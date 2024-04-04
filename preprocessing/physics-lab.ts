@@ -76,6 +76,8 @@ interface User {
     Oldtimer: boolean;
     /** IsModerator: Whether the user is, or was, a moderator. */
     Moderator: boolean;
+    /** Messages: Messages on the profile. */
+    Messages?: Comment[];
 }
 
 /** Users: Known users in Physics Lab. */
@@ -132,8 +134,10 @@ async function FindMentions(Database: Mongo.Db, Content: string): Promise<[strin
 }
 
 /** ExportComments: Export all comments from the database. */
-async function ExportComments(Database: Mongo.Db, Collection: Mongo.Collection, Condition: Record<string, any>): Promise<Comment[] | undefined> {
+async function ExportComments(Database: Mongo.Db, Collection: Mongo.Collection, Condition?: Record<string, any>): Promise<Comment[] | undefined> {
     // Add the cutoff date and find all
+    var ForUsers = Condition == undefined;
+    Condition = Condition ?? {};
     Condition.Timestamp = { $lte: CutoffDate.getTime() };
     Condition.Hidden = { $ne: true };
     var Comments = await Collection.find(Condition).toArray();
@@ -160,7 +164,15 @@ async function ExportComments(Database: Mongo.Db, Collection: Mongo.Collection, 
         var [Content, Mentioned] = await FindMentions(Database, Metadata.Content);
         Metadata.Content = Content;
         Metadata.Mentioned = Mentioned;
-        Results.push(Metadata);
+        // If this is for users, put it to the relevant user.
+        if (ForUsers) {
+            var Target = await ExportUser(Database, Comment.TargetID);
+            Target.Messages = Target.Messages ?? [];
+            Target.Messages.push(Metadata);
+        } else {
+            // Otherwise, put it to the results.
+            Results.push(Metadata);
+        }
     }
     return Results;
 }
@@ -225,13 +237,19 @@ async function ExportAll() {
     Projects = Projects.concat(await ExportProjects(Database, Database.collection("ExperimentSummaries")));
     Projects = Projects.concat(await ExportProjects(Database, Database.collection("Discussions")));
     
+    // Read personal messages
+    var Messages: Comment[] = [];
+    Messages = Messages.concat((await ExportComments(Database, Database.collection("PersonalComments")))!);
+    Messages = Messages.concat((await ExportComments(Database, Database.collection("UserComments")))!);
+
     // Write all projects into a JSON file.
     File.writeFileSync(`${RootPath}\\Projects.json`, JSON.stringify(Projects, null, 4));
 
     // Write all users into a JSON file.
-    File.writeFileSync(`${RootPath}\\Users.json`, JSON.stringify(Array.from(Users.values()), null, 4));
+    var UserArray = Array.from(Users.values());
+    File.writeFileSync(`${RootPath}\\Users.json`, JSON.stringify(UserArray, null, 4));
 
-    console.log(`Exported ${Users.size} users, their ${Projects.length} projects, and ${Projects.reduce((Sum, Project) => Sum + (Project.Comments?.length ?? 0), 0)} comments.`);
+    console.log(`Exported ${Users.size} users, their ${Projects.length} projects, ${Projects.reduce((Sum, Project) => Sum + (Project.Comments?.length ?? 0), 0)} comments on projects, and ${UserArray.reduce((Sum, User) => Sum + (User.Messages?.length ?? 0), 0)} personal comments.`);
 }
 
 ExportAll().then(() => process.exit(0));
