@@ -9,6 +9,8 @@
         "request": "launch",
         "name": "Launch Current File",
         "program": "${file}",
+        "cwd": "${workspaceFolder}",
+        "localRoot": "${workspaceFolder}",
         "preLaunchTask": "tsc: build - tsconfig.json",
         "outFiles": ["${workspaceFolder}/out/**/*.js"]
       }

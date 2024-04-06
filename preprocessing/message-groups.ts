@@ -1,33 +1,7 @@
 import * as File from 'fs';
 import { CutoffDate, DatasetPath } from '../constants';
-
-/** Message: A message in a group chat. */
-interface Message {
-    /** SenderID: The ID of sender of the message. */
-    SenderID: string;
-    /** Nickname: The nickname of the sender. */
-    Nickname: string;
-    /** Time: The time the message was sent. */
-    Time: Date;
-    /** Content: The content of the message. */
-    Content: string;
-    /** FirstSeen: Whether the sender is first seen in the group. */
-    FirstSeen?: boolean;
-    /** Mentions: The participants that this message mentioned */
-    Mentions?: string[];
-}
-
-/** Participant: A participant in a group chat. */
-interface Participant {
-    /** ID: The ID of the participant. */
-    ID: string;
-    /** Nickname: The initial nickname of the participant. */
-    Nickname: string;
-    /** Messages: The number of messages sent by the participant. */
-    Messages: number;
-    /** FirstSeen: The time the participant first appeared in the group. */
-    FirstSeen: Date;
-}
+import { Tokenize } from '../utils/tokenizer';
+import { Message, Participant } from '../utils/schema';
 
 /** ReadQQMessages: Read messages from a text record of QQ groups. */
 function ReadQQMessages(Path: string): Message[] {
@@ -41,17 +15,27 @@ function ReadQQMessages(Path: string): Message[] {
                 Number(Match[4]) + (Match[7] === 'PM' ? 12 : 0), Number(Match[5]), Number(Match[6]));
             LastMessage = { 
                 SenderID: Match[9].substring(1, Match[9].length - 1), 
-                Nickname: Match[8].replaceAll(/"|,/g, ''),
+                Nickname: Match[8].replaceAll(/"|,/g, '').replaceAll(/^【.{2}】/g, ''),
                 Time, 
                 Content: '' };
             if (LastMessage.Time > CutoffDate) break;
             Messages.push(LastMessage);
         }  else if (LastMessage !== undefined) {
-            LastMessage.Content += Source;
+            LastMessage.Content += Source.replace("\r", "\n").trim() + "\n";
         }
     }
     return Messages;
 }
+
+// Read emojis
+const Emojis = File.readFileSync(`./known/emoji.csv`, 'utf-8').split('\n');
+const EmojiMap = new Map<string, string>();
+for (const Emoji of Emojis) {
+    var [Source, Translation] = Emoji.split(',');
+    if (!Source.startsWith("[")) Source = `\/${Source}`;
+    EmojiMap.set(Source, Translation.trim());
+}
+const UnknownEmojis = new Map<string, number>();
 
 // Read messages from the groups, anonymize user ids, and export into JSON and CSV format.
 const RootPath = `${DatasetPath}\\Messaging Groups`;
@@ -96,7 +80,21 @@ for (const Group of Groups) {
                 return `@${Metadata[1]}(${Metadata[0]})`;
             } else return Match;
         });
+        // Here, we need to replace all emojis with the corresponding translation.
+        for (const [Source, Translation] of EmojiMap) {
+            Message.Content = Message.Content.replaceAll(Source, Translation);
+        }
+        Message.Content = Message.Content.trim();
+        // Identify unknown emojis
+        for (const UnknownEmoji of Message.Content.matchAll(/\/([\u4e00-\u9fa5]{1,4})/g)) {
+            if (UnknownEmojis.has(UnknownEmoji[1])) 
+                UnknownEmojis.set(UnknownEmoji[1], UnknownEmojis.get(UnknownEmoji[1])! + 1);
+            else UnknownEmojis.set(UnknownEmoji[1], 1);
+        }
     }
+    // Write the unknown emojis into a CSV file.
+    File.writeFileSync(`./known/unknown-emoji.csv`, 
+        'Emoji,Frequency\n' + Array.from(UnknownEmojis).filter(Emoji => Emoji[1] > 2).map(Emoji => `${Emoji[0]},${Emoji[1]}`).join(',\n'));
     // Write the messages into a JSON file.
     File.writeFileSync(`${RootPath}\\${Group}\\Messages.json`, JSON.stringify(Messages, null, 4));
     // Write the messages (metadata) into a CSV file using Unix timestamp. Only length of content is stored.
@@ -104,16 +102,20 @@ for (const Group of Groups) {
         Messages.filter(Message => Message.SenderID != "0").map(Message => `${Index},${Message.SenderID},${Message.Nickname},${Message.Time.toISOString()},${Message.Time.getTime()},${Message.FirstSeen},${Message.Content.length},${Message.Mentions?.length ?? 0}`).join('\n'));
     NameMappings.clear();
     Index++;
-    console.log(`Exported ${Messages.length} messages.`)
+    // Calculate tokens
+    var Content = Messages.map(Message => Message.Content).join("\n");
+    console.log(`Exported ${Messages.length} messages, at ${Content.length} chars, estimated at ${Tokenize(Content).length} tokens.`)
 }
 
 // For Stata: need to + 315619200000
-
+const ParticipantArray = Array.from(Participants.values());
 // Write all participants into a JSON file.
-File.writeFileSync(`${RootPath}\\Participants.json`, JSON.stringify(Array.from(Participants.values()), null, 4));
+File.writeFileSync(`${RootPath}\\Participants.json`, JSON.stringify(ParticipantArray, null, 4));
 
 // Write all participants into a CSV file.
 File.writeFileSync(`${RootPath}\\Participants.csv`, 'ID,Nickname,Messages,FirstSeen,FirstTimestamp\n' + 
-    Array.from(Participants.values()).map(Participant => `${Participant.ID},${Participant.Nickname},${Participant.Messages},${Participant.FirstSeen.toISOString()},${Participant.FirstSeen.getTime()}`).join('\n'));
+    ParticipantArray.map(Participant => `${Participant.ID},${Participant.Nickname},${Participant.Messages},${Participant.FirstSeen.toISOString()},${Participant.FirstSeen.getTime()}`).join('\n'));
 
-console.log(`Exported ${Participants.size} participants.`)
+// Calculate tokens
+var Tokens = Tokenize(ParticipantArray.map(Participant => Participant.Nickname).join("\n")).length;
+console.log(`Exported ${Participants.size} participants, estimated at ${Tokens} tokens.`)
