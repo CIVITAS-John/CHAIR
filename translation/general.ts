@@ -92,7 +92,7 @@ export async function TranslateStringsWithLLM(Type: string, Source: string[]): P
     var SystemPrompt = "Translate all following Chinese text into English, one by one.";
     switch (Type) {
         case "nickname":
-            SystemPrompt = "Translate all following Chinese nicknames into English, one by one.";
+            SystemPrompt = "Translate all following Chinese names into English, one by one.";
             break;
     }
     // Call the LLM
@@ -101,34 +101,42 @@ export async function TranslateStringsWithLLM(Type: string, Source: string[]): P
     for (var Text of Source) {
         var CurrentTokens = Tokenize(Text).length + 16;
         if (Tokens + CurrentTokens > MaxOutput || Requests.length >= MaxItems) {
-            var Tries = 0;
-            while (true) {
-                try {
-                    Results = Results.concat(await TranslateChunkedStringsWithLLM(Type, Requests, SystemPrompt));
-                    break;
-                } catch (Error: any) {
-                    if (++Tries > 2) throw Error;
-                    console.log(`Translation error ${Error.message}, retrying ${Tries} times.`);
-                }
-            }
+            Results = Results.concat(await TranslateChunkedStringsWithLLMRetries(Type, Requests, SystemPrompt));
             Requests = [];
             CurrentTokens = 0;
         }
         Requests.push(Text);
     }
     if (Requests.length > 0)
-        Results = Results.concat(await TranslateChunkedStringsWithLLM(Type, Requests, SystemPrompt));
+        Results = Results.concat(await TranslateChunkedStringsWithLLMRetries(Type, Requests, SystemPrompt));
     return Results;
 }
 
+/** TranslateChunkedStringsWithLLMRetries: Translate a bunch of strings calling LLMs with Retry strategies. */
+async function TranslateChunkedStringsWithLLMRetries(Type: string, Requests: string[], SystemPrompt: string): Promise<string[]> {
+    var Tries = 0;
+    while (true) {
+        try {
+            return await TranslateChunkedStringsWithLLM(Type, Requests, SystemPrompt, Tries);
+            break;
+        } catch (Error: any) {
+            if (++Tries > 2) throw Error;
+            console.log(`Translation error ${Error.message}, retrying ${Tries} times.`);
+        }
+    }
+}
+
 /** TranslateChunkedStringsWithLLM: Translate a bunch of strings calling LLMs. */
-async function TranslateChunkedStringsWithLLM(Type: string, Source: string[], SystemPrompt: string): Promise<string[]> {
+async function TranslateChunkedStringsWithLLM(Type: string, Source: string[], SystemPrompt: string, Tries: number): Promise<string[]> {
     var Separator = "\n---\n";
     // Call the LLM
     const Result = await RequestLLM([new SystemMessage(SystemPrompt + " Use `---` to separate texts."), new HumanMessage(
-        Source.map((Text, Index) => `${Index + 1}\n${Text}`).join(Separator))]);
+        Source.map((Text, Index) => `${Index + 1}. ${Text}`).join(Separator))], Tries * 0.2);
     // Split the result
-    const Results = Result.split(Separator);
+    var Results = Result.split(/\n *--- *\n/gm);
+    // Sometimes GPT-4.5-turbo ignores the proceding line break.
+    if (Results.length == 1)
+        Results = Result.split(/\n? *--- *\n/gm);
     // Claude loves to add a sentence at the beginning.
     if (Results.length == Source.length + 1)
         Results.shift();
@@ -138,7 +146,12 @@ async function TranslateChunkedStringsWithLLM(Type: string, Source: string[], Sy
     // Save the result to cache
     var Cache = TranslatedCache.get(Type)!;
     for (let I = 0; I < Source.length; I++) {
-        Results[I] = Results[I].trim().replace(/^(\d+)\n/gs, '');
+        Results[I] = Results[I].trim();
+        // Sometimes, some LLM inevitably includes a proceding text
+        if (I == 0 && !Results[I].startsWith("1."))
+            Results[I] = Results[I].substring(Results[I].indexOf(".") - 1);
+        Results[I] = Results[I].replace(/^(\d+)\.?(\s|\n)/gs, '');
+        if (Source[I] == Results[I]) throw new Error(`Translation Error: ${Source[I]} => ${Results[I]}`);
         Cache.set(Source[I], Results[I]);
     }
     return Results;

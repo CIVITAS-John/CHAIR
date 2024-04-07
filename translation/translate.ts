@@ -25,8 +25,9 @@ export async function TranslateMessages(Messages: Message[], Participants: Parti
             return `@${ID} `;
         });
         // Truncate the message if it's too long
-        if (Message.Content.length >= MaxOutput) 
-            Message.Content = Message.Content.substring(0, MaxOutput - 20) + " (Too long to translate)";
+        // Here we leave some rooms since the model might need more tokens than the source text to translate
+        if (Message.Content.length >= MaxOutput * 0.75) 
+            Message.Content = Message.Content.substring(0, MaxOutput * 0.75) + " (Too long to translate)";
         return Message.Content;
     });
     // Translate the nicknames and contents

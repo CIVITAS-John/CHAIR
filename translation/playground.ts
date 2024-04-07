@@ -5,8 +5,13 @@ import { UseLLM } from "./general";
 import { TranslateMessages, TranslateParticipants } from "./translate";
 import { ExportMessages } from '../utils/export';
 import { Message } from '../utils/schema';
+import { LLMName } from '../utils/llms';
 
-UseLLM("gpt-3.5-turbo");
+// UseLLM("mistral-small");
+// UseLLM("gpt-3.5-turbo");
+UseLLM("gpt-4.5-turbo");
+// UseLLM("claude3-haiku");
+// UseLLM("claude3-sonnet");
 MessagesPlayground("Users of Physics Lab (Group 1)", true).then(() => {
     console.log("Translation done.");
     process.exit(0);
@@ -30,7 +35,7 @@ async function MessagesPlayground(Group: string, Bilingual: boolean = false) {
     // Translate the messages with LLM
     Messages = await TranslateMessages(Messages, Participants);
     // Write into JSON file
-    File.writeFileSync(GetMessagesPath(Group, "Messages-Translated.json"), JSON.stringify(Messages, null, 4));
+    File.writeFileSync(GetMessagesPath(Group, `Messages-Translated-${LLMName}.json`), JSON.stringify(Messages, null, 4));
     // Write into Markdown file
-    File.writeFileSync(GetMessagesPath(Group, "Messages-Translated.md"), ExportMessages(Messages, Bilingual ? Originals : undefined));
+    File.writeFileSync(GetMessagesPath(Group, `Messages-Translated-${LLMName}.md`), ExportMessages(Messages, Bilingual ? Originals : undefined));
 }

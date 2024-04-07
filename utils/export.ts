@@ -5,7 +5,7 @@ import { Message } from "./schema";
 export function ExportMessages(Messages: Message[], Originals?: Message[]): string {
     var Result = "";
     for (let I = 0; I < Messages.length; I++) {
-        Result += `**${Messages[I].Nickname}**`;
+        Result += `**P${Messages[I].SenderID}, ${Messages[I].Nickname}**`;
         if (Originals !== undefined && Originals[I].Nickname != Messages[I].Nickname)
             Result += ` (${Originals[I].Nickname})`;
         Result += `: ${Messages[I].Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}\n`

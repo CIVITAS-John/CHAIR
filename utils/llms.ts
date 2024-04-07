@@ -1,11 +1,13 @@
 import * as File from 'fs';
 import * as dotenv from 'dotenv'
 import { BaseChatModel } from "@langchain/core/language_models/chat_models"
-import { ChatOpenAI } from "@langchain/openai"
 import { BaseMessage } from "@langchain/core/messages"
+import { ChatOpenAI } from "@langchain/openai"
+import { ChatAnthropic } from '@langchain/anthropic';
+import { ChatMistralAI } from '@langchain/mistralai';
 
 // Model: The chat model to use.
-export var Model: BaseChatModel | undefined;
+export var Model: (Temperature: number) => BaseChatModel;
 // LLMName: The name of the current LLM.
 export var LLMName = "";
 // MaxInput: The maximum input tokens for each request.
@@ -21,12 +23,62 @@ export function InitializeLLM(LLM: string) {
     dotenv.config();
     switch (LLM) {
         case "gpt-3.5-turbo":
+            // 0.5$ / 1.5$
             MaxInput = 16385;
-            MaxOutput = 3072;
+            MaxOutput = 4096;
             MaxItems = 32;
-            Model = new ChatOpenAI({
-                temperature: 0,
+            Model = (Temp) => new ChatOpenAI({
+                temperature: Temp,
                 modelName: "gpt-3.5-turbo-0125",
+                streaming: false,
+                maxTokens: MaxOutput,
+            });
+            break;
+        case "gpt-4.5-turbo":
+            // 10$ / 30$
+            MaxInput = 16385;
+            MaxOutput = 4096;
+            MaxItems = 32;
+            Model = (Temp) => new ChatOpenAI({
+                temperature: Temp,
+                modelName: "gpt-4-turbo-preview",
+                streaming: false,
+                maxTokens: MaxOutput,
+            });
+            break;
+        case "claude3-haiku":
+            // 0.25$ / 0.75$
+            MaxInput = 200000;
+            MaxOutput = 4096;
+            MaxItems = 32;
+            Model = (Temp) => new ChatAnthropic({
+                temperature: Temp,
+                modelName: "claude-3-haiku-20240307",
+                streaming: false,
+                maxTokens: MaxOutput,
+            });
+            break;
+        case "claude3-sonnet":
+            // 3$ / 15$
+            MaxInput = 200000;
+            MaxOutput = 4096;
+            MaxItems = 32;
+            Model = (Temp) => new ChatAnthropic({
+                temperature: Temp,
+                modelName: "claude-3-sonnet-20240229",
+                streaming: false,
+                maxTokens: MaxOutput,
+            });
+            break;
+        case "mistral-small":
+            // The cheaper one, 7x8b, does not work even for translation
+            // 2$ / 8$
+            MaxInput = 32000;
+            MaxOutput = 32000;
+            MaxItems = 32;
+            Model = (Temp) => new ChatMistralAI({
+                temperature: Temp,
+                modelName: "mistral-small-latest",
                 streaming: false,
                 maxTokens: MaxOutput,
             });
@@ -38,12 +90,12 @@ export function InitializeLLM(LLM: string) {
 }
 
 /** RequestLLM: Call the model to generate text. */
-export async function RequestLLM(Messages: BaseMessage[]): Promise<string> {
+export async function RequestLLM(Messages: BaseMessage[], Temperature?: number): Promise<string> {
     var Text = "";
     try {
-        console.log(`LLM Request: \n${Messages.map(Message => `${Message._getType()}: ${Message.content}`).join('\n---\n')}\n`);
+        console.log(`LLM Request ${Temperature}: \n${Messages.map(Message => `${Message._getType()}: ${Message.content}`).join('\n---\n')}\n`);
         await PromiseWithTimeout(
-            Model!.invoke(Messages).then(Result => {
+            Model(Temperature ?? 0).invoke(Messages, { temperature: Temperature } as any).then(Result => {
                 Text = Result.content as string;
             }), 120000);
         console.log(`LLM Result: \n${Text}\n`);
