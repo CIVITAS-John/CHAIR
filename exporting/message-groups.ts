@@ -2,6 +2,7 @@ import * as File from 'fs';
 import { CutoffDate, DatasetPath } from '../constants';
 import { Tokenize } from '../utils/tokenizer';
 import { Message, Participant } from '../utils/schema';
+import { GetMessagesPath, GetParticipantsPath } from '../utils/loader';
 
 /** ReadQQMessages: Read messages from a text record of QQ groups. */
 function ReadQQMessages(Path: string): Message[] {
@@ -38,14 +39,13 @@ for (const Emoji of Emojis) {
 const UnknownEmojis = new Map<string, number>();
 
 // Read messages from the groups, anonymize user ids, and export into JSON and CSV format.
-const RootPath = `${DatasetPath}\\Messaging Groups`;
 const Groups = [String.raw`Users of Physics Lab (Group 1)`, String.raw`Users of Physics Lab (Group 2)`];
 const Participants = new Map<string, Participant>();
 // Many users have multiple nicknames, so we need to map the `@...` references to a single ID.
 const NameMappings = new Map<string, [string, string]>();
 var Index = 0;
 for (const Group of Groups) {
-    const Messages = ReadQQMessages(`${RootPath}\\${Group}\\Raw.txt`);
+    const Messages = ReadQQMessages(GetMessagesPath(Group, "Raw.txt"));
     // First pass: get the participants and anonymize the user ids.
     for (const Message of Messages) {
         if (!Participants.has(Message.SenderID)) {
@@ -72,12 +72,12 @@ for (const Group of Groups) {
         Message.SenderID = Participant.ID;
         Message.Nickname = Participant.Nickname;
         // Here, we need to replace all `@...` references with the corresponding ID.
-        Message.Content = Message.Content.replaceAll(/\@(.*?)\s/g, (Match, Name) => {
+        Message.Content = Message.Content.replaceAll(/\@(.*?)(\s|$)/g, (Match, Name) => {
             if (NameMappings.has(Name)) {
                 var Metadata = NameMappings.get(Name)!;
                 Message.Mentions = Message.Mentions ?? [];
                 Message.Mentions.push(Metadata[0]);
-                return `@${Metadata[1]}(${Metadata[0]})`;
+                return `@${Metadata[1]}(${Metadata[0]}) `;
             } else return Match;
         });
         // Here, we need to replace all emojis with the corresponding translation.
@@ -96,9 +96,9 @@ for (const Group of Groups) {
     File.writeFileSync(`./known/unknown-emoji.csv`, 
         'Emoji,Frequency\n' + Array.from(UnknownEmojis).filter(Emoji => Emoji[1] > 2).map(Emoji => `${Emoji[0]},${Emoji[1]}`).join(',\n'));
     // Write the messages into a JSON file.
-    File.writeFileSync(`${RootPath}\\${Group}\\Messages.json`, JSON.stringify(Messages, null, 4));
+    File.writeFileSync(GetMessagesPath(Group, "Messages.json"), JSON.stringify(Messages, null, 4));
     // Write the messages (metadata) into a CSV file using Unix timestamp. Only length of content is stored.
-    File.writeFileSync(`${RootPath}\\${Group}\\Messages.csv`, 'Source,ID,Nickname,Time,Timestamp,First,Length,Mentions\n' + 
+    File.writeFileSync(GetMessagesPath(Group, "Messages.csv"), 'Source,ID,Nickname,Time,Timestamp,First,Length,Mentions\n' + 
         Messages.filter(Message => Message.SenderID != "0").map(Message => `${Index},${Message.SenderID},${Message.Nickname},${Message.Time.toISOString()},${Message.Time.getTime()},${Message.FirstSeen},${Message.Content.length},${Message.Mentions?.length ?? 0}`).join('\n'));
     NameMappings.clear();
     Index++;
@@ -110,10 +110,10 @@ for (const Group of Groups) {
 // For Stata: need to + 315619200000
 const ParticipantArray = Array.from(Participants.values());
 // Write all participants into a JSON file.
-File.writeFileSync(`${RootPath}\\Participants.json`, JSON.stringify(ParticipantArray, null, 4));
+File.writeFileSync(GetParticipantsPath("Participants.json"), JSON.stringify(ParticipantArray, null, 4));
 
 // Write all participants into a CSV file.
-File.writeFileSync(`${RootPath}\\Participants.csv`, 'ID,Nickname,Messages,FirstSeen,FirstTimestamp\n' + 
+File.writeFileSync(GetParticipantsPath("Participants.csv"), 'ID,Nickname,Messages,FirstSeen,FirstTimestamp\n' + 
     ParticipantArray.map(Participant => `${Participant.ID},${Participant.Nickname},${Participant.Messages},${Participant.FirstSeen.toISOString()},${Participant.FirstSeen.getTime()}`).join('\n'));
 
 // Calculate tokens
