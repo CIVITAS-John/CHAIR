@@ -20,3 +20,14 @@ export function HandleGlossary(Text: string): string {
     const Tokens = Jieba.cut(Text);
     return Tokens.map(Token => GlossaryMap.has(Token) ? GlossaryMap.get(Token) : Token).join('');
 }
+
+/** Preprocess: Preprocess for translation. */
+export function Preprocess(Text: string): string {
+    // Remove overly repetitive pattern.
+    // Otherwise, some AI will complain and refuse to translate.
+    Text = Text.replaceAll(/(.)\1{9,}/g, (Match, Char) => Char.repeat(9));
+    // Trim the text's white spaces in each line.
+    Text = Text.split('\n').map(Line => Line.trim()).join('\n');
+    // Handle the glossary
+    return HandleGlossary(Text);
+}

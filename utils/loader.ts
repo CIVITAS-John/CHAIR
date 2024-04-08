@@ -1,7 +1,18 @@
 // Data loader from exported JSON files
 import * as File from 'fs';
-import { Message, Participant } from "./schema";
+import { Message, Participant, Project } from "./schema";
 import { DatasetPath } from '../constants';
+
+/** LoadProjects: Load the projects. */
+export function LoadProjects(): Project[] {
+    const Projects: Project[] = JSON.parse(File.readFileSync(GetProjectsPath("Projects.json"), 'utf-8'));
+    Projects.forEach(Project => {
+        Project.Time = new Date(Date.parse(Project.Time as any));
+        if (Project.Comments)
+            Project.Comments.forEach(Comment => Comment.Time = new Date(Date.parse(Comment.Time as any)));
+    });
+    return Projects;
+}
 
 /** LoadMessages: Load the chat messages. */
 export function LoadMessages(Group: string): Message[] {
@@ -15,6 +26,11 @@ export function LoadMessages(Group: string): Message[] {
 /** LoadParticipants: Load the participants. */
 export function LoadParticipants(): Participant[] {
     return JSON.parse(File.readFileSync(GetParticipantsPath("Participants.json"), 'utf-8'));
+}
+
+/** GetProjectsPath: Get the saving path of certain projects. */
+export function GetProjectsPath(Name: string): string { 
+    return `${DatasetPath}\\Projects and Comments\\${Name}`; 
 }
 
 /** GetMessagesPath: Get the saving path of certain messages. */

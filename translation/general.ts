@@ -1,7 +1,7 @@
 import * as File from 'fs';
 import { SystemMessage, HumanMessage } from "@langchain/core/messages";
 import { EnsureFolder, InitializeLLM, LLMName, MaxItems, MaxOutput, RequestLLM } from "../utils/llms";
-import { HandleGlossary } from "../utils/glossary";
+import { HandleGlossary, Preprocess } from "../utils/glossary";
 import { Tokenize } from "../utils/tokenizer";
 
 // TranslatedCache: A cache for translated strings.
@@ -21,6 +21,7 @@ export function LoadCache(): void {
     for (const Type of File.readdirSync(`./known/translation/${LLMName}`)) {
         const Data = File.readFileSync(`./known/translation/${LLMName}/${Type}`, 'utf-8');
         const Cache = new Map<string, string>(JSON.parse(Data));
+        for (const [Key, Value] of Cache) Cache.set(Key.trim(), Value.trim());
         Translations += Cache.size;
         TranslatedCache.set(Type.substring(0, Type.length - 5), Cache);
     }
@@ -47,7 +48,7 @@ export async function TranslateStrings(Type: string, Source: string[]): Promise<
     const ToTranslateIndexes: number[] = [];
     const Result: string[] = [];
     for (var Text of Source) {
-        Text = HandleGlossary(Text);
+        Text = Preprocess(Text);
         if (Text.match(/[\u4e00-\u9fa5]/) === null) {
             // Special: if no Chinese characters, skip the translation
             Result.push(Text);
@@ -138,7 +139,7 @@ async function TranslateChunkedStringsWithLLM(Type: string, Source: string[], Sy
     if (Results.length == 1)
         Results = Result.split(/\n? *--- *\n/gm);
     // Claude loves to add a sentence at the beginning.
-    if (Results.length == Source.length + 1)
+    if (!Results[0].startsWith("1.") && Results.length == Source.length + 1)
         Results.shift();
     if (Results.length !== Source.length) {
         throw new Error(`Translation Error: ${Results.length} results for ${Source.length} sources.`);
