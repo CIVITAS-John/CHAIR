@@ -4,7 +4,7 @@ import { Message, Project } from "./schema.js";
 // ExportMessages: Export messages into markdown.
 export function ExportMessages(Messages: Message[], Originals?: Message[]): string {
     var Result = "";
-    var LastConversation = 0;
+    var LastConversation = "0";
     for (let I = 0; I < Messages.length; I++) {
         var Message = Messages[I];
         // Write a separator if the time gap is too long

@@ -1,4 +1,20 @@
 // Schema for the dataset.
+/** Conversation: A segment of the group chat. */
+export interface Conversation {
+    /** ID: The ID of the conversation. */
+    ID: string;
+    /** Start: The time the conversation started. */
+    Start: Date;
+    /** End: The time the conversation ended. */
+    End: Date;
+    /** Participants: The participants in the conversation. */
+    Participants: Map<string, number>;
+    /** Mentions: The participants that this conversation mentioned. */
+    Mentions: string[];
+    /** Messages: The number of messages in the conversation. */
+    Messages: number;
+}
+
 /** Message: A message in a group chat. */
 export interface Message {
     /** SenderID: The ID of sender of the message. */
@@ -14,7 +30,7 @@ export interface Message {
     /** Mentions: The participants that this message mentioned */
     Mentions?: string[];
     /** Conversation: The conversationID of the message. */
-    Conversation?: number;
+    Conversation?: string;
 }
 
 /** Participant: A participant in a group chat. */
