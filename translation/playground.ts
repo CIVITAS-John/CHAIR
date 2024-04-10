@@ -1,12 +1,12 @@
 // This is a playground for selectively translating data.
 import * as File from 'fs';
-import { GetMessagesPath, GetParticipantsPath, GetProjectsPath, LoadMessages, LoadParticipants, LoadProjects } from "../utils/loader";
-import { UseLLM } from "./general";
-import { TranslateMessages, TranslateParticipants } from "./message-groups";
-import { ExportMessages, ExportProjects } from '../utils/export';
-import { Message, Project } from '../utils/schema';
-import { LLMName } from '../utils/llms';
-import { TranslateProjects } from './physics-lab';
+import { GetMessagesPath, GetParticipantsPath, GetProjectsPath, LoadMessages, LoadParticipants, LoadProjects } from "../utils/loader.js";
+import { UseLLM } from "./general.js";
+import { TranslateMessages, TranslateParticipants } from "./message-groups.js";
+import { ExportMessages, ExportProjects } from '../utils/export.js';
+import { Message, Project } from '../utils/schema.js';
+import { LLMName } from '../utils/llms.js';
+import { TranslateProjects } from './physics-lab.js';
 
 // UseLLM("mistral-small");
 UseLLM("gpt-3.5-turbo");

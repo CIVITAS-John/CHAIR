@@ -92,6 +92,8 @@ for (const Group of Groups) {
             else UnknownEmojis.set(UnknownEmoji[1], 1);
         }
     }
+    // Sort messages by time (sometimes, my computer may receive records in incorrect orders)
+    Messages.sort((A, B) => A.Time.getTime() - B.Time.getTime());
     // Write the unknown emojis into a CSV file.
     File.writeFileSync(`./known/unknown-emoji.csv`, 
         'Emoji,Frequency\n' + Array.from(UnknownEmojis).filter(Emoji => Emoji[1] > 2).map(Emoji => `${Emoji[0]},${Emoji[1]}`).join(',\n'));
@@ -99,12 +101,12 @@ for (const Group of Groups) {
     File.writeFileSync(GetMessagesPath(Group, "Messages.json"), JSON.stringify(Messages, null, 4));
     // Write the messages (metadata) into a CSV file using Unix timestamp. Only length of content is stored.
     File.writeFileSync(GetMessagesPath(Group, "Messages.csv"), 'Source,ID,Nickname,Time,Timestamp,First,Length,Mentions\n' + 
-        Messages.filter(Message => Message.SenderID != "0").map(Message => `${Index},${Message.SenderID},${Message.Nickname},${Message.Time.toISOString()},${Message.Time.getTime()},${Message.FirstSeen},${Message.Content.length},${Message.Mentions?.length ?? 0}`).join('\n'));
+        Messages.filter(Message => Message.SenderID != "0").map((Message, Index) => `${Index},${Message.SenderID},${Message.Nickname},${Message.Time.toISOString()},${Message.Time.getTime()},${Message.FirstSeen},${Message.Content.length},${Message.Mentions?.length ?? 0}`).join('\n'));
     NameMappings.clear();
     Index++;
     // Calculate tokens
     var Content = Messages.map(Message => Message.Content).join("\n");
-    console.log(`Exported ${Messages.length} messages, at ${Content.length} chars, estimated at ${Tokenize(Content).length} tokens.`)
+    console.log(`Exported ${Messages.length} messages, at ${Content.length} chars.`)
 }
 
 // For Stata: need to + 315619200000

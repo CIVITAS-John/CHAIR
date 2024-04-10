@@ -1,16 +1,23 @@
-import { Message, Project } from "./schema";
+import { Message, Project } from "./schema.js";
 
 // Export: Export the JSON data into human-readable formats.
 // ExportMessages: Export messages into markdown.
 export function ExportMessages(Messages: Message[], Originals?: Message[]): string {
     var Result = "";
+    var LastTimestamp = 0;
     for (let I = 0; I < Messages.length; I++) {
-        Result += `${I + 1}. **P${Messages[I].SenderID}, ${Messages[I].Nickname}**`;
-        if (Originals !== undefined && Originals[I].Nickname != Messages[I].Nickname)
+        var Message = Messages[I];
+        // Write a separator if the time gap is too long
+        if (Message.Time.getTime() - LastTimestamp > 5 * 60 * 1000)
+            Result += `\n\n===\n\n`;
+        LastTimestamp = Message.Time.getTime();
+        // Export the message
+        Result += `${I + 1}. **P${Message.SenderID}, ${Message.Nickname}**`;
+        if (Originals !== undefined && Originals[I].Nickname != Message.Nickname)
             Result += ` (${Originals[I].Nickname})`;
-        Result += `: ${Messages[I].Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}\n`
-        Result += `${Messages[I].Content}`;
-        if (Originals !== undefined && Messages[I].Content != Originals[I].Content) 
+        Result += `: ${Message.Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}\n`
+        Result += `${Message.Content}`;
+        if (Originals !== undefined && Message.Content != Originals[I].Content) 
             Result += `\n${Originals[I].Content}`;
         Result += "\n";
     }

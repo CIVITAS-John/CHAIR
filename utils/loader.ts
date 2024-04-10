@@ -1,7 +1,7 @@
 // Data loader from exported JSON files
 import * as File from 'fs';
-import { Message, Participant, Project } from "./schema";
-import { DatasetPath } from '../constants';
+import { Message, Participant, Project } from "./schema.js";
+import { DatasetPath } from '../constants.js';
 
 /** LoadProjects: Load the projects. */
 export function LoadProjects(): Project[] {

@@ -1,6 +1,6 @@
-import { MaxOutput } from '../utils/llms';
-import { Project, Comment } from '../utils/schema';
-import { TranslateStrings } from "./general";
+import { MaxOutput } from '../utils/llms.js';
+import { Project, Comment } from '../utils/schema.js';
+import { TranslateStrings } from "./general.js";
 
 // TranslateProjects: Translate a bunch of projects.
 export async function TranslateProjects(Projects: Project[]): Promise<Project[]> {
@@ -19,26 +19,22 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
         }
     }
 
-    // Get the contents to translate
-    var Contents = Projects.map((Project) => {
-        // Handle the mentioned users (=> @ID)
-        Project.Content = Project.Content.replaceAll(/(回复)?@(.*?)\((\d+)\)(\s|$|:)/g, (Match, Reply, Name, ID) => {
+    // Handle the mentioned users (=> @ID)
+    var HandleContent = (Content: string) => {
+        return Content.replaceAll(/(回复)?@(.*?)\((\d+)\)(\s|$|:)/g, (Match, Reply, Name, ID) => {
             UserMappings.set(ID, Name);
             Nicknames.add(Name);
             if (Reply) {
                 return `Reply @${ID}:`;
             } else return `@${ID} `;
         });
+    }
+    // Get the contents to translate
+    var Contents = Projects.map((Project) => {
+        Project.Content = HandleContent(Project.Content);
         // For comments
         Project.Comments?.forEach((Comment) => {
-            // Handle the mentioned users (=> @ID)
-            Comment.Content = Comment.Content.replaceAll(/(回复)?@(.*?)\((\d+)\)(\s|$|:)/g, (Match, Reply, Name, ID) => {
-                UserMappings.set(ID, Name);
-                Nicknames.add(Name);
-                if (Reply) {
-                    return `Reply @${ID}:`;
-                } else return `@${ID} `;
-            });
+            Comment.Content = HandleContent(Comment.Content);
             return Comment.Content;
         });
         // Truncate the message if it's too long
@@ -79,7 +75,11 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
 
 // TranslateComments: Translate a bunch of comments.
 export async function TranslateComments(Comments: Comment[], UserMappings: Map<string, string>, NameTranslations: Map<string, string>): Promise<Comment[]> {
-    var Contents = Comments.map((Comment) => Comment.Content);
+    var Contents = Comments.map((Comment) => {
+        if (Comment.Content.length >= MaxOutput * 0.75) 
+            Comment.Content = Comment.Content.substring(0, MaxOutput * 0.75) + " (Too long to translate)";
+        return Comment.Content;
+    });
     var TranslatedContents = await TranslateStrings("messages", Contents);
     for (let I = 0; I < Comments.length; I++) {
         // Decipher the nicknames

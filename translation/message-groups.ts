@@ -1,6 +1,6 @@
-import { MaxOutput } from "../utils/llms";
-import { Message, Participant } from '../utils/schema';
-import { TranslateStrings } from "./general";
+import { MaxOutput } from "../utils/llms.js";
+import { Message, Participant } from '../utils/schema.js';
+import { TranslateStrings } from "./general.js";
 
 // TranslateParticipants: Translate a bunch of participants.
 export async function TranslateParticipants(Participants: Participant[]): Promise<Participant[]> {
