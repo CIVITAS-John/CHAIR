@@ -1,8 +1,8 @@
 import * as File from 'fs';
-import { CutoffDate, DatasetPath } from '../constants';
-import { Tokenize } from '../utils/tokenizer';
-import { Message, Participant } from '../utils/schema';
-import { GetMessagesPath, GetParticipantsPath } from '../utils/loader';
+import { CutoffDate, DatasetPath } from '../constants.js';
+import { Tokenize } from '../utils/tokenizer.js';
+import { Message, Participant } from '../utils/schema.js';
+import { GetMessagesPath, GetParticipantsPath } from '../utils/loader.js';
 
 /** ReadQQMessages: Read messages from a text record of QQ groups. */
 function ReadQQMessages(Path: string): Message[] {
@@ -100,8 +100,8 @@ for (const Group of Groups) {
     // Write the messages into a JSON file.
     File.writeFileSync(GetMessagesPath(Group, "Messages.json"), JSON.stringify(Messages, null, 4));
     // Write the messages (metadata) into a CSV file using Unix timestamp. Only length of content is stored.
-    File.writeFileSync(GetMessagesPath(Group, "Messages.csv"), 'Source,ID,Nickname,Time,Timestamp,First,Length,Mentions\n' + 
-        Messages.filter(Message => Message.SenderID != "0").map((Message, Index) => `${Index},${Message.SenderID},${Message.Nickname},${Message.Time.toISOString()},${Message.Time.getTime()},${Message.FirstSeen},${Message.Content.length},${Message.Mentions?.length ?? 0}`).join('\n'));
+    File.writeFileSync(GetMessagesPath(Group, "Messages.csv"), 'Source,ID,Time,Timestamp,First,Length,Mentions\n' + 
+        Messages.filter(Message => Message.SenderID != "0").map((Message, Index) => `${Index},${Message.SenderID},${Message.Time.toISOString()},${Message.Time.getTime()},${Message.FirstSeen},${Message.Content.length},${Message.Mentions?.length ?? 0}`).join('\n'));
     NameMappings.clear();
     Index++;
     // Calculate tokens
@@ -115,8 +115,8 @@ const ParticipantArray = Array.from(Participants.values());
 File.writeFileSync(GetParticipantsPath("Participants.json"), JSON.stringify(ParticipantArray, null, 4));
 
 // Write all participants into a CSV file.
-File.writeFileSync(GetParticipantsPath("Participants.csv"), 'ID,Nickname,Messages,FirstSeen,FirstTimestamp\n' + 
-    ParticipantArray.map(Participant => `${Participant.ID},${Participant.Nickname},${Participant.Messages},${Participant.FirstSeen.toISOString()},${Participant.FirstSeen.getTime()}`).join('\n'));
+File.writeFileSync(GetParticipantsPath("Participants.csv"), 'ID,Messages,FirstSeen,FirstTimestamp\n' + 
+    ParticipantArray.map(Participant => `${Participant.ID},${Participant.Messages},${Participant.FirstSeen.toISOString()},${Participant.FirstSeen.getTime()}`).join('\n'));
 
 // Calculate tokens
 var Tokens = Tokenize(ParticipantArray.map(Participant => Participant.Nickname).join("\n")).length;

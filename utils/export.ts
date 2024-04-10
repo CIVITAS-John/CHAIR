@@ -4,13 +4,14 @@ import { Message, Project } from "./schema.js";
 // ExportMessages: Export messages into markdown.
 export function ExportMessages(Messages: Message[], Originals?: Message[]): string {
     var Result = "";
-    var LastTimestamp = 0;
+    var LastConversation = 0;
     for (let I = 0; I < Messages.length; I++) {
         var Message = Messages[I];
         // Write a separator if the time gap is too long
-        if (Message.Time.getTime() - LastTimestamp > 5 * 60 * 1000)
-            Result += `\n\n===\n\n`;
-        LastTimestamp = Message.Time.getTime();
+        if (Message.Conversation && LastConversation != Message.Conversation) {
+            Result += `\n===\n\n`;
+            LastConversation = Message.Conversation;
+        }
         // Export the message
         Result += `${I + 1}. **P${Message.SenderID}, ${Message.Nickname}**`;
         if (Originals !== undefined && Originals[I].Nickname != Message.Nickname)

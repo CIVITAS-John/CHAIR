@@ -13,14 +13,9 @@ UseLLM("gpt-3.5-turbo");
 // UseLLM("gpt-4.5-turbo");
 // UseLLM("claude3-haiku");
 // UseLLM("claude3-sonnet");
-/* MessagesPlayground("Users of Physics Lab (Group 2)", false).then(() => {
-    console.log("Translation done.");
-    process.exit(0);
-}); */
-ProjectPlayground(false).then(() => {
-    console.log("Translation done.");
-    process.exit(0);
-});
+// await MessagesPlayground("Users of Physics Lab (Group 2)", false);
+await ProjectPlayground(false);
+console.log("Translation done.");
 
 /** MessagesPlayground: Translate certain messages from a group. */
 async function MessagesPlayground(Group: string, Bilingual: boolean = false) {

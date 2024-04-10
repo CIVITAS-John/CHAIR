@@ -13,6 +13,8 @@ export interface Message {
     FirstSeen?: boolean;
     /** Mentions: The participants that this message mentioned */
     Mentions?: string[];
+    /** Conversation: The conversationID of the message. */
+    Conversation?: number;
 }
 
 /** Participant: A participant in a group chat. */
