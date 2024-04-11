@@ -4,7 +4,7 @@ import { ExportMessages } from '../utils/export.js';
 import spawnAsync from '@expo/spawn-async';
 import { Conversation } from '../utils/schema.js';
 
-await SeperateMessages("Users of Physics Lab (Group 1)");
+await SeperateMessages("Users of Physics Lab (Group 2)");
 
 /** SeperateMessages: Seperate messages into conversations from a group. */
 async function SeperateMessages(Source: string) {
@@ -16,6 +16,7 @@ async function SeperateMessages(Source: string) {
     Python.child.stderr!.on('data', (data) => {
         console.error(`${data}`);
     });
+    await Python;
     // Load messages
     var Messages = LoadMessages(Source).filter(Message => Message.SenderID != "0");
     // Break up messages based on the indexes
@@ -50,17 +51,15 @@ async function SeperateMessages(Source: string) {
         var Original = Current;
         if (Current.Messages > 6) continue;
         Orphans++;
+        // If orphan, check if it can be merged with the previous or next conversation
+        var MergeBefore = "";
+        var MergeAfter = "";
         if (I > 0) {
             var Previous = Conversations[I - 1];
             // Maybe someone mentioned me in the previous conversation, or if all my participants were there
             if (Previous.Mentions.findIndex(Mention => Original.Participants.has(Mention)) != -1 || 
                 [...Original.Participants.keys()].every(Participant => Previous.Participants.has(Participant))) {
-                Previous.End = Current.End;
-                Previous.Messages += Current.Messages;
-                Previous.Mentions = [...new Set([...Previous.Mentions, ...Current.Mentions])];
-                Current = Previous;
-                Conversations.splice(I, 1);
-                I--; Merged++;
+                MergeBefore = Previous.ID;
             }
         }
         if (I < Conversations.length - 1) {
@@ -68,12 +67,39 @@ async function SeperateMessages(Source: string) {
             // Maybe I mentioned someone in the next conversation, or if all my participants were there
             if (Original.Mentions.findIndex(Mention => Next.Participants.has(Mention)) != -1 ||
                 [...Original.Participants.keys()].every(Participant => Next.Participants.has(Participant))) {
-                Next.Start = Current.Start;
-                Next.Messages += Current.Messages;
-                Next.Mentions = [...new Set([...Next.Mentions, ...Current.Mentions])];
-                Conversations.splice(I, 1);
-                I--; Merged++;
+                MergeAfter = Next.ID;
             }
+        }
+        // If both are possible and long enough, merge with the one that is closer
+        if (MergeBefore != "" && MergeAfter != "" && (Conversations[I - 1].Messages > 6 || Conversations[I + 1].Messages > 6)) {
+            var DiffBefore = Current.Start.getTime() - Conversations[I - 1].End.getTime();
+            var DiffAfter = Conversations[I + 1].Start.getTime() - Current.End.getTime();
+            if (DiffBefore < DiffAfter)
+                MergeAfter = "";
+            else
+                MergeBefore = "";
+        }
+        if (MergeBefore != "") {
+            var Previous = Conversations[I - 1];
+            Previous.End = Current.End;
+            Previous.Messages += Current.Messages;
+            Previous.Mentions = [...new Set([...Previous.Mentions, ...Current.Mentions])];
+            for (var [Participant, Count] of Current.Participants)
+                Previous.Participants.set(Participant, (Previous.Participants.get(Participant) ?? 0) + Count);
+            Current = Previous;
+            Conversations.splice(I, 1);
+            I--; Merged++;
+        }
+        if (MergeAfter != "") {
+            var Next = Conversations[I + 1];
+            Next.ID = Current.ID;
+            Next.Start = Current.Start;
+            Next.Messages += Current.Messages;
+            Next.Mentions = [...new Set([...Next.Mentions, ...Current.Mentions])];
+            for (var [Participant, Count] of Current.Participants)
+                Next.Participants.set(Participant, (Next.Participants.get(Participant) ?? 0) + Count);
+            Conversations.splice(I, 1);
+            I--; Merged++;
         }
     }
     console.log("Orphan conversations:", Orphans, "Merged conversations:", Merged);
@@ -86,14 +112,15 @@ async function SeperateMessages(Source: string) {
             CurrentConversation = Conversations[++ConversationIndex];
         Message.Conversation = CurrentConversation.ID;
     }
-    // Write the conversation info into a JSON file
-    File.writeFileSync(GetMessagesPath(Source, `Conversations.json`), JSON.stringify(Conversations, null, 4));
     // Write the conversation info into a CSV file
     var CSV = "ID,Start,End,Messages,Participants\n";
     Conversations.forEach(Conversation => {
         CSV += `${Conversation.ID},${Conversation.Start.toISOString()},${Conversation.End.toISOString()},${Conversation.Messages},${Conversation.Participants.size}\n`;
     });
     File.writeFileSync(GetMessagesPath(Source, `Conversations.csv`), CSV);
+    // Write the conversation info into a JSON file
+    Conversations.forEach(Conversation => Conversation.Participants = [...Conversation.Participants] as any);
+    File.writeFileSync(GetMessagesPath(Source, `Conversations.json`), JSON.stringify(Conversations, null, 4));
     // Write into Markdown file
     File.writeFileSync(GetMessagesPath(Source, `Messages.md`), ExportMessages(Messages));
 }

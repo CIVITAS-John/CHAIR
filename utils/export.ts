@@ -9,7 +9,7 @@ export function ExportMessages(Messages: Message[], Originals?: Message[]): stri
         var Message = Messages[I];
         // Write a separator if the time gap is too long
         if (Message.Conversation && LastConversation != Message.Conversation) {
-            Result += `\n===\n\n`;
+            Result += `\n=== ${Message.Conversation}\n\n`;
             LastConversation = Message.Conversation;
         }
         // Export the message
