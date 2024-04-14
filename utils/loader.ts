@@ -1,6 +1,6 @@
 // Data loader from exported JSON files
 import * as File from 'fs';
-import { Message, Participant, Project } from "./schema.js";
+import { Conversation, Message, Participant, Project } from "./schema.js";
 import { DatasetPath } from '../constants.js';
 
 /** LoadProjects: Load the projects. */
@@ -21,6 +21,11 @@ export function LoadMessages(Group: string): Message[] {
         Message.Time = new Date(Date.parse(Message.Time as any));
     });
     return Messages;
+}
+
+/** LoadConversations: Load the conversations. */
+export function LoadConversations(Group: string): Conversation[] {
+    return JSON.parse(File.readFileSync(GetMessagesPath(Group, "Conversations.json"), 'utf-8'));
 }
 
 /** LoadParticipants: Load the participants. */

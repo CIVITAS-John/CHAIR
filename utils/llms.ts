@@ -5,6 +5,7 @@ import { BaseMessage } from "@langchain/core/messages"
 import { ChatOpenAI } from "@langchain/openai"
 import { ChatAnthropic } from '@langchain/anthropic';
 import { ChatMistralAI } from '@langchain/mistralai';
+import { Tokenize } from './tokenizer.js';
 
 // Model: The chat model to use.
 export var Model: (Temperature: number) => BaseChatModel;
@@ -41,7 +42,7 @@ export function InitializeLLM(LLM: string) {
             MaxItems = 32;
             Model = (Temp) => new ChatOpenAI({
                 temperature: Temp,
-                modelName: "gpt-4-turbo-preview",
+                modelName: "gpt-4-turbo",
                 streaming: false,
                 maxTokens: MaxOutput,
             });
@@ -93,12 +94,13 @@ export function InitializeLLM(LLM: string) {
 export async function RequestLLM(Messages: BaseMessage[], Temperature?: number): Promise<string> {
     var Text = "";
     try {
-        console.log(`LLM Request ${Temperature}: \n${Messages.map(Message => `${Message._getType()}: ${Message.content}`).join('\n---\n')}\n`);
+        console.log(`LLM Request ${Temperature ?? 0}: \n${Messages.map(Message => `${Message._getType()}: ${Message.content}`).join('\n---\n')}\n`);
         await PromiseWithTimeout(
             Model(Temperature ?? 0).invoke(Messages, { temperature: Temperature } as any).then(Result => {
                 Text = Result.content as string;
             }), 120000);
         console.log(`LLM Result: \n${Text}\n`);
+        console.log(`LLM Tokens: Input ${Messages.map(Message => Tokenize(Message.content as string).length).reduce((Prev, Curr) => Prev + Curr)}, Output ${Tokenize(Text).length}\n`);
     } catch (Error: any) {
         console.log(Error);
         throw Error;

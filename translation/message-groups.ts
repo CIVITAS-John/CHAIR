@@ -1,28 +1,37 @@
 import * as File from 'fs';
 import { LLMName, MaxOutput } from "../utils/llms.js";
-import { GetMessagesPath, GetParticipantsPath, LoadMessages, LoadParticipants } from "../utils/loader.js";
-import { Message, Participant } from '../utils/schema.js';
+import { GetMessagesPath, GetParticipantsPath, LoadConversations, LoadMessages, LoadParticipants } from "../utils/loader.js";
+import { Conversation, Message, Participant } from '../utils/schema.js';
 import { TranslateStrings } from "./general.js";
 import { ExportMessages } from '../utils/export.js';
 import Excel from 'exceljs';
 const { Workbook } = Excel;
 
 /** TranslateConversation: Translate certain conversations for qualitative coding. */
-export async function TranslateConversations(Group: string, Conversations: number[]): Promise<void> {
+export async function TranslateConversations(Group: string, Targets: number[]): Promise<void> {
     var AllMessages = LoadMessages(Group).filter(Message => Message.SenderID != "0");
     // Before we start, we need to translate all participants
     var Participants = LoadParticipants();
     console.log(`Participants to translate: ${Participants.length}`);
     Participants = await TranslateParticipants(Participants);
+    // Also, we need to load the conversations
+    var Conversations = LoadConversations(Group);
     // Write into JSON file
     File.writeFileSync(GetParticipantsPath("Participants-Translated.json"), JSON.stringify(Participants, null, 4));
     // Create the Excel workbook
     var Book = new Workbook();
-    for (const Conversation of Conversations) {
-        var Messages = await TranslateConversation(Group, AllMessages, Participants, Conversation);
+    var Results: Record<string, Conversation> = {};
+    var Minimum = -1, Maximum = 0;
+    for (const Target of Targets) {
+        var Messages = await TranslateConversation(Group, AllMessages, Participants, Target);
         if (Messages.length == 0) continue;
+        // Get and count conversations
+        if (Minimum == -1) Minimum = Target;
+        Maximum = Target;
+        Results[Target.toString()] = Conversations.find(Conversation => Conversation.ID == Target.toString())!;
+        Results[Target.toString()].AllMessages = Messages;
         // Write into Excel worksheet
-        var Sheet = Book.addWorksheet(`${Conversation}`, {
+        var Sheet = Book.addWorksheet(`${Target}`, {
             views:[ { state: 'frozen', xSplit: 1, ySplit: 1 } ]
         });
         Sheet.columns = [
@@ -31,7 +40,7 @@ export async function TranslateConversations(Group: string, Conversations: numbe
             { header: 'SID', key: 'SID', width: 6 },
             { header: 'Nickname', key: 'Nickname', width: 16 },
             { header: 'Time', key: 'Time', width: 13, style: { numFmt: 'mm/dd hh:MM' } },
-            { header: 'In', key: 'In', width: 3 },
+            { header: 'In', key: 'In', width: 4 },
             { header: 'Content', key: 'Content', width: 120 },
             { header: 'Codes', key: 'Codes', width: 80 }
         ];
@@ -52,7 +61,7 @@ export async function TranslateConversations(Group: string, Conversations: numbe
                 SID: parseInt(Message.SenderID),
                 Nickname: Message.Nickname,
                 Time: new Date(Date.parse(Message.Time as any)),
-                In: Message.Conversation == Conversation.toString() ? "Y" : "N",
+                In: Message.Conversation == Target.toString() ? "Y" : "N",
                 Content: Message.Content,
                 Codes: ""
             })
@@ -60,7 +69,7 @@ export async function TranslateConversations(Group: string, Conversations: numbe
                 name: 'Lato',
                 family: 4,
                 size: 12,
-                color: { argb:  Message.Conversation == Conversation.toString() ? 'FF000000' : 'FF666666' }
+                color: { argb:  Message.Conversation == Target.toString() ? 'FF000000' : 'FF666666' }
             };
             Row.height = Message.Content.split("\n").map(Text => Math.max(1, Math.ceil(Text.length / 120)))
                 .reduce((Prev, Curr) => Prev + Curr) * 12 + 6;
@@ -80,7 +89,9 @@ export async function TranslateConversations(Group: string, Conversations: numbe
         };
     }
     // Save the Excel file
-    await Book.xlsx.writeFile(GetMessagesPath(Group, `Conversations/${Conversations[0]}~${Conversations[Conversations.length - 1]}-${LLMName}.xlsx`));
+    await Book.xlsx.writeFile(GetMessagesPath(Group, `Conversations/${Minimum}~${Maximum}-${LLMName}.xlsx`));
+    // Write into JSON file
+    File.writeFileSync(GetMessagesPath(Group, `Conversations/${Minimum}~${Maximum}-${LLMName}.json`), JSON.stringify(Results, null, 4));
 }
 
 /** TranslateConversation: Translate certain messages from a conversation. */
@@ -96,10 +107,8 @@ async function TranslateConversation(Group: string, AllMessages: Message[], Part
     console.log(`Messages to translate: ${Messages.length}`);
     // Translate the messages with LLM
     Messages = await TranslateMessages(Messages, Participants);
-    // Write into JSON file
-    File.writeFileSync(GetMessagesPath(Group, `Conversations/${Conversation}-${LLMName}.json`), JSON.stringify(Messages, null, 4));
     // Write into Markdown file
-    File.writeFileSync(GetMessagesPath(Group, `Conversations/${Conversation}-${LLMName}.md`), ExportMessages(Messages, Originals));
+    if (Bilingual) File.writeFileSync(GetMessagesPath(Group, `Conversations/${Conversation}-${LLMName}.md`), ExportMessages(Messages, Originals));
     return Messages;
 }
 

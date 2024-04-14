@@ -15,6 +15,8 @@ export interface Conversation {
     Messages: number;
     /** FirstSeen: The number of first-time participants. */
     FirstSeen: number;
+    /** AllMessages: All messages in the conversation. */
+    AllMessages?: Message[];
 }
 
 /** Message: A message in a group chat. */
