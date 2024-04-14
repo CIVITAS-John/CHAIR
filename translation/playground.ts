@@ -1,44 +1,21 @@
 // This is a playground for selectively translating data.
 import * as File from 'fs';
-import { GetMessagesPath, GetParticipantsPath, GetProjectsPath, LoadMessages, LoadParticipants, LoadProjects } from "../utils/loader.js";
+import { GetProjectsPath, LoadProjects } from "../utils/loader.js";
 import { UseLLM } from "./general.js";
-import { TranslateMessages, TranslateParticipants } from "./message-groups.js";
-import { ExportMessages, ExportProjects } from '../utils/export.js';
-import { Message, Project } from '../utils/schema.js';
+import { ExportProjects } from '../utils/export.js';
+import { Project } from '../utils/schema.js';
 import { LLMName } from '../utils/llms.js';
 import { TranslateProjects } from './physics-lab.js';
+import { TranslateConversation } from './message-groups.js';
 
 // UseLLM("mistral-small");
 UseLLM("gpt-3.5-turbo");
 // UseLLM("gpt-4.5-turbo");
 // UseLLM("claude3-haiku");
 // UseLLM("claude3-sonnet");
-// await MessagesPlayground("Users of Physics Lab (Group 2)", false);
-await ProjectPlayground(false);
+await TranslateConversation("Users of Physics Lab (Group 1)", 1, false);
+// await ProjectPlayground(false);
 console.log("Translation done.");
-
-/** MessagesPlayground: Translate certain messages from a group. */
-async function MessagesPlayground(Group: string, Bilingual: boolean = false) {
-    var Messages = LoadMessages(Group);
-    var StartDate = new Date(2017, 10, 28);
-    var EndDate = new Date(2017, 0, 1);
-    // Before we start, we need to translate all participants
-    var Participants = LoadParticipants();
-    console.log(`Participants to translate: ${Participants.length}`);
-    Participants = await TranslateParticipants(Participants);
-    // Write into JSON file
-    File.writeFileSync(GetParticipantsPath("Participants-Translated.json"), JSON.stringify(Participants, null, 4));
-    // By default we don't want system messages
-    Messages = Messages.filter(Message => Message.Time >= StartDate && Message.Time < EndDate && Message.SenderID !== "0" && Message.Content !== "");
-    var Originals = JSON.parse(JSON.stringify(Messages)) as Message[]; 
-    console.log(`Messages to translate: ${Messages.length}`);
-    // Translate the messages with LLM
-    Messages = await TranslateMessages(Messages, Participants);
-    // Write into JSON file
-    File.writeFileSync(GetMessagesPath(Group, `Messages-Translated-${LLMName}.json`), JSON.stringify(Messages, null, 4));
-    // Write into Markdown file
-    File.writeFileSync(GetMessagesPath(Group, `Messages-Translated-${LLMName}.md`), ExportMessages(Messages, Bilingual ? Originals : undefined));
-}
 
 /** ProjectPlayground: Translate certain projects. */
 async function ProjectPlayground(Bilingual: boolean = false) {

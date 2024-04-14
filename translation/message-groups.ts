@@ -1,6 +1,33 @@
-import { MaxOutput } from "../utils/llms.js";
+import * as File from 'fs';
+import { LLMName, MaxOutput } from "../utils/llms.js";
+import { GetMessagesPath, GetParticipantsPath, LoadMessages, LoadParticipants } from "../utils/loader.js";
 import { Message, Participant } from '../utils/schema.js';
 import { TranslateStrings } from "./general.js";
+import { ExportMessages } from '../utils/export.js';
+
+/** TranslateConversation: Translate certain messages from a conversation. */
+export async function TranslateConversation(Group: string, Conversation: number, Bilingual: boolean = false) {
+    var AllMessages = LoadMessages(Group).filter(Message => Message.SenderID != "0");
+    // Before we start, we need to translate all participants
+    var Participants = LoadParticipants();
+    console.log(`Participants to translate: ${Participants.length}`);
+    Participants = await TranslateParticipants(Participants);
+    // Write into JSON file
+    File.writeFileSync(GetParticipantsPath("Participants-Translated.json"), JSON.stringify(Participants, null, 4));
+    // Get the messages we want: 3 messages before and after the conversation
+    var FirstIndex = AllMessages.findIndex(Message => Message.Conversation == Conversation.toString());
+    var LastIndex = AllMessages.findLastIndex(Message => Message.Conversation == Conversation.toString());
+    var Messages = AllMessages.slice(Math.max(0, FirstIndex - 3), Math.min(AllMessages.length, LastIndex + 4));
+    // Keep the original messages for bilingual translation
+    var Originals = JSON.parse(JSON.stringify(Messages)) as Message[]; 
+    console.log(`Messages to translate: ${Messages.length}`);
+    // Translate the messages with LLM
+    Messages = await TranslateMessages(Messages, Participants);
+    // Write into JSON file
+    File.writeFileSync(GetMessagesPath(Group, `Conversations/${Conversation}-${LLMName}.json`), JSON.stringify(Messages, null, 4));
+    // Write into Markdown file
+    File.writeFileSync(GetMessagesPath(Group, `Conversations/${Conversation}-${LLMName}.md`), ExportMessages(Messages, Bilingual ? Originals : undefined));
+}
 
 // TranslateParticipants: Translate a bunch of participants.
 export async function TranslateParticipants(Participants: Participant[]): Promise<Participant[]> {

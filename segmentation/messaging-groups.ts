@@ -4,7 +4,7 @@ import { ExportMessages } from '../utils/export.js';
 import spawnAsync from '@expo/spawn-async';
 import { Conversation } from '../utils/schema.js';
 
-await SeperateMessages("Users of Physics Lab (Group 2)");
+await SeperateMessages("Users of Physics Lab (Group 1)");
 
 /** SeperateMessages: Seperate messages into conversations from a group. */
 async function SeperateMessages(Source: string) {
@@ -27,10 +27,12 @@ async function SeperateMessages(Source: string) {
         var Participants = new Map<string, number>();
         var Mentions = new Set<string>();
         var EndTime: Date;
+        var FirstSeen = 0;
         // Count the messages and participants
         for (var J = I == 0 ? 0 : Indexes[I - 1] + 1; J <= Indexes[I]; J++) {
             EndTime = Messages[J].Time;
             Messages[J].Mentions?.forEach(Mention => Mentions.add(Mention));
+            if (Messages[J].FirstSeen) FirstSeen++;
             Participants.set(Messages[J].SenderID, 1 + (Participants.get(Messages[J].SenderID) ?? 0));
         }
         // Create a new conversation
@@ -40,7 +42,8 @@ async function SeperateMessages(Source: string) {
             End: EndTime!,
             Messages: Indexes[I] - (I == 0 ? 0 : Indexes[I - 1] + 1) + 1,
             Mentions: [...Mentions],
-            Participants: Participants
+            Participants: Participants,
+            FirstSeen: FirstSeen
         });
     }
     // Now, try to connect orphan conversations
@@ -74,16 +77,15 @@ async function SeperateMessages(Source: string) {
         if (MergeBefore != "" && MergeAfter != "" && (Conversations[I - 1].Messages > 6 || Conversations[I + 1].Messages > 6)) {
             var DiffBefore = Current.Start.getTime() - Conversations[I - 1].End.getTime();
             var DiffAfter = Conversations[I + 1].Start.getTime() - Current.End.getTime();
-            if (DiffBefore < DiffAfter)
-                MergeAfter = "";
-            else
-                MergeBefore = "";
+            if (DiffAfter > DiffBefore) MergeAfter = "";
+            if (DiffBefore > DiffBefore) MergeBefore = "";
         }
         if (MergeBefore != "") {
             var Previous = Conversations[I - 1];
             Previous.End = Current.End;
             Previous.Messages += Current.Messages;
             Previous.Mentions = [...new Set([...Previous.Mentions, ...Current.Mentions])];
+            Previous.FirstSeen += Current.FirstSeen;
             for (var [Participant, Count] of Current.Participants)
                 Previous.Participants.set(Participant, (Previous.Participants.get(Participant) ?? 0) + Count);
             Current = Previous;
@@ -96,6 +98,7 @@ async function SeperateMessages(Source: string) {
             Next.Start = Current.Start;
             Next.Messages += Current.Messages;
             Next.Mentions = [...new Set([...Next.Mentions, ...Current.Mentions])];
+            Next.FirstSeen += Current.FirstSeen;
             for (var [Participant, Count] of Current.Participants)
                 Next.Participants.set(Participant, (Next.Participants.get(Participant) ?? 0) + Count);
             Conversations.splice(I, 1);
@@ -119,8 +122,9 @@ async function SeperateMessages(Source: string) {
     });
     File.writeFileSync(GetMessagesPath(Source, `Conversations.csv`), CSV);
     // Write the conversation info into a JSON file
-    Conversations.forEach(Conversation => Conversation.Participants = [...Conversation.Participants] as any);
+    Conversations.forEach(Conversation => Conversation.Participants = Object.fromEntries(Conversation.Participants) as any);
     File.writeFileSync(GetMessagesPath(Source, `Conversations.json`), JSON.stringify(Conversations, null, 4));
+    File.writeFileSync(GetMessagesPath(Source, "Messages.json"), JSON.stringify(Messages, null, 4));
     // Write into Markdown file
     File.writeFileSync(GetMessagesPath(Source, `Messages.md`), ExportMessages(Messages));
 }

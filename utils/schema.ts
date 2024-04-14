@@ -13,6 +13,8 @@ export interface Conversation {
     Mentions: string[];
     /** Messages: The number of messages in the conversation. */
     Messages: number;
+    /** FirstSeen: The number of first-time participants. */
+    FirstSeen: number;
 }
 
 /** Message: A message in a group chat. */
