@@ -51,7 +51,7 @@ export async function TranslateConversations(Group: string, Conversations: numbe
                 CID: parseInt(Message.Conversation!),
                 SID: parseInt(Message.SenderID),
                 Nickname: Message.Nickname,
-                Time: Message.Time,
+                Time: new Date(Date.parse(Message.Time as any)),
                 In: Message.Conversation == Conversation.toString() ? "Y" : "N",
                 Content: Message.Content,
                 Codes: ""
@@ -62,12 +62,15 @@ export async function TranslateConversations(Group: string, Conversations: numbe
                 size: 12,
                 color: { argb:  Message.Conversation == Conversation.toString() ? 'FF000000' : 'FF666666' }
             };
+            Row.height = Message.Content.split("\n").map(Text => Math.max(1, Math.ceil(Text.length / 120)))
+                .reduce((Prev, Curr) => Prev + Curr) * 12 + 6;
             Row.alignment = { vertical: 'middle' };
             Row.getCell("Content").alignment = { vertical: 'middle', wrapText: true };
         }
         Sheet.addRow({});
         // Last row for notes
         var LastRow = Sheet.addRow({ ID: -1, Content: "Leave your note in this cell." });
+        LastRow.height = 36;
         LastRow.alignment = { vertical: 'middle' };
         LastRow.getCell("Content").alignment = { vertical: 'middle', wrapText: true };
         LastRow.font = {

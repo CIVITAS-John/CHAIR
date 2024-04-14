@@ -2,7 +2,7 @@
 import * as File from 'fs';
 import { GetProjectsPath, LoadProjects } from "../utils/loader.js";
 import { UseLLM } from "./general.js";
-import { ExportProjects } from '../utils/export.js';
+import { ExportProjects, Range } from '../utils/export.js';
 import { Project } from '../utils/schema.js';
 import { LLMName } from '../utils/llms.js';
 import { TranslateProjects } from './physics-lab.js';
@@ -13,7 +13,9 @@ UseLLM("gpt-3.5-turbo");
 // UseLLM("gpt-4.5-turbo");
 // UseLLM("claude3-haiku");
 // UseLLM("claude3-sonnet");
-await TranslateConversations("Users of Physics Lab (Group 2)", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+// 0 - 16
+await TranslateConversations("Users of Physics Lab (Group 1)", Range(0, 17));
+await TranslateConversations("Users of Physics Lab (Group 2)", Range(0, 16));
 // await ProjectPlayground(false);
 console.log("Translation done.");
 process.exit(0);

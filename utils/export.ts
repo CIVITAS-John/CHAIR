@@ -1,5 +1,10 @@
 import { Message, Project } from "./schema.js";
 
+// Range: Generate a range of numbers.
+export function Range(startAt: number, endAt: number): number[] {
+    return [...Array(endAt - startAt + 1).keys()].map(i => i + startAt);
+}
+
 // Export: Export the JSON data into human-readable formats.
 // ExportMessages: Export messages into markdown.
 export function ExportMessages(Messages: Message[], Originals?: Message[]): string {
