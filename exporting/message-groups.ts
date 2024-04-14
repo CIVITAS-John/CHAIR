@@ -15,6 +15,7 @@ function ReadQQMessages(Path: string): Message[] {
             const Time = new Date(Number(Match[1]), Number(Match[2]) - 1, Number(Match[3]), 
                 Number(Match[4]) + (Match[7] === 'PM' ? 12 : 0), Number(Match[5]), Number(Match[6]));
             LastMessage = { 
+                ID: Messages.length.toString(),
                 SenderID: Match[9].substring(1, Match[9].length - 1), 
                 Nickname: Match[8].replaceAll(/"|,/g, '').replaceAll(/^【.{2}】/g, ''),
                 Time, 

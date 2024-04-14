@@ -19,6 +19,8 @@ export interface Conversation {
 
 /** Message: A message in a group chat. */
 export interface Message {
+    /** ID: The ID of the message. */
+    ID: string;
     /** SenderID: The ID of sender of the message. */
     SenderID: string;
     /** Nickname: The nickname of the sender. */

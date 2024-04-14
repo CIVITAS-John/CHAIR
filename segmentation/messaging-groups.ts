@@ -124,7 +124,8 @@ async function SeperateMessages(Source: string) {
     // Write the conversation info into a JSON file
     Conversations.forEach(Conversation => Conversation.Participants = Object.fromEntries(Conversation.Participants) as any);
     File.writeFileSync(GetMessagesPath(Source, `Conversations.json`), JSON.stringify(Conversations, null, 4));
+    // Write into JSON and Markdown file
+    Messages.forEach((Message, I) => Message.ID = I.toString());
     File.writeFileSync(GetMessagesPath(Source, "Messages.json"), JSON.stringify(Messages, null, 4));
-    // Write into Markdown file
     File.writeFileSync(GetMessagesPath(Source, `Messages.md`), ExportMessages(Messages));
 }

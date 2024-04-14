@@ -4,7 +4,7 @@ import { Message, Project } from "./schema.js";
 // ExportMessages: Export messages into markdown.
 export function ExportMessages(Messages: Message[], Originals?: Message[]): string {
     var Result = "";
-    var LastConversation = "0";
+    var LastConversation = "-1";
     for (let I = 0; I < Messages.length; I++) {
         var Message = Messages[I];
         // Write a separator if the time gap is too long
@@ -13,7 +13,7 @@ export function ExportMessages(Messages: Message[], Originals?: Message[]): stri
             LastConversation = Message.Conversation;
         }
         // Export the message
-        Result += `${I + 1}. **P${Message.SenderID}, ${Message.Nickname}**`;
+        Result += `${Message.ID}. **P${Message.SenderID}, ${Message.Nickname}**`;
         if (Originals !== undefined && Originals[I].Nickname != Message.Nickname)
             Result += ` (${Originals[I].Nickname})`;
         Result += `: ${Message.Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}\n`

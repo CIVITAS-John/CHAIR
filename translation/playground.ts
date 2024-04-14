@@ -6,16 +6,17 @@ import { ExportProjects } from '../utils/export.js';
 import { Project } from '../utils/schema.js';
 import { LLMName } from '../utils/llms.js';
 import { TranslateProjects } from './physics-lab.js';
-import { TranslateConversation } from './message-groups.js';
+import { TranslateConversations } from './message-groups.js';
 
 // UseLLM("mistral-small");
 UseLLM("gpt-3.5-turbo");
 // UseLLM("gpt-4.5-turbo");
 // UseLLM("claude3-haiku");
 // UseLLM("claude3-sonnet");
-await TranslateConversation("Users of Physics Lab (Group 1)", 1, false);
+await TranslateConversations("Users of Physics Lab (Group 1)", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 // await ProjectPlayground(false);
 console.log("Translation done.");
+process.exit(0);
 
 /** ProjectPlayground: Translate certain projects. */
 async function ProjectPlayground(Bilingual: boolean = false) {

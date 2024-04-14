@@ -1,7 +1,7 @@
 import * as File from 'fs';
 import { SystemMessage, HumanMessage } from "@langchain/core/messages";
 import { EnsureFolder, InitializeLLM, LLMName, MaxItems, MaxOutput, RequestLLM } from "../utils/llms.js";
-import { HandleGlossary, Preprocess } from "../utils/glossary.js";
+import { Preprocess } from "../utils/glossary.js";
 import { Tokenize } from "../utils/tokenizer.js";
 
 // TranslatedCache: A cache for translated strings.
@@ -148,6 +148,7 @@ async function TranslateChunkedStringsWithLLM(Type: string, Source: string[], Sy
     var Cache = TranslatedCache.get(Type)!;
     for (let I = 0; I < Source.length; I++) {
         Results[I] = Results[I].trim();
+        if (Results[I].endsWith("---")) Results[I] = Results[I].substring(0, Results[I].length - 3).trim();
         // Sometimes, some LLM inevitably includes a proceding text
         if (I == 0 && !Results[I].startsWith("1."))
             Results[I] = Results[I].substring(Results[I].indexOf(".") - 1);
