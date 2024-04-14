@@ -119,7 +119,6 @@ async function TranslateChunkedStringsWithLLMRetries(Type: string, Requests: str
     while (true) {
         try {
             return await TranslateChunkedStringsWithLLM(Type, Requests, SystemPrompt, Tries);
-            break;
         } catch (Error: any) {
             if (++Tries > 2) throw Error;
             console.log(`Translation error ${Error.message}, retrying ${Tries} times.`);

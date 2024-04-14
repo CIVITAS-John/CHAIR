@@ -13,7 +13,7 @@ UseLLM("gpt-3.5-turbo");
 // UseLLM("gpt-4.5-turbo");
 // UseLLM("claude3-haiku");
 // UseLLM("claude3-sonnet");
-await TranslateConversations("Users of Physics Lab (Group 1)", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+await TranslateConversations("Users of Physics Lab (Group 2)", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 // await ProjectPlayground(false);
 console.log("Translation done.");
 process.exit(0);

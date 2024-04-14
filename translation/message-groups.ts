@@ -88,14 +88,15 @@ async function TranslateConversation(Group: string, AllMessages: Message[], Part
     if (FirstIndex == -1 || LastIndex == -1) return [];
     var Messages = AllMessages.slice(Math.max(0, FirstIndex - 3), Math.min(AllMessages.length, LastIndex + 4));
     // Keep the original messages for bilingual translation
-    var Originals = JSON.parse(JSON.stringify(Messages)) as Message[]; 
+    Messages = JSON.parse(JSON.stringify(Messages)) as Message[];
+    var Originals = Bilingual ? JSON.parse(JSON.stringify(Messages)) as Message[] : undefined; 
     console.log(`Messages to translate: ${Messages.length}`);
     // Translate the messages with LLM
     Messages = await TranslateMessages(Messages, Participants);
     // Write into JSON file
     File.writeFileSync(GetMessagesPath(Group, `Conversations/${Conversation}-${LLMName}.json`), JSON.stringify(Messages, null, 4));
     // Write into Markdown file
-    File.writeFileSync(GetMessagesPath(Group, `Conversations/${Conversation}-${LLMName}.md`), ExportMessages(Messages, Bilingual ? Originals : undefined));
+    File.writeFileSync(GetMessagesPath(Group, `Conversations/${Conversation}-${LLMName}.md`), ExportMessages(Messages, Originals));
     return Messages;
 }
 
