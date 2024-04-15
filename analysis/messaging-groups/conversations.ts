@@ -1,8 +1,24 @@
-import { MaxItems, RequestLLMWithCache } from '../../utils/llms.js';
+import * as File from 'fs';
+import { GetMessagesPath } from '../../utils/loader.js';
+import { LLMName, MaxItems, RequestLLMWithCache } from '../../utils/llms.js';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { CodedThread, Conversation } from '../../utils/schema.js';
 import { Analyzer } from '../analyzer.js';
 import { Message } from '../../utils/schema';
+import { LoadConversationsForAnalysis } from '../../utils/loader.js';
+import { ExportConversationsForCoding } from '../../utils/export.js';
+
+/** ProcessConversations: Load, analyze, and export conversations. */
+export async function ProcessConversations(Analyzer: Analyzer<Conversation>, Group: string, ConversationName: string, FakeRequest: boolean = false) {
+    var Conversations = LoadConversationsForAnalysis(Group, ConversationName);
+    // Analyze the conversations
+    var Result = await AnalyzeConversations(Analyzer, Conversations, {}, FakeRequest);
+    // Write the result into a JSON file
+    File.writeFileSync(GetMessagesPath(Group, `Conversations/${Analyzer.Name}/${ConversationName.replace(".json", "")}-${LLMName}.json`), JSON.stringify(Result, null, 4));
+    // Write the result into an Excel file
+    var Book = ExportConversationsForCoding(Object.values(Conversations), Result);
+    await Book.xlsx.writeFile(GetMessagesPath(Group, `Conversations/${Analyzer.Name}/${ConversationName.replace(".json", "")}-${LLMName}.xlsx`));
+}
 
 /** AnalyzeConversations: Analyze the conversations. */
 export async function AnalyzeConversations(Analyzer: Analyzer<Conversation>, Conversations: Record<string, Conversation>, Analyzed: Record<string, CodedThread> = {}, FakeRequest: boolean = false): Promise<Record<string, CodedThread>> {

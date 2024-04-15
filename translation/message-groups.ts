@@ -5,8 +5,8 @@ import { Conversation, Message, Participant } from '../utils/schema.js';
 import { TranslateStrings } from "./general.js";
 import { ExportConversationsForCoding, ExportMessages } from '../utils/export.js';
 
-/** TranslateConversation: Translate certain conversations for qualitative coding. */
-export async function TranslateConversations(Group: string, Targets: number[]): Promise<void> {
+/** ProcessConversations: Load, translate, and export certain conversations for qualitative coding. */
+export async function ProcessConversations(Group: string, Targets: number[]): Promise<void> {
     var AllMessages = LoadMessages(Group).filter(Message => Message.SenderID != "0");
     // Before we start, we need to translate all participants
     var Participants = LoadParticipants();
