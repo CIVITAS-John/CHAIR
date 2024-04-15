@@ -6,6 +6,8 @@ export interface CodedThread {
     ID: string;
     /** Summary: Summary of the thread. */
     Summary?: string;
+    /** Plan: Plans before the coding. */
+    Plan?: string;
     /** Reflection: Reflections after the coding. */
     Reflection?: string;
     /** Items: Coded items in the thread. */

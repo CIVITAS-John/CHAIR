@@ -10,9 +10,14 @@ export async function AnalyzeConversations(Analyzer: Analyzer<Conversation>, Con
     for (const [Key, Conversation] of Object.entries(Conversations)) {
         // Get the messages
         var Messages = Conversation.AllMessages!;
-        var Analysis: CodedThread = Analyzed[Key] ?? { ID: Key, Items: {} };
-        Analyzed[Key] = Analysis;
         console.log(`Conversation ${Key}: ${Messages.length} messages`);
+        // Initialize the analysis
+        var Analysis: CodedThread = Analyzed[Key];
+        if (!Analysis) {
+            Analysis = { ID: Key, Items: {} };
+            Messages.forEach(Message => Analysis.Items[Message.ID] = { ID: Message.ID });
+            Analyzed[Key] = Analysis;
+        } 
         // Build the prompts
         var Prompts = Analyzer.BuildPrompts(Conversation, Analysis, Messages);
         // Run the prompts
@@ -20,7 +25,12 @@ export async function AnalyzeConversations(Analyzer: Analyzer<Conversation>, Con
         while (true) {
             try {
                 var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], 
-                    `messaging-groups/${Analyzer.Name}`, Tries * 0.1, FakeRequest);
+                    `messaging-groups/${Analyzer.Name}`, Tries * 0.2, FakeRequest);
+                var ItemResults = Analyzer.ParseResponse(Response.split("\n").map(Line => Line.trim()), Analysis);
+                for (const [Index, Result] of Object.entries(ItemResults)) {
+                    Analysis.Items[Messages[parseInt(Index) - 1].ID].Codes = 
+                        Result.split(',').map(Code => Code.trim().replace(/\.$/, "").toLowerCase()).filter(Code => Code.length > 0);
+                }
                 break;
             } catch (Error: any) {
                 if (++Tries > 2) throw Error;

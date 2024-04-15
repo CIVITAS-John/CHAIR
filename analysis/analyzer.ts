@@ -6,4 +6,6 @@ export interface Analyzer<T> {
     Name: string;
     /** BuildPrompts: Build the prompts for the LLM. */
     BuildPrompts(Target: T, Analysis: CodedThread, Messages: Message[]): [string, string];
+    /** ParseResponse: Parse the responses from the LLM. */
+    ParseResponse(Lines: string[], Analysis: CodedThread): Record<number, string>;
 }
