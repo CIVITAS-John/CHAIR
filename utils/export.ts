@@ -1,4 +1,6 @@
-import { Message, Project } from "./schema.js";
+import { CodedThread, Conversation, Message, Project } from "./schema.js";
+import Excel from 'exceljs';
+const { Workbook } = Excel;
 
 // Range: Generate a range of numbers.
 export function Range(startAt: number, endAt: number): number[] {
@@ -75,4 +77,79 @@ export function ExportProjects(Projects: Project[], Originals?: Project[]): stri
         Result += "\n\n";
     }
     return Result;
+}
+
+/** ExportConversationsForCoding: Export conversations into an Excel workbook for coding. */
+export function ExportConversationsForCoding(Conversations: Conversation[], Analyses: Record<string, CodedThread> = {}) {
+    var Book = new Workbook();
+    var GetRowHeight = (Content: string) => 
+        Content.split("\n").map(Text => Math.max(1, Math.ceil(Text.length / 120)))
+            .reduce((Prev, Curr) => Prev + Curr) * 12 + 6;
+    for (const Conversation of Conversations) {
+        var Messages = Conversation.AllMessages!;
+        var Analysis = Analyses[Conversation.ID];
+        // Write into Excel worksheet
+        var Sheet = Book.addWorksheet(`${Conversation.ID}`, {
+            views:[ { state: 'frozen', xSplit: 1, ySplit: 1 } ]
+        });
+        Sheet.columns = [
+            { header: 'ID', key: 'ID', width: 6 },
+            { header: 'CID', key: 'CID', width: 6 },
+            { header: 'SID', key: 'SID', width: 6 },
+            { header: 'Nickname', key: 'Nickname', width: 16 },
+            { header: 'Time', key: 'Time', width: 13, style: { numFmt: 'mm/dd hh:MM' } },
+            { header: 'In', key: 'In', width: 4 },
+            { header: 'Content', key: 'Content', width: 120 },
+            { header: 'Codes', key: 'Codes', width: 80 }
+        ];
+        Sheet.getRow(1).alignment = { vertical: 'middle', wrapText: true };
+        Sheet.getRow(1).font = {
+            name: 'Lato',
+            family: 4,
+            size: 12,
+            bold: true
+        };
+        Sheet.properties.defaultRowHeight = 18;
+        // Write the messages
+        for (let I = 0; I < Messages.length; I++) {
+            var Message = Messages[I];
+            var Item = Analysis?.Items[Message.ID];
+            var Row = Sheet.addRow({
+                ID: parseInt(Message.ID),
+                CID: parseInt(Message.Conversation!),
+                SID: parseInt(Message.SenderID),
+                Nickname: Message.Nickname,
+                Time: new Date(Date.parse(Message.Time as any)),
+                In: Message.Conversation == Conversation.ID ? "Y" : "N",
+                Content: Message.Content,
+                Codes: Item?.Codes?.join(", ") ?? ""
+            })
+            Row.font = {
+                name: 'Lato',
+                family: 4,
+                size: 12,
+                color: { argb:  Message.Conversation == Conversation.ID ? 'FF000000' : 'FF666666' }
+            };
+            Row.height = GetRowHeight(Message.Content);
+            Row.alignment = { vertical: 'middle' };
+            Row.getCell("Content").alignment = { vertical: 'middle', wrapText: true };
+        }
+        Sheet.addRow({});
+        // Extra row for notes
+        var AddExtraRow = (ID: number, Name: string, Content: string) => {
+            var LastRow = Sheet.addRow({ ID: ID, Nickname: Name, Content: Content });
+            LastRow.height = Math.max(30, GetRowHeight(Content));
+            LastRow.alignment = { vertical: 'middle' };
+            LastRow.getCell("Content").alignment = { vertical: 'middle', wrapText: true };
+            LastRow.font = {
+                name: 'Lato',
+                family: 4,
+                size: 12
+            };
+        }
+        AddExtraRow(-1, "Thoughts", Analysis?.Plan ?? "(Optional) Your thoughts before coding the conversation.");
+        AddExtraRow(-2, "Summary", Analysis?.Summary ?? "The summary about the conversation.");
+        AddExtraRow(-3, "Reflection", Analysis?.Reflection ?? "Your reflections after coding the conversation.");
+    }
+    return Book;
 }

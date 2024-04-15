@@ -3,9 +3,7 @@ import { LLMName, MaxOutput } from "../utils/llms.js";
 import { GetMessagesPath, GetParticipantsPath, LoadConversations, LoadMessages, LoadParticipants } from "../utils/loader.js";
 import { Conversation, Message, Participant } from '../utils/schema.js';
 import { TranslateStrings } from "./general.js";
-import { ExportMessages } from '../utils/export.js';
-import Excel from 'exceljs';
-const { Workbook } = Excel;
+import { ExportConversationsForCoding, ExportMessages } from '../utils/export.js';
 
 /** TranslateConversation: Translate certain conversations for qualitative coding. */
 export async function TranslateConversations(Group: string, Targets: number[]): Promise<void> {
@@ -19,7 +17,6 @@ export async function TranslateConversations(Group: string, Targets: number[]): 
     // Write into JSON file
     File.writeFileSync(GetParticipantsPath("Participants-Translated.json"), JSON.stringify(Participants, null, 4));
     // Create the Excel workbook
-    var Book = new Workbook();
     var Results: Record<string, Conversation> = {};
     var Minimum = -1, Maximum = 0;
     for (const Target of Targets) {
@@ -30,65 +27,9 @@ export async function TranslateConversations(Group: string, Targets: number[]): 
         Maximum = Target;
         Results[Target.toString()] = Conversations.find(Conversation => Conversation.ID == Target.toString())!;
         Results[Target.toString()].AllMessages = Messages;
-        // Write into Excel worksheet
-        var Sheet = Book.addWorksheet(`${Target}`, {
-            views:[ { state: 'frozen', xSplit: 1, ySplit: 1 } ]
-        });
-        Sheet.columns = [
-            { header: 'ID', key: 'ID', width: 6 },
-            { header: 'CID', key: 'CID', width: 6 },
-            { header: 'SID', key: 'SID', width: 6 },
-            { header: 'Nickname', key: 'Nickname', width: 16 },
-            { header: 'Time', key: 'Time', width: 13, style: { numFmt: 'mm/dd hh:MM' } },
-            { header: 'In', key: 'In', width: 4 },
-            { header: 'Content', key: 'Content', width: 120 },
-            { header: 'Codes', key: 'Codes', width: 80 }
-        ];
-        Sheet.getRow(1).alignment = { vertical: 'middle', wrapText: true };
-        Sheet.getRow(1).font = {
-            name: 'Lato',
-            family: 4,
-            size: 12,
-            bold: true
-        };
-        Sheet.properties.defaultRowHeight = 18;
-        // Write the messages
-        for (let I = 0; I < Messages.length; I++) {
-            var Message = Messages[I];
-            var Row = Sheet.addRow({
-                ID: parseInt(Message.ID),
-                CID: parseInt(Message.Conversation!),
-                SID: parseInt(Message.SenderID),
-                Nickname: Message.Nickname,
-                Time: new Date(Date.parse(Message.Time as any)),
-                In: Message.Conversation == Target.toString() ? "Y" : "N",
-                Content: Message.Content,
-                Codes: ""
-            })
-            Row.font = {
-                name: 'Lato',
-                family: 4,
-                size: 12,
-                color: { argb:  Message.Conversation == Target.toString() ? 'FF000000' : 'FF666666' }
-            };
-            Row.height = Message.Content.split("\n").map(Text => Math.max(1, Math.ceil(Text.length / 120)))
-                .reduce((Prev, Curr) => Prev + Curr) * 12 + 6;
-            Row.alignment = { vertical: 'middle' };
-            Row.getCell("Content").alignment = { vertical: 'middle', wrapText: true };
-        }
-        Sheet.addRow({});
-        // Last row for notes
-        var LastRow = Sheet.addRow({ ID: -1, Content: "Leave your note in this cell." });
-        LastRow.height = 36;
-        LastRow.alignment = { vertical: 'middle' };
-        LastRow.getCell("Content").alignment = { vertical: 'middle', wrapText: true };
-        LastRow.font = {
-            name: 'Lato',
-            family: 4,
-            size: 12
-        };
     }
     // Save the Excel file
+    var Book = ExportConversationsForCoding(Object.values(Results));
     await Book.xlsx.writeFile(GetMessagesPath(Group, `Conversations/${Minimum}~${Maximum}-${LLMName}.xlsx`));
     // Write into JSON file
     File.writeFileSync(GetMessagesPath(Group, `Conversations/${Minimum}~${Maximum}-${LLMName}.json`), JSON.stringify(Results, null, 4));
