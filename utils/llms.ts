@@ -19,6 +19,10 @@ export var MaxOutput: number = 16000;
 // MaxItems: The maximum input items for each request.
 // Unfortunately, weaker LLMs like GPT-3.5 turbo sometimes cannot remember all bundled tasks.
 export var MaxItems: number = 64;
+// InputTokens: The total input tokens for requests so far.
+export var InputTokens: number = 0;
+// OutputTokens: The total output tokens for requests so far.
+export var OutputTokens: number = 0;
 
 /** InitializeLLM: Initialize a LLM with the given name. */
 export function InitializeLLM(LLM: string) {
@@ -124,7 +128,11 @@ export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, 
                 }), 120000);
             console.log(`LLM Result: \n${Text}\n`);
         }
-        console.log(`LLM Tokens: Input ${Messages.map(Message => Tokenize(Message.content as string).length).reduce((Prev, Curr) => Prev + Curr)}, Output ${Tokenize(Text).length}\n`);
+        var Input = Messages.map(Message => Tokenize(Message.content as string).length).reduce((Prev, Curr) => Prev + Curr);
+        var Output = Tokenize(Text).length;
+        InputTokens += Input;
+        OutputTokens += Output;
+        console.log(`LLM Tokens: Input ${Input}, Output ${Output}\n`);
     } catch (Error: any) {
         console.log(Error);
         throw Error;

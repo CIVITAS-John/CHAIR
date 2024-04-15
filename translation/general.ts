@@ -1,6 +1,6 @@
 import * as File from 'fs';
 import { SystemMessage, HumanMessage } from "@langchain/core/messages";
-import { EnsureFolder, InitializeLLM, LLMName, MaxItems, MaxOutput, RequestLLM } from "../utils/llms.js";
+import { EnsureFolder, InitializeLLM, InputTokens, LLMName, MaxItems, MaxOutput, OutputTokens, RequestLLM } from "../utils/llms.js";
 import { Preprocess } from "../utils/glossary.js";
 import { Tokenize } from "../utils/tokenizer.js";
 
@@ -11,7 +11,15 @@ export const TranslatedCache = new Map<string, Map<string, string>>();
 export function UseLLM(LLM: string): void {
     InitializeLLM(LLM);
     LoadCache();
-    return;
+}
+
+/** UseLLMs: Use specific LLMs one by one. Call it before start translating. */
+export async function UseLLMs(Task: () => Promise<void>, ...LLMs: string[]): Promise<void> {
+    for (const LLM of LLMs) {
+        UseLLM(LLM);
+        await Task();
+        console.log(`LLM ${LLM} done. Input tokens: ${InputTokens}, Output tokens: ${OutputTokens}`);
+    }
 }
 
 /** LoadCache: Load the tanslation cache from a file. */
