@@ -37,10 +37,10 @@ Notes: {Summary and specific notes about the entire conversation}`.trim(),
                 var Match = Line.match(/^(\d+)\. (.*)$/);
                 if (Match) {
                     var Codes = Match[2].trim();
-                    // Sometimes the LLM will return "{codes}"
-                    if (Codes.startsWith("{") && Codes.endsWith("}")) Codes = Codes.substring(1, Codes.length - 1);
                     // Sometimes the LLM will return "P{number}: {codes}"
                     Codes = Codes.replace(/^(P(\d+)|Designer)\:/, "").trim();
+                    // Sometimes the LLM will return "{codes}"
+                    if (Codes.startsWith("{") && Codes.endsWith("}")) Codes = Codes.substring(1, Codes.length - 1);
                     // Sometimes the LLM will start with the original content
                     var Message = Messages[parseInt(Match[1]) - 1];
                     if (Codes.toLowerCase().startsWith(Message.Content.toLowerCase())) Codes = Codes.substring(Message.Content.length).trim();
