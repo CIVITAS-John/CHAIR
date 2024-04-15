@@ -6,6 +6,7 @@ import { ChatOpenAI } from "@langchain/openai"
 import { ChatAnthropic } from '@langchain/anthropic';
 import { ChatMistralAI } from '@langchain/mistralai';
 import { Tokenize } from './tokenizer.js';
+import md5 from 'md5';
 
 // Model: The chat model to use.
 export var Model: (Temperature: number) => BaseChatModel;
@@ -90,16 +91,39 @@ export function InitializeLLM(LLM: string) {
     LLMName = LLM;
 }
 
+/** RequestLLMWithCache: Call the model to generate text with cache. */
+export async function RequestLLMWithCache(Messages: BaseMessage[], Temperature?: number, FakeRequest: boolean = false): Promise<string> {
+    var Input = Messages.map(Message => Message.content).join('\n~~~\n');
+    var CacheFolder = `known/analysis/${LLMName}`;
+    EnsureFolder(CacheFolder);
+    // Check if the cache exists
+    var CacheFile = `${CacheFolder}/${md5(Input)}-${Temperature}.txt`;
+    if (File.existsSync(CacheFile)) {
+        var Cache = File.readFileSync(CacheFile, 'utf-8');
+        var Split = Cache.split('\n===\n');
+        if (Split.length == 2) {
+            var Content = Split[1].trim();
+            if (Content.length > 0) return Content;
+        }
+    }
+    // If not, call the model
+    var Result = await RequestLLM(Messages, Temperature, FakeRequest);
+    File.writeFileSync(CacheFile, `${Input}\n===\n${Result}`);
+    return Result;
+}
+
 /** RequestLLM: Call the model to generate text. */
-export async function RequestLLM(Messages: BaseMessage[], Temperature?: number): Promise<string> {
+export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, FakeRequest: boolean = false): Promise<string> {
     var Text = "";
     try {
         console.log(`LLM Request ${Temperature ?? 0}: \n${Messages.map(Message => `${Message._getType()}: ${Message.content}`).join('\n---\n')}\n`);
-        await PromiseWithTimeout(
-            Model(Temperature ?? 0).invoke(Messages, { temperature: Temperature } as any).then(Result => {
-                Text = Result.content as string;
-            }), 120000);
-        console.log(`LLM Result: \n${Text}\n`);
+        if (!FakeRequest) {
+            await PromiseWithTimeout(
+                Model(Temperature ?? 0).invoke(Messages, { temperature: Temperature } as any).then(Result => {
+                    Text = Result.content as string;
+                }), 120000);
+            console.log(`LLM Result: \n${Text}\n`);
+        }
         console.log(`LLM Tokens: Input ${Messages.map(Message => Tokenize(Message.content as string).length).reduce((Prev, Curr) => Prev + Curr)}, Output ${Tokenize(Text).length}\n`);
     } catch (Error: any) {
         console.log(Error);

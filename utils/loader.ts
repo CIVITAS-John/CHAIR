@@ -28,6 +28,11 @@ export function LoadConversations(Group: string): Conversation[] {
     return JSON.parse(File.readFileSync(GetMessagesPath(Group, "Conversations.json"), 'utf-8'));
 }
 
+/** LoadConversationsForFirstRound: Load the conversations for the first round analysis. */
+export function LoadConversationsForFirstRound(Group: string, Name: string): Record<string, Conversation> {
+    return JSON.parse(File.readFileSync(GetMessagesPath(Group, "Conversations/" + Name), 'utf-8'));
+}
+
 /** LoadParticipants: Load the participants. */
 export function LoadParticipants(): Participant[] {
     return JSON.parse(File.readFileSync(GetParticipantsPath("Participants.json"), 'utf-8'));

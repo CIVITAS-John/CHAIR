@@ -1,4 +1,26 @@
 // Schema for the dataset.
+/** CodedThread: A qualitatively coded thread (e.g. a project, a conversation). */
+// Depending on the context, each prompt/ways of coding may use some or all of the following fields.
+export interface CodedThread {
+    /** ID: The ID of the item. */
+    ID: string;
+    /** Summary: Summary of the thread. */
+    Summary?: string;
+    /** Reflection: Reflections after the coding. */
+    Reflection?: string;
+    /** Items: Coded items in the thread. */
+    Items: Record<string, CodedItem>;
+}
+
+/** CodedItem: A qualitatively coded item (e.g. a comment, a message). */
+// Depending on the context, each prompt/ways of coding may use some or all of the following fields.
+export interface CodedItem {
+    /** ID: The ID of the item. */
+    ID: string;
+    /** Codes: Qualitative codes on the item. */
+    Codes?: string[];
+}
+
 /** Conversation: A segment of the group chat. */
 export interface Conversation {
     /** ID: The ID of the conversation. */
