@@ -44,6 +44,8 @@ Notes: {Summary and specific notes about the entire conversation}`.trim(),
                     // Sometimes the LLM will start with the original content
                     var Message = Messages[parseInt(Match[1]) - 1];
                     if (Codes.toLowerCase().startsWith(Message.Content.toLowerCase())) Codes = Codes.substring(Message.Content.length).trim();
+                    // Sometimes the LLM will return "- {codes}"
+                    if (Codes.startsWith("-")) Codes = Codes.substring(1).trim();
                     Results[parseInt(Match[1])] = Codes;
                 }
             }
