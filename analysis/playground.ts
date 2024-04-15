@@ -12,6 +12,6 @@ var Name = "0~17-gpt-3.5-turbo.json"
 var Conversations = LoadConversationsForFirstRound(Group, Name);
 
 // Analyze the conversations
-var Result = await AnalyzeConversations(new LowLevelAnalyzer1(), Conversations, {}, true);
+var Result = await AnalyzeConversations(new LowLevelAnalyzer1(), Conversations, {}, false);
 console.log(Result);
 process.exit(0);

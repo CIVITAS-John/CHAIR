@@ -19,7 +19,8 @@ export async function AnalyzeConversations(Analyzer: Analyzer<Conversation>, Con
         var Tries = 0;
         while (true) {
             try {
-                var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], Tries * 0.1, FakeRequest);
+                var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], 
+                    `messaging-groups/${Analyzer.Name}`, Tries * 0.1, FakeRequest);
                 break;
             } catch (Error: any) {
                 if (++Tries > 2) throw Error;
@@ -32,7 +33,7 @@ export async function AnalyzeConversations(Analyzer: Analyzer<Conversation>, Con
 
 /** BuildMessagePrompt: Build a prompt segment with a message. */
 export function BuildMessagePrompt(Message: Message): string {
-    var Content = Message.Content.replaceAll(/@(.*?)\((\d+)\)(\s|$)/g, (Match, Name, ID) => {
+    var Content = Message.Content.replaceAll(/@(.*?)\((\d+)\)([^\w]|$)/g, (Match, Name, ID) => {
         if (ID == "3") return `@Designer `;
         return `@P${ID} `;
     });

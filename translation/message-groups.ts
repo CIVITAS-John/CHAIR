@@ -148,10 +148,10 @@ export async function TranslateMessages(Messages: Message[], Participants: Parti
         Messages[I].Nickname = TranslatedNicknames[I];
         // Handle the mentioned users (=> @Nickname (ID))
         var Content = TranslatedContents[I];
-        Content = Content.replaceAll(/@(\d+)([^\w]|$)/g, (Match, ID) => {
+        Content = Content.replaceAll(/@(\d+)([^\w]|$)/g, (Match, ID, Punc) => {
             if (ParticipantMap.has(ID)) {
                 var Participant = ParticipantMap.get(ID)!;
-                return `@${Participant.Nickname} (${ID}) `;
+                return `@${Participant.Nickname} (${ID})${Punc}`;
             } else return `@${ID} `;
         });
         Messages[I].Content = Content;

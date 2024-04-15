@@ -5,6 +5,8 @@ import { BuildMessagePrompt } from './conversations.js';
 /** LowLevelAnalyzer1: Conduct the first-round low-level coding of the conversations. */
 // Authored by John Chen.
 export class LowLevelAnalyzer1 implements Analyzer<Conversation> {
+    /** Name: The name of the analyzer. */
+    public Name: string = "low-level-1";
     /** BuildPrompts: Build the prompts for the LLM. */
     public BuildPrompts(Target: Conversation, Analysis: CodedThread, Messages: Message[]): [string, string] {
         return [`

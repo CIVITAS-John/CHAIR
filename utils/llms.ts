@@ -92,9 +92,9 @@ export function InitializeLLM(LLM: string) {
 }
 
 /** RequestLLMWithCache: Call the model to generate text with cache. */
-export async function RequestLLMWithCache(Messages: BaseMessage[], Temperature?: number, FakeRequest: boolean = false): Promise<string> {
+export async function RequestLLMWithCache(Messages: BaseMessage[], Cache: string, Temperature?: number, FakeRequest: boolean = false): Promise<string> {
     var Input = Messages.map(Message => Message.content).join('\n~~~\n');
-    var CacheFolder = `known/analysis/${LLMName}`;
+    var CacheFolder = `known/${Cache}/${LLMName}`;
     EnsureFolder(CacheFolder);
     // Check if the cache exists
     var CacheFile = `${CacheFolder}/${md5(Input)}-${Temperature}.txt`;
