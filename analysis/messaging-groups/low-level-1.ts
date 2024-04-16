@@ -13,7 +13,7 @@ export class LowLevelAnalyzer1 extends Analyzer<Conversation> {
         return Recommended;
     }
     /** BuildPrompts: Build the prompts for the LLM. */
-    public BuildPrompts(Target: Conversation, Analysis: CodedThread, Messages: Message[], ChunkStart: number, LastChunk: boolean): [string, string] {
+    public BuildPrompts(Target: Conversation, Analysis: CodedThread, Messages: Message[], ChunkStart: number): [string, string] {
         return [`
 You are an expert in thematic analysis. Now, you are working on the open coding.
 This conversation comes from Physics Lab's online messaging groups. The goal is to identify low-level tags of each message with a focus on social interactions.
@@ -21,16 +21,16 @@ The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
 Thoughts: {Thoughts and plans about analyzing the conversation}
-Analysis:
+Analysis for all ${Messages.length} messages:
 1. tag1, tag2
-2. tag3, tag4
-(Repeat for all messages)
+...
+${Messages.length}. tag3, tag4
 Summary: {Summary of the entire conversation}
 Notes: {Summary and specific notes about the entire conversation}`.trim(),
             Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join("\n")];
     }
     /** ParseResponse: Parse the responses from the LLM. */
-    public ParseResponse(Lines: string[], Analysis: CodedThread, Messages: Message[], ChunkStart: number, LastChunk: boolean): Record<number, string> {
+    public ParseResponse(Lines: string[], Analysis: CodedThread, Messages: Message[], ChunkStart: number): Record<number, string> {
         var Results: Record<number, string> = {};
         for (var I = 0; I < Lines.length; I++) {
             var Line = Lines[I];
