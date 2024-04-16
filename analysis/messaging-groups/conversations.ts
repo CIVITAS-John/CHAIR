@@ -51,7 +51,6 @@ export async function AnalyzeConversations(Analyzer: Analyzer<Conversation>, Con
             Chunks.push([Messages.slice(Start, End), Cursor - Start]);
             Cursor += ChunkSize[0];
         }
-        if (Chunks.length > 1) debugger;
         // Run the analysis on each chunk
         for (var I = 0; I < Chunks.length; I++) {
             var Chunk = Chunks[I];
