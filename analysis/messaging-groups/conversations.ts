@@ -35,21 +35,28 @@ export async function AnalyzeConversations(Analyzer: Analyzer<Conversation>, Con
             Analyzed[Key] = Analysis;
         }
         // Split messages into smaller chunks based on the maximum items
-        var Chunks: Message[][] = [];
-        var MaxSize = MaxItems - 2;
-        for (var I = 0; I < Messages.length; I += MaxSize) {
-            var Boundary = I + MaxSize;
-            // We don't want to leave the last message alone
-            if (Boundary >= Messages.length - 3)
-                Boundary = Messages.length - 1;
-            Chunks.push(Messages.slice(I, Boundary));
-            if (Boundary == Messages.length - 1) break;
+        var Chunks: [Message[], number][] = [];
+        var RecommendedSize = MaxItems - 2; var Cursor = 0;
+        while (Cursor < Messages.length) {
+            var ChunkSize = Analyzer.GetChunkSize(RecommendedSize, Messages.length - Cursor);
+            if (typeof ChunkSize == "number") {
+                if (ChunkSize == RecommendedSize) {
+                    if (Cursor + ChunkSize >= Messages.length - 3)
+                        ChunkSize = Messages.length - Cursor;
+                }
+                ChunkSize = [ChunkSize, 0, 0];
+            }
+            var Start = Math.max(Cursor - ChunkSize[1], 0);
+            var End = Math.min(Cursor + ChunkSize[0] + ChunkSize[2], Messages.length) - 1;
+            Chunks.push([Messages.slice(Start, End), Cursor - Start]);
+            Cursor += ChunkSize[0];
         }
         // Run the analysis on each chunk
         for (var I = 0; I < Chunks.length; I++) {
             var Chunk = Chunks[I];
+            var Messages = Chunk[0];
             // Build the prompts
-            var Prompts = Analyzer.BuildPrompts(Conversation, Analysis, Chunk, I == Chunks.length - 1);
+            var Prompts = Analyzer.BuildPrompts(Conversation, Analysis, Messages, Chunk[1], I == Chunks.length - 1);
             if (I != 0 && Analysis.Summary) Prompts[1] = `Summary of the conversation until now: ${Analysis.Summary}\n${Prompts[1]}`;
             // Run the prompts
             var Tries = 0;
@@ -58,9 +65,9 @@ export async function AnalyzeConversations(Analyzer: Analyzer<Conversation>, Con
                     var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], 
                         `messaging-groups/${Analyzer.Name}`, Tries * 0.2, FakeRequest);
                     if (FakeRequest) break;
-                    var ItemResults = Analyzer.ParseResponse(Response.split("\n").map(Line => Line.trim()), Analysis, Chunk);
+                    var ItemResults = Analyzer.ParseResponse(Response.split("\n").map(Line => Line.trim()), Analysis, Messages, Chunk[1], I == Chunks.length - 1);
                     for (const [Index, Result] of Object.entries(ItemResults)) {
-                        var Message = Chunk[parseInt(Index) - 1];
+                        var Message = Messages[parseInt(Index) - 1];
                         Analysis.Items[Message.ID].Codes = 
                             Result.toLowerCase().split(/,|\|/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase())
                                 .filter(Code => Code != Message.Content.toLowerCase() && Code.length > 0);
