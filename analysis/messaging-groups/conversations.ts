@@ -47,10 +47,11 @@ export async function AnalyzeConversations(Analyzer: Analyzer<Conversation>, Con
                 ChunkSize = [ChunkSize, 0, 0];
             }
             var Start = Math.max(Cursor - ChunkSize[1], 0);
-            var End = Math.min(Cursor + ChunkSize[0] + ChunkSize[2], Messages.length) - 1;
+            var End = Math.min(Cursor + ChunkSize[0] + ChunkSize[2], Messages.length);
             Chunks.push([Messages.slice(Start, End), Cursor - Start]);
             Cursor += ChunkSize[0];
         }
+        if (Chunks.length > 1) debugger;
         // Run the analysis on each chunk
         for (var I = 0; I < Chunks.length; I++) {
             var Chunk = Chunks[I];
