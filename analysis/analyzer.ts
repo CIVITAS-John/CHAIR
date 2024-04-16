@@ -15,6 +15,8 @@ export abstract class Analyzer<T> {
         return Recommended;
     }
     /** BuildPrompts: Build the prompts for the LLM. */
+    // Note that the `ChunkStart` index starts from 0, which could be confusing because in our example, the first message in the prompt is 1 (with index=0).
+    // `ChunkStart` is particularly useful if you want to code just 1 message but also include the context of the previous and next messages.
     public abstract BuildPrompts(Target: T, Analysis: CodedThread, Messages: Message[], ChunkStart: number): [string, string];
     /** ParseResponse: Parse the responses from the LLM. */
     public abstract ParseResponse(Lines: string[], Analysis: CodedThread, Messages: Message[], ChunkStart: number): Record<number, string>;

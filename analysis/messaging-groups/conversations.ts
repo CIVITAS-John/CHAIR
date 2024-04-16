@@ -1,6 +1,6 @@
 import * as File from 'fs';
 import { GetMessagesPath } from '../../utils/loader.js';
-import { LLMName, MaxItems, RequestLLMWithCache } from '../../utils/llms.js';
+import { EnsureFolder, LLMName, MaxItems, RequestLLMWithCache } from '../../utils/llms.js';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { CodedThread, Conversation } from '../../utils/schema.js';
 import { Analyzer } from '../analyzer.js';
@@ -14,6 +14,7 @@ export async function ProcessConversations(Analyzer: Analyzer<Conversation>, Gro
     // Analyze the conversations
     var Result = await AnalyzeConversations(Analyzer, Conversations, {}, FakeRequest);
     // Write the result into a JSON file
+    EnsureFolder(GetMessagesPath(Group, `Conversations/${Analyzer.Name}`));
     File.writeFileSync(GetMessagesPath(Group, `Conversations/${Analyzer.Name}/${ConversationName.replace(".json", "")}-${LLMName}.json`), JSON.stringify(Result, null, 4));
     // Write the result into an Excel file
     var Book = ExportConversationsForCoding(Object.values(Conversations), Result);
