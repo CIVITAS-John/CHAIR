@@ -33,8 +33,8 @@ export interface Code {
     Category: string;
     /** Label: The label of the code. */
     Label: string;
-    /** Description: The description of the code. */
-    Description?: string;
+    /** Definition: The definition of the code. */
+    Definition?: string;
     /** Examples: Examples of the code. */
     Examples?: string[];
     /** Alternatives: Alternative labels. */

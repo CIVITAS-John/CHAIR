@@ -7,6 +7,8 @@ import { LowLevelAnalyzerBase } from './low-level';
 export class LowLevelAnalyzer1 extends LowLevelAnalyzerBase {
     /** Name: The name of the analyzer. */
     public Name: string = "low-level-1";
+    /** BaseTemperature: The base temperature for the LLM. */
+    public BaseTemperature: number = 0;
     /** BuildPrompts: Build the prompts for the LLM. */
     public BuildPrompts(Target: Conversation, Analysis: CodedThread, Messages: Message[], ChunkStart: number): [string, string] {
         return [`
