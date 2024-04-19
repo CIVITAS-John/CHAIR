@@ -1,6 +1,6 @@
 import { CodedThread, Conversation, Message } from '../../utils/schema';
 import { BuildMessagePrompt } from './conversations.js';
-import { LowLevelAnalyzerBase } from './low-level';
+import { LowLevelAnalyzerBase } from './low-level.js';
 
 /** LowLevelAnalyzer1: Conduct the first-round low-level coding of the conversations. */
 // Authored by John Chen.

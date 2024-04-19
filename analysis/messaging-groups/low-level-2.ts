@@ -1,6 +1,6 @@
 import { CodedThread, Conversation, Message } from '../../utils/schema';
 import { BuildMessagePrompt } from './conversations.js';
-import { LowLevelAnalyzerBase } from './low-level';
+import { LowLevelAnalyzerBase } from './low-level.js';
 
 /** LowLevelAnalyzer2: Conduct the first-round low-level coding of the conversations. */
 // Change from LowLevelAnalyzer1: We try to get the LLMs look from multiple angles and give more tags. Also, the temperature is raised.
