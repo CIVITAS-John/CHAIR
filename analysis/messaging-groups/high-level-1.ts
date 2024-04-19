@@ -1,4 +1,4 @@
-import { CodedThread, Conversation, Message } from '../../utils/schema';
+import { Code, CodedThread, Conversation, Message } from '../../utils/schema';
 import { Analyzer } from '../analyzer.js';
 import { BuildMessagePrompt } from './conversations.js';
 
@@ -10,7 +10,7 @@ Please give me a codebook to analyze the instructional methodologies and the sen
 ---
 Barany et al. (2024) ChatGPT for Education Research: Exploring the Potential of Large Language Models for Qualitative Codebook Development
 ---
-However, the original prompt does not give examples as documented by the paper.
+However, the original prompt does not give examples as documented by the paper. We modified the prompt to make that happen.
 */
 export class HighLevelAnalyzer1 extends Analyzer<Conversation> {
     /** Name: The name of the analyzer. */
@@ -28,7 +28,7 @@ Please give me a codebook to analyze factors within this interaction that could 
 Always follow the output format:
 ---
 ## Category 1
-- Code 1: Definition of the code
+- Name of code 1: Definition of code 1
   - Example quote 1
   - Example quote 2
   - Example quote 3
@@ -37,41 +37,32 @@ Always follow the output format:
     }
     /** ParseResponse: Parse the responses from the LLM. */
     public ParseResponse(Lines: string[], Analysis: CodedThread, Messages: Message[], ChunkStart: number): Record<number, string> {
-        var Results: Record<number, string> = {};
+        var Category = "[All]";
+        var CurrentCode: Code | undefined;
+        // Parse the response
         for (var I = 0; I < Lines.length; I++) {
             var Line = Lines[I];
-            if (Line.startsWith("Thoughts:")) 
-                Analysis.Plan = Line.substring(9).trim(); 
-            else if (Line.startsWith("Summary:")) 
-                Analysis.Summary = Line.substring(8).trim(); 
-            else if (Line.startsWith("Notes:")) {
-                Analysis.Reflection = Line.substring(6).trim(); 
-                if (Analysis.Reflection == "") 
-                    Analysis.Reflection = Lines.slice(I + 1).join("\n").trim();
-            } else {
-                var Match = Line.match(/^(\d+)\. (.*)$/);
-                if (Match) {
-                    var Codes = Match[2].trim().replaceAll("_", " ");
-                    // Sometimes the LLM will return "P{number}: {codes}"
-                    Codes = Codes.replace(/^(P(\d+)|Designer)\:/, "").trim();
-                    // Sometimes the LLM will return "{codes}"
-                    if (Codes.startsWith("{") && Codes.endsWith("}")) Codes = Codes.substring(1, Codes.length - 1);
-                    // Sometimes the LLM will start with the original content
-                    var Message = Messages[parseInt(Match[1]) - 1];
-                    if (Codes.toLowerCase().startsWith(Message.Content.toLowerCase())) Codes = Codes.substring(Message.Content.length).trim();
-                    // Sometimes the LLM will return "- tags: {codes}"
-                    if (Codes.startsWith("- tags:")) Codes = Codes.substring(7).trim();
-                    // Sometimes the LLM will return "- {codes}"
-                    if (Codes.startsWith("-")) Codes = Codes.substring(1).trim();
-                    Results[parseInt(Match[1])] = Codes;
+            if (Line.startsWith("## ")) {
+                Category = Line.substring(2).trim();
+            } else if (Line.startsWith("- ")) {
+                Line = Line.substring(2).trim();
+                var Match = Line.match(/^(.*?): (.*)$/);
+                var Name = Match ? Match[1].trim() : Line;
+                var Description = Match ? Match[2].trim() : undefined;
+                // Get or create the code
+                CurrentCode = Analysis.Codes[Name] ?? { Category: Category, Label: Name };
+                if (Description) CurrentCode.Description = Description;
+                Analysis.Codes[Name] = CurrentCode;
+            } else if (Line.trim().startsWith("- ")) {
+                // Add examples to the current code
+                if (CurrentCode) {
+                    CurrentCode.Examples = CurrentCode.Examples ?? [];
+                    if (!CurrentCode.Examples.includes(Line))
+                        CurrentCode.Examples.push(Line);
                 }
             }
         }
-        if (Analysis.Plan == undefined) throw new Error(`Invalid response: no plans`);
-        if (Analysis.Reflection == undefined) throw new Error(`Invalid response: no reflections`);
-        if (Analysis.Summary == undefined) throw new Error(`Invalid response: no summary`);
-        if (Object.keys(Results).length != Messages.length) 
-            throw new Error(`Invalid response: ${Object.keys(Results).length} results for ${Messages.length} inputs`);
-        return Results;
+        // This analyzer does not conduct item-level coding.
+        return {};
     }
 }

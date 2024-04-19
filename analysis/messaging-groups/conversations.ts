@@ -66,15 +66,20 @@ export async function AnalyzeConversations(Analyzer: Analyzer<Conversation>, Con
                         `messaging-groups/${Analyzer.Name}`, Tries * 0.2 + Analyzer.BaseTemperature, FakeRequest);
                     if (FakeRequest) break;
                     var ItemResults = Analyzer.ParseResponse(Response.split("\n").map(Line => Line.trim()), Analysis, Currents, Index);
-                    var AllCodes = Analysis.Codes["[All]"] ?? [];
                     for (const [Index, Result] of Object.entries(ItemResults)) {
                         var Message = Currents[parseInt(Index) - 1];
                         var Codes = Result.toLowerCase().split(/,|\||;/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase())
                             .filter(Code => Code != Message.Content.toLowerCase() && Code.length > 0);
+                        // Record the codes from line-level coding
                         Analysis.Items[Message.ID].Codes = Codes;
-                        Codes.forEach(Code => { if (AllCodes.indexOf(Code) == -1) AllCodes.push(Code); });
+                        Codes.forEach(Code => {
+                            var Current = Analysis.Codes[Code] ?? { Category: "[All]", Label: Code };
+                            Current.Examples = Current.Examples ?? [];
+                            if (Message.Content !== "" && !Current.Examples.includes(Message.Content)) 
+                                Current.Examples.push(Message.Content);
+                            Analysis.Codes[Code] = Current;
+                         });
                     }
-                    if (AllCodes.length > 0) Analysis.Codes["[All]"] = AllCodes;
                     break;
                 } catch (Error: any) {
                     if (++Tries > 2) throw Error;

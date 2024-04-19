@@ -11,7 +11,7 @@ export interface CodedThread {
     /** Reflection: Reflections after the coding. */
     Reflection?: string;
     /** Codes: The codes used in the coding. */
-    Codes: Record<string, string[]>;
+    Codes: Record<string, Code>;
     /** Items: Coded items in the thread. */
     Items: Record<string, CodedItem>;
     /** Iteration: The iteration of the coding. */
@@ -25,6 +25,20 @@ export interface CodedItem {
     ID: string;
     /** Codes: Qualitative codes on the item. */
     Codes?: string[];
+}
+
+/** Code: A qualitative code. */
+export interface Code {
+    /** Category: The category of the code. */
+    Category: string;
+    /** Label: The label of the code. */
+    Label: string;
+    /** Description: The description of the code. */
+    Description?: string;
+    /** Examples: Examples of the code. */
+    Examples?: string[];
+    /** Alternatives: Alternative labels. */
+    Alternatives?: string[];
 }
 
 /** Conversation: A segment of the group chat. */
