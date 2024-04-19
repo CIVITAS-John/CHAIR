@@ -11,6 +11,7 @@ Please give me a codebook to analyze the instructional methodologies and the sen
 Barany et al. (2024) ChatGPT for Education Research: Exploring the Potential of Large Language Models for Qualitative Codebook Development
 ---
 However, the original prompt does not give examples as documented by the paper. We modified the prompt to make that happen.
+Adapter: John Chen
 */
 export class HighLevelAnalyzer1 extends Analyzer<Conversation> {
     /** Name: The name of the analyzer. */
@@ -54,6 +55,7 @@ Definition: A definition of code 1
                 // Sometimes, the LLM will return "P{number}" as the name of the code
                 if (Line.match(/^(P(\d+)|Designer)$/)) throw new Error(`Invalid code name: ${Line}.`);
                 // Get or create the code
+                Line = Line.toLowerCase();
                 CurrentCode = Analysis.Codes[Line] ?? { Category: Category, Label: Line };
                 Analysis.Codes[Line] = CurrentCode;
             } else if (Line.startsWith("Definition: ")) {
@@ -68,8 +70,8 @@ Definition: A definition of code 1
                     Line = Line.substring(2).trim();
                     // Sometimes the LLM will return "P{number}: {codes}"
                     Line = Line.replace(/^(P(\d+)|Designer|tag(\d+))\:/, "").trim();
-                    // Sometimes the LLM will return `"quote"`
-                    Line = Line.replace(/^\"(.*)\"$/, "$1");
+                    // Sometimes the LLM will return `"quote" (Author)`
+                    Line = Line.replace(/^\"(.*)\"/, "$1");
                     // Add the example if it is not already in the list
                     CurrentCode.Examples = CurrentCode.Examples ?? [];
                     if (!CurrentCode.Examples.includes(Line))
