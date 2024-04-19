@@ -10,8 +10,12 @@ export interface CodedThread {
     Plan?: string;
     /** Reflection: Reflections after the coding. */
     Reflection?: string;
+    /** Codes: The codes used in the coding. */
+    Codes: Record<string, string[]>;
     /** Items: Coded items in the thread. */
     Items: Record<string, CodedItem>;
+    /** Iteration: The iteration of the coding. */
+    Iteration: number;
 }
 
 /** CodedItem: A qualitatively coded item (e.g. a comment, a message). */

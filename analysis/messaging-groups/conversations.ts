@@ -31,7 +31,7 @@ export async function AnalyzeConversations(Analyzer: Analyzer<Conversation>, Con
         // Initialize the analysis
         var Analysis: CodedThread = Analyzed[Key];
         if (!Analysis) {
-            Analysis = { ID: Key, Items: {} };
+            Analysis = { ID: Key, Items: {}, Iteration: 0, Codes: {} };
             Messages.forEach(Message => Analysis.Items[Message.ID] = { ID: Message.ID });
             Analyzed[Key] = Analysis;
         }
@@ -66,12 +66,15 @@ export async function AnalyzeConversations(Analyzer: Analyzer<Conversation>, Con
                         `messaging-groups/${Analyzer.Name}`, Tries * 0.2, FakeRequest);
                     if (FakeRequest) break;
                     var ItemResults = Analyzer.ParseResponse(Response.split("\n").map(Line => Line.trim()), Analysis, Currents, Index);
+                    var AllCodes = Analysis.Codes["[All]"] ?? [];
                     for (const [Index, Result] of Object.entries(ItemResults)) {
                         var Message = Currents[parseInt(Index) - 1];
-                        Analysis.Items[Message.ID].Codes = 
-                            Result.toLowerCase().split(/,|\|/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase())
-                                .filter(Code => Code != Message.Content.toLowerCase() && Code.length > 0);
+                        var Codes = Result.toLowerCase().split(/,|\|/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase())
+                            .filter(Code => Code != Message.Content.toLowerCase() && Code.length > 0);
+                        Analysis.Items[Message.ID].Codes = Codes;
+                        Codes.forEach(Code => { if (AllCodes.indexOf(Code) == -1) AllCodes.push(Code); });
                     }
+                    if (AllCodes.length > 0) Analysis.Codes["[All]"] = AllCodes;
                     break;
                 } catch (Error: any) {
                     if (++Tries > 2) throw Error;
@@ -81,6 +84,7 @@ export async function AnalyzeConversations(Analyzer: Analyzer<Conversation>, Con
             // Move the cursor
             Cursor += ChunkSize[0];
         }
+        Analysis.Iteration++;
     }
     return Analyzed;
 }

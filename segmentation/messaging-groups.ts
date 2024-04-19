@@ -5,6 +5,7 @@ import spawnAsync from '@expo/spawn-async';
 import { Conversation } from '../utils/schema.js';
 
 await SeperateMessages("Users of Physics Lab (Group 1)");
+await SeperateMessages("Users of Physics Lab (Group 2)");
 
 /** SeperateMessages: Seperate messages into conversations from a group. */
 async function SeperateMessages(Source: string) {
