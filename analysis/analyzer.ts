@@ -4,6 +4,8 @@ import { CodedThread, Message } from "../utils/schema";
 export abstract class Analyzer<T> {
     /** Name: The name of the analyzer. */
     public Name: string = "Unnamed";
+    /** BaseTemperature: The base temperature for the LLM. */
+    public BaseTemperature: number = 0;
     /** GetChunkSize: Get the chunk configuration for the LLM. */
     // Return value: Chunk size; or [Chunk size, Prefetch, Postfetch]
     // return Recommended: the default behavior, use the recommended chunk size (ideal for coding individual messages);

@@ -63,13 +63,13 @@ export async function AnalyzeConversations(Analyzer: Analyzer<Conversation>, Con
                 // Run the prompts
                 try {
                     var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], 
-                        `messaging-groups/${Analyzer.Name}`, Tries * 0.2, FakeRequest);
+                        `messaging-groups/${Analyzer.Name}`, Tries * 0.2 + Analyzer.BaseTemperature, FakeRequest);
                     if (FakeRequest) break;
                     var ItemResults = Analyzer.ParseResponse(Response.split("\n").map(Line => Line.trim()), Analysis, Currents, Index);
                     var AllCodes = Analysis.Codes["[All]"] ?? [];
                     for (const [Index, Result] of Object.entries(ItemResults)) {
                         var Message = Currents[parseInt(Index) - 1];
-                        var Codes = Result.toLowerCase().split(/,|\|/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase())
+                        var Codes = Result.toLowerCase().split(/,|\||;/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase())
                             .filter(Code => Code != Message.Content.toLowerCase() && Code.length > 0);
                         Analysis.Items[Message.ID].Codes = Codes;
                         Codes.forEach(Code => { if (AllCodes.indexOf(Code) == -1) AllCodes.push(Code); });
