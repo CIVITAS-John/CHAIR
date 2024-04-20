@@ -186,14 +186,14 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
     var Codes = Object.values(Analyses.Codebook);
     // Sort the codes
     Codes.sort((A, B) => {
-        var Category = (A.Categories?.join("; ") ?? "").localeCompare(B.Categories?.join("; ") ?? "");
+        var Category = (A.Categories?.sort().join("; ") ?? "").localeCompare(B.Categories?.sort().join("; ") ?? "");
         return Category != 0 ? Category : A.Label.localeCompare(B.Label);
     });
     // Write the codes
     for (var Code of Codes) {
-        var Categories = Code.Categories?.map(Category => Code.Categories!.length > 1 ? `- ${Category}` : Category).join("\n") ?? "";
-        var Definitions = Code.Definitions?.map(Definition => Code.Definitions!.length > 1 ? `- ${Definition}` : Definition).join("\n") ?? "";
-        var Examples = Code.Examples?.map(Example => Code.Examples!.length > 1 ? `- ${Example}` : Example).join("\n") ?? "";
+        var Categories = Code.Categories?.map(Category => Code.Categories!.length > 1 ? `* ${Category}` : Category).join("\n") ?? "";
+        var Definitions = Code.Definitions?.map(Definition => Code.Definitions!.length > 1 ? `* ${Definition}` : Definition).join("\n") ?? "";
+        var Examples = Code.Examples?.map(Example => Code.Examples!.length > 1 ? `* ${Example}` : Example).join("\n") ?? "";
         var Row = Sheet.addRow({
             Label: Code.Label,
             Category: Categories,
@@ -207,6 +207,7 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
         };
         Row.height = Math.max(30, GetRowHeight(Categories, 100), GetRowHeight(Definitions, 100), GetRowHeight(Examples, 100));
         Row.alignment = { vertical: 'middle' };
+        Row.getCell("Category").alignment = { vertical: 'middle', wrapText: true };
         Row.getCell("Definition").alignment = { vertical: 'middle', wrapText: true };
         Row.getCell("Examples").alignment = { vertical: 'middle', wrapText: true };
     }
