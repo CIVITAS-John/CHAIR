@@ -1,16 +1,16 @@
-import { CodedThread, Conversation, Message } from '../../utils/schema';
-import { Analyzer } from '../analyzer.js';
+import { CodedThread, Conversation, Message } from '../../utils/schema.js';
+import { ConversationAnalyzer } from './conversations.js';
 
 /** LowLevelAnalyzerBase: Conduct the first-round low-level coding of the conversations. */
 // Authored by John Chen.
-export abstract class LowLevelAnalyzerBase extends Analyzer<Conversation> {
+export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // Return value: [Chunk size, Cursor movement]
     public GetChunkSize(Recommended: number, Remaining: number) {
         return Recommended;
     }
     /** ParseResponse: Parse the responses from the LLM. */
-    public ParseResponse(Lines: string[], Analysis: CodedThread, Messages: Message[], ChunkStart: number): Record<number, string> {
+    public ParseResponse(Analysis: CodedThread, Lines: string[], Messages: Message[], ChunkStart: number): Record<number, string> {
         var Results: Record<number, string> = {};
         for (var I = 0; I < Lines.length; I++) {
             var Line = Lines[I];

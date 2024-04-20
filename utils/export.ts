@@ -80,7 +80,7 @@ export function ExportProjects(Projects: Project[], Originals?: Project[]): stri
 }
 
 /** ExportConversationsForCoding: Export conversations into an Excel workbook for coding. */
-export function ExportConversationsForCoding(Conversations: Conversation[], Analyses: Record<string, CodedThread> = {}) {
+export function ExportConversationsForCoding(Conversations: Conversation[], Analyses: CodedThreads = {}) {
     var Book = new Workbook();
     var GetRowHeight = (Content: string) => 
         Content.split("\n").map(Text => Math.max(1, Math.ceil(Text.length / 120)))

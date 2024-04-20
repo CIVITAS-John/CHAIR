@@ -1,4 +1,12 @@
 // Schema for the dataset.
+/** CodedThreads: A collection of qualitatively coded threads. */
+export interface CodedThreads {
+    /** Threads: The qualitatively coded threads. */
+    Threads: Record<string, CodedThread>;
+    /** Codebook?: The summarized codebook. */
+    Codebook?: Codebook
+}
+
 /** CodedThread: A qualitatively coded thread (e.g. a project, a conversation). */
 // Depending on the context, each prompt/ways of coding may use some or all of the following fields.
 export interface CodedThread {
@@ -11,7 +19,7 @@ export interface CodedThread {
     /** Reflection: Reflections after the coding. */
     Reflection?: string;
     /** Codes: The codes used in the coding. */
-    Codes: Record<string, Code>;
+    Codes: Codebook;
     /** Items: Coded items in the thread. */
     Items: Record<string, CodedItem>;
     /** Iteration: The iteration of the coding. */
@@ -27,14 +35,19 @@ export interface CodedItem {
     Codes?: string[];
 }
 
+/** Codebook: A codebook for the qualitative codes. */
+export interface Codebook extends Record<string, Code> {
+
+}
+
 /** Code: A qualitative code. */
 export interface Code {
-    /** Category: The category of the code. */
-    Category: string;
     /** Label: The label of the code. */
     Label: string;
-    /** Definition: The definition of the code. */
-    Definition?: string;
+    /** Categories: The categories of the code. */
+    Categories?: string[];
+    /** Definitions: The definitions of the code. */
+    Definitions?: string[];
     /** Examples: Examples of the code. */
     Examples?: string[];
     /** Alternatives: Alternative labels. */

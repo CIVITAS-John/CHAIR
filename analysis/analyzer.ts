@@ -1,25 +1,64 @@
-import { CodedThread, Message } from "../utils/schema";
+import { MaxItems } from "../utils/llms";
 
 /** Analyzer: The definition of an abstract analyzer. */
-export abstract class Analyzer<T> {
+export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     /** Name: The name of the analyzer. */
     public Name: string = "Unnamed";
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature: number = 0;
     /** GetChunkSize: Get the chunk configuration for the LLM. */
     // Return value: Chunk size; or [Chunk size, Prefetch, Postfetch]
-    // return Recommended: the default behavior, use the recommended chunk size (ideal for coding individual messages);
-    // return 1: each message will be its own chunk (not recommended for the lack of context);
-    // return [1, 1, 1]: each message will be its own chunk, and the LLM will receive the previous and next messages as well;
-    // return Remaining: all remaining messages will be in the same chunk (ideal for coding the entire conversation). 
-    // For example, for an output of [1, 1, 1], `BuildPrompts` would receive `Messages` 0 (Prefetch), 1, and 2 (Postfetch). `ChunkStart` will be 1 because that's the first message in the chunk.
+    // return Recommended: the default behavior, use the recommended chunk size (ideal for coding individual subunits);
+    // return 1: each subunit will be its own chunk (not recommended for the lack of context);
+    // return [1, 1, 1]: each subunit will be its own chunk, and the LLM will receive the previous and next subunits as well;
+    // return Remaining: all remaining subunits will be in the same chunk (ideal for coding the entire conversation). 
+    // For example, for an output of [1, 1, 1], `BuildPrompts` would receive `subunits` 0 (Prefetch), 1, and 2 (Postfetch). `ChunkStart` will be 1 because that's the first message in the chunk.
     public GetChunkSize(Recommended: number, Remaining: number): number | [number, number, number] {
         return Recommended;
     }
     /** BuildPrompts: Build the prompts for the LLM. */
     // Note that the `ChunkStart` index starts from 0, which could be confusing because in our example, the first message in the prompt is 1 (with index=0).
-    // `ChunkStart` is particularly useful if you want to code just 1 message but also include the context of the previous and next messages.
-    public abstract BuildPrompts(Target: T, Analysis: CodedThread, Messages: Message[], ChunkStart: number): [string, string];
+    // `ChunkStart` is particularly useful if you want to code just 1 message but also include the context of the previous and next subunits.
+    public abstract BuildPrompts(Analysis: TAnalysis, Target: TUnit, Subunits: TSubunit[], ChunkStart: number): [string, string];
     /** ParseResponse: Parse the responses from the LLM. */
-    public abstract ParseResponse(Lines: string[], Analysis: CodedThread, Messages: Message[], ChunkStart: number): Record<number, string>;
+    // The return value is only for item-based coding, where each item has its own response. Otherwise, return {}.
+    public abstract ParseResponse(Analysis: TAnalysis, Lines: string[], Subunits: TSubunit[], ChunkStart: number): Record<number, string>;
+}
+
+/** LoopThroughChunks: Process data through the analyzer in a chunkified way. */
+export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
+    Analyzer: Analyzer<TUnit, TSubunit, TAnalysis>, Analysis: TAnalysis, Source: TUnit, Sources: TSubunit[], 
+    Action: (Currents: TSubunit[], ChunkStart: number, IsFirst: boolean, Tries: number) => Promise<boolean>) {
+    // Split units into smaller chunks based on the maximum items
+    var Cursor = 0;
+    while (Cursor < Sources.length) {
+        var Tries = 0;
+        while (true) {
+            // Get the chunk size
+            var RecommendedSize = MaxItems - 2 - Tries;
+            var ChunkSize = Analyzer.GetChunkSize(RecommendedSize, Sources.length - Cursor);
+            if (typeof ChunkSize == "number") {
+                if (ChunkSize == RecommendedSize) {
+                    if (Cursor + ChunkSize >= Sources.length - 3)
+                        ChunkSize = Sources.length - Cursor;
+                }
+                ChunkSize = [ChunkSize, 0, 0];
+            }
+            // Get the chunk
+            var Start = Math.max(Cursor - ChunkSize[1], 0);
+            var End = Math.min(Cursor + ChunkSize[0] + ChunkSize[2], Sources.length);
+            var Currents = Sources.slice(Start, End);
+            var IsFirst = Cursor == 0;
+            // Run the prompts
+            try {
+                await Action(Currents, Cursor - Start, IsFirst, Tries);
+                break;
+            } catch (Error: any) {
+                if (++Tries > 2) throw Error;
+                console.log(`Analysis error ${Error.message}, retrying ${Tries} times.`);
+            }
+        }
+        // Move the cursor
+        Cursor += ChunkSize[0];
+    }
 }

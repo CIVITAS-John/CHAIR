@@ -1,6 +1,6 @@
 // Data loader from exported JSON files
 import * as File from 'fs';
-import { Conversation, Message, Participant, Project } from "./schema.js";
+import { CodedThread, CodedThreads, Conversation, Message, Participant, Project } from "./schema.js";
 import { DatasetPath } from '../constants.js';
 
 /** LoadProjects: Load the projects. */
@@ -31,6 +31,11 @@ export function LoadConversations(Group: string): Conversation[] {
 /** LoadConversationsForAnalysis: Load the conversations for analysis. */
 export function LoadConversationsForAnalysis(Group: string, Name: string): Record<string, Conversation> {
     return JSON.parse(File.readFileSync(GetMessagesPath(Group, "Conversations/" + Name), 'utf-8'));
+}
+
+/** LoadAnalyses: Load analyzed threads.*/
+export function LoadAnalyses(Path: string): CodedThreads {
+    return JSON.parse(File.readFileSync(Path, 'utf-8'));
 }
 
 /** LoadParticipants: Load the participants. */

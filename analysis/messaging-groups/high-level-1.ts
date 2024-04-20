@@ -1,6 +1,5 @@
-import { Code, CodedThread, Conversation, Message } from '../../utils/schema';
-import { Analyzer } from '../analyzer.js';
-import { BuildMessagePrompt } from './conversations.js';
+import { Code, CodedThread, Conversation, Message } from '../../utils/schema.js';
+import { BuildMessagePrompt, ConversationAnalyzer } from './conversations.js';
 
 /** HighLevelAnalyzer1: Conduct the first-round high-level coding of the conversations. */
 /* Original prompt format:
@@ -13,7 +12,7 @@ Barany et al. (2024) ChatGPT for Education Research: Exploring the Potential of 
 However, the original prompt does not give examples as documented by the paper. We modified the prompt to make that happen.
 Adapter: John Chen
 */
-export class HighLevelAnalyzer1 extends Analyzer<Conversation> {
+export class HighLevelAnalyzer1 extends ConversationAnalyzer {
     /** Name: The name of the analyzer. */
     public Name: string = "high-level-1";
     /** BaseTemperature: The base temperature for the LLM. */
@@ -24,7 +23,7 @@ export class HighLevelAnalyzer1 extends Analyzer<Conversation> {
         return Remaining;
     }
     /** BuildPrompts: Build the prompts for the LLM. */
-    public BuildPrompts(Target: Conversation, Analysis: CodedThread, Messages: Message[], ChunkStart: number): [string, string] {
+    public BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): [string, string] {
         return [`
 Hi ChatGPT, I want to analyze the following interaction in one of Physics Lab's online message groups.
 Please give me a codebook to analyze factors within this interaction that could contribute to the community's emergence.
@@ -42,7 +41,7 @@ Definition: A definition of code 1
             Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join("\n")];
     }
     /** ParseResponse: Parse the responses from the LLM. */
-    public ParseResponse(Lines: string[], Analysis: CodedThread, Messages: Message[], ChunkStart: number): Record<number, string> {
+    public ParseResponse(Analysis: CodedThread, Lines: string[], Messages: Message[], ChunkStart: number): Record<number, string> {
         var Category = "[All]";
         var CurrentCode: Code | undefined;
         // Parse the response
@@ -62,7 +61,7 @@ Definition: A definition of code 1
                 // Add the definition to the current code
                 if (CurrentCode) {
                     Line = Line.substring(12).trim();
-                    CurrentCode!.Definition = Line;
+                    CurrentCode!.Definitions = [Line];
                 }
             } else if (Line.startsWith("- ")) {
                 // Add examples to the current code
