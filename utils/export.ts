@@ -169,10 +169,10 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
     });
     // Set the columns
     Sheet.columns = [
-        { header: 'Label', key: 'Label', width: 20 },
-        { header: 'Category', key: 'Category', width: 20 },
-        { header: 'Definition', key: 'Definition', width: 100 },
-        { header: 'Examples', key: 'Examples', width: 100 }
+        { header: 'Label', key: 'Label', width: 30 },
+        { header: 'Category', key: 'Category', width: 30 },
+        { header: 'Definition', key: 'Definition', width: 80 },
+        { header: 'Examples', key: 'Examples', width: 120 }
     ];
     Sheet.getRow(1).alignment = { vertical: 'middle', wrapText: true };
     Sheet.getRow(1).font = {
@@ -207,5 +207,6 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
         Row.height = Math.max(30, GetRowHeight(Definitions, 100), GetRowHeight(Examples, 100));
         Row.alignment = { vertical: 'middle' };
         Row.getCell("Definition").alignment = { vertical: 'middle', wrapText: true };
+        Row.getCell("Examples").alignment = { vertical: 'middle', wrapText: true };
     }
 }

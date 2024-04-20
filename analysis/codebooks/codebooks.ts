@@ -1,4 +1,4 @@
-import { HumanMessage, SystemMessage } from "langchain/schema";
+import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { EnsureFolder, RequestLLMWithCache } from "../../utils/llms.js";
 import { CodedThread, CodedThreads, Conversation } from "../../utils/schema.js";
 import { Analyzer, LoopThroughChunks } from "../analyzer.js";
@@ -13,12 +13,12 @@ export function MergeCodebook(Analyses: CodedThreads) {
     Analyses.Codebook = {};
     for (const [Key, Analysis] of Object.entries(Analyses.Threads)) {
         for (const [Code, Value] of Object.entries(Analysis.Codes)) {
-            var Current = Analyses.Codebook[Code] ?? { Label: Value.Label, Examples: [] };
-            if (Value.Examples!.length > 0)
+            var Current = Analyses.Codebook[Code] ?? { Label: Value.Label, Examples: [], Definitions: [], Categories: [] };
+            if (Value.Examples?.length ?? 0 > 0)
                 Current.Examples = [...new Set([...Current.Examples!, ...Value.Examples!])];
-            if (Value.Definitions!.length > 0)
+            if (Value.Definitions?.length ?? 0 > 0)
                 Current.Definitions = [...new Set([...Current.Definitions!, ...Value.Definitions!])];
-            if (Value.Categories!.length > 0)
+            if (Value.Categories?.length ?? 0 > 0)
                 Current.Categories = [...new Set([...Current.Categories!, ...Value.Categories!])];
             Analyses.Codebook[Code] = Current;
         }

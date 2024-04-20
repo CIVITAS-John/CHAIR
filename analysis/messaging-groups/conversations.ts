@@ -40,7 +40,7 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
             Analyzed.Threads[Key] = Analysis;
         }
         // Run the messages through chunks (as defined by the analyzer)
-        LoopThroughChunks(Analyzer, Analysis, Conversation, Messages, async (Currents, ChunkStart, IsFirst, Tries) => {
+        await LoopThroughChunks(Analyzer, Analysis, Conversation, Messages, async (Currents, ChunkStart, IsFirst, Tries) => {
             var Prompts = Analyzer.BuildPrompts(Analysis, Conversation, Currents, ChunkStart);
             if (!IsFirst && Analysis.Summary) Prompts[1] = `Summary of the conversation until now: ${Analysis.Summary}\n${Prompts[1]}`;
             // Run the prompts
