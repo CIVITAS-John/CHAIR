@@ -17,6 +17,7 @@ export async function ProcessConversations(Group: string, Targets: number[]): Pr
     // Write into JSON file
     File.writeFileSync(GetParticipantsPath("Participants-Translated.json"), JSON.stringify(Participants, null, 4));
     // Create the Excel workbook
+    var ResultMessages: Message[] = [];
     var Results: Record<string, Conversation> = {};
     var Minimum = -1, Maximum = 0;
     for (const Target of Targets) {
@@ -27,10 +28,13 @@ export async function ProcessConversations(Group: string, Targets: number[]): Pr
         Maximum = Target;
         Results[Target.toString()] = Conversations.find(Conversation => Conversation.ID == Target.toString())!;
         Results[Target.toString()].AllMessages = Messages;
+        ResultMessages.push(...Messages);
     }
     // Save the Excel file
     var Book = ExportConversationsForCoding(Object.values(Results));
     await Book.xlsx.writeFile(GetMessagesPath(Group, `Conversations/${Minimum}~${Maximum}-${LLMName}.xlsx`));
+    // Write into Markdown file
+    File.writeFileSync(GetMessagesPath(Group, `Conversations/${Minimum}~${Maximum}-${LLMName}.md`), ExportMessages(ResultMessages));
     // Write into JSON file
     File.writeFileSync(GetMessagesPath(Group, `Conversations/${Minimum}~${Maximum}-${LLMName}.json`), JSON.stringify(Results, null, 4));
 }

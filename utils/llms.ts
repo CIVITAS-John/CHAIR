@@ -107,7 +107,10 @@ export async function RequestLLMWithCache(Messages: BaseMessage[], Cache: string
         var Split = Cache.split('\n===\n');
         if (Split.length == 2) {
             var Content = Split[1].trim();
-            if (Content.length > 0) return Content;
+            if (Content.length > 0) {
+                OutputTokens += Tokenize(Content).length;
+                return Content;
+            }
         }
     }
     // If not, call the model
