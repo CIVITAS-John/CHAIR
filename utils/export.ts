@@ -191,9 +191,9 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
     });
     // Write the codes
     for (var Code of Codes) {
-        var Categories = Code.Categories?.map(Category => Code.Categories!.length > 0 ? `- ${Category}` : Category).join("\n") ?? "";
-        var Definitions = Code.Definitions?.map(Definition => Code.Definitions!.length > 0 ? `- ${Definition}` : Definition).join("\n") ?? "";
-        var Examples = Code.Examples?.map(Example => Code.Examples!.length > 0 ? `- ${Example}` : Example).join("\n") ?? "";
+        var Categories = Code.Categories?.map(Category => Code.Categories!.length > 1 ? `- ${Category}` : Category).join("\n") ?? "";
+        var Definitions = Code.Definitions?.map(Definition => Code.Definitions!.length > 1 ? `- ${Definition}` : Definition).join("\n") ?? "";
+        var Examples = Code.Examples?.map(Example => Code.Examples!.length > 1 ? `- ${Example}` : Example).join("\n") ?? "";
         var Row = Sheet.addRow({
             Label: Code.Label,
             Category: Categories,
