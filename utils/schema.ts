@@ -44,13 +44,13 @@ export interface Codebook extends Record<string, Code> {
 export interface Code {
     /** Label: The label of the code. */
     Label: string;
-    /** Categories: The categories of the code. */
+    /** Categories: Categories of the code. */
     Categories?: string[];
-    /** Definitions: The definitions of the code. */
+    /** Definitions: Definitions of the code. */
     Definitions?: string[];
     /** Examples: Examples of the code. */
     Examples?: string[];
-    /** Alternatives: Alternative labels. */
+    /** Alternatives: Alternative labels of the code. */
     Alternatives?: string[];
 }
 

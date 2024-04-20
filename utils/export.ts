@@ -1,4 +1,4 @@
-import { CodedThread, Conversation, Message, Project } from "./schema.js";
+import { CodedThread, CodedThreads, Conversation, Message, Project } from "./schema.js";
 import Excel from 'exceljs';
 const { Workbook } = Excel;
 
@@ -79,19 +79,24 @@ export function ExportProjects(Projects: Project[], Originals?: Project[]): stri
     return Result;
 }
 
-/** ExportConversationsForCoding: Export conversations into an Excel workbook for coding. */
-export function ExportConversationsForCoding(Conversations: Conversation[], Analyses: CodedThreads = {}) {
-    var Book = new Workbook();
-    var GetRowHeight = (Content: string) => 
-        Content.split("\n").map(Text => Math.max(1, Math.ceil(Text.length / 120)))
+/** GetRowHeight: Get the row height for a given content. */
+export function GetRowHeight(Content: string, Width: number): number {
+    return Content.split("\n").map(Text => Math.max(1, Math.ceil(Text.length / Width)))
             .reduce((Prev, Curr) => Prev + Curr) * 12 + 6;
+}
+
+/** ExportConversationsForCoding: Export conversations into an Excel workbook for coding. */
+export function ExportConversationsForCoding(Conversations: Conversation[], Analyses: CodedThreads = { Threads: {} }) {
+    var Book = new Workbook();
+    // Export the conversations
     for (const Conversation of Conversations) {
         var Messages = Conversation.AllMessages!;
-        var Analysis = Analyses[Conversation.ID];
+        var Analysis = Analyses.Threads[Conversation.ID];
         // Write into Excel worksheet
         var Sheet = Book.addWorksheet(`${Conversation.ID}`, {
             views:[ { state: 'frozen', xSplit: 1, ySplit: 1 } ]
         });
+        // Set the columns
         Sheet.columns = [
             { header: 'ID', key: 'ID', width: 6 },
             { header: 'CID', key: 'CID', width: 6 },
@@ -130,7 +135,7 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
                 size: 12,
                 color: { argb:  Message.Conversation == Conversation.ID ? 'FF000000' : 'FF666666' }
             };
-            Row.height = GetRowHeight(Message.Content);
+            Row.height = GetRowHeight(Message.Content, 120);
             Row.alignment = { vertical: 'middle' };
             Row.getCell("Content").alignment = { vertical: 'middle', wrapText: true };
         }
@@ -138,7 +143,7 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
         // Extra row for notes
         var AddExtraRow = (ID: number, Name: string, Content: string) => {
             var LastRow = Sheet.addRow({ ID: ID, Nickname: Name, Content: Content });
-            LastRow.height = Math.max(30, GetRowHeight(Content));
+            LastRow.height = Math.max(30, GetRowHeight(Content, 120));
             LastRow.alignment = { vertical: 'middle' };
             LastRow.getCell("Content").alignment = { vertical: 'middle', wrapText: true };
             LastRow.font = {
@@ -151,5 +156,56 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
         AddExtraRow(-2, "Summary", Analysis?.Summary ?? "The summary about the conversation.");
         AddExtraRow(-3, "Reflection", Analysis?.Reflection ?? "Your reflections after coding the conversation.");
     }
+    // Export the codebook
+    ExportCodebook(Book, Analyses);
     return Book;
+}
+
+/** ExportCodebook: Export a codebook into an Excel workbook. */
+export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { Threads: {} }, Name: string = "Codebook") {
+    if (Analyses.Codebook == undefined) return;
+    var Sheet = Book.addWorksheet(Name, {
+        views:[ { state: 'frozen', xSplit: 1, ySplit: 1 } ]
+    });
+    // Set the columns
+    Sheet.columns = [
+        { header: 'Label', key: 'Label', width: 20 },
+        { header: 'Category', key: 'Category', width: 20 },
+        { header: 'Definition', key: 'Definition', width: 100 },
+        { header: 'Examples', key: 'Examples', width: 100 }
+    ];
+    Sheet.getRow(1).alignment = { vertical: 'middle', wrapText: true };
+    Sheet.getRow(1).font = {
+        name: 'Lato',
+        family: 4,
+        size: 12,
+        bold: true
+    };
+    Sheet.properties.defaultRowHeight = 18;
+    // Write the codebook
+    var Codes = Object.values(Analyses.Codebook);
+    // Sort the codes
+    Codes.sort((A, B) => {
+        var Category = (A.Categories?.join("; ") ?? "").localeCompare(B.Categories?.join("; ") ?? "");
+        return Category != 0 ? Category : A.Label.localeCompare(B.Label);
+    });
+    // Write the codes
+    for (var Code of Codes) {
+        var Definitions = Code.Definitions?.join("\n") ?? "";
+        var Examples = Code.Examples?.join("\n") ?? "";
+        var Row = Sheet.addRow({
+            Label: Code.Label,
+            Category: Code.Categories?.join("; "),
+            Definition: Definitions,
+            Examples: Examples
+        });
+        Row.font = {
+            name: 'Lato',
+            family: 4,
+            size: 12
+        };
+        Row.height = Math.max(30, GetRowHeight(Definitions, 100), GetRowHeight(Examples, 100));
+        Row.alignment = { vertical: 'middle' };
+        Row.getCell("Definition").alignment = { vertical: 'middle', wrapText: true };
+    }
 }

@@ -6,6 +6,7 @@ import { CodedThread, CodedThreads, Conversation, Message } from '../../utils/sc
 import { Analyzer, LoopThroughChunks } from '../analyzer.js';
 import { LoadConversationsForAnalysis } from '../../utils/loader.js';
 import { ExportConversationsForCoding } from '../../utils/export.js';
+import { MergeCodebook } from '../codebooks/codebooks.js';
 
 /** ConversationAnalyzer: The definition of an abstract conversation analyzer. */
 export abstract class ConversationAnalyzer extends Analyzer<Conversation, Message, CodedThread> {
@@ -66,7 +67,7 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
         Analysis.Iteration++;
     }
     // Consolidate a codebook
-    
+    MergeCodebook(Analyzed);
     return Analyzed;
 }
 

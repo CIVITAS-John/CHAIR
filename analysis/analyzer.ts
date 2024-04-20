@@ -1,4 +1,4 @@
-import { MaxItems } from "../utils/llms";
+import { MaxItems } from "../utils/llms.js";
 
 /** Analyzer: The definition of an abstract analyzer. */
 export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
