@@ -4,7 +4,7 @@ export interface CodedThreads {
     /** Threads: The qualitatively coded threads. */
     Threads: Record<string, CodedThread>;
     /** Codebook?: The summarized codebook. */
-    Codebook?: Codebook
+    Codebook?: Codebook;
 }
 
 /** CodedThread: A qualitatively coded thread (e.g. a project, a conversation). */

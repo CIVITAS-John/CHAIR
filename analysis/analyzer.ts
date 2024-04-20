@@ -6,6 +6,8 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     public Name: string = "Unnamed";
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature: number = 0;
+    /** MaxIterations: The maximum number of iterations for the analyzer. */
+    public MaxIterations: number = 1;
     /** GetChunkSize: Get the chunk configuration for the LLM. */
     // Return value: Chunk size; or [Chunk size, Prefetch, Postfetch]
     // return Recommended: the default behavior, use the recommended chunk size (ideal for coding individual subunits);
@@ -30,35 +32,39 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
     Analyzer: Analyzer<TUnit, TSubunit, TAnalysis>, Analysis: TAnalysis, Source: TUnit, Sources: TSubunit[], 
     Action: (Currents: TSubunit[], ChunkStart: number, IsFirst: boolean, Tries: number) => Promise<boolean>) {
     // Split units into smaller chunks based on the maximum items
-    var Cursor = 0;
-    while (Cursor < Sources.length) {
-        var Tries = 0;
-        while (true) {
-            // Get the chunk size
-            var RecommendedSize = MaxItems - 2 - Tries;
-            var ChunkSize = Analyzer.GetChunkSize(RecommendedSize, Sources.length - Cursor);
-            if (typeof ChunkSize == "number") {
-                if (ChunkSize == RecommendedSize) {
-                    if (Cursor + ChunkSize >= Sources.length - 3)
-                        ChunkSize = Sources.length - Cursor;
+    for (var I = 0; I < Analyzer.MaxIterations; I++) {
+        var Cursor = 0;
+        var ProcessedAny = false;
+        while (Cursor < Sources.length) {
+            var Tries = 0;
+            while (true) {
+                // Get the chunk size
+                var RecommendedSize = MaxItems - 2 - Tries;
+                var ChunkSize = Analyzer.GetChunkSize(RecommendedSize, Sources.length - Cursor);
+                if (typeof ChunkSize == "number") {
+                    if (ChunkSize == RecommendedSize) {
+                        if (Cursor + ChunkSize >= Sources.length - 3)
+                            ChunkSize = Sources.length - Cursor;
+                    }
+                    ChunkSize = [ChunkSize, 0, 0];
                 }
-                ChunkSize = [ChunkSize, 0, 0];
+                // Get the chunk
+                var Start = Math.max(Cursor - ChunkSize[1], 0);
+                var End = Math.min(Cursor + ChunkSize[0] + ChunkSize[2], Sources.length);
+                var Currents = Sources.slice(Start, End);
+                var IsFirst = Cursor == 0;
+                // Run the prompts
+                try {
+                    if (await Action(Currents, Cursor - Start, IsFirst, Tries)) ProcessedAny = true;
+                    break;
+                } catch (Error: any) {
+                    if (++Tries > 2) throw Error;
+                    console.log(`Analysis error ${Error.message}, retrying ${Tries} times.`);
+                }
             }
-            // Get the chunk
-            var Start = Math.max(Cursor - ChunkSize[1], 0);
-            var End = Math.min(Cursor + ChunkSize[0] + ChunkSize[2], Sources.length);
-            var Currents = Sources.slice(Start, End);
-            var IsFirst = Cursor == 0;
-            // Run the prompts
-            try {
-                await Action(Currents, Cursor - Start, IsFirst, Tries);
-                break;
-            } catch (Error: any) {
-                if (++Tries > 2) throw Error;
-                console.log(`Analysis error ${Error.message}, retrying ${Tries} times.`);
-            }
+            // Move the cursor
+            Cursor += ChunkSize[0];
+            if (!ProcessedAny) break;
         }
-        // Move the cursor
-        Cursor += ChunkSize[0];
     }
 }

@@ -42,6 +42,7 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
         // Run the messages through chunks (as defined by the analyzer)
         await LoopThroughChunks(Analyzer, Analysis, Conversation, Messages, async (Currents, ChunkStart, IsFirst, Tries) => {
             var Prompts = Analyzer.BuildPrompts(Analysis, Conversation, Currents, ChunkStart);
+            if (Prompts[0] == "" && Prompts[1] == "") return false;
             if (!IsFirst && Analysis.Summary) Prompts[1] = `Summary of the conversation until now: ${Analysis.Summary}\n${Prompts[1]}`;
             // Run the prompts
             var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], 

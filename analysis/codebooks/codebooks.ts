@@ -1,11 +1,13 @@
+import * as File from 'fs';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
-import { EnsureFolder, RequestLLMWithCache } from "../../utils/llms.js";
-import { CodedThread, CodedThreads, Conversation } from "../../utils/schema.js";
+import { LLMName, EnsureFolder, RequestLLMWithCache } from "../../utils/llms.js";
+import { Code, CodedThreads, Conversation } from "../../utils/schema.js";
 import { Analyzer, LoopThroughChunks } from "../analyzer.js";
 import { GetMessagesPath, LoadAnalyses, LoadConversationsForAnalysis } from "../../utils/loader.js";
+import { ExportConversationsForCoding } from '../../utils/export.js';
 
 /** CodebookConsolidator: The definition of an abstract codebook consolidator. */
-export abstract class CodebookConsolidator<TUnit> extends Analyzer<TUnit[], TUnit, CodedThreads> {
+export abstract class CodebookConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedThreads> {
 }
 
 /** MergeCodebook: Simply merge the codebooks without further consolidating. */
@@ -25,19 +27,20 @@ export function MergeCodebook(Analyses: CodedThreads) {
     }
 }
 
-/** ProcessConversations: Load, analyze, and export conversation codebooks. */
-export async function ProcessConversations(Consolidator: CodebookConsolidator<Conversation>, Group: string, ConversationName: string, Analyzer: string, FakeRequest: boolean = false) {
+/** ConsolidateConversations: Load, consolidate, and export conversation codebooks. */
+export async function ConsolidateConversations(Consolidator: CodebookConsolidator<Conversation>, Group: string, ConversationName: string, Analyzer: string, AnalyzerLLM: string, FakeRequest: boolean = false) {
+    var ExportFolder = GetMessagesPath(Group, `Conversations/${Analyzer}-${Consolidator.Name}`);
+    EnsureFolder(ExportFolder);
     // Load the conversations and analyses
     var Conversations = LoadConversationsForAnalysis(Group, ConversationName);
-    var Analyses = LoadAnalyses(GetMessagesPath(Group, `Conversations/${Analyzer}/${ConversationName.replace(".json", "")}.json`));
+    var Analyses = LoadAnalyses(GetMessagesPath(Group, `Conversations/${Analyzer}/${ConversationName.replace(".json", `-${AnalyzerLLM}`)}.json`));
     // Consolidate the codebook
     await ConsolidateCodebook(Consolidator, [...Object.values(Conversations)], Analyses, FakeRequest);
     // Write the result into a JSON file
-    EnsureFolder(GetMessagesPath(Group, `Conversations/${Analyzer}/${Consolidator.Name}`));
-    // File.writeFileSync(GetMessagesPath(Group, `Conversations/${Analyzer}/${Consolidator.Name}/${ConversationName.replace(".json", "")}-${LLMName}.json`), JSON.stringify(Result, null, 4));
+    File.writeFileSync(`${ExportFolder}/${ConversationName.replace(".json", `-${AnalyzerLLM}-${LLMName}`)}.json`, JSON.stringify(Analyses, null, 4));
     // Write the result into an Excel file
-    // var Book = ExportConversationsForCoding(Object.values(Conversations), Result);
-    // await Book.xlsx.writeFile(GetMessagesPath(Group, `Conversations/${Analyzer.Name}/${ConversationName.replace(".json", "")}-${LLMName}.xlsx`));
+    var Book = ExportConversationsForCoding(Object.values(Conversations), Analyses);
+    await Book.xlsx.writeFile(GetMessagesPath(Group, `${ExportFolder}/${ConversationName.replace(".json", `-${AnalyzerLLM}-${LLMName}`)}.xlsx`));
 }
 
 /** ConsolidateCodebook: Load, consolidate, and export codebooks. */
@@ -45,9 +48,11 @@ export async function ConsolidateCodebook<TUnit>(Consolidator: CodebookConsolida
     // Check if the analysis is already done
     if (Object.keys(Analyses.Threads).length != Sources.length) 
         throw new Error(`Invalid analysis: Among ${Sources.length} threads, only ${Object.keys(Analyses.Threads).length} have been analyzed.`);
+    if (!Analyses.Codebook) MergeCodebook(Analyses);
     // Run the coded threads through chunks (as defined by the consolidator)
-    LoopThroughChunks(Consolidator, Analyses, Sources, Sources, async (Currents, ChunkStart, IsFirst, Tries) => {
+    LoopThroughChunks(Consolidator, Analyses, Sources, Object.values(Analyses.Codebook!), async (Currents, ChunkStart, IsFirst, Tries) => {
         var Prompts = Consolidator.BuildPrompts(Analyses, Sources, Currents, ChunkStart);
+        if (Prompts[0] == "" && Prompts[1] == "") return false;
         // Run the prompts
         var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], 
             `codebooks/${Consolidator.Name}`, Tries * 0.2 + Consolidator.BaseTemperature, FakeRequest);
