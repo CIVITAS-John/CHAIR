@@ -82,7 +82,7 @@ export function ExportProjects(Projects: Project[], Originals?: Project[]): stri
 /** GetRowHeight: Get the row height for a given content. */
 export function GetRowHeight(Content: string, Width: number): number {
     return Content.split("\n").map(Text => Math.max(1, Math.ceil(Text.length / Width)))
-            .reduce((Prev, Curr) => Prev + Curr) * 12 + 6;
+            .reduce((Prev, Curr) => Prev + Curr) * 15 + 3;
 }
 
 /** ExportConversationsForCoding: Export conversations into an Excel workbook for coding. */
@@ -191,11 +191,12 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
     });
     // Write the codes
     for (var Code of Codes) {
-        var Definitions = Code.Definitions?.join("\n") ?? "";
-        var Examples = Code.Examples?.join("\n") ?? "";
+        var Categories = Code.Categories?.map(Category => Code.Categories!.length > 0 ? `- ${Category}` : Category).join("\n") ?? "";
+        var Definitions = Code.Definitions?.map(Definition => Code.Definitions!.length > 0 ? `- ${Definition}` : Definition).join("\n") ?? "";
+        var Examples = Code.Examples?.map(Example => Code.Examples!.length > 0 ? `- ${Example}` : Example).join("\n") ?? "";
         var Row = Sheet.addRow({
             Label: Code.Label,
-            Category: Code.Categories?.join("; "),
+            Category: Categories,
             Definition: Definitions,
             Examples: Examples
         });
@@ -204,7 +205,7 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
             family: 4,
             size: 12
         };
-        Row.height = Math.max(30, GetRowHeight(Definitions, 100), GetRowHeight(Examples, 100));
+        Row.height = Math.max(30, GetRowHeight(Categories, 100), GetRowHeight(Definitions, 100), GetRowHeight(Examples, 100));
         Row.alignment = { vertical: 'middle' };
         Row.getCell("Definition").alignment = { vertical: 'middle', wrapText: true };
         Row.getCell("Examples").alignment = { vertical: 'middle', wrapText: true };

@@ -67,6 +67,8 @@ Definition: A definition of code 1
                 // Add examples to the current code
                 if (CurrentCode) {
                     Line = Line.substring(2).trim();
+                    // Sometimes the LLM will return "Example quote 1: quote"
+                    Line = Line.replace(/^(Example quote \d+):/, "").trim();
                     // Sometimes the LLM will return "P{number}: {codes}"
                     Line = Line.replace(/^(P(\d+)|Designer|tag(\d+))\:/, "").trim();
                     // Sometimes the LLM will return `"quote" (Author)`
@@ -78,6 +80,8 @@ Definition: A definition of code 1
                 }
             }
         }
+        // Remove the "..." code
+        delete Analysis.Codes["..."];
         // This analyzer does not conduct item-level coding.
         return {};
     }
