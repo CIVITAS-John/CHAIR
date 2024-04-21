@@ -21,14 +21,14 @@ embeddings = embeddings.reshape((Embeddings, Dimensions))
 print("Embeddings reshaped:", embeddings.shape)
 # print("Example embedding:", embeddings[2])
 
-# Send into HDBScan
+# Send into DBScan
 import json
-from sklearn.cluster import HDBSCAN
+from sklearn.cluster import DBSCAN
 # from sklearn.preprocessing import normalize
 # norm_embeddings = normalize(embeddings, norm='l2')
-hdb = HDBSCAN(min_cluster_size = 2, min_samples = 1, cluster_selection_method = 'leaf')
-hdb.fit(embeddings)
-print(json.dumps([hdb.labels_.tolist(), hdb.probabilities_.tolist()]))
+db = DBSCAN(eps = 0.2, min_samples = 1, metric = 'cosine')
+db.fit(embeddings)
+print(json.dumps([db.labels_.tolist(), np.ones(Embeddings).tolist()]))
 
 # Use UMap to reduce the dimensions for potential visualization
 from umap import UMAP

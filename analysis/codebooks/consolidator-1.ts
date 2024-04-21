@@ -33,9 +33,9 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
                 if (Codes.findIndex(Code => (Code.Definitions?.length ?? 0) == 0) == -1) return ["", ""];
                 Codes = Codes.filter(Code => (Code.Definitions?.length ?? 0) == 0);
                 return [`
-You are an expert in thematic analysis.
-You are writing short, clear, generalizable definitions for each code based on example quotes.
-Example quotes are independent of each other. Do not include the name or examples in the definition.
+You are an expert in thematic analysis clarifying the definitions of qualitative codes.
+Write short, clear, generalizable definitions without unnecessary specifics or examples.
+Example quotes are independent of each other.
 Always follow the output format for all ${Codes.length} codes:
 ---
 1. {Definition of code 1}
@@ -52,9 +52,9 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
                 Codes = Codes.filter(Code => (Code.Definitions?.length ?? 0) > 0);
                 // Combine each code into a string for clustering
                 var CodeStrings = Codes.map(Code => {
-                    var Text = `${Code.Label}`;
+                    var Text = `Label: ${Code.Label}`;
                     if ((Code.Categories?.length ?? 0) > 0) Text += `\nCategories: \n- ${Code.Categories!.join("\n")}`;
-                    // if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinitions: \n- ${Code.Definitions!.join("\n")}`;
+                    if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinitions: \n- ${Code.Definitions!.join("\n")}`;
                     // Examples may result in confusing embeddings
                     // if ((Code.Examples?.length ?? 0) > 0) Text += `\nExamples: \n- ${Code.Examples!.join("\n")}`;
                     return Text;
@@ -74,14 +74,21 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
                     args: [Dimensions.toString(), CodeStrings.length.toString()],
                     parser: (Message) => { 
                         if (Message.startsWith("[")) {
-                            var Clusters = JSON.parse(Message) as number[];
+                            var Results = JSON.parse(Message) as number[][];
+                            var Clusters = Results[0];
+                            var Probabilities = Results[1];
                             // Find out unique clusters
                             var UniqueClusters = [...new Set(Clusters)].sort();
                             // For each unique cluster, find the codes
                             for (var Cluster of UniqueClusters) {
-                                var ClusterCodes = Codes.filter((Code, Index) => Clusters[Index] == Cluster);
-                                console.log(ClusterCodes.map(Code => Code.Label));
+                                var ClusterCodes: string[] = [];
+                                for (var I = 0; I < Codes.length; I++) {
+                                    if (Clusters[I] == Cluster)
+                                        ClusterCodes.push(`${Codes[I].Label} (${Math.round(Probabilities[I] * 100)}%)`);
+                                }
+                                console.log(`${ClusterCodes.length}: ${ClusterCodes.join(", ")}`);
                             }
+                            console.log(`Clusters: ${UniqueClusters.length} from ${Codes.length} codes`);
                         } else console.log(Message);
                     }
                 });
