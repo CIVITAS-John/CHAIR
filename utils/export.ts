@@ -88,6 +88,9 @@ export function GetRowHeight(Content: string, Width: number): number {
 /** ExportConversationsForCoding: Export conversations into an Excel workbook for coding. */
 export function ExportConversationsForCoding(Conversations: Conversation[], Analyses: CodedThreads = { Threads: {} }) {
     var Book = new Workbook();
+    var Consolidated = false;
+    // Whether the codebook is consolidated
+    if (Analyses.Codebook) Object.values(Analyses.Codebook).findIndex(Code => Code.Alternatives?.length ?? 0 > 0) != -1;
     // Export the conversations
     for (const Conversation of Conversations) {
         var Messages = Conversation.AllMessages!;
@@ -107,6 +110,7 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
             { header: 'Content', key: 'Content', width: 120 },
             { header: 'Codes', key: 'Codes', width: 80 }
         ];
+        if (Consolidated) Sheet.columns.push({ header: 'Consolidated', key: 'Consolidated', width: 80 });
         Sheet.getRow(1).alignment = { vertical: 'middle', wrapText: true };
         Sheet.getRow(1).font = {
             name: 'Lato',
@@ -119,7 +123,7 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
         for (let I = 0; I < Messages.length; I++) {
             var Message = Messages[I];
             var Item = Analysis?.Items[Message.ID];
-            var Row = Sheet.addRow({
+            var Columns: Record<string, any> = {
                 ID: parseInt(Message.ID),
                 CID: parseInt(Message.Conversation!),
                 SID: parseInt(Message.SenderID),
@@ -128,7 +132,8 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
                 In: Message.Conversation == Conversation.ID ? "Y" : "N",
                 Content: Message.Content,
                 Codes: Item?.Codes?.join(", ") ?? ""
-            })
+            };
+            var Row = Sheet.addRow(Columns)
             Row.font = {
                 name: 'Lato',
                 family: 4,
@@ -172,7 +177,8 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
         { header: 'Label', key: 'Label', width: 30 },
         { header: 'Category', key: 'Category', width: 30 },
         { header: 'Definition', key: 'Definition', width: 80 },
-        { header: 'Examples', key: 'Examples', width: 120 }
+        { header: 'Examples', key: 'Examples', width: 120 },
+        { header: 'Alternatives', key: 'Alternatives', width: 30 },
     ];
     Sheet.getRow(1).alignment = { vertical: 'middle', wrapText: true };
     Sheet.getRow(1).font = {
@@ -194,11 +200,13 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
         var Categories = Code.Categories?.map(Category => Code.Categories!.length > 1 ? `* ${Category}` : Category).join("\n") ?? "";
         var Definitions = Code.Definitions?.map(Definition => Code.Definitions!.length > 1 ? `* ${Definition}` : Definition).join("\n") ?? "";
         var Examples = Code.Examples?.map(Example => Code.Examples!.length > 1 ? `* ${Example}` : Example).join("\n") ?? "";
+        var Alternatives = Code.Alternatives?.map(Code => `* ${Code}`).join("\n") ?? "";
         var Row = Sheet.addRow({
             Label: Code.Label,
             Category: Categories,
             Definition: Definitions,
-            Examples: Examples
+            Examples: Examples,
+            Alternatives: Alternatives
         });
         Row.font = {
             name: 'Lato',

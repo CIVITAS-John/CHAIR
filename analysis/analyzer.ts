@@ -15,22 +15,22 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     // return [1, 1, 1]: each subunit will be its own chunk, and the LLM will receive the previous and next subunits as well;
     // return Remaining: all remaining subunits will be in the same chunk (ideal for coding the entire conversation). 
     // For example, for an output of [1, 1, 1], `BuildPrompts` would receive `subunits` 0 (Prefetch), 1, and 2 (Postfetch). `ChunkStart` will be 1 because that's the first message in the chunk.
-    public GetChunkSize(Recommended: number, Remaining: number): number | [number, number, number] {
+    public GetChunkSize(Recommended: number, Remaining: number, Iteration: number): number | [number, number, number] {
         return Recommended;
     }
     /** BuildPrompts: Build the prompts for the LLM. */
     // Note that the `ChunkStart` index starts from 0, which could be confusing because in our example, the first message in the prompt is 1 (with index=0).
     // `ChunkStart` is particularly useful if you want to code just 1 message but also include the context of the previous and next subunits.
-    public abstract BuildPrompts(Analysis: TAnalysis, Target: TUnit, Subunits: TSubunit[], ChunkStart: number): [string, string];
+    public abstract BuildPrompts(Analysis: TAnalysis, Target: TUnit, Subunits: TSubunit[], ChunkStart: number, Iteration: number): [string, string];
     /** ParseResponse: Parse the responses from the LLM. */
     // The return value is only for item-based coding, where each item has its own response. Otherwise, return {}.
-    public abstract ParseResponse(Analysis: TAnalysis, Lines: string[], Subunits: TSubunit[], ChunkStart: number): Record<number, string>;
+    public abstract ParseResponse(Analysis: TAnalysis, Lines: string[], Subunits: TSubunit[], ChunkStart: number, Iteration: number): Record<number, string>;
 }
 
 /** LoopThroughChunks: Process data through the analyzer in a chunkified way. */
 export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
     Analyzer: Analyzer<TUnit, TSubunit, TAnalysis>, Analysis: TAnalysis, Source: TUnit, Sources: TSubunit[], 
-    Action: (Currents: TSubunit[], ChunkStart: number, IsFirst: boolean, Tries: number) => Promise<boolean>) {
+    Action: (Currents: TSubunit[], ChunkStart: number, IsFirst: boolean, Tries: number, Iteration: number) => Promise<boolean>) {
     // Split units into smaller chunks based on the maximum items
     for (var I = 0; I < Analyzer.MaxIterations; I++) {
         var Cursor = 0;
@@ -40,7 +40,7 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
             while (true) {
                 // Get the chunk size
                 var RecommendedSize = MaxItems - 2 - Tries;
-                var ChunkSize = Analyzer.GetChunkSize(RecommendedSize, Sources.length - Cursor);
+                var ChunkSize = Analyzer.GetChunkSize(RecommendedSize, Sources.length - Cursor, I);
                 if (typeof ChunkSize == "number") {
                     if (ChunkSize == RecommendedSize) {
                         if (Cursor + ChunkSize >= Sources.length - 3)
@@ -55,7 +55,7 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
                 var IsFirst = Cursor == 0;
                 // Run the prompts
                 try {
-                    if (await Action(Currents, Cursor - Start, IsFirst, Tries)) ProcessedAny = true;
+                    if (await Action(Currents, Cursor - Start, IsFirst, Tries, I)) ProcessedAny = true;
                     break;
                 } catch (Error: any) {
                     if (++Tries > 2) throw Error;

@@ -40,7 +40,7 @@ export async function ConsolidateConversations(Consolidator: CodebookConsolidato
     File.writeFileSync(`${ExportFolder}/${ConversationName.replace(".json", `-${AnalyzerLLM}-${LLMName}`)}.json`, JSON.stringify(Analyses, null, 4));
     // Write the result into an Excel file
     var Book = ExportConversationsForCoding(Object.values(Conversations), Analyses);
-    await Book.xlsx.writeFile(GetMessagesPath(Group, `${ExportFolder}/${ConversationName.replace(".json", `-${AnalyzerLLM}-${LLMName}`)}.xlsx`));
+    await Book.xlsx.writeFile(`${ExportFolder}/${ConversationName.replace(".json", `-${AnalyzerLLM}-${LLMName}`)}.xlsx`);
 }
 
 /** ConsolidateCodebook: Load, consolidate, and export codebooks. */
@@ -49,15 +49,17 @@ export async function ConsolidateCodebook<TUnit>(Consolidator: CodebookConsolida
     if (Object.keys(Analyses.Threads).length != Sources.length) 
         throw new Error(`Invalid analysis: Among ${Sources.length} threads, only ${Object.keys(Analyses.Threads).length} have been analyzed.`);
     if (!Analyses.Codebook) MergeCodebook(Analyses);
+    // Ignore codes with 0 examples
+    var Codes = Object.values(Analyses.Codebook!).filter(Code => (Code.Examples?.length ?? 0) > 0);
     // Run the coded threads through chunks (as defined by the consolidator)
-    LoopThroughChunks(Consolidator, Analyses, Sources, Object.values(Analyses.Codebook!), async (Currents, ChunkStart, IsFirst, Tries) => {
-        var Prompts = Consolidator.BuildPrompts(Analyses, Sources, Currents, ChunkStart);
-        if (Prompts[0] == "" && Prompts[1] == "") return false;
+    await LoopThroughChunks(Consolidator, Analyses, Sources, Codes, async (Currents, ChunkStart, IsFirst, Tries, Iteration) => {
+        var Prompts = Consolidator.BuildPrompts(Analyses, Sources, Currents, ChunkStart, Iteration);
+        if (Prompts[0] == "" && Prompts[1] == "") return true;
         // Run the prompts
         var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], 
             `codebooks/${Consolidator.Name}`, Tries * 0.2 + Consolidator.BaseTemperature, FakeRequest);
         if (FakeRequest) return true;
-        Consolidator.ParseResponse(Analyses, Response.split("\n").map(Line => Line.trim()), Currents, ChunkStart);
+        Consolidator.ParseResponse(Analyses, Response.split("\n").map(Line => Line.trim()), Currents, ChunkStart, Iteration);
         return true;
     });
 }

@@ -38,10 +38,12 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     // Sometimes the LLM will return "- {codes}"
                     if (Codes.startsWith("-")) Codes = Codes.substring(1).trim();
                     // Sometimes the LLM will return codes such as AcknowledgingResponse, which should be split into two words
-                    Codes = Codes.replace(/((?<=[a-z])[A-Z]|[A-Z](?=[a-z]))/g, " $1").trim();
+                    Codes = Codes.replace(/((?<=[a-z][a-z])[A-Z]|[A-Z](?=[a-z]))/g, " $1").trim();
                     // Sometimes the LLM will use - to separate words
                     Codes = Codes.replaceAll("-", " ")
-                    // Sometimes the LLM will return "{code}: {explaination}"
+                    // Sometimes the LLM will generate multiple spaces
+                    Codes = Codes.replaceAll(/\s+/g, " ");
+                    // Sometimes the LLM will return "{code}: {explanation}
                     if (Codes.match(/^[\w ]+\: /)) Codes = Codes.substring(0, Codes.indexOf(":")).trim();
                     Results[parseInt(Match[1])] = Codes;
                 }
