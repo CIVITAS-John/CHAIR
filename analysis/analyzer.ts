@@ -18,6 +18,8 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     public GetChunkSize(Recommended: number, Remaining: number, Iteration: number): number | [number, number, number] {
         return Recommended;
     }
+    /** SubunitFilter: Filter the subunits before chunking. */
+    public SubunitFilter(Subunit: TSubunit, Iteration: number): boolean { return true; }
     /** BuildPrompts: Build the prompts for the LLM. */
     // Note that the `ChunkStart` index starts from 0, which could be confusing because in our example, the first message in the prompt is 1 (with index=0).
     // `ChunkStart` is particularly useful if you want to code just 1 message but also include the context of the previous and next subunits.
@@ -35,23 +37,28 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
     for (var I = 0; I < Analyzer.MaxIterations; I++) {
         var Cursor = 0;
         var ProcessedAny = false;
-        while (Cursor < Sources.length) {
+        var Filtered = Sources.filter(Subunit => Analyzer.SubunitFilter(Subunit, I));
+        while (Cursor < Filtered.length) {
             var Tries = 0;
             while (true) {
                 // Get the chunk size
                 var RecommendedSize = MaxItems - 2 - Tries;
-                var ChunkSize = Analyzer.GetChunkSize(RecommendedSize, Sources.length - Cursor, I);
+                var ChunkSize = Analyzer.GetChunkSize(RecommendedSize, Filtered.length - Cursor, I);
                 if (typeof ChunkSize == "number") {
+                    if (ChunkSize < 0) {
+                        console.log("Stopped iterating due to signals sent by the analyzer (<0 chunk size).");
+                        return;
+                    }
                     if (ChunkSize == RecommendedSize) {
-                        if (Cursor + ChunkSize >= Sources.length - 3)
-                            ChunkSize = Sources.length - Cursor;
+                        if (Cursor + ChunkSize >= Filtered.length - 3)
+                            ChunkSize = Filtered.length - Cursor;
                     }
                     ChunkSize = [ChunkSize, 0, 0];
                 }
                 // Get the chunk
                 var Start = Math.max(Cursor - ChunkSize[1], 0);
-                var End = Math.min(Cursor + ChunkSize[0] + ChunkSize[2], Sources.length);
-                var Currents = Sources.slice(Start, End);
+                var End = Math.min(Cursor + ChunkSize[0] + ChunkSize[2], Filtered.length);
+                var Currents = Filtered.slice(Start, End);
                 var IsFirst = Cursor == 0;
                 // Run the prompts
                 try {

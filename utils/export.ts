@@ -178,7 +178,7 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
         { header: 'Category', key: 'Category', width: 30 },
         { header: 'Definition', key: 'Definition', width: 80 },
         { header: 'Examples', key: 'Examples', width: 120 },
-        { header: 'Alternatives', key: 'Alternatives', width: 30 },
+        { header: 'Alternatives', key: 'Alternatives', width: 40 },
     ];
     Sheet.getRow(1).alignment = { vertical: 'middle', wrapText: true };
     Sheet.getRow(1).font = {
@@ -218,5 +218,6 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
         Row.getCell("Category").alignment = { vertical: 'middle', wrapText: true };
         Row.getCell("Definition").alignment = { vertical: 'middle', wrapText: true };
         Row.getCell("Examples").alignment = { vertical: 'middle', wrapText: true };
+        Row.getCell("Alternatives").alignment = { vertical: 'middle', wrapText: true };
     }
 }

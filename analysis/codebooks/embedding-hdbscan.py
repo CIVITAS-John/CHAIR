@@ -5,8 +5,8 @@ import numpy as np
 Dimensions = int(sys.argv[1])
 Embeddings = int(sys.argv[2])
 
-print("Dimensions:", Dimensions)
-print("Embeddings:", Embeddings)
+# print("Dimensions:", Dimensions)
+# print("Embeddings:", Embeddings)
 
 # Read from `./known/temp.bytes`
 with open("./known/temp.bytes", "rb") as file:
@@ -18,17 +18,22 @@ with open("./known/temp.bytes", "rb") as file:
 
 # Reshape the embeddings
 embeddings = embeddings.reshape((Embeddings, Dimensions))
-print("Embeddings reshaped:", embeddings.shape)
+# print("Embeddings reshaped:", embeddings.shape)
 # print("Example embedding:", embeddings[2])
 
 # Send into HDBScan
 import json
-from sklearn.cluster import HDBSCAN
-# from sklearn.preprocessing import normalize
-# norm_embeddings = normalize(embeddings, norm='l2')
-hdb = HDBSCAN(min_cluster_size = 2, min_samples = 1, cluster_selection_method = 'leaf')
+import hdbscan
+hdb = hdbscan.HDBSCAN(min_cluster_size = 2, min_samples = 1, cluster_selection_method = 'leaf') # , prediction_data = True
 hdb.fit(embeddings)
 print(json.dumps([hdb.labels_.tolist(), hdb.probabilities_.tolist()]))
+
+# Here, we try to use the soft clustering to produce more nuanced probabilities
+# Unfortunately, I don't think that really make a difference - except for more time spent and weird chances returned
+# membership = hdbscan.all_points_membership_vectors(hdb)
+# labels = [int(np.argmax(x)) for x in membership]
+# probabilities = [float(np.max(x)) for x in membership]
+# print(json.dumps([hdb.labels_.tolist(), probabilities]))
 
 # Use UMap to reduce the dimensions for potential visualization
 from umap import UMAP
