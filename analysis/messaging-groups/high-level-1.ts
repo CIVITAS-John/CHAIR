@@ -23,7 +23,7 @@ export class HighLevelAnalyzer1 extends ConversationAnalyzer {
         return Remaining;
     }
     /** BuildPrompts: Build the prompts for the LLM. */
-    public BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): [string, string] {
+    public async BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): Promise<[string, string]> {
         return [`
 Hi ChatGPT, I want to analyze the following interaction in one of Physics Lab's online message groups.
 Please give me a codebook to analyze factors within this interaction that could contribute to the community's emergence.
@@ -41,7 +41,7 @@ Definition: A definition of code 1
             Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join("\n")];
     }
     /** ParseResponse: Parse the responses from the LLM. */
-    public ParseResponse(Analysis: CodedThread, Lines: string[], Messages: Message[], ChunkStart: number): Record<number, string> {
+    public async ParseResponse(Analysis: CodedThread, Lines: string[], Messages: Message[], ChunkStart: number): Promise<Record<number, string>> {
         var Category = "[All]";
         var CurrentCode: Code | undefined;
         // Parse the response

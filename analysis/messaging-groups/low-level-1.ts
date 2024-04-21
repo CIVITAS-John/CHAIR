@@ -10,7 +10,7 @@ export class LowLevelAnalyzer1 extends LowLevelAnalyzerBase {
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature: number = 0;
     /** BuildPrompts: Build the prompts for the LLM. */
-    public BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): [string, string] {
+    public async BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): Promise<[string, string]> {
         return [`
 You are an expert in thematic analysis. Now, you are working on the open coding.
 This conversation comes from Physics Lab's online messaging groups. The goal is to identify low-level tags of each message with a focus on social interactions.

@@ -21,10 +21,10 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     /** BuildPrompts: Build the prompts for the LLM. */
     // Note that the `ChunkStart` index starts from 0, which could be confusing because in our example, the first message in the prompt is 1 (with index=0).
     // `ChunkStart` is particularly useful if you want to code just 1 message but also include the context of the previous and next subunits.
-    public abstract BuildPrompts(Analysis: TAnalysis, Target: TUnit, Subunits: TSubunit[], ChunkStart: number, Iteration: number): [string, string];
+    public abstract BuildPrompts(Analysis: TAnalysis, Target: TUnit, Subunits: TSubunit[], ChunkStart: number, Iteration: number): Promise<[string, string]>;
     /** ParseResponse: Parse the responses from the LLM. */
     // The return value is only for item-based coding, where each item has its own response. Otherwise, return {}.
-    public abstract ParseResponse(Analysis: TAnalysis, Lines: string[], Subunits: TSubunit[], ChunkStart: number, Iteration: number): Record<number, string>;
+    public abstract ParseResponse(Analysis: TAnalysis, Lines: string[], Subunits: TSubunit[], ChunkStart: number, Iteration: number): Promise<Record<number, string>>;
 }
 
 /** LoopThroughChunks: Process data through the analyzer in a chunkified way. */

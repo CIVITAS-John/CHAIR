@@ -1,4 +1,6 @@
-import { RequestEmbeddingWithCache } from '../../utils/embeddings.js';
+import * as File from 'fs';
+import { PythonShell } from 'python-shell';
+import { Dimensions, RequestEmbeddingWithCache } from '../../utils/embeddings.js';
 import { Code, CodedThreads } from '../../utils/schema.js';
 import { CodebookConsolidator } from './codebooks.js';
 
@@ -23,7 +25,7 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
         }
     }
     /** BuildPrompts: Build the prompts for the LLM. */
-    public BuildPrompts(Analysis: CodedThreads, Data: TUnit[], Codes: Code[], ChunkStart: number, Iteration: number): [string, string] {
+    public async BuildPrompts(Analysis: CodedThreads, Data: TUnit[], Codes: Code[], ChunkStart: number, Iteration: number): Promise<[string, string]> {
         switch (Iteration) {
             // 0: Generate definitions for codes
             case 0:
@@ -50,21 +52,46 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
                 Codes = Codes.filter(Code => (Code.Definitions?.length ?? 0) > 0);
                 // Combine each code into a string for clustering
                 var CodeStrings = Codes.map(Code => {
-                    var Text = `Label: ${Code.Label}`;
+                    var Text = `${Code.Label}`;
                     if ((Code.Categories?.length ?? 0) > 0) Text += `\nCategories: \n- ${Code.Categories!.join("\n")}`;
-                    if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinitions: \n- ${Code.Definitions!.join("\n")}`;
-                    if ((Code.Examples?.length ?? 0) > 0) Text += `\nExamples: \n- ${Code.Examples!.join("\n")}`;
+                    // if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinitions: \n- ${Code.Definitions!.join("\n")}`;
+                    // Examples may result in confusing embeddings
+                    // if ((Code.Examples?.length ?? 0) > 0) Text += `\nExamples: \n- ${Code.Examples!.join("\n")}`;
                     return Text;
                 });
-                var Embeddings = CodeStrings.map(Text => RequestEmbeddingWithCache(Text, this.Name));
-                // This step does not involve any prompts
+                // Get the embeddings for the code strings
+                var Embeddings = new Float32Array(Dimensions * CodeStrings.length);
+                for (var I = 0; I < CodeStrings.length; I++) {
+                    var CodeString = CodeStrings[I];
+                    var Embedding = await RequestEmbeddingWithCache(CodeString, this.Name);
+                    Embeddings.set(Embedding, Dimensions * I);
+                }
+                // console.log("Example embedding:" + Embeddings.slice(0, Dimensions).join(", "));
+                File.writeFileSync(`./known/temp.bytes`, Embeddings);
+                // Send the embeddings to the Python script
+                console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + CodeStrings.length + " embeddings)");
+                await PythonShell.run("analysis/codebooks/embedding-hdbscan.py", {
+                    args: [Dimensions.toString(), CodeStrings.length.toString()],
+                    parser: (Message) => { 
+                        if (Message.startsWith("[")) {
+                            var Clusters = JSON.parse(Message) as number[];
+                            // Find out unique clusters
+                            var UniqueClusters = [...new Set(Clusters)].sort();
+                            // For each unique cluster, find the codes
+                            for (var Cluster of UniqueClusters) {
+                                var ClusterCodes = Codes.filter((Code, Index) => Clusters[Index] == Cluster);
+                                console.log(ClusterCodes.map(Code => Code.Label));
+                            }
+                        } else console.log(Message);
+                    }
+                });
                 return ["", ""];
             default:
                 return ["", ""];
         }
     }
     /** ParseResponse: Parse the responses from the LLM. */
-    public ParseResponse(Analysis: CodedThreads, Lines: string[], Codes: Code[], ChunkStart: number, Iteration: number): Record<number, string> {
+    public async ParseResponse(Analysis: CodedThreads, Lines: string[], Codes: Code[], ChunkStart: number, Iteration: number): Promise<Record<number, string>> {
         switch (Iteration) {
             case 0:
                 // 0: Generate definitions for codes

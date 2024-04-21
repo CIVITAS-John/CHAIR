@@ -10,7 +10,7 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
         return Recommended;
     }
     /** ParseResponse: Parse the responses from the LLM. */
-    public ParseResponse(Analysis: CodedThread, Lines: string[], Messages: Message[], ChunkStart: number): Record<number, string> {
+    public async ParseResponse(Analysis: CodedThread, Lines: string[], Messages: Message[], ChunkStart: number): Promise<Record<number, string>> {
         var Results: Record<number, string> = {};
         for (var I = 0; I < Lines.length; I++) {
             var Line = Lines[I];

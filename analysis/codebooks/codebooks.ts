@@ -53,13 +53,13 @@ export async function ConsolidateCodebook<TUnit>(Consolidator: CodebookConsolida
     var Codes = Object.values(Analyses.Codebook!).filter(Code => (Code.Examples?.length ?? 0) > 0);
     // Run the coded threads through chunks (as defined by the consolidator)
     await LoopThroughChunks(Consolidator, Analyses, Sources, Codes, async (Currents, ChunkStart, IsFirst, Tries, Iteration) => {
-        var Prompts = Consolidator.BuildPrompts(Analyses, Sources, Currents, ChunkStart, Iteration);
+        var Prompts = await Consolidator.BuildPrompts(Analyses, Sources, Currents, ChunkStart, Iteration);
         if (Prompts[0] == "" && Prompts[1] == "") return true;
         // Run the prompts
         var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], 
             `codebooks/${Consolidator.Name}`, Tries * 0.2 + Consolidator.BaseTemperature, FakeRequest);
         if (FakeRequest) return true;
-        Consolidator.ParseResponse(Analyses, Response.split("\n").map(Line => Line.trim()), Currents, ChunkStart, Iteration);
+        await Consolidator.ParseResponse(Analyses, Response.split("\n").map(Line => Line.trim()), Currents, ChunkStart, Iteration);
         return true;
     });
 }
