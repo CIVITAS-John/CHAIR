@@ -79,6 +79,7 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
 You are an expert in thematic analysis.
 Each code is merged from multiple ones. Refine the labels and definitions to make each code cover all definitions while staying concise and clear.
 Write generalizable definitions without unnecessary specifics or examples.
+The research question is: How did Physics Lab's online community emerge?
 Always follow the output format for all ${Codes.length} codes:
 ---
 1.
@@ -140,8 +141,57 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 if (Results.length != Codes.length) 
                     throw new Error(`Invalid response: ${Results.length} results for ${Codes.length} inputs`);
                 // Update the codes
-                for (var I = 0; I < Codes.length; I++) {
+                for (var I = 0; I < Codes.length; I++)
                     Codes[I].Definitions = [Results[I]];
+                break;
+            case this.RefineDefinitions:
+                // Refine definitions for codes
+                var Pendings: Record<number, Code> = {};
+                var CurrentCode: Code | undefined;
+                var Status = "";
+                // Parse the definitions
+                for (var I = 0; I < Lines.length; I++) {
+                    var Line = Lines[I];
+                    if (Line == "" || Line.startsWith("---")) continue;
+                    var Match = Line.match(/^(\d+)\./);
+                    if (Match) {
+                        var Index = parseInt(Match[1]) - 1;
+                        CurrentCode = { Label: "", Definitions: [], Categories: [], Examples: [], Alternatives: [] };
+                        Pendings[Index] = CurrentCode;
+                    } else if (Line.startsWith("Label:") && CurrentCode) {
+                        CurrentCode.Label = Line.substring(6).trim();
+                        Status = "Label";
+                    } else if (Line.startsWith("Definition:") && CurrentCode) {
+                        var Definition = Line.substring(11).trim();
+                        if (Definition !== "")
+                            CurrentCode.Definitions = [Definition];
+                        Status = "Definition";
+                    } else if (Line.startsWith("Category:") && CurrentCode) {
+                        var Category = Line.substring(9).trim();
+                        if (Category !== "")
+                            CurrentCode.Categories = [Category];
+                        Status = "Category";
+                    } else if (Status == "Label") {
+                        CurrentCode!.Label = `${CurrentCode!.Label}\n${Line}`.trim();
+                    } else if (Status == "Definition") {
+                        CurrentCode!.Definitions!.push(Line.trim());
+                    } else if (Status == "Category") {
+                        CurrentCode!.Categories!.push(Line.trim());
+                    }
+                }
+                // Check if the response is valid
+                if (Object.keys(Pendings).length != Codes.length) 
+                    throw new Error(`Invalid response: ${Object.keys(Pendings).length} results for ${Codes.length} inputs`);
+                // Update the codes
+                for (var I = 0; I < Codes.length; I++) {
+                    var Code = Pendings[I];
+                    var NewLabel = Code.Label.toLowerCase();
+                    if (NewLabel != Codes[I].Label) {
+                        Codes[I].Alternatives!.push(Codes[I].Label);
+                        Codes[I].Label = NewLabel;
+                    }
+                    Codes[I].Definitions = Code.Definitions;
+                    Codes[I].Categories = Code.Categories;
                 }
                 break;
         }

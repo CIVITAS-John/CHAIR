@@ -6,7 +6,7 @@ import { InitializeEmbeddings } from '../utils/embeddings.js';
 
 InitializeEmbeddings("openai-large-512");
 await UseLLMs(async () => {
-    await ConsolidateConversations(new Consolidator1(), "Users of Physics Lab (Group 1)", "0~17-gpt-3.5-turbo.json", "high-level-1", LLMName, false);
+    await ConsolidateConversations(new Consolidator1(), "Users of Physics Lab (Group 1)", "0~17-gpt-3.5-turbo.json", "low-level-1", LLMName, false);
 }, "gpt-3.5-turbo");
 
 process.exit(0);
