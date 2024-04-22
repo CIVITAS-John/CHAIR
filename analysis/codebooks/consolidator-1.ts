@@ -61,14 +61,14 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
                 // Generate definitions for codes
                 // For weaker models, we will need to provide more guidance
                 return [`
-You are an expert in thematic analysis clarifying the definitions of qualitative codes.
-Write short, clear, generalizable definitions without unnecessary specifics or examples.
+You are an expert in thematic analysis clarifying the criteria of qualitative codes.
+Write short, clear, generalizable criteria without unnecessary specifics or examples.
 Example quotes are independent of each other.
 Always follow the output format for all ${Codes.length} codes:
 ---
-1. ${LLMName == "gpt-3.5-turbo" ? "{Code}: " : ""}{Definition of code 1}
+1. ${LLMName == "gpt-3.5-turbo" ? "{Code}: " : ""}{Criteria of code 1}
 ...
-${Codes.length}. ${LLMName == "gpt-3.5-turbo" ? "{Code}: " : ""}{Definition of code ${Codes.length}}
+${Codes.length}. ${LLMName == "gpt-3.5-turbo" ? "{Code}: " : ""}{Criteria of code ${Codes.length}}
 ---`.trim(), 
                     Codes.map((Code, Index) => `
 ${Index + 1}. ${Code.Label}. Quotes:
