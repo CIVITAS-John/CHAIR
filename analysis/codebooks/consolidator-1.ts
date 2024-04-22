@@ -130,6 +130,11 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                     var Match = Lines[I].match(/^(\d+)\. (.*)$/);
                     if (Match) {
                         var Definition = Match[2].trim();
+                        // Sometimes the LLM will put the actual response in the next line
+                        if (I + 1 < Lines.length && !Lines[I + 1].match(/^\d+\./)) {
+                            var NextLine = Lines[++I].trim();
+                            if (NextLine.length > Definition.length) Definition = NextLine;
+                        }
                         // Sometimes the LLM will return "{code}: {definition}"
                         if (Definition.match(/^[\w\-\_ ]+\: /)) Definition = Definition.substring(Definition.indexOf(":") + 1).trim();
                         // Sometimes the LLM will return "{definition}"
@@ -190,6 +195,7 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                         Codes[I].Alternatives!.push(Codes[I].Label);
                         Codes[I].Label = NewLabel;
                     }
+                    Codes[I].Alternatives = Codes[I].Alternatives?.filter(Label => Label != Codes[I].Label);
                     Codes[I].Definitions = Code.Definitions;
                     Codes[I].Categories = Code.Categories;
                 }
