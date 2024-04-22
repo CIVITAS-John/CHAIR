@@ -1,7 +1,7 @@
 import { ClusterTexts } from '../../utils/embeddings.js';
 import { LLMName } from '../../utils/llms.js';
 import { Code, CodedThreads } from '../../utils/schema.js';
-import { CodebookConsolidator } from './codebooks.js';
+import { CodebookConsolidator, MergeCodesByCluster } from './codebooks.js';
 
 /** Consolidator1: Consolidate a codebook through generating definitions for codes, then cluster them using text embeddings. */
 export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
@@ -10,18 +10,21 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature: number = 0;
     /** MaxIterations: The maximum number of iterations for the analyzer. */
-    public MaxIterations: number = 3;
-    /** GenerateDefinition: The iteration that generates definition. */
-    public readonly GenerateDefinition: number = 0;
+    public MaxIterations: number = 4;
+    /** GenerateDefinitions: The iteration that generates definition. */
+    public readonly GenerateDefinitions: number = 0;
     /** MergeLabels: The iteration that merges labels. */
     public readonly MergeLabels: number = 1;
     /** MergeLabelsAgain: The iteration that merges labels again. */
     public readonly MergeLabelsAgain: number = 2;
+    /** RefineDefinitions: The iteration that refines definitions. */
+    public readonly RefineDefinitions: number = 3;
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // Return value: [Chunk size, Cursor movement]
     public GetChunkSize(Recommended: number, Remaining: number, Iteration: number) {
         switch (Iteration) {
-            case this.GenerateDefinition:
+            case this.GenerateDefinitions:
+            case this.RefineDefinitions:
                 return Recommended;
             case this.MergeLabels:
             case this.MergeLabelsAgain:
@@ -34,9 +37,14 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
     public SubunitFilter(Code: Code, Iteration: number): boolean {
         if (Code.Label == "[Merged]") return false;
         switch (Iteration) {
-            case this.GenerateDefinition:
+            case this.GenerateDefinitions:
+                // Only when the code has no definitions should we generate them
                 return (Code.Definitions?.length ?? 0) == 0;
+            case this.RefineDefinitions:
+                // Only when the code has multiple definitions should we refine them
+                return (Code.Definitions?.length ?? 0) > 1;
             case this.MergeLabels:
+                // Only when the code has definitions should we merge them
                 return (Code.Definitions?.length ?? 0) > 0;
             case this.MergeLabelsAgain:
                 // Only when the code has definitions but no categories should we merge them again
@@ -49,7 +57,7 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
     /** BuildPrompts: Build the prompts for the LLM. */
     public async BuildPrompts(Analysis: CodedThreads, Data: TUnit[], Codes: Code[], ChunkStart: number, Iteration: number): Promise<[string, string]> {
         switch (Iteration) {
-            case this.GenerateDefinition:
+            case this.GenerateDefinitions:
                 // Generate definitions for codes
                 // For weaker models, we will need to provide more guidance
                 return [`
@@ -65,6 +73,27 @@ ${Codes.length}. ${LLMName == "gpt-3.5-turbo" ? "{Code}: " : ""}{Definition of c
                     Codes.map((Code, Index) => `
 ${Index + 1}. ${Code.Label}. Quotes:
 ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => `- ${Example}`).join("\n")}`.trim()).join("\n\n")];
+            case this.RefineDefinitions:
+                // Refine definitions for codes
+                return [`
+You are an expert in thematic analysis.
+Each code is merged from multiple ones. Refine the labels and definitions to make each code cover all definitions while staying concise and clear.
+Write generalizable definitions without unnecessary specifics or examples.
+Always follow the output format for all ${Codes.length} codes:
+---
+1.
+Label: {Label}
+Definition: {Definition of code 1}
+Category: {Category of code 1}
+...
+${Codes.length}.
+Label: {Label}
+Definition: {Definition of code ${Codes.length}}
+Category: {Category of code ${Codes.length}}
+---`.trim(), 
+                    Codes.map((Code, Index) => `
+${Index + 1}. ${(Code.Alternatives ?? []).concat(Code.Label).join(", ") ?? ""}.
+${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).join("\n\n")];
             case this.MergeLabels:
             case this.MergeLabelsAgain:
                 // Cluster codes using text embeddings
@@ -81,47 +110,8 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
                 });
                 // Categorize the strings
                 var Clusters = await ClusterTexts(CodeStrings, this.Name);
-                var Codebook: Record<string, Code> = {};
-                // Merge the codes based on clustering results
-                for (var Key of Object.keys(Clusters)) {
-                    var ClusterID = parseInt(Key);
-                    // Pick the code with the highest probability and the shortest label + definition to merge into
-                    // This could inevitably go wrong. We will need another iteration to get a better new label
-                    var BestCode = Clusters[ClusterID]
-                        .sort((A, B) => B.Probability - A.Probability)
-                        .map(Item => Codes[Item.ID])
-                        .sort((A, B) => (A.Label.length * 5 + (A.Definitions?.[0].length ?? 0)) - (B.Label.length * 5 + (B.Definitions?.[0].length ?? 0)))[0];
-                    if (ClusterID != -1) {
-                        Codebook[BestCode.Label] = BestCode;
-                        BestCode.Alternatives = BestCode.Alternatives ?? [];
-                        BestCode.Categories = BestCode.Categories ?? [];
-                        BestCode.Definitions = BestCode.Definitions ?? [];
-                        BestCode.Examples = BestCode.Examples ?? [];
-                    }
-                    for (var Item of Clusters[ClusterID]) {
-                        var Code = Codes[Item.ID];
-                        // Only merge codes with high probability
-                        if (ClusterID == -1 || Item.Probability <= 0.95) {
-                            // Codes that cannot be clustered
-                            Codebook[Code.Label] = Code;
-                        } else if (Code.Label != BestCode.Label) {
-                            // Merge the code
-                            BestCode.Alternatives!.push(Code.Label);
-                            if ((Code.Categories?.length ?? 0) > 0)
-                                BestCode.Categories = [...new Set([...BestCode.Categories!, ...Code.Categories!])];
-                            if ((Code.Definitions?.length ?? 0) > 0)
-                                BestCode.Definitions = [...new Set([...BestCode.Definitions!, ...Code.Definitions!])];
-                            if ((Code.Examples?.length ?? 0) > 0)
-                                BestCode.Examples = [...new Set([...BestCode.Examples!, ...Code.Examples!])];
-                            if ((Code.Alternatives?.length ?? 0) > 0)
-                                BestCode.Alternatives = [...new Set([...BestCode.Alternatives!, ...Code.Alternatives!])];
-                            console.log("Merging: " + Code.Label + " into " + BestCode.Label + " with " + (Item.Probability * 100).toFixed(2) + "% chance");
-                            Code.Label = "[Merged]";
-                        }
-                    }
-                }
-                console.log(`Codes reduced from ${Codes.length} to ${Object.keys(Codebook).length}`);
-                Analysis.Codebook = Codebook;
+                // Merge the codes
+                Analysis.Codebook = MergeCodesByCluster(Clusters, Codes);
                 return ["", ""];
             default:
                 return ["", ""];
@@ -130,7 +120,7 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
     /** ParseResponse: Parse the responses from the LLM. */
     public async ParseResponse(Analysis: CodedThreads, Lines: string[], Codes: Code[], ChunkStart: number, Iteration: number): Promise<Record<number, string>> {
         switch (Iteration) {
-            case this.GenerateDefinition:
+            case this.GenerateDefinitions:
                 // Generate definitions for codes
                 var Results: string[] = [];
                 Codes = Codes.filter(Code => (Code.Definitions?.length ?? 0) == 0);

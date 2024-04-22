@@ -47,7 +47,7 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
             // Run the prompts
             var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], 
                 `messaging-groups/${Analyzer.Name}`, Tries * 0.2 + Analyzer.BaseTemperature, FakeRequest);
-            if (FakeRequest) return true;
+            if (Response == "") return true;
             var ItemResults = await Analyzer.ParseResponse(Analysis, Response.split("\n").map(Line => Line.trim()), Currents, ChunkStart, Iteration);
             for (const [Index, Result] of Object.entries(ItemResults)) {
                 var Message = Currents[parseInt(Index) - 1];
