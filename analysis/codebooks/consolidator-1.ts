@@ -37,8 +37,11 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
             case this.GenerateDefinition:
                 return (Code.Definitions?.length ?? 0) == 0;
             case this.MergeLabels:
-            case this.MergeLabelsAgain:
                 return (Code.Definitions?.length ?? 0) > 0;
+            case this.MergeLabelsAgain:
+                // Only when the code has definitions but no categories should we merge them again
+                // Because high-level codes could be over-merged
+                return (Code.Definitions?.length ?? 0) > 0 && (Code.Categories?.length ?? 0) == 0;
             default: 
                 return true;
         }
@@ -68,7 +71,8 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
                 // Combine each code into a string for clustering
                 var CodeStrings = Codes.map(Code => {
                     var Text = `Label: ${Code.Label}`;
-                    if ((Code.Categories?.length ?? 0) > 0) Text += `\nCategories: \n- ${Code.Categories!.join("\n")}`;
+                    // Categories may lead to over-merging, so we will skip them
+                    // if ((Code.Categories?.length ?? 0) > 0) Text += `\nCategories: \n- ${Code.Categories!.join("\n")}`;
                     if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinitions: \n- ${Code.Definitions!.join("\n")}`;
                     if ((Code.Alternatives?.length ?? 0) > 0) Text += `\nAlternatives: \n- ${Code.Alternatives!.join("\n")}`;
                     // Examples may result in confusing embeddings, so we will skip them
@@ -89,10 +93,10 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
                         .sort((A, B) => (A.Label.length * 5 + (A.Definitions?.[0].length ?? 0)) - (B.Label.length * 5 + (B.Definitions?.[0].length ?? 0)))[0];
                     if (ClusterID != -1) {
                         Codebook[BestCode.Label] = BestCode;
-                        BestCode.Alternatives = [];
-                        BestCode.Categories = [];
-                        BestCode.Definitions = [];
-                        BestCode.Examples = [];
+                        BestCode.Alternatives = BestCode.Alternatives ?? [];
+                        BestCode.Categories = BestCode.Categories ?? [];
+                        BestCode.Definitions = BestCode.Definitions ?? [];
+                        BestCode.Examples = BestCode.Examples ?? [];
                     }
                     for (var Item of Clusters[ClusterID]) {
                         var Code = Codes[Item.ID];
