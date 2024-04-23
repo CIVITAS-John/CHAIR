@@ -42,16 +42,11 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
             var Tries = 0;
             while (true) {
                 // Get the chunk size
-                var RecommendedSize = MaxItems - 2 - Tries;
-                var ChunkSize = Analyzer.GetChunkSize(RecommendedSize, Filtered.length - Cursor, I);
+                var ChunkSize = Analyzer.GetChunkSize(Math.min(MaxItems, Filtered.length - Cursor), Filtered.length - Cursor, I);
                 if (typeof ChunkSize == "number") {
-                    if (ChunkSize < 0) {
+                    if (ChunkSize <= 0) {
                         console.log("Stopped iterating due to signals sent by the analyzer (<0 chunk size).");
                         return;
-                    }
-                    if (ChunkSize == RecommendedSize) {
-                        if (Cursor + ChunkSize >= Filtered.length - 3)
-                            ChunkSize = Filtered.length - Cursor;
                     }
                     ChunkSize = [ChunkSize, 0, 0];
                 }
@@ -66,7 +61,7 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
                     break;
                 } catch (Error: any) {
                     if (++Tries > 2) throw Error;
-                    console.log(`Analysis error ${Error.message}, retrying ${Tries} times.`);
+                    console.log(`Analysis error, retrying ${Tries} times:\n${Error.toString()}`);
                 }
             }
             // Move the cursor

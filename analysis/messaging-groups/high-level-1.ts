@@ -55,7 +55,7 @@ Definition: A definition of code 1
                 if (Line.match(/^(P(\d+)|Designer)$/)) throw new Error(`Invalid code name: ${Line}.`);
                 // Get or create the code
                 Line = Line.toLowerCase();
-                CurrentCode = Analysis.Codes[Line] ?? { Categories: [Category], Label: Line };
+                CurrentCode = Analysis.Codes[Line] ?? { Categories: [Category.toLowerCase()], Label: Line };
                 Analysis.Codes[Line] = CurrentCode;
             } else if (Line.startsWith("Definition: ")) {
                 // Add the definition to the current code

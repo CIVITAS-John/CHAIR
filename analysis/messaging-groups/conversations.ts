@@ -30,7 +30,7 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
     // Run the prompt over each conversation
     for (const [Key, Conversation] of Object.entries(Conversations)) {
         // Get the messages
-        var Messages = Conversation.AllMessages!;
+        var Messages = Conversation.AllMessages!.filter(Message => Message.Content != "");
         console.log(`Conversation ${Key}: ${Messages.length} messages`);
         // Initialize the analysis
         var Analysis: CodedThread = Analyzed.Threads[Key];

@@ -5,9 +5,9 @@ import { ConversationAnalyzer } from './conversations.js';
 // Authored by John Chen.
 export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
-    // Return value: [Chunk size, Cursor movement]
-    public GetChunkSize(Recommended: number, Remaining: number) {
-        return Recommended;
+    // We will fetch at least 8 messages for each batch to keep the context.
+    public GetChunkSize(Recommended: number, Remaining: number, Tries: number): [number, number, number] {
+        return [Recommended - Tries, Math.min(8 - (Recommended + Tries), 0), 0];
     }
     /** ParseResponse: Parse the responses from the LLM. */
     public async ParseResponse(Analysis: CodedThread, Lines: string[], Messages: Message[], ChunkStart: number): Promise<Record<number, string>> {
@@ -25,13 +25,19 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
             } else {
                 var Match = Line.match(/^(\d+)\. (.*)$/);
                 if (Match) {
+                    var Message = Messages[parseInt(Match[1]) - 1];
                     var Codes = Match[2].trim().replaceAll("_", " ");
+                    // For images, force the tag "Image sharing"
+                    if (Message.Content == "[Image]") Codes = "Image Sharing";
+                    // For emoji, force the tag "Emoji"
+                    if (Message.Content == "[Emoji]") Codes = "Emoji";
+                    // For checkin, force the tag "Checkin"
+                    if (Message.Content == "[Checkin]") Codes = "Checkin";
                     // Sometimes the LLM will return "P{number}: {codes}"
                     Codes = Codes.replace(/^(P(\d+)|Designer|tag(\d+))\:/, "").trim();
                     // Sometimes the LLM will return "{codes}"
                     if (Codes.startsWith("{") && Codes.endsWith("}")) Codes = Codes.substring(1, Codes.length - 1);
                     // Sometimes the LLM will start with the original content
-                    var Message = Messages[parseInt(Match[1]) - 1];
                     if (Codes.toLowerCase().startsWith(Message.Content.toLowerCase())) Codes = Codes.substring(Message.Content.length).trim();
                     // Sometimes the LLM will return "- tags: {codes}"
                     if (Codes.startsWith("- tags:")) Codes = Codes.substring(7).trim();
