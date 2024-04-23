@@ -15,7 +15,7 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     // return [1, 1, 1]: each subunit will be its own chunk, and the LLM will receive the previous and next subunits as well;
     // return Remaining: all remaining subunits will be in the same chunk (ideal for coding the entire conversation). 
     // For example, for an output of [1, 1, 1], `BuildPrompts` would receive `subunits` 0 (Prefetch), 1, and 2 (Postfetch). `ChunkStart` will be 1 because that's the first message in the chunk.
-    public GetChunkSize(Recommended: number, Remaining: number, Iteration: number): number | [number, number, number] {
+    public GetChunkSize(Recommended: number, Remaining: number, Iteration: number, Tries: number): number | [number, number, number] {
         return Recommended;
     }
     /** SubunitFilter: Filter the subunits before chunking. */
@@ -32,19 +32,19 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
 /** LoopThroughChunks: Process data through the analyzer in a chunkified way. */
 export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
     Analyzer: Analyzer<TUnit, TSubunit, TAnalysis>, Analysis: TAnalysis, Source: TUnit, Sources: TSubunit[], 
-    Action: (Currents: TSubunit[], ChunkStart: number, IsFirst: boolean, Tries: number, Iteration: number) => Promise<boolean>) {
+    Action: (Currents: TSubunit[], ChunkStart: number, IsFirst: boolean, Tries: number, Iteration: number) => Promise<number>) {
     // Split units into smaller chunks based on the maximum items
     for (var I = 0; I < Analyzer.MaxIterations; I++) {
         var Cursor = 0;
         var ProcessedAny = false;
         var Filtered = Sources.filter(Subunit => Analyzer.SubunitFilter(Subunit, I));
         while (Cursor < Filtered.length) {
-            var Tries = 0;
+            var Tries = 0; var CursorRelative = 0;
             while (true) {
                 // Get the chunk size
-                var ChunkSize = Analyzer.GetChunkSize(Math.min(MaxItems, Filtered.length - Cursor), Filtered.length - Cursor, I);
+                var ChunkSize = Analyzer.GetChunkSize(Math.min(MaxItems, Filtered.length - Cursor), Filtered.length - Cursor, I, Tries);
                 if (typeof ChunkSize == "number") {
-                    if (ChunkSize <= 0) {
+                    if (ChunkSize < 0) {
                         console.log("Stopped iterating due to signals sent by the analyzer (<0 chunk size).");
                         return;
                     }
@@ -55,9 +55,13 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
                 var End = Math.min(Cursor + ChunkSize[0] + ChunkSize[2], Filtered.length);
                 var Currents = Filtered.slice(Start, End);
                 var IsFirst = Cursor == 0;
+                if (End - Start <= 2) debugger;
                 // Run the prompts
                 try {
-                    if (await Action(Currents, Cursor - Start, IsFirst, Tries, I)) ProcessedAny = true;
+                    CursorRelative = await Action(Currents, Cursor - Start, IsFirst, Tries, I);
+                    // Sometimes, the action may return a relative cursor movement
+                    if (ChunkSize[0] + CursorRelative < 0) throw new Error("Failed to process any subunits.");
+                    console.log(`Expected ${ChunkSize[0]} subunits, processed ${ChunkSize[0] + CursorRelative} subunits.`);
                     break;
                 } catch (Error: any) {
                     if (++Tries > 2) throw Error;
@@ -65,8 +69,7 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
                 }
             }
             // Move the cursor
-            Cursor += ChunkSize[0];
-            if (!ProcessedAny) break;
+            Cursor += ChunkSize[0] + CursorRelative;
         }
     }
 }

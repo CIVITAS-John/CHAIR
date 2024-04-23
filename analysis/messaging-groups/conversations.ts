@@ -42,13 +42,14 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
         // Run the messages through chunks (as defined by the analyzer)
         await LoopThroughChunks(Analyzer, Analysis, Conversation, Messages, async (Currents, ChunkStart, IsFirst, Tries, Iteration) => {
             var Prompts = await Analyzer.BuildPrompts(Analysis, Conversation, Currents, ChunkStart, Iteration);
-            if (Prompts[0] == "" && Prompts[1] == "") return true;
-            if (!IsFirst && Analysis.Summary) Prompts[1] = `Summary of the conversation until now: ${Analysis.Summary}\n${Prompts[1]}`;
+            if (Prompts[0] == "" && Prompts[1] == "") return 0;
+            if (!IsFirst && Analysis.Summary) Prompts[1] = `Summary of previous conversation: ${Analysis.Summary}\n${Prompts[1]}`;
             // Run the prompts
             var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], 
                 `messaging-groups/${Analyzer.Name}`, Tries * 0.2 + Analyzer.BaseTemperature, FakeRequest);
-            if (Response == "") return true;
+            if (Response == "") return 0;
             var ItemResults = await Analyzer.ParseResponse(Analysis, Response.split("\n").map(Line => Line.trim()), Currents, ChunkStart, Iteration);
+            // Process the results
             for (const [Index, Result] of Object.entries(ItemResults)) {
                 var Message = Currents[parseInt(Index) - 1];
                 var Codes = Result.toLowerCase().split(/,|\||;/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase())
@@ -63,7 +64,8 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
                     Analysis.Codes[Code] = Current;
                 });
             }
-            return true;
+            // Dial back the cursor if necessary
+            return Object.keys(ItemResults).length - Currents.length;
         });
         Analysis.Iteration++;
     }

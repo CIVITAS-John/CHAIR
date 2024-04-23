@@ -44,7 +44,7 @@ export function InitializeLLM(LLM: string) {
             // 10$ / 30$
             MaxInput = 16385;
             MaxOutput = 4096;
-            MaxItems = 32;
+            MaxItems = 64;
             Model = (Temp) => new ChatOpenAI({
                 temperature: Temp,
                 modelName: "gpt-4-turbo",
@@ -68,7 +68,7 @@ export function InitializeLLM(LLM: string) {
             // 3$ / 15$
             MaxInput = 200000;
             MaxOutput = 4096;
-            MaxItems = 32;
+            MaxItems = 64;
             Model = (Temp) => new ChatAnthropic({
                 temperature: Temp,
                 modelName: "claude-3-sonnet-20240229",

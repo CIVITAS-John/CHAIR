@@ -1,13 +1,16 @@
-import { CodedThread, Conversation, Message } from '../../utils/schema.js';
+import { MaxItems } from '../../utils/llms.js';
+import { CodedThread, Message } from '../../utils/schema.js';
 import { ConversationAnalyzer } from './conversations.js';
 
 /** LowLevelAnalyzerBase: Conduct the first-round low-level coding of the conversations. */
 // Authored by John Chen.
 export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
-    // We will fetch at least 8 messages for each batch to keep the context.
-    public GetChunkSize(Recommended: number, Remaining: number, Tries: number): [number, number, number] {
-        return [Recommended - Tries, Math.min(8 - (Recommended + Tries), 0), 0];
+    // We will fetch at least 10 messages for each batch to keep the context.
+    public GetChunkSize(Recommended: number, Remaining: number, Iteration: number, Tries: number): [number, number, number] {
+        // For weaker models, we will reduce the chunk size (32 => 24 => 16 => 8)
+        if (Recommended == MaxItems) return [Recommended - Tries * 8, 0, 0];
+        return [Recommended - Tries * 2, Math.max(8 - Recommended - Tries, 0), 0];
     }
     /** ParseResponse: Parse the responses from the LLM. */
     public async ParseResponse(Analysis: CodedThread, Lines: string[], Messages: Message[], ChunkStart: number): Promise<Record<number, string>> {
@@ -58,8 +61,9 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
         if (Analysis.Plan == undefined) throw new Error(`Invalid response: no plans`);
         if (Analysis.Reflection == undefined) throw new Error(`Invalid response: no reflections`);
         if (Analysis.Summary == undefined) throw new Error(`Invalid response: no summary`);
-        if (Object.keys(Results).length != Messages.length) 
-            throw new Error(`Invalid response: ${Object.keys(Results).length} results for ${Messages.length} inputs`);
+        // Check keys
+        for (var I = 0; I < Object.keys(Results).length; I++)
+            if (!Results[I + 1]) throw new Error(`Invalid response: missing message ${I + 1}`);
         return Results;
     }
 }

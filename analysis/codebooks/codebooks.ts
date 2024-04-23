@@ -62,13 +62,13 @@ export async function ConsolidateCodebook<TUnit>(Consolidator: CodebookConsolida
         if (Iteration != LastIteration) await IterationCallback?.(LastIteration);
         LastIteration = Iteration;
         var Prompts = await Consolidator.BuildPrompts(Analyses, Sources, Currents, ChunkStart, Iteration);
-        if (Prompts[0] == "" && Prompts[1] == "") return true;
+        if (Prompts[0] == "" && Prompts[1] == "") return 0;
         // Run the prompts
         var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], 
             `codebooks/${Consolidator.Name}`, Tries * 0.2 + Consolidator.BaseTemperature, FakeRequest);
-        if (Response == "") return true;
+        if (Response == "") return 0;
         await Consolidator.ParseResponse(Analyses, Response.split("\n").map(Line => Line.trim()), Currents, ChunkStart, Iteration);
-        return true;
+        return 0;
     });
 }
 
