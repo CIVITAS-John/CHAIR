@@ -160,19 +160,20 @@ ${Count}. {2-4 words for category ${Count}}
                 return [`
 You are an expert in thematic analysis.
 You are finding and organizing categories from existing ones. A list of initial categories and qualitative codes is provided.
-Drop ones that are broad categories. Merge ones that are too specific. Optimize the rest.
+Merge categories that are too specific and/or small. Split categories that are too big. Consolidate into a single level of categories.
+Optimize names of the rest to be more representative. Use 2-4 words for categories to provide contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
-Thoughts: {A paragraph of thoughts and plans about refining the categories. What do you plan to drop? What do you plan to merge?}
+Thoughts: {A detailed plan about refining the categories. What do you plan to split? What do you plan to merge?}
 
-Categories to drop:
-- Category 1
-- Category 2
+Categories to split:
+- Category a
+- Category b
 
 Categories to merge:
-- Category 1
-- Category 2
+- Category a
+- Category b
 
 Refined categories:
 1. Category 1
@@ -180,11 +181,10 @@ Refined categories:
 ...
 ---`.trim(), 
                     `
-# Qualitative codes
-${SortCodes(Codes).map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0]}`).join("\n\n")}
-
 # Initial categories
-${Categories.map((Category, Index) => `${Index + 1}. ${Category}`).join("\n")}
+${Categories.map((Category, Index) => `${Index + 1}. ${Category}. Codes:
+${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `* ${Code.Label}`).join("\n")}
+`.trim()).join("\n")}
                 `.trim()];
             case this.AssignCategories:
                 return [`
