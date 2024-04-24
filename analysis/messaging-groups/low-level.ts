@@ -29,6 +29,7 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                 var Match = Line.match(/^(\d+)\. (.*)$/);
                 if (Match) {
                     var Message = Messages[parseInt(Match[1]) - 1];
+                    if (!Message) continue;
                     var Codes = Match[2].trim().replaceAll("_", " ");
                     // For images, force the tag "Image sharing"
                     if (Message.Content == "[Image]") Codes = "Image Sharing";

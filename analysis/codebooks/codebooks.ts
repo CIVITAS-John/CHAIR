@@ -148,7 +148,7 @@ export function MergeCategoriesByCluster(Clusters: Record<number, ClusterItem[]>
             continue;
         }
         // Get the current categories
-        var Current = Clusters[ClusterID].filter(Item => Item.Probability > 0.9).map(Item => Categories[Item.ID]);
+        var Current = Clusters[ClusterID].filter(Item => Item.Probability > 0.95).map(Item => Categories[Item.ID]);
         if (Current.length <= 1) continue;
         // Merge the categories
         var Items: Code[] = [];

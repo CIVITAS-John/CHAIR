@@ -10,7 +10,7 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature: number = 0;
     /** MaxIterations: The maximum number of iterations for the analyzer. */
-    public MaxIterations: number = 6;
+    public MaxIterations: number = 7;
     /** GenerateDefinitions: The iteration that generates definition. */
     public readonly GenerateDefinitions: number = 0;
     /** MergeLabels: The iteration that merges labels. */
@@ -34,12 +34,12 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
             case this.GenerateDefinitions:
             case this.RefineDefinitions:
             case this.RefineDefinitionsAgain:
-            case this.AssignCategories:
                 return Math.max(Recommended - Tries * 8, 1);
             case this.MergeLabels:
             case this.MergeLabelsAgain:
             case this.MergeCategories:
             case this.RefineCategories:
+            case this.AssignCategories:
                 return Remaining;
             default: 
                 return -1;
@@ -61,11 +61,8 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
                 // Only when the code has definitions should we merge them
                 return (Code.Definitions?.length ?? 0) > 0;
             case this.MergeCategories:
-                // Only when the code has 1 category should we use it to merge categories
+                // Only when the code has 1 category should we use it to merge and refine categories
                 return (Code.Categories?.length ?? 0) == 1;
-            case this.RefineCategories:
-                // Only when the code has categories should we use it to merge categories
-                return (Code.Definitions?.length ?? 0) > 0;
             default: 
                 return true;
         }
@@ -79,20 +76,21 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
                 // Generate definitions for codes
                 return [`
 You are an expert in thematic analysis clarifying the criteria of qualitative codes. Quotes are independent of each other.
-Write short, clear, generalizable criteria without unnecessary specifics or examples. Refine the label if necessary. Group each code into a category.
+Write clear and generalizable criteria to apply across quotes, without unnecessary specifics or examples. Then, refine the short label if necessary.
+Group each code into a category. Use 2-4 words for categories to provide general contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
 Definitions for each code (${Codes.length} in total):
 1. 
-Criteria: {Criteria of code 1}
 Label: {Label 1}
-Category: {The category of 1}
+Criteria: {Criteria of code 1}
+Category: {2-4 words for code 1}
 ...
 ${Codes.length}.
-Criteria: {Criteria of code ${Codes.length}}
 Label: {Label ${Codes.length}}
-Category: {The category of code ${Codes.length}}
+Criteria: {Criteria of code ${Codes.length}}
+Category: {2-4 words for code ${Codes.length}}
 ---`.trim(), 
                     Codes.map((Code, Index) => `
 ${Index + 1}.
@@ -104,20 +102,21 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
                 // Refine definitions for codes
                 return [`
 You are an expert in thematic analysis. Each code is merged from multiple ones.
-Write labels and criteria to make each code cover all criteria while staying concise and clear, without unnecessary specifics or examples. Group each code into a category.
+Write labels and consolidate criteria to apply across quotes. Both should be clear and generalizable, without unnecessary specifics or examples.
+Group each code into a category. Use 2-4 words for categories to provide contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
 Definitions for each code (${Codes.length} in total):
 1.
-Criteria: {Criteria of code 1}
 Label: {Label 1}
-Category: {The category of 1}
+Criteria: {Criteria of code 1}
+Category: {2-4 words for code 1}
 ...
 ${Codes.length}.
-Criteria: {Criteria of code ${Codes.length}}
 Label: {Label ${Codes.length}}
-Category: {The category of code ${Codes.length}}
+Criteria: {Criteria of code ${Codes.length}}
+Category: {2-4 words for code ${Codes.length}}
 ---`.trim(), 
                     Codes.map((Code, Index) => `
 ${Index + 1}. ${(Code.Alternatives ?? []).concat(Code.Label).join(", ") ?? ""}.
@@ -145,20 +144,52 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 // Ask LLMs to write new names for each category
                 return [`
 You are an expert in thematic analysis. You are assigning names for categories based on the merging results.
-Make sure each name is clear, concise, related to the research question, and without specifics.
+Make sure those names are concise, accurate, and related to the research question. Use 2-4 words to provide contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 The research question is: How did Physics Lab's online community emerge?
 
 Always follow the output format:
 ---
 Names for each category (${Count} in total):
-1. {Name of category 1}
+1. {2-4 words for category 1}
 ...
-${Count}. {Name of category ${Count}}
+${Count}. {2-4 words for category ${Count}}
 ---`.trim(), "Merge results:\n" + Object.keys(Merged).map((Category, Index) => `${Index + 1}.\n${Category.split("|").map(Current => `- ${Current}`).join("\n")}`).join("\n\n")];
+            case this.RefineCategories:
+                // We have too many categories. Filter ones with only 1 code.
+                Categories = Categories.filter(Category => Codes.filter(Code => Code.Categories?.includes(Category)).length > 1).sort();
+                return [`
+You are an expert in thematic analysis.
+You are finding and organizing categories from existing ones. A list of initial categories and qualitative codes is provided.
+Drop ones that are broad categories. Merge ones that are too specific. Optimize the rest.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Thoughts: {A paragraph of thoughts and plans about refining the categories. What do you plan to drop? What do you plan to merge?}
+
+Categories to drop:
+- Category 1
+- Category 2
+
+Categories to merge:
+- Category 1
+- Category 2
+
+Refined categories:
+1. Category 1
+2. Category 2
+...
+---`.trim(), 
+                    `
+# Qualitative codes
+${SortCodes(Codes).map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0]}`).join("\n\n")}
+
+# Initial categories
+${Categories.map((Category, Index) => `${Index + 1}. ${Category}`).join("\n")}
+                `.trim()];
             case this.AssignCategories:
-                // In this case, we ask LLMs to assign codes based on an existing list.
                 return [`
 You are an expert in thematic analysis. You are assigning categories to qualitative codes based on their definitions.
+First, you will refine the list of categories. Then, you will assign the most relevant category to each code.
 The list of possible categories:
 ---
 ${Categories.map((Category, Index) => `* ${Category}`).join("\n")}
@@ -166,15 +197,22 @@ ${Categories.map((Category, Index) => `* ${Category}`).join("\n")}
 The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
+Thought: {Thoughts and plans about refining the categories. What can be added? What should be merged?}
+
+Refined categories:
+a. {Category 1}
+b. {Category 2}
+...
+
 Category for each code (${Codes.length} in total):
 1. {The most relevant category for code 1}
 2. {The most relevant category for code 2}
 ...
-${Codes.length + 1}: {The most relevant category for code ${Codes.length}}
+${Codes.length}: {The most relevant category for code ${Codes.length}}
 ---`.trim(), 
                     `
 Qualitative codes:
-${SortCodes(Codes).map((Code, Index) => `* ${Code.Label}\n${Code.Definitions![0]}`).join("\n\n")}
+${SortCodes(Codes).map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0]}`).join("\n\n")}
 `.trim()];
             default:
                 return ["", ""];
@@ -269,6 +307,9 @@ ${SortCodes(Codes).map((Code, Index) => `* ${Code.Label}\n${Code.Definitions![0]
                         }
                     }
                 }
+                break;
+            case this.RefineCategories:
+
                 break;
         }
         return 0;

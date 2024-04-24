@@ -55,7 +55,6 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
                 var End = Math.min(Cursor + ChunkSize[0] + ChunkSize[2], Filtered.length);
                 var Currents = Filtered.slice(Start, End);
                 var IsFirst = Cursor == 0;
-                if (End - Start <= 2) debugger;
                 // Run the prompts
                 try {
                     CursorRelative = await Action(Currents, Cursor - Start, IsFirst, Tries, I);

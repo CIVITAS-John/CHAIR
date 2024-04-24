@@ -23,7 +23,8 @@ export class LowLevelAnalyzer3 extends LowLevelAnalyzerBase {
     public async BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): Promise<[string, string]> {
         return [`
 You are an expert in thematic analysis with grounded theory, working on open coding.
-Your goal is to identify multiple low-level tags for each message. Tags are short phrases that can be applied across messages.
+Your goal is to identify multiple low-level tags for each message.
+When writing tags, balance between specifics and generalizability across messages. For example, "design discussion" is better than "discussion", "seeking guidance" is better than "guidance", while "questions about circuits" is better than "questions about diodes".
 The research question is: How did Physics Lab's online community emerge?
 "Designer" is the person who designed and developed Physics Lab.
 
@@ -31,9 +32,9 @@ Always follow the output format:
 ---
 Thoughts: {A paragraph of thoughts, plans, and guiding questions about analyzing the conversation from different angles}
 Tags for each message (${Messages.length} in total):
-1. tag1; tag2; tag3...
+1. tag 1; tag 2; tag 3...
 ...
-${Messages.length}. tag4; tag5; tag6; ...
+${Messages.length}. tag 4; tag 5; tag 6...
 Summary: {A somehow detailed summary of the conversation, including previous ones}
 Notes: {Notes and hypotheses about the conversation until now}`.trim(),
             Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message, Analysis.Items[Message.ID])}`).join("\n")];
