@@ -89,8 +89,15 @@ export function GetRowHeight(Content: string, Width: number): number {
 export function ExportConversationsForCoding(Conversations: Conversation[], Analyses: CodedThreads = { Threads: {} }) {
     var Book = new Workbook();
     var Consolidated = false;
+    var Consolidation = new Map<string, string>();
     // Whether the codebook is consolidated
-    if (Analyses.Codebook) Object.values(Analyses.Codebook).findIndex(Code => Code.Alternatives?.length ?? 0 > 0) != -1;
+    if (Analyses.Codebook) {
+        for (var Code of Object.values(Analyses.Codebook)) {
+            if ((Code.Alternatives?.length ?? 0) > 0)
+                Code.Alternatives!.forEach(Alternative => Consolidation.set(Alternative, Code.Label));
+        }
+        Consolidated = Consolidation.size > 0;
+    }
     // Export the conversations
     for (const Conversation of Conversations) {
         var Messages = Conversation.AllMessages!;
@@ -108,9 +115,10 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
             { header: 'Time', key: 'Time', width: 13, style: { numFmt: 'mm/dd hh:MM' } },
             { header: 'In', key: 'In', width: 4 },
             { header: 'Content', key: 'Content', width: 120 },
-            { header: 'Codes', key: 'Codes', width: 80 }
+            { header: 'Codes', key: 'Codes', width: 80 },
+            { header: 'Memo', key: 'Memo', width: 80 },
+            { header: 'Consolidated', key: 'Consolidated', width: 80 }
         ];
-        if (Consolidated) Sheet.columns.push({ header: 'Consolidated', key: 'Consolidated', width: 80 });
         Sheet.getRow(1).alignment = { vertical: 'middle', wrapText: true };
         Sheet.getRow(1).font = {
             name: 'Lato',
@@ -131,7 +139,9 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
                 Time: new Date(Date.parse(Message.Time as any)),
                 In: Message.Conversation == Conversation.ID ? "Y" : "N",
                 Content: Message.Content,
-                Codes: Item?.Codes?.join(", ") ?? ""
+                Codes: Item?.Codes?.join(", ") ?? "",
+                Memo: "",
+                Consolidated: [...new Set(Item?.Codes?.map(Code => Consolidation.get(Code) ?? Code) ?? [])].join(", ") ?? ""
             };
             var Row = Sheet.addRow(Columns)
             Row.font = {
@@ -143,6 +153,7 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
             Row.height = GetRowHeight(Message.Content, 120);
             Row.alignment = { vertical: 'middle' };
             Row.getCell("Content").alignment = { vertical: 'middle', wrapText: true };
+            Row.getCell("Memo").alignment = { vertical: 'middle', wrapText: true };
         }
         Sheet.addRow({});
         // Extra row for notes

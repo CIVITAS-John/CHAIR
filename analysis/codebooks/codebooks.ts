@@ -120,3 +120,44 @@ export function MergeCodesByCluster(Clusters: Record<number, ClusterItem[]>, Cod
     console.log(`Codes reduced from ${Codes.length} to ${Object.keys(Codebook).length}`);
     return Codebook;
 }
+
+/** AssignCategoriesByCluster: Assign categories based on category clustering results. */
+export function AssignCategoriesByCluster(Clusters: Record<number, ClusterItem[]>, Codes: Code[]): Record<string, string[]> {
+    var Results: Record<string, string[]> = {};
+    for (var Key of Object.keys(Clusters)) {
+        var ClusterID = parseInt(Key);
+        var ClusterName = ClusterID == -1 ? "Miscellaneous" : `Cluster ${ClusterID}`;
+        var Items: string[] = [];
+        for (var Item of Clusters[ClusterID]) {
+            Codes[Item.ID].Categories = [ClusterName];
+            Items.push(Codes[Item.ID].Label);
+        }
+        if (ClusterID != -1) 
+            Results[ClusterName] = Items;
+    }
+    return Results;
+}
+
+/** MergeCategoriesByCluster: Merge categories based on category clustering results. */
+export function MergeCategoriesByCluster(Clusters: Record<number, ClusterItem[]>, Categories: string[], Codes: Code[]): string[] {
+    var Results: string[] = [];
+    for (var Key of Object.keys(Clusters)) {
+        var ClusterID = parseInt(Key);
+        if (ClusterID == -1) {
+            Clusters[ClusterID].forEach(Item => Results.push(Categories[Item.ID]));
+            continue;
+        }
+        var Current = Clusters[ClusterID].filter(Item => Item.Probability > 0.9).map(Item => Categories[Item.ID]);
+        if (Current.length <= 1) continue;
+        var NewCategory = Current.join("|");
+        console.log("Merging categories: " + Clusters[ClusterID].map(Item => `${Categories[Item.ID]} with ${(Item.Probability * 100).toFixed(2)}%`).join(", "));
+        for (var Code of Codes) {
+            if (!Code.Categories) continue;
+            var Filtered = Code.Categories.filter(Category => !Current.includes(Category) && Category != NewCategory);
+            if (Filtered.length != Code.Categories.length)
+                Code.Categories = [...Filtered, NewCategory];
+        }
+        Results.push(NewCategory);
+    }
+    return Results.sort();
+}

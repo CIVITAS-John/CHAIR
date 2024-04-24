@@ -7,9 +7,10 @@ cpus = multiprocessing.cpu_count()
 # Get the arguments
 Dimensions = int(sys.argv[1])
 Embeddings = int(sys.argv[2])
-
-# print("Dimensions:", Dimensions)
-# print("Embeddings:", Embeddings)
+Method = sys.argv[3] if len(sys.argv) > 3 else "leaf"
+MinCluster = float(sys.argv[4]) if len(sys.argv) > 4 else 2
+MinSamples = float(sys.argv[5]) if len(sys.argv) > 5 else 1
+print("Method:", Method, ", MinCluster:", MinCluster, ", MinSamples:", MinSamples)
 
 # Read from `./known/temp.bytes`
 with open("./known/temp.bytes", "rb") as file:
@@ -31,7 +32,7 @@ distances = pairwise_distances(embeddings, embeddings, metric='cosine', n_jobs=c
 # Send into HDBScan
 import json
 import hdbscan
-hdb = hdbscan.HDBSCAN(min_cluster_size = 2, min_samples = 1, cluster_selection_method = 'leaf', core_dist_n_jobs = cpus, metric = 'precomputed') # , prediction_data = True
+hdb = hdbscan.HDBSCAN(min_cluster_size = MinCluster, min_samples = MinSamples, cluster_selection_method = Method, core_dist_n_jobs = cpus, metric = 'precomputed') # , prediction_data = True
 hdb.fit(distances.astype(np.float64))
 print(json.dumps([hdb.labels_.tolist(), hdb.probabilities_.tolist()]))
 

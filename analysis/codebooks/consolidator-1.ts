@@ -1,7 +1,7 @@
 import { ClusterTexts } from '../../utils/embeddings.js';
 import { SortCodes } from '../../utils/export.js';
 import { Code, CodedThreads } from '../../utils/schema.js';
-import { CodebookConsolidator, MergeCodesByCluster } from './codebooks.js';
+import { AssignCategoriesByCluster, CodebookConsolidator, MergeCategoriesByCluster, MergeCodesByCluster } from './codebooks.js';
 
 /** Consolidator1: Consolidate a codebook through generating definitions for codes, then cluster them using text embeddings. */
 export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
@@ -21,10 +21,12 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
     public readonly MergeLabelsAgain: number = 3;
     /** RefineDefinitionsAgain: The iteration that refines definitions again. */
     public readonly RefineDefinitionsAgain: number = 4;
+    /** MergeCategories: The iteration that merge into initial categories. */
+    public readonly MergeCategories: number = 5;
     /** RefineCategories: The iteration that refines categories. */
-    public readonly RefineCategories: number = 5;
+    public readonly RefineCategories: number = 6;
     /** AssignCategories: The iteration that assigns categories. */
-    public readonly AssignCategories: number = 6;
+    public readonly AssignCategories: number = 7;
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // Return value: [Chunk size, Cursor movement]
     public GetChunkSize(Recommended: number, Remaining: number, Iteration: number, Tries: number) {
@@ -36,6 +38,7 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
                 return Math.max(Recommended - Tries * 8, 1);
             case this.MergeLabels:
             case this.MergeLabelsAgain:
+            case this.MergeCategories:
             case this.RefineCategories:
                 return Remaining;
             default: 
@@ -57,8 +60,12 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
             case this.MergeLabelsAgain:
                 // Only when the code has definitions should we merge them
                 return (Code.Definitions?.length ?? 0) > 0;
+            case this.MergeCategories:
+                // Only when the code has definitions should we use it to merge categories
+                // Only use when there are no categories
+                return (Code.Definitions?.length ?? 0) > 0 && (Code.Categories?.length ?? 0) == 0;
             case this.RefineCategories:
-                // Only when the code has definitions should we use it to refine categories
+                // Only when the code has categories should we use it to merge categories
                 return (Code.Definitions?.length ?? 0) > 0;
             default: 
                 return true;
@@ -67,32 +74,24 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
     /** BuildPrompts: Build the prompts for the LLM. */
     public async BuildPrompts(Analysis: CodedThreads, Data: TUnit[], Codes: Code[], ChunkStart: number, Iteration: number): Promise<[string, string]> {
         // Collect the existing categories from the codebook
-        var Categories = [...new Set(Object.values(Analysis.Codebook!).map(Code => Code.Categories ?? []).flat().filter(Category => Category != ""))];
+        var Categories = [...new Set(Object.values(Analysis.Codebook!).map(Code => Code.Categories ?? []).flat().filter(Category => Category != "").sort())];
         switch (Iteration) {
             case this.GenerateDefinitions:
                 // Generate definitions for codes
                 return [`
 You are an expert in thematic analysis clarifying the criteria of qualitative codes. Quotes are independent of each other.
-First, identify some potential categories for all codes in short phrases.
-Then, write short, clear, generalizable criteria without unnecessary specifics or examples. Refine the label if necessary. Group each code into a category.
+Write short, clear, generalizable criteria without unnecessary specifics or examples. Refine the label if necessary.
 The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
-Potential categories:
-a. {Category A}
-b. {Category B}
-...
-
 Definitions for each code (${Codes.length} in total):
 1. 
-Label: {Label 1}
 Criteria: {Criteria of code 1}
-Category: {The category of code 1}
+Label: {Label 1}
 ...
 ${Codes.length}.
-Label: {Label ${Codes.length}}
 Criteria: {Criteria of code ${Codes.length}}
-Category: {The category of code ${Codes.length}}
+Label: {Label ${Codes.length}}
 ---`.trim(), 
                     Codes.map((Code, Index) => `
 ${Index + 1}.
@@ -104,26 +103,18 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
                 // Refine definitions for codes
                 return [`
 You are an expert in thematic analysis. Each code is merged from multiple ones.
-First, identify some potential categories for all codes in short phrases.
-Then, the labels and criteria to make each code cover all criteria while staying concise and clear. Write generalizable definitions without unnecessary specifics or examples. Group each code into a category.
+Write labels and criteria to make each code cover all criteria while staying concise and clear, without unnecessary specifics or examples.
 The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
-Potential categories:
-a. {Category A}
-b. {Category B}
-...
-
 Definitions for each code (${Codes.length} in total):
 1.
-Label: {Label 1}
 Criteria: {Criteria of code 1}
-Category: {The category of code 1}
+Label: {Label 1}
 ...
 ${Codes.length}.
-Label: {Label ${Codes.length}}
 Criteria: {Criteria of code ${Codes.length}}
-Category: {The category of code ${Codes.length}}
+Label: {Label ${Codes.length}}
 ---`.trim(), 
                     Codes.map((Code, Index) => `
 ${Index + 1}. ${(Code.Alternatives ?? []).concat(Code.Label).join(", ") ?? ""}.
@@ -142,38 +133,51 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 // Merge the codes
                 Analysis.Codebook = MergeCodesByCluster(Clusters, Codes);
                 return ["", ""];
-            case this.RefineCategories:
-                // Raw codes are too many. We only use frequent ones to refine categories.
+            case this.MergeCategories:
+                // Cluster codes using text embeddings
+                var CodeStrings = Codes.map(Code => {
+                    var Text = `Label: ${Code.Label}`;
+                    if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
+                    return Text.trim();
+                });
+                // Cluster categories using text embeddings
+                var Clusters = await ClusterTexts(CodeStrings, this.Name, "hdbscan", "eom", "5", "2");
+                var Merged = AssignCategoriesByCluster(Clusters, Codes);
+                (Analysis as any).Categories = Object.keys(Merged);
+                // Ask LLMs to write new names for each category
                 return [`
-You are an expert in thematic analysis.
-You are brainstorming and refining structured themes to categorize all qualitative codes. Themes should be grounded, not speculations or hypotheses, but also not too specific.
-Each theme or sub-theme should cover multiple codes. Avoid overlapping or missing concepts.
+You are an expert in thematic analysis. You are assigning proper names to each category based on input qualitative codes.
+Make sure each name is clear, representative of codes in the category and without specifics.
+The research question is: How did Physics Lab's online community emerge?
+
+Always follow the output format:
+---
+Names for each category (${Merged.length} in total):
+1. {Name of category 1}
+...
+${Merged.length}. {Name of category ${Merged.length}}
+---`.trim(), "Categories:\n" + Object.keys(Merged).map((Category, Index) => `${Index + 1}. Codes: ${Merged[Category].join("; ")}`).join("\n\n")];
+            case this.AssignCategories:
+                // In this case, we ask LLMs to assign codes based on an existing list.
+                return [`
+You are an expert in thematic analysis. You are assigning categories to qualitative codes based on their definitions.
+The list of possible categories:
+---
+${Categories.map((Category, Index) => `* ${Category}`).join("\n")}
+---
 The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
-Thoughts: {Thoughts and plans about structuring input qualitative codes into themes around the research question.}
-Initial Themes:
-1. Theme 1
-  - Subtheme 1
-    - Input codes related to subtheme 1
-  - Subtheme 2
-    - Input codes related to subtheme 2
-2. Theme 2
+Category for each code (${Codes.length} in total):
+1. {The most relevant category for code 1}
+2. {The most relevant category for code 2}
 ...
----
-Reflections: {Reflection on the initial themes. Find examples of themes that could be added or separated into new themes or subthemes. Find examples of overlapping, redundant themes that could be merged or turned into subthemes.}
-Refined Themes:
-1. Theme 1
-  - Subtheme 1
-    - Input codes related to subtheme 1
-  - Subtheme 2
-    - Input codes related to subtheme 2
-2. Theme 2
-...
+${Codes.length + 1}: {The most relevant category for code ${Codes.length}}
 ---`.trim(), 
-                    "Qualitative codes:\n" + 
-                    SortCodes(Codes).filter(Code => (Code.Alternatives?.length ?? 0) > 0 || Code.Categories!.length > 0 || Code.Examples!.length > 0)
-                        .map((Code, Index) => `* ${Code.Label} (${Code.Categories![0]})\n${Code.Definitions![0]}`).join("\n\n")];
+                    `
+Qualitative codes:
+${SortCodes(Codes).map((Code, Index) => `* ${Code.Label}\n${Code.Definitions![0]}`).join("\n\n")}
+`.trim()];
             default:
                 return ["", ""];
         }
@@ -240,6 +244,34 @@ Refined Themes:
                 }
                 // Return the cursor movement
                 return Object.keys(Pendings).length - Codes.length;
+            case this.MergeCategories:
+                var Categories = (Analysis as any).Categories as string[];
+                delete (Analysis as any).Categories;
+                var Results = [];
+                // Parse the categories
+                for (var I = 0; I < Lines.length; I++) {
+                    var Line = Lines[I];
+                    if (Line == "" || Line.startsWith("---")) continue;
+                    var Match = Line.match(/^(\d+)\./);
+                    if (Match) {
+                        var Index = parseInt(Match[1]) - 1;
+                        var Category = Line.substring(Match[0].length).trim().toLowerCase();
+                        Results.push(Category);
+                    }
+                }
+                // Update the categories
+                if (Results.length != Categories.length) throw new Error(`Invalid response: ${Results.length} results for ${Categories.length} categories.`);
+                for (var I = 0; I < Categories.length; I++) {
+                    var Category = Categories[I];
+                    var NewCategory = Results[I];
+                    for (var Code of Codes) {
+                        if (Code.Categories?.includes(Category)) {
+                            Code.Categories = Code.Categories?.filter(C => C != Category);
+                            Code.Categories.push(NewCategory);
+                        }
+                    }
+                }
+                break;
         }
         return 0;
     }
