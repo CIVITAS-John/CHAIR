@@ -62,8 +62,7 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
                 return (Code.Definitions?.length ?? 0) > 0;
             case this.MergeCategories:
                 // Only when the code has definitions should we use it to merge categories
-                // Only use when there are no categories
-                return (Code.Definitions?.length ?? 0) > 0 && (Code.Categories?.length ?? 0) == 0;
+                return (Code.Definitions?.length ?? 0) > 0;
             case this.RefineCategories:
                 // Only when the code has categories should we use it to merge categories
                 return (Code.Definitions?.length ?? 0) > 0;
@@ -80,7 +79,7 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
                 // Generate definitions for codes
                 return [`
 You are an expert in thematic analysis clarifying the criteria of qualitative codes. Quotes are independent of each other.
-Write short, clear, generalizable criteria without unnecessary specifics or examples. Refine the label if necessary.
+Write short, clear, generalizable criteria without unnecessary specifics or examples. Refine the label if necessary. Group each code into a category.
 The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
@@ -88,10 +87,12 @@ Definitions for each code (${Codes.length} in total):
 1. 
 Criteria: {Criteria of code 1}
 Label: {Label 1}
+Category: {The category of 1}
 ...
 ${Codes.length}.
 Criteria: {Criteria of code ${Codes.length}}
 Label: {Label ${Codes.length}}
+Category: {The category of code ${Codes.length}}
 ---`.trim(), 
                     Codes.map((Code, Index) => `
 ${Index + 1}.
@@ -103,7 +104,7 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
                 // Refine definitions for codes
                 return [`
 You are an expert in thematic analysis. Each code is merged from multiple ones.
-Write labels and criteria to make each code cover all criteria while staying concise and clear, without unnecessary specifics or examples.
+Write labels and criteria to make each code cover all criteria while staying concise and clear, without unnecessary specifics or examples. Group each code into a category.
 The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
@@ -111,10 +112,12 @@ Definitions for each code (${Codes.length} in total):
 1.
 Criteria: {Criteria of code 1}
 Label: {Label 1}
+Category: {The category of 1}
 ...
 ${Codes.length}.
 Criteria: {Criteria of code ${Codes.length}}
 Label: {Label ${Codes.length}}
+Category: {The category of code ${Codes.length}}
 ---`.trim(), 
                     Codes.map((Code, Index) => `
 ${Index + 1}. ${(Code.Alternatives ?? []).concat(Code.Label).join(", ") ?? ""}.
@@ -137,26 +140,28 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 // Cluster codes using text embeddings
                 var CodeStrings = Codes.map(Code => {
                     var Text = `Label: ${Code.Label}`;
+                    if ((Code.Categories?.length ?? 0) > 0) Text += `\nInitial category: ${Code.Categories![0]}`;
                     if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
                     return Text.trim();
                 });
                 // Cluster categories using text embeddings
-                var Clusters = await ClusterTexts(CodeStrings, this.Name, "hdbscan", "eom", "5", "2");
+                var Clusters = await ClusterTexts(CodeStrings, this.Name, "hdbscan", "eom", "3", "1", "euclidean", "2");
                 var Merged = AssignCategoriesByCluster(Clusters, Codes);
+                var Count = Object.keys(Merged).length;
                 (Analysis as any).Categories = Object.keys(Merged);
                 // Ask LLMs to write new names for each category
                 return [`
 You are an expert in thematic analysis. You are assigning proper names to each category based on input qualitative codes.
-Make sure each name is clear, representative of codes in the category and without specifics.
+Make sure each name is clear, representative of all codes in the category and without specifics.
 The research question is: How did Physics Lab's online community emerge?
 
 Always follow the output format:
 ---
-Names for each category (${Merged.length} in total):
+Names for each category (${Count} in total):
 1. {Name of category 1}
 ...
-${Merged.length}. {Name of category ${Merged.length}}
----`.trim(), "Categories:\n" + Object.keys(Merged).map((Category, Index) => `${Index + 1}. Codes: ${Merged[Category].join("; ")}`).join("\n\n")];
+${Count}. {Name of category ${Count}}
+---`.trim(), "Categories:\n" + Object.keys(Merged).map((Category, Index) => `${Index + 1}. Codes:\n${Merged[Category].map(Code => `- ${Code.Label} (${Code.Definitions![0]})`).join("\n")}`).join("\n\n")];
             case this.AssignCategories:
                 // In this case, we ask LLMs to assign codes based on an existing list.
                 return [`

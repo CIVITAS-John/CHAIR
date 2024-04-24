@@ -122,15 +122,15 @@ export function MergeCodesByCluster(Clusters: Record<number, ClusterItem[]>, Cod
 }
 
 /** AssignCategoriesByCluster: Assign categories based on category clustering results. */
-export function AssignCategoriesByCluster(Clusters: Record<number, ClusterItem[]>, Codes: Code[]): Record<string, string[]> {
-    var Results: Record<string, string[]> = {};
+export function AssignCategoriesByCluster(Clusters: Record<number, ClusterItem[]>, Codes: Code[]): Record<string, Code[]> {
+    var Results: Record<string, Code[]> = {};
     for (var Key of Object.keys(Clusters)) {
         var ClusterID = parseInt(Key);
-        var ClusterName = ClusterID == -1 ? "Miscellaneous" : `Cluster ${ClusterID}`;
-        var Items: string[] = [];
+        var ClusterName = ClusterID == -1 ? "miscellaneous" : `cluster ${ClusterID}`;
+        var Items: Code[] = [];
         for (var Item of Clusters[ClusterID]) {
             Codes[Item.ID].Categories = [ClusterName];
-            Items.push(Codes[Item.ID].Label);
+            Items.push(Codes[Item.ID]);
         }
         if (ClusterID != -1) 
             Results[ClusterName] = Items;

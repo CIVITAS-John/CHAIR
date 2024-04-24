@@ -31,7 +31,7 @@ export function InitializeEmbeddings(Embedding: string) {
                 dimensions: Dimensions
             });
             break;
-        case "openai-large-512":
+        case "openai-large-1024":
             Dimensions = 1024;
             Model = new OpenAIEmbeddings({
                 modelName: "text-embedding-3-large",

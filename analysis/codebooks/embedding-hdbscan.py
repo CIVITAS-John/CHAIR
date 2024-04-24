@@ -1,6 +1,8 @@
 import sys
 import numpy as np
 import multiprocessing
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 cpus = multiprocessing.cpu_count()
 
@@ -8,9 +10,11 @@ cpus = multiprocessing.cpu_count()
 Dimensions = int(sys.argv[1])
 Embeddings = int(sys.argv[2])
 Method = sys.argv[3] if len(sys.argv) > 3 else "leaf"
-MinCluster = float(sys.argv[4]) if len(sys.argv) > 4 else 2
-MinSamples = float(sys.argv[5]) if len(sys.argv) > 5 else 1
-print("Method:", Method, ", MinCluster:", MinCluster, ", MinSamples:", MinSamples)
+MinCluster = int(sys.argv[4]) if len(sys.argv) > 4 else 2
+MinSamples = int(sys.argv[5]) if len(sys.argv) > 5 else 1
+Metrics = sys.argv[6] if len(sys.argv) > 6 else "cosine"
+TargetDimensions = int(sys.argv[7]) if len(sys.argv) > 7 else Dimensions
+print("Method:", Method, ", MinCluster:", MinCluster, ", MinSamples:", MinSamples, ", Metrics:", Metrics, ", Target Dimensions:", TargetDimensions)
 
 # Read from `./known/temp.bytes`
 with open("./known/temp.bytes", "rb") as file:
@@ -25,9 +29,16 @@ embeddings = embeddings.reshape((Embeddings, Dimensions))
 # print("Embeddings reshaped:", embeddings.shape)
 # print("Example embedding:", embeddings[2])
 
+# Use UMap to reduce the dimensions
+from umap import UMAP
+if TargetDimensions < Dimensions:
+    umap = UMAP(n_components = TargetDimensions)
+    embeddings = umap.fit_transform(embeddings)
+    print("Embeddings reduced:", embeddings.shape)
+
 # Calculate distances
 from sklearn.metrics.pairwise import pairwise_distances
-distances = pairwise_distances(embeddings, embeddings, metric='cosine', n_jobs=cpus)
+distances = pairwise_distances(embeddings, embeddings, metric=Metrics, n_jobs=cpus)
 
 # Send into HDBScan
 import json
@@ -36,15 +47,13 @@ hdb = hdbscan.HDBSCAN(min_cluster_size = MinCluster, min_samples = MinSamples, c
 hdb.fit(distances.astype(np.float64))
 print(json.dumps([hdb.labels_.tolist(), hdb.probabilities_.tolist()]))
 
-# Here, we try to use the soft clustering to produce more nuanced probabilities
-# Unfortunately, I don't think that really make a difference - except for more time spent and weird chances returned
-# membership = hdbscan.all_points_membership_vectors(hdb)
-# labels = [int(np.argmax(x)) for x in membership]
-# probabilities = [float(np.max(x)) for x in membership]
-# print(json.dumps([hdb.labels_.tolist(), probabilities]))
-
-# Use UMap to reduce the dimensions for potential visualization
-from umap import UMAP
-umap = UMAP(n_components = 2)
-reduced_embeddings = umap.fit_transform(embeddings)
-# print("Embeddings reduced:", reduced_embeddings.shape)
+# Plot the clusters
+if TargetDimensions == 2:
+    color_palette = sns.color_palette('deep', len(set(hdb.labels_)))
+    cluster_colors = [color_palette[x] if x >= 0
+                    else (0.5, 0.5, 0.5)
+                    for x in hdb.labels_]
+    colors = [sns.desaturate(x, p) for x, p in
+              zip(cluster_colors, hdb.probabilities_)]
+    plt.scatter(embeddings[:, 0], embeddings[:, 1], s=50, linewidth=0, c=colors, alpha=0.25)
+    plt.show()
