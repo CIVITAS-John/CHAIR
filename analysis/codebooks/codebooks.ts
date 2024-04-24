@@ -59,7 +59,9 @@ export async function ConsolidateCodebook<TUnit>(Consolidator: CodebookConsolida
     var LastIteration = 0;
     // Run the coded threads through chunks (as defined by the consolidator)
     await LoopThroughChunks(Consolidator, Analyses, Sources, Codes, async (Currents, ChunkStart, IsFirst, Tries, Iteration) => {
-        if (Iteration != LastIteration) await IterationCallback?.(LastIteration);
+        console.log("Iteration: " + Iteration)
+        if (Iteration != LastIteration) 
+            await IterationCallback?.(LastIteration);
         LastIteration = Iteration;
         var Prompts = await Consolidator.BuildPrompts(Analyses, Sources, Currents, ChunkStart, Iteration);
         if (Prompts[0] == "" && Prompts[1] == "") return 0;

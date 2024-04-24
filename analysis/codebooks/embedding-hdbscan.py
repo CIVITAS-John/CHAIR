@@ -1,5 +1,8 @@
 import sys
 import numpy as np
+import multiprocessing
+
+cpus = multiprocessing.cpu_count()
 
 # Get the arguments
 Dimensions = int(sys.argv[1])
@@ -21,11 +24,15 @@ embeddings = embeddings.reshape((Embeddings, Dimensions))
 # print("Embeddings reshaped:", embeddings.shape)
 # print("Example embedding:", embeddings[2])
 
+# Calculate distances
+from sklearn.metrics.pairwise import pairwise_distances
+distances = pairwise_distances(embeddings, embeddings, metric='cosine', n_jobs=cpus)
+
 # Send into HDBScan
 import json
 import hdbscan
-hdb = hdbscan.HDBSCAN(min_cluster_size = 2, min_samples = 1, cluster_selection_method = 'leaf', core_dist_n_jobs = 12) # , prediction_data = True
-hdb.fit(embeddings)
+hdb = hdbscan.HDBSCAN(min_cluster_size = 2, min_samples = 1, cluster_selection_method = 'leaf', core_dist_n_jobs = cpus, metric = 'precomputed') # , prediction_data = True
+hdb.fit(distances.astype(np.float64))
 print(json.dumps([hdb.labels_.tolist(), hdb.probabilities_.tolist()]))
 
 # Here, we try to use the soft clustering to produce more nuanced probabilities
@@ -39,4 +46,4 @@ print(json.dumps([hdb.labels_.tolist(), hdb.probabilities_.tolist()]))
 from umap import UMAP
 umap = UMAP(n_components = 2)
 reduced_embeddings = umap.fit_transform(embeddings)
-print("Embeddings reduced:", reduced_embeddings.shape)
+# print("Embeddings reduced:", reduced_embeddings.shape)

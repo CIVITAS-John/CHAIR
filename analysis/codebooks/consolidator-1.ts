@@ -10,25 +10,28 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature: number = 0;
     /** MaxIterations: The maximum number of iterations for the analyzer. */
-    public MaxIterations: number = 3;
+    public MaxIterations: number = 5;
     /** GenerateDefinitions: The iteration that generates definition. */
     public readonly GenerateDefinitions: number = 0;
     /** MergeLabels: The iteration that merges labels. */
     public readonly MergeLabels: number = 1;
-    /** MergeLabelsAgain: The iteration that merges labels again. */
-    public readonly MergeLabelsAgain: number = 2;
     /** RefineDefinitions: The iteration that refines definitions. */
-    public readonly RefineDefinitions: number = 3;
+    public readonly RefineDefinitions: number = 2;
+    /** MergeLabelsAgain: The iteration that merges labels again. */
+    public readonly MergeLabelsAgain: number = 3;
+    /** RefineDefinitionsAgain: The iteration that refines definitions again. */
+    public readonly RefineDefinitionsAgain: number = 4;
     /** RefineCategories: The iteration that refines categories. */
-    public readonly RefineCategories: number = 4;
+    public readonly RefineCategories: number = 5;
     /** AssignCategories: The iteration that assigns categories. */
-    public readonly AssignCategories: number = 5;
+    public readonly AssignCategories: number = 6;
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // Return value: [Chunk size, Cursor movement]
     public GetChunkSize(Recommended: number, Remaining: number, Iteration: number, Tries: number) {
         switch (Iteration) {
             case this.GenerateDefinitions:
             case this.RefineDefinitions:
+            case this.RefineDefinitionsAgain:
             case this.AssignCategories:
                 return Math.max(Recommended - Tries * 8, 1);
             case this.MergeLabels:
@@ -47,15 +50,13 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
                 // Only when the code has no definitions should we generate them
                 return (Code.Definitions?.length ?? 0) == 0;
             case this.RefineDefinitions:
+            case this.RefineDefinitionsAgain:
                 // Only when the code has multiple definitions should we refine them
                 return (Code.Definitions?.length ?? 0) > 1;
             case this.MergeLabels:
+            case this.MergeLabelsAgain:
                 // Only when the code has definitions should we merge them
                 return (Code.Definitions?.length ?? 0) > 0;
-            case this.MergeLabelsAgain:
-                // Only when the code has definitions but no categories should we merge them again
-                // Because high-level codes could be over-merged
-                return (Code.Definitions?.length ?? 0) > 0 && (Code.Categories?.length ?? 0) == 0;
             case this.RefineCategories:
                 // Only when the code has definitions should we use it to refine categories
                 return (Code.Definitions?.length ?? 0) > 0;
@@ -72,17 +73,16 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
                 // Generate definitions for codes
                 return [`
 You are an expert in thematic analysis clarifying the criteria of qualitative codes. Quotes are independent of each other.
-Write short, clear, generalizable criteria without unnecessary specifics or examples. Shorten the label if necessary.
-Then, group each code into a category, with a short phrase. Example categories:
----
-design exchanges
-social interactions
-physics discussions
-technology topics
----
+First, identify some potential categories for all codes in short phrases.
+Then, write short, clear, generalizable criteria without unnecessary specifics or examples. Refine the label if necessary. Group each code into a category.
 The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
+Potential categories:
+a. {Category A}
+b. {Category B}
+...
+
 Definitions for each code (${Codes.length} in total):
 1. 
 Label: {Label 1}
@@ -100,21 +100,20 @@ Label: ${Code.Label}
 Quotes:
 ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => `- ${Example}`).join("\n")}`.trim()).join("\n\n")];
             case this.RefineDefinitions:
+            case this.RefineDefinitionsAgain:
                 // Refine definitions for codes
                 return [`
-You are an expert in thematic analysis.
-Each code is merged from multiple ones. Refine the labels and criteria to make each code cover all criteria while staying concise and clear. Then, assign relevant themes.
-Write generalizable definitions without unnecessary specifics or examples.
-Then, group each code into a category, with a short phrase. Example categories:
----
-design exchanges
-social interactions
-physics discussions
-technology topics
----
+You are an expert in thematic analysis. Each code is merged from multiple ones.
+First, identify some potential categories for all codes in short phrases.
+Then, the labels and criteria to make each code cover all criteria while staying concise and clear. Write generalizable definitions without unnecessary specifics or examples. Group each code into a category.
 The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
+Potential categories:
+a. {Category A}
+b. {Category B}
+...
+
 Definitions for each code (${Codes.length} in total):
 1.
 Label: {Label 1}
@@ -135,12 +134,8 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 // Combine each code into a string for clustering
                 var CodeStrings = Codes.map(Code => {
                     var Text = `Label: ${Code.Label}`;
-                    if ((Code.Categories?.length ?? 0) > 0) Text += `\nCategories: \n- ${Code.Categories!.join("\n")}`;
-                    if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinitions: \n- ${Code.Definitions!.join("\n")}`;
-                    if ((Code.Alternatives?.length ?? 0) > 0) Text += `\nAlternatives: \n- ${Code.Alternatives!.join("\n")}`;
-                    // Examples may result in confusing embeddings, so we will skip them
-                    // if ((Code.Examples?.length ?? 0) > 0) Text += `\nExamples: \n- ${Code.Examples!.join("\n")}`;
-                    return Text;
+                    if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
+                    return Text.trim();
                 });
                 // Categorize the strings
                 var Clusters = await ClusterTexts(CodeStrings, this.Name);
@@ -183,6 +178,7 @@ Organized Themes:
         switch (Iteration) {
             case this.GenerateDefinitions:
             case this.RefineDefinitions:
+            case this.RefineDefinitionsAgain:
                 // Refine definitions for codes
                 var Pendings: Record<number, Code> = {};
                 var CurrentCode: Code | undefined;
@@ -191,6 +187,8 @@ Organized Themes:
                 for (var I = 0; I < Lines.length; I++) {
                     var Line = Lines[I];
                     if (Line == "" || Line.startsWith("---")) continue;
+                    // If we see "...", that means later codes are not processed and should be truncated
+                    if (Line == "...") break;
                     var Match = Line.match(/^(\d+)\./);
                     if (Match) {
                         var Index = parseInt(Match[1]) - 1;
@@ -224,6 +222,7 @@ Organized Themes:
                 // Update the codes
                 for (var I = 0; I < Codes.length; I++) {
                     var Code = Pendings[I];
+                    if (!Code) break;
                     var NewLabel = Code.Label.toLowerCase();
                     if (NewLabel != Codes[I].Label) {
                         Codes[I].Alternatives = Codes[I].Alternatives ?? [];
