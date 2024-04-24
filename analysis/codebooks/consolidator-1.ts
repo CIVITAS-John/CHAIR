@@ -61,8 +61,8 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
                 // Only when the code has definitions should we merge them
                 return (Code.Definitions?.length ?? 0) > 0;
             case this.MergeCategories:
-                // Only when the code has definitions should we use it to merge categories
-                return (Code.Definitions?.length ?? 0) > 0;
+                // Only when the code has 1 category should we use it to merge categories
+                return (Code.Categories?.length ?? 0) == 1;
             case this.RefineCategories:
                 // Only when the code has categories should we use it to merge categories
                 return (Code.Definitions?.length ?? 0) > 0;
@@ -137,22 +137,15 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 Analysis.Codebook = MergeCodesByCluster(Clusters, Codes);
                 return ["", ""];
             case this.MergeCategories:
-                // Cluster codes using text embeddings
-                var CodeStrings = Codes.map(Code => {
-                    var Text = `Label: ${Code.Label}`;
-                    if ((Code.Categories?.length ?? 0) > 0) Text += `\nInitial category: ${Code.Categories![0]}`;
-                    if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
-                    return Text.trim();
-                });
                 // Cluster categories using text embeddings
-                var Clusters = await ClusterTexts(CodeStrings, this.Name, "hdbscan", "eom", "3", "1", "euclidean", "2");
-                var Merged = AssignCategoriesByCluster(Clusters, Codes);
+                var Clusters = await ClusterTexts(Categories, this.Name);
+                var Merged = MergeCategoriesByCluster(Clusters, Categories, Codes);
                 var Count = Object.keys(Merged).length;
                 (Analysis as any).Categories = Object.keys(Merged);
                 // Ask LLMs to write new names for each category
                 return [`
-You are an expert in thematic analysis. You are assigning proper names to each category based on input qualitative codes.
-Make sure each name is clear, representative of all codes in the category and without specifics.
+You are an expert in thematic analysis. You are assigning names for categories based on the merging results.
+Make sure each name is clear, concise, related to the research question, and without specifics.
 The research question is: How did Physics Lab's online community emerge?
 
 Always follow the output format:
@@ -161,7 +154,7 @@ Names for each category (${Count} in total):
 1. {Name of category 1}
 ...
 ${Count}. {Name of category ${Count}}
----`.trim(), "Categories:\n" + Object.keys(Merged).map((Category, Index) => `${Index + 1}. Codes:\n${Merged[Category].map(Code => `- ${Code.Label} (${Code.Definitions![0]})`).join("\n")}`).join("\n\n")];
+---`.trim(), "Merge results:\n" + Object.keys(Merged).map((Category, Index) => `${Index + 1}.\n${Category.split("|").map(Current => `- ${Current}`).join("\n")}`).join("\n\n")];
             case this.AssignCategories:
                 // In this case, we ask LLMs to assign codes based on an existing list.
                 return [`

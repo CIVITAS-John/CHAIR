@@ -139,25 +139,31 @@ export function AssignCategoriesByCluster(Clusters: Record<number, ClusterItem[]
 }
 
 /** MergeCategoriesByCluster: Merge categories based on category clustering results. */
-export function MergeCategoriesByCluster(Clusters: Record<number, ClusterItem[]>, Categories: string[], Codes: Code[]): string[] {
-    var Results: string[] = [];
+export function MergeCategoriesByCluster(Clusters: Record<number, ClusterItem[]>, Categories: string[], Codes: Code[]): Record<string, Code[]> {
+    var Results: Record<string, Code[]> = {};
     for (var Key of Object.keys(Clusters)) {
         var ClusterID = parseInt(Key);
+        // Skip the non-clustered ones
         if (ClusterID == -1) {
-            Clusters[ClusterID].forEach(Item => Results.push(Categories[Item.ID]));
             continue;
         }
+        // Get the current categories
         var Current = Clusters[ClusterID].filter(Item => Item.Probability > 0.9).map(Item => Categories[Item.ID]);
         if (Current.length <= 1) continue;
+        // Merge the categories
+        var Items: Code[] = [];
         var NewCategory = Current.join("|");
         console.log("Merging categories: " + Clusters[ClusterID].map(Item => `${Categories[Item.ID]} with ${(Item.Probability * 100).toFixed(2)}%`).join(", "));
         for (var Code of Codes) {
             if (!Code.Categories) continue;
             var Filtered = Code.Categories.filter(Category => !Current.includes(Category) && Category != NewCategory);
-            if (Filtered.length != Code.Categories.length)
+            if (Filtered.length != Code.Categories.length) {
                 Code.Categories = [...Filtered, NewCategory];
+                Items.push(Code);
+            }
         }
-        Results.push(NewCategory);
+        // Record the new category
+        Results[NewCategory] = Items;
     }
-    return Results.sort();
+    return Results;
 }
