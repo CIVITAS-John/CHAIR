@@ -10,7 +10,7 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature: number = 0;
     /** MaxIterations: The maximum number of iterations for the analyzer. */
-    public MaxIterations: number = 5;
+    public MaxIterations: number = 6;
     /** GenerateDefinitions: The iteration that generates definition. */
     public readonly GenerateDefinitions: number = 0;
     /** MergeLabels: The iteration that merges labels. */
@@ -146,8 +146,8 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 // Raw codes are too many. We only use frequent ones to refine categories.
                 return [`
 You are an expert in thematic analysis.
-You are trying to optimize structured themes to categorize the known qualitative codes. Themes should be generalizable findings, not speculations or hypotheses.
-Avoid overlapping concepts between themes. Each theme or sub-theme should cover multiple codes. Never not introduce new information.
+You are brainstorming and refining structured themes to categorize all qualitative codes. Themes should be grounded, not speculations or hypotheses, but also not too specific.
+Each theme or sub-theme should cover multiple codes. Avoid overlapping or missing concepts.
 The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
@@ -155,19 +155,24 @@ Thoughts: {Thoughts and plans about structuring input qualitative codes into the
 Initial Themes:
 1. Theme 1
   - Subtheme 1
+    - Input codes related to subtheme 1
   - Subtheme 2
+    - Input codes related to subtheme 2
 2. Theme 2
 ...
 ---
-Reflections: {Reflection on the initial themes. Find examples of overlapping, redundant concepts that could be merged. Find examples of missing concepts that could be added or separated.}
-Organized Themes:
+Reflections: {Reflection on the initial themes. Find examples of themes that could be added or separated into new themes or subthemes. Find examples of overlapping, redundant themes that could be merged or turned into subthemes.}
+Refined Themes:
 1. Theme 1
   - Subtheme 1
+    - Input codes related to subtheme 1
   - Subtheme 2
+    - Input codes related to subtheme 2
 2. Theme 2
 ...
 ---`.trim(), 
-                    SortCodes(Codes).filter(Code => Code.Alternatives!.length > 0 || Code.Categories!.length > 0)
+                    "Qualitative codes:\n" + 
+                    SortCodes(Codes).filter(Code => (Code.Alternatives?.length ?? 0) > 0 || Code.Categories!.length > 0 || Code.Examples!.length > 0)
                         .map((Code, Index) => `* ${Code.Label} (${Code.Categories![0]})\n${Code.Definitions![0]}`).join("\n\n")];
             default:
                 return ["", ""];

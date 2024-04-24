@@ -36,6 +36,10 @@ export function CountItems(Expected: number, Finished: number) {
 /** InitializeLLM: Initialize a LLM with the given name. */
 export function InitializeLLM(LLM: string) {
     dotenv.config();
+    InputTokens = 0;
+    OutputTokens = 0;
+    ExpectedItems = 0;
+    FinishedItems = 0;
     switch (LLM) {
         case "gpt-3.5-turbo":
             // 0.5$ / 1.5$
@@ -138,7 +142,7 @@ export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, 
             await PromiseWithTimeout(
                 Model(Temperature ?? 0).invoke(Messages, { temperature: Temperature } as any).then(Result => {
                     Text = Result.content as string;
-                }), 120000);
+                }), 300000);
             console.log(`LLM Result: \n${Text}\n`);
         }
         var Input = Messages.map(Message => Tokenize(Message.content as string).length).reduce((Prev, Curr) => Prev + Curr);
