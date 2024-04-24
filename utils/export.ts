@@ -1,4 +1,4 @@
-import { CodedThread, CodedThreads, Conversation, Message, Project } from "./schema.js";
+import { Code, CodedThread, CodedThreads, Conversation, Message, Project } from "./schema.js";
 import Excel from 'exceljs';
 const { Workbook } = Excel;
 
@@ -191,10 +191,7 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
     // Write the codebook
     var Codes = Object.values(Analyses.Codebook);
     // Sort the codes
-    Codes.sort((A, B) => {
-        var Category = (A.Categories?.sort().join("; ") ?? "").localeCompare(B.Categories?.sort().join("; ") ?? "");
-        return Category != 0 ? Category : A.Label.localeCompare(B.Label);
-    });
+    Codes = SortCodes(Codes);
     // Write the codes
     for (var Code of Codes) {
         var Categories = Code.Categories?.map(Category => Code.Categories!.length > 1 ? `* ${Category}` : Category).join("\n") ?? "";
@@ -220,4 +217,12 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
         Row.getCell("Examples").alignment = { vertical: 'middle', wrapText: true };
         Row.getCell("Alternatives").alignment = { vertical: 'middle', wrapText: true };
     }
+}
+
+/** SortCodes: Sort an array of codes. */
+export function SortCodes(Codes: Code[]) {
+    return [...Codes].sort((A, B) => {
+        var Category = (A.Categories?.sort().join("; ") ?? "").localeCompare(B.Categories?.sort().join("; ") ?? "");
+        return Category != 0 ? Category : A.Label.localeCompare(B.Label);
+    });
 }

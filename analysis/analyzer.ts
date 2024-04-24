@@ -1,4 +1,4 @@
-import { MaxItems } from "../utils/llms.js";
+import { CountItems, MaxItems } from "../utils/llms.js";
 
 /** Analyzer: The definition of an abstract analyzer. */
 export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
@@ -26,7 +26,8 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     public abstract BuildPrompts(Analysis: TAnalysis, Target: TUnit, Subunits: TSubunit[], ChunkStart: number, Iteration: number): Promise<[string, string]>;
     /** ParseResponse: Parse the responses from the LLM. */
     // The return value is only for item-based coding, where each item has its own response. Otherwise, return {}.
-    public abstract ParseResponse(Analysis: TAnalysis, Lines: string[], Subunits: TSubunit[], ChunkStart: number, Iteration: number): Promise<Record<number, string>>;
+    // Alternatively, it can return a number to indicate the relative cursor movement. (Actual units - Expected units, often negative.)
+    public abstract ParseResponse(Analysis: TAnalysis, Lines: string[], Subunits: TSubunit[], ChunkStart: number, Iteration: number): Promise<Record<number, string> | number>;
 }
 
 /** LoopThroughChunks: Process data through the analyzer in a chunkified way. */
@@ -36,7 +37,6 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
     // Split units into smaller chunks based on the maximum items
     for (var I = 0; I < Analyzer.MaxIterations; I++) {
         var Cursor = 0;
-        var ProcessedAny = false;
         var Filtered = Sources.filter(Subunit => Analyzer.SubunitFilter(Subunit, I));
         while (Cursor < Filtered.length) {
             var Tries = 0; var CursorRelative = 0;
@@ -61,10 +61,13 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
                     CursorRelative = await Action(Currents, Cursor - Start, IsFirst, Tries, I);
                     // Sometimes, the action may return a relative cursor movement
                     if (ChunkSize[0] + CursorRelative < 0) throw new Error("Failed to process any subunits.");
-                    console.log(`Expected ${ChunkSize[0]} subunits, processed ${ChunkSize[0] + CursorRelative} subunits.`);
+                    CountItems(ChunkSize[0], ChunkSize[0] + CursorRelative);
+                    if (CursorRelative != 0)
+                        console.log(`Expected ${ChunkSize[0]} subunits, processed ${ChunkSize[0] + CursorRelative} subunits.`);
                     break;
                 } catch (Error: any) {
-                    if (++Tries > 2) throw Error;
+                    if (++Tries > 3) throw Error;
+                    CountItems(ChunkSize[0], 0);
                     console.log(`Analysis error, retrying ${Tries} times:\n${Error.toString()}`);
                 }
             }

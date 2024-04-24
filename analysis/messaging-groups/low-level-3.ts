@@ -1,3 +1,4 @@
+import { MaxItems } from '../../utils/llms.js';
 import { CodedThread, Conversation, Message } from '../../utils/schema.js';
 import { BuildMessagePrompt } from './conversations.js';
 import { LowLevelAnalyzerBase } from './low-level.js';
@@ -10,6 +11,14 @@ export class LowLevelAnalyzer3 extends LowLevelAnalyzerBase {
     public Name: string = "low-level-3";
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature: number = 0.5;
+    /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
+    // We will fetch at least 10 messages for each batch to keep the context.
+    // We will further fetch 3 messages from the previous batch to make codes consistent.
+    public GetChunkSize(Recommended: number, Remaining: number, Iteration: number, Tries: number): [number, number, number] {
+        // For weaker models, we will reduce the chunk size (32 => 24 => 16 => 8)
+        if (Recommended == MaxItems) return [Recommended - Tries * 8, 3, 0];
+        return [Recommended - Tries * 2, Math.max(8 - Recommended - Tries, 3), 0];
+    }
     /** BuildPrompts: Build the prompts for the LLM. */
     public async BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): Promise<[string, string]> {
         return [`
@@ -21,12 +30,12 @@ The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
 Thoughts: {A paragraph of thoughts, plans, and guiding questions about analyzing the conversation from different angles}
-Analysis of all ${Messages.length} messages:
-1. tag1, tag2, tag3...
+Tags for each message (${Messages.length} in total):
+1. tag1; tag2; tag3...
 ...
 ${Messages.length}. tag4; tag5; tag6; ...
 Summary: {A somehow detailed summary of the conversation, including previous ones}
 Notes: {Notes and hypotheses about the conversation until now}`.trim(),
-            Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join("\n")];
+            Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message, Analysis.Items[Message.ID])}`).join("\n")];
     }
 }

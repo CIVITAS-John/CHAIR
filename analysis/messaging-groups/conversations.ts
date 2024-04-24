@@ -2,7 +2,7 @@ import * as File from 'fs';
 import { GetMessagesPath } from '../../utils/loader.js';
 import { EnsureFolder, LLMName, RequestLLMWithCache } from '../../utils/llms.js';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
-import { CodedThread, CodedThreads, Conversation, Message } from '../../utils/schema.js';
+import { CodedItem, CodedThread, CodedThreads, Conversation, Message } from '../../utils/schema.js';
 import { Analyzer, LoopThroughChunks } from '../analyzer.js';
 import { LoadConversationsForAnalysis } from '../../utils/loader.js';
 import { ExportConversationsForCoding } from '../../utils/export.js';
@@ -40,7 +40,16 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
             Analyzed.Threads[Key] = Analysis;
         }
         // Run the messages through chunks (as defined by the analyzer)
+        var PreviousAnalysis: CodedThread | undefined;
         await LoopThroughChunks(Analyzer, Analysis, Conversation, Messages, async (Currents, ChunkStart, IsFirst, Tries, Iteration) => {
+            // Sync from the previous analysis to keep the overlapping codes
+            if (PreviousAnalysis && PreviousAnalysis != Analysis) {
+                for (const [ID, Item] of Object.entries(PreviousAnalysis.Items)) {
+                    if (Conversation.AllMessages?.findIndex(Message => Message.ID == ID) != -1)
+                        Analysis.Items[ID] = { ID: ID, Codes: Item.Codes};
+                }
+            }
+            // Build the prompts
             var Prompts = await Analyzer.BuildPrompts(Analysis, Conversation, Currents, ChunkStart, Iteration);
             if (Prompts[0] == "" && Prompts[1] == "") return 0;
             if (!IsFirst && Analysis.Summary) Prompts[1] = `Summary of previous conversation: ${Analysis.Summary}\n${Prompts[1]}`;
@@ -50,10 +59,11 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
             if (Response == "") return 0;
             var ItemResults = await Analyzer.ParseResponse(Analysis, Response.split("\n").map(Line => Line.trim()), Currents, ChunkStart, Iteration);
             // Process the results
+            if (typeof ItemResults == "number") return ItemResults;
             for (const [Index, Result] of Object.entries(ItemResults)) {
                 var Message = Currents[parseInt(Index) - 1];
                 var Codes = Result.toLowerCase().split(/,|\||;/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase())
-                    .filter(Code => Code != Message.Content.toLowerCase() && Code.length > 0);
+                    .filter(Code => Code != Message.Content.toLowerCase() && Code.length > 0 && !Code.endsWith(`p${Message.SenderID}`));
                 // Record the codes from line-level coding
                 Analysis.Items[Message.ID].Codes = Codes;
                 Codes.forEach(Code => {
@@ -64,6 +74,7 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
                     Analysis.Codes[Code] = Current;
                 });
             }
+            PreviousAnalysis = Analysis;
             // Dial back the cursor if necessary
             return Object.keys(ItemResults).length - Currents.length;
         });
@@ -75,10 +86,15 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
 }
 
 /** BuildMessagePrompt: Build a prompt segment with a message. */
-export function BuildMessagePrompt(Message: Message): string {
+export function BuildMessagePrompt(Message: Message, Coded?: CodedItem): string {
     var Content = Message.Content.replaceAll(/@(.*?)\((\d+)\)([^\w]|$)/g, (Match, Name, ID) => {
         if (ID == "3") return `@Designer `;
         return `@P${ID} `;
     });
-    return `${Message.SenderID == "3" ? "Designer" : "P" + Message.SenderID}: ${Content}`;
+    // Replace the image and checkin tags to avoid confusing the LLM
+    Content = Content.replace(/\[(Image|Checkin|Emoji)\]/g, (Match, Type) => `[${Type} ${Message.ID}]`);
+    // Compose the result
+    var Result = `${Message.SenderID == "3" ? "Designer" : "P" + Message.SenderID}: ${Content}`;
+    if ((Coded?.Codes?.length ?? 0) > 0) Result += `\nPreliminary tags: ${Coded!.Codes!.join("; ")}`;
+    return Result;
 }

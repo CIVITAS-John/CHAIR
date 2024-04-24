@@ -24,7 +24,7 @@ embeddings = embeddings.reshape((Embeddings, Dimensions))
 # Send into HDBScan
 import json
 import hdbscan
-hdb = hdbscan.HDBSCAN(min_cluster_size = 2, min_samples = 1, cluster_selection_method = 'leaf') # , prediction_data = True
+hdb = hdbscan.HDBSCAN(min_cluster_size = 2, min_samples = 1, cluster_selection_method = 'leaf', core_dist_n_jobs = 12) # , prediction_data = True
 hdb.fit(embeddings)
 print(json.dumps([hdb.labels_.tolist(), hdb.probabilities_.tolist()]))
 

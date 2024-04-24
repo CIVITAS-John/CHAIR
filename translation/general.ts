@@ -1,6 +1,6 @@
 import * as File from 'fs';
 import { SystemMessage, HumanMessage } from "@langchain/core/messages";
-import { EnsureFolder, InitializeLLM, InputTokens, LLMName, MaxItems, MaxOutput, OutputTokens, RequestLLM } from "../utils/llms.js";
+import { EnsureFolder, ExpectedItems, FinishedItems, InitializeLLM, InputTokens, LLMName, MaxItems, MaxOutput, OutputTokens, RequestLLM } from "../utils/llms.js";
 import { Preprocess } from "../utils/glossary.js";
 import { Tokenize } from "../utils/tokenizer.js";
 
@@ -18,7 +18,7 @@ export async function UseLLMs(Task: () => Promise<void>, ...LLMs: string[]): Pro
     for (const LLM of LLMs) {
         UseLLM(LLM);
         await Task();
-        console.log(`LLM ${LLM} done. Input tokens: ${InputTokens}, Output tokens: ${OutputTokens}`);
+        console.log(`LLM ${LLM} done. Input tokens: ${InputTokens}, Output tokens: ${OutputTokens}. Finish rate: ${Math.round(FinishedItems / Math.max(1, ExpectedItems) * 100)}%.\n`);
     }
 }
 

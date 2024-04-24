@@ -36,6 +36,8 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     if (Message.Content == "[Emoji]") Codes = "Emoji";
                     // For checkin, force the tag "Checkin"
                     if (Message.Content == "[Checkin]") Codes = "Checkin";
+                    // Remove the () part
+                    Codes = Codes.replace(/\(.*?\)/, "").trim();
                     // Sometimes the LLM will return "P{number}: {codes}"
                     Codes = Codes.replace(/^(P(\d+)|Designer|tag(\d+))\:/, "").trim();
                     // Sometimes the LLM will return "{codes}"
@@ -61,9 +63,10 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
         if (Analysis.Plan == undefined) throw new Error(`Invalid response: no plans`);
         if (Analysis.Reflection == undefined) throw new Error(`Invalid response: no reflections`);
         if (Analysis.Summary == undefined) throw new Error(`Invalid response: no summary`);
+        if (Object.keys(Results).length != Messages.length) throw new Error(`Invalid response: ${Object.keys(Results).length} results for ${Messages.length} messages.`);
         // Check keys
-        for (var I = 0; I < Object.keys(Results).length; I++)
-            if (!Results[I + 1]) throw new Error(`Invalid response: missing message ${I + 1}`);
+        //for (var I = 0; I < Object.keys(Results).length; I++)
+        //    if (!Results[I + 1]) throw new Error(`Invalid response: missing message ${I + 1}`);
         return Results;
     }
 }

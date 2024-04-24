@@ -1,5 +1,5 @@
 import { ClusterTexts } from '../../utils/embeddings.js';
-import { LLMName } from '../../utils/llms.js';
+import { SortCodes } from '../../utils/export.js';
 import { Code, CodedThreads } from '../../utils/schema.js';
 import { CodebookConsolidator, MergeCodesByCluster } from './codebooks.js';
 
@@ -25,12 +25,12 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
     public readonly AssignCategories: number = 5;
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // Return value: [Chunk size, Cursor movement]
-    public GetChunkSize(Recommended: number, Remaining: number, Iteration: number) {
+    public GetChunkSize(Recommended: number, Remaining: number, Iteration: number, Tries: number) {
         switch (Iteration) {
             case this.GenerateDefinitions:
             case this.RefineDefinitions:
             case this.AssignCategories:
-                return Recommended;
+                return Math.max(Recommended - Tries * 8, 1);
             case this.MergeLabels:
             case this.MergeLabelsAgain:
             case this.RefineCategories:
@@ -72,23 +72,26 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
                 // Generate definitions for codes
                 return [`
 You are an expert in thematic analysis clarifying the criteria of qualitative codes. Quotes are independent of each other.
-Write short, clear, generalizable criteria without unnecessary specifics or examples. Rename the label if necessary.
-Then, group each code into a theme, with a short phrase. For example:
+Write short, clear, generalizable criteria without unnecessary specifics or examples. Shorten the label if necessary.
+Then, group each code into a category, with a short phrase. Example categories:
 ---
-${Categories.length > 0 ? `${Categories.sort().join("\n")}` : "design discussions\nsocial interactions\ntechnical topics"}
+design discussions
+social interactions
+technical topics
 ---
 The research question is: How did Physics Lab's online community emerge?
-Always follow the output format for all ${Codes.length} codes:
+Always follow the output format:
 ---
+Definitions for each codes (${Codes.length} in total):
 1. 
 Label: {Label 1}
 Criteria: {Criteria of code 1}
-Theme: {A theme of code 1}
+Category: {The category of code 1}
 ...
 ${Codes.length}.
 Label: {Label ${Codes.length}}
 Criteria: {Criteria of code ${Codes.length}}
-Theme: {A theme of code ${Codes.length}}
+Category: {The category of code ${Codes.length}}
 ---`.trim(), 
                     Codes.map((Code, Index) => `
 ${Index + 1}.
@@ -101,22 +104,25 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
 You are an expert in thematic analysis.
 Each code is merged from multiple ones. Refine the labels and criteria to make each code cover all criteria while staying concise and clear. Then, assign relevant themes.
 Write generalizable definitions without unnecessary specifics or examples.
-Then, group each code into a theme, with a short phrase. For example:
+Then, group each code into a category, with a short phrase. Example categories:
 ---
-${Categories.length > 0 ? `${Categories.sort().join("\n")}` : "design discussions\nsocial interactions\ntechnical topics"}
+design discussions
+social interactions
+technical topics
 ---
 The research question is: How did Physics Lab's online community emerge?
-Always follow the output format for all ${Codes.length} codes:
+Always follow the output format:
 ---
+Definitions for each codes (${Codes.length} in total):
 1.
 Label: {Label 1}
 Criteria: {Criteria of code 1}
-Theme: {A theme of code 1}
+Category: {The category of code 1}
 ...
 ${Codes.length}.
 Label: {Label ${Codes.length}}
 Criteria: {Criteria of code ${Codes.length}}
-Theme: {A theme of code ${Codes.length}}
+Category: {The category of code ${Codes.length}}
 ---`.trim(), 
                     Codes.map((Code, Index) => `
 ${Index + 1}. ${(Code.Alternatives ?? []).concat(Code.Label).join(", ") ?? ""}.
@@ -141,38 +147,38 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 Analysis.Codebook = MergeCodesByCluster(Clusters, Codes);
                 return ["", ""];
             case this.RefineCategories:
+                // Raw codes are too many. We only use frequent ones to refine categories.
                 return [`
 You are an expert in thematic analysis.
-You are trying to optimize structured themes to categorize the known qualitative codes. 
+You are trying to optimize structured themes to categorize the known qualitative codes. Themes should be generalizable findings, not speculations or hypotheses.
 Avoid overlapping concepts between themes. Each theme or sub-theme should cover multiple codes. Never not introduce new information.
 The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
 Thoughts: {Thoughts and plans about structuring input qualitative codes into themes around the research question.}
+Initial Themes:
+1. Theme 1
+  - Subtheme 1
+  - Subtheme 2
+2. Theme 2
+...
+---
+Reflections: {Reflection on the initial themes. Find examples of overlapping, redundant concepts that could be merged. Find examples of missing concepts that could be added or separated.}
 Organized Themes:
 1. Theme 1
   - Subtheme 1
   - Subtheme 2
 2. Theme 2
 ...
----
-Reflections: {Reflection on the organized themes. Find overlapping or redundant concepts. Identify what could be merged or separated.}
-Optimized Themes:
-1. Theme 1
-  - Subtheme 1
-  - Subtheme 2
-2. Theme 2
-...
 ---`.trim(), 
-                    Codes.map((Code, Index) => `${Code.Label}:
-Criteria: ${Code.Definitions![0]}
-Theme: ${Code.Categories![0]}`).join("\n")];
+                    SortCodes(Codes).filter(Code => Code.Alternatives!.length > 0 || Code.Categories!.length > 0)
+                        .map((Code, Index) => `* ${Code.Label} (${Code.Categories![0]})\n${Code.Definitions![0]}`).join("\n\n")];
             default:
                 return ["", ""];
         }
     }
     /** ParseResponse: Parse the responses from the LLM. */
-    public async ParseResponse(Analysis: CodedThreads, Lines: string[], Codes: Code[], ChunkStart: number, Iteration: number): Promise<Record<number, string>> {
+    public async ParseResponse(Analysis: CodedThreads, Lines: string[], Codes: Code[], ChunkStart: number, Iteration: number): Promise<number> {
         switch (Iteration) {
             case this.GenerateDefinitions:
             case this.RefineDefinitions:
@@ -199,27 +205,27 @@ Theme: ${Code.Categories![0]}`).join("\n")];
                         if (Definition !== "")
                             CurrentCode.Definitions = [Definition];
                         Status = "Criteria";
-                    } else if (Line.startsWith("Theme:") && CurrentCode) {
-                        var Category = Line.substring(6).trim();
+                    } else if (Line.startsWith("Category:") && CurrentCode) {
+                        var Category = Line.substring(9).trim();
                         if (Category !== "")
                             CurrentCode.Categories = [Category.toLowerCase()];
-                        Status = "Theme";
+                        Status = "Category";
                     } else if (Status == "Label") {
                         CurrentCode!.Label = `${CurrentCode!.Label}\n${Line}`.trim();
                     } else if (Status == "Criteria") {
                         CurrentCode!.Definitions!.push(Line.trim());
                     } else if (Status == "Theme") {
+                        // Sometimes, the theme ends with a "."
+                        if (Line.endsWith(".")) Line = Line.substring(0, Line.length - 1).trim();
                         CurrentCode!.Categories!.push(Line.trim());
                     }
                 }
-                // Check if the response is valid
-                if (Object.keys(Pendings).length != Codes.length) 
-                    throw new Error(`Invalid response: ${Object.keys(Pendings).length} results for ${Codes.length} inputs`);
                 // Update the codes
                 for (var I = 0; I < Codes.length; I++) {
                     var Code = Pendings[I];
                     var NewLabel = Code.Label.toLowerCase();
                     if (NewLabel != Codes[I].Label) {
+                        Codes[I].Alternatives = Codes[I].Alternatives ?? [];
                         Codes[I].Alternatives!.push(Codes[I].Label);
                         Codes[I].Label = NewLabel;
                     }
@@ -227,8 +233,9 @@ Theme: ${Code.Categories![0]}`).join("\n")];
                     Codes[I].Definitions = Code.Definitions;
                     Codes[I].Categories = Code.Categories;
                 }
-                break;
+                // Return the cursor movement
+                return Object.keys(Pendings).length - Codes.length;
         }
-        return {};
+        return 0;
     }
 }

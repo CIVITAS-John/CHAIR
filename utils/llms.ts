@@ -23,6 +23,15 @@ export var MaxItems: number = 64;
 export var InputTokens: number = 0;
 // OutputTokens: The total output tokens for requests so far.
 export var OutputTokens: number = 0;
+// ExpectedItems: The total expected items for requests so far.
+export var ExpectedItems: number = 0;
+// FinishedItems: The total finished items for requests so far.
+export var FinishedItems: number = 0;
+/** CountItems: Count the expected and finished items. */
+export function CountItems(Expected: number, Finished: number) {
+    ExpectedItems += Expected;
+    FinishedItems += Finished;
+}
 
 /** InitializeLLM: Initialize a LLM with the given name. */
 export function InitializeLLM(LLM: string) {

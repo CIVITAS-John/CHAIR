@@ -67,7 +67,9 @@ export async function ConsolidateCodebook<TUnit>(Consolidator: CodebookConsolida
         var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], 
             `codebooks/${Consolidator.Name}`, Tries * 0.2 + Consolidator.BaseTemperature, FakeRequest);
         if (Response == "") return 0;
-        await Consolidator.ParseResponse(Analyses, Response.split("\n").map(Line => Line.trim()), Currents, ChunkStart, Iteration);
+        // Parse the response
+        var Result = await Consolidator.ParseResponse(Analyses, Response.split("\n").map(Line => Line.trim()), Currents, ChunkStart, Iteration);
+        if (typeof Result == "number") return Result;
         return 0;
     });
 }
@@ -94,7 +96,7 @@ export function MergeCodesByCluster(Clusters: Record<number, ClusterItem[]>, Cod
         for (var Item of Clusters[ClusterID]) {
             var Code = Codes[Item.ID];
             // Only merge codes with high probability
-            if (ClusterID == -1 || Item.Probability <= 0.95) {
+            if (ClusterID == -1 || Item.Probability <= 0.9) {
                 // Codes that cannot be clustered
                 Codebook[Code.Label] = Code;
             } else if (Code.Label != BestCode.Label) {
