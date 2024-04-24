@@ -10,7 +10,7 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature: number = 0;
     /** MaxIterations: The maximum number of iterations for the analyzer. */
-    public MaxIterations: number = 5;
+    public MaxIterations: number = 3;
     /** GenerateDefinitions: The iteration that generates definition. */
     public readonly GenerateDefinitions: number = 0;
     /** MergeLabels: The iteration that merges labels. */
@@ -75,14 +75,15 @@ You are an expert in thematic analysis clarifying the criteria of qualitative co
 Write short, clear, generalizable criteria without unnecessary specifics or examples. Shorten the label if necessary.
 Then, group each code into a category, with a short phrase. Example categories:
 ---
-design discussions
+design exchanges
 social interactions
-technical topics
+physics discussions
+technology topics
 ---
 The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
-Definitions for each codes (${Codes.length} in total):
+Definitions for each code (${Codes.length} in total):
 1. 
 Label: {Label 1}
 Criteria: {Criteria of code 1}
@@ -106,14 +107,15 @@ Each code is merged from multiple ones. Refine the labels and criteria to make e
 Write generalizable definitions without unnecessary specifics or examples.
 Then, group each code into a category, with a short phrase. Example categories:
 ---
-design discussions
+design exchanges
 social interactions
-technical topics
+physics discussions
+technology topics
 ---
 The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
-Definitions for each codes (${Codes.length} in total):
+Definitions for each code (${Codes.length} in total):
 1.
 Label: {Label 1}
 Criteria: {Criteria of code 1}
@@ -133,8 +135,7 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 // Combine each code into a string for clustering
                 var CodeStrings = Codes.map(Code => {
                     var Text = `Label: ${Code.Label}`;
-                    // Categories may lead to over-merging, so we will skip them
-                    // if ((Code.Categories?.length ?? 0) > 0) Text += `\nCategories: \n- ${Code.Categories!.join("\n")}`;
+                    if ((Code.Categories?.length ?? 0) > 0) Text += `\nCategories: \n- ${Code.Categories!.join("\n")}`;
                     if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinitions: \n- ${Code.Definitions!.join("\n")}`;
                     if ((Code.Alternatives?.length ?? 0) > 0) Text += `\nAlternatives: \n- ${Code.Alternatives!.join("\n")}`;
                     // Examples may result in confusing embeddings, so we will skip them

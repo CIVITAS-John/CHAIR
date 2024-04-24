@@ -68,7 +68,7 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
                 } catch (Error: any) {
                     if (++Tries > 3) throw Error;
                     CountItems(ChunkSize[0], 0);
-                    console.log(`Analysis error, retrying ${Tries} times:\n${Error.toString()}`);
+                    console.log(`Analysis error, retrying ${Tries} times:\n${Error.message}\n${Error.stack}`);
                 }
             }
             // Move the cursor
