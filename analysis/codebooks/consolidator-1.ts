@@ -82,6 +82,9 @@ Group each code into a theory-informed category. Use 2-4 words for categories to
 ${ResearchQuestion}
 Always follow the output format:
 ---
+Thoughts: 
+* {Your plan to categorize the codes related to the research question and theoretical lens}
+
 Definitions for each code (${Codes.length} in total):
 1. 
 Label: {A label of code 1}
@@ -108,6 +111,9 @@ Group each code into a theory-informed category. Use 2-4 words for categories to
 ${ResearchQuestion}
 Always follow the output format:
 ---
+Thoughts: 
+* {Your plan to categorize the codes related to the research question and theoretical lens}
+
 Definitions for each code (${Codes.length} in total):
 1.
 Label: {A label of code 1}
@@ -145,7 +151,7 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 // Ask LLMs to write new names for each category
                 return [`
 You are an expert in thematic analysis. You are assigning names for categories based on the merging results.
-Make sure those names are concise, accurate, and related to the research question and theoretical lens. Use 2-4 words to provide contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
+Make sure those names are concise, accurate, and related to the research question. Use 2-4 words to provide contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 ${ResearchQuestion}
 Always follow the output format:
 ---
@@ -203,8 +209,7 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `* ${Cod
 You are an expert in thematic analysis. You are assigning categories to qualitative codes based on their definitions.
 For each code, assign the closest category from the following list. Use "miscellaneous" if none fits.
 ---
-${Categories.map((Category, Index) => `* ${Category}`).join("\n")}
-* miscellaneous
+${Categories.filter(Category => Category != "miscellaneous").map((Category, Index) => `* ${Category}`).join("\n")}
 ---
 ${ResearchQuestion}
 Always follow the output format:
@@ -218,7 +223,7 @@ ${Codes.length}. Code ${Codes.length}
 ---`.trim(), 
                     `
 Qualitative codes:
-${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0]}`).join("\n\n")}
+${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}${Categories.includes(Code.Categories![0]) ? ` (maybe ${Code.Categories![0]})` : ""}\n${Code.Definitions![0]}`).join("\n\n")}
 `.trim()];
             default:
                 return ["", ""];
@@ -326,7 +331,6 @@ ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0
                     if (Line == "" || Line.startsWith("---")) continue;
                     var Match = Line.match(/^(\d+)\./);
                     if (Match) {
-                        var Index = parseInt(Match[1]) - 1;
                         var Category = Lines[I + 1].trim().toLowerCase();
                         // Sometimes, the LLM will return "{category}"
                         if (Category.startsWith("{") && Category.endsWith("}")) Category = Category.substring(1, Category.length - 1);

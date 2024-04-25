@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv'
 import md5 from 'md5';
 import { Embeddings } from "@langchain/core/embeddings";
 import { OpenAIEmbeddings } from "@langchain/openai";
+import { GoogleVertexAIEmbeddings } from '@langchain/community/embeddings/googlevertexai';
 import { EnsureFolder } from './llms.js';
 import { PythonShell } from 'python-shell';
 
@@ -36,6 +37,12 @@ export function InitializeEmbeddings(Embedding: string) {
             Model = new OpenAIEmbeddings({
                 modelName: "text-embedding-3-large",
                 dimensions: Dimensions
+            });
+            break;
+        case "gecko-768":
+            Dimensions = 768;
+            Model = new GoogleVertexAIEmbeddings({
+                model: "text-embedding-preview-0409"
             });
             break;
         default:
