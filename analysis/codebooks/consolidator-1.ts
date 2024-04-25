@@ -77,7 +77,7 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
                 // Generate definitions for codes
                 return [`
 You are an expert in thematic analysis clarifying the criteria of qualitative codes. Quotes are independent of each other.
-Write clear and generalizable criteria to apply across quotes, without unnecessary specifics or examples. Then, refine the short label if necessary.
+Write clear and generalizable criteria to apply across quotes, informed by the context, and without unnecessary specifics or examples. Then, refine the short label if necessary.
 Group each code into a theory-informed category. Use 2-4 words for categories to provide general contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 ${ResearchQuestion}
 Always follow the output format:
@@ -106,7 +106,7 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
                 // Refine definitions for codes
                 return [`
 You are an expert in thematic analysis. 
-Each code is merged from multiple ones. Write a single label and criteria to apply across quotes. Both should be clear and generalizable, without unnecessary specifics or examples.
+Each code is merged from multiple ones. Write a single label and criteria to apply across quotes. Both should be clear and generalizable, informed by the context, and without unnecessary specifics or examples.
 Group each code into a theory-informed category. Use 2-4 words for categories and avoid over-generalization (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 ${ResearchQuestion}
 Always follow the output format:
@@ -223,7 +223,7 @@ ${Codes.length}. Code ${Codes.length}
 ---`.trim(), 
                     `
 Qualitative codes:
-${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}${Categories.includes(Code.Categories![0]) ? ` (maybe ${Code.Categories![0]})` : ""}\n${Code.Definitions![0]}`).join("\n\n")}
+${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0]}`).join("\n\n")}
 `.trim()];
             default:
                 return ["", ""];
