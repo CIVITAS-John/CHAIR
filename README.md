@@ -10,6 +10,12 @@ ANTHROPIC_API_KEY={Your Anthropic API Key}
 MISTRAL_API_KEY={Your Mistral API Key}
 ```
 
+For Google Cloud, you will need to install the GCloud SDK and successfully initialize it in local command line environments. Specifically, you need to do:
+```
+gcloud init
+gcloud auth application-default login
+```
+
 ## Segmentation
 ### Messaging Groups
 The messaging group data are, essentially, continuous streams of messages covering several years. To enable qualitative analysis, we need to break them down into smaller units of analysis. An intuitive choice is *conversations*: A series of chat exchanges that could stand on its own, with sufficient context information for analysis. In this project, we used basic signal processing approaches to achieve this: by looking at time gaps between every two messages, we tried to find the "peaks" and seperate the stream into multiple chunks. To mitigate the issue of "somebody asked a question a while ago, then another person answered, but those are separated into two", we also looked at the mentioned (@) data and participants data, merging chunks if certain characteristic is identified. However, this might still not be enough. During the analysis, 3 messages will be added to before and after each conversation.

@@ -107,7 +107,7 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
                 return [`
 You are an expert in thematic analysis. 
 Each code is merged from multiple ones. Write a single label and criteria to apply across quotes. Both should be clear and generalizable, without unnecessary specifics or examples.
-Group each code into a theory-informed category. Use 2-4 words for categories to provide contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
+Group each code into a theory-informed category. Use 2-4 words for categories and avoid over-generalization (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 ${ResearchQuestion}
 Always follow the output format:
 ---
@@ -151,7 +151,7 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 // Ask LLMs to write new names for each category
                 return [`
 You are an expert in thematic analysis. You are assigning names for categories based on the merging results.
-Make sure those names are concise, accurate, and related to the research question. Use 2-4 words to provide contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
+Make sure those names are concise, accurate, and related to the research question. Use 2-4 words and avoid over-generalization (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 ${ResearchQuestion}
 Always follow the output format:
 ---
@@ -281,7 +281,7 @@ ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}${Categories.includes(C
             case this.MergeCategories:
                 var Categories = (Analysis as any).Categories as string[];
                 delete (Analysis as any).Categories;
-                var Results = [];
+                var Results: string[] = [];
                 // Parse the categories
                 for (var I = 0; I < Lines.length; I++) {
                     var Line = Lines[I];
@@ -324,14 +324,18 @@ ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}${Categories.includes(C
                 UpdateCategoriesByMap(Mappings, Codes);
                 break;
             case this.AssignCategories:
-                var Results = [];
+                var Results: string[] = [];
                 // Parse the categories
                 for (var I = 0; I < Lines.length; I++) {
                     var Line = Lines[I];
                     if (Line == "" || Line.startsWith("---")) continue;
                     var Match = Line.match(/^(\d+)\./);
                     if (Match) {
-                        var Category = Lines[I + 1].trim().toLowerCase();
+                        var Category = "";
+                        if (I + 1 >= Lines.length || Lines[I + 1].match(/^\d+\./)) {
+                            Category = Line.substring(Match[0].length).trim().toLowerCase();
+                            // if (Category == Codes[Results.length].Label) continue;
+                        } else Category = Lines[I + 1].trim().toLowerCase();
                         // Sometimes, the LLM will return "{category}"
                         if (Category.startsWith("{") && Category.endsWith("}")) Category = Category.substring(1, Category.length - 1);
                         Results.push(Category);
