@@ -6,6 +6,7 @@ import { Analyzer, LoopThroughChunks } from "../analyzer.js";
 import { GetMessagesPath, LoadAnalyses, LoadConversationsForAnalysis } from "../../utils/loader.js";
 import { ExportConversationsForCoding } from '../../utils/export.js';
 import { ClusterItem } from '../../utils/embeddings.js';
+import { Codebook } from '../../utils/schema';
 
 /** CodebookConsolidator: The definition of an abstract codebook consolidator. */
 export abstract class CodebookConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedThreads> {
@@ -37,6 +38,9 @@ export async function ConsolidateConversations(Consolidator: CodebookConsolidato
     var Analyses = LoadAnalyses(GetMessagesPath(Group, `Conversations/${Analyzer}/${ConversationName.replace(".json", `-${AnalyzerLLM}`)}.json`));
     // Consolidate the codebook
     await ConsolidateCodebook(Consolidator, [...Object.values(Conversations)], Analyses, async (Iteration) => {
+        var Values = Object.values(Analyses.Codebook!).filter(Code => Code.Label != "[Merged]");
+        Analyses.Codebook = {};
+        for (var Code of Values) Analyses.Codebook[Code.Label] = Code;
         var Book = ExportConversationsForCoding(Object.values(Conversations), Analyses);
         await Book.xlsx.writeFile(`${ExportFolder}/${ConversationName.replace(".json", `-${AnalyzerLLM}-${LLMName}-iteration-${Iteration}`)}.xlsx`);
     }, FakeRequest);
@@ -136,6 +140,55 @@ export function AssignCategoriesByCluster(Clusters: Record<number, ClusterItem[]
             Results[ClusterName] = Items;
     }
     return Results;
+}
+
+/** UpdateCodes: Update code labels and definitions. */
+export function UpdateCodes(Codebook: Codebook, NewCodes: Code[], Codes: Code[]): Record<string, Code> {
+    for (var I = 0; I < Codes.length; I++) {
+        var NewCode = NewCodes[I];
+        if (!NewCode) break;
+        var NewLabel = NewCode.Label.toLowerCase();
+        if (NewLabel != Codes[I].Label) {
+            var Parent = Codes.find(Parent => Parent.Alternatives?.includes(NewLabel));
+            if (Parent && Parent != Codes[I]) {
+                // We will merge the definitions and examples using Set
+                Parent.Alternatives = Array.from(new Set((Parent.Alternatives ?? []).concat(Codes[I].Alternatives ?? [])));
+                Parent.Definitions = Array.from(new Set((Parent.Definitions ?? []).concat(NewCode.Definitions ?? [])));
+                Parent.Categories = Array.from(new Set((Parent.Categories ?? []).concat(NewCode.Categories ?? [])));
+                Parent.Examples = Array.from(new Set((Parent.Examples ?? []).concat(Codes[I].Examples ?? [])));
+                Codes[I].Label = "[Merged]";
+                continue;
+            }
+            Codes[I].Alternatives = Codes[I].Alternatives ?? [];
+            if (Codes[I].Alternatives!.includes(Codes[I].Label) !== true)
+                Codes[I].Alternatives!.push(Codes[I].Label);
+            Codes[I].Label = NewLabel;
+        }
+        Codes[I].Alternatives = Codes[I].Alternatives?.filter(Label => Label != Codes[I].Label);
+        Codes[I].Definitions = NewCode.Definitions;
+        Codes[I].Categories = NewCode.Categories;
+    }
+    return Codebook;
+}
+
+/** UpdateCategories: Update category mappings for codes. */
+export function UpdateCategories(Categories: string[], NewCategories: string[], Codes: Code[]) {
+    for (var I = 0; I < Categories.length; I++) {
+        var Category = Categories[I];
+        var NewCategory = NewCategories[I];
+        for (var Code of Codes) {
+            if (Code.Categories?.includes(Category)) {
+                Code.Categories = Code.Categories?.filter(C => C != Category);
+                if (Code.Categories?.includes(NewCategory) !== true)
+                    Code.Categories.push(NewCategory);
+            }
+        }
+    }
+}
+
+/** UpdateCategoriesByMap: Update category mappings for codes using a map. */
+export function UpdateCategoriesByMap(Map: Map<string, string>, Codes: Code[]) {
+    UpdateCategories([...Map.keys()], [...Map.values()], Codes);
 }
 
 /** MergeCategoriesByCluster: Merge categories based on category clustering results. */

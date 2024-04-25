@@ -1,8 +1,8 @@
 import { ResearchQuestion } from '../../constants.js';
 import { ClusterTexts } from '../../utils/embeddings.js';
 import { SortCodes } from '../../utils/export.js';
-import { Code, CodedThreads } from '../../utils/schema.js';
-import { AssignCategoriesByCluster, CodebookConsolidator, MergeCategoriesByCluster, MergeCodesByCluster } from './codebooks.js';
+import { Code, CodedThreads, GetCategories } from '../../utils/schema.js';
+import { AssignCategoriesByCluster, CodebookConsolidator, MergeCategoriesByCluster, MergeCodesByCluster, UpdateCategories, UpdateCategoriesByMap, UpdateCodes } from './codebooks.js';
 
 /** Consolidator1: Consolidate a codebook through generating definitions for codes, then cluster them using text embeddings. */
 export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
@@ -11,7 +11,7 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature: number = 0;
     /** MaxIterations: The maximum number of iterations for the analyzer. */
-    public MaxIterations: number = 7;
+    public MaxIterations: number = 8;
     /** GenerateDefinitions: The iteration that generates definition. */
     public readonly GenerateDefinitions: number = 0;
     /** MergeLabels: The iteration that merges labels. */
@@ -35,12 +35,12 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
             case this.GenerateDefinitions:
             case this.RefineDefinitions:
             case this.RefineDefinitionsAgain:
+            case this.AssignCategories:
                 return Math.max(Recommended - Tries * 8, 1);
             case this.MergeLabels:
             case this.MergeLabelsAgain:
             case this.MergeCategories:
             case this.RefineCategories:
-            case this.AssignCategories:
                 return Remaining;
             default: 
                 return -1;
@@ -71,25 +71,25 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
     /** BuildPrompts: Build the prompts for the LLM. */
     public async BuildPrompts(Analysis: CodedThreads, Data: TUnit[], Codes: Code[], ChunkStart: number, Iteration: number): Promise<[string, string]> {
         // Collect the existing categories from the codebook
-        var Categories = [...new Set(Object.values(Analysis.Codebook!).map(Code => Code.Categories ?? []).flat().filter(Category => Category != "").sort())];
+        var Categories = GetCategories(Analysis.Codebook!);
         switch (Iteration) {
             case this.GenerateDefinitions:
                 // Generate definitions for codes
                 return [`
 You are an expert in thematic analysis clarifying the criteria of qualitative codes. Quotes are independent of each other.
 Write clear and generalizable criteria to apply across quotes, without unnecessary specifics or examples. Then, refine the short label if necessary.
-Group each code into a category. Use 2-4 words for categories to provide general contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
+Group each code into a theory-informed category. Use 2-4 words for categories to provide general contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 ${ResearchQuestion}
 Always follow the output format:
 ---
 Definitions for each code (${Codes.length} in total):
 1. 
-Label: {Label 1}
+Label: {A label of code 1}
 Criteria: {Criteria of code 1}
 Category: {2-4 words for code 1}
 ...
 ${Codes.length}.
-Label: {Label ${Codes.length}}
+Label: {A label of code ${Codes.length}}
 Criteria: {Criteria of code ${Codes.length}}
 Category: {2-4 words for code ${Codes.length}}
 ---`.trim(), 
@@ -102,20 +102,20 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
             case this.RefineDefinitionsAgain:
                 // Refine definitions for codes
                 return [`
-You are an expert in thematic analysis. Each code is merged from multiple ones.
-Write labels and consolidate criteria to apply across quotes. Both should be clear and generalizable, without unnecessary specifics or examples.
-Group each code into a category. Use 2-4 words for categories to provide contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
+You are an expert in thematic analysis. 
+Each code is merged from multiple ones. Write a single label and criteria to apply across quotes. Both should be clear and generalizable, without unnecessary specifics or examples.
+Group each code into a theory-informed category. Use 2-4 words for categories to provide contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 ${ResearchQuestion}
 Always follow the output format:
 ---
 Definitions for each code (${Codes.length} in total):
 1.
-Label: {Label 1}
+Label: {A label of code 1}
 Criteria: {Criteria of code 1}
 Category: {2-4 words for code 1}
 ...
 ${Codes.length}.
-Label: {Label ${Codes.length}}
+Label: {A label of code ${Codes.length}}
 Criteria: {Criteria of code ${Codes.length}}
 Category: {2-4 words for code ${Codes.length}}
 ---`.trim(), 
@@ -127,8 +127,8 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 // Cluster codes using text embeddings
                 // Combine each code into a string for clustering
                 var CodeStrings = Codes.map(Code => {
-                    var Text = `Label: ${Code.Label}`;
-                    if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
+                    var Text = `${Code.Label}`;
+                    if ((Code.Definitions?.length ?? 0) > 0) Text += `: ${Code.Definitions![0]}`;
                     return Text.trim();
                 });
                 // Categorize the strings
@@ -145,9 +145,8 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 // Ask LLMs to write new names for each category
                 return [`
 You are an expert in thematic analysis. You are assigning names for categories based on the merging results.
-Make sure those names are concise, accurate, and related to the research question. Use 2-4 words to provide contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
+Make sure those names are concise, accurate, and related to the research question and theoretical lens. Use 2-4 words to provide contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 ${ResearchQuestion}
-
 Always follow the output format:
 ---
 Names for each category (${Count} in total):
@@ -156,11 +155,11 @@ Names for each category (${Count} in total):
 ${Count}. {2-4 words for category ${Count}}
 ---`.trim(), "Merge results:\n" + Object.keys(Merged).map((Category, Index) => `${Index + 1}.\n${Category.split("|").map(Current => `- ${Current}`).join("\n")}`).join("\n\n")];
             case this.RefineCategories:
-                // We have too many categories. Filter ones with only 1 code.
+                // We have too many categories. Filter ones with more than 1 instances.
                 Categories = Categories.filter(Category => Codes.filter(Code => Code.Categories?.includes(Category)).length > 1).sort();
                 return [`
 You are an expert in thematic analysis.
-You will identify existing categories that can be merged into another. Prioritize merging smaller categories. Avoid creating giant categories. Names of new categories must concisely cover the aspects and stay in the research context.
+You will identify input categories that can be merged into another. Find as many as possible. Prioritize merging smaller categories. Avoid creating huge categories. Names of new categories must concisely cover the aspects and stay in the research context.
 ${ResearchQuestion}
 Always follow the output format:
 ---
@@ -175,10 +174,10 @@ Always follow the output format:
 ...
 
 # Reflection
-Identify issues with the process with concrete examples. 
-- Did you make categories too broad? 
-- Did you miss anything? 
-- Is any naming inaccurate? 
+Answer the following questions with detailed examples:
+- Did you make categories too large?
+- Can you identify more categories for merging?
+- Is any naming inaccurate?
 Revise and rewrite the final merging plan in the next section, following the same format.
 
 # Final Merging
@@ -198,32 +197,28 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `* ${Cod
                 `${Categories.map((Category, Index) => `${Index + 1}. ${Category} (${Codes.filter(Code => Code.Categories?.includes(Category)).length} codes)`).join("\n")}
                 `.trim()];
             case this.AssignCategories:
+                // We have too many categories. Filter ones with more than 1 instances.
+                Categories = Categories.filter(Category => Object.values(Analysis.Codebook!).filter(Code => Code.Categories?.includes(Category)).length > 1).sort();
                 return [`
 You are an expert in thematic analysis. You are assigning categories to qualitative codes based on their definitions.
-First, you will refine the list of categories. Then, you will assign the most relevant category to each code.
-The list of possible categories:
+For each code, assign the closest category from the following list. Use "miscellaneous" if none fits.
 ---
 ${Categories.map((Category, Index) => `* ${Category}`).join("\n")}
+* miscellaneous
 ---
 ${ResearchQuestion}
 Always follow the output format:
 ---
-Thought: {Thoughts and plans about refining the categories. What can be added? What should be merged?}
-
-Refined categories:
-a. {Category 1}
-b. {Category 2}
-...
-
 Category for each code (${Codes.length} in total):
-1. {The most relevant category for code 1}
-2. {The most relevant category for code 2}
+1. Code 1
+{The most relevant category for code 1}
 ...
-${Codes.length}: {The most relevant category for code ${Codes.length}}
+${Codes.length}. Code ${Codes.length}
+{The most relevant category for code ${Codes.length}}
 ---`.trim(), 
                     `
 Qualitative codes:
-${SortCodes(Codes).map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0]}`).join("\n\n")}
+${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0]}`).join("\n\n")}
 `.trim()];
             default:
                 return ["", ""];
@@ -236,7 +231,7 @@ ${SortCodes(Codes).map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Def
             case this.RefineDefinitions:
             case this.RefineDefinitionsAgain:
                 // Refine definitions for codes
-                var Pendings: Record<number, Code> = {};
+                var Pendings: Code[] = [];
                 var CurrentCode: Code | undefined;
                 var Status = "";
                 // Parse the definitions
@@ -248,10 +243,9 @@ ${SortCodes(Codes).map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Def
                     var Match = Line.match(/^(\d+)\./);
                     if (Match) {
                         var Index = parseInt(Match[1]) - 1;
-                        CurrentCode = { Label: "", Definitions: [], Categories: [], Examples: [], Alternatives: [] };
-                        Pendings[Index] = CurrentCode;
                         // Sometimes, the label is merged with the number
-                        Pendings[Index].Label = Line.substring(Match[0].length).trim();
+                        CurrentCode = { Label: Line.substring(Match[0].length).trim(), Definitions: [], Categories: [], Examples: [], Alternatives: [] };
+                        Pendings.push(CurrentCode);
                     } else if (Line.startsWith("Label:") && CurrentCode) {
                         CurrentCode.Label = Line.substring(6).trim();
                         Status = "Label";
@@ -276,19 +270,7 @@ ${SortCodes(Codes).map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Def
                     }
                 }
                 // Update the codes
-                for (var I = 0; I < Codes.length; I++) {
-                    var Code = Pendings[I];
-                    if (!Code) break;
-                    var NewLabel = Code.Label.toLowerCase();
-                    if (NewLabel != Codes[I].Label) {
-                        Codes[I].Alternatives = Codes[I].Alternatives ?? [];
-                        Codes[I].Alternatives!.push(Codes[I].Label);
-                        Codes[I].Label = NewLabel;
-                    }
-                    Codes[I].Alternatives = Codes[I].Alternatives?.filter(Label => Label != Codes[I].Label);
-                    Codes[I].Definitions = Code.Definitions;
-                    Codes[I].Categories = Code.Categories;
-                }
+                UpdateCodes(Analysis.Codebook!, Pendings, Codes);
                 // Return the cursor movement
                 return Object.keys(Pendings).length - Codes.length;
             case this.MergeCategories:
@@ -308,19 +290,53 @@ ${SortCodes(Codes).map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Def
                 }
                 // Update the categories
                 if (Results.length != Categories.length) throw new Error(`Invalid response: ${Results.length} results for ${Categories.length} categories.`);
-                for (var I = 0; I < Categories.length; I++) {
-                    var Category = Categories[I];
-                    var NewCategory = Results[I];
-                    for (var Code of Codes) {
-                        if (Code.Categories?.includes(Category)) {
-                            Code.Categories = Code.Categories?.filter(C => C != Category);
-                            Code.Categories.push(NewCategory);
-                        }
-                    }
-                }
+                UpdateCategories(Categories, Results, Codes);
                 break;
             case this.RefineCategories:
-
+                var Started = false;
+                var Mappings = new Map<string, string>();
+                var OldCategories: string[] = [];
+                // Parse the categories
+                for (var I = 0; I < Lines.length; I++) {
+                    var Line = Lines[I];
+                    if (Line == "" || Line.startsWith("---")) continue;
+                    // Start parsing when we see the final merging
+                    if (Line.toLowerCase() == "# final merging") Started = true;
+                    else if (!Started) continue;
+                    // Parse the merging destination
+                    var Towards = Line.match(/^\=\> (.*)/);
+                    if (Towards) {
+                        var Target = Towards[1].trim().toLowerCase();
+                        OldCategories.forEach(Category => Mappings.set(Category, Target));
+                        OldCategories = [];
+                    }
+                    // Parse the merging source
+                    var Item = Line.match(/^\* (.*)/);
+                    if (Item) OldCategories.push(Item[1].trim().toLowerCase());
+                }
+                // Update the categories
+                if (Mappings.size == 0) throw new Error("No categories are merged.");
+                UpdateCategoriesByMap(Mappings, Codes);
+                break;
+            case this.AssignCategories:
+                var Results = [];
+                // Parse the categories
+                for (var I = 0; I < Lines.length; I++) {
+                    var Line = Lines[I];
+                    if (Line == "" || Line.startsWith("---")) continue;
+                    var Match = Line.match(/^(\d+)\./);
+                    if (Match) {
+                        var Index = parseInt(Match[1]) - 1;
+                        var Category = Lines[I + 1].trim().toLowerCase();
+                        // Sometimes, the LLM will return "{category}"
+                        if (Category.startsWith("{") && Category.endsWith("}")) Category = Category.substring(1, Category.length - 1);
+                        Results.push(Category);
+                    }
+                }
+                // Update the codes
+                if (Results.length != Codes.length) throw new Error(`Invalid response: ${Results.length} results for ${Codes.length} codes.`);
+                for (var I = 0; I < Codes.length; I++)
+                    Codes[I].Categories = [Results[I]];
                 break;
         }
         return 0;

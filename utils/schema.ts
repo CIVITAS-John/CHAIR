@@ -40,6 +40,11 @@ export interface Codebook extends Record<string, Code> {
 
 }
 
+/** GetCategories: Get the categories from the codebook. */
+export function GetCategories(Codebook: Codebook): string[] {
+    return Array.from(new Set(Object.values(Codebook).flatMap(Code => Code.Categories ?? []))).filter(Category => Category != "");
+}
+
 /** Code: A qualitative code. */
 export interface Code {
     /** Label: The label of the code. */

@@ -15,7 +15,7 @@ export class LowLevelAnalyzer1 extends LowLevelAnalyzerBase {
         return [`
 You are an expert in thematic analysis. Now, you are working on the open coding.
 This conversation comes from Physics Lab's online messaging groups. The goal is to identify low-level tags of each message with a focus on social interactions.
-${ResearchQuestion}
+The research question is: How did Physics Lab's online community emerge?
 Always follow the output format:
 ---
 Thoughts: {Thoughts and plans about analyzing the conversation}

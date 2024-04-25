@@ -25,13 +25,13 @@ export class LowLevelAnalyzer3 extends LowLevelAnalyzerBase {
         return [`
 You are an expert in thematic analysis with grounded theory, working on open coding.
 Your goal is to identify multiple low-level tags for each message.
-When writing tags, balance between specifics and generalizability across messages. For example, "design discussion" is better than "discussion", "seeking guidance" is better than "guidance", while "questions about circuits" is better than "questions about diodes".
+When writing tags, balance between specifics and generalizability across messages.
 ${ResearchQuestion}
 "Designer" is the person who designed and developed Physics Lab.
 
 Always follow the output format:
 ---
-Thoughts: {A paragraph of thoughts, plans, and guiding questions about analyzing the conversation from different angles}
+Thoughts: {A paragraph of plans and guiding questions about analyzing the conversation from multiple theoretical angles}
 Tags for each message (${Messages.length} in total):
 1. tag 1; tag 2; tag 3...
 ...
