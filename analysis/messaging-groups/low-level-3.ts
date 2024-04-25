@@ -1,3 +1,4 @@
+import { ResearchQuestion } from '../../constants.js';
 import { MaxItems } from '../../utils/llms.js';
 import { CodedThread, Conversation, Message } from '../../utils/schema.js';
 import { BuildMessagePrompt } from './conversations.js';
@@ -25,7 +26,7 @@ export class LowLevelAnalyzer3 extends LowLevelAnalyzerBase {
 You are an expert in thematic analysis with grounded theory, working on open coding.
 Your goal is to identify multiple low-level tags for each message.
 When writing tags, balance between specifics and generalizability across messages. For example, "design discussion" is better than "discussion", "seeking guidance" is better than "guidance", while "questions about circuits" is better than "questions about diodes".
-The research question is: How did Physics Lab's online community emerge?
+${ResearchQuestion}
 "Designer" is the person who designed and developed Physics Lab.
 
 Always follow the output format:

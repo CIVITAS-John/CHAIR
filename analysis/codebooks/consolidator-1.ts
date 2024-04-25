@@ -1,3 +1,4 @@
+import { ResearchQuestion } from '../../constants.js';
 import { ClusterTexts } from '../../utils/embeddings.js';
 import { SortCodes } from '../../utils/export.js';
 import { Code, CodedThreads } from '../../utils/schema.js';
@@ -78,7 +79,7 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
 You are an expert in thematic analysis clarifying the criteria of qualitative codes. Quotes are independent of each other.
 Write clear and generalizable criteria to apply across quotes, without unnecessary specifics or examples. Then, refine the short label if necessary.
 Group each code into a category. Use 2-4 words for categories to provide general contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
-The research question is: How did Physics Lab's online community emerge?
+${ResearchQuestion}
 Always follow the output format:
 ---
 Definitions for each code (${Codes.length} in total):
@@ -104,7 +105,7 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
 You are an expert in thematic analysis. Each code is merged from multiple ones.
 Write labels and consolidate criteria to apply across quotes. Both should be clear and generalizable, without unnecessary specifics or examples.
 Group each code into a category. Use 2-4 words for categories to provide contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
-The research question is: How did Physics Lab's online community emerge?
+${ResearchQuestion}
 Always follow the output format:
 ---
 Definitions for each code (${Codes.length} in total):
@@ -145,7 +146,7 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 return [`
 You are an expert in thematic analysis. You are assigning names for categories based on the merging results.
 Make sure those names are concise, accurate, and related to the research question. Use 2-4 words to provide contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
-The research question is: How did Physics Lab's online community emerge?
+${ResearchQuestion}
 
 Always follow the output format:
 ---
@@ -159,32 +160,42 @@ ${Count}. {2-4 words for category ${Count}}
                 Categories = Categories.filter(Category => Codes.filter(Code => Code.Categories?.includes(Category)).length > 1).sort();
                 return [`
 You are an expert in thematic analysis.
-You are finding and organizing categories from existing ones. A list of initial categories and qualitative codes is provided.
-Merge categories that are too specific and/or small. Split categories that are too big. Consolidate into a single level of categories.
-Optimize names of the rest to be more representative. Use 2-4 words for categories to provide contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
-The research question is: How did Physics Lab's online community emerge?
+You will identify existing categories that can be merged into another. Prioritize merging smaller categories. Avoid creating giant categories. Names of new categories must concisely cover the aspects and stay in the research context.
+${ResearchQuestion}
 Always follow the output format:
 ---
-Thoughts: {A detailed plan about refining the categories. What do you plan to split? What do you plan to merge?}
+# Draft Merging
+* Category a
+* Category b
+=> Category c
 
-Categories to split:
-- Category a
-- Category b
+* Category d
+* Category e
+=> Category f
+...
 
-Categories to merge:
-- Category a
-- Category b
+# Reflection
+Identify issues with the process with concrete examples. 
+- Did you make categories too broad? 
+- Did you miss anything? 
+- Is any naming inaccurate? 
+Revise and rewrite the final merging plan in the next section, following the same format.
 
-Refined categories:
-1. Category 1
-2. Category 2
+# Final Merging
+* Category g
+* Category h
+=> Category i
+
+* Category j
+* Category k
+=> Category l
 ...
 ---`.trim(), 
-                    `
-# Initial categories
+/*`# Initial categories
 ${Categories.map((Category, Index) => `${Index + 1}. ${Category}. Codes:
 ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `* ${Code.Label}`).join("\n")}
-`.trim()).join("\n")}
+`.trim()).join("\n")}*/
+                `${Categories.map((Category, Index) => `${Index + 1}. ${Category} (${Codes.filter(Code => Code.Categories?.includes(Category)).length} codes)`).join("\n")}
                 `.trim()];
             case this.AssignCategories:
                 return [`
@@ -194,7 +205,7 @@ The list of possible categories:
 ---
 ${Categories.map((Category, Index) => `* ${Category}`).join("\n")}
 ---
-The research question is: How did Physics Lab's online community emerge?
+${ResearchQuestion}
 Always follow the output format:
 ---
 Thought: {Thoughts and plans about refining the categories. What can be added? What should be merged?}

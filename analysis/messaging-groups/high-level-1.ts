@@ -1,3 +1,4 @@
+import { ResearchQuestion } from '../../constants.js';
 import { Code, CodedThread, Conversation, Message } from '../../utils/schema.js';
 import { BuildMessagePrompt, ConversationAnalyzer } from './conversations.js';
 
@@ -26,7 +27,8 @@ export class HighLevelAnalyzer1 extends ConversationAnalyzer {
     public async BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): Promise<[string, string]> {
         return [`
 Hi ChatGPT, I want to analyze the following interaction in one of Physics Lab's online message groups.
-Please give me a codebook to analyze factors within this interaction that could contribute to the community's emergence.
+Please give me a codebook to analyze factors within this interaction that could contribute to the research.
+${ResearchQuestion}
 For each code, try to find 3 quotes. Always follow the output format:
 ---
 # Label of category 1

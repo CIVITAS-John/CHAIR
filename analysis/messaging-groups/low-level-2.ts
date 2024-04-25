@@ -1,3 +1,4 @@
+import { ResearchQuestion } from '../../constants.js';
 import { CodedThread, Conversation, Message } from '../../utils/schema.js';
 import { BuildMessagePrompt } from './conversations.js';
 import { LowLevelAnalyzerBase } from './low-level.js';
@@ -15,7 +16,7 @@ export class LowLevelAnalyzer2 extends LowLevelAnalyzerBase {
         return [`
 You are an expert in thematic analysis. Now, you are working on the open coding.
 This conversation comes from Physics Lab's online messaging groups. The goal is to identify multiple low-level tags of each message with a focus on social interactions.
-The research question is: How did Physics Lab's online community emerge?
+${ResearchQuestion}
 Always follow the output format:
 ---
 Thoughts: {Thoughts and plans about analyzing the conversation from different angles.}
