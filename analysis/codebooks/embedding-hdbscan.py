@@ -14,7 +14,7 @@ Method = sys.argv[4] if len(sys.argv) > 4 else "leaf"
 MinCluster = int(sys.argv[5]) if len(sys.argv) > 5 else 2
 MinSamples = int(sys.argv[6]) if len(sys.argv) > 6 else 1
 TargetDimensions = int(sys.argv[7]) if len(sys.argv) > 7 else Dimensions
-Plotting = bool(sys.argv[7]) if len(sys.argv) > 7 else False
+Plotting = bool(sys.argv[7]) if len(sys.argv) > 7 else True
 print("Method:", Method, ", MinCluster:", MinCluster, ", MinSamples:", MinSamples, ", Metrics:", Metrics, ", Target Dimensions:", TargetDimensions)
 
 # Read from `./known/temp.bytes`
@@ -49,7 +49,10 @@ hdb.fit(distances.astype(np.float64))
 print(json.dumps([hdb.labels_.tolist(), hdb.probabilities_.tolist()]))
 
 # Plot the clusters
-if TargetDimensions == 2:
+if Plotting:
+    if TargetDimensions < 2:
+        umap = UMAP(n_components = 2)
+        embeddings = umap.fit_transform(embeddings)
     color_palette = sns.color_palette('deep', len(set(hdb.labels_)))
     cluster_colors = [color_palette[x] if x >= 0
                     else (0.5, 0.5, 0.5)

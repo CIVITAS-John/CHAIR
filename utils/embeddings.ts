@@ -75,11 +75,37 @@ export function InitializeEmbeddings(Embedding: string) {
 
 /** RequestEmbeddings: Call the model to generate text embeddings with cache. */
 export async function RequestEmbeddings(Sources: string[], Cache: string): Promise<Float32Array> {
+    // Create the cache folder
+    var CacheFolder = `known/embeddings/${Cache}/${EmbeddingName}`;
+    EnsureFolder(CacheFolder);
+    // Check if the cache exists
     var Embeddings = new Float32Array(Dimensions * Sources.length);
+    var Requests: number[] = [];
     for (var I = 0; I < Sources.length; I++) {
-        var CodeString = Sources[I];
-        var Embedding = await RequestEmbeddingWithCache(CodeString, Cache);
-        Embeddings.set(Embedding, Dimensions * I);
+        var Source = Sources[I];
+        var CacheFile = `${CacheFolder}/${md5(Source)}.bytes`;
+        if (File.existsSync(CacheFile)) {
+            var Buffer = File.readFileSync(CacheFile);
+            var Embedding = new Float32Array(Buffer.buffer, Buffer.byteOffset, Buffer.byteLength / 4);
+            Embeddings.set(Embedding, Dimensions * I);
+        } else {
+            Requests.push(I);
+        }
+    }
+    // Request the online embeddings
+    var BatchSize = 50;
+    for (var I = 0; I < Requests.length; I += BatchSize) {
+        var Results = await Model.embedDocuments(Requests.slice(I, I + BatchSize).map((Index) => Sources[Index]));
+        for (var J = 0; J < Results.length; J++) {
+            var Index = Requests[I + J];
+            var Embedding = new Float32Array(Results[J]);
+            // Check if all elements are 0
+            if (Embedding.every((Value) => Value == 0))
+                throw new Error(`Invalid embedding for: ${Sources[Index]}`);
+            Embeddings.set(Embedding, Dimensions * Index);
+            var CacheFile = `${CacheFolder}/${md5(Sources[Index])}.bytes`;
+            File.writeFileSync(CacheFile, Embedding);
+        }
     }
     return Embeddings;
 }

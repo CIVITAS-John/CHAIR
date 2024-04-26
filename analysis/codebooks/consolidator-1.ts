@@ -77,7 +77,7 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
                 // Generate definitions for codes
                 return [`
 You are an expert in thematic analysis clarifying the criteria of qualitative codes. Quotes are independent of each other.
-Write clear and generalizable criteria to apply across quotes, informed by the context, and without unnecessary specifics or examples. Then, refine the short label if necessary.
+Write clear and contextualized criteria to apply across quotes. Do not provide examples. Then, refine the label if necessary.
 Group each code into a theory-informed category. Use 2-4 words for categories to provide general contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 ${ResearchQuestion}
 Always follow the output format:
@@ -135,11 +135,13 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 var CodeStrings = Codes.map(Code => {
                     var Text = `Label: ${Code.Label}`;
                     if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
+                    // if ((Code.Examples?.length ?? 0) > 1) Text += `\nExamples:\n${Code.Examples?.sort((A, B) => B.length - A.length).map(A => `- ${A}`).slice(0, 3).join("\n")}`;
                     return Text.trim();
                 });
                 // Categorize the strings
-                var Clusters = Iteration == this.MergeLabels ? 
-                    await ClusterTexts(CodeStrings, this.Name) : await ClusterTexts(CodeStrings, this.Name, "dbscan");
+                // var Clusters = Iteration == this.MergeLabels ? 
+                //    await ClusterTexts(CodeStrings, this.Name) : await ClusterTexts(CodeStrings, this.Name, "dbscan");
+                var Clusters = await ClusterTexts(CodeStrings, this.Name, "agglo", "cosine", "average", Iteration == this.MergeLabels ? "0.25" : "0.22");
                 // Merge the codes
                 Analysis.Codebook = MergeCodesByCluster(Clusters, Codes);
                 return ["", ""];
@@ -155,7 +157,7 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Cod
                 // Switch to the clustering version - TODO: this is a hack, needs to be fixed later
                 InitializeEmbeddings("gecko-768-clustering");
                 // Cluster categories using text embeddings
-                var Clusters = await ClusterTexts(CategoryStrings, this.Name);
+                var Clusters = await ClusterTexts(CategoryStrings, this.Name, "agglo", "cosine", "average", "0.4");
                 var Merged = MergeCategoriesByCluster(Clusters, Categories, Codes);
                 var Count = Object.keys(Merged).length;
                 (Analysis as any).Categories = Object.keys(Merged);
@@ -258,12 +260,11 @@ ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0
                     if (Line == "...") break;
                     var Match = Line.match(/^(\d+)\./);
                     if (Match) {
-                        var Index = parseInt(Match[1]) - 1;
                         // Sometimes, the label is merged with the number
-                        CurrentCode = { Label: Line.substring(Match[0].length).trim(), Definitions: [], Categories: [], Examples: [], Alternatives: [] };
+                        CurrentCode = { Label: Line.substring(Match[0].length).trim().toLowerCase(), Definitions: [], Categories: [], Examples: [], Alternatives: [] };
                         Pendings.push(CurrentCode);
                     } else if (Line.startsWith("Label:") && CurrentCode) {
-                        CurrentCode.Label = Line.substring(6).trim();
+                        CurrentCode.Label = Line.substring(6).trim().toLowerCase();
                         Status = "Label";
                     } else if (Line.startsWith("Criteria:") && CurrentCode) {
                         var Definition = Line.substring(9).trim();
@@ -284,6 +285,10 @@ ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0
                         if (Line.endsWith(".")) Line = Line.substring(0, Line.length - 1).trim();
                         CurrentCode!.Categories!.push(Line.trim());
                     }
+                }
+                for (var Code of Pendings) {
+                    // Sometimes, the new label starts with "label:"
+                    if (Code.Label.startsWith("label:")) Code.Label = Code.Label.substring(6).trim();
                 }
                 // Update the codes
                 UpdateCodes(Analysis.Codebook!, Pendings, Codes);
@@ -316,18 +321,28 @@ ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0
                     var Line = Lines[I];
                     if (Line == "" || Line.startsWith("---")) continue;
                     // Start parsing when we see the final merging
-                    if (Line.toLowerCase() == "# final merging") Started = true;
-                    else if (!Started) continue;
+                    if (Line.toLowerCase() == "# draft merging") Started = true;
+                    else if (Line.toLowerCase() == "# final merging") {
+                        Started = true;
+                        Mappings.clear();
+                    } else if (!Started) continue;
                     // Parse the merging destination
                     var Towards = Line.match(/^\=\> (.*)/);
                     if (Towards) {
                         var Target = Towards[1].trim().toLowerCase();
+                        // Sometimes, the LLM will return "{category} (10 codes)"
+                        if (Target.includes("(")) Target = Target.substring(0, Target.indexOf("(")).trim();
                         OldCategories.forEach(Category => Mappings.set(Category, Target));
                         OldCategories = [];
                     }
                     // Parse the merging source
                     var Item = Line.match(/^\* (.*)/);
-                    if (Item) OldCategories.push(Item[1].trim().toLowerCase());
+                    if (Item) {
+                        var Source = Item[1].trim().toLowerCase();
+                        // Sometimes, the LLM will return "{category} (10 codes)"
+                        if (Source.includes("(")) Target = Source.substring(0, Source.indexOf("(")).trim();
+                        OldCategories.push(Item[1].trim().toLowerCase());
+                    }
                 }
                 // Update the categories
                 if (Mappings.size == 0) throw new Error("No categories are merged.");

@@ -8,11 +8,11 @@ cpus = multiprocessing.cpu_count()
 Dimensions = int(sys.argv[1])
 Embeddings = int(sys.argv[2])
 Metrics = sys.argv[3] if len(sys.argv) > 3 else "cosine"
-Epsilon = float(sys.argv[4]) if len(sys.argv) > 4 else 0.17
-MinSamples = int(sys.argv[5]) if len(sys.argv) > 5 else 1
+Linkage = sys.argv[4] if len(sys.argv) > 4 else "average"
+MinDistance = float(sys.argv[5]) if len(sys.argv) > 5 else 0.25
 TargetDimensions = int(sys.argv[6]) if len(sys.argv) > 6 else Dimensions
-Plotting = bool(sys.argv[7]) if len(sys.argv) > 7 else True
-print("Epsilon:", Epsilon, ", MinSamples:", MinSamples, ", Metrics:", Metrics, ", Target Dimensions:", TargetDimensions)
+Plotting = bool(sys.argv[7]) if len(sys.argv) > 7 else False
+print("Linkage:", Linkage, ", MinDistance:", MinDistance, ", Metrics:", Metrics, ", Target Dimensions:", TargetDimensions)
 
 # Read from `./known/temp.bytes`
 with open("./known/temp.bytes", "rb") as file:
@@ -24,8 +24,6 @@ with open("./known/temp.bytes", "rb") as file:
 
 # Reshape the embeddings
 embeddings = embeddings.reshape((Embeddings, Dimensions))
-# print("Embeddings reshaped:", embeddings.shape)
-# print("Example embedding:", embeddings[2])
 
 # Use UMap to reduce the dimensions
 from umap import UMAP
@@ -54,12 +52,10 @@ if Plotting:
 
 # Send into DBScan
 import json
-from sklearn.cluster import DBSCAN
+from sklearn.cluster import AgglomerativeClustering
 # from sklearn.preprocessing import normalize
 # norm_embeddings = normalize(embeddings, norm='l2')
-db = DBSCAN(eps=Epsilon, min_samples=MinSamples, metric="precomputed", n_jobs=cpus)
+db = AgglomerativeClustering(n_clusters=None, distance_threshold=MinDistance, linkage=Linkage, metric="precomputed")
 db.fit(distances)
 
-# Change all 0 to -1
-db.labels_[db.labels_ == 0] = -1
 print(json.dumps([db.labels_.tolist(), np.ones(Embeddings).tolist()]))

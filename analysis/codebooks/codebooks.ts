@@ -118,6 +118,9 @@ export function MergeCodesByCluster(Clusters: Record<number, ClusterItem[]>, Cod
                     BestCode.Alternatives = [...new Set([...BestCode.Alternatives!, ...Code.Alternatives!])];
                 console.log("Merging: " + Code.Label + " into " + BestCode.Label + " with " + (Item.Probability * 100).toFixed(2) + "% chance");
                 Code.Label = "[Merged]";
+            } else {
+                // Codes that have no name changes
+                Codebook[Code.Label] = Code;
             }
         }
     }
@@ -144,12 +147,13 @@ export function AssignCategoriesByCluster(Clusters: Record<number, ClusterItem[]
 
 /** UpdateCodes: Update code labels and definitions. */
 export function UpdateCodes(Codebook: Codebook, NewCodes: Code[], Codes: Code[]): Record<string, Code> {
+    var AllCodes = Object.values(Codebook);
     for (var I = 0; I < Codes.length; I++) {
         var NewCode = NewCodes[I];
         if (!NewCode) break;
         var NewLabel = NewCode.Label.toLowerCase();
         if (NewLabel != Codes[I].Label) {
-            var Parent = Codes.find(Parent => Parent.Alternatives?.includes(NewLabel));
+            var Parent = AllCodes.find(Parent => Parent.Label == NewLabel || Parent.Alternatives?.includes(NewLabel));
             if (Parent && Parent != Codes[I]) {
                 // We will merge the definitions and examples using Set
                 Parent.Alternatives = Array.from(new Set((Parent.Alternatives ?? []).concat(Codes[I].Alternatives ?? [])));
