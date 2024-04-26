@@ -59,7 +59,7 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
                 try {
                     CursorRelative = await Action(Currents, Cursor - Start, IsFirst, Tries, I);
                     // Sometimes, the action may return a relative cursor movement
-                    if (ChunkSize[0] + CursorRelative < 0) throw new Error("Failed to process any subunits.");
+                    if (ChunkSize[0] + CursorRelative <= 0) throw new Error("Failed to process any subunits.");
                     CountItems(ChunkSize[0], ChunkSize[0] + CursorRelative);
                     if (CursorRelative != 0)
                         console.log(`Expected ${ChunkSize[0]} subunits, processed ${ChunkSize[0] + CursorRelative} subunits.`);

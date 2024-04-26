@@ -5,6 +5,7 @@ import { BaseMessage } from "@langchain/core/messages"
 import { ChatOpenAI } from "@langchain/openai"
 import { ChatAnthropic } from '@langchain/anthropic';
 import { ChatMistralAI } from '@langchain/mistralai';
+import { ChatGroq } from "@langchain/groq";
 import { Tokenize } from './tokenizer.js';
 import md5 from 'md5';
 
@@ -98,6 +99,18 @@ export function InitializeLLM(LLM: string) {
             Model = (Temp) => new ChatMistralAI({
                 temperature: Temp,
                 modelName: "mistral-small-latest",
+                streaming: false,
+                maxTokens: MaxOutput,
+            });
+            break;
+        case "llama3-70b":
+            // 5$ / 15$
+            MaxInput = 8192;
+            MaxOutput = 8192;
+            MaxItems = 32;
+            Model = (Temp) => new ChatGroq({
+                temperature: Temp,
+                modelName: "llama3-70b-8192",
                 streaming: false,
                 maxTokens: MaxOutput,
             });
