@@ -17,6 +17,7 @@ export async function ProcessConversations(Group: string, Targets: number[]): Pr
     // Write into JSON file
     File.writeFileSync(GetParticipantsPath("Participants-Translated.json"), JSON.stringify(Participants, null, 4));
     // Create the Excel workbook
+    var IDs = new Set<string>();
     var ResultMessages: Message[] = [];
     var Results: Record<string, Conversation> = {};
     var Minimum = -1, Maximum = 0;
@@ -28,7 +29,11 @@ export async function ProcessConversations(Group: string, Targets: number[]): Pr
         Maximum = Target;
         Results[Target.toString()] = Conversations.find(Conversation => Conversation.ID == Target.toString())!;
         Results[Target.toString()].AllMessages = Messages;
-        ResultMessages.push(...Messages);
+        Messages.forEach(Message => {
+            if (IDs.has(Message.ID)) return;
+            IDs.add(Message.ID);
+            ResultMessages.push(Message);
+        });
     }
     // Save the Excel file
     var Book = ExportConversationsForCoding(Object.values(Results));

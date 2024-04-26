@@ -17,6 +17,7 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
         var Results: Record<number, string> = {};
         for (var I = 0; I < Lines.length; I++) {
             var Line = Lines[I];
+            var NextLine = I + 1 < Lines.length ? Lines[I + 1] : "";
             if (Line.startsWith("Thoughts:")) 
                 Analysis.Plan = Line.substring(9).trim(); 
             else if (Line.startsWith("Summary:")) 
@@ -30,7 +31,13 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                 if (Match) {
                     var Message = Messages[parseInt(Match[1]) - 1];
                     if (!Message) continue;
-                    var Codes = Match[2].trim().replaceAll("_", " ");
+                    var Codes = Match[2].trim();
+                    // Sometimes, the LLM will return the message content and put the codes in the next line
+                    if (NextLine != "" && !NextLine.startsWith("Summary:") && !NextLine.match(/^(\d+)\. (.*)$/)) {
+                        Codes = NextLine.trim();
+                        I++;
+                    }
+                    Codes = Codes.replaceAll("_", " ")
                     // For images, force the tag "Image sharing"
                     if (Message.Content == "[Image]") Codes = "Image Sharing";
                     // For emoji, force the tag "Emoji"

@@ -3,9 +3,10 @@ import * as dotenv from 'dotenv'
 import md5 from 'md5';
 import { Embeddings } from "@langchain/core/embeddings";
 import { OpenAIEmbeddings } from "@langchain/openai";
-import { GoogleVertexAIEmbeddings } from '@langchain/community/embeddings/googlevertexai';
 import { EnsureFolder } from './llms.js';
 import { PythonShell } from 'python-shell';
+import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai';
+import { TaskType } from "@google/generative-ai";
 
 // Model: The embedding model to use.
 export var Model: Embeddings;
@@ -39,10 +40,11 @@ export function InitializeEmbeddings(Embedding: string) {
                 dimensions: Dimensions
             });
             break;
-        case "gecko-768":
+        case "gecko-768-clustering":
             Dimensions = 768;
-            Model = new GoogleVertexAIEmbeddings({
-                model: "text-embedding-preview-0409"
+            Model = new GoogleGenerativeAIEmbeddings({
+                model: "text-embedding-preview-0409",
+                taskType: TaskType.CLUSTERING
             });
             break;
         default:

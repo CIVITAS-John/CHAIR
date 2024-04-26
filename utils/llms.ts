@@ -104,7 +104,7 @@ export function InitializeLLM(LLM: string) {
             });
             break;
         case "llama3-70b":
-            // 5$ / 15$
+            // 0.59$ / 0.79$
             MaxInput = 8192;
             MaxOutput = 8192;
             MaxItems = 32;

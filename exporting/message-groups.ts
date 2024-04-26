@@ -31,11 +31,16 @@ function ReadQQMessages(Path: string): Message[] {
 
 // Read emojis
 const Emojis = File.readFileSync(`./known/emoji.csv`, 'utf-8').split('\n');
-const EmojiMap = new Map<string, string>();
+const EmojiMap = new Map<string | RegExp, string>();
 for (const Emoji of Emojis) {
-    var [Source, Translation] = Emoji.split(',');
-    if (!Source.startsWith("[")) Source = `\/${Source}`;
-    EmojiMap.set(Source, Translation.trim());
+    var LastSeperator = Emoji.lastIndexOf(',');
+    var [Source, Translation] = [Emoji.substring(0, LastSeperator), Emoji.substring(LastSeperator + 1)];
+    if (Source.includes("{")) {
+        EmojiMap.set(new RegExp(Source, 'g'), Translation.trim());
+    } else {
+        if (!Source.startsWith("[")) Source = `\/${Source}`;
+        EmojiMap.set(Source, Translation.trim());
+    }
 }
 const UnknownEmojis = new Map<string, number>();
 

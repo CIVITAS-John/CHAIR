@@ -1,6 +1,6 @@
 import * as File from 'fs';
 import { SystemMessage, HumanMessage } from "@langchain/core/messages";
-import { EnsureFolder, ExpectedItems, FinishedItems, InitializeLLM, InputTokens, LLMName, MaxItems, MaxOutput, OutputTokens, RequestLLM } from "../utils/llms.js";
+import { EnsureFolder, ExpectedItems, FinishedItems, InitializeLLM, InputTokens, LLMName, MaxItems, MaxOutput, OutputTokens, RequestLLM, RequestLLMWithCache } from "../utils/llms.js";
 import { Preprocess } from "../utils/glossary.js";
 import { Tokenize } from "../utils/tokenizer.js";
 
@@ -138,13 +138,21 @@ async function TranslateChunkedStringsWithLLMRetries(Type: string, Requests: str
 async function TranslateChunkedStringsWithLLM(Type: string, Source: string[], SystemPrompt: string, Tries: number): Promise<string[]> {
     var Separator = "\n---\n";
     // Call the LLM
-    const Result = await RequestLLM([new SystemMessage(SystemPrompt + " Use `---` to separate texts."), new HumanMessage(
-        Source.map((Text, Index) => `${Index + 1}. ${Text}`).join(Separator))], Tries * 0.2);
+    const Result = await RequestLLMWithCache([new SystemMessage(`${SystemPrompt} Always follow the output format:
+---
+1. Translated Text 1
+---
+2. Translated Text 2
+---
+...`.trim()), new HumanMessage(
+        Source.map((Text, Index) => `${Index + 1}. ${Text}`).join(Separator))], "translation-cache", Tries * 0.2);
     // Split the result
     var Results = Result.split(/\n *--- *\n/gm);
     // Sometimes GPT-4.5-turbo ignores the proceding line break.
     if (Results.length == 1)
         Results = Result.split(/\n? *--- *\n/gm);
+    // Filter empty strings
+    Results = Results.filter(Text => Text.trim() !== "");
     // Claude loves to add a sentence at the beginning.
     if (!Results[0].startsWith("1.") && Results.length == Source.length + 1)
         Results.shift();
