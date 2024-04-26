@@ -9,7 +9,8 @@ import { TranslateProjects } from './physics-lab.js';
 import { ProcessConversations } from './message-groups.js';
 
 // UseLLM("mistral-small");
-UseLLM("llama3-70b");
+// UseLLM("llama3-70b");
+UseLLM("gpt-3.5-turbo");
 // UseLLM("gpt-4.5-turbo");
 // UseLLM("claude3-haiku");
 // UseLLM("claude3-sonnet");
