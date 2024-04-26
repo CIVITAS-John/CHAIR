@@ -9,11 +9,12 @@ cpus = multiprocessing.cpu_count()
 # Get the arguments
 Dimensions = int(sys.argv[1])
 Embeddings = int(sys.argv[2])
-Method = sys.argv[3] if len(sys.argv) > 3 else "leaf"
-MinCluster = int(sys.argv[4]) if len(sys.argv) > 4 else 2
-MinSamples = int(sys.argv[5]) if len(sys.argv) > 5 else 1
-Metrics = sys.argv[6] if len(sys.argv) > 6 else "cosine"
+Metrics = sys.argv[3] if len(sys.argv) > 3 else "cosine"
+Method = sys.argv[4] if len(sys.argv) > 4 else "leaf"
+MinCluster = int(sys.argv[5]) if len(sys.argv) > 5 else 2
+MinSamples = int(sys.argv[6]) if len(sys.argv) > 6 else 1
 TargetDimensions = int(sys.argv[7]) if len(sys.argv) > 7 else Dimensions
+Plotting = bool(sys.argv[7]) if len(sys.argv) > 7 else False
 print("Method:", Method, ", MinCluster:", MinCluster, ", MinSamples:", MinSamples, ", Metrics:", Metrics, ", Target Dimensions:", TargetDimensions)
 
 # Read from `./known/temp.bytes`

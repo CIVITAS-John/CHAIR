@@ -40,11 +40,31 @@ export function InitializeEmbeddings(Embedding: string) {
                 dimensions: Dimensions
             });
             break;
+        case "gecko-768":
+            Dimensions = 768;
+            Model = new GoogleGenerativeAIEmbeddings({
+                model: "text-embedding-004"
+            });
+            break;
+        case "gecko-768-classification":
+            Dimensions = 768;
+            Model = new GoogleGenerativeAIEmbeddings({
+                model: "text-embedding-004",
+                taskType: TaskType.CLASSIFICATION
+            });
+            break;
         case "gecko-768-clustering":
             Dimensions = 768;
             Model = new GoogleGenerativeAIEmbeddings({
-                model: "text-embedding-preview-0409",
+                model: "text-embedding-004",
                 taskType: TaskType.CLUSTERING
+            });
+            break;
+        case "gecko-768-similarity":
+            Dimensions = 768;
+            Model = new GoogleGenerativeAIEmbeddings({
+                model: "text-embedding-004",
+                taskType: TaskType.SEMANTIC_SIMILARITY
             });
             break;
         default:
@@ -82,7 +102,8 @@ export async function RequestEmbeddingWithCache(Source: string, Cache: string): 
 
 /** RequestEmbedding: Call the model to generate a text embedding. */
 export async function RequestEmbedding(Source: string): Promise<number[]> {
-    return (await Model.embedDocuments([Source]))[0];
+    var Result = (await Model.embedDocuments([Source]))
+    return Result[0];
 }
 
 /** ClusterItem: The item in a cluster. */

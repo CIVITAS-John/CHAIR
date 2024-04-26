@@ -1,5 +1,5 @@
 import { ResearchQuestion } from '../../constants.js';
-import { ClusterTexts } from '../../utils/embeddings.js';
+import { ClusterTexts, InitializeEmbeddings } from '../../utils/embeddings.js';
 import { SortCodes } from '../../utils/export.js';
 import { Code, CodedThreads, GetCategories } from '../../utils/schema.js';
 import { AssignCategoriesByCluster, CodebookConsolidator, MergeCategoriesByCluster, MergeCodesByCluster, UpdateCategories, UpdateCategoriesByMap, UpdateCodes } from './codebooks.js';
@@ -133,18 +133,29 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 // Cluster codes using text embeddings
                 // Combine each code into a string for clustering
                 var CodeStrings = Codes.map(Code => {
-                    var Text = `${Code.Label}`;
-                    if ((Code.Definitions?.length ?? 0) > 0) Text += `: ${Code.Definitions![0]}`;
+                    var Text = `Label: ${Code.Label}`;
+                    if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
                     return Text.trim();
                 });
                 // Categorize the strings
-                var Clusters = await ClusterTexts(CodeStrings, this.Name);
+                var Clusters = Iteration == this.MergeLabels ? 
+                    await ClusterTexts(CodeStrings, this.Name) : await ClusterTexts(CodeStrings, this.Name, "dbscan");
                 // Merge the codes
                 Analysis.Codebook = MergeCodesByCluster(Clusters, Codes);
                 return ["", ""];
             case this.MergeCategories:
+                var CategoryStrings = Categories.map(Category => {
+                    var Text = `Category: ${Category}
+Items:
+${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Code.Label}`).join("\n")}
+`.trim();
+// ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Code.Label} (${Code.Definitions![0]})`).join("\n")}
+                    return Text.trim();
+                });
+                // Switch to the clustering version - TODO: this is a hack, needs to be fixed later
+                InitializeEmbeddings("gecko-768-clustering");
                 // Cluster categories using text embeddings
-                var Clusters = await ClusterTexts(Categories, this.Name);
+                var Clusters = await ClusterTexts(CategoryStrings, this.Name);
                 var Merged = MergeCategoriesByCluster(Clusters, Categories, Codes);
                 var Count = Object.keys(Merged).length;
                 (Analysis as any).Categories = Object.keys(Merged);
@@ -181,10 +192,10 @@ Always follow the output format:
 
 # Reflection
 Answer the following questions with detailed examples:
-- Did you make categories too large?
 - Can you identify more categories for merging?
+- Can you identify over-merged categories that should be split?
 - Is any naming inaccurate?
-Revise and rewrite the final merging plan in the next section, following the same format.
+Improve the draft plan into the final merging plan in the next section, following the same format.
 
 # Final Merging
 * Category g
@@ -288,7 +299,6 @@ ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0
                     if (Line == "" || Line.startsWith("---")) continue;
                     var Match = Line.match(/^(\d+)\./);
                     if (Match) {
-                        var Index = parseInt(Match[1]) - 1;
                         var Category = Line.substring(Match[0].length).trim().toLowerCase();
                         Results.push(Category);
                     }
@@ -338,6 +348,8 @@ ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0
                         } else Category = Lines[I + 1].trim().toLowerCase();
                         // Sometimes, the LLM will return "{category}"
                         if (Category.startsWith("{") && Category.endsWith("}")) Category = Category.substring(1, Category.length - 1);
+                        // Sometimes, the LLM will return "**category**"
+                        if (Category.startsWith("**") && Category.endsWith("**")) Category = Category.substring(2, Category.length - 2);
                         Results.push(Category);
                     }
                 }

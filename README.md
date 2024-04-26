@@ -8,13 +8,11 @@ To run the code in this repository, you need to create the `.env` file in the re
 OPENAI_API_KEY={Your OpenAI API Key}
 ANTHROPIC_API_KEY={Your Anthropic API Key}
 MISTRAL_API_KEY={Your Mistral API Key}
+GROQ_API_KEY={Your Groq API Key} # for llama3 series models
+GOOGLE_API_KEY={Your Google API Key} # for gecko embedding models
 ```
 
-For Google Cloud, you will need to install the GCloud SDK and successfully initialize it in local command line environments. Specifically, you need to do:
-```
-gcloud init
-gcloud auth application-default login
-```
+For Google API, get the key at https://aistudio.google.com/app/u/1/apikey
 
 ## Segmentation
 ### Messaging Groups
