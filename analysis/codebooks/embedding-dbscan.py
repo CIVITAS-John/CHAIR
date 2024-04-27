@@ -2,6 +2,8 @@ import sys
 import numpy as np
 from embedding import Dimensions, Items, cpus, labels, embeddings
 
+# DBScan Clustering
+
 # Get the arguments
 Metrics = sys.argv[3] if len(sys.argv) > 3 else "cosine"
 Epsilon = float(sys.argv[4]) if len(sys.argv) > 4 else 0.17
@@ -36,7 +38,6 @@ if Plotting:
     plt.show()
 
 # Send into DBScan
-import json
 from sklearn.cluster import DBSCAN
 # from sklearn.preprocessing import normalize
 # norm_embeddings = normalize(embeddings, norm='l2')
@@ -45,4 +46,7 @@ db.fit(distances)
 
 # Change all 0 to -1
 db.labels_[db.labels_ == 0] = -1
+
+# Send the results
+import json
 print(json.dumps([db.labels_.tolist(), np.ones(Items).tolist()]))

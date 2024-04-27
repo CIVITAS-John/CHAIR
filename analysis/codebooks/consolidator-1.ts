@@ -139,7 +139,8 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                     return Text.trim();
                 });
                 // Categorize the strings
-                var Clusters = await ClusterTexts(CodeStrings, Codes.map(Code => Code.Label), this.Name, "agglo", "cosine", "average", Iteration == this.MergeLabels ? "0.8" : "0.6");
+                var Clusters = await ClusterTexts(CodeStrings, Codes.map(Code => Code.Label), this.Name, 
+                    "jc", "euclidean", "ward", Iteration == this.MergeLabels ? "1" : "0.75", "0.25");
                 // Merge the codes
                 Analysis.Codebook = MergeCodesByCluster(Clusters, Codes);
                 return ["", ""];
@@ -154,8 +155,11 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Cod
                 });
                 // Switch to the clustering version - TODO: this is a hack, needs to be fixed later
                 InitializeEmbeddings("gecko-768-clustering");
+                console.log(`Statistics: categories to merge: ${CategoryStrings.length}`);
                 // Cluster categories using text embeddings
-                var Clusters = await ClusterTexts(CategoryStrings, Categories, this.Name, "agglo", "cosine", "complete", "0.4");
+                var Clusters = await ClusterTexts(CategoryStrings, Categories, this.Name, 
+                    "jc", "euclidean", "ward", "1.5", "0.5"
+                );
                 var Merged = MergeCategoriesByCluster(Clusters, Categories, Codes);
                 var Count = Object.keys(Merged).length;
                 (Analysis as any).Categories = Object.keys(Merged);
@@ -174,6 +178,7 @@ ${Count}. {2-4 words for category ${Count}}
             case this.RefineCategories:
                 // We have too many categories. Filter ones with more than 1 instances.
                 Categories = Categories.filter(Category => Codes.filter(Code => Code.Categories?.includes(Category)).length > 1).sort();
+                console.log(`Statistics: categories to merge: ${Categories.length}`);
                 return [`
 You are an expert in thematic analysis.
 You will identify input categories that can be merged into another. Find as many as possible. Prioritize merging smaller categories. Avoid creating huge categories. Names of new categories must concisely cover the aspects and stay in the research context.

@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from embedding import Dimensions, Items, cpus, labels, embeddings
 
+# HDBScan Clustering
+
 # Get the arguments
 Metrics = sys.argv[3] if len(sys.argv) > 3 else "cosine"
 Method = sys.argv[4] if len(sys.argv) > 4 else "leaf"
@@ -25,11 +27,13 @@ from sklearn.metrics.pairwise import pairwise_distances
 distances = pairwise_distances(embeddings, embeddings, metric=Metrics, n_jobs=cpus)
 
 # Send into HDBScan
-import json
 import hdbscan
 hdb = hdbscan.HDBSCAN(min_cluster_size = MinCluster, min_samples = MinSamples, cluster_selection_method = Method, core_dist_n_jobs = cpus, metric = 'precomputed') # , prediction_data = True
 hdb.fit(distances.astype(np.float64))
 linkage = hdb.single_linkage_tree_._linkage
+
+# Send the results
+import json
 print(json.dumps([hdb.labels_.tolist(), hdb.probabilities_.tolist()]))
 
 # Plot the clusters
