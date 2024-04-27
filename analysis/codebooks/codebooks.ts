@@ -124,7 +124,7 @@ export function MergeCodesByCluster(Clusters: Record<number, ClusterItem[]>, Cod
             }
         }
     }
-    console.log(`Codes reduced from ${Codes.length} to ${Object.keys(Codebook).length}`);
+    console.log(`Codes merged from ${Codes.length} to ${Object.keys(Codebook).length}`);
     return Codebook;
 }
 

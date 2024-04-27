@@ -141,24 +141,25 @@ export interface ClusterItem {
 }
 
 /** ClusterTexts: Categorize the embeddings into clusters. */
-export async function ClusterTexts(Sources: string[], Cache: string, Method: string = "hdbscan", ...ExtraOptions: string[]): Promise<Record<number, ClusterItem[]>> {
+export async function ClusterTexts(Sources: string[], Names: string[], Cache: string, Method: string = "hdbscan", ...ExtraOptions: string[]): Promise<Record<number, ClusterItem[]>> {
     console.log("Requesting embeddings for: " + Sources.length);
     var Embeddings = await RequestEmbeddings(Sources, Cache);
-    return await ClusterEmbeddings(Embeddings, Sources.length, Method, ...ExtraOptions);
+    return await ClusterEmbeddings(Embeddings, Names, Method, ...ExtraOptions);
 }
 
 /** 
  * ClusterEmbeddings: Categorize the embeddings into clusters.
  * Return format: { Cluster: [ID, Probability][] }
  * */
-export async function ClusterEmbeddings(Embeddings: Float32Array, Items: number, Method: string = "hdbscan", ...ExtraOptions: string[]): Promise<Record<number, ClusterItem[]>> {
+export async function ClusterEmbeddings(Embeddings: Float32Array, Names: string[], Method: string = "hdbscan", ...ExtraOptions: string[]): Promise<Record<number, ClusterItem[]>> {
     var Results: Record<number, ClusterItem[]> = {};
     // Write it into ./known/temp.bytes
     File.writeFileSync(`./known/temp.bytes`, Buffer.from(Embeddings.buffer));
-    console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Items + " embeddings)");
+    File.writeFileSync(`./known/temp.text`, Names.join("\n"));
+    console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
     // Run the Python script
     await PythonShell.run(`analysis/codebooks/embedding-${Method}.py`, {
-        args: [Dimensions.toString(), Items.toString(), ...ExtraOptions],
+        args: [Dimensions.toString(), Names.length.toString(), ...ExtraOptions],
         parser: (Message) => { 
             if (Message.startsWith("[")) {
                 var Data = JSON.parse(Message) as number[][];
@@ -166,14 +167,17 @@ export async function ClusterEmbeddings(Embeddings: Float32Array, Items: number,
                 var Probabilities = Data[1];
                 // Get unique clusters
                 var UniqueClusters = [...new Set(Clusters)].sort();
+                var NoCluster = 0;
                 for (var Cluster of UniqueClusters) {
                     Results[Cluster] = [];
                     for (var J = 0; J < Clusters.length; J++) {
-                        if (Clusters[J] == Cluster)
+                        if (Clusters[J] == Cluster) {
                             Results[Cluster].push({ ID: J, Probability: Probabilities[J] });
+                            if (Cluster == -1) NoCluster++;
+                        }
                     }
                 }
-                console.log(`Clusters: ${UniqueClusters.length} from ${Items} items`);
+                console.log(`Clusters: ${UniqueClusters.length - (NoCluster > 0 ? 1 : 0)} from ${Names.length} items; ${NoCluster} items unclustered.`);
             } else console.log(Message);
         }
     });

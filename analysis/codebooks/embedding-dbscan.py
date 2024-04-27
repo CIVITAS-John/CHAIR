@@ -1,31 +1,14 @@
 import sys
 import numpy as np
-import multiprocessing
-
-cpus = multiprocessing.cpu_count()
+from embedding import Dimensions, Items, cpus, labels, embeddings
 
 # Get the arguments
-Dimensions = int(sys.argv[1])
-Embeddings = int(sys.argv[2])
 Metrics = sys.argv[3] if len(sys.argv) > 3 else "cosine"
 Epsilon = float(sys.argv[4]) if len(sys.argv) > 4 else 0.17
 MinSamples = int(sys.argv[5]) if len(sys.argv) > 5 else 1
 TargetDimensions = int(sys.argv[6]) if len(sys.argv) > 6 else Dimensions
 Plotting = bool(sys.argv[7]) if len(sys.argv) > 7 else True
 print("Epsilon:", Epsilon, ", MinSamples:", MinSamples, ", Metrics:", Metrics, ", Target Dimensions:", TargetDimensions)
-
-# Read from `./known/temp.bytes`
-with open("./known/temp.bytes", "rb") as file:
-    # Read the bytes
-    float_bytes = file.read(Dimensions * Embeddings * 4)  # 4 bytes per float
-    # Convert the bytes to floats
-    embeddings = np.frombuffer(float_bytes, dtype=np.float32)
-    # print("Embeddings received:", len(embeddings), ", expected:", Dimensions * Embeddings)
-
-# Reshape the embeddings
-embeddings = embeddings.reshape((Embeddings, Dimensions))
-# print("Embeddings reshaped:", embeddings.shape)
-# print("Example embedding:", embeddings[2])
 
 # Use UMap to reduce the dimensions
 from umap import UMAP
@@ -62,4 +45,4 @@ db.fit(distances)
 
 # Change all 0 to -1
 db.labels_[db.labels_ == 0] = -1
-print(json.dumps([db.labels_.tolist(), np.ones(Embeddings).tolist()]))
+print(json.dumps([db.labels_.tolist(), np.ones(Items).tolist()]))

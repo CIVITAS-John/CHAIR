@@ -139,9 +139,7 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                     return Text.trim();
                 });
                 // Categorize the strings
-                // var Clusters = Iteration == this.MergeLabels ? 
-                //    await ClusterTexts(CodeStrings, this.Name) : await ClusterTexts(CodeStrings, this.Name, "dbscan");
-                var Clusters = await ClusterTexts(CodeStrings, this.Name, "agglo", "cosine", "complete", Iteration == this.MergeLabels ? "0.25" : "0.22");
+                var Clusters = await ClusterTexts(CodeStrings, Codes.map(Code => Code.Label), this.Name, "agglo", "cosine", "average", Iteration == this.MergeLabels ? "0.8" : "0.6");
                 // Merge the codes
                 Analysis.Codebook = MergeCodesByCluster(Clusters, Codes);
                 return ["", ""];
@@ -157,7 +155,7 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Cod
                 // Switch to the clustering version - TODO: this is a hack, needs to be fixed later
                 InitializeEmbeddings("gecko-768-clustering");
                 // Cluster categories using text embeddings
-                var Clusters = await ClusterTexts(CategoryStrings, this.Name, "agglo", "cosine", "complete", "0.4");
+                var Clusters = await ClusterTexts(CategoryStrings, Categories, this.Name, "agglo", "cosine", "complete", "0.4");
                 var Merged = MergeCategoriesByCluster(Clusters, Categories, Codes);
                 var Count = Object.keys(Merged).length;
                 (Analysis as any).Categories = Object.keys(Merged);
