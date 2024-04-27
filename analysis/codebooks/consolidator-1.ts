@@ -140,7 +140,7 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 });
                 // Categorize the strings
                 var Clusters = await ClusterTexts(CodeStrings, Codes.map(Code => Code.Label), this.Name, 
-                    "jc", "euclidean", "ward", Iteration == this.MergeLabels ? "1" : "0.75", "0.25");
+                    "jc", "euclidean", "ward", Iteration == this.MergeLabels ? "1" : "0.6", Iteration == this.MergeLabels ? "0.25" : "0.1");
                 // Merge the codes
                 Analysis.Codebook = MergeCodesByCluster(Clusters, Codes);
                 return ["", ""];
