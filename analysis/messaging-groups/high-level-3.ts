@@ -1,21 +1,19 @@
+import { ResearchQuestion } from '../../constants.js';
 import { Code, CodedThread, Conversation, Message } from '../../utils/schema.js';
 import { BuildMessagePrompt } from './conversations.js';
 import { HighLevelAnalyzerBase } from './high-level.js';
 
-/** HighLevelAnalyzer1: Conduct the first-round high-level coding of the conversations. */
+/** HighLevelAnalyzer3: Conduct the first-round high-level coding of the conversations. */
 /* Original prompt format:
-Hi ChatGPT, I want to analyze the following interaction between an instructor and some students:
-[DATA]
-Please give me a codebook to analyze the instructional methodologies and the sentiment within this interaction.
+Identify up to 3 most relevant themes in the text, provide a name for each theme in no more than 3 words, 4 lines meaningful and desnse description of the theme and a quote from the respondent for each theme no longer than 7 lines. Format the response as a json file keeping names, descriptions, and quotes together in the json, and keep them together in 'Themes'.
 ---
-Barany et al. (2024) ChatGPT for Education Research: Exploring the Potential of Large Language Models for Qualitative Codebook Development
----
-However, the original prompt does not give examples as documented by the paper. We modified the prompt to make that happen. Note that the original paper's codebook only has around 8-11 codes. Therefore, we only ask ChatGPT to generate a single layer of codes.
-Adapter: John Chen
+De Paoli, S.: Performing an Inductive Thematic Analysis of Semi-Structured Interviews
+With a Large Language Model: An Exploration and Provocation on the Limits of the
+Approach. Social Science Computer Review, 08944393231220483 (2023).
 */
-export class HighLevelAnalyzer1 extends HighLevelAnalyzerBase {
+export class HighLevelAnalyzer3 extends HighLevelAnalyzerBase {
     /** Name: The name of the analyzer. */
-    public Name: string = "high-level-1";
+    public Name: string = "high-level-3";
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature: number = 0.5;
     /** BuildPrompts: Build the prompts for the LLM. */
@@ -23,15 +21,23 @@ export class HighLevelAnalyzer1 extends HighLevelAnalyzerBase {
         return [`
 Hi ChatGPT, I want to analyze the following interaction in one of Physics Lab's online message groups.
 Please give me a codebook to analyze factors within this interaction that could contribute to the research.
-The research question is: How did Physics Lab's online community emerge?
+${ResearchQuestion}
 For each code, try to find 3 quotes. Always follow the output format:
 ---
+* Summary
+{A summary of the conversation}
+
+* Plan
+{A paragraph of plans and guiding questions about analyzing the conversation from multiple theoretical angles}
+
+# Label of category 1
 ## Label of code 1
 Definition: A definition of code 1
 - Example quote 1
 - Example quote 2
 
 ## ...
+# ...
 `.trim(),
             Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join("\n")];
     }
