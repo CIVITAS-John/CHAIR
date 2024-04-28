@@ -153,7 +153,7 @@ export function UpdateCodes(Codebook: Codebook, NewCodes: Code[], Codes: Code[])
         if (!NewCode) break;
         var NewLabel = NewCode.Label.toLowerCase();
         if (NewLabel != Codes[I].Label) {
-            var Parent = AllCodes.find(Parent => Parent.Label == NewLabel || Parent.Alternatives?.includes(NewLabel));
+            var Parent = AllCodes.find(Current => Current.Label == NewLabel || Current.Alternatives?.includes(NewLabel));
             if (Parent && Parent != Codes[I]) {
                 // We will merge the definitions and examples using Set
                 Parent.Alternatives = Array.from(new Set((Parent.Alternatives ?? []).concat(Codes[I].Alternatives ?? [])));

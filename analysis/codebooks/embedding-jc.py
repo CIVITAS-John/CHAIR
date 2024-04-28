@@ -66,7 +66,7 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
     leftlabel = labels[left_id] if left_id < Items else "cluster-" + str(left_id)
     right_id = node.get_right().id
     rightlabel = labels[right_id] if right_id < Items else "cluster-" + str(right_id)
-    print("depth", leaf_depths[node.id], "distance", node.dist, leftlabel, rightlabel, criteria, node.dist <= criteria)
+    # print("depth", leaf_depths[node.id], "distance", node.dist, leftlabel, rightlabel, criteria, node.dist <= criteria)
     if cluster == -1 and node.dist <= criteria:
         cluster = cluster_index
         cluster_index += 1

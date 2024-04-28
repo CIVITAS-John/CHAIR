@@ -289,9 +289,15 @@ ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0
                         CurrentCode!.Categories!.push(Line.trim());
                     }
                 }
-                for (var Code of Pendings) {
+                // Check if we have all the codes and avoid mismatches
+                for (var I = 0; I < Pendings.length; I++) {
+                    var NewCode = Pendings[I];
                     // Sometimes, the new label starts with "label:"
-                    if (Code.Label.startsWith("label:")) Code.Label = Code.Label.substring(6).trim();
+                    if (NewCode.Label.startsWith("label:")) NewCode.Label = NewCode.Label.substring(6).trim();
+                    // Sometimes, the order of labels is wrong (! found for gpt-3.5-turbo)
+                    var Found = Codes.findIndex(Code => Code.Label == NewCode.Label);
+                    if (Found != -1 && Found !== I) 
+                        throw new Error(`Invalid response: code ${NewCode.Label}'s mapping order is wrong.`);
                 }
                 // Update the codes
                 UpdateCodes(Analysis.Codebook!, Pendings, Codes);
@@ -364,6 +370,9 @@ ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0
                             Category = Line.substring(Match[0].length).trim().toLowerCase();
                             // if (Category == Codes[Results.length].Label) continue;
                         } else Category = Lines[I + 1].trim().toLowerCase();
+                        // Sometimes, the LLM will return "Code 1 - {category}"
+                        Match = Category.match(/^code (\d+) \-/);
+                        if (Match) Category = Category.substring(Match[0].length).trim();
                         // Sometimes, the LLM will return "{category}"
                         if (Category.startsWith("{") && Category.endsWith("}")) Category = Category.substring(1, Category.length - 1);
                         // Sometimes, the LLM will return "**category**"
