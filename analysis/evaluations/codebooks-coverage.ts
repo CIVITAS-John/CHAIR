@@ -1,18 +1,35 @@
+import { ClusterTexts } from "../../utils/embeddings.js";
 import { Code, Codebook } from "../../utils/schema.js";
 import { CodebookEvaluator } from './codebooks.js';
 
 /** CoverageEvaluator: An evaluator of codebook coverage. */
 export class CoverageEvaluator extends CodebookEvaluator {
+    /** Name: The name of the evaluator. */
+    public Name: string = "coverage-evaluator";
     /** Evaluate: Evaluate a number of codebooks. */
     public async Evaluate(Codebooks: Codebook[], Names: string[]): Promise<void> {
-        for (var Codebook in Codebooks) {
+        var AllCodes: Code[] = [];
+        var AllLabels: string[] = [];
+        var AllOwners: number[] = [];
+        // Get all the codes
+        for (var I = 0; I < Codebooks.length; I++) {
+            var Codebook = Codebooks[I];
             // Build the code strings
-            var Codes = Object.values(Codebooks[Codebook]);
-            var CodeStrings = Codes.map(Code => {
-                var Text = `Label: ${Code.Label}`;
-                if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
-            });
-            // Evaluate the codebook
+            var Codes = Object.values(Codebook);
+            var CodeStrings = Codes.map(GetCodeString);
+            var Labels = Codes.map(Code => Code.Label);
+            AllCodes.push(...Codes); 
+            AllLabels.push(...Labels.map(Label => `${Codebook}/${Label}`));
+            AllOwners.push(...Labels.map(Label => I));
+            // Visualize the embeddings
+            await ClusterTexts(CodeStrings, Labels, "evaluator", "show-density");
         }
     }
+}
+
+/** GetCodeString: Get the  */
+export function GetCodeString(Code: Code): string {
+    var Text = `Label: ${Code.Label}`;
+    if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
+    return Text;
 }

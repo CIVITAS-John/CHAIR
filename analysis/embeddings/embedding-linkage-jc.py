@@ -2,16 +2,18 @@ import sys
 import numpy as np
 from embedding import Dimensions, Items, cpus, labels, embeddings
 
-# Hierarchical Agglomerative Clustering - John Chen's heuristic
+# Linkage-based Clustering - John Chen's heuristic
+# The basic idea is to apply a penalty to the distance based on the depth of the tree
 
 # Get the arguments
 Metrics = sys.argv[3] if len(sys.argv) > 3 else "euclidean"
 Linkage = sys.argv[4] if len(sys.argv) > 4 else "ward"
 MaxDistance = float(sys.argv[5]) if len(sys.argv) > 5 else 1
 Penalty = float(sys.argv[6]) if len(sys.argv) > 6 else 0.25
-TargetDimensions = int(sys.argv[7]) if len(sys.argv) > 7 else Dimensions
-Plotting = bool(sys.argv[8]) if len(sys.argv) > 8 else False
-print("Linkage:", Linkage, ", MaxDistance:", MaxDistance, ", Metrics:", Metrics, ", Target Dimensions:", TargetDimensions)
+MinDistance = float(sys.argv[7]) if len(sys.argv) > 7 else 0.25
+TargetDimensions = int(sys.argv[8]) if len(sys.argv) > 8 else Dimensions
+Plotting = bool(sys.argv[9]) if len(sys.argv) > 9 else False
+print("Linkage:", Linkage, ", MaxDistance:", MaxDistance, ", MinDistance:", MinDistance, ", Metrics:", Metrics, ", Target Dimensions:", TargetDimensions)
 
 # Use UMap to reduce the dimensions
 from umap import UMAP
@@ -60,7 +62,7 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
         probs[node.id] = prob
         return 1
     # If it is not a leaf, check if it is a cluster
-    criteria = MaxDistance - leaf_depths[node.id] * Penalty
+    criteria = max(MaxDistance - leaf_depths[node.id] * Penalty, MinDistance)
     # Verbose: show the cluster
     left_id = node.get_left().id
     leftlabel = labels[left_id] if left_id < Items else "cluster-" + str(left_id)

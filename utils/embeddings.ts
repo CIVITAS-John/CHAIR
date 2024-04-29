@@ -158,7 +158,7 @@ export async function ClusterEmbeddings(Embeddings: Float32Array, Names: string[
     File.writeFileSync(`./known/temp.text`, Names.join("\n"));
     console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
     // Run the Python script
-    await PythonShell.run(`analysis/codebooks/embedding-${Method}.py`, {
+    await PythonShell.run(`analysis/embeddings/embedding-${Method}.py`, {
         args: [Dimensions.toString(), Names.length.toString(), ...ExtraOptions],
         parser: (Message) => { 
             if (Message.startsWith("[")) {

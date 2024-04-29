@@ -5,6 +5,8 @@ import { GetFilesRecursively } from '../../utils/file.js';
 
 /** CodebookEvaluator: An evaluator of codebook. */
 export abstract class CodebookEvaluator {
+    /** Name: The name of the evaluator. */
+    public Name: string = "Unnamed";
     /** Evaluate: Evaluate a number of codebooks. */
     public abstract Evaluate(Codebooks: Codebook[], Names: string[]): Promise<void>;
 }

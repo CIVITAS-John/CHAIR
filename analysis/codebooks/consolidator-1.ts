@@ -142,7 +142,7 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 });
                 // Categorize the strings
                 var Clusters = await ClusterTexts(CodeStrings, Codes.map(Code => Code.Label), this.Name, 
-                    "jc", "euclidean", "ward", Iteration == this.MergeLabels ? "1" : "0.6", Iteration == this.MergeLabels ? "0.25" : "0.1");
+                    "linkage-jc", "euclidean", "ward", Iteration == this.MergeLabels ? "1" : "0.6", Iteration == this.MergeLabels ? "0.25" : "0.1");
                 // Merge the codes
                 Analysis.Codebook = MergeCodesByCluster(Clusters, Codes);
                 return ["", ""];
@@ -160,7 +160,7 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Cod
                 console.log(`Statistics: categories to merge: ${CategoryStrings.length}`);
                 // Cluster categories using text embeddings
                 var Clusters = await ClusterTexts(CategoryStrings, Categories, this.Name, 
-                    "jc", "euclidean", "ward", "1.5", "0.5"
+                    "linkage-jc", "euclidean", "ward", "1.5", "0.5"
                 );
                 var Merged = MergeCategoriesByCluster(Clusters, Categories, Codes);
                 var Count = Object.keys(Merged).length;
