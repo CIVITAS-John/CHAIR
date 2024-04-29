@@ -11,23 +11,25 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature: number = 0;
     /** MaxIterations: The maximum number of iterations for the analyzer. */
-    public MaxIterations: number = 8;
+    public MaxIterations: number = 9;
+    /** PreMerge: The iteration that merges labels solely based on its labels. */
+    public readonly PreMerge: number = 0;
     /** GenerateDefinitions: The iteration that generates definition. */
-    public readonly GenerateDefinitions: number = 0;
+    public readonly GenerateDefinitions: number = 1;
     /** MergeLabels: The iteration that merges labels. */
-    public readonly MergeLabels: number = 1;
+    public readonly MergeLabels: number = 2;
     /** RefineDefinitions: The iteration that refines definitions. */
-    public readonly RefineDefinitions: number = 2;
+    public readonly RefineDefinitions: number = 3;
     /** MergeLabelsAgain: The iteration that merges labels again. */
-    public readonly MergeLabelsAgain: number = 3;
+    public readonly MergeLabelsAgain: number = 4;
     /** RefineDefinitionsAgain: The iteration that refines definitions again. */
-    public readonly RefineDefinitionsAgain: number = 4;
+    public readonly RefineDefinitionsAgain: number = 5;
     /** MergeCategories: The iteration that merge into initial categories. */
-    public readonly MergeCategories: number = 5;
+    public readonly MergeCategories: number = 6;
     /** RefineCategories: The iteration that refines categories. */
-    public readonly RefineCategories: number = 6;
+    public readonly RefineCategories: number = 7;
     /** AssignCategories: The iteration that assigns categories. */
-    public readonly AssignCategories: number = 7;
+    public readonly AssignCategories: number = 8;
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // Return value: [Chunk size, Cursor movement]
     public GetChunkSize(Recommended: number, Remaining: number, Iteration: number, Tries: number) {
@@ -37,6 +39,7 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
             case this.RefineDefinitionsAgain:
             case this.AssignCategories:
                 return Math.max(Recommended - Tries * 8, 1);
+            case this.PreMerge:
             case this.MergeLabels:
             case this.MergeLabelsAgain:
             case this.MergeCategories:
@@ -128,6 +131,15 @@ Category: {2-4 words for code ${Codes.length}}
                     Codes.map((Code, Index) => `
 ${Index + 1}. ${(Code.Alternatives ?? []).concat(Code.Label).join(", ") ?? ""}.
 ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).join("\n\n")];
+            case this.PreMerge:
+                // Categorize the strings
+                var Labels = Codes.map(Code => Code.Label);
+                var Clusters = await ClusterTexts(Labels, Labels, this.Name, 
+                    "linkage-jc", "euclidean", "ward", "0.4", "0");
+                // Merge the codes
+                Analysis.Codebook = MergeCodesByCluster(Clusters, Codes);
+                // Merge labels solely based on their labels
+                return ["", ""];
             case this.MergeLabels:
             case this.MergeLabelsAgain:
                 // For high-level coders, we want to skip this pass because they are less redundant and we want to have definitions refined first
@@ -143,7 +155,7 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 });
                 // Categorize the strings
                 var Clusters = await ClusterTexts(CodeStrings, Codes.map(Code => Code.Label), this.Name, 
-                    "linkage-jc", "euclidean", "ward", Iteration == this.MergeLabels ? "1" : "0.6", Iteration == this.MergeLabels ? "0.3" : "0.15");
+                    "linkage-jc", "euclidean", "ward", Iteration == this.MergeLabels ? "0.9" : "0.6", Iteration == this.MergeLabels ? "0.2" : "0.1");
                 // Merge the codes
                 Analysis.Codebook = MergeCodesByCluster(Clusters, Codes);
                 return ["", ""];

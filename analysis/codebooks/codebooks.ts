@@ -91,7 +91,7 @@ export function MergeCodesByCluster(Clusters: Record<number, ClusterItem[]>, Cod
         var BestCode = Clusters[ClusterID]
             .sort((A, B) => B.Probability - A.Probability)
             .map(Item => Codes[Item.ID])
-            .sort((A, B) => (A.Label.length * 5 + (A.Definitions?.[0].length ?? 0)) - (B.Label.length * 5 + (B.Definitions?.[0].length ?? 0)))[0];
+            .sort((A, B) => (A.Label.length * 5 + (A.Definitions?.[0]?.length ?? 0)) - (B.Label.length * 5 + (B.Definitions?.[0]?.length ?? 0)))[0];
         if (ClusterID != -1) {
             Codebook[BestCode.Label] = BestCode;
             BestCode.Alternatives = BestCode.Alternatives ?? [];
@@ -101,8 +101,7 @@ export function MergeCodesByCluster(Clusters: Record<number, ClusterItem[]>, Cod
         }
         for (var Item of Clusters[ClusterID]) {
             var Code = Codes[Item.ID];
-            // Only merge codes with high probability
-            if (ClusterID == -1 || Item.Probability <= 0.9) {
+            if (ClusterID == -1) {
                 // Codes that cannot be clustered
                 Codebook[Code.Label] = Code;
             } else if (Code.Label != BestCode.Label) {

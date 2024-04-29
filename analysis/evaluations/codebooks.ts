@@ -16,7 +16,7 @@ export async function EvaluateCodebooks(Source: string, Evaluator: CodebookEvalu
     var Codebooks: Codebook[] = [];
     var Names: string[] = [];
     // Find all the codebooks under the path
-    for (var Current of GetFilesRecursively(Source)) {
+    for (var Current of GetFilesRecursively(Source).sort()) {
         if (Current.endsWith(".json")) {
             var Content = File.readFileSync(`${Current}`, 'utf8');
             var Parsed = JSON.parse(Content);

@@ -8,9 +8,9 @@ from embedding import Dimensions, Items, cpus, labels, embeddings
 # Get the arguments
 Metrics = sys.argv[3] if len(sys.argv) > 3 else "euclidean"
 Linkage = sys.argv[4] if len(sys.argv) > 4 else "ward"
-MaxDistance = float(sys.argv[5]) if len(sys.argv) > 5 else 1
-Penalty = float(sys.argv[6]) if len(sys.argv) > 6 else 0.25
-MinDistance = float(sys.argv[7]) if len(sys.argv) > 7 else 0.25
+MaxDistance = float(sys.argv[5]) if len(sys.argv) > 5 else 0.9
+Penalty = float(sys.argv[6]) if len(sys.argv) > 6 else 0.2
+MinDistance = float(sys.argv[7]) if len(sys.argv) > 7 else 0.4
 TargetDimensions = int(sys.argv[8]) if len(sys.argv) > 8 else Dimensions
 Plotting = bool(sys.argv[9]) if len(sys.argv) > 9 else False
 print("Linkage:", Linkage, ", MaxDistance:", MaxDistance, ", MinDistance:", MinDistance, ", Metrics:", Metrics, ", Target Dimensions:", TargetDimensions)
@@ -73,6 +73,7 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
         cluster = cluster_index
         cluster_index += 1
         color = "#000000"
+        prob = max(1 - node.dist, 0)
     colors[node.id] = color
     # Traverse the children
     return traverse(node.get_left(), depth + 1, cluster, prob, color) + traverse(node.get_right(), depth + 1, cluster, prob, color)
