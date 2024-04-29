@@ -106,7 +106,7 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
                 // Refine definitions for codes
                 return [`
 You are an expert in thematic analysis. 
-Each code is merged from multiple ones. Write a single label and criteria to apply across quotes. Both should be clear and generalizable, informed by the context, and without unnecessary specifics or examples.
+Each code is merged from multiple ones. Consolidate into a single label and criteria that covers all concepts. Labels and criteria should be clear and generalizable, informed by the context, and without unnecessary specifics or examples.
 Group each code into a theory-informed category. Use 2-4 words for categories and avoid over-generalization (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 ${ResearchQuestion}
 Always follow the output format:
@@ -116,13 +116,13 @@ Thoughts:
 
 Definitions for each code (${Codes.length} in total):
 1.
-Label: {A label of code 1}
-Criteria: {Criteria of code 1}
+Label: {A consolidated label of code 1}
+Criteria: {Consolidated criteria of code 1}
 Category: {2-4 words for code 1}
 ...
 ${Codes.length}.
-Label: {A label of code ${Codes.length}}
-Criteria: {Criteria of code ${Codes.length}}
+Label: {A consolidated label of code ${Codes.length}}
+Criteria: {Consolidated criteria of code ${Codes.length}}
 Category: {2-4 words for code ${Codes.length}}
 ---`.trim(), 
                     Codes.map((Code, Index) => `
@@ -131,7 +131,8 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
             case this.MergeLabels:
             case this.MergeLabelsAgain:
                 // For high-level coders, we want to skip this pass because they are less redundant and we want to have definitions refined first
-                if (Iteration == this.MergeLabels && Codes.findIndex(Code => (Code.Definitions?.length ?? 0) > 1)) return ["", ""];
+                if (Iteration == this.MergeLabels && Codes.findIndex(Code => (Code.Definitions?.length ?? 0) > 1) != -1) 
+                    return ["", ""];
                 // Cluster codes using text embeddings
                 // Combine each code into a string for clustering
                 var CodeStrings = Codes.map(Code => {
@@ -142,7 +143,7 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 });
                 // Categorize the strings
                 var Clusters = await ClusterTexts(CodeStrings, Codes.map(Code => Code.Label), this.Name, 
-                    "linkage-jc", "euclidean", "ward", Iteration == this.MergeLabels ? "1" : "0.6", Iteration == this.MergeLabels ? "0.25" : "0.1");
+                    "linkage-jc", "euclidean", "ward", Iteration == this.MergeLabels ? "1" : "0.6", Iteration == this.MergeLabels ? "0.3" : "0.15");
                 // Merge the codes
                 Analysis.Codebook = MergeCodesByCluster(Clusters, Codes);
                 return ["", ""];
@@ -156,7 +157,7 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Cod
                     return Text.trim();
                 });
                 // Switch to the clustering version - TODO: this is a hack, needs to be fixed later
-                InitializeEmbeddings("gecko-768-clustering");
+                // InitializeEmbeddings("gecko-768-clustering");
                 console.log(`Statistics: categories to merge: ${CategoryStrings.length}`);
                 // Cluster categories using text embeddings
                 var Clusters = await ClusterTexts(CategoryStrings, Categories, this.Name, 
@@ -297,9 +298,9 @@ ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0
                     // Sometimes, the new label starts with "label:"
                     if (NewCode.Label.startsWith("label:")) NewCode.Label = NewCode.Label.substring(6).trim();
                     // Sometimes, the order of labels is wrong (! found for gpt-3.5-turbo)
-                    var Found = Codes.findIndex(Code => Code.Label == NewCode.Label);
+                    /*var Found = Codes.findIndex(Code => Code.Label == NewCode.Label);
                     if (Found != -1 && Found !== I) 
-                        throw new Error(`Invalid response: code ${NewCode.Label}'s mapping order is wrong.`);
+                        throw new Error(`Invalid response: code ${NewCode.Label}'s mapping order is wrong.`);*/
                 }
                 // Update the codes
                 UpdateCodes(Analysis.Codebook!, Pendings, Codes);

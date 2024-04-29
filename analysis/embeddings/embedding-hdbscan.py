@@ -38,10 +38,6 @@ print(json.dumps([hdb.labels_.tolist(), hdb.probabilities_.tolist()]))
 
 # Plot the clusters
 if Plotting:
-    # Plot the dendrogram
-    from scipy.cluster.hierarchy import dendrogram
-    dendrogram(linkage, labels=labels)
-
     # Transform the embeddings to 2D
     if TargetDimensions < 2:
         umap = UMAP(n_components = 2)

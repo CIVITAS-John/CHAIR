@@ -14,22 +14,22 @@ export class CoverageEvaluator extends CodebookEvaluator {
         // Get all the codes
         for (var I = 0; I < Codebooks.length; I++) {
             var Codebook = Codebooks[I];
-            // Build the code strings
             var Codes = Object.values(Codebook);
-            var CodeStrings = Codes.map(GetCodeString);
             var Labels = Codes.map(Code => Code.Label);
             AllCodes.push(...Codes); 
-            AllLabels.push(...Labels.map(Label => `${Codebook}/${Label}`));
+            AllLabels.push(...Labels.map(Label => `${I}/${Label}`));
             AllOwners.push(...Labels.map(Label => I));
-            // Visualize the embeddings
-            await ClusterTexts(CodeStrings, Labels, "evaluator", "show-density");
         }
+        // Visualize them
+        var CodeStrings = AllCodes.map(GetCodeString);
+        await ClusterTexts(CodeStrings, AllLabels, "evaluator", "show-density");
     }
 }
 
 /** GetCodeString: Get the  */
 export function GetCodeString(Code: Code): string {
-    var Text = `Label: ${Code.Label}`;
-    if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
-    return Text;
+    return Code.Label;
+    // var Text = `Label: ${Code.Label}`;
+    // if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
+    // return Text;
 }

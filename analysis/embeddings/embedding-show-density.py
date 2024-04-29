@@ -1,41 +1,68 @@
 import sys
 import numpy as np
+import matplotlib.pyplot as plt
 from embedding import Dimensions, Items, cpus, labels, embeddings
 
 # Density visualization
 
 # Get the arguments
 Metrics = sys.argv[3] if len(sys.argv) > 3 else "euclidean"
-TargetDimensions = int(sys.argv[4]) if len(sys.argv) > 4 else 2
+
+# Separate the owners ID from labels (format: owner_id/label)
+if labels[0].count('/') > 0:
+    owners = [int(label.split('/')[0]) for label in labels]
+    labels = [label.split('/')[1] for label in labels]
+else:
+    owners = [0] * len(labels)
 
 # Use UMap to reduce the dimensions
 from umap import UMAP
-if TargetDimensions < Dimensions:
-    umap = UMAP(n_components = TargetDimensions)
-    embeddings = umap.fit_transform(embeddings)
-    from sklearn.preprocessing import normalize
-    embeddings = normalize(embeddings, norm='l2')
-    print("Embeddings reduced:", embeddings.shape)
+umap = UMAP(n_components = 2)
+embeddings = umap.fit_transform(embeddings)
+print("Embeddings reduced:", embeddings.shape)
 
-# Use Plotly's 2D Density plot function
-import plotly.figure_factory as ff
+# Standardize the embeddings
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+scaler = StandardScaler()
+embeddings = scaler.fit_transform(embeddings)
+scaler = MinMaxScaler(feature_range=(-1, 1))
+embeddings = scaler.fit_transform(embeddings)
 
-fig = ff.create_2d_density(
-    x=embeddings[:, 0],  # X coordinates
-    y=embeddings[:, 1],  # Y coordinates
-    colorscale='Viridis',  # Color scale for the heatmap
-    hist_color='rgba(0, 0, 255, 0.5)',  # Histogram color
-    point_size=5  # Size of each point on the scatter plot
-)
+# Compute the density
+from scipy.stats import gaussian_kde
+x, y = embeddings[:, 0], embeddings[:, 1]
+kde = gaussian_kde([x, y])
+xgrid = np.linspace(-1, 1, 100)
+ygrid = np.linspace(-1, 1, 100)
+Xgrid, Ygrid = np.meshgrid(xgrid, ygrid)
+Z = kde(np.vstack([Xgrid.ravel(), Ygrid.ravel()])).reshape(Xgrid.shape)
 
-# Update the layout
-fig.update_layout(
-    title='Density Heatmap of Codes',
-    xaxis_title='X',
-    yaxis_title='Y',
-    xaxis=dict(range=[0, 1]),  # Ensure x-axis ranges from 0 to 1
-    yaxis=dict(range=[0, 1])   # Ensure y-axis ranges from 0 to 1
-)
+# Plotting the heatmap
+fig, ax = plt.subplots()
+heatmap = ax.imshow(Z, origin='lower', extent=[-1, 1, -1, 1], aspect='auto', cmap='viridis')
 
-# Show the plot
-fig.show()
+# Plot each group with its own color and label
+colors = plt.cm.jet(np.linspace(0, 1, len(np.unique(owners))))
+for owner_id, color in zip(np.unique(owners), colors):
+    idx = owners == owner_id
+    ax.scatter(x[idx], y[idx], color=color, label=f'Codebook {owner_id}')
+
+# Plot the texts
+for i, point in enumerate(embeddings):
+    ax.text(point[0], point[1], labels[i], color='black', fontsize=8)
+
+# Setting the labels and limitations
+ax.set_xlim(-1, 1)
+ax.set_ylim(-1, 1)
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_title('Density Heatmap on Codes')
+ax.legend()
+
+# Adding a color bar
+cbar = fig.colorbar(heatmap)
+cbar.set_label('Density')
+
+wm = plt.get_current_fig_manager()
+wm.window.state('zoomed')
+plt.show()

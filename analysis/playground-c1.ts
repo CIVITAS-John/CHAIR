@@ -8,6 +8,6 @@ await UseLLMs(async () => {
     InitializeEmbeddings("gecko-768-similarity");
     await ConsolidateConversations(new Consolidator1(), "Users of Physics Lab (Group 1)", "0~17-gpt-3.5-turbo.json", "high-level-2", LLMName, false);
     // await ConsolidateConversations(new Consolidator1(), "Users of Physics Lab (Group 2)", "0~16-gpt-3.5-turbo.json", "low-level-3", LLMName, false);
-}, "llama3-70b"); // 
+}, "llama3-70b", "gpt-3.5-turbo", "gpt-4.5-turbo"); // 
 
 process.exit(0);
