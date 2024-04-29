@@ -9,7 +9,7 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
     /** Name: The name of the analyzer. */
     public Name: string = "consolidator-1";
     /** BaseTemperature: The base temperature for the LLM. */
-    public BaseTemperature: number = 0;
+    public BaseTemperature: number = 0.5;
     /** MaxIterations: The maximum number of iterations for the analyzer. */
     public MaxIterations: number = 9;
     /** PreMerge: The iteration that merges labels solely based on its labels. */
@@ -80,7 +80,7 @@ export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
                 // Generate definitions for codes
                 return [`
 You are an expert in thematic analysis clarifying the criteria of qualitative codes. Quotes are independent of each other.
-Write clear and contextualized criteria to apply across quotes. Do not provide examples. Then, refine the label if necessary.
+Write clear criteria to apply across quotes. Keep important contexts but do not include examples. Then, refine the label if necessary.
 Group each code into a theory-informed category. Use 2-4 words for categories to provide general contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 ${ResearchQuestion}
 Always follow the output format:
@@ -135,7 +135,7 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 // Categorize the strings
                 var Labels = Codes.map(Code => Code.Label);
                 var Clusters = await ClusterTexts(Labels, Labels, this.Name, 
-                    "linkage-jc", "euclidean", "ward", "0.4", "0");
+                    "linkage-jc", "euclidean", "ward", "0.5", "0");
                 // Merge the codes
                 Analysis.Codebook = MergeCodesByCluster(Clusters, Codes);
                 // Merge labels solely based on their labels
@@ -155,7 +155,7 @@ ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).jo
                 });
                 // Categorize the strings
                 var Clusters = await ClusterTexts(CodeStrings, Codes.map(Code => Code.Label), this.Name, 
-                    "linkage-jc", "euclidean", "ward", Iteration == this.MergeLabels ? "0.9" : "0.6", Iteration == this.MergeLabels ? "0.2" : "0.1");
+                    "linkage-jc", "euclidean", "ward", Iteration == this.MergeLabels ? "0.7" : "0.6", Iteration == this.MergeLabels ? "0.15" : "0.1", "0.4");
                 // Merge the codes
                 Analysis.Codebook = MergeCodesByCluster(Clusters, Codes);
                 return ["", ""];

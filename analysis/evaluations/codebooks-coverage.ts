@@ -14,7 +14,7 @@ export class CoverageEvaluator extends CodebookEvaluator {
         // Get all the codes
         for (var I = 0; I < Codebooks.length; I++) {
             var Codebook = Codebooks[I];
-            var Codes = Object.values(Codebook);
+            var Codes = Object.values(Codebook).filter(Code => (Code.Examples?.length ?? 0) > 1);
             var Labels = Codes.map(Code => Code.Label);
             AllCodes.push(...Codes); 
             AllLabels.push(...Labels.map(Label => `${I}/${Label}`));
