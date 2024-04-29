@@ -21,7 +21,7 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
             } else if (Line.startsWith("## ")) {
                 Line = Line.substring(3).trim();
                 // Sometimes, the LLM will return "P{number}" as the name of the code
-                if (Line.match(/^(P(\d+)|Designer)($|\:)/)) throw new Error(`Invalid code name: ${Line}.`);
+                if (Line.match(/^(P(\d+))($|\:)/)) throw new Error(`Invalid code name: ${Line}.`);
                 // Get or create the code
                 Line = Line.toLowerCase();
                 CurrentCode = Analysis.Codes[Line] ?? { Categories: [Category.toLowerCase()], Label: Line };

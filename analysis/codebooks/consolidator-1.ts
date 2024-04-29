@@ -130,6 +130,8 @@ ${Index + 1}. ${(Code.Alternatives ?? []).concat(Code.Label).join(", ") ?? ""}.
 ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).join("\n\n")];
             case this.MergeLabels:
             case this.MergeLabelsAgain:
+                // For high-level coders, we want to skip this pass because they are less redundant and we want to have definitions refined first
+                if (Iteration == this.MergeLabels && Codes.findIndex(Code => (Code.Definitions?.length ?? 0) > 1)) return ["", ""];
                 // Cluster codes using text embeddings
                 // Combine each code into a string for clustering
                 var CodeStrings = Codes.map(Code => {

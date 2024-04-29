@@ -45,15 +45,15 @@ export function LoadParticipants(): Participant[] {
 
 /** GetProjectsPath: Get the saving path of certain projects. */
 export function GetProjectsPath(Name: string): string { 
-    return `${DatasetPath}\\Projects and Comments\\${Name}`; 
+    return `${DatasetPath}/Projects and Comments/${Name}`; 
 }
 
 /** GetMessagesPath: Get the saving path of certain messages. */
 export function GetMessagesPath(Group: string, Name: string): string { 
-    return `${DatasetPath}\\Messaging Groups\\${Group}\\${Name}`; 
+    return `${DatasetPath}/Messaging Groups/${Group}/${Name}`; 
 }
 
 /** GetParticipantsPath: Get the saving path of messaging group participants. */
 export function GetParticipantsPath(Name: string): string { 
-    return `${DatasetPath}\\Messaging Groups\\${Name}`; 
+    return `${DatasetPath}/Messaging Groups/${Name}`; 
 }
