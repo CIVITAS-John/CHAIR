@@ -2,7 +2,8 @@ import { ResearchQuestion } from '../../constants.js';
 import { ClusterTexts, InitializeEmbeddings } from '../../utils/embeddings.js';
 import { SortCodes } from '../../utils/export.js';
 import { Code, CodedThreads, GetCategories } from '../../utils/schema.js';
-import { AssignCategoriesByCluster, CodebookConsolidator, MergeCategoriesByCluster, MergeCodesByCluster, UpdateCategories, UpdateCategoriesByMap, UpdateCodes } from './codebooks.js';
+import { AssignCategoriesByCluster, MergeCategoriesByCluster, MergeCodesByCluster, UpdateCategories, UpdateCategoriesByMap, UpdateCodes } from './codebooks.js';
+import { CodebookConsolidator } from './consolidator.js';
 
 /** Consolidator1: Consolidate a codebook through generating definitions for codes, then cluster them using text embeddings. */
 export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {

@@ -1,16 +1,12 @@
 import * as File from 'fs';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { LLMName, EnsureFolder, RequestLLMWithCache } from "../../utils/llms.js";
-import { Code, CodedThreads, Conversation } from "../../utils/schema.js";
-import { Analyzer, LoopThroughChunks } from "../analyzer.js";
+import { Code, CodedThreads, Codebook, Conversation } from "../../utils/schema.js";
+import { LoopThroughChunks } from "../analyzer.js";
 import { GetMessagesPath, LoadAnalyses, LoadConversationsForAnalysis } from "../../utils/loader.js";
 import { ExportConversationsForCoding } from '../../utils/export.js';
 import { ClusterItem } from '../../utils/embeddings.js';
-import { Codebook } from '../../utils/schema';
-
-/** CodebookConsolidator: The definition of an abstract codebook consolidator. */
-export abstract class CodebookConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedThreads> {
-}
+import { CodebookConsolidator } from './consolidator.js';
 
 /** MergeCodebook: Simply merge the codebooks without further consolidating. */
 export function MergeCodebook(Analyses: CodedThreads) {
@@ -42,7 +38,7 @@ export async function ConsolidateConversations(Consolidator: CodebookConsolidato
         Analyses.Codebook = {};
         for (var Code of Values) Analyses.Codebook[Code.Label] = Code;
         var Book = ExportConversationsForCoding(Object.values(Conversations), Analyses);
-        await Book.xlsx.writeFile(`${ExportFolder}/${ConversationName.replace(".json", `-${AnalyzerLLM}-${LLMName}-iteration-${Iteration}`)}.xlsx`);
+        await Book.xlsx.writeFile(`${ExportFolder}/${ConversationName.replace(".json", `-${AnalyzerLLM}-${LLMName}-${Iteration}`)}.xlsx`);
     }, FakeRequest);
     // Write the result into a JSON file
     File.writeFileSync(`${ExportFolder}/${ConversationName.replace(".json", `-${AnalyzerLLM}-${LLMName}`)}.json`, JSON.stringify(Analyses, null, 4));
@@ -60,13 +56,8 @@ export async function ConsolidateCodebook<TUnit>(Consolidator: CodebookConsolida
     if (!Analyses.Codebook) MergeCodebook(Analyses);
     // Ignore codes with 0 examples
     var Codes = Object.values(Analyses.Codebook!).filter(Code => (Code.Examples?.length ?? 0) > 0);
-    var LastIteration = 0;
     // Run the coded threads through chunks (as defined by the consolidator)
     await LoopThroughChunks(Consolidator, Analyses, Sources, Codes, async (Currents, ChunkStart, IsFirst, Tries, Iteration) => {
-        console.log("Iteration: " + Iteration)
-        if (Iteration != LastIteration) 
-            await IterationCallback?.(LastIteration);
-        LastIteration = Iteration;
         var Prompts = await Consolidator.BuildPrompts(Analyses, Sources, Currents, ChunkStart, Iteration);
         if (Prompts[0] == "" && Prompts[1] == "") return 0;
         // Run the prompts
@@ -77,7 +68,7 @@ export async function ConsolidateCodebook<TUnit>(Consolidator: CodebookConsolida
         var Result = await Consolidator.ParseResponse(Analyses, Response.split("\n").map(Line => Line.trim()), Currents, ChunkStart, Iteration);
         if (typeof Result == "number") return Result;
         return 0;
-    });
+    }, IterationCallback);
 }
 
 /** MergeCodesByCluster: Merge codebooks based on clustering results. */
@@ -123,25 +114,8 @@ export function MergeCodesByCluster(Clusters: Record<number, ClusterItem[]>, Cod
             }
         }
     }
-    console.log(`Statistics: codes merged from ${Codes.length} to ${Object.keys(Codebook).length}`);
+    console.log(`Statistics: Codes merged from ${Codes.length} to ${Object.keys(Codebook).length}`);
     return Codebook;
-}
-
-/** AssignCategoriesByCluster: Assign categories based on category clustering results. */
-export function AssignCategoriesByCluster(Clusters: Record<number, ClusterItem[]>, Codes: Code[]): Record<string, Code[]> {
-    var Results: Record<string, Code[]> = {};
-    for (var Key of Object.keys(Clusters)) {
-        var ClusterID = parseInt(Key);
-        var ClusterName = ClusterID == -1 ? "miscellaneous" : `cluster ${ClusterID}`;
-        var Items: Code[] = [];
-        for (var Item of Clusters[ClusterID]) {
-            Codes[Item.ID].Categories = [ClusterName];
-            Items.push(Codes[Item.ID]);
-        }
-        if (ClusterID != -1) 
-            Results[ClusterName] = Items;
-    }
-    return Results;
 }
 
 /** UpdateCodes: Update code labels and definitions. */
@@ -192,6 +166,23 @@ export function UpdateCategories(Categories: string[], NewCategories: string[], 
 /** UpdateCategoriesByMap: Update category mappings for codes using a map. */
 export function UpdateCategoriesByMap(Map: Map<string, string>, Codes: Code[]) {
     UpdateCategories([...Map.keys()], [...Map.values()], Codes);
+}
+
+/** AssignCategoriesByCluster: Assign categories based on category clustering results. */
+export function AssignCategoriesByCluster(Clusters: Record<number, ClusterItem[]>, Codes: Code[]): Record<string, Code[]> {
+    var Results: Record<string, Code[]> = {};
+    for (var Key of Object.keys(Clusters)) {
+        var ClusterID = parseInt(Key);
+        var ClusterName = ClusterID == -1 ? "miscellaneous" : `cluster ${ClusterID}`;
+        var Items: Code[] = [];
+        for (var Item of Clusters[ClusterID]) {
+            Codes[Item.ID].Categories = [ClusterName];
+            Items.push(Codes[Item.ID]);
+        }
+        if (ClusterID != -1) 
+            Results[ClusterName] = Items;
+    }
+    return Results;
 }
 
 /** MergeCategoriesByCluster: Merge categories based on category clustering results. */

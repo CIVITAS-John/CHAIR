@@ -18,6 +18,8 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     public GetChunkSize(Recommended: number, Remaining: number, Iteration: number, Tries: number): number | [number, number, number] {
         return Recommended;
     }
+    /** Preprocess: Preprocess the subunits before filtering and chunking. */
+    public Preprocess(Subunits: TSubunit[]): TSubunit[] { return Subunits; }
     /** SubunitFilter: Filter the subunits before chunking. */
     public SubunitFilter(Subunit: TSubunit, Iteration: number): boolean { return true; }
     /** BuildPrompts: Build the prompts for the LLM. */
@@ -33,11 +35,17 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
 /** LoopThroughChunks: Process data through the analyzer in a chunkified way. */
 export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
     Analyzer: Analyzer<TUnit, TSubunit, TAnalysis>, Analysis: TAnalysis, Source: TUnit, Sources: TSubunit[], 
-    Action: (Currents: TSubunit[], ChunkStart: number, IsFirst: boolean, Tries: number, Iteration: number) => Promise<number>) {
+    Action: (Currents: TSubunit[], ChunkStart: number, IsFirst: boolean, Tries: number, Iteration: number) => Promise<number>, 
+    Iteration: (Iteration: number) => Promise<void> = async () => { }) {
     // Split units into smaller chunks based on the maximum items
     for (var I = 0; I < Analyzer.MaxIterations; I++) {
         var Cursor = 0;
-        var Filtered = Sources.filter(Subunit => Analyzer.SubunitFilter(Subunit, I));
+        // Preprocess and filter the subunits
+        var Filtered = Sources;
+        Filtered = Analyzer.Preprocess(Filtered);
+        if (Filtered.length == 0) continue;
+        Filtered = Filtered.filter(Subunit => Analyzer.SubunitFilter(Subunit, I));
+        // Loop through the subunits
         while (Cursor < Filtered.length) {
             var Tries = 0; var CursorRelative = 0;
             while (true) {
@@ -73,5 +81,7 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
             // Move the cursor
             Cursor += ChunkSize[0] + CursorRelative;
         }
+        // Run the iteration function
+        await Iteration(I);
     }
 }
