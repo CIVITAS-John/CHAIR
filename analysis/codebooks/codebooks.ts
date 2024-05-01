@@ -7,6 +7,7 @@ import { GetMessagesPath, LoadAnalyses, LoadConversationsForAnalysis } from "../
 import { ExportConversationsForCoding } from '../../utils/export.js';
 import { ClusterItem } from '../../utils/embeddings.js';
 import { CodebookConsolidator } from './consolidator.js';
+import chalk from 'chalk';
 
 /** MergeCodebook: Simply merge the codebooks without further consolidating. */
 export function MergeCodebook(Analyses: CodedThreads) {
@@ -116,7 +117,7 @@ export function MergeCodesByCluster(Clusters: Record<number, ClusterItem[]>, Cod
             }
         }
     }
-    console.log(`Statistics: Codes merged from ${Codes.length} to ${Object.keys(Codebook).length}`);
+    console.log(chalk.green(`Statistics: Codes merged from ${Codes.length} to ${Object.keys(Codebook).length}`));
     return Codebook;
 }
 
@@ -204,7 +205,9 @@ export function MergeCategoriesByCluster(Clusters: Record<number, ClusterItem[]>
         console.log("Merging categories: " + Clusters[ClusterID].map(Item => `${Categories[Item.ID]} with ${(Item.Probability * 100).toFixed(2)}%`).join(", "));
         for (var Code of Codes) {
             if (!Code.Categories) continue;
-            Code.Categories = Array.from(new Set([...Code.Categories.filter(Category => !Subcategories.includes(Category)), NewCategory]));
+            var Filtered = Code.Categories.filter(Category => !Subcategories.includes(Category));
+            if (Filtered.length != Code.Categories.length)
+                Code.Categories = Array.from(new Set([...Code.Categories.filter(Category => !Subcategories.includes(Category)), NewCategory]));
         }
         // Record the new category
         Results[NewCategory] = Subcategories;

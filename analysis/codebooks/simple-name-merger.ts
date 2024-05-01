@@ -3,10 +3,10 @@ import { Codebook, Code } from "../../utils/schema.js";
 import { MergeCodesByCluster } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
 
-/** NameMerger: Merge codes based on similar names. */
+/** SimpleNameMerger: Merge codes based on similar names. */
 // Note that in this pass, we are not refining names. The shortest name will be adopted.
 // So we don't recommend setting a high threshold, because different concepts may be merged.
-export class NameMerger extends CodeConsolidator {
+export class SimpleNameMerger extends CodeConsolidator {
     /** Threshold: The similarity threshold for merging codes. */
     public Threshold: number;
     /** Constructor: Create a new NameMerger. */

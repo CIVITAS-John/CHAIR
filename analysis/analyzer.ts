@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import { CountItems, MaxItems } from "../utils/llms.js";
 
 /** Analyzer: The definition of an abstract analyzer. */
@@ -74,7 +75,8 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
                 } catch (Error: any) {
                     if (++Tries > 3) throw Error;
                     CountItems(ChunkSize[0], 0);
-                    console.log(`Analysis error, retrying ${Tries} times:\n${Error.message}\n${Error.stack}`);
+                    console.log(chalk.red(`Analysis error, retrying ${Tries} times:`));
+                    console.log(`${Error.stack}`);
                 }
             }
             // Move the cursor

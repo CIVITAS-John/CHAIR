@@ -8,6 +8,7 @@ import { ChatMistralAI } from '@langchain/mistralai';
 import { ChatGroq } from "@langchain/groq";
 import { Tokenize } from './tokenizer.js';
 import md5 from 'md5';
+import chalk from 'chalk';
 
 // Model: The chat model to use.
 export var Model: (Temperature: number) => BaseChatModel;
@@ -150,19 +151,19 @@ export async function RequestLLMWithCache(Messages: BaseMessage[], Cache: string
 export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, FakeRequest: boolean = false): Promise<string> {
     var Text = "";
     try {
-        console.log(`LLM Request ${Temperature ?? 0}: \n${Messages.map(Message => `${Message._getType()}: ${Message.content}`).join('\n---\n')}\n`);
+        console.log(chalk.dim(`LLM Request ${Temperature ?? 0}: \n${Messages.map(Message => `${Message._getType()}: ${Message.content}`).join('\n---\n')}\n`));
         if (!FakeRequest) {
             await PromiseWithTimeout(
                 Model(Temperature ?? 0).invoke(Messages, { temperature: Temperature } as any).then(Result => {
                     Text = Result.content as string;
                 }), 300000);
-            console.log(`LLM Result: \n${Text}\n`);
+            console.log(chalk.cyan(`LLM Result: \n${Text}`));
         }
         var Input = Messages.map(Message => Tokenize(Message.content as string).length).reduce((Prev, Curr) => Prev + Curr);
         var Output = Tokenize(Text).length;
         InputTokens += Input;
         OutputTokens += Output;
-        console.log(`LLM Tokens: Input ${Input}, Output ${Output}\n`);
+        console.log(chalk.gray(`LLM Tokens: Input ${Input}, Output ${Output}\n`));
     } catch (Error: any) {
         console.log(Error);
         throw Error;

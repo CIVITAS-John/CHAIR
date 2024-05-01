@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import { ResearchQuestion } from "../../constants.js";
 import { ClusterTexts } from "../../utils/embeddings.js";
 import { Codebook, Code, GetCategories } from "../../utils/schema.js";
@@ -11,7 +12,7 @@ export class CategoryMerger extends CodeConsolidator {
     /** Penalty: The level penalty for merging codes. */
     public Penalty: number;
     /** Constructor: Create a new NameMerger. */
-    constructor({Threshold = 1.0, Penalty = 0.1, Looping = false}: {Threshold?: number, Penalty?: number, Looping?: boolean}) {
+    constructor({Threshold = 0.6, Penalty = 0.05, Looping = false}: {Threshold?: number, Penalty?: number, Looping?: boolean}) {
         super();
         this.Looping = Looping;
         this.Penalty = Penalty;
@@ -38,6 +39,7 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Cod
 // ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Code.Label} (${Code.Definitions![0]})`).join("\n")}
             return Text.trim();
         });
+        // Codes.map(Code => Code.Categories).filter(Categories => Categories.findIndex(Category => Category == undefined) != -1)
         // Cluster categories using text embeddings
         var Clusters = await ClusterTexts(CategoryStrings, Categories, "consolidated", 
             "linkage-jc", "euclidean", "ward", this.Threshold.toString(), this.Penalty.toString(), "0.5"
@@ -77,9 +79,13 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Cod
             }
         }
         // Update the categories
-        if (Results.length != this.OldCategories.length) throw new Error(`Invalid response: ${Results.length} results for ${this.OldCategories.length} categories.`);
-        UpdateCategories(this.OldCategories, Results, Codes);
-        console.log(`Statistics: Categories merged from ${this.OldCategories.length} to ${GetCategories(Codebook).length}`);
+        if (Results.length != Object.keys(this.NewCategories).length) throw new Error(`Invalid response: ${Results.length} results for ${this.OldCategories.length} categories.`);
+        UpdateCategories(Object.keys(this.NewCategories), Results, Codes);
+        // Check if we are done
+        var OldLength = this.OldCategories.length;
+        var NewLength = GetCategories(Codebook).length;
+        if (OldLength == NewLength) this.Stopping = true;
+        console.log(chalk.green(`Statistics: Categories merged from ${OldLength} to ${NewLength}`));
         return 0;
     }
 }

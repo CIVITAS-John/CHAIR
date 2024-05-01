@@ -28,7 +28,7 @@ export class CategoryNameMerger extends CodeConsolidator {
             "linkage-jc", "euclidean", "ward", this.Threshold.toString(), "0"
         );
         // Update the categories
-        var Results = MergeCategoriesByCluster(Clusters, Categories, Codes, true);
+        MergeCategoriesByCluster(Clusters, Categories, Codes, true);
         console.log(`Statistics: Categories merged from ${Categories.length} to ${GetCategories(Codebook).length}`);
         return Codes;
     }

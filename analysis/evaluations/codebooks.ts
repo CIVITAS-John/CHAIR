@@ -2,6 +2,7 @@ import * as File from 'fs';
 import * as Path from 'path';
 import { Codebook } from "../../utils/schema.js";
 import { GetFilesRecursively } from '../../utils/file.js';
+import chalk from 'chalk';
 
 /** CodebookEvaluator: An evaluator of codebook. */
 export abstract class CodebookEvaluator {
@@ -33,7 +34,7 @@ export async function EvaluateCodebooks(Source: string, Evaluator: CodebookEvalu
             Names.push(Path.basename(Current));
         }
     }
-    console.log(`Statistics: Loaded ${Codebooks.length} codebooks.`);
+    console.log(chalk.green(`Statistics: Loaded ${Codebooks.length} codebooks.`));
     // Evaluate the codebooks
     await Evaluator.Evaluate(Codebooks, Names);
 }

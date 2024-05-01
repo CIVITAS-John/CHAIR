@@ -9,6 +9,7 @@
         "request": "launch",
         "name": "Launch Current File",
         "program": "${file}",
+        "console": "integratedTerminal",
         "cwd": "${workspaceFolder}",
         "localRoot": "${workspaceFolder}",
         "preLaunchTask": "tsc: build - tsconfig.json",

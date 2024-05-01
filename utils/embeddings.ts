@@ -7,6 +7,7 @@ import { EnsureFolder } from './llms.js';
 import { PythonShell } from 'python-shell';
 import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai';
 import { TaskType } from "@google/generative-ai";
+import chalk from 'chalk';
 
 // Model: The embedding model to use.
 export var Model: Embeddings;
@@ -142,7 +143,7 @@ export interface ClusterItem {
 
 /** ClusterTexts: Categorize the embeddings into clusters. */
 export async function ClusterTexts(Sources: string[], Names: string[], Cache: string, Method: string = "hdbscan", ...ExtraOptions: string[]): Promise<Record<number, ClusterItem[]>> {
-    console.log("Requesting embeddings for: " + Sources.length);
+    console.log(chalk.gray("Requesting embeddings for: " + Sources.length));
     var Embeddings = await RequestEmbeddings(Sources, Cache);
     return await ClusterEmbeddings(Embeddings, Names, Method, ...ExtraOptions);
 }
@@ -156,7 +157,7 @@ export async function ClusterEmbeddings(Embeddings: Float32Array, Names: string[
     // Write it into ./known/temp.bytes
     File.writeFileSync(`./known/temp.bytes`, Buffer.from(Embeddings.buffer));
     File.writeFileSync(`./known/temp.text`, Names.join("\n"));
-    console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
+    // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
     // Run the Python script
     await PythonShell.run(`analysis/embeddings/embedding-${Method}.py`, {
         args: [Dimensions.toString(), Names.length.toString(), ...ExtraOptions],
@@ -177,8 +178,8 @@ export async function ClusterEmbeddings(Embeddings: Float32Array, Names: string[
                         }
                     }
                 }
-                console.log(`Clusters: ${UniqueClusters.length - (NoCluster > 0 ? 1 : 0)} from ${Names.length} items; ${NoCluster} items unclustered.`);
-            } else console.log(Message);
+                console.log(chalk.green(`Statistics: Clusters ${UniqueClusters.length - (NoCluster > 0 ? 1 : 0)} from ${Names.length} items; ${NoCluster} items unclustered.`));
+            } else console.log(chalk.gray(Message));
         }
     });
     return Results;
