@@ -78,8 +78,8 @@ export class DefinitionGenerator extends DefinitionParser {
         // Generate definitions for codes
         return [`
 You are an expert in thematic analysis clarifying the criteria of qualitative codes. Quotes are independent of each other.
+Write clear and generalizable criteria for each code, informed by the context, and without unnecessary specifics or examples.
 If necessary, refine labels to keep contexts, but do not write repetitive ones.
-Write clear criteria to apply across quotes but do not include examples.
 Group each code into a theory-informed category. Use 2-4 words for categories to provide general contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 ${ResearchQuestion}
 Always follow the output format:
@@ -89,13 +89,13 @@ Thoughts:
 
 Definitions for each code (${Codes.length} in total):
 1. 
-Label: {A label of code 1}
 Criteria: {Criteria of code 1}
+Label: {A label of code 1}
 Category: {2-4 words for code 1}
 ...
 ${Codes.length}.
-Label: {A label of code ${Codes.length}}
 Criteria: {Criteria of code ${Codes.length}}
+Label: {A label of code ${Codes.length}}
 Category: {2-4 words for code ${Codes.length}}
 ---`.trim(), 
             Codes.map((Code, Index) => `

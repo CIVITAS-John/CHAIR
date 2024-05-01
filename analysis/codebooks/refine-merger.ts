@@ -20,6 +20,10 @@ export class RefineMerger extends DefinitionParser {
         this.Threshold = Threshold;
         this.UseDefinition = UseDefinition;
     }
+    /** GetName: Get the name of the consolidator. */
+    public GetName(): string {
+        return `${super.GetName()} (Threshold ${this.Threshold}, Penalty ${this.Penalty}, Definition ${this.UseDefinition})`;
+    }
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     public GetChunkSize(Recommended: number, Remaining: number, Tries: number) {
         return Math.max(Recommended - Tries * 8, 1);
@@ -60,7 +64,7 @@ export class RefineMerger extends DefinitionParser {
     public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
         return [`
 You are an expert in thematic analysis. 
-Each code is merged from multiple qualitative sub-code. If a sub-code includes another, use the broader one. If sub-codes are parallel, generalize into a higher-level concept.
+Each code is a cluster of multiple qualitative sub-code. If a sub-code includes another, use the broader one. If sub-codes are parallel, write one that covers both.
 Write clear and generalizable labels and criteria for each code, informed by the context, and without unnecessary specifics or examples.
 Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
 ${ResearchQuestion}
@@ -71,15 +75,15 @@ Categories:
 
 Definitions for each code (${Codes.length} in total):
 1.
-Thought: {Describe the logical relationship between sub-codes in code 1}
-Label: {A consolidated label of code 1}
+Relationship: {The logical relationship between sub-codes in code 1}
 Criteria: {Consolidated criteria of code 1}
+Label: {A consolidated label of code 1}
 Category: {2-4 words for code 1}
 ...
 ${Codes.length}.
-Thought: {Describe the logical relationship between sub-codes in code ${Codes.length}}
-Label: {A consolidated label of code ${Codes.length}}
+Relationship: {The logical relationship between sub-codes in code ${Codes.length}}
 Criteria: {Consolidated criteria of code ${Codes.length}}
+Label: {A consolidated label of code ${Codes.length}}
 Category: {2-4 words for code ${Codes.length}}
 ---`.trim(), 
                     Codes.map((Code, Index) => `

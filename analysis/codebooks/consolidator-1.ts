@@ -6,6 +6,7 @@ import { AssignCategoriesByCluster, MergeCategoriesByCluster, MergeCodesByCluste
 import { CodebookConsolidator } from './consolidator.js';
 
 /** Consolidator1: Consolidate a codebook through generating definitions for codes, then cluster them using text embeddings. */
+// Obsolete: see playground-c.ts for a pipelined example.
 export class Consolidator1<TUnit> extends CodebookConsolidator<TUnit> {
     /** Name: The name of the analyzer. */
     public Name: string = "consolidator-1";

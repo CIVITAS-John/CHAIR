@@ -88,6 +88,10 @@ export abstract class CodeConsolidator {
     public Looping: boolean = false;
     /** Stopping: Whether the consolidator is stopping. */
     public Stopping: boolean = false;
+    /** GetName: Get the name of the consolidator. */
+    public GetName(): string {
+        return this.constructor.name;
+    }
     /** SubunitFilter: Filter the subunits before chunking. */
     public SubunitFilter(Code: Code): boolean {
         return true;
