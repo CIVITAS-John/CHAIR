@@ -3,51 +3,12 @@ import { Codebook, Code } from "../../utils/schema.js";
 import { UpdateCodes } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
 
-/** DefinitionGenerator: Generator definitions based on labels and quotes. */
-export class DefinitionGenerator extends CodeConsolidator {
-    /** Constructor: Create a new DefinitionGenerator. */
+/** DefinitionParse: Parse generated definitions based on labels and quotes. */
+export abstract class DefinitionParser extends CodeConsolidator {
+    /** Constructor: Create a new DefinitionParser. */
     constructor() {
         super();
-    }
-    /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
-    public GetChunkSize(Recommended: number, Remaining: number, Tries: number) {
-        return Math.max(Recommended - Tries * 8, 1);
-    }
-    /** SubunitFilter: Filter the subunits before chunking. */
-    public SubunitFilter(Code: Code): boolean {
-        // Only when the code has no definitions should we generate them
-        return super.SubunitFilter(Code) && (Code.Definitions?.length ?? 0) == 0;
-    }
-    /** BuildPrompts: Build the prompts for the code consolidator. */
-    public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]>{
-        // Generate definitions for codes
-        return [`
-You are an expert in thematic analysis clarifying the criteria of qualitative codes. Quotes are independent of each other.
-If necessary, refine labels to keep contexts, but do not write repetitive ones.
-Write clear criteria to apply across quotes but do not include examples.
-Group each code into a theory-informed category. Use 2-4 words for categories to provide general contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
-${ResearchQuestion}
-Always follow the output format:
----
-Thoughts: 
-* {Your plan to categorize the codes related to the research question and theoretical lens}
-
-Definitions for each code (${Codes.length} in total):
-1. 
-Label: {A label of code 1}
-Criteria: {Criteria of code 1}
-Category: {2-4 words for code 1}
-...
-${Codes.length}.
-Label: {A label of code ${Codes.length}}
-Criteria: {Criteria of code ${Codes.length}}
-Category: {2-4 words for code ${Codes.length}}
----`.trim(), 
-            Codes.map((Code, Index) => `
-${Index + 1}.
-Label: ${Code.Label}
-Quotes:
-${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => `- ${Example}`).join("\n")}`.trim()).join("\n\n")];
+        this.Chunkified = true;
     }
     /** ParseResponse: Parse the response for the code consolidator. */
     public async ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]) {
@@ -102,5 +63,45 @@ ${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => 
         UpdateCodes(Codebook, Pendings, Codes);
         // Return the cursor movement
         return Object.keys(Pendings).length - Codes.length;
+    }
+}
+
+/** DefinitionGenerator: Generate definitions based on labels and quotes. */
+export class DefinitionGenerator extends DefinitionParser {
+    /** SubunitFilter: Filter the subunits before chunking. */
+    public SubunitFilter(Code: Code): boolean {
+        // Only when the code has no definitions should we generate them
+        return super.SubunitFilter(Code) && (Code.Definitions?.length ?? 0) == 0;
+    }
+    /** BuildPrompts: Build the prompts for the code consolidator. */
+    public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]>{
+        // Generate definitions for codes
+        return [`
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Quotes are independent of each other.
+If necessary, refine labels to keep contexts, but do not write repetitive ones.
+Write clear criteria to apply across quotes but do not include examples.
+Group each code into a theory-informed category. Use 2-4 words for categories to provide general contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
+${ResearchQuestion}
+Always follow the output format:
+---
+Thoughts: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (${Codes.length} in total):
+1. 
+Label: {A label of code 1}
+Criteria: {Criteria of code 1}
+Category: {2-4 words for code 1}
+...
+${Codes.length}.
+Label: {A label of code ${Codes.length}}
+Criteria: {Criteria of code ${Codes.length}}
+Category: {2-4 words for code ${Codes.length}}
+---`.trim(), 
+            Codes.map((Code, Index) => `
+${Index + 1}.
+Label: ${Code.Label}
+Quotes:
+${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => `- ${Example}`).join("\n")}`.trim()).join("\n\n")];
     }
 }

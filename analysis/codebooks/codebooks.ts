@@ -71,6 +71,18 @@ export async function ConsolidateCodebook<TUnit>(Consolidator: CodebookConsolida
     }, IterationCallback);
 }
 
+/** MergeCodes: Merge labels and definitions of two codes. */
+export function MergeCodes(Parent: Code, Code: Code) {
+    var Alternatives = new Set([...(Parent.Alternatives ?? []), ...(Code.Alternatives ?? []), Code.Label]);
+    Alternatives.delete(Parent.Label);
+    Parent.Alternatives = Array.from(Alternatives);
+    Parent.Definitions = Array.from(new Set((Parent.Definitions ?? []).concat(Code.Definitions ?? [])));
+    Parent.Categories = Array.from(new Set((Parent.Categories ?? []).concat(Code.Categories ?? [])));
+    Parent.Examples = Array.from(new Set((Parent.Examples ?? []).concat(Code.Examples ?? [])));
+    Code.Label = "[Merged]";
+    return Parent;
+}
+
 /** MergeCodesByCluster: Merge codebooks based on clustering results. */
 export function MergeCodesByCluster(Clusters: Record<number, ClusterItem[]>, Codes: Code[]): Record<string, Code> {
     var Codebook: Record<string, Code> = {};
@@ -85,10 +97,7 @@ export function MergeCodesByCluster(Clusters: Record<number, ClusterItem[]>, Cod
             .sort((A, B) => (A.Label.length * 5 + (A.Definitions?.[0]?.length ?? 0)) - (B.Label.length * 5 + (B.Definitions?.[0]?.length ?? 0)))[0];
         if (ClusterID != -1) {
             Codebook[BestCode.Label] = BestCode;
-            BestCode.Alternatives = BestCode.Alternatives ?? [];
-            BestCode.Categories = BestCode.Categories ?? [];
-            BestCode.Definitions = BestCode.Definitions ?? [];
-            BestCode.Examples = BestCode.Examples ?? [];
+            BestCode.OldLabels = BestCode.OldLabels ?? [];
         }
         for (var Item of Clusters[ClusterID]) {
             var Code = Codes[Item.ID];
@@ -97,17 +106,10 @@ export function MergeCodesByCluster(Clusters: Record<number, ClusterItem[]>, Cod
                 Codebook[Code.Label] = Code;
             } else if (Code.Label != BestCode.Label) {
                 // Merge the code
-                BestCode.Alternatives!.push(Code.Label);
-                if ((Code.Categories?.length ?? 0) > 0)
-                    BestCode.Categories = [...new Set([...BestCode.Categories!, ...Code.Categories!])];
-                if ((Code.Definitions?.length ?? 0) > 0)
-                    BestCode.Definitions = [...new Set([...BestCode.Definitions!, ...Code.Definitions!])];
-                if ((Code.Examples?.length ?? 0) > 0)
-                    BestCode.Examples = [...new Set([...BestCode.Examples!, ...Code.Examples!])];
-                if ((Code.Alternatives?.length ?? 0) > 0)
-                    BestCode.Alternatives = [...new Set([...BestCode.Alternatives!, ...Code.Alternatives!])];
                 console.log("Merging: " + Code.Label + " into " + BestCode.Label + " with " + (Item.Probability * 100).toFixed(2) + "% chance");
-                Code.Label = "[Merged]";
+                if (BestCode.OldLabels!.includes(Code.Label) != true)
+                    BestCode.OldLabels!.push(Code.Label);
+                MergeCodes(BestCode, Code);
             } else {
                 // Codes that have no name changes
                 Codebook[Code.Label] = Code;
@@ -125,25 +127,25 @@ export function UpdateCodes(Codebook: Codebook, NewCodes: Code[], Codes: Code[])
         var NewCode = NewCodes[I];
         if (!NewCode) break;
         var NewLabel = NewCode.Label.toLowerCase();
+        // Update the code
+        Codes[I].Definitions = NewCode.Definitions;
+        Codes[I].Categories = NewCode.Categories;
+        // Check if the label is changed
         if (NewLabel != Codes[I].Label) {
+            // Find the code with the same new label and merge
             var Parent = AllCodes.find(Current => Current.Label == NewLabel || Current.Alternatives?.includes(NewLabel));
             if (Parent && Parent != Codes[I]) {
-                // We will merge the definitions and examples using Set
-                Parent.Alternatives = Array.from(new Set((Parent.Alternatives ?? []).concat(Codes[I].Alternatives ?? [])));
-                Parent.Definitions = Array.from(new Set((Parent.Definitions ?? []).concat(NewCode.Definitions ?? [])));
-                Parent.Categories = Array.from(new Set((Parent.Categories ?? []).concat(NewCode.Categories ?? [])));
-                Parent.Examples = Array.from(new Set((Parent.Examples ?? []).concat(Codes[I].Examples ?? [])));
-                Codes[I].Label = "[Merged]";
+                MergeCodes(Parent, Codes[I]);
                 continue;
             }
+            // Otehrwise, update the label and alternatives
             Codes[I].Alternatives = Codes[I].Alternatives ?? [];
             if (Codes[I].Alternatives!.includes(Codes[I].Label) !== true)
                 Codes[I].Alternatives!.push(Codes[I].Label);
             Codes[I].Label = NewLabel;
+            if (Codes[I].Alternatives!.includes(NewLabel) !== true)
+                Codes[I].Alternatives!.slice(Codes[I].Alternatives!.indexOf(NewLabel), 1);
         }
-        Codes[I].Alternatives = Codes[I].Alternatives?.filter(Label => Label != Codes[I].Label);
-        Codes[I].Definitions = NewCode.Definitions;
-        Codes[I].Categories = NewCode.Categories;
     }
     return Codebook;
 }
@@ -186,8 +188,8 @@ export function AssignCategoriesByCluster(Clusters: Record<number, ClusterItem[]
 }
 
 /** MergeCategoriesByCluster: Merge categories based on category clustering results. */
-export function MergeCategoriesByCluster(Clusters: Record<number, ClusterItem[]>, Categories: string[], Codes: Code[]): Record<string, Code[]> {
-    var Results: Record<string, Code[]> = {};
+export function MergeCategoriesByCluster(Clusters: Record<number, ClusterItem[]>, Categories: string[], Codes: Code[], TakeFirst: boolean = false): Record<string, string[]> {
+    var Results: Record<string, string[]> = {};
     for (var Key of Object.keys(Clusters)) {
         var ClusterID = parseInt(Key);
         // Skip the non-clustered ones
@@ -195,22 +197,17 @@ export function MergeCategoriesByCluster(Clusters: Record<number, ClusterItem[]>
             continue;
         }
         // Get the current categories
-        var Current = Clusters[ClusterID].filter(Item => Item.Probability > 0.5).map(Item => Categories[Item.ID]);
-        if (Current.length <= 1) continue;
+        var Subcategories = Clusters[ClusterID].map(Item => Categories[Item.ID]);
+        if (Subcategories.length <= 1) continue;
         // Merge the categories
-        var Items: Code[] = [];
-        var NewCategory = Current.join("|");
+        var NewCategory = TakeFirst ? Subcategories[0] : Subcategories.join("|");
         console.log("Merging categories: " + Clusters[ClusterID].map(Item => `${Categories[Item.ID]} with ${(Item.Probability * 100).toFixed(2)}%`).join(", "));
         for (var Code of Codes) {
             if (!Code.Categories) continue;
-            var Filtered = Code.Categories.filter(Category => !Current.includes(Category) && Category != NewCategory);
-            if (Filtered.length != Code.Categories.length) {
-                Code.Categories = [...Filtered, NewCategory];
-                Items.push(Code);
-            }
+            Code.Categories = Array.from(new Set([...Code.Categories.filter(Category => !Subcategories.includes(Category)), NewCategory]));
         }
         // Record the new category
-        Results[NewCategory] = Items;
+        Results[NewCategory] = Subcategories;
     }
     return Results;
 }

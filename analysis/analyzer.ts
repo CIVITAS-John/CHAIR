@@ -19,13 +19,13 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
         return Recommended;
     }
     /** Preprocess: Preprocess the subunits before filtering and chunking. */
-    public Preprocess(Subunits: TSubunit[]): TSubunit[] { return Subunits; }
+    public async Preprocess(Analysis: TAnalysis, Source: TUnit, Subunits: TSubunit[], Iteration: number): Promise<TSubunit[]> { return Subunits; }
     /** SubunitFilter: Filter the subunits before chunking. */
     public SubunitFilter(Subunit: TSubunit, Iteration: number): boolean { return true; }
     /** BuildPrompts: Build the prompts for the LLM. */
     // Note that the `ChunkStart` index starts from 0, which could be confusing because in our example, the first message in the prompt is 1 (with index=0).
     // `ChunkStart` is particularly useful if you want to code just 1 message but also include the context of the previous and next subunits.
-    public abstract BuildPrompts(Analysis: TAnalysis, Target: TUnit, Subunits: TSubunit[], ChunkStart: number, Iteration: number): Promise<[string, string]>;
+    public abstract BuildPrompts(Analysis: TAnalysis, Source: TUnit, Subunits: TSubunit[], ChunkStart: number, Iteration: number): Promise<[string, string]>;
     /** ParseResponse: Parse the responses from the LLM. */
     // The return value is only for item-based coding, where each item has its own response. Otherwise, return {}.
     // Alternatively, it can return a number to indicate the relative cursor movement. (Actual units - Expected units, often negative.)
@@ -41,10 +41,9 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
     for (var I = 0; I < Analyzer.MaxIterations; I++) {
         var Cursor = 0;
         // Preprocess and filter the subunits
-        var Filtered = Sources;
-        Filtered = Analyzer.Preprocess(Filtered);
-        if (Filtered.length == 0) continue;
-        Filtered = Filtered.filter(Subunit => Analyzer.SubunitFilter(Subunit, I));
+        Sources = await Analyzer.Preprocess(Analysis, Source, Sources, I);
+        if (Sources.length == 0) continue;
+        var Filtered = Sources.filter(Subunit => Analyzer.SubunitFilter(Subunit, I));
         // Loop through the subunits
         while (Cursor < Filtered.length) {
             var Tries = 0; var CursorRelative = 0;

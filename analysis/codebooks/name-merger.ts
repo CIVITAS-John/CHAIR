@@ -4,6 +4,8 @@ import { MergeCodesByCluster } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
 
 /** NameMerger: Merge codes based on similar names. */
+// Note that in this pass, we are not refining names. The shortest name will be adopted.
+// So we don't recommend setting a high threshold, because different concepts may be merged.
 export class NameMerger extends CodeConsolidator {
     /** Threshold: The similarity threshold for merging codes. */
     public Threshold: number;
@@ -12,13 +14,12 @@ export class NameMerger extends CodeConsolidator {
         super();
         this.Threshold = Threshold;
     }
-    /** BuildPrompts: Build the prompts for the code consolidator. */
-    // In this case, we do not really use the LLM, so we just merge the codes
-    public async BuildPrompts(Codebook: Codebook, Codes: Code[]) {
+    /** Preprocess: In this case, we do not really use the LLM, so we just merge the codes. */
+    public async Preprocess(Codebook: Codebook, Codes: Code[]) {
         // Categorize the strings
         var Labels = Codes.map(Code => Code.Label);
         var Clusters = await ClusterTexts(Labels, Labels, "consolidator", 
-            "linkage-jc", "euclidean", "ward", "0.5", "0");
+            "linkage-jc", "euclidean", "ward", this.Threshold.toString(), "0");
         // Merge the codes
         return MergeCodesByCluster(Clusters, Codes);
     }

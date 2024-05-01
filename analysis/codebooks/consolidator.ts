@@ -29,7 +29,7 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         return this.Consolidators[this.Index].GetChunkSize(Recommended, Remaining, Tries);
     }
     /** Preprocess: Preprocess the subunits before filtering and chunking. */
-    public Preprocess(Subunits: Code[]): Code[] {
+    public async Preprocess(Analysis: CodedThreads, Data: TUnit[], Subunits: Code[], Iteration: number): Promise<Code[]> {
         if (this.Index >= this.Consolidators.length) return [];
         if (this.Index > -1 && this.Consolidators[this.Index].Looping) {
             // If the previous consolidator is looping, check if it's stopping
@@ -40,7 +40,13 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
             // Otherwise, advance the index
         } else this.Index++;
         if (this.Index >= this.Consolidators.length) return [];
-        return this.Consolidators[this.Index].Preprocess(Subunits);
+        console.log(`Iteration ${this.Index}: Start ${this.Consolidators[this.Index].constructor.name}`)
+        // Preprocess the subunits
+        Subunits = Subunits.filter(Code => Code.Label !== "[Merged]");
+        var Result = await this.Consolidators[this.Index].Preprocess(Analysis.Codebook!, Subunits);
+        if (Result instanceof Array) return Result;
+        Analysis.Codebook = Result;
+        return Object.values(Result);
     }
     /** SubunitFilter: Filter the subunits before chunking. */
     public SubunitFilter(Code: Code, Iteration: number): boolean {
@@ -76,18 +82,19 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
 /** CodeConsolidator: The definition of an abstract code consolidator. */
 export abstract class CodeConsolidator {
     /** Chunckified: Whether the consolidator needs chunkified results. */
-    private Chunkified: boolean = false;
+    public Chunkified: boolean = false;
     /** Looping: Whether the consolidator is looping. */
-    public readonly Looping: boolean = false;
+    public Looping: boolean = false;
     /** Stopping: Whether the consolidator is stopping. */
     public Stopping: boolean = false;
     /** SubunitFilter: Filter the subunits before chunking. */
     public SubunitFilter(Code: Code): boolean {
-        if (Code.Label == "[Merged]") return false;
         return true;
     }
     /** Preprocess: Preprocess the subunits after filtering, before chunking. */
-    public Preprocess(Subunits: Code[]): Code[] { return Subunits; }
+    public async Preprocess(Codebook: Codebook, Subunits: Code[]): Promise<Code[] | Codebook> { 
+        return Subunits;
+    }
     /** BuildPrompts: Build the prompts for the code consolidator. */
     public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<Codebook | [string, string] | [string, string, Codebook]> { return Codebook; }
     /** ParseResponse: Parse the response for the code consolidator. */

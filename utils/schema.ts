@@ -57,6 +57,8 @@ export interface Code {
     Examples?: string[];
     /** Alternatives: Alternative labels of the code. */
     Alternatives?: string[];
+    /** OldLabels: Temporary, old labels of the code. */
+    OldLabels?: string[];
 }
 
 /** Conversation: A segment of the group chat. */
