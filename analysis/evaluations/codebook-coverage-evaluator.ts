@@ -41,6 +41,11 @@ export class CoverageEvaluator extends CodebookEvaluator {
                 Evaluations[Owner].Overlap += 1;
             }
         }
+        // Then, we convert each code into an embedding and send to Python
+        var Labels = Array.from(Codes.values()).map(Code => Code.Label);
+        var CodeStrings = Labels.map(Label => GetCodeString(Codes.get(Label)!));
+        var LabelStrings = Labels.map(Label => `${Label}|${Owners.get(Label)!.join(",")}`);
+        var Evaluations = 
         // Return in the format
         var Results: Record<string, CodebookEvaluation> = {};
         for (var [Index, Name] of Names.entries())
@@ -49,7 +54,7 @@ export class CoverageEvaluator extends CodebookEvaluator {
     }
 }
 
-/** GetCodeString: Get the  */
+/** GetCodeString: Get the strings of the codes. */
 export function GetCodeString(Code: Code): string {
     var Text = `Label: ${Code.Label}`;
     if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
