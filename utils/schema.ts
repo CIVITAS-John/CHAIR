@@ -45,6 +45,11 @@ export function GetCategories(Codebook: Codebook): string[] {
     return Array.from(new Set(Object.values(Codebook).flatMap(Code => Code.Categories ?? []))).filter(Category => Category != "");
 }
 
+/** CodebookEvaluation: Evaluation of a codebook. */
+export interface CodebookEvaluation extends Record<string, number> {
+
+}
+
 /** Code: A qualitative code. */
 export interface Code {
     /** Label: The label of the code. */

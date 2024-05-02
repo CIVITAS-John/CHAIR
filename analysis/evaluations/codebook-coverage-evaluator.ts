@@ -1,35 +1,57 @@
 import { ClusterTexts } from "../../utils/embeddings.js";
-import { Code, Codebook } from "../../utils/schema.js";
+import { Code, Codebook, CodebookEvaluation } from "../../utils/schema.js";
 import { CodebookEvaluator } from './codebooks.js';
 
 /** CoverageEvaluator: An evaluator of codebook coverage. */
+// This evaluator will evaluate the coverage of a codebook against a reference codebook (#0).
 export class CoverageEvaluator extends CodebookEvaluator {
     /** Name: The name of the evaluator. */
     public Name: string = "coverage-evaluator";
+    /** Visualize: Whether we visualize the evaluation. */
+    public Visualize: boolean = true;
     /** Evaluate: Evaluate a number of codebooks. */
-    public async Evaluate(Codebooks: Codebook[], Names: string[]): Promise<void> {
-        var AllCodes: Code[] = [];
-        var AllLabels: string[] = [];
-        var AllOwners: number[] = [];
-        // Get all the codes
-        for (var I = 0; I < Codebooks.length; I++) {
-            var Codebook = Codebooks[I];
-            var Codes = Object.values(Codebook).filter(Code => (Code.Examples?.length ?? 0) > 1);
-            var Labels = Codes.map(Code => `Label: ${Code.Label}\nDefinition: ${Code.Definitions?.[0]}`);
-            AllCodes.push(...Codes); 
-            AllLabels.push(...Labels.map(Label => `${I}/${Label}`));
-            AllOwners.push(...Labels.map(Label => I));
+    public async Evaluate(Codebooks: Codebook[], Names: string[]): Promise<Record<string, CodebookEvaluation>> {
+        // We treat the first input as the reference codebook
+        var Reference = Codebooks[0];
+        Names[0] = "baseline";
+        // Then, we combine the codes from each codebook and record the ownership
+        // We use the reference code as the baseline if multiple codes are found
+        // Here, the first codebook's definition will be used (will need to change)
+        var Evaluations: CodebookEvaluation[] = [];
+        var Codes: Map<string, Code> = new Map();
+        var Owners: Map<string, number[]> = new Map();
+        var Alternatives: Map<string, string> = new Map();
+        for (var [Index, Codebook] of Codebooks.entries()) {
+            for (var [Label, Code] of Object.entries(Codebook)) {
+                var NewLabel = Label;
+                if (Index == 0)
+                    Code.Alternatives?.forEach(Alternative => Alternatives.set(Alternative, Label));
+                else if (Alternatives.has(Label)) 
+                    NewLabel = Alternatives.get(Label)!;
+                if (!Codes.has(NewLabel)) Codes.set(NewLabel, Code);
+                if (!Owners.has(NewLabel)) Owners.set(NewLabel, []);
+                if (!Owners.get(NewLabel)!.includes(Index))
+                    Owners.get(NewLabel)!.push(Index);
+            }
+            Evaluations.push({ Count: Object.keys(Codebook).length, Overlap: 0 });
         }
-        // Visualize them
-        var CodeStrings = AllCodes.map(GetCodeString);
-        await ClusterTexts(CodeStrings, AllLabels, "evaluator", "embedding-coverage");
+        // Then, we calculate the name overlapping of each code (a very rough metric)
+        for (var [Label, Code] of Codes.entries()) {
+            for (var Owner of Owners.get(Label)!) {
+                Evaluations[Owner].Overlap += 1;
+            }
+        }
+        // Return in the format
+        var Results: Record<string, CodebookEvaluation> = {};
+        for (var [Index, Name] of Names.entries())
+            Results[Name] = Evaluations[Index];
+        return Results;
     }
 }
 
 /** GetCodeString: Get the  */
 export function GetCodeString(Code: Code): string {
-    return Code.Label;
-    // var Text = `Label: ${Code.Label}`;
-    // if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
-    // return Text;
+    var Text = `Label: ${Code.Label}`;
+    if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
+    return Text;
 }

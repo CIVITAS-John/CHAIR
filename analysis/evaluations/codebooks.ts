@@ -1,6 +1,6 @@
 import * as File from 'fs';
 import * as Path from 'path';
-import { Codebook } from "../../utils/schema.js";
+import { Codebook, CodebookEvaluation } from "../../utils/schema.js";
 import { GetFilesRecursively } from '../../utils/file.js';
 import chalk from 'chalk';
 
@@ -9,15 +9,17 @@ export abstract class CodebookEvaluator {
     /** Name: The name of the evaluator. */
     public Name: string = "Unnamed";
     /** Evaluate: Evaluate a number of codebooks. */
-    public abstract Evaluate(Codebooks: Codebook[], Names: string[]): Promise<void>;
+    public abstract Evaluate(Codebooks: Codebook[], Names: string[]): Promise<Record<string, CodebookEvaluation>>;
 }
 
 /** EvaluateCodebooks: Evaluate a number of codebooks. */
-export async function EvaluateCodebooks(Source: string | string[], Evaluator: CodebookEvaluator) {
+export async function EvaluateCodebooks(Source: string | string[], Evaluator: CodebookEvaluator): Promise<Record<string, CodebookEvaluation>> {
     // Find all the codebooks under the path
     var [ Codebooks, Names ] = LoadCodebooks(Source);
     // Evaluate the codebooks
-    await Evaluator.Evaluate(Codebooks, Names);
+    var Results = await Evaluator.Evaluate(Codebooks, Names);
+    console.log(chalk.green(JSON.stringify(Results, null, 4)));
+    return Results;
 }
 
 /** LoadCodebooks: Load codebooks from a source. */

@@ -3,8 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from embedding import Dimensions, Items, cpus, labels, embeddings
 
-# Density visualization
-
+# Evaluate coverage of codebooks through KDE
 # Get the arguments
 Metrics = sys.argv[3] if len(sys.argv) > 3 else "euclidean"
 
