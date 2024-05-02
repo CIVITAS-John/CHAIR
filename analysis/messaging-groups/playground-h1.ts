@@ -1,7 +1,7 @@
 import * as File from 'fs';
-import { UseLLMs } from '../translation/general.js';
-import { ProcessConversations } from './messaging-groups/conversations.js';
-import { HighLevelAnalyzer1 } from './messaging-groups/high-level-1.js';
+import { UseLLMs } from '../../translation/general.js';
+import { ProcessConversations } from './conversations.js';
+import { HighLevelAnalyzer1 } from './high-level-1.js';
 
 // GPT-3.5-turbo is not capable of this. 
 // It will guarantee codes related to persons, which is not desired.

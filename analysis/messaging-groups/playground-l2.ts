@@ -1,7 +1,7 @@
 import * as File from 'fs';
-import { UseLLMs } from '../translation/general.js';
-import { ProcessConversations } from './messaging-groups/conversations.js';
-import { LowLevelAnalyzer2 } from './messaging-groups/low-level-2.js';
+import { UseLLMs } from '../../translation/general.js';
+import { ProcessConversations } from './conversations.js';
+import { LowLevelAnalyzer2 } from './low-level-2.js';
 
 await UseLLMs(async () => {
     await ProcessConversations(new LowLevelAnalyzer2(), "Users of Physics Lab (Group 1)", "0~17-gpt-3.5-turbo.json", false);

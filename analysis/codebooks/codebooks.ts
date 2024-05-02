@@ -26,6 +26,21 @@ export function MergeCodebook(Analyses: CodedThreads) {
     }
 }
 
+/** MergeCodebooks: Merge multiple codebooks simply by labels of codes. */
+export function MergeCodebooks(Codebooks: Codebook[]) {
+    var Result: Codebook = {};
+    for (var Codebook of Codebooks) {
+        for (var Code of Object.values(Codebook)) {
+            if (Result[Code.Label]) {
+                MergeCodes(Result[Code.Label], Code);
+            } else {
+                Result[Code.Label] = Code;
+            }
+        }
+    }
+    return Result;
+}
+
 /** ConsolidateConversations: Load, consolidate, and export conversation codebooks. */
 export async function ConsolidateConversations(Consolidator: CodebookConsolidator<Conversation>, Group: string, ConversationName: string, Analyzer: string, AnalyzerLLM: string, FakeRequest: boolean = false) {
     var ExportFolder = GetMessagesPath(Group, `Conversations/${Analyzer}-${Consolidator.Name}`);

@@ -12,12 +12,20 @@ export abstract class CodebookEvaluator {
     public abstract Evaluate(Codebooks: Codebook[], Names: string[]): Promise<void>;
 }
 
-/** EvaluateCodebooks: Evaluate a number of codebooks under the same folder. */
-export async function EvaluateCodebooks(Source: string, Evaluator: CodebookEvaluator) {
+/** EvaluateCodebooks: Evaluate a number of codebooks. */
+export async function EvaluateCodebooks(Source: string | string[], Evaluator: CodebookEvaluator) {
+    // Find all the codebooks under the path
+    var [ Codebooks, Names ] = LoadCodebooks(Source);
+    // Evaluate the codebooks
+    await Evaluator.Evaluate(Codebooks, Names);
+}
+
+/** LoadCodebooks: Load codebooks from a source. */
+export function LoadCodebooks(Source: string | string[]): [Codebook[], string[]] {
     var Codebooks: Codebook[] = [];
     var Names: string[] = [];
-    // Find all the codebooks under the path
-    for (var Current of GetFilesRecursively(Source).sort()) {
+    var Sources = Source instanceof String ? GetFilesRecursively(Source as string) : Source as string[];
+    for (var Current of Sources) {
         if (Current.endsWith(".json")) {
             var Content = File.readFileSync(`${Current}`, 'utf8');
             var Parsed = JSON.parse(Content);
@@ -35,6 +43,5 @@ export async function EvaluateCodebooks(Source: string, Evaluator: CodebookEvalu
         }
     }
     console.log(chalk.green(`Statistics: Loaded ${Codebooks.length} codebooks.`));
-    // Evaluate the codebooks
-    await Evaluator.Evaluate(Codebooks, Names);
+    return [Codebooks, Names];
 }

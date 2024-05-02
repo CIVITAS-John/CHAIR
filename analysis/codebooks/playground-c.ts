@@ -1,15 +1,15 @@
-import { UseLLMs } from '../translation/general.js';
-import { ConsolidateConversations } from './codebooks/codebooks.js';
-import { LLMName } from '../utils/llms.js';
-import { InitializeEmbeddings, Model } from '../utils/embeddings.js';
-import { PipelineConsolidator } from './codebooks/consolidator.js';
-import { DefinitionGenerator } from './codebooks/definition-generator.js';
-import { RefineMerger } from './codebooks/refine-merger.js';
-import { CategoryMerger } from './codebooks/category-merger.js';
-import { CategoryNameMerger } from './codebooks/category-name-merger.js';
-import { SimpleNameMerger } from './codebooks/simple-name-merger.js';
-import { CategoryRefiner } from './codebooks/category-refiner.js';
-import { CategoryAssigner } from './codebooks/category-assigner.js';
+import { UseLLMs } from '../../translation/general.js';
+import { ConsolidateConversations } from './codebooks.js';
+import { LLMName } from '../../utils/llms.js';
+import { InitializeEmbeddings, Model } from '../../utils/embeddings.js';
+import { PipelineConsolidator } from './consolidator.js';
+import { DefinitionGenerator } from './definition-generator.js';
+import { RefineMerger } from './refine-merger.js';
+import { CategoryMerger } from './category-merger.js';
+import { CategoryNameMerger } from './category-name-merger.js';
+import { SimpleNameMerger } from './simple-name-merger.js';
+import { CategoryRefiner } from './category-refiner.js';
+import { CategoryAssigner } from './category-assigner.js';
 
 await UseLLMs(async () => {
     InitializeEmbeddings("gecko-768-similarity");
@@ -33,7 +33,7 @@ await UseLLMs(async () => {
         new CategoryRefiner(),
         // Assign categories to codes
         new CategoryAssigner()
-    ), "Users of Physics Lab (Group 1)", "0~17-gpt-3.5-turbo.json", "low-level-3", "gpt-3.5-turbo", false);
-}, "llama3-70b"); // 
+    ), "Users of Physics Lab (Group 1)", "0~17-gpt-3.5-turbo.json", "low-level-3", "llama3-70b", false);
+}, "gpt-4.5-turbo"); // 
 
 process.exit(0);

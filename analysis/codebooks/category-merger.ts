@@ -54,16 +54,16 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Cod
         var Count = Object.keys(this.NewCategories).length;
         // Ask LLMs to write new names for each category
         return [`
-            You are an expert in thematic analysis. You are assigning names for categories based on the merging results.
-            Make sure those names are concise, accurate, and related to the research question. Use 2-4 words and avoid over-generalization (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
-            ${ResearchQuestion}
-            Always follow the output format:
-            ---
-            Names for each category (${Count} in total):
-            1. {2-4 words for category 1}
-            ...
-            ${Count}. {2-4 words for category ${Count}}
-            ---`.trim(), "Merge results:\n" + Object.keys(this.NewCategories).map((Category, Index) => `${Index + 1}.\n${Category.split("|").map(Current => `- ${Current}`).join("\n")}`).join("\n\n")];
+You are an expert in thematic analysis. You are assigning names for categories based on the merging results.
+Make sure those names are concise, accurate, and related to the research question. Use 2-4 words and avoid over-generalization (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
+${ResearchQuestion}
+Always follow the output format:
+---
+Names for each category (${Count} in total):
+1. {2-4 words for category 1}
+...
+${Count}. {2-4 words for category ${Count}}
+---`.trim(), "Merge results:\n" + Object.keys(this.NewCategories).map((Category, Index) => `${Index + 1}.\n${Category.split("|").map(Current => `- ${Current}`).join("\n")}`).join("\n\n")];
     }
     /** ParseResponse: Parse the response for the code consolidator. */
     public async ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]) {

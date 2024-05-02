@@ -41,7 +41,7 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
             // Otherwise, advance the index
         } else this.Index++;
         if (this.Index >= this.Consolidators.length) return [];
-        console.log(chalk.white(chalk.bold(`Iteration ${Iteration}: ${this.Consolidators[this.Index].constructor.name}`)));
+        console.log(chalk.white(chalk.bold(`Iteration ${Iteration}: ${this.Consolidators[this.Index].GetName()}`)));
         // Preprocess the subunits
         Subunits = Subunits.filter(Code => Code.Label !== "[Merged]");
         var Result = await this.Consolidators[this.Index].Preprocess(Analysis.Codebook!, Subunits);

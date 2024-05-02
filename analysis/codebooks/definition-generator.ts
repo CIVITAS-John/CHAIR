@@ -77,7 +77,7 @@ export class DefinitionGenerator extends DefinitionParser {
     public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]>{
         // Generate definitions for codes
         return [`
-You are an expert in thematic analysis clarifying the criteria of qualitative codes. Quotes are independent of each other.
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Quotes are independent of each other. Do not attempt to merge codes now.
 Write clear and generalizable criteria for each code, informed by the context, and without unnecessary specifics or examples.
 If necessary, refine labels to keep contexts, but do not write repetitive ones.
 Group each code into a theory-informed category. Use 2-4 words for categories to provide general contexts (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
