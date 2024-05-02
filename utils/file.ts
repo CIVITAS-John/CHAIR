@@ -3,8 +3,10 @@ import * as Path from 'path';
 
 /** GetFilesRecursively: Get all files in a directory recursively. */
 export function GetFilesRecursively(Source: string): string[] {
-    let files: string[] = [];
+    // Check if the source is a file
+    if (File.statSync(Source).isFile()) return [Source];
     // Read all directory contents (files and directories)
+    let files: string[] = [];
     const entries = File.readdirSync(Source, { withFileTypes: true });
     // Iterate through each entry
     for (let entry of entries) {

@@ -15,14 +15,14 @@ export class CoverageEvaluator extends CodebookEvaluator {
         for (var I = 0; I < Codebooks.length; I++) {
             var Codebook = Codebooks[I];
             var Codes = Object.values(Codebook).filter(Code => (Code.Examples?.length ?? 0) > 1);
-            var Labels = Codes.map(Code => Code.Label);
+            var Labels = Codes.map(Code => `Label: ${Code.Label}\nDefinition: ${Code.Definitions?.[0]}`);
             AllCodes.push(...Codes); 
             AllLabels.push(...Labels.map(Label => `${I}/${Label}`));
             AllOwners.push(...Labels.map(Label => I));
         }
         // Visualize them
         var CodeStrings = AllCodes.map(GetCodeString);
-        await ClusterTexts(CodeStrings, AllLabels, "evaluator", "show-density");
+        await ClusterTexts(CodeStrings, AllLabels, "evaluator", "embedding-coverage");
     }
 }
 

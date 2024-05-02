@@ -22,9 +22,16 @@ export async function EvaluateCodebooks(Source: string | string[], Evaluator: Co
 
 /** LoadCodebooks: Load codebooks from a source. */
 export function LoadCodebooks(Source: string | string[]): [Codebook[], string[]] {
+    // Load potential paths
+    var Sources: string[] = [];
+    if (typeof(Source) == "string") {
+        Sources = GetFilesRecursively(Source);
+    } else {
+        Sources = Source.map(Source => GetFilesRecursively(Source)).flat();
+    }
+    // Load the codebooks
     var Codebooks: Codebook[] = [];
     var Names: string[] = [];
-    var Sources = Source instanceof String ? GetFilesRecursively(Source as string) : Source as string[];
     for (var Current of Sources) {
         if (Current.endsWith(".json")) {
             var Content = File.readFileSync(`${Current}`, 'utf8');
