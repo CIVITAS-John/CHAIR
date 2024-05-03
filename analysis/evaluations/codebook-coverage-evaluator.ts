@@ -1,9 +1,8 @@
-import { ClusterTexts } from "../../utils/embeddings.js";
+import { EvaluateTexts } from "../../utils/embeddings.js";
 import { Code, Codebook, CodebookEvaluation } from "../../utils/schema.js";
 import { CodebookEvaluator } from './codebooks.js';
 
-/** CoverageEvaluator: An evaluator of codebook coverage. */
-// This evaluator will evaluate the coverage of a codebook against a reference codebook (#0).
+/** CoverageEvaluator: An evaluator of codebook coverage against a reference codebook (#0). */
 export class CoverageEvaluator extends CodebookEvaluator {
     /** Name: The name of the evaluator. */
     public Name: string = "coverage-evaluator";
@@ -12,7 +11,6 @@ export class CoverageEvaluator extends CodebookEvaluator {
     /** Evaluate: Evaluate a number of codebooks. */
     public async Evaluate(Codebooks: Codebook[], Names: string[]): Promise<Record<string, CodebookEvaluation>> {
         // We treat the first input as the reference codebook
-        var Reference = Codebooks[0];
         Names[0] = "baseline";
         // Then, we combine the codes from each codebook and record the ownership
         // We use the reference code as the baseline if multiple codes are found
@@ -44,8 +42,8 @@ export class CoverageEvaluator extends CodebookEvaluator {
         // Then, we convert each code into an embedding and send to Python
         var Labels = Array.from(Codes.values()).map(Code => Code.Label);
         var CodeStrings = Labels.map(Label => GetCodeString(Codes.get(Label)!));
-        var LabelStrings = Labels.map(Label => `${Label}|${Owners.get(Label)!.join(",")}`);
-        var Evaluations = 
+        var CodeOwners = Labels.map(Label => Owners.get(Label)!);
+        var Result = await EvaluateTexts(CodeStrings, Labels, CodeOwners, Names, this.Name, "coverage", this.Visualize.toString());
         // Return in the format
         var Results: Record<string, CodebookEvaluation> = {};
         for (var [Index, Name] of Names.entries())

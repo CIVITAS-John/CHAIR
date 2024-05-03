@@ -1,3 +1,4 @@
+import os
 import sys
 import numpy as np
 import multiprocessing
@@ -10,6 +11,8 @@ Items = int(sys.argv[2])
 
 # Read from `./known/temp.bytes`
 with open("./known/temp.bytes", "rb") as file:
+    # Calculate the number of embeddings if not provided
+    Items = int(os.stat("./known/temp.bytes").st_size / (Dimensions * 4)) if Items == 0 else Items
     # Read the bytes
     float_bytes = file.read(Dimensions * Items * 4)  # 4 bytes per float
     # Convert the bytes to floats

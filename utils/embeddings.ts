@@ -159,7 +159,7 @@ export async function ClusterEmbeddings(Embeddings: Float32Array, Names: string[
     File.writeFileSync(`./known/temp.text`, Names.join("\n"));
     // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
     // Run the Python script
-    await PythonShell.run(`analysis/embeddings/embedding-${Method}.py`, {
+    await PythonShell.run(`analysis/embeddings/clustering-${Method}.py`, {
         args: [Dimensions.toString(), Names.length.toString(), ...ExtraOptions],
         parser: (Message) => { 
             if (Message.startsWith("[")) {
@@ -183,4 +183,34 @@ export async function ClusterEmbeddings(Embeddings: Float32Array, Names: string[
         }
     });
     return Results;
+}
+
+/** EvaluateTexts: Evaluate a number of texts. */
+export async function EvaluateTexts(Sources: string[], Labels: string[], Owners: number[][], OwnerLabels: string[], Cache: string, Method: string = "coverage", ...ExtraOptions: string[]): Promise<void> {
+    console.log(chalk.gray("Requesting embeddings for: " + Sources.length));
+    var Embeddings = await RequestEmbeddings(Sources, Cache);
+    return await EvaluateEmbeddings(Embeddings, Labels, Owners, OwnerLabels, Method, ...ExtraOptions);
+}
+
+/** 
+ * EvaluateEmbeddings: Evaluate a number of embeddings.
+ * Return format: 
+ * */
+export async function EvaluateEmbeddings(Embeddings: Float32Array, Labels: string[], Owners: number[][], OwnerLabels: string[], Method: string = "coverage", ...ExtraOptions: string[]): Promise<void> {
+    // var Results: Record<number, ClusterItem[]> = {};
+    // Write it into ./known/temp.bytes
+    File.writeFileSync(`./known/temp.bytes`, Buffer.from(Embeddings.buffer));
+    var TextData = Labels.map((Label, Index) => `${Owners[Index].join(",")}|${Label}`);
+    File.writeFileSync(`./known/temp.text`, OwnerLabels.concat(TextData).join("\n"));
+    // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
+    // Run the Python script
+    await PythonShell.run(`analysis/embeddings/evaluation-${Method}.py`, {
+        args: [Dimensions.toString(), Labels.length.toString(), OwnerLabels.length.toString(), ...ExtraOptions],
+        parser: (Message) => { 
+            if (Message.startsWith("[")) {
+                console.log(Message);
+            } else console.log(chalk.gray(Message));
+        }
+    });
+    // return Results;
 }
