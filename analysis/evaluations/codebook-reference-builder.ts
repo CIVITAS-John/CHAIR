@@ -18,7 +18,9 @@ export async function BuildReference(Codebooks: Codebook[]): Promise<Codebook> {
     var Threads = { Codebook: Codebook, Threads: {} };
     await ConsolidateCodebook<void>(new PipelineConsolidator(
         // Merge very similar names
-        new SimpleMerger({}),
+        new SimpleMerger({ Looping: true }),
+        // Merge similar definitions too
+        new SimpleMerger({ Looping: true, UseDefinition: true, Threshold: 0.4 }),
     ), [], Threads);
     console.log(chalk.green(`Statistics: ${Object.keys(Threads.Codebook).length} codes remained after consolidation.`));
     // Return the new codebook

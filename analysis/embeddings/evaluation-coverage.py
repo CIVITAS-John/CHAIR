@@ -26,7 +26,7 @@ else:
 
 # Use UMap to reduce the dimensions
 from umap import UMAP
-umap = UMAP(n_components = 2)
+umap = UMAP(densmap=True, n_components = 2)
 embeddings = umap.fit_transform(embeddings)
 print("Embeddings reduced:", embeddings.shape)
 
@@ -36,40 +36,44 @@ scaler = StandardScaler()
 embeddings = scaler.fit_transform(embeddings)
 scaler = MinMaxScaler(feature_range=(-1, 1))
 embeddings = scaler.fit_transform(embeddings)
-
-# Compute the density
-from scipy.stats import gaussian_kde
 x, y = embeddings[:, 0], embeddings[:, 1]
-kde = gaussian_kde([x, y])
-xgrid = np.linspace(-1, 1, 100)
-ygrid = np.linspace(-1, 1, 100)
-Xgrid, Ygrid = np.meshgrid(xgrid, ygrid)
-Z = kde(np.vstack([Xgrid.ravel(), Ygrid.ravel()])).reshape(Xgrid.shape)
 
-# Plot the heatmap
-if Visualize:
+# Calculating density
+def get_density(owner):
+    from scipy.stats import gaussian_kde
+    idx = [j for j in range(len(labels)) if owner in owners[j]]
+    kde = gaussian_kde([x[idx], y[idx]])
+    xgrid = np.linspace(-1, 1, 100)
+    ygrid = np.linspace(-1, 1, 100)
+    Xgrid, Ygrid = np.meshgrid(xgrid, ygrid)
+    return kde(np.vstack([Xgrid.ravel(), Ygrid.ravel()])).reshape(Xgrid.shape)
+
+# Plotting function
+def plot_comparison(codebooks, density):
     # Plotting the heatmap
-    fig, ax = plt.subplots(figsize=(20, 20))
-    heatmap = ax.imshow(Z, origin='lower', extent=[-1, 1, -1, 1], aspect='auto', cmap='viridis')
+    fig, ax = plt.subplots(figsize=(25, 25))
+    heatmap = ax.imshow(density, origin='lower', extent=[-1, 1, -1, 1], aspect='auto', cmap='viridis')
 
     # Note that we only support 1 baseline + 2 codebooks; or 1 baseline + 1 codebook
-    if Owners == 2:
-        combinations = [[0], [0, 1]]
+    if len(codebooks) == 1:
+        combinations = [[0], codebooks]
         markers = ['o', 's']
         colors = ['tab:gray', 'tab:red']
-        legends = [groups[0], groups[1]]
+        legends = [groups[0], groups[codebooks[0]]]
     else:
-        combinations = [[0], [0, 1], [0, 2], [0, 1, 2]]
+        combinations = [[0], [0, codebooks[0]], [0, codebooks[1]], [0, codebooks[0], codebooks[1]]]
         markers = ['o', 'o', 'o', 'lr']
         colors = ['tab:gray', 'tab:red', 'tab:blue', ['tab:red', 'tab:blue']]
-        legends = [groups[0] + ' only', groups[1], groups[2], 'both']
+        legends = [groups[0] + ' only', groups[codebooks[0]], groups[codebooks[1]], 'both']
 
     # Plot the texts
     offset = mtransforms.ScaledTranslation(5/72, -3/72, plt.gcf().dpi_scale_trans)
     text_transform = ax.transData + offset
     for i, point in enumerate(embeddings):
-        txt = ax.text(point[0], point[1], labels[i], color='k', fontsize=8, transform=text_transform)
-        txt.set_path_effects([PathEffects.withStroke(linewidth=1, foreground='w', alpha=0.5)])
+        is_baseline = owners[i] == [0]
+        alpha = 0.5 if is_baseline else 1
+        txt = ax.text(point[0], point[1], labels[i], color='k', fontsize=8, transform=text_transform, alpha=alpha)
+        txt.set_path_effects([PathEffects.withStroke(linewidth=1, foreground='w', alpha=0.5 * alpha)])
 
     # Plot each group with its own color and label
     for i, owner in enumerate(combinations):
@@ -87,14 +91,33 @@ if Visualize:
     ax.set_ylim(-1, 1)
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
-    ax.set_title('Comparison of Codes')
+    ax.set_title('Comparison of Codebooks ' + ', '.join(codebooks))
     ax.legend()
 
     # Adding a color bar
     cbar = fig.colorbar(heatmap)
     cbar.set_label('Density')
 
+    # Save the plot
+    codebooks = [str(codebook) for codebook in codebooks]
+    path = './known/coverage-' + '-'.join(codebooks) + '.png'
+    plt.savefig(path, dpi=160, bbox_inches='tight')
+    print('Coverage plot saved to', path)
+
+    # Show the plot
     wm = plt.get_current_fig_manager()
     wm.window.state('zoomed')
-    plt.savefig('./known/coverage.png', dpi=160, bbox_inches='tight')
-    plt.show()
+    if Visualize:
+        plt.show()
+
+# Compute the density
+reference_density = get_density(0)
+
+# Plot the combination heatmap
+if Owners == 3:
+    plot_comparison([1, 2], reference_density)
+
+# Plot the individual heatmaps
+for codebook in Owners[1:]:
+    density = get_density(codebook)
+    plot_comparison([codebook], density)

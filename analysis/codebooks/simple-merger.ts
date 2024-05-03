@@ -23,19 +23,23 @@ export class SimpleMerger extends CodeConsolidator {
     }
     /** Preprocess: In this case, we do not really use the LLM, so we just merge the codes. */
     public async Preprocess(Codebook: Codebook, Codes: Code[]) {
+        var Length = Object.keys(Codebook).length;
         // Categorize the strings
         var Labels = Codes.map(Code => {
             if (this.UseDefinition) {
                 var Text = `Label: ${Code.Label}`;
-                if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinitions: ${Code.Definitions!.map(Definition => "- " + Definition).join("\n")}`;
+                if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinitions:\n${Code.Definitions!.map(Definition => "- " + Definition).join("\n")}`;
                 return Text.trim();
             } else {
                 return Code.Label;
             }
         });
-        var Clusters = await ClusterTexts(Labels, Labels, "consolidator", 
+        var Clusters = await ClusterTexts(Labels, Codes.map(Code => Code.Label), "consolidator", 
             "linkage-jc", "euclidean", "ward", this.Threshold.toString(), this.Penalty.toString(), "0.2");
         // Merge the codes
-        return MergeCodesByCluster(Clusters, Codes);
+        var Result = MergeCodesByCluster(Clusters, Codes);
+        // Check if we should stop - when nothing is merged
+        this.Stopping = Object.keys(Result).length == Length;
+        return Result;
     }
 }
