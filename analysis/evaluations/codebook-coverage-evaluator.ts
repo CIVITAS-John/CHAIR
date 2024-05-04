@@ -7,7 +7,7 @@ export class CoverageEvaluator extends CodebookEvaluator {
     /** Name: The name of the evaluator. */
     public Name: string = "coverage-evaluator";
     /** Visualize: Whether we visualize the evaluation. */
-    public Visualize: boolean = true;
+    public Visualize: boolean = false;
     /** Evaluate: Evaluate a number of codebooks. */
     public async Evaluate(Codebooks: Codebook[], Names: string[]): Promise<Record<string, CodebookEvaluation>> {
         // We treat the first input as the reference codebook
