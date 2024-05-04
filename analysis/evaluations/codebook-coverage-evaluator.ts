@@ -26,7 +26,10 @@ export class CoverageEvaluator extends CodebookEvaluator {
                     Code.Alternatives?.forEach(Alternative => Alternatives.set(Alternative, Label));
                 else if (Alternatives.has(Label)) 
                     NewLabel = Alternatives.get(Label)!;
-                if (!Codes.has(NewLabel)) Codes.set(NewLabel, Code);
+                if (!Codes.has(NewLabel)) {
+                    Codes.set(NewLabel, Code);
+                    if (Index != 0) debugger;
+                }
                 if (!Owners.has(NewLabel)) Owners.set(NewLabel, []);
                 if (!Owners.get(NewLabel)!.includes(Index))
                     Owners.get(NewLabel)!.push(Index);
@@ -44,6 +47,11 @@ export class CoverageEvaluator extends CodebookEvaluator {
         var CodeStrings = Labels.map(Label => GetCodeString(Codes.get(Label)!));
         var CodeOwners = Labels.map(Label => Owners.get(Label)!);
         var Result = await EvaluateTexts(CodeStrings, Labels, CodeOwners, Names, this.Name, "coverage", this.Visualize.toString());
+        for (var Key of Object.keys(Result)) {
+            var Index = parseInt(Key);
+            var Evaluation = Result[Index];
+            Object.assign(Evaluations[Index], Evaluation);
+        }
         // Return in the format
         var Results: Record<string, CodebookEvaluation> = {};
         for (var [Index, Name] of Names.entries())

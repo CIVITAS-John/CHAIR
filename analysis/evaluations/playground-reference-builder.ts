@@ -10,7 +10,7 @@ InitializeEmbeddings("gecko-768-similarity");
 
 // Load the codebooks
 var SourcePath = GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations/evaluation/reference-sources");
-var TargetPath = GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations/evaluation/references/low-level-3-gpt-3.5-turbo");
+var TargetPath = GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations/evaluation/references/low-level-3");
 var [Codebooks, Names] = LoadCodebooks(SourcePath);
 
 // Build the reference codebook

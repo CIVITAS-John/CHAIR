@@ -8,6 +8,7 @@ import { PythonShell } from 'python-shell';
 import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai';
 import { TaskType } from "@google/generative-ai";
 import chalk from 'chalk';
+import { CodebookEvaluation } from './schema.js';
 
 // Model: The embedding model to use.
 export var Model: Embeddings;
@@ -186,7 +187,7 @@ export async function ClusterEmbeddings(Embeddings: Float32Array, Names: string[
 }
 
 /** EvaluateTexts: Evaluate a number of texts. */
-export async function EvaluateTexts(Sources: string[], Labels: string[], Owners: number[][], OwnerLabels: string[], Cache: string, Method: string = "coverage", ...ExtraOptions: string[]): Promise<void> {
+export async function EvaluateTexts(Sources: string[], Labels: string[], Owners: number[][], OwnerLabels: string[], Cache: string, Method: string = "coverage", ...ExtraOptions: string[]): Promise<Record<number, CodebookEvaluation>> {
     console.log(chalk.gray("Requesting embeddings for: " + Sources.length));
     var Embeddings = await RequestEmbeddings(Sources, Cache);
     return await EvaluateEmbeddings(Embeddings, Labels, Owners, OwnerLabels, Method, ...ExtraOptions);
@@ -196,8 +197,8 @@ export async function EvaluateTexts(Sources: string[], Labels: string[], Owners:
  * EvaluateEmbeddings: Evaluate a number of embeddings.
  * Return format: 
  * */
-export async function EvaluateEmbeddings(Embeddings: Float32Array, Labels: string[], Owners: number[][], OwnerLabels: string[], Method: string = "coverage", ...ExtraOptions: string[]): Promise<void> {
-    // var Results: Record<number, ClusterItem[]> = {};
+export async function EvaluateEmbeddings(Embeddings: Float32Array, Labels: string[], Owners: number[][], OwnerLabels: string[], Method: string = "coverage", ...ExtraOptions: string[]): Promise<Record<number, CodebookEvaluation>> {
+    var Results: Record<number, CodebookEvaluation> = {};
     // Write it into ./known/temp.bytes
     File.writeFileSync(`./known/temp.bytes`, Buffer.from(Embeddings.buffer));
     var TextData = Labels.map((Label, Index) => `${Owners[Index].join(",")}|${Label}`);
@@ -207,10 +208,10 @@ export async function EvaluateEmbeddings(Embeddings: Float32Array, Labels: strin
     await PythonShell.run(`analysis/embeddings/evaluation-${Method}.py`, {
         args: [Dimensions.toString(), Labels.length.toString(), OwnerLabels.length.toString(), ...ExtraOptions],
         parser: (Message) => { 
-            if (Message.startsWith("[")) {
-                console.log(Message);
+            if (Message.startsWith("{")) {
+                Results = JSON.parse(Message) as Record<number, CodebookEvaluation>;
             } else console.log(chalk.gray(Message));
         }
     });
-    // return Results;
+    return Results;
 }
