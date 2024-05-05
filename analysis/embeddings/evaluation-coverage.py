@@ -21,10 +21,10 @@ labels = labels[Owners:]
 # Separate the owners from labels (format: owner1,owner2,owner3|label)
 if labels[0].count('|') > 0:
     owners = [label.split('|')[0].split(',') for label in labels]
-    owners = [[int(owner) for owner in owner_list] for owner_list in owners]
+    owners = [set([int(owner) for owner in owner_list]) for owner_list in owners]
     labels = [label.split('|')[1] for label in labels]
 else:
-    owners = [[0]] * len(labels)
+    owners = [{0}] * len(labels)
 
 # Use UMap to reduce the dimensions
 from umap import UMAP
@@ -103,19 +103,21 @@ print('Reference spread:', reference_spread, ", density", reference_density, ", 
 # Plotting function
 plot_size_per_unit = math.ceil(math.sqrt(len(embeddings)) / 5)
 def plot_comparison(codebooks, distribution):
+    codebookset = set(codebooks)
     # Plotting the heatmap
     fig, ax = plt.subplots(figsize=((extent[1] - extent[0] + 1.5) * plot_size_per_unit, (extent[3] - extent[2]) * plot_size_per_unit))
     dis = np.where(distribution < min_density, 0, distribution) # max_density
     heatmap = ax.imshow(dis, origin='lower', vmax=max_density, vmin=0, extent=extent, aspect='auto', cmap='viridis')
 
-    # Note that we only support 1 baseline + 2 codebooks; or 1 baseline + 1 codebook
     if len(codebooks) == 1:
-        combinations = [[0], [codebooks[0]]]
+        # 1 baseline + 1 codebook
+        combinations = [lambda i: not codebookset.issubset(owners[i]), lambda i: codebookset.issubset(owners[i])]
         markers = ['o', 's']
         colors = ['tab:gray', 'tab:red']
         legends = [groups[0], groups[codebooks[0]]]
-    else:
-        combinations = [[0], [0, codebooks[0]], [0, codebooks[1]], [0, codebooks[0], codebooks[1]]]
+    elif len(codebooks) == 2:
+        # 1 baseline + 2 codebooks
+        combinations = [lambda i: not codebookset.isdisjoint(owners[i]), lambda i: codebooks[0] in owners[i], lambda i: codebooks[1] in owners[i], lambda i: codebookset.issubset(owners[i])]
         markers = ['o', 'o', 'o', 'lr']
         colors = ['tab:gray', 'tab:red', 'tab:blue', ['tab:red', 'tab:blue']]
         legends = [groups[0] + ' only', groups[codebooks[0]], groups[codebooks[1]], 'both']
@@ -134,13 +136,7 @@ def plot_comparison(codebooks, distribution):
 
     # Plot each group with its own color and label
     for i, owner in enumerate(combinations):
-        if len(codebooks) == 1:
-            if owner[0] == 0:
-                idx = [j for j in range(len(labels)) if codebooks[0] not in owners[j]]
-            else:
-                idx = [j for j in range(len(labels)) if codebooks[0] in owners[j]]
-        else:
-            idx = [j for j in range(len(labels)) if owners[j] == owner]
+        idx = [j for j in range(len(labels)) if owner(j) == True]
         marker = markers[i]
         color = colors[i]
         if marker == 'lr':
