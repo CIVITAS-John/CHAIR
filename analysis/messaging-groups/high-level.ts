@@ -12,13 +12,22 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
     /** ParseResponse: Parse the responses from the LLM. */
     public async ParseResponse(Analysis: CodedThread, Lines: string[], Messages: Message[], ChunkStart: number): Promise<number> {
         var Category = "";
+        var Position = "";
         var CurrentCode: Code | undefined;
         // Parse the response
         for (var I = 0; I < Lines.length; I++) {
             var Line = Lines[I];
-            if (Line.startsWith("# ")) {
+            if (Line.startsWith("* Summary")) {
+                Analysis.Summary = Line.substring(9).trim();
+                if (Analysis.Summary == "") Position = "Summary";
+            } else if (Line.startsWith("* Plan")) {
+                Analysis.Plan = Line.substring(8).trim();
+                if (Analysis.Plan == "") Position = "Plan";
+            } else if (Line.startsWith("# ")) {
+                Position = "";
                 Category = Line.substring(2).trim();
             } else if (Line.startsWith("## ")) {
+                Position = "";
                 Line = Line.substring(3).trim();
                 // Sometimes, the LLM will return "P{number}" as the name of the code
                 if (Line.match(/^(P(\d+))($|\:)/)) throw new Error(`Invalid code name: ${Line}.`);
@@ -32,6 +41,10 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                     Line = Line.substring(12).trim();
                     CurrentCode!.Definitions = [Line];
                 }
+            } else if (Position == "Summary") {
+                Analysis.Summary = (Analysis.Summary + "\n" + Line.trim()).trim();
+            } else if (Position == "Plan") {
+                Analysis.Plan = (Analysis.Plan + "\n" + Line.trim()).trim();
             } else if (Line.startsWith("- ")) {
                 // Add examples to the current code
                 if (CurrentCode) {
