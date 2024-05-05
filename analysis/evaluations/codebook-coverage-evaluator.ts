@@ -14,12 +14,14 @@ export class CoverageEvaluator extends CodebookEvaluator {
         Names[0] = "baseline";
         // Then, we combine the codes from each codebook and record the ownership
         // We use the reference code as the baseline if multiple codes are found
-        // Here, the first codebook's definition will be used (will need to change)
+        // Here, the reference codebook's first definition will be used (will need to change)
+        // Then, we calculate the name overlapping of each code (a very rough metric)
         var Evaluations: CodebookEvaluation[] = [];
         var Codes: Map<string, Code> = new Map();
         var Owners: Map<string, number[]> = new Map();
         var Alternatives: Map<string, string> = new Map();
         for (var [Index, Codebook] of Codebooks.entries()) {
+            Evaluations.push({ Count: Object.keys(Codebook).length, Overlap: 0 });
             for (var [Label, Code] of Object.entries(Codebook)) {
                 var NewLabel = Label;
                 if (Index == 0)
@@ -33,13 +35,7 @@ export class CoverageEvaluator extends CodebookEvaluator {
                 if (!Owners.has(NewLabel)) Owners.set(NewLabel, []);
                 if (!Owners.get(NewLabel)!.includes(Index))
                     Owners.get(NewLabel)!.push(Index);
-            }
-            Evaluations.push({ Count: Object.keys(Codebook).length, Overlap: 0 });
-        }
-        // Then, we calculate the name overlapping of each code (a very rough metric)
-        for (var [Label, Code] of Codes.entries()) {
-            for (var Owner of Owners.get(Label)!) {
-                Evaluations[Owner].Overlap += 1;
+                Evaluations[Index].Overlap += 1;
             }
         }
         // Then, we convert each code into an embedding and send to Python

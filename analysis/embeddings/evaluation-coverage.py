@@ -28,7 +28,7 @@ else:
 
 # Use UMap to reduce the dimensions
 from umap import UMAP
-umap = UMAP(densmap=True, n_components=2)
+umap = UMAP(n_components=2) # densmap=True, 
 embeddings = umap.fit_transform(embeddings)
 x, y = embeddings[:, 0], embeddings[:, 1]
 print("Embeddings reduced:", embeddings.shape)
