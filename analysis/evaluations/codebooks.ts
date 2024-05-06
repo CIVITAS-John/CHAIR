@@ -1,23 +1,38 @@
 import * as File from 'fs';
 import * as Path from 'path';
 import { Codebook, CodebookEvaluation } from "../../utils/schema.js";
-import { GetFilesRecursively } from '../../utils/file.js';
+import { GetFilesRecursively, ReadOrBuildCache } from '../../utils/file.js';
 import chalk from 'chalk';
+import { BuildReferenceAndExport } from './codebook-reference-builder.js';
+import md5 from 'md5';
 
 /** CodebookEvaluator: An evaluator of codebook. */
 export abstract class CodebookEvaluator {
     /** Name: The name of the evaluator. */
     public Name: string = "Unnamed";
     /** Evaluate: Evaluate a number of codebooks. */
-    public abstract Evaluate(Codebooks: Codebook[], Names: string[]): Promise<Record<string, CodebookEvaluation>>;
+    public abstract Evaluate(Codebooks: Codebook[], Names: string[], ExportPath?: string): Promise<Record<string, CodebookEvaluation>>;
 }
 
-/** EvaluateCodebooks: Evaluate a number of codebooks. */
-export async function EvaluateCodebooks(Source: string | string[], Evaluator: CodebookEvaluator): Promise<Record<string, CodebookEvaluation>> {
+/** EvaluateCodebooksWithReference: Evaluate a number of codebooks. */
+export async function EvaluateCodebooksWithReference(Source: string | string[], Evaluator: CodebookEvaluator, ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
     // Find all the codebooks under the path
     var [ Codebooks, Names ] = LoadCodebooks(Source);
     // Evaluate the codebooks
-    var Results = await Evaluator.Evaluate(Codebooks, Names);
+    var Results = await Evaluator.Evaluate(Codebooks, Names, ExportPath);
+    console.log(chalk.green(JSON.stringify(Results, null, 4)));
+    return Results;
+}
+
+/** BuildReferenceAndEvaluateCodebooks: Build a reference and evaluate a number of codebooks. */
+export async function BuildReferenceAndEvaluateCodebooks(Source: string | string[], ReferencePath: string, Evaluator: CodebookEvaluator, ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
+    // Find all the codebooks under the path
+    var [ Codebooks, Names ] = LoadCodebooks(Source);
+    var Hash = md5(JSON.stringify(Codebooks));
+    // Build the reference codebook
+    var Reference = await ReadOrBuildCache(ReferencePath, Hash, () => BuildReferenceAndExport(Codebooks, ReferencePath));
+    // Evaluate the codebooks
+    var Results = await Evaluator.Evaluate([Reference, ...Codebooks], Names, ExportPath);
     console.log(chalk.green(JSON.stringify(Results, null, 4)));
     return Results;
 }

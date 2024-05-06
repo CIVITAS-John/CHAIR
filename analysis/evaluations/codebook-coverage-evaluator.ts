@@ -9,7 +9,7 @@ export class CoverageEvaluator extends CodebookEvaluator {
     /** Visualize: Whether we visualize the evaluation. */
     public Visualize: boolean = false;
     /** Evaluate: Evaluate a number of codebooks. */
-    public async Evaluate(Codebooks: Codebook[], Names: string[]): Promise<Record<string, CodebookEvaluation>> {
+    public async Evaluate(Codebooks: Codebook[], Names: string[], ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
         // We treat the first input as the reference codebook
         Names[0] = "baseline";
         // Then, we combine the codes from each codebook and record the ownership

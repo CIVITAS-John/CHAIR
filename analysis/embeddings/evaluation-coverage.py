@@ -11,6 +11,7 @@ from embedding import Dimensions, Items, cpus, labels, embeddings
 # Get the arguments
 Owners = int(sys.argv[3]) if len(sys.argv) > 3 else 2
 Visualize = sys.argv[4].lower() == "true" if len(sys.argv) > 4 else False
+OutputPath = sys.argv[5] if len(sys.argv) > 5 else './known/'
 print('Owners:', Owners, ', Visualize:', Visualize)
 
 # Seperate owners' names from labels (the first few items)
@@ -104,39 +105,49 @@ print('Reference spread:', reference_spread, ", density", reference_density, ", 
 plot_size_per_unit = math.ceil(math.sqrt(len(embeddings)) / 5)
 def plot_comparison(codebooks, distribution):
     codebookset = set(codebooks)
-    # Plotting the heatmap
-    fig, ax = plt.subplots(figsize=((extent[1] - extent[0] + 1.5) * plot_size_per_unit, (extent[3] - extent[2]) * plot_size_per_unit))
     dis = np.where(distribution < min_density, 0, distribution) # max_density
-    heatmap = ax.imshow(dis, origin='lower', vmax=max_density, vmin=0, extent=extent, aspect='auto', cmap='viridis')
 
+    # Handle different numbers of codebooks
     if len(codebooks) == 1:
         # 1 baseline + 1 codebook
-        combinations = [lambda i: not codebookset.issubset(owners[i]), lambda i: codebookset.issubset(owners[i])]
+        combinations = [lambda i: not codebookset.isdisjoint(i), lambda i: codebookset.issubset(i)]
         markers = ['o', 's']
         colors = ['tab:gray', 'tab:red']
         legends = [groups[0], groups[codebooks[0]]]
     elif len(codebooks) == 2:
         # 1 baseline + 2 codebooks
-        combinations = [lambda i: not codebookset.isdisjoint(owners[i]), lambda i: codebooks[0] in owners[i], lambda i: codebooks[1] in owners[i], lambda i: codebookset.issubset(owners[i])]
+        combinations = [lambda i: not codebookset.isdisjoint(i), lambda i: codebooks[0] in i, lambda i: codebooks[1] in i, lambda i: codebookset.issubset(i)]
         markers = ['o', 'o', 'o', 'lr']
         colors = ['tab:gray', 'tab:red', 'tab:blue', ['tab:red', 'tab:blue']]
         legends = [groups[0] + ' only', groups[codebooks[0]], groups[codebooks[1]], 'both']
+    else:
+        # 1 baseline + n codebooks
+        combinations = [lambda i: True]
+        markers = ['o']
+        markers = markers + ['s'] * len(codebooks)
+        colors = ['tab:red'] * (len(codebooks) + 1)
+        legends = ['None of the codebooks']
+        for n in range(len(codebooks)):
+            combinations.append(lambda i: codebookset.intersection(i) == n)
+            markers.append('o')
+            legends.append(str(n) + ' codebooks')
+
+    # Plotting the heatmap
+    fig, ax = plt.subplots(figsize=((extent[1] - extent[0] + 1.5) * plot_size_per_unit, (extent[3] - extent[2]) * plot_size_per_unit))
+    heatmap = ax.imshow(dis, origin='lower', vmax=max_density, vmin=0, extent=extent, aspect='auto', cmap='viridis')
 
     # Plot the texts
     offset = mtransforms.ScaledTranslation(5/72, -3/72, plt.gcf().dpi_scale_trans)
     text_transform = ax.transData + offset
     for i, point in enumerate(embeddings):
-        if len(codebooks) == 1:
-            is_baseline = codebooks[0] not in owners[i]
-        else:
-            is_baseline = owners[i] == [0]
+        is_baseline = combinations[0](owners[i])
         alpha = 0.5 if is_baseline else 1
         txt = ax.text(point[0], point[1], labels[i], color='k', fontsize=8, transform=text_transform, alpha=alpha)
         txt.set_path_effects([PathEffects.withStroke(linewidth=1, foreground='w', alpha=0.5 * alpha)])
 
     # Plot each group with its own color and label
     for i, owner in enumerate(combinations):
-        idx = [j for j in range(len(labels)) if owner(j) == True]
+        idx = [j for j in range(len(labels)) if owner(owners[j]) == True]
         marker = markers[i]
         color = colors[i]
         if marker == 'lr':
@@ -145,13 +156,13 @@ def plot_comparison(codebooks, distribution):
         else:
             ax.scatter(x[idx], y[idx], marker=marker, color=color, label=f'{legends[i]}')
 
-    codebooks = [str(codebook) for codebook in codebooks]
+    names = [str(codebook) for codebook in codebooks]
     # Setting the labels and limitations
     ax.set_xlim(extent[0], extent[1])
     ax.set_ylim(extent[2], extent[3])
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
-    ax.set_title('Comparison of Codebook ' + ', '.join(codebooks))
+    ax.set_title('Comparison of Codebook ' + ', '.join(names))
     ax.legend()
 
     # Adding a color bar
@@ -159,7 +170,7 @@ def plot_comparison(codebooks, distribution):
     cbar.set_label('Density')
 
     # Save the plot
-    path = './known/coverage-' + '-'.join(codebooks) + '.png'
+    path = OutputPath + 'coverage-' + '-'.join(names) + '.png'
     plt.savefig(path, dpi=160, bbox_inches='tight')
     print('Coverage plot saved to', path)
 
@@ -172,6 +183,8 @@ def plot_comparison(codebooks, distribution):
 # Plot the combination heatmap
 if Owners == 3:
     plot_comparison([1, 2], reference_distribution)
+else:
+    plot_comparison(group_ids[1:], reference_distribution)
 
 # Plot the individual heatmaps and evaluate spread and density
 for codebook in group_ids[1:]:
