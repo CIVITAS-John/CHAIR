@@ -197,11 +197,20 @@ plot_comparison(group_ids[1:], reference_distribution, 'heatmap')
 if Owners > 2:
     plot_comparison(group_ids[1:], reference_distribution, 'overlap')
 
-# Here, contribution is defined as the ratio of the spread to the overlapping area (where n >= max(2, floor(codebooks / 2)))
+# Here, conformity is defined as the ratio of the spread to the overlapping area (where n >= max(2, floor(codebooks / 2)))
 meaningful_threshold = max(2, math.floor(len(group_ids[1:]) / 2))
-meaningful_overlapping = np.where(overlapping >=meaningful_threshold , 1, 0)
-meaningful_area = np.where(meaningful_overlapping, 1, 0).sum()
+meaningful_overlapping = np.where(overlapping >= meaningful_threshold, 1, 0)
+meaningful_area = meaningful_overlapping.sum()
 print('Meaningful overlapping area:', meaningful_area, "based on >=", meaningful_threshold, "codebooks")
+
+# Outliers (measurement of "novelty") are defined as the covered area outside the overlapping one
+outlier = np.where(overlapping < meaningful_threshold, 1, 0)
+outlier_area = outlier.sum()
+
+# Meanwhile, contributing area is defined as "without you, how much overlapping area will be lost?"
+contributing = np.where(overlapping >= meaningful_threshold, 1, 0)
+contributing_area = contributing.sum()
+print('Contributing area:', meaningful_area, "based on >=", meaningful_threshold, "codebooks")
 
 # Plot the individual heatmaps and evaluate spread and density, and contribution
 for i, codebook in enumerate(group_ids[1:]):
@@ -212,9 +221,11 @@ for i, codebook in enumerate(group_ids[1:]):
     # Calculate the overlapping area
     dist = np.where(distribution > min_density, 1, 0)
     conformity = (dist * meaningful_overlapping).sum()
+    contribution = (dist * contributing).sum()
+    outlier = (dist * outlier).sum()
     # Finish the evaluation
-    print('Codebook:', codebook, ', spread:', spread, ', density:', density, ', variation:', variation, ', conformity:', conformity)
-    evaluation[codebook] = ({ "Spread": spread / reference_spread, "Density": density / reference_density, "Variation": variation, "Conformity": conformity / meaningful_area })
+    print('Codebook:', codebook, ', spread:', spread, ', density:', density, ', variation:', variation, ', conformity:', conformity, ', contribution:', contribution, ', outlier:', outlier)
+    evaluation[codebook] = ({ "Spread": spread / reference_spread, "Density": density / reference_density, "Variation": variation, "Conformity": conformity / meaningful_area, "Contribution": contribution / contribution_area, "Novelty": outlier / outlier_area})
     # Plot the heatmap
     plot_comparison([codebook], distribution)
 
