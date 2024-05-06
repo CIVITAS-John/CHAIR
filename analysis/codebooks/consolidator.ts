@@ -56,7 +56,7 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
     }
     /** BuildPrompts: Build the prompts for the LLM. */
     public async BuildPrompts(Analysis: CodedThreads, Data: TUnit[], Codes: Code[], ChunkStart: number, Iteration: number): Promise<[string, string]> {
-        if (this.Index >= this.Consolidators.length) return ["", ""];
+        if (this.Index >= this.Consolidators.length || this.Consolidators[this.Index].Stopping) return ["", ""];
         var Prompts = await this.Consolidators[this.Index].BuildPrompts(Analysis.Codebook!, Codes);
         if (Prompts instanceof Array) {
             if (Prompts.length == 2) return Prompts;
@@ -69,7 +69,7 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
     }
     /** ParseResponse: Parse the responses from the LLM. */
     public async ParseResponse(Analysis: CodedThreads, Lines: string[], Codes: Code[], ChunkStart: number, Iteration: number): Promise<number> {
-        if (this.Index >= this.Consolidators.length) return -1;
+        if (this.Index >= this.Consolidators.length || this.Consolidators[this.Index].Stopping) return -1;
         var Result = await this.Consolidators[this.Index].ParseResponse(Analysis.Codebook!, Codes, Lines);
         if (Result instanceof Array) {
             Analysis.Codebook = Result[1];
