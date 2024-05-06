@@ -14,11 +14,12 @@ async function EvaluateAnalyzers(SourcePath: string, Dataset: string, LLM: strin
     var TargetPath = SourcePath + "/evaluation/results/" + LLM;
     EnsureFolder(TargetPath);
     // Build the paths
-    var Paths = Analyzers.map(Analyzer => SourcePath + "/" + Analyzer + " / " + Dataset + "-" + LLM + ".json");
+    var Paths = Analyzers.map(Analyzer => SourcePath + "/" + Analyzer + "/" + Dataset + "-" + LLM + ".json");
     // Build the reference and evaluate the codebooks
     var Results = await BuildReferenceAndEvaluateCodebooks(
         Paths, ReferencePath + "/" + LLM, new CoverageEvaluator(), TargetPath);
     File.writeFileSync(TargetPath + ".json", JSON.stringify(Results, null, 4));
 }
 
-await EvaluateAnalyzers(GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations"), "0~17-gpt-3.5-turbo", "llama3-70b", ["high-level-1", "high-level-2", "low-level-3"]);
+await EvaluateAnalyzers(GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations"), "0~17-gpt-3.5-turbo", 
+    "llama3-70b", ["high-level-1", "high-level-2", "low-level-3"]);

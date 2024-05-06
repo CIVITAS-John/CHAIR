@@ -205,10 +205,12 @@ print('Meaningful overlapping area:', meaningful_area, "based on >=", meaningful
 
 # Outliers (measurement of "novelty") are defined as the covered area outside the overlapping one
 outlier = np.where(overlapping < meaningful_threshold, 1, 0)
+outlier = np.where(overlapping > 0, outlier, 0)
 outlier_area = outlier.sum()
+print('Outlier area:', outlier_area, "based on <", meaningful_threshold, "codebooks")
 
 # Meanwhile, contributing area is defined as "without you, how much overlapping area will be lost?"
-contributing = np.where(overlapping >= meaningful_threshold, 1, 0)
+contributing = np.where(overlapping == meaningful_threshold, 1, 0)
 contributing_area = contributing.sum()
 print('Contributing area:', meaningful_area, "based on >=", meaningful_threshold, "codebooks")
 
@@ -222,10 +224,10 @@ for i, codebook in enumerate(group_ids[1:]):
     dist = np.where(distribution > min_density, 1, 0)
     conformity = (dist * meaningful_overlapping).sum()
     contribution = (dist * contributing).sum()
-    outlier = (dist * outlier).sum()
+    novelty = (dist * outlier).sum()
     # Finish the evaluation
-    print('Codebook:', codebook, ', spread:', spread, ', density:', density, ', variation:', variation, ', conformity:', conformity, ', contribution:', contribution, ', outlier:', outlier)
-    evaluation[codebook] = ({ "Spread": spread / reference_spread, "Density": density / reference_density, "Variation": variation, "Conformity": conformity / meaningful_area, "Contribution": contribution / contribution_area, "Novelty": outlier / outlier_area})
+    print('Codebook:', codebook, ', spread:', spread, ', density:', density, ', variation:', variation, ', conformity:', conformity, ', contribution:', contribution, ', novelty:', novelty)
+    evaluation[codebook] = ({ "Spread": spread / reference_spread, "Density": density / reference_density, "Variation": variation, "Conformity": conformity / meaningful_area, "Contribution": contribution / contributing_area, "Novelty": novelty / outlier_area})
     # Plot the heatmap
     plot_comparison([codebook], distribution)
 

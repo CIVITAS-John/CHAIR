@@ -45,7 +45,6 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         // Preprocess the subunits
         Subunits = Subunits.filter(Code => Code.Label !== "[Merged]");
         var Result = await this.Consolidators[this.Index].Preprocess(Analysis.Codebook!, Subunits);
-        if (this.Consolidators[this.Index].Stopping) return [];
         if (Result instanceof Array) return Result;
         Analysis.Codebook = Result;
         return Object.values(Result);
