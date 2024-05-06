@@ -55,7 +55,7 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
             new SimpleMerger({ Looping: true, UseDefinition: true, Threshold: 0.4 }),
             // Refine similar definitions
             new RefineMerger({ Looping: true, UseDefinition: true, Threshold: 0.5 }),
-            new RefineMerger({ UseDefinition: true, Threshold: 0.7, Penalty: 0.05 }),
+            new RefineMerger({ UseDefinition: true, Threshold: 0.7, Penalty: 0.1 }),
             // Merge very similar names once again
             new SimpleMerger({ Looping: true }),
         ), [], Threads);

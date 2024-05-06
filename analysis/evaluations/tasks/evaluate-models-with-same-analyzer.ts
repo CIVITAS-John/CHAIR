@@ -24,5 +24,6 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
 }
 
 // await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations"), "high-level-1");
+await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations"), "high-level-2", new RefiningReferenceBuilder());
 await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations"), "high-level-2-consolidated", new RefiningReferenceBuilder());
 await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations"), "low-level-3-consolidated", new RefiningReferenceBuilder());
