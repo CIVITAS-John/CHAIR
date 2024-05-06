@@ -7,9 +7,8 @@ import { EnsureFolder } from '../../../utils/llms.js';
 
 InitializeEmbeddings("gecko-768-similarity");
 
-/** EvaluateWithinAnalyzer: Evaluate the performance of a codebook within the analyzer. */
-async function EvaluateWithinAnalyzer(SourcePath: string, Analyzer: string) {
-    /* Example Task: Compare the performance between models using high-level-1 analyzer. */
+/** EvaluateModelsWithSameAnalyzer: Evaluate the performance of different models using the same analyzer. */
+async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: string) {
     var ReferencePath = SourcePath + "/evaluation/references";
     EnsureFolder(ReferencePath);
     var TargetPath = SourcePath + "/evaluation/results/" + Analyzer;
@@ -21,6 +20,6 @@ async function EvaluateWithinAnalyzer(SourcePath: string, Analyzer: string) {
     File.writeFileSync(TargetPath + ".json", JSON.stringify(Results, null, 4));
 }
 
-await EvaluateWithinAnalyzer(GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations"), "high-level-1");
-await EvaluateWithinAnalyzer(GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations"), "high-level-2");
-await EvaluateWithinAnalyzer(GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations"), "low-level-3");
+await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations"), "high-level-1");
+await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations"), "high-level-2");
+await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations"), "low-level-3");
