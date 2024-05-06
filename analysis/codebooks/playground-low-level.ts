@@ -9,6 +9,7 @@ import { CategoryNameMerger } from './category-name-merger.js';
 import { SimpleMerger } from './simple-merger.js';
 import { CategoryRefiner } from './category-refiner.js';
 import { CategoryAssigner } from './category-assigner.js';
+import { LLMName } from '../../utils/llms.js';
 
 await UseLLMs(async () => {
     InitializeEmbeddings("gecko-768-similarity");
@@ -32,7 +33,7 @@ await UseLLMs(async () => {
         new CategoryRefiner(),
         // Assign categories to codes
         new CategoryAssigner()
-    ), "Users of Physics Lab (Group 1)", "0~17-gpt-3.5-turbo.json", "low-level-3", "llama3-70b", false);
-}, "gpt-4.5-turbo"); // 
+    ), "Users of Physics Lab (Group 1)", "0~17-gpt-3.5-turbo.json", "low-level-3", LLMName, false);
+}, "gpt-3.5-turbo", "gpt-4.5-turbo", "claude3-haiku", "claude3-sonnet", "llama3-70b");
 
 process.exit(0);
