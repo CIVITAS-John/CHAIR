@@ -3,7 +3,7 @@ import * as Path from 'path';
 import { Codebook, CodebookEvaluation } from "../../utils/schema.js";
 import { GetFilesRecursively, ReadOrBuildCache } from '../../utils/file.js';
 import chalk from 'chalk';
-import { BuildReferenceAndExport } from './codebook-reference-builder.js';
+import { BuildReferenceAndExport, ReferenceBuilder } from './reference-builder.js';
 import md5 from 'md5';
 
 /** CodebookEvaluator: An evaluator of codebook. */
@@ -25,12 +25,16 @@ export async function EvaluateCodebooksWithReference(Source: string | string[], 
 }
 
 /** BuildReferenceAndEvaluateCodebooks: Build a reference and evaluate a number of codebooks. */
-export async function BuildReferenceAndEvaluateCodebooks(Source: string | string[], ReferencePath: string, Evaluator: CodebookEvaluator, ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
+export async function BuildReferenceAndEvaluateCodebooks(Source: string | string[], ReferencePath: string, Builder: ReferenceBuilder, Evaluator: CodebookEvaluator, 
+    ExportPath?: string, ComparingCodebooks?: string[]): Promise<Record<string, CodebookEvaluation>> {
     // Find all the codebooks under the path
     var [ Codebooks, Names ] = LoadCodebooks(Source);
     var Hash = md5(JSON.stringify(Codebooks));
     // Build the reference codebook
-    var Reference = await ReadOrBuildCache(ReferencePath, Hash, () => BuildReferenceAndExport(Codebooks, ReferencePath));
+    var Reference = await ReadOrBuildCache(ReferencePath, Hash, () => BuildReferenceAndExport(Builder, Codebooks, ReferencePath));
+    // Read the comparing codebooks
+    if (ComparingCodebooks)
+        [ Codebooks, Names ] = LoadCodebooks(ComparingCodebooks);
     // Evaluate the codebooks
     var Results = await Evaluator.Evaluate([Reference, ...Codebooks], [ReferencePath, ...Names], ExportPath);
     console.log(chalk.green(JSON.stringify(Results, null, 4)));

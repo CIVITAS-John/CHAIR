@@ -204,7 +204,7 @@ export async function EvaluateEmbeddings(Embeddings: Float32Array, Labels: strin
     File.writeFileSync(`./known/temp.bytes`, Buffer.from(Embeddings.buffer));
     var TextData = Labels.map((Label, Index) => `${Owners[Index].join(",")}|${Label}`);
     File.writeFileSync(`./known/temp.text`, OwnerLabels.concat(TextData).join("\n"));
-    // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
+    console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Labels.length + " embeddings)");
     // Run the Python script
     await PythonShell.run(`analysis/embeddings/evaluation-${Method}.py`, {
         args: [Dimensions.toString(), Labels.length.toString(), OwnerLabels.length.toString(), ...ExtraOptions],

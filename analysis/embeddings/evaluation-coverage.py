@@ -172,7 +172,10 @@ def plot_comparison(codebooks, distribution, type='heatmap'):
     ax.set_ylim(extent[2], extent[3])
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
-    ax.set_title('Comparison of Codebook ' + ', '.join(names))
+    if len(codebooks) == 1:
+        ax.set_title('Visualization of Codebook ' + groups[0] + ' (' + type.capitalize() + ')')
+    else:
+        ax.set_title('Combined Visualization of Codebook ' + ', '.join(names) + ' (' + type.capitalize() + ')')
     ax.legend()
 
     # Adding a color bar
@@ -180,8 +183,9 @@ def plot_comparison(codebooks, distribution, type='heatmap'):
     cbar.set_label('Density')
 
     # Save the plot
-    path = OutputPath + '/coverage-' + '-'.join(names) + '.png'
-    plt.savefig(path, dpi=160, bbox_inches='tight')
+    path = OutputPath + '/coverage-' + '-'.join(names)
+    if type != 'heatmap': path += '-' + type
+    plt.savefig(path + '.png', dpi=160, bbox_inches='tight')
     print('Coverage plot saved to', path)
 
     # Show the plot

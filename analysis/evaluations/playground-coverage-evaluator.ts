@@ -1,6 +1,6 @@
 import { InitializeEmbeddings } from '../../utils/embeddings.js';
 import { GetMessagesPath } from '../../utils/loader.js';
-import { CoverageEvaluator } from './codebook-coverage-evaluator.js';
+import { CoverageEvaluator } from './coverage-evaluator.js';
 import { EvaluateCodebooksWithReference } from './codebooks.js';
 
 InitializeEmbeddings("gecko-768-similarity");

@@ -1,7 +1,8 @@
 import { InitializeEmbeddings } from '../../utils/embeddings.js';
 import { GetMessagesPath } from '../../utils/loader.js';
-import { BuildReferenceAndExport } from './codebook-reference-builder.js';
+import { BuildReferenceAndExport } from './reference-builder.js';
 import { LoadCodebooks } from './codebooks.js';
+import { SimpleReferenceBuilder } from './reference-builder';
 
 InitializeEmbeddings("gecko-768-similarity");
 
@@ -11,6 +12,6 @@ var TargetPath = GetMessagesPath("Users of Physics Lab (Group 1)", "Conversation
 var [Codebooks, Names] = LoadCodebooks(SourcePath);
 
 // Build the reference codebook
-await BuildReferenceAndExport(Codebooks, TargetPath);
+await BuildReferenceAndExport(new SimpleReferenceBuilder(), Codebooks, TargetPath);
 
 process.exit(0);
