@@ -42,7 +42,7 @@ export class CoverageEvaluator extends CodebookEvaluator {
         var Labels = Array.from(Codes.values()).map(Code => Code.Label);
         var CodeStrings = Labels.map(Label => GetCodeString(Codes.get(Label)!));
         var CodeOwners = Labels.map(Label => Owners.get(Label)!);
-        var Result = await EvaluateTexts(CodeStrings, Labels, CodeOwners, Names, this.Name, "coverage", this.Visualize.toString());
+        var Result = await EvaluateTexts(CodeStrings, Labels, CodeOwners, Names, this.Name, "coverage", this.Visualize.toString(), ExportPath ?? "./known");
         for (var Key of Object.keys(Result)) {
             var Index = parseInt(Key);
             var Evaluation = Result[Index];

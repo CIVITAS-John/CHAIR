@@ -46,6 +46,8 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Cod
         );
         this.OldCategories = Categories;
         this.NewCategories = MergeCategoriesByCluster(Clusters, Categories, Codes);
+        // Check if we should stop - when nothing is merged
+        this.Stopping = Object.keys(this.NewCategories).length == this.OldCategories.length;
         return Codes;
     }
     /** BuildPrompts: Build the prompts for the code consolidator. */

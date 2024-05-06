@@ -11,7 +11,7 @@ from embedding import Dimensions, Items, cpus, labels, embeddings
 # Get the arguments
 Owners = int(sys.argv[3]) if len(sys.argv) > 3 else 2
 Visualize = sys.argv[4].lower() == "true" if len(sys.argv) > 4 else False
-OutputPath = sys.argv[5] if len(sys.argv) > 5 else './known/'
+OutputPath = sys.argv[5] if len(sys.argv) > 5 else './known'
 print('Owners:', Owners, ', Visualize:', Visualize)
 
 # Seperate owners' names from labels (the first few items)
@@ -101,53 +101,63 @@ reference_spread = get_spread(reference_distribution)
 reference_density, reference_variance = get_density(reference_distribution, reference_spread)
 print('Reference spread:', reference_spread, ", density", reference_density, ", variation", reference_variance)
 
+# Calculate sub-distributions
+distributions = [get_distribution(codebook) for codebook in group_ids[1:]]
+
+# Calculate the overlapping distribution
+overlapping = np.zeros(reference_distribution.shape)
+for i, distribution in enumerate(distributions):
+    overlapping += np.where(distribution > min_density, 1, 0)
+
 # Plotting function
 plot_size_per_unit = math.ceil(math.sqrt(len(embeddings)) / 5)
-def plot_comparison(codebooks, distribution):
+def plot_comparison(codebooks, distribution, type='heatmap'):
     codebookset = set(codebooks)
     dis = np.where(distribution < min_density, 0, distribution) # max_density
 
     # Handle different numbers of codebooks
     if len(codebooks) == 1:
         # 1 baseline + 1 codebook
-        combinations = [lambda i: not codebookset.isdisjoint(i), lambda i: codebookset.issubset(i)]
+        combinations = [lambda i, j: codebookset.isdisjoint(i), lambda i, j: codebookset.issubset(i)]
         markers = ['o', 's']
         colors = ['tab:gray', 'tab:red']
         legends = [groups[0], groups[codebooks[0]]]
     elif len(codebooks) == 2:
         # 1 baseline + 2 codebooks
-        combinations = [lambda i: not codebookset.isdisjoint(i), lambda i: codebooks[0] in i, lambda i: codebooks[1] in i, lambda i: codebookset.issubset(i)]
+        combinations = [lambda i, j: codebookset.isdisjoint(i), lambda i, j: codebooks[0] in i, lambda i, j: codebooks[1] in i, lambda i, j: codebookset.issubset(i)]
         markers = ['o', 'o', 'o', 'lr']
         colors = ['tab:gray', 'tab:red', 'tab:blue', ['tab:red', 'tab:blue']]
         legends = [groups[0] + ' only', groups[codebooks[0]], groups[codebooks[1]], 'both']
     else:
         # 1 baseline + n codebooks
-        combinations = [lambda i: True]
+        combinations = [lambda i, j: codebookset.isdisjoint(i)]
         markers = ['o']
-        markers = markers + ['s'] * len(codebooks)
-        colors = ['tab:red'] * (len(codebooks) + 1)
+        colors = ['tab:gray'] + ['tab:red'] * len(codebooks)
         legends = ['None of the codebooks']
         for n in range(len(codebooks)):
-            combinations.append(lambda i: codebookset.intersection(i) == n)
-            markers.append('o')
-            legends.append(str(n) + ' codebooks')
+            combinations.append(lambda i, j: len(codebookset.intersection(i)) == j)
+            markers.append('$' + str(n + 1) + '$')
+            legends.append(str(n + 1) + ' codebooks')
 
     # Plotting the heatmap
     fig, ax = plt.subplots(figsize=((extent[1] - extent[0] + 1.5) * plot_size_per_unit, (extent[3] - extent[2]) * plot_size_per_unit))
-    heatmap = ax.imshow(dis, origin='lower', vmax=max_density, vmin=0, extent=extent, aspect='auto', cmap='viridis')
+    if type == 'overlap':
+        heatmap = ax.imshow(overlapping, origin='lower', vmax=len(codebooks), vmin=0, extent=extent, aspect='auto', cmap='magma')
+    elif type == 'heatmap':
+        heatmap = ax.imshow(dis, origin='lower', vmax=max_density, vmin=0, extent=extent, aspect='auto', cmap='viridis')
 
     # Plot the texts
     offset = mtransforms.ScaledTranslation(5/72, -3/72, plt.gcf().dpi_scale_trans)
     text_transform = ax.transData + offset
     for i, point in enumerate(embeddings):
-        is_baseline = combinations[0](owners[i])
+        is_baseline = combinations[0](owners[i], 0)
         alpha = 0.5 if is_baseline else 1
         txt = ax.text(point[0], point[1], labels[i], color='k', fontsize=8, transform=text_transform, alpha=alpha)
         txt.set_path_effects([PathEffects.withStroke(linewidth=1, foreground='w', alpha=0.5 * alpha)])
 
     # Plot each group with its own color and label
     for i, owner in enumerate(combinations):
-        idx = [j for j in range(len(labels)) if owner(owners[j]) == True]
+        idx = [j for j in range(len(labels)) if owner(owners[j], i) == True]
         marker = markers[i]
         color = colors[i]
         if marker == 'lr':
@@ -170,7 +180,7 @@ def plot_comparison(codebooks, distribution):
     cbar.set_label('Density')
 
     # Save the plot
-    path = OutputPath + 'coverage-' + '-'.join(names) + '.png'
+    path = OutputPath + '/coverage-' + '-'.join(names) + '.png'
     plt.savefig(path, dpi=160, bbox_inches='tight')
     print('Coverage plot saved to', path)
 
@@ -181,18 +191,31 @@ def plot_comparison(codebooks, distribution):
         plt.show()
 
 # Plot the combination heatmap
-if Owners == 3:
-    plot_comparison([1, 2], reference_distribution)
-else:
-    plot_comparison(group_ids[1:], reference_distribution)
+plot_comparison(group_ids[1:], reference_distribution, 'heatmap')
 
-# Plot the individual heatmaps and evaluate spread and density
-for codebook in group_ids[1:]:
-    distribution = get_distribution(codebook)
+# Plot the overlapping heatmap
+if Owners > 2:
+    plot_comparison(group_ids[1:], reference_distribution, 'overlap')
+
+# Here, contribution is defined as the ratio of the spread to the overlapping area (where n >= max(2, floor(codebooks / 2)))
+meaningful_threshold = max(2, math.floor(len(group_ids[1:]) / 2))
+meaningful_overlapping = np.where(overlapping >=meaningful_threshold , 1, 0)
+meaningful_area = np.where(meaningful_overlapping, 1, 0).sum()
+print('Meaningful overlapping area:', meaningful_area, "based on >=", meaningful_threshold, "codebooks")
+
+# Plot the individual heatmaps and evaluate spread and density, and contribution
+for i, codebook in enumerate(group_ids[1:]):
+    distribution = distributions[i]
+    # Calculate the spread and density
     spread = get_spread(distribution)
     density, variation = get_density(distribution, spread)
-    print('Codebook:', codebook, ', spread:', spread, ', density:', density, ', variation:', variation)
-    evaluation[codebook] = ({ "Spread": spread / reference_spread, "Density": density / reference_density, "Variation": variation })
+    # Calculate the overlapping area
+    dist = np.where(distribution > min_density, 1, 0)
+    conformity = (dist * meaningful_overlapping).sum()
+    # Finish the evaluation
+    print('Codebook:', codebook, ', spread:', spread, ', density:', density, ', variation:', variation, ', conformity:', conformity)
+    evaluation[codebook] = ({ "Spread": spread / reference_spread, "Density": density / reference_density, "Variation": variation, "Conformity": conformity / meaningful_area })
+    # Plot the heatmap
     plot_comparison([codebook], distribution)
 
 # Send the results

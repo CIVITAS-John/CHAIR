@@ -32,7 +32,7 @@ export async function BuildReferenceAndEvaluateCodebooks(Source: string | string
     // Build the reference codebook
     var Reference = await ReadOrBuildCache(ReferencePath, Hash, () => BuildReferenceAndExport(Codebooks, ReferencePath));
     // Evaluate the codebooks
-    var Results = await Evaluator.Evaluate([Reference, ...Codebooks], Names, ExportPath);
+    var Results = await Evaluator.Evaluate([Reference, ...Codebooks], [ReferencePath, ...Names], ExportPath);
     console.log(chalk.green(JSON.stringify(Results, null, 4)));
     return Results;
 }
@@ -63,7 +63,7 @@ export function LoadCodebooks(Source: string | string[]): [Codebook[], string[]]
                 console.log(`Skipping ${Current} because it is not a codebook.`);
                 continue;
             }
-            Names.push(Path.basename(Current));
+            Names.push(Current);
         }
     }
     console.log(chalk.green(`Statistics: Loaded ${Codebooks.length} codebooks.`));
