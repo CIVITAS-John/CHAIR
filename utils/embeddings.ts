@@ -145,6 +145,7 @@ export interface ClusterItem {
 /** ClusterTexts: Categorize the embeddings into clusters. */
 export async function ClusterTexts(Sources: string[], Names: string[], Cache: string, Method: string = "hdbscan", ...ExtraOptions: string[]): Promise<Record<number, ClusterItem[]>> {
     console.log(chalk.gray("Requesting embeddings for: " + Sources.length));
+    if (Sources.length == 0) return {};
     var Embeddings = await RequestEmbeddings(Sources, Cache);
     return await ClusterEmbeddings(Embeddings, Names, Method, ...ExtraOptions);
 }

@@ -35,6 +35,7 @@ export class RefineMerger extends DefinitionParser {
         // Cluster codes using text embeddings
         // Only when the code has more than one definition should we merge them
         Codes = Codes.filter((Code) => this.UseDefinition ? (Code.Definitions?.length ?? 0) > 0 : true);
+        if (Codes.length == 0) return {};
         // Combine each code into a string for clustering
         var CodeStrings = Codes.map(Code => {
             if (this.UseDefinition) {
