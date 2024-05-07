@@ -15,6 +15,7 @@ export class RefineMerger extends DefinitionParser {
     /** Constructor: Create a new NameMerger. */
     constructor({Threshold = 0.6, Penalty = 0.1, Looping = false, UseDefinition = true}: {Threshold?: number, Penalty?: number, Looping?: boolean, UseDefinition?: boolean}) {
         super();
+        this.Chunkified = true;
         this.Looping = Looping;
         this.Penalty = Penalty;
         this.Threshold = Threshold;
@@ -23,10 +24,6 @@ export class RefineMerger extends DefinitionParser {
     /** GetName: Get the name of the consolidator. */
     public GetName(): string {
         return `${super.GetName()} (Threshold ${this.Threshold}, Penalty ${this.Penalty}, Definition ${this.UseDefinition})`;
-    }
-    /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
-    public GetChunkSize(Recommended: number, Remaining: number, Tries: number) {
-        return Math.max(Recommended - Tries * 8, 1);
     }
     /** Preprocess: Preprocess the subunits before filtering and chunking. */
     public async Preprocess(Codebook: Codebook, Codes: Code[]) {

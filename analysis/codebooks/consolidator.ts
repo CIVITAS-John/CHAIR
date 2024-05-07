@@ -107,6 +107,6 @@ export abstract class CodeConsolidator {
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // Return value: [Chunk size, Cursor movement]
     public GetChunkSize(Recommended: number, Remaining: number, Tries: number) {
-        return this.Chunkified ? Math.max(Recommended - Tries * 8, 1) : Remaining;
+        return this.Chunkified ? Math.max(Recommended - Tries * Math.ceil(Recommended / 4), 1) : Remaining;
     }
 }
