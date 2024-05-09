@@ -51,7 +51,8 @@ export async function LoadCodebooks(Source: string | string[]): Promise<[Codeboo
     } else {
         Sources = Source.map(Source => GetFilesRecursively(Source)).flat();
     }
-    Sources = Sources.sort();
+    // Remove the in-process codebooks
+    Sources = Sources.filter(Source => !Source.match(/\-(\d)+.xlsx$/g)).sort();
     // Load the codebooks
     var Codebooks: Codebook[] = [];
     var Names: string[] = [];
@@ -70,14 +71,15 @@ export async function LoadCodebooks(Source: string | string[]): Promise<[Codeboo
                 continue;
             }
         } else if (Current.endsWith(".xlsx")) {
-            if (Names.includes(Current.slice(0, Current.length - 5) + ".json")) {
-                console.log(`Skipping ${Current} because a JSON version is already loaded.`);
+            var Name = Current.slice(0, Current.length - 5);
+            if (Names.includes(Name)) {
+                console.log(`Skipping ${Current} because another version is already loaded.`);
                 continue;
             }
             console.log(`Loading ${Current} as an Excel workbook.`);
             Codebooks.push((await LoadCodedConversations(Current)).Codebook!);
         } else continue;
-        Names.push(Current);
+        Names.push(Current.substring(0, Current.length - Path.extname(Current).length));
     }
     console.log(chalk.green(`Statistics: Loaded ${Codebooks.length} codebooks.`));
     return [Codebooks, Names];

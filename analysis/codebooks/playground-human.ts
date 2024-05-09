@@ -8,7 +8,7 @@ import { SimpleMerger } from './simple-merger.js';
 
 await UseLLMs(async () => {
     InitializeEmbeddings("gecko-768-similarity");
-    var Humans = ["Lexie", "Lily"];
+    var Humans = ["Lexie", "Lily", "John"];
     for (var Human of Humans) {
         await ConsolidateConversations(new PipelineConsolidator(
             // Merge very similar names

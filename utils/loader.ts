@@ -99,6 +99,7 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
                 return;
             }
             // Get the ID
+            if (IDIndex == -1) return;
             var ID = Row.getCell(IDIndex)?.value;
             if (!ID || typeof ID != "number") return;
             var Content = Row.getCell(ContentIndex)?.value?.toString()?.trim() ?? "";
@@ -138,6 +139,5 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
     }
     // Merge the codebook
     MergeCodebook(Threads);
-    console.log(JSON.stringify(Threads, null, 4));
     return Threads;
 }
