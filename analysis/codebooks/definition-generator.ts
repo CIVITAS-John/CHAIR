@@ -19,6 +19,8 @@ export abstract class DefinitionParser extends CodeConsolidator {
         for (var I = 0; I < Lines.length; I++) {
             var Line = Lines[I];
             if (Line == "" || Line.startsWith("---")) continue;
+            // Sometimes, LLMs will do **(...)** for anything. We need to remove that.
+            Line = Line.replace(/\*\*/g, "");
             // If we see "...", that means later codes are not processed and should be truncated
             if (Line == "...") break;
             var Match = Line.match(/^(\d+)\./);

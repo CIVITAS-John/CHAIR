@@ -18,11 +18,11 @@ export async function ProcessConversations(Analyzer: ConversationAnalyzer, Group
     // Analyze the conversations
     var Result = await AnalyzeConversations(Analyzer, Conversations, { Threads: {} }, FakeRequest);
     // Write the result into a JSON file
-    EnsureFolder(GetMessagesPath(Group, `Conversations/${Analyzer.Name}`));
-    File.writeFileSync(GetMessagesPath(Group, `Conversations/${Analyzer.Name}/${ConversationName.replace(".json", "")}-${LLMName}.json`), JSON.stringify(Result, null, 4));
+    EnsureFolder(GetMessagesPath(Group, `${Analyzer.Name}`));
+    File.writeFileSync(GetMessagesPath(Group, `${Analyzer.Name}/${ConversationName.replace(".json", "")}-${LLMName}.json`), JSON.stringify(Result, null, 4));
     // Write the result into an Excel file
     var Book = ExportConversationsForCoding(Object.values(Conversations), Result);
-    await Book.xlsx.writeFile(GetMessagesPath(Group, `Conversations/${Analyzer.Name}/${ConversationName.replace(".json", "")}-${LLMName}.xlsx`));
+    await Book.xlsx.writeFile(GetMessagesPath(Group, `${Analyzer.Name}/${ConversationName.replace(".json", "")}-${LLMName}.xlsx`));
 }
 
 /** AnalyzeConversations: Analyze the conversations. */
@@ -78,7 +78,7 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
             // Dial back the cursor if necessary
             return Object.keys(ItemResults).length - Currents.length;
         });
-        Analysis.Iteration++;
+        Analysis.Iteration!++;
     }
     // Consolidate a codebook
     MergeCodebook(Analyzed);

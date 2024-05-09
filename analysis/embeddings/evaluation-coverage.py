@@ -1,4 +1,5 @@
 import sys
+import os
 import numpy as np
 import math
 import matplotlib.pyplot as plt
@@ -18,6 +19,10 @@ print('Owners:', Owners, ', Visualize:', Visualize)
 groups = labels[:Owners]
 group_ids = [i for i in range(Owners)]
 labels = labels[Owners:]
+
+# Find the common string in `groups` and remove it
+common = os.path.commonprefix(groups[1:])
+if common != '': groups = [groups[0]] + [group[len(common):] for group in groups[1:]]
 
 # Separate the owners from labels (format: owner1,owner2,owner3|label)
 if labels[0].count('|') > 0:
@@ -110,7 +115,7 @@ for i, distribution in enumerate(distributions):
     overlapping += np.where(distribution > min_density, 1, 0)
 
 # Plotting function
-plot_size_per_unit = math.ceil(math.sqrt(len(embeddings)) / 5)
+plot_size_per_unit = math.ceil(math.sqrt(max(len(embeddings), 100)) / 5)
 def plot_comparison(codebooks, distribution, type='heatmap'):
     codebookset = set(codebooks)
     dis = np.where(distribution < min_density, 0, distribution) # max_density

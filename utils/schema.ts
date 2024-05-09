@@ -23,7 +23,7 @@ export interface CodedThread {
     /** Items: Coded items in the thread. */
     Items: Record<string, CodedItem>;
     /** Iteration: The iteration of the coding. */
-    Iteration: number;
+    Iteration?: number;
 }
 
 /** CodedItem: A qualitatively coded item (e.g. a comment, a message). */

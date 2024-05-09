@@ -1,12 +1,12 @@
 import * as File from 'fs';
-import { LLMName, MaxOutput } from "../utils/llms.js";
+import { EnsureFolder, LLMName, MaxOutput } from "../utils/llms.js";
 import { GetMessagesPath, GetParticipantsPath, LoadConversations, LoadMessages, LoadParticipants } from "../utils/loader.js";
 import { Conversation, Message, Participant } from '../utils/schema.js';
 import { TranslateStrings } from "./general.js";
 import { ExportConversationsForCoding, ExportMessages } from '../utils/export.js';
 
 /** ProcessConversations: Load, translate, and export certain conversations for qualitative coding. */
-export async function ProcessConversations(Group: string, Targets: number[]): Promise<void> {
+export async function ProcessConversations(Group: string, Targets: number[], Dataset?: string): Promise<void> {
     var AllMessages = LoadMessages(Group).filter(Message => Message.SenderID != "0");
     // Before we start, we need to translate all participants
     var Participants = LoadParticipants();
@@ -35,13 +35,16 @@ export async function ProcessConversations(Group: string, Targets: number[]): Pr
             ResultMessages.push(Message);
         });
     }
+    // Get the export path
+    Dataset = Dataset ?? Group;
+    EnsureFolder(GetMessagesPath(Dataset));
     // Save the Excel file
     var Book = ExportConversationsForCoding(Object.values(Results));
-    await Book.xlsx.writeFile(GetMessagesPath(Group, `Conversations/${Minimum}~${Maximum}-${LLMName}.xlsx`));
+    await Book.xlsx.writeFile(GetMessagesPath(Dataset, `${Minimum}~${Maximum}-${LLMName}.xlsx`));
     // Write into Markdown file
-    File.writeFileSync(GetMessagesPath(Group, `Conversations/${Minimum}~${Maximum}-${LLMName}.md`), ExportMessages(ResultMessages));
+    File.writeFileSync(GetMessagesPath(Dataset, `${Minimum}~${Maximum}-${LLMName}.md`), ExportMessages(ResultMessages));
     // Write into JSON file
-    File.writeFileSync(GetMessagesPath(Group, `Conversations/${Minimum}~${Maximum}-${LLMName}.json`), JSON.stringify(Results, null, 4));
+    File.writeFileSync(GetMessagesPath(Dataset, `${Minimum}~${Maximum}-${LLMName}.json`), JSON.stringify(Results, null, 4));
 }
 
 /** TranslateConversation: Translate certain messages from a conversation. */
@@ -58,7 +61,7 @@ async function TranslateConversation(Group: string, AllMessages: Message[], Part
     // Translate the messages with LLM
     Messages = await TranslateMessages(Messages, Participants);
     // Write into Markdown file
-    if (Bilingual) File.writeFileSync(GetMessagesPath(Group, `Conversations/${Conversation}-${LLMName}.md`), ExportMessages(Messages, Originals));
+    if (Bilingual) File.writeFileSync(GetMessagesPath(Group, `${Conversation}-${LLMName}.md`), ExportMessages(Messages, Originals));
     return Messages;
 }
 

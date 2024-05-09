@@ -169,7 +169,7 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
             };
         }
         AddExtraRow(-1, "Thoughts", Analysis?.Plan ?? "(Optional) Your thoughts before coding the conversation.");
-        AddExtraRow(-2, "Summary", Analysis?.Summary ?? "The summary about the conversation.");
+        AddExtraRow(-2, "Summary", Analysis?.Summary ?? "The summary of the conversation.");
         AddExtraRow(-3, "Reflection", Analysis?.Reflection ?? "Your reflections after coding the conversation.");
     }
     // Export the codebook

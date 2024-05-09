@@ -25,6 +25,6 @@ async function EvaluateAnalyzers(SourcePath: string, Dataset: string, LLM: strin
     File.writeFileSync(TargetPath + ".json", JSON.stringify(Results, null, 4));
 }
 
-await EvaluateAnalyzers(GetMessagesPath("Users of Physics Lab (Group 2)", "Conversations"), "0~16-gpt-3.5-turbo", 
+await EvaluateAnalyzers(GetMessagesPath("Coded Dataset 1", "Conversations"), "0~16-gpt-3.5-turbo", 
     "llama3-70b", new RefiningReferenceBuilder(),
     ["high-level-1", "high-level-2", "low-level-3"]);

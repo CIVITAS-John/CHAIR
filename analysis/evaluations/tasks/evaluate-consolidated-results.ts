@@ -28,7 +28,25 @@ async function EvaluateConsolidatedResults(SourcePath: string, TaskName: string,
     File.writeFileSync(TargetPath + ".json", JSON.stringify(Results, null, 4));
 }
 
-await EvaluateConsolidatedResults(GetMessagesPath("Users of Physics Lab (Group 1)", "Conversations"), 
-    "high-level vs low-level consolidated", "all-analyzers",
+/*await EvaluateConsolidatedResults(GetMessagesPath("Coded Dataset 1"), 
+    "high-level vs low-level consolidated", "all-analyzers-refined",
     new RefiningReferenceBuilder(),
-    ["high-level-2-consolidated.json", "low-level-3-consolidated.json"], ["high-level-2-consolidated.json", "low-level-3-consolidated.json"]);
+    ["high-level-2-consolidated-refined.json", "low-level-3-consolidated-refined.json"], ["high-level-2-consolidated-refined.json", "low-level-3-consolidated-refined.json"]);
+File.copyFileSync(
+    GetMessagesPath("Coded Dataset 1", "evaluation/references/all-analyzers-refined.json"),
+    GetMessagesPath("Comparisons", "evaluation/references/group-1-refined.json"));
+
+await EvaluateConsolidatedResults(GetMessagesPath("Coded Dataset 1", "Conversations"), 
+    "high-level vs low-level consolidated", "all-analyzers-refined",
+    new RefiningReferenceBuilder(),
+    ["high-level-2-consolidated-refined.json", "low-level-3-consolidated-refined.json"], ["high-level-2-consolidated-refined.json", "low-level-3-consolidated-refined.json"]);
+File.copyFileSync(
+    GetMessagesPath("Coded Dataset 1", "evaluation/references/all-analyzers-refined.json"),
+    GetMessagesPath("Comparisons", "evaluation/references/group-2-refined.json"));*/
+
+await EvaluateConsolidatedResults(GetMessagesPath("Comparisons", ""), 
+    "group 1 vs group 2", "group-1-2",
+    new RefiningReferenceBuilder(),
+    ["group-1-refined.json", "group-2-refined.json"]);
+
+process.exit(0);

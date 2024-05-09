@@ -4,8 +4,8 @@ import { ExportMessages } from '../utils/export.js';
 import spawnAsync from '@expo/spawn-async';
 import { Conversation } from '../utils/schema.js';
 
-await SeperateMessages("Users of Physics Lab (Group 1)");
-await SeperateMessages("Users of Physics Lab (Group 2)");
+await SeperateMessages("Coded Dataset 2");
+await SeperateMessages("Coded Dataset 1");
 
 /** SeperateMessages: Seperate messages into conversations from a group. */
 async function SeperateMessages(Source: string) {

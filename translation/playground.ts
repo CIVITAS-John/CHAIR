@@ -15,8 +15,8 @@ UseLLM("gpt-3.5-turbo");
 // UseLLM("claude3-haiku");
 // UseLLM("claude3-sonnet");
 // 0 - 16
-await ProcessConversations("Users of Physics Lab (Group 1)", Range(0, 17));
-await ProcessConversations("Users of Physics Lab (Group 2)", Range(0, 16));
+await ProcessConversations("Users of Physics Lab (Group 1)", Range(0, 17), "Coded Dataset 2");
+await ProcessConversations("Users of Physics Lab (Group 2)", Range(0, 16), "Coded Dataset 1");
 // await ProjectPlayground(false);
 console.log("Translation done.");
 process.exit(0);

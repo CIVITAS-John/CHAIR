@@ -33,7 +33,7 @@ await UseLLMs(async () => {
         new CategoryRefiner(),
         // Assign categories to codes
         new CategoryAssigner()
-    ), "Users of Physics Lab (Group 2)", "0~16-gpt-3.5-turbo.json", "low-level-3", LLMName, false);
+    ), "Coded Dataset 1", "0~16-gpt-3.5-turbo.json", "low-level-3", LLMName, false);
 }, "gpt-3.5-turbo", "gpt-4.5-turbo", "claude3-haiku", "claude3-sonnet", "llama3-70b");
 
 process.exit(0);

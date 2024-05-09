@@ -43,11 +43,11 @@ export function MergeCodebooks(Codebooks: Codebook[]) {
 
 /** ConsolidateConversations: Load, consolidate, and export conversation codebooks. */
 export async function ConsolidateConversations(Consolidator: CodebookConsolidator<Conversation>, Group: string, ConversationName: string, Analyzer: string, AnalyzerLLM: string, FakeRequest: boolean = false) {
-    var ExportFolder = GetMessagesPath(Group, `Conversations/${Analyzer}-${Consolidator.Name}`);
+    var ExportFolder = GetMessagesPath(Group, `${Analyzer}-${Consolidator.Name}`);
     EnsureFolder(ExportFolder);
     // Load the conversations and analyses
     var Conversations = LoadConversationsForAnalysis(Group, ConversationName);
-    var Analyses = LoadAnalyses(GetMessagesPath(Group, `Conversations/${Analyzer}/${ConversationName.replace(".json", `-${AnalyzerLLM}`)}.json`));
+    var Analyses = await LoadAnalyses(GetMessagesPath(Group, `${Analyzer}/${ConversationName.replace(".json", `-${AnalyzerLLM}`)}`));
     // Consolidate the codebook
     await ConsolidateCodebook(Consolidator, [...Object.values(Conversations)], Analyses, async (Iteration) => {
         var Values = Object.values(Analyses.Codebook!).filter(Code => Code.Label != "[Merged]");

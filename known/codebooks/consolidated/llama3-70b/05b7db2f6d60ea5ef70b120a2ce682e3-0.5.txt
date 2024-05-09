@@ -1,0 +1,145 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. If a sub-code includes another, use the broader one. If sub-codes are parallel, write one that covers both.
+Write clear and generalizable labels and criteria for each code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (11 in total):
+1.
+Relationship: {The logical relationship between sub-codes in code 1}
+Criteria: {Consolidated criteria of code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+11.
+Relationship: {The logical relationship between sub-codes in code 11}
+Criteria: {Consolidated criteria of code 11}
+Label: {A consolidated label of code 11}
+Category: {2-4 words for code 11}
+---
+~~~
+1. design considerations, considering usability.
+- Examining how the design of the software impacts user experience.
+- Instances where the designer considers usability principles or user experience in the design process.
+
+2. visual design, user interface design.
+- Considerations around the visual aspects and representations in the user interface
+- The design decisions related to the user interface, such as the choice of circuit diagram representation.
+
+3. interface interaction, interface choices.
+- Conversations related to how users interact with the software interface.
+- Discussions related to specific elements of the software interface, such as layout, icons, or functionality.
+
+4. context awareness, constraints and challenges.
+- Discussions or considerations of the users' contexts, environments, or constraints that influence the software's design or usage.
+- Discussions about limitations or problems faced by users in specific environments that affect how they use the software.
+
+5. ask a question about the app, ask a question about how to use.
+- Asking a question about the app or software
+- Asking how to use a feature or functionality
+
+6. technical inquiries, queries and clarifications.
+- Instances of users asking technical questions or seeking technical assistance.
+- Questions posed by users seeking further information or clarification about the software or its features.
+
+7. technical support, support and troubleshooting.
+- Instances where users or the Designer provide technical assistance or troubleshooting advice.
+- Interactions related to providing support and troubleshooting tips within the community.
+
+8. usage guidance, providing instructions.
+- Instances where users seek or provide guidance on how to use the software effectively.
+- Instances where the designer provides instructions or guidance to users on how to access or use the software.
+
+9. image sharing, image uploading inquiry.
+- Technical aspects and user experience of sharing images within the online platform
+- Discussions or inquiries about how to use the platform's features, specifically related to uploading images, which can indicate usability and accessibility of the platform.
+
+10. request, ask for resources.
+- Making a request or asking for something
+- Asking for resources or materials
+
+11. user-centered design.
+- The design approach that focuses on the needs and preferences of the users.
+- Continuously improving the software based on user feedback and testing, the Developer continuously updating and improving the software based on user feedback and community input
+===
+Here is the output in the required format:
+
+---
+Categories: 
+* Design and Development
+* User Experience
+* Community Interactions
+* User Support
+* Participatory Design
+
+Definitions for each code:
+
+1.
+Relationship: Hierarchical (design considerations encompass usability)
+Criteria: Examining design's impact on user experience, considering usability principles
+Label: Design Considerations
+Category: Design and Development
+
+2.
+Relationship: Parallel (visual design and user interface design are distinct aspects)
+Criteria: Visual aspects and representations in the user interface, design decisions for user interface
+Label: Visual Design
+Category: Design and Development
+
+3.
+Relationship: Hierarchical (interface interaction encompasses interface choices)
+Criteria: How users interact with the software interface, specific interface elements
+Label: Interface Interaction
+Category: User Experience
+
+4.
+Relationship: Hierarchical (context awareness encompasses constraints and challenges)
+Criteria: Users' contexts, environments, or constraints influencing design or usage
+Label: Context Awareness
+Category: User Experience
+
+5.
+Relationship: Parallel (asking about the app and how to use are distinct queries)
+Criteria: Asking about the app or how to use a feature
+Label: Information Seeking
+Category: Community Interactions
+
+6.
+Relationship: Hierarchical (technical inquiries encompass queries and clarifications)
+Criteria: Technical questions or seeking technical assistance, seeking further information
+Label: Technical Inquiries
+Category: Community Interactions
+
+7.
+Relationship: Hierarchical (technical support encompasses troubleshooting)
+Criteria: Providing technical assistance or troubleshooting advice
+Label: Technical Support
+Category: User Support
+
+8.
+Relationship: Hierarchical (usage guidance encompasses providing instructions)
+Criteria: Seeking or providing guidance on using the software effectively
+Label: Usage Guidance
+Category: User Support
+
+9.
+Relationship: Hierarchical (image sharing encompasses image uploading inquiry)
+Criteria: Technical aspects and user experience of sharing images, inquiring about uploading images
+Label: Image Sharing
+Category: User Experience
+
+10.
+Relationship: Hierarchical (request encompasses asking for resources)
+Criteria: Making a request or asking for something, asking for resources or materials
+Label: Resource Request
+Category: Community Interactions
+
+11.
+Relationship: N/A (standalone code)
+Criteria: Design approach focusing on user needs and preferences, continuous improvement based on user feedback
+Label: User-Centered Design
+Category: Participatory Design
