@@ -27,9 +27,9 @@ await UseLLMs(async () => {
         new CategoryMerger({ Looping: true, Threshold: 0.7, Penalty: 0.1 }),
         new CategoryNameMerger(),
         new CategoryRefiner(),
-        // Assign categories to codes
+        // Assign categories to codes1
         new CategoryAssigner()
-    ), "Coded Dataset 1", "0~16-gpt-3.5-turbo.json", "high-level-2", LLMName, false);
-}, "gpt-3.5-turbo", "gpt-4.5-turbo", "claude3-haiku", "claude3-sonnet", "llama3-70b");
+    ), "Coded Dataset 1", "0~16-gpt-3.5-turbo.json", "high-level-1", LLMName, false);
+}, "gpt-4.5-turbo", "claude3-haiku", "claude3-sonnet", "llama3-70b");
 
 process.exit(0);

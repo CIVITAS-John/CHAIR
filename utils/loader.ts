@@ -46,7 +46,7 @@ export async function LoadAnalyses(Source: string): Promise<CodedThreads> {
     }
     if (Source.endsWith(".json")) return JSON.parse(File.readFileSync(Source, 'utf-8'));
     if (Source.endsWith(".xlsx")) return await LoadCodedConversations(Source);
-    throw new Error("Unsupported file format.");
+    throw new Error("Unsupported or non-existent file: " + Source + ".");
 }
 
 /** LoadParticipants: Load the participants. */
