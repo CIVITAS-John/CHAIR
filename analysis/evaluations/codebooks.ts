@@ -5,6 +5,7 @@ import { GetFilesRecursively, ReadOrBuildCache } from '../../utils/file.js';
 import chalk from 'chalk';
 import { BuildReferenceAndExport, ReferenceBuilder } from './reference-builder.js';
 import md5 from 'md5';
+import commonPathPrefix from 'common-path-prefix';
 import { LoadCodedConversations } from '../../utils/loader.js';
 
 /** CodebookEvaluator: An evaluator of codebook. */
@@ -81,6 +82,9 @@ export async function LoadCodebooks(Source: string | string[]): Promise<[Codeboo
         } else continue;
         Names.push(Current.substring(0, Current.length - Path.extname(Current).length));
     }
+    // Find common prefixes and remove them
+    var Prefix = commonPathPrefix(Names, "/");
+    Names = Names.map(Name => Name.substring(Prefix.length));
     console.log(chalk.green(`Statistics: Loaded ${Codebooks.length} codebooks.`));
     return [Codebooks, Names];
 }

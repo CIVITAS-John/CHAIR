@@ -4,8 +4,8 @@ import { ProcessConversations } from './conversations.js';
 import { HighLevelAnalyzer2 } from './high-level-2.js';
 
 await UseLLMs(async () => {
-    await ProcessConversations(new HighLevelAnalyzer2(), "Coded Dataset 2", "0~17-gpt-3.5-turbo.json", false);
-    await ProcessConversations(new HighLevelAnalyzer2(), "Coded Dataset 1", "0~16-gpt-3.5-turbo.json", false);
-}, "llama3-70b", "gpt-3.5-turbo", "gpt-4.5-turbo", "claude3-haiku", "claude3-sonnet");
+    await ProcessConversations(new HighLevelAnalyzer2(), "Coded Dataset 2", "0~17-gpt-4.5-omni.json", false);
+    await ProcessConversations(new HighLevelAnalyzer2(), "Coded Dataset 1", "0~16-gpt-4.5-omni.json", false);
+}, "gpt-4.5-omni"); // "llama3-70b", "gpt-3.5-turbo", "gpt-4.5-turbo", "claude3-haiku", "claude3-sonnet"
 
 process.exit(0);

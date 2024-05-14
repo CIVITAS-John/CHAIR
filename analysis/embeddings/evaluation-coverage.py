@@ -20,10 +20,6 @@ groups = labels[:Owners]
 group_ids = [i for i in range(Owners)]
 labels = labels[Owners:]
 
-# Find the common string in `groups` and remove it
-common = os.path.commonprefix(groups[1:])
-if common != '': groups = [groups[0]] + [group[len(common):] for group in groups[1:]]
-
 # Separate the owners from labels (format: owner1,owner2,owner3|label)
 if labels[0].count('|') > 0:
     owners = [label.split('|')[0].split(',') for label in labels]
@@ -194,9 +190,9 @@ def plot_comparison(codebooks, distribution, type='heatmap'):
     print('Coverage plot saved to', path)
 
     # Show the plot
-    wm = plt.get_current_fig_manager()
-    wm.window.state('zoomed')
     if Visualize:
+        wm = plt.get_current_fig_manager()
+        wm.window.state('zoomed')
         plt.show()
 
 # Plot the combination heatmap

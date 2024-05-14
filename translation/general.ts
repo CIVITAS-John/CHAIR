@@ -168,7 +168,7 @@ async function TranslateChunkedStringsWithLLM(Type: string, Source: string[], Sy
         if (I == 0 && !Results[I].startsWith("1."))
             Results[I] = Results[I].substring(Results[I].indexOf(".") - 1);
         Results[I] = Results[I].replace(/^(\d+)\.?(\s|\n)/gs, '');
-        if (Source[I] == Results[I]) throw new Error(`Translation Error: ${Source[I]} => ${Results[I]}`);
+        if (Source[I] == Results[I] && Tries == 0) throw new Error(`Translation Error: ${Source[I]} => ${Results[I]}`);
         Cache.set(Source[I], Results[I]);
     }
     return Results;
