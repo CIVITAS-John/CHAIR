@@ -83,7 +83,8 @@ export async function LoadCodebooks(Source: string | string[]): Promise<[Codeboo
         Names.push(Current.substring(0, Current.length - Path.extname(Current).length));
     }
     // Find common prefixes and remove them
-    var Prefix = commonPathPrefix(Names, "/");
+    var Prefix = commonPathPrefix(Names, "-");
+    if (Prefix.length == 0) Prefix = commonPathPrefix(Names, "/");
     Names = Names.map(Name => Name.substring(Prefix.length));
     console.log(chalk.green(`Statistics: Loaded ${Codebooks.length} codebooks.`));
     return [Codebooks, Names];

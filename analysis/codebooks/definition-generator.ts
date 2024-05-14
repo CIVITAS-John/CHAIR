@@ -63,6 +63,8 @@ export abstract class DefinitionParser extends CodeConsolidator {
         }
         // Update the codes
         UpdateCodes(Codebook, Pendings, Codes);
+        // Remove temp labels
+        Codes.forEach(Code => delete Code.OldLabels);
         // Return the cursor movement
         return Object.keys(Pendings).length - Codes.length;
     }

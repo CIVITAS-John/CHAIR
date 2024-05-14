@@ -188,7 +188,7 @@ export async function ClusterEmbeddings(Embeddings: Float32Array, Names: string[
 }
 
 /** EvaluateTexts: Evaluate a number of texts. */
-export async function EvaluateTexts(Sources: string[], Labels: string[], Owners: number[][], OwnerLabels: string[], Cache: string, Method: string = "coverage", ...ExtraOptions: string[]): Promise<Record<number, CodebookEvaluation>> {
+export async function EvaluateTexts<T>(Sources: string[], Labels: string[], Owners: number[][], OwnerLabels: string[], Cache: string, Method: string = "coverage", ...ExtraOptions: string[]): Promise<T> {
     console.log(chalk.gray("Requesting embeddings for: " + Sources.length));
     var Embeddings = await RequestEmbeddings(Sources, Cache);
     return await EvaluateEmbeddings(Embeddings, Labels, Owners, OwnerLabels, Method, ...ExtraOptions);
@@ -198,8 +198,8 @@ export async function EvaluateTexts(Sources: string[], Labels: string[], Owners:
  * EvaluateEmbeddings: Evaluate a number of embeddings.
  * Return format: 
  * */
-export async function EvaluateEmbeddings(Embeddings: Float32Array, Labels: string[], Owners: number[][], OwnerLabels: string[], Method: string = "coverage", ...ExtraOptions: string[]): Promise<Record<number, CodebookEvaluation>> {
-    var Results: Record<number, CodebookEvaluation> = {};
+export async function EvaluateEmbeddings<T>(Embeddings: Float32Array, Labels: string[], Owners: number[][], OwnerLabels: string[], Method: string = "coverage", ...ExtraOptions: string[]): Promise<T> {
+    var Results: T | undefined;
     // Write it into ./known/temp.bytes
     File.writeFileSync(`./known/temp.bytes`, Buffer.from(Embeddings.buffer));
     var TextData = Labels.map((Label, Index) => `${Owners[Index].join(",")}|${Label}`);
@@ -210,9 +210,10 @@ export async function EvaluateEmbeddings(Embeddings: Float32Array, Labels: strin
         args: [Dimensions.toString(), Labels.length.toString(), OwnerLabels.length.toString(), ...ExtraOptions],
         parser: (Message) => { 
             if (Message.startsWith("{")) {
-                Results = JSON.parse(Message) as Record<number, CodebookEvaluation>;
+                Results = JSON.parse(Message) as T;
             } else console.log(chalk.gray(Message));
         }
     });
+    if (!Results) throw new Error("No results returned from the Python script.");
     return Results;
 }

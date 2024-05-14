@@ -27,18 +27,51 @@ export function MergeCodebook(Analyses: CodedThreads) {
 }
 
 /** MergeCodebooks: Merge multiple codebooks simply by labels of codes. */
-export function MergeCodebooks(Codebooks: Codebook[]) {
-    var Result: Codebook = {};
-    for (var Codebook of Codebooks) {
-        for (var Code of Object.values(Codebook)) {
-            if (Result[Code.Label]) {
-                MergeCodes(Result[Code.Label], Code);
-            } else {
-                Result[Code.Label] = Code;
+// Then, we combine the codes from each codebook and record the ownership
+// We use the reference code as the baseline if multiple codes are found
+// Here, the reference codebook's first definition will be used (will need to change)
+export function MergeCodebooks(Codebooks: Codebook[], WithReference: boolean = false) {
+    var Codes: Map<string, Code> = new Map();
+    var Alternatives: Map<string, string> = new Map();
+    for (var [Index, Codebook] of Codebooks.entries()) {
+        for (var [Label, Code] of Object.entries(Codebook))
+            Code.Owners = [];
+    }
+    for (var [Index, Codebook] of Codebooks.entries()) {
+        for (var [Label, Code] of Object.entries(Codebook)) {
+            var NewLabel = Label;
+            // Merge the alternatives
+            if (WithReference) {
+                if (Index == 0)
+                    Code.Alternatives?.forEach(Alternative => Alternatives.set(Alternative, Label));
+                else {
+                    if (Alternatives.has(Label)) 
+                        NewLabel = Alternatives.get(Label)!;
+                }
             }
+            // Merge the code
+            if (WithReference) {
+                if (!Codes.has(NewLabel)) {
+                    // Here we want to create a clean copy
+                    var NewInstance: Code = { Label: NewLabel, Examples: Code.Examples, Definitions: Code.Definitions, Categories: Code.Categories };
+                    // We only care about the reference codebook's alternatives
+                    if (Index == 0) NewInstance.Alternatives = Code.Alternatives;
+                    NewInstance.Owners = [Index];
+                    Codes.set(NewLabel, NewInstance);
+                } else {
+                    Code = Codes.get(NewLabel)!;
+                    if (!Code.Owners!.includes(Index))
+                        Code.Owners!.push(Index);
+                }
+            } else {
+                if (!Codes.has(NewLabel)) 
+                    Codes.set(NewLabel, Code);
+                else 
+                    MergeCodes(Codes.get(NewLabel)!, Code);
+            };
         }
     }
-    return Result;
+    return Object.fromEntries(Codes);
 }
 
 /** ConsolidateConversations: Load, consolidate, and export conversation codebooks. */
@@ -95,6 +128,8 @@ export function MergeCodes(Parent: Code, Code: Code) {
     Parent.Definitions = Array.from(new Set((Parent.Definitions ?? []).concat(Code.Definitions ?? [])));
     Parent.Categories = Array.from(new Set((Parent.Categories ?? []).concat(Code.Categories ?? [])));
     Parent.Examples = Array.from(new Set((Parent.Examples ?? []).concat(Code.Examples ?? [])));
+    if (Parent.Owners || Code.Owners)
+        Parent.Owners = Array.from(new Set((Parent.Owners ?? []).concat(Code.Owners ?? [])));
     Code.Label = "[Merged]";
     return Parent;
 }
@@ -102,6 +137,8 @@ export function MergeCodes(Parent: Code, Code: Code) {
 /** MergeCodesByCluster: Merge codebooks based on clustering results. */
 export function MergeCodesByCluster(Clusters: Record<number, ClusterItem[]>, Codes: Code[]): Record<string, Code> {
     var Codebook: Record<string, Code> = {};
+    // Remove temp labels
+    Codes.forEach(Code => delete Code.OldLabels);
     // Merge the codes based on clustering results
     for (var Key of Object.keys(Clusters)) {
         var ClusterID = parseInt(Key);

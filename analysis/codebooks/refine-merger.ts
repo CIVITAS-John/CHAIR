@@ -28,7 +28,6 @@ export class RefineMerger extends DefinitionParser {
     /** Preprocess: Preprocess the subunits before filtering and chunking. */
     public async Preprocess(Codebook: Codebook, Codes: Code[]) {
         var Length = Codes.length;
-        Codes.forEach(Code => delete Code.OldLabels);
         // Cluster codes using text embeddings
         // Only when the code has more than one definition should we merge them
         Codes = Codes.filter((Code) => this.UseDefinition ? (Code.Definitions?.length ?? 0) > 0 : true);

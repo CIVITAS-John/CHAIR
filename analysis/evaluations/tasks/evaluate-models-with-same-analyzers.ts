@@ -1,6 +1,7 @@
 import * as File from 'fs';
 import { GetMessagesPath } from "../../../utils/loader.js";
 import { CoverageEvaluator } from "../coverage-evaluator.js";
+import { NetworkEvaluator } from '../network-evaluator.js';
 import { BuildReferenceAndEvaluateCodebooks } from "../codebooks.js";
 import { InitializeEmbeddings } from '../../../utils/embeddings.js';
 import { EnsureFolder } from '../../../utils/llms.js';
@@ -19,18 +20,19 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
     EnsureFolder(TargetPath);
     // Build the reference and evaluate the codebooks
     var Results = await BuildReferenceAndEvaluateCodebooks(
-        [SourcePath + "/" + Analyzer], ReferencePath + "/" + Analyzer + Builder.Suffix, Builder, new CoverageEvaluator(), TargetPath);
+        [SourcePath + "/" + Analyzer], ReferencePath + "/" + Analyzer + Builder.Suffix, Builder, 
+        new NetworkEvaluator(), TargetPath);
     File.writeFileSync(TargetPath + ".json", JSON.stringify(Results, null, 4));
 }
 
-await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "high-level-2-consolidated", new RefiningReferenceBuilder());
+await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "low-level-3-consolidated", new RefiningReferenceBuilder()); 
 process.exit(0);
 
 await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "high-level-1-consolidated", new RefiningReferenceBuilder());
 await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "lexie-vs-high-level", new RefiningReferenceBuilder());
 await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "high-level-1", new RefiningReferenceBuilder());
 await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "high-level-2", new RefiningReferenceBuilder());
-await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "low-level-3-consolidated", new RefiningReferenceBuilder()); 
+await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "high-level-2-consolidated", new RefiningReferenceBuilder());
 await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "human-consolidated", new RefiningReferenceBuilder());
 await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "low-level-3-consolidated", new RefiningReferenceBuilder()); 
 await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "gpt-4-t-vs-o", new RefiningReferenceBuilder()); 

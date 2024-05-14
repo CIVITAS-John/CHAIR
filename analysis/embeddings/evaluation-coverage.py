@@ -28,10 +28,14 @@ if labels[0].count('|') > 0:
 else:
     owners = [{0}] * len(labels)
 
+# Calculate the distance matrix
+from sklearn.metrics.pairwise import pairwise_distances
+distances = pairwise_distances(embeddings, embeddings, metric='cosine', n_jobs=cpus)
+
 # Use UMap to reduce the dimensions
 from umap import UMAP
-umap = UMAP(n_components=2) # densmap=True, 
-embeddings = umap.fit_transform(embeddings)
+umap = UMAP(n_components=2, metric='precomputed') # densmap=True, 
+embeddings = umap.fit_transform(distances)
 x, y = embeddings[:, 0], embeddings[:, 1]
 print("Embeddings reduced:", embeddings.shape)
 
@@ -236,6 +240,6 @@ for i, codebook in enumerate(group_ids[1:]):
     # Plot the heatmap
     plot_comparison([codebook], distribution)
 
-# Send the results
+# Send the evaluations
 import json
 print(json.dumps(evaluation))

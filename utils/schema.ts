@@ -35,6 +35,18 @@ export interface CodedItem {
     Codes?: string[];
 }
 
+/** CodebookComparison: A package for comparing codebooks. */
+export interface CodebookComparison {
+    /** Codebooks: The codebooks to compare with. */
+    Codebooks: Codebook[];
+    /** Names: The names of the codebooks. */
+    Names: string[];
+    /** Codes: The codes in the combined codebook. */
+    Codes: Code[];
+    /** Distances: The distance matrix between codes in the first codebook. */
+    Distances: number[][];
+}
+
 /** Codebook: A codebook for the qualitative codes. */
 export interface Codebook extends Record<string, Code> {
 
@@ -62,8 +74,12 @@ export interface Code {
     Examples?: string[];
     /** Alternatives: Alternative labels of the code. */
     Alternatives?: string[];
-    /** OldLabels: Temporary, old labels of the code. */
+    /** OldLabels: Temporary, old labels of the code. Only used in consolidation. */
     OldLabels?: string[];
+    /** Owners: Owner codebooks of the code. Only used in evaluation. */
+    Owners?: number[];
+    /** Position: Visual position of the code. Only used in evaluation. */
+    Position?: [number, number];
 }
 
 /** Conversation: A segment of the group chat. */
