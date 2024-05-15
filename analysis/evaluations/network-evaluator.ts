@@ -3,6 +3,7 @@ import { EvaluateTexts } from "../../utils/embeddings.js";
 import { Code, Codebook, CodebookComparison, CodebookEvaluation } from "../../utils/schema.js";
 import { MergeCodebooks } from "../codebooks/codebooks.js";
 import { CodebookEvaluator } from './codebooks.js';
+import { CreateServer } from '../../utils/server.js';
 
 /** NetworkEvaluator: A network evaluator of codebook against a reference codebook (#0) with potential human inputs. */
 export class NetworkEvaluator extends CodebookEvaluator {
@@ -35,6 +36,8 @@ export class NetworkEvaluator extends CodebookEvaluator {
             Distances: Result.Distances
         };
         File.writeFileSync(ExportPath + "/network.json", JSON.stringify(Package, null, 4));
+        // Run the HTTP server
+        CreateServer(8080, "analysis/evaluations/network", ExportPath + "/network.json");
         // Return in the format
         var Results: Record<string, CodebookEvaluation> = {};
         return Results;

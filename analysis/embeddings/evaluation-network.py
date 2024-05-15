@@ -23,5 +23,4 @@ print("Embeddings reduced:", embeddings.shape)
 # Send the results
 import json
 raw = {"Distances": distances.tolist(), "Positions": embeddings.tolist()}
-print(raw)
 print(json.dumps(raw))
