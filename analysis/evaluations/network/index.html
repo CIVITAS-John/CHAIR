@@ -1,1 +1,23 @@
-hello world!
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Network Analysis</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="layer layer-data">
+        <div class="visualization">
+
+        </div>
+        <div class="side-panel">
+            <div class="panel-header">
+                <h2>Network-based Evaluator</h2>
+            </div>
+        </div>
+    </div>
+    <script src="https://d3js.org/d3.v7.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cash/8.1.5/cash.min.js"></script>
+    <script src="visualizer.js" type="module"></script>
+    <script>new Visualizer($(".visualization"))</script>
+</body>
+</html>

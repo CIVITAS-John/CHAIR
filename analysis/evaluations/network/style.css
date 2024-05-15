@@ -1,0 +1,40 @@
+/** General layout */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    line-height: 150%;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+}
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+/* Layers occupies the entire viewport and displays in layers. */
+.layer {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+/* The data layer uses flex to create a left-right layout. */
+.layer-data {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 100%;
+}
+/* The right side of the data layer is the side panel. */
+.layer-data .side-panel {
+    width: 20rem;
+    padding: 1rem;
+    overflow-y: auto;
+    background-color: #f8f8f8;
+}
+/* The left side of the data layer is the main visualization. */
+.layer-data .visualization {
+    flex: 1;
+    height: 100%;
+    position: relative;
+}

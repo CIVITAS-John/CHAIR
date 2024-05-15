@@ -6,47 +6,43 @@ import open from 'open';
 /** CreateServer: Create a local server for interactivity. */
 export function CreateServer(Port: number, BaseDirectory: string, ...DataFiles: string[]): Promise<void> {
     var Shutdown: () => void;
-    const Server: http.Server = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) => {
-        var Url = req.url ?? "/";
+    const Server: http.Server = http.createServer((Request: http.IncomingMessage, Response: http.ServerResponse) => {
+        var Url = Request.url ?? "/";
         if (Url == "/") Url = "/index.html";
-
         // Handle requests for data files specifically
         for (const dataFile of DataFiles) {
             if (Url === `/${path.basename(dataFile)}`) {
-                fs.readFile(dataFile, (err: NodeJS.ErrnoException | null, data: Buffer) => {
-                    if (err) {
-                        res.writeHead(404);
-                        res.end(`Error loading ${path.basename(dataFile)}`);
-                        return;
-                    }
-                    res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(data);
-                    return;
-                });
-                return; // Exit the callback function after handling the data file
+                SendData(Response, dataFile);
+                return;
             }
         }
-
         // Serve files from the BaseDirectory
-        let FilePath: string = path.join(BaseDirectory, Url);
+        SendData(Response, path.join(BaseDirectory, Url));
+    });
+    // Send data to the client
+    const SendData = function(Response: http.ServerResponse, FilePath: string) {
         fs.readFile(FilePath, (err: NodeJS.ErrnoException | null, data: Buffer) => {
             if (err) {
-                res.writeHead(404);
-                res.end("Error loading file");
+                Response.writeHead(404);
+                Response.end(`Error loading ${path.basename(FilePath)}`);
                 return;
             }
             // Determine content type by file extension
             let ext: string = path.extname(FilePath).toLowerCase();
-            let contentType: string = 'text/html'; // Default content type
+            let contentType: string = 'text/html; charset=utf-8'; // Default content type
             switch (ext) {
                 case '.js':
-                    contentType = 'text/javascript';
+                    contentType = 'text/javascript; charset=utf-8';
+                    let content = data.toString();
+                    // Remove all import statements
+                    content = content.replaceAll(/^(.*)import(.*?)$/gm, '');
+                    data = Buffer.from(content);
                     break;
                 case '.css':
-                    contentType = 'text/css';
+                    contentType = 'text/css; charset=utf-8';
                     break;
                 case '.json':
-                    contentType = 'application/json';
+                    contentType = 'application/json; charset=utf-8';
                     break;
                 case '.png':
                     contentType = 'image/png';
@@ -56,15 +52,18 @@ export function CreateServer(Port: number, BaseDirectory: string, ...DataFiles: 
                     contentType = 'image/jpeg';
                     break;
             }
-            res.writeHead(200, { 'Content-Type': contentType });
-            res.end(data);
+            Response.writeHead(200, { 'Content-Type': contentType });
+            Response.end(data);
         });
-    });
+    }
     // Start the server
     return new Promise<void>((resolve, reject) => {
         Server.listen(Port, async () => {
             console.log(`Server running at http://localhost:${Port}/`);
-            await open(`http://localhost:${Port}/`); // Automatically open the browser when the server starts
+            console.log('Press Ctrl+C to shut down the server.')
+            await open(`http://localhost:${Port}/`, { wait: true }); // Automatically open the browser when the server starts
+            console.log('The browser tab has closed, shutting down the server.')
+            Shutdown();
         });
         // Handle server shutdown
         Shutdown = () => {

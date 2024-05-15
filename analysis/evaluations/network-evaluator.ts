@@ -37,7 +37,9 @@ export class NetworkEvaluator extends CodebookEvaluator {
         };
         File.writeFileSync(ExportPath + "/network.json", JSON.stringify(Package, null, 4));
         // Run the HTTP server
-        CreateServer(8080, "analysis/evaluations/network", ExportPath + "/network.json");
+        await CreateServer(8080, "analysis/evaluations/network",
+            "./out/analysis/evaluations/network/visualizer.js", 
+            ExportPath + "/network.json");
         // Return in the format
         var Results: Record<string, CodebookEvaluation> = {};
         return Results;
