@@ -18,6 +18,9 @@
     <script src="https://d3js.org/d3.v7.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cash/8.1.5/cash.min.js"></script>
     <script src="visualizer.js" type="module"></script>
-    <script>new Visualizer($(".visualization"))</script>
+    <script type="module">
+        import Visualizer from './visualizer.js';
+        window.Visualizer = new Visualizer($(".visualization"))
+    </script>
 </body>
 </html>

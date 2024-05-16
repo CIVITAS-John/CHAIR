@@ -30,7 +30,9 @@ else:
 
 # Calculate the distance matrix
 from sklearn.metrics.pairwise import pairwise_distances
-distances = pairwise_distances(embeddings, embeddings, metric='cosine', n_jobs=cpus)
+from sklearn.preprocessing import normalize
+embeddings = normalize(embeddings, norm='l2')
+distances = pairwise_distances(embeddings, embeddings, metric='euclidean', n_jobs=cpus)
 
 # Use UMap to reduce the dimensions
 from umap import UMAP
