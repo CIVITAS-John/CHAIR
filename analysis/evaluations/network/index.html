@@ -1,16 +1,21 @@
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Network Analysis</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="visualization.css">
+    <link rel="stylesheet" type="text/css" href="side-panel.css">
 </head>
 <body>
     <div class="layer layer-data">
         <div class="visualization">
         </div>
-        <div class="side-panel">
-            <div class="panel-header">
-                <h2>Network-based Evaluator</h2>
+        <div class="side-panel collapsed">
+            <div class="collapsable"><span>»</span></div> <!--«-->
+            <div class="content">
+                <div class="panel-header">
+                    <h2>Network-based Evaluator</h2>
+                </div>
             </div>
         </div>
     </div>
@@ -18,8 +23,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cash/8.1.5/cash.min.js"></script>
     <script src="visualizer.js" type="module"></script>
     <script type="module">
-        import Visualizer from './visualizer.js';
-        window.Visualizer = new Visualizer($(".visualization"))
+        import { Visualizer, SidePanel } from './visualizer.js';
+        window.Visualizer = new Visualizer($(".visualization"));
+        window.SidePanel = new SidePanel($(".side-panel"));
     </script>
 </body>
 </html>

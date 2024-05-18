@@ -1,0 +1,42 @@
+/* The right side of the data layer is the side panel. */
+.layer-data .side-panel {
+    width: 20rem;
+    padding: 1rem;
+    position: relative;
+    background-color: #f8f8f8;
+}
+/* Collapsable support. */
+.side-panel .content {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+.side-panel.collapsed {
+    width: 0;
+    padding: 0;
+}
+.side-panel.collapsed .content {
+    display: none;
+}
+.side-panel .collapsable {
+    top: calc(50% - 1rem);
+    left: -1.2rem;
+    width: 1.2rem;
+    height: 2rem;
+    padding-left: 0.1rem;
+    z-index: 255;
+    cursor: pointer;
+    text-align: center;
+    line-height: 2rem;
+    font-size: 1.6rem;
+    position: absolute;
+    border-radius: 0.5rem 0 0 0.5rem;
+    background-color: #f8f8f8;
+}
+.side-panel.collapsed .collapsable span {
+    font-size: 0;
+}
+.side-panel.collapsed .collapsable span::after {
+    content: '«';
+    font-size: 1.6rem;
+}

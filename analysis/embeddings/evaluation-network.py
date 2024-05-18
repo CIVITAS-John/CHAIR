@@ -23,7 +23,7 @@ print("Embeddings reduced:", embeddings.shape)
 
 # Reshape the positions using MinMaxScaler
 from sklearn.preprocessing import MinMaxScaler
-scaler = MinMaxScaler(feature_range=(50, 150))
+scaler = MinMaxScaler(feature_range=(100, 200))
 embeddings = scaler.fit_transform(embeddings)
 x, y = embeddings[:, 0], embeddings[:, 1]
 
