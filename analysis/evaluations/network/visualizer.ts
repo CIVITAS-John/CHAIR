@@ -40,7 +40,7 @@ export class Visualizer {
         // Load the data
         d3.json("network.json").then((Data) => {
             this.Dataset = Data as any;
-            this.CodeGraph = BuildCodeGraph(this.Dataset, this.Parameters);
+            this.CodeGraph = BuildSemanticGraph(this.Dataset, this.Parameters);
             this.GenerateLayout(this.CodeGraph, (Alpha) => this.RenderCodes(Alpha));
         });
     }
@@ -206,8 +206,8 @@ function SetClassForLinks<T>(ID: string, Class: string, Status: boolean) {
     Links.each((Index, Element) => SetClassForNode($(Element).attr("sourceid")!, Class, Status));
 }
 
-/** BuildCodeGraph: Build the coding graph from the dataset. */
-export function BuildCodeGraph(Dataset: CodebookComparison, Parameter: Parameters = new Parameters()): Graph<Code> {
+/** BuildSemanticGraph: Build a semantic code graph from the dataset. */
+export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Parameters = new Parameters()): Graph<Code> {
     var Nodes: Node<Code>[] = 
         Dataset.Codes.map((Code, Index) => ({ ID: Index.toString(), Data: Code, NearOwners: new Set(Code.Owners), x: Code.Position![0], y: Code.Position![1] }));
     var Links: Map<string, Link<Code>> = new Map();
@@ -243,8 +243,6 @@ export function BuildCodeGraph(Dataset: CodebookComparison, Parameter: Parameter
             MinDistance = Math.min(MinDistance, Distance);
         }
     }
-    // Filter the nodes and links
-
     // Store it
     return { Nodes: Nodes, Links: Array.from(Links.values()), MaximumDistance: MaxDistance, MinimumDistance: MinDistance };
 }
