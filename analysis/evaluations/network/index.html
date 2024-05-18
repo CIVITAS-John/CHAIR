@@ -24,10 +24,15 @@
     <script src="https://d3js.org/d3.v7.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cash/8.1.5/cash.min.js"></script>
     <script src="visualizer.js" type="module"></script>
+    <script src="side-panel.js" type="module"></script>
+    <script src="info-panel.js" type="module"></script>
     <script type="module">
-        import { Visualizer, SidePanel } from './visualizer.js';
+        import { Visualizer } from './visualizer.js';
+        import { SidePanel } from './side-panel.js';
+        import { InfoPanel } from './info-panel.js';
         window.Visualizer = new Visualizer($(".visualization"));
         window.SidePanel = new SidePanel($(".side-panel"));
+        window.InfoPanel = new SidePanel($(".info-panel"));
     </script>
 </body>
 </html>

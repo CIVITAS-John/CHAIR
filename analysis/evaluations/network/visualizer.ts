@@ -176,22 +176,6 @@ function FindMinimumIndexes(arr: number[], k: number): number[] {
     return indices.slice(0, k);
 }
 
-/** SidePanel: The side panel for the visualizer. */
-export class SidePanel {
-    /** Visualizer: The visualizer in-use. */
-    private Visualizer: Visualizer;
-    /** Container: The container for the side panel. */
-    private Container: Cash;
-    /** Constructor: Constructing the side panel. */
-    public constructor(Container: Cash, Visualizer: Visualizer) {
-        this.Visualizer = Visualizer;
-        this.Container = Container;
-        this.Container.find(".collapsable").on("click", () => {
-            this.Container.toggleClass("collapsed");
-        });
-    }
-}
-
 /** SetClassForNode: Set a class for a node and its label. */
 function SetClassForNode<T>(ID: string, Class: string, Status: boolean) {
     $(`#node-${ID}`).toggleClass(Class, Status);

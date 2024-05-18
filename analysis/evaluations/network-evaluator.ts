@@ -45,6 +45,8 @@ export class NetworkEvaluator extends CodebookEvaluator {
         // Run the HTTP server
         await CreateServer(8080, "analysis/evaluations/network",
             "./out/analysis/evaluations/network/visualizer.js", 
+            "./out/analysis/evaluations/network/side-panel.js", 
+            "./out/analysis/evaluations/network/info-panel.js", 
             ExportPath + "/network.json");
         // Return in the format
         var Results: Record<string, CodebookEvaluation> = {};
