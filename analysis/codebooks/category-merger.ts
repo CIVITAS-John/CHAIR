@@ -12,7 +12,7 @@ export class CategoryMerger extends CodeConsolidator {
     /** Minimum: The minimum threshold for merging categories. */
     public Minimum: number;
     /** Constructor: Create a new NameMerger. */
-    constructor({Maximum = 0.7, Minimum = 0.5, Looping = false}: {Maximum?: number, Minimum?: number, Looping?: boolean}) {
+    constructor({Maximum = 0.65, Minimum = 0.5, Looping = false}: {Maximum?: number, Minimum?: number, Looping?: boolean}) {
         super();
         this.Maximum = Maximum;
         this.Minimum = Minimum;

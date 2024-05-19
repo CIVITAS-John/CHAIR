@@ -22,7 +22,7 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
     var Results = await BuildReferenceAndEvaluateCodebooks(
         [SourcePath + "/" + Analyzer], ReferencePath + "/" + Analyzer + Builder.Suffix, Builder, 
         new NetworkEvaluator(), TargetPath);
-    File.writeFileSync(TargetPath + ".json", JSON.stringify(Results, null, 4));
+    File.writeFileSync(TargetPath + "-" + Analyzer + ".json", JSON.stringify(Results, null, 4));
 }
 
 // await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "low-level-3-consolidated", new RefiningReferenceBuilder());

@@ -104,7 +104,7 @@ export class InfoPanel {
                 }
             } else {
                 var Quote = $(`<p class="quote"></p>`).appendTo(Panel)
-                    .append(this.BuildExample(Code.Examples[0], Examples.get(Code.Examples[0])!));
+                    .append(this.BuildExample(Examples.keys().next().value, Examples.values().next().value));
                 if (Code.Examples.length > 1) $(`<a href="javascript:void(0)">(${Code.Examples.length - 1} more)</a>`).appendTo(Quote).on("click", () => {
                     this.ShowDialogForCode(0, Code);
                 });

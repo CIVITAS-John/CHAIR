@@ -257,7 +257,7 @@ export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Param
 /** Parameters: The parameters for the visualizer. */
 export class Parameters {
     /** LinkMinimumDistance: The minimum distance to create links between codes. */
-    public LinkMinimumDistance: number = 0.7;
+    public LinkMinimumDistance: number = 0.65;
     /** LinkMaximumDistance: The maximum distance to create links between codes. */
     public LinkMaximumDistance: number = 0.9;
     /** LinkDistanceDisplayScale: The display scale factor for the link distances. */

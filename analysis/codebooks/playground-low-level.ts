@@ -21,8 +21,8 @@ await UseLLMs(async () => {
         // Merge definitions
         new RefineMerger({ Maximum: 0.5, UseDefinition: false }),
         new RefineMerger({ Maximum: 0.5, Looping: true }),
-        new RefineMerger({ Maximum: 0.7, UseDefinition: false }),
-        new RefineMerger({ Maximum: 0.7, Looping: true }),
+        new RefineMerger({ Maximum: 0.65, UseDefinition: false }),
+        new RefineMerger({ Maximum: 0.65, Looping: true }),
         /*// Merge categories
         new CategoryNameMerger(),
         new CategoryMerger({ Looping: true }),
