@@ -127,8 +127,9 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
                     for (var Code of Item.Codes!) {
                         var Current: Code = Thread.Codes![Code] ?? { Label: Code, Examples: [] };
                         Thread.Codes![Code] = Current;
-                        if (Content !== "" && !Current.Examples!.find(Example => Example == Content))
-                            Current.Examples!.push(Content);
+                        var ContentWithID = `${ID}|||${Content}`;
+                        if (Content !== "" && !Current.Examples!.includes(ContentWithID))
+                            Current.Examples!.push(ContentWithID);
                     }
                     Thread.Items[ID.toString()] = Item;
                     break;

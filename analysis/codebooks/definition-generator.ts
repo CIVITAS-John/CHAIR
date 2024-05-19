@@ -106,6 +106,16 @@ Category: {2-4 words for code ${Codes.length}}
 ${Index + 1}.
 Label: ${Code.Label}
 Quotes:
-${Code.Examples?.sort((A, B) => B.length - A.length).slice(0, 3).map(Example => `- ${Example}`).join("\n")}`.trim()).join("\n\n")];
+${TakeExamples(Code.Examples ?? [], 3).map(Example => `- ${Example}`).join("\n")}`.trim()).join("\n\n")];
     }
+}
+
+/** TakeExamples: Take some unique examples from a set. */
+export function TakeExamples(Examples: string[], Take: number): string[] {
+    Examples = [...new Set(Examples.map(Example => {
+        var Index = Example.indexOf("|||");
+        if (Index == -1) return Example;
+        return Example.substring(Index + 3);
+    }))];
+    return Examples.sort((A, B) => B.length - A.length).slice(0, Take);
 }

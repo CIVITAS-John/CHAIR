@@ -69,8 +69,9 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
                 Codes.forEach(Code => {
                     var Current = Analysis.Codes[Code] ?? { Label: Code };
                     Current.Examples = Current.Examples ?? [];
-                    if (Message.Content !== "" && !Current.Examples.includes(Message.Content)) 
-                        Current.Examples.push(Message.Content);
+                    var Content = `${Message.ID}|||${Message.Content}`;
+                    if (Message.Content !== "" && !Current.Examples.includes(Content)) 
+                        Current.Examples.push(Content);
                     Analysis.Codes[Code] = Current;
                 });
             }
