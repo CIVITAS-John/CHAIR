@@ -22,13 +22,15 @@ export async function ProcessConversations(Group: string, Targets: number[], Dat
     var Results: Record<string, Conversation> = {};
     var Minimum = -1, Maximum = 0;
     for (const Target of Targets) {
-        var Messages = await TranslateConversation(Group, AllMessages, Participants, Target);
+        var Conversation = Conversations.find(Conversation => Conversation.ID.endsWith(`-${Target}`));
+        if (!Conversation) continue;
+        var Messages = await TranslateConversation(Group, AllMessages, Participants, Conversation.ID);
         if (Messages.length == 0) continue;
         // Get and count conversations
         if (Minimum == -1) Minimum = Target;
         Maximum = Target;
-        Results[Target.toString()] = Conversations.find(Conversation => Conversation.ID == Target.toString())!;
-        Results[Target.toString()].AllMessages = Messages;
+        Results[Conversation.ID] = Conversation;
+        Results[Conversation.ID].AllMessages = Messages;
         Messages.forEach(Message => {
             if (IDs.has(Message.ID)) return;
             IDs.add(Message.ID);
@@ -48,10 +50,10 @@ export async function ProcessConversations(Group: string, Targets: number[], Dat
 }
 
 /** TranslateConversation: Translate certain messages from a conversation. */
-async function TranslateConversation(Group: string, AllMessages: Message[], Participants: Participant[], Conversation: number, Bilingual: boolean = false): Promise<Message[]> {
+async function TranslateConversation(Group: string, AllMessages: Message[], Participants: Participant[], Conversation: string, Bilingual: boolean = false): Promise<Message[]> {
     // Get the messages we want: 3 messages before and after the conversation
-    var FirstIndex = AllMessages.findIndex(Message => Message.Conversation == Conversation.toString());
-    var LastIndex = AllMessages.findLastIndex(Message => Message.Conversation == Conversation.toString());
+    var FirstIndex = AllMessages.findIndex(Message => Message.Conversation == Conversation);
+    var LastIndex = AllMessages.findLastIndex(Message => Message.Conversation == Conversation);
     if (FirstIndex == -1 || LastIndex == -1) return [];
     var Messages = AllMessages.slice(Math.max(0, FirstIndex - 3), Math.min(AllMessages.length, LastIndex + 4));
     // Keep the original messages for bilingual translation

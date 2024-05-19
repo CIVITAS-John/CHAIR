@@ -101,26 +101,28 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
             // Get the ID
             if (IDIndex == -1) return;
             var ID = Row.getCell(IDIndex)?.value;
-            if (!ID || typeof ID != "number") return;
+            if (!ID) return;
             var Content = Row.getCell(ContentIndex)?.value?.toString()?.trim() ?? "";
+            ID = ID.toString();
             switch (ID) {
-                case -1: // Summary
+                case "-1": // Summary
                     Thread.Summary = Content;
                     if (Thread.Summary == "" || Thread.Summary == "(Optional) Your thoughts before coding the conversation.") 
                         Thread.Summary = undefined;
                     break;
-                case -2: // Plan
+                case "-2": // Plan
                     Thread.Plan = Content;
                     if (Thread.Plan == "" || Thread.Plan == "The summary of the conversation.") 
                         Thread.Plan = undefined;
                     break;
-                case -3: // Reflection
+                case "-3": // Reflection
                     Thread.Reflection = Content;
                     if (Thread.Reflection == "" || Thread.Reflection == "Your reflections after coding the conversation.") 
                         Thread.Reflection = undefined;
                     break;
                 default: // Coded item
-                    var Item: CodedItem = { ID: ID.toString(), Codes: [] };
+                    if (ID.indexOf("-") == -1) ID = "2-" + ID; // A hack for the first coded dataset.
+                    var Item: CodedItem = { ID: ID, Codes: [] };
                     var Codes = Row.getCell(CodeIndex)?.value;
                     if (Codes && typeof Codes == "string") 
                         Item.Codes = Codes.split(/,|\||;/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase()).filter(Code => Code !== "");
@@ -131,7 +133,7 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
                         if (Content !== "" && !Current.Examples!.includes(ContentWithID))
                             Current.Examples!.push(ContentWithID);
                     }
-                    Thread.Items[ID.toString()] = Item;
+                    Thread.Items[ID] = Item;
                     break;
             }
         });

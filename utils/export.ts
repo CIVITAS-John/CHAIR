@@ -108,7 +108,7 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
         });
         // Set the columns
         Sheet.columns = [
-            { header: 'ID', key: 'ID', width: 6 },
+            { header: 'ID', key: 'ID', width: 8 },
             { header: 'CID', key: 'CID', width: 6 },
             { header: 'SID', key: 'SID', width: 6 },
             { header: 'Nickname', key: 'Nickname', width: 16 },
@@ -132,8 +132,8 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
             var Message = Messages[I];
             var Item = Analysis?.Items[Message.ID];
             var Columns: Record<string, any> = {
-                ID: parseInt(Message.ID),
-                CID: parseInt(Message.Conversation!),
+                ID: Message.ID,
+                CID: Message.Conversation,
                 SID: parseInt(Message.SenderID),
                 Nickname: Message.Nickname,
                 Time: new Date(Date.parse(Message.Time as any)),

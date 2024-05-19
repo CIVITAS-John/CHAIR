@@ -4,11 +4,11 @@ import { ExportMessages } from '../utils/export.js';
 import spawnAsync from '@expo/spawn-async';
 import { Conversation } from '../utils/schema.js';
 
-await SeperateMessages("Users of Physics Lab (Group 1)");
-await SeperateMessages("Users of Physics Lab (Group 2)");
+await SeperateMessages("Users of Physics Lab (Group 1)", "1");
+await SeperateMessages("Users of Physics Lab (Group 2)", "2");
 
 /** SeperateMessages: Seperate messages into conversations from a group. */
-async function SeperateMessages(Source: string) {
+async function SeperateMessages(Source: string, Prefix: string) {
     // Call the Python script
     var Python = spawnAsync('python', ['segmentation/messaging-groups.py', GetMessagesPath(Source, "Messages.csv")]);
     Python.child.stdout!.on('data', (data) => {
@@ -38,7 +38,7 @@ async function SeperateMessages(Source: string) {
         }
         // Create a new conversation
         Conversations.push({ 
-            ID: Conversations.length.toString(), 
+            ID: `${Prefix}-${Conversations.length.toString()}`, 
             Start: Messages[Indexes[I]].Time, 
             End: EndTime!,
             Messages: Indexes[I] - (I == 0 ? 0 : Indexes[I - 1] + 1) + 1,
@@ -126,7 +126,6 @@ async function SeperateMessages(Source: string) {
     Conversations.forEach(Conversation => Conversation.Participants = Object.fromEntries(Conversation.Participants) as any);
     File.writeFileSync(GetMessagesPath(Source, `Conversations.json`), JSON.stringify(Conversations, null, 4));
     // Write into JSON and Markdown file
-    Messages.forEach((Message, I) => Message.ID = I.toString());
     File.writeFileSync(GetMessagesPath(Source, "Messages.json"), JSON.stringify(Messages, null, 4));
     File.writeFileSync(GetMessagesPath(Source, `Messages.md`), ExportMessages(Messages));
 }

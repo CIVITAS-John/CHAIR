@@ -1,6 +1,6 @@
 // DatasetPath: The path to the dataset folder.
 export const DatasetPath = String.raw
-    `/Users/johnchen/Library/CloudStorage/GoogleDrive-yuehanchen2023@u.northwestern.edu/My Drive/Physics Lab AR/Research/Research on Community, 2024/Datasets`;
+    `I:\My Drive\Physics Lab AR\Research\Research on Community, 2024\Datasets`;
 
 // CutoffDate: The cutoff date for the dataset.
 export const CutoffDate = new Date(2021, 0, 1);
