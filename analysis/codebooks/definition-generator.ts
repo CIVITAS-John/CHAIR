@@ -111,7 +111,7 @@ ${TakeExamples(Code.Examples ?? [], 3).map(Example => `- ${Example}`).join("\n")
 }
 
 /** TakeExamples: Take some unique examples from a set. */
-export function TakeExamples(Examples: string[], Take: number): string[] {
+export function TakeExamples(Examples: string[], Take: number = 1000000): string[] {
     Examples = [...new Set(Examples.map(Example => {
         var Index = Example.indexOf("|||");
         if (Index == -1) return Example;

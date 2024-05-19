@@ -94,22 +94,50 @@ export class InfoPanel {
         else
             Panel.append($(`<p><i>No definition available.</i></p>`));
         if (Code.Examples && Code.Examples.length > 0) {
+            var Examples = this.ExtractExamples(Code.Examples);
             Panel.append($(`<hr>`));
             if (Everything) {
                 var List = $(`<ol class="quote"></ol>`).appendTo(Panel);
-                for (var Example of Code.Examples) {
-                    $(`<li class="quote"><span>${Example}</span></li>`).appendTo(List);
+                for (var Example of Examples) {
+                    $(`<li class="quote"></li>`).appendTo(List)
+                        .append(this.BuildExample(Example[0], Example[1]));
                 }
             } else {
-                var Quote = $(`<p class="quote"><span>${Code.Examples[0]}</span></p>`).appendTo(Panel);
+                var Quote = $(`<p class="quote"></p>`).appendTo(Panel)
+                    .append(this.BuildExample(Code.Examples[0], Examples.get(Code.Examples[0])!));
                 if (Code.Examples.length > 1) $(`<a href="javascript:void(0)">(${Code.Examples.length - 1} more)</a>`).appendTo(Quote).on("click", () => {
                     this.ShowDialogForCode(0, Code);
                 });
             }
         }
     }
+    /** ExtractExamples: Extract examples from a code. */
+    private ExtractExamples(Examples: string[]): Map<string, string[]> {
+        var Results = new Map();
+        for (var Example of Examples) {
+            var Index = Example.indexOf("|||");
+            if (Index != -1) {
+                var Quote = Example.substring(Index + 3);
+                var ID = Example.substring(0, Index);
+                if (!Results.has(Quote)) Results.set(Quote, []);
+                Results.get(Quote)!.push(ID);
+            } else {
+                if (!Results.has(Example)) Results.set(Example, []);
+                Results.get(Example)!.push("");
+            }
+        }
+        return Results;
+    }
+    /** BuildExample: Build an element for a code example. */
+    private BuildExample(Example: string, IDs: string[]): Cash {
+        var Element = $(`<span>${Example}</span>`);
+        if (IDs.length > 0) {
+
+        }
+        return Element;
+    }
     /** FindOriginalCodes: Find the original codes from an owner. */
-    public FindOriginalCodes(Source: Code, Owner: number): Code[] {
+    private FindOriginalCodes(Source: Code, Owner: number): Code[] {
         var Codebook = this.Visualizer.Dataset.Codebooks[Owner];
         return Object.values(Codebook).filter(Code => Source.Label == Code.Label || Source.Alternatives?.includes(Code.Label));
     }
