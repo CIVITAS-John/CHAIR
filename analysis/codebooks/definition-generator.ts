@@ -110,12 +110,18 @@ ${TakeExamples(Code.Examples ?? [], 3).map(Example => `- ${Example}`).join("\n")
     }
 }
 
-/** TakeExamples: Take some unique examples from a set. */
+/** TakeExamples: Take some best unique examples from a set. */
+// Here, best is defined as the longest * most frequent unique quotes.
 export function TakeExamples(Examples: string[], Take: number = 1000000): string[] {
-    Examples = [...new Set(Examples.map(Example => {
+    var ExampleMap = new Map<string, number>();
+    for (var Example of Examples) {
         var Index = Example.indexOf("|||");
-        if (Index == -1) return Example;
-        return Example.substring(Index + 3);
-    }))];
-    return Examples.sort((A, B) => B.length - A.length).slice(0, Take);
+        if (Index != -1) Example = Example.substring(Index + 3);
+        if (!ExampleMap.has(Example)) ExampleMap.set(Example, 0);
+        ExampleMap.set(Example, ExampleMap.get(Example)! + 1);
+    }
+    for (var [Example, Count] of ExampleMap) {
+        ExampleMap.set(Example, Count * Example.length);
+    }
+    return Array.from(ExampleMap.keys()).sort((A, B) => ExampleMap.get(B)! - ExampleMap.get(A)!).slice(0, Take);
 }
