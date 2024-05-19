@@ -47,7 +47,7 @@ for (const Emoji of Emojis) {
 const UnknownEmojis = new Map<string, number>();
 
 // Read messages from the groups, anonymize user ids, and export into JSON and CSV format.
-const Groups = [String.raw`Users of Physics Lab (Group 1)`, String.raw`Users of Physics Lab (Group 2)`];
+const Groups = [String.raw`Users of Physics Lab (Group 2)`, String.raw`Users of Physics Lab (Group 12)`];
 const Participants = new Map<string, Participant>();
 // Many users have multiple nicknames, so we need to map the `@...` references to a single ID.
 const NameMappings = new Map<string, [string, string]>();
