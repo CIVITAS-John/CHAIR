@@ -193,12 +193,13 @@ export function UpdateCodes(Codebook: Codebook, NewCodes: Code[], Codes: Code[])
                 continue;
             }
             // Otehrwise, update the label and alternatives
-            Codes[I].Alternatives = Codes[I].Alternatives ?? [];
-            if (Codes[I].Alternatives!.includes(Codes[I].Label) !== true)
-                Codes[I].Alternatives!.push(Codes[I].Label);
+            var Alternatives = Codes[I].Alternatives ?? [];
+            if (!Alternatives.includes(Codes[I].Label))
+                Alternatives.push(Codes[I].Label);
+            if (Alternatives.includes(NewLabel))
+                Alternatives = Alternatives.filter(Alternative => Alternative != NewLabel);
+            Codes[I].Alternatives = Alternatives;
             Codes[I].Label = NewLabel;
-            if (Codes[I].Alternatives!.includes(NewLabel) !== true)
-                Codes[I].Alternatives!.slice(Codes[I].Alternatives!.indexOf(NewLabel), 1);
         }
     }
     return Codebook;

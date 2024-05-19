@@ -43,6 +43,14 @@ avg_size = np.mean(sizes_for_calc)
 std_size = np.std(sizes_for_calc)
 print("Average size:", avg_size, ", Standard deviation:", std_size)
 
+# Calculate the penalty on the distance - we calculated twice: once on the distance matrix, once on the linkage
+# The rationale is that we want to avoid having a few large clusters and many small clusters
+for i in range(Items):
+    for j in range(Items):
+        penalty = min(1, max(0, (sizes[i] + sizes[j] - avg_size) / 3 / std_size))
+        penalty = penalty * penalty
+        distances[i][j] += penalty * Penalty
+
 # Calculate the linkage
 from scipy.cluster.hierarchy import linkage, to_tree
 linkages = linkage(condensed_distances, method=Linkage)
@@ -73,11 +81,11 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
         probs[node.id] = prob
         return 1
     # If it is not a leaf, check if it is a cluster
-    # Apply the maximum penalty when the new size is 2 std_size larger than the average
+    # Apply the maximum penalty when the new size is 3 * std_size larger than the average
     penalty = min(1, max(0, (leaf_sizes[node.id] - avg_size) / 2 / std_size))
     penalty = penalty * penalty
     criteria = max(MaxDistance - penalty * Penalty, MinDistance)
-    print("Node:", node.id, ", Size:", leaf_sizes[node.id], ", % Penalty:", penalty, ", Distance:", node.dist, ", Criteria:", criteria)
+    # print("Node:", node.id, ", Size:", leaf_sizes[node.id], ", % Penalty:", penalty, ", Distance:", node.dist, ", Criteria:", criteria)
     # Verbose: show the cluster
     left_id = node.get_left().id
     leftlabel = labels[left_id] if left_id < Items else "cluster-" + str(left_id)
