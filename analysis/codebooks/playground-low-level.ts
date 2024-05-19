@@ -23,8 +23,8 @@ await UseLLMs(async () => {
         // My heuristics: we start from closer ideas, then try to merge distance ones, before give some final touches
         new RefineMerger({ Threshold: 0.5, Penalty: 0, UseDefinition: false }),
         new RefineMerger({ Threshold: 0.5, Penalty: 0, Looping: true }),
-        new RefineMerger({ Threshold: 0.7, Penalty: 0.1, UseDefinition: false }),
-        new RefineMerger({ Threshold: 0.7, Penalty: 0.1 }),
+        new RefineMerger({ Threshold: 0.6, Penalty: 0.1, UseDefinition: false }),
+        new RefineMerger({ Threshold: 0.6, Penalty: 0.1 }),
         new RefineMerger({ Threshold: 0.5, Penalty: 0, Looping: true }),
         // Merge categories
         new CategoryNameMerger(),
@@ -33,7 +33,7 @@ await UseLLMs(async () => {
         new CategoryRefiner(),
         // Assign categories to codes
         new CategoryAssigner()
-    ), "Coded Dataset 1", "0~16-gpt-3.5-turbo.json", "low-level-3", LLMName, false);
-}, "gpt-4.5-omni"); // "gpt-3.5-turbo", "gpt-4.5-turbo", "claude3-haiku", "claude3-sonnet", "llama3-70b"
+    ), "Coded Dataset 1", "0~16-gpt-4.5-omni.json", "low-level-3", LLMName, false);
+}, "gpt-3.5-turbo", "gpt-4.5-turbo", "gpt-4.5-omni", "llama3-70b", "claude3-haiku", "claude3-sonnet");
 
 process.exit(0);

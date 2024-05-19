@@ -18,6 +18,8 @@ export interface Node<T> extends d3.SimulationNodeDatum {
     ID: string;
     /** Data: The data associated with the node. */
     Data: T;
+    /** Type: The type of the data. */
+    Type: string;
     /** NearOwners: Owners that own at least a close neighbor nodes to this node. */
     NearOwners: Set<number>;
 }

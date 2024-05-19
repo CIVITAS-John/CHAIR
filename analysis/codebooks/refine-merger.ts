@@ -61,9 +61,9 @@ export class RefineMerger extends DefinitionParser {
     public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
         return [`
 You are an expert in thematic analysis. 
-Each code is a cluster of multiple qualitative sub-code. If a sub-code includes another, use the broader one. If sub-codes are parallel, write one that covers both.
-Write clear and generalizable labels and criteria for each code, informed by the context, and without unnecessary specifics or examples.
-Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between sub-codes. If a sub-code includes another, use the broader one. If sub-codes are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
 ${ResearchQuestion}
 Always follow the output format:
 ---

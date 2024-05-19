@@ -1,0 +1,38 @@
+/** The bottom side of the data layer is the info panel. */
+.info-panel {
+    left: 0;
+    bottom: 0;
+    display: flex;
+    position: absolute;
+    flex-direction: row;
+}
+/* Individual panels. */
+.info-panel > .panel {
+    width: 30rem;
+    padding: 0.5rem 1rem;
+    border-right: 1px solid #666;
+    background-color: #f0f0f0;
+}
+.info-panel h3 {
+    margin-bottom: 0.1rem;
+}
+.info-panel h3 span {
+    color: #666;
+    margin-left: 0.5rem;
+    font-size: 1em;
+    font-weight: normal;
+}
+.info-panel p.quote {
+    color: #666;
+    font-style: italic;
+}
+.info-panel p.quote span:before {
+    content: "“";
+}
+.info-panel p.quote span:after {
+    content: "”";
+    margin-right: 0.2em;
+}
+.info-panel p.owners a:after {
+    content: ", "
+}

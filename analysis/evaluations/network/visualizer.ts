@@ -19,7 +19,7 @@ export class Visualizer {
     /** Zoom: The zoom behavior in-use. */
     private Zoom: d3.ZoomBehavior<globalThis.Element, unknown>;
     /** Dataset: The underlying dataset. */
-    private Dataset: CodebookComparison = {} as any;
+    public Dataset: CodebookComparison = {} as any;
     /** Parameters: The parameters for the visualizer. */
     private Parameters: Parameters = new Parameters();
     /** Constructor: Constructing the manager. */
@@ -61,8 +61,8 @@ export class Visualizer {
             Enter.append("circle")
                  .attr("id", (Node) => `node-${Node.ID}`)
                  .attr("label", (Node) => Node.Data.Label)
-                 .on("mouseover", this.NodeOver)
-                 .on("mouseout", this.NodeOut)
+                 .on("mouseover", (Event, Node) => this.NodeOver(Event, Node))
+                 .on("mouseout", (Event, Node) => this.NodeOut(Event, Node))
                  .on("click", (Event, Node) => this.NodeChosen(Event, Node)), 
             (Update) => Update)
             // Set the fill color based on the number of owners
@@ -114,14 +114,29 @@ export class Visualizer {
     public NodeOver<T>(Event: Event, Node: Node<T>) {
         SetClassForNode(Node.ID, "hovering", true);
         SetClassForLinks(Node.ID, "hovering", true);
+        if (!this.ChosenNodes.includes(Node))
+            this.TriggerChosenCallback(Node, true);
     }
     /** NodeOut: Handle the mouse-out event on a node. */
     public NodeOut<T>(Event: Event, Node: Node<T>) {
         SetClassForNode(Node.ID, "hovering", false);
         SetClassForLinks(Node.ID, "hovering", false);
+        if (!this.ChosenNodes.includes(Node))
+            this.TriggerChosenCallback(Node, false);
     }
     /** ChosenNode: The currently chosen node. */
     public ChosenNodes: any[] = [];
+    /** OnChosen: The callback for chosen nodes. */
+    public ChosenCallbacks: Map<string, (Node: any, Status: boolean) => void> = new Map();
+    /** RegisterChosenCallback: Register a callback for a certain data type. */
+    public RegisterChosenCallback<T>(Name: string, Callback: (Node: Node<T>, Status: boolean) => void) {
+        this.ChosenCallbacks.set(Name, Callback);
+    }
+    /** TriggerChosenCallback: Trigger a callback for a certain node. */
+    public TriggerChosenCallback<T>(Node: Node<T>, Status: boolean) {
+        var Callback = this.ChosenCallbacks.get(Node.Type);
+        if (Callback) Callback(Node, Status);
+    }
     /** NodeChosen: Handle the click event on a node. */
     public NodeChosen<T>(Event: Event, Node?: Node<T>, Additive: boolean = false) {
         var Incumbent = Node && this.ChosenNodes.includes(Node);
@@ -132,6 +147,7 @@ export class Visualizer {
             this.ChosenNodes.forEach(Node => {
                 SetClassForNode(Node.ID, "chosen", false);
                 SetClassForLinks(Node.ID, "chosen-neighbor", false);
+                this.TriggerChosenCallback(Node, false);
             });
             this.ChosenNodes = [];
         }
@@ -141,11 +157,13 @@ export class Visualizer {
                 this.ChosenNodes.push(Node);
                 SetClassForNode(Node.ID, "chosen", true);
                 SetClassForLinks(Node.ID, "chosen-neighbor", true);
+                this.TriggerChosenCallback(Node, true);
             } else {
                 // If the node is chosen, remove it
                 this.ChosenNodes.splice(this.ChosenNodes.indexOf(Node), 1);
                 SetClassForNode(Node.ID, "chosen", false);
                 SetClassForLinks(Node.ID, "chosen-neighbor", false);
+                this.TriggerChosenCallback(Node, false);
             }
         }
         this.Container.attr("class", this.ChosenNodes.length > 0 ? "with-chosen" : "");
@@ -163,6 +181,11 @@ export class Visualizer {
                 .distance((Link) => Math.pow((Link as any).Distance, 3) * this.Parameters.LinkDistanceDisplayScale).strength(1))
             .on("tick", () => Renderer(this.Simulation!.alpha()));
         this.Simulation.alpha(1).alphaTarget(0).restart();
+    }
+    /** GetCodebookColor: Get the color of a codebook. */
+    public GetCodebookColor(Number: number): string {
+        return d3.scaleSequential().clamp(true)
+            .domain([0, this.Dataset.Codebooks.length]).interpolator(d3.interpolateSinebow)(Number);
     }
 }
 
@@ -193,7 +216,7 @@ function SetClassForLinks<T>(ID: string, Class: string, Status: boolean) {
 /** BuildSemanticGraph: Build a semantic code graph from the dataset. */
 export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Parameters = new Parameters()): Graph<Code> {
     var Nodes: Node<Code>[] = 
-        Dataset.Codes.map((Code, Index) => ({ ID: Index.toString(), Data: Code, NearOwners: new Set(Code.Owners), x: Code.Position![0], y: Code.Position![1] }));
+        Dataset.Codes.map((Code, Index) => ({ Type: "Code", ID: Index.toString(), Data: Code, NearOwners: new Set(Code.Owners), x: Code.Position![0], y: Code.Position![1] }));
     var Links: Map<string, Link<Code>> = new Map();
     var MaxDistance = 0;
     var MinDistance = Number.MAX_VALUE;

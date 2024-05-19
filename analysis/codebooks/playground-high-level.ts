@@ -24,12 +24,12 @@ await UseLLMs(async () => {
         new RefineMerger({ Threshold: 0.5, Penalty: 0, Looping: true }),
         // Merge categories
         new CategoryNameMerger(),
-        new CategoryMerger({ Looping: true, Threshold: 0.7, Penalty: 0.1 }),
+        new CategoryMerger({ Looping: true, Threshold: 0.6, Penalty: 0.1 }),
         new CategoryNameMerger(),
         new CategoryRefiner(),
         // Assign categories to codes1
         new CategoryAssigner()
     ), "Coded Dataset 1", "0~16-gpt-4.5-omni.json", "high-level-2", LLMName, false);
-}, "gpt-4.5-omni"); // "gpt-4.5-turbo", "claude3-haiku", "claude3-sonnet", "llama3-70b")
+}, "gpt-3.5-turbo", "gpt-4.5-turbo", "gpt-4.5-omni", "llama3-70b", "claude3-haiku", "claude3-sonnet");
 
 process.exit(0);

@@ -57,7 +57,7 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Cod
         // Ask LLMs to write new names for each category
         return [`
 You are an expert in thematic analysis. You are assigning names for categories based on the merging results.
-Make sure those names are concise, accurate, and related to the research question. Use 2-4 words and avoid over-generalization (e.g. "social interaction" instead of "interaction", "communication approach" instead of "communication").
+Make sure those merged names are concise, accurate, and related to the research question. Use 2-4 words and avoid over-generalization.
 ${ResearchQuestion}
 Always follow the output format:
 ---
