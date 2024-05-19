@@ -81,19 +81,20 @@ export async function ConsolidateConversations(Consolidator: CodebookConsolidato
     // Load the conversations and analyses
     var Conversations = LoadConversationsForAnalysis(Group, ConversationName);
     var Analyses = await LoadAnalyses(GetMessagesPath(Group, `${Analyzer}/${ConversationName.replace(".json", `-${AnalyzerLLM}`)}`));
+    var ResultName = AnalyzerLLM == LLMName ? AnalyzerLLM : `${AnalyzerLLM}-${LLMName}`;
     // Consolidate the codebook
     await ConsolidateCodebook(Consolidator, [...Object.values(Conversations)], Analyses, async (Iteration) => {
         var Values = Object.values(Analyses.Codebook!).filter(Code => Code.Label != "[Merged]");
         Analyses.Codebook = {};
         for (var Code of Values) Analyses.Codebook[Code.Label] = Code;
         var Book = ExportConversationsForCoding(Object.values(Conversations), Analyses);
-        await Book.xlsx.writeFile(`${ExportFolder}/${ConversationName.replace(".json", `-${AnalyzerLLM}-${LLMName}-${Iteration}`)}.xlsx`);
+        await Book.xlsx.writeFile(`${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}-${Iteration}`)}.xlsx`);
     }, FakeRequest);
     // Write the result into a JSON file
-    File.writeFileSync(`${ExportFolder}/${ConversationName.replace(".json", `-${AnalyzerLLM}-${LLMName}`)}.json`, JSON.stringify(Analyses, null, 4));
+    File.writeFileSync(`${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}`)}.json`, JSON.stringify(Analyses, null, 4));
     // Write the result into an Excel file
     var Book = ExportConversationsForCoding(Object.values(Conversations), Analyses);
-    await Book.xlsx.writeFile(`${ExportFolder}/${ConversationName.replace(".json", `-${AnalyzerLLM}-${LLMName}`)}.xlsx`);
+    await Book.xlsx.writeFile(`${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}`)}.xlsx`);
 }
 
 /** ConsolidateCodebook: Load, consolidate, and export codebooks. */

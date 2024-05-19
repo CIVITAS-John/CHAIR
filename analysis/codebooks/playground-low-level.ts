@@ -23,12 +23,11 @@ await UseLLMs(async () => {
         // My heuristics: we start from closer ideas, then try to merge distance ones, before give some final touches
         new RefineMerger({ Threshold: 0.5, Penalty: 0, UseDefinition: false }),
         new RefineMerger({ Threshold: 0.5, Penalty: 0, Looping: true }),
-        new RefineMerger({ Threshold: 0.6, Penalty: 0.1, UseDefinition: false }),
-        new RefineMerger({ Threshold: 0.6, Penalty: 0.1 }),
-        new RefineMerger({ Threshold: 0.5, Penalty: 0, Looping: true }),
+        new RefineMerger({ Threshold: 0.6, Penalty: 0.05, UseDefinition: false }),
+        new RefineMerger({ Threshold: 0.6, Penalty: 0.05, Looping: true }),
         // Merge categories
         new CategoryNameMerger(),
-        new CategoryMerger({ Looping: true, Threshold: 0.7, Penalty: 0.1 }),
+        new CategoryMerger({ Looping: true, Threshold: 0.6, Penalty: 0.05 }),
         new CategoryNameMerger(),
         new CategoryRefiner(),
         // Assign categories to codes

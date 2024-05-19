@@ -93,12 +93,12 @@ Thoughts:
 
 Definitions for each code (${Codes.length} in total):
 1. 
-Criteria: {Criteria of code 1}
+Criteria: {A sentence of criteria 1}
 Label: {A label of code 1}
 Category: {2-4 words for code 1}
 ...
 ${Codes.length}.
-Criteria: {Criteria of code ${Codes.length}}
+Criteria: {A sentence of criteria ${Codes.length}}
 Label: {A label of code ${Codes.length}}
 Category: {2-4 words for code ${Codes.length}}
 ---`.trim(), 

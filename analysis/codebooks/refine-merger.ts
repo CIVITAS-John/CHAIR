@@ -73,13 +73,13 @@ Categories:
 Definitions for each code (${Codes.length} in total):
 1.
 Relationship: {The logical relationship between sub-codes in code 1}
-Criteria: {Consolidated criteria of code 1}
+Criteria: {A sentence of consolidated criteria 1}
 Label: {A consolidated label of code 1}
 Category: {2-4 words for code 1}
 ...
 ${Codes.length}.
 Relationship: {The logical relationship between sub-codes in code ${Codes.length}}
-Criteria: {Consolidated criteria of code ${Codes.length}}
+Criteria: {A sentence of consolidated criteria ${Codes.length}}
 Label: {A consolidated label of code ${Codes.length}}
 Category: {2-4 words for code ${Codes.length}}
 ---`.trim(), 

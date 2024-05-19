@@ -9,12 +9,16 @@ export class InfoPanel {
     private Visualizer: Visualizer;
     /** Container: The container for the info panel. */
     private Container: Cash;
+    /** DialogContainer: The container for the expanded dialog. */
+    private DialogContainer: Cash;
     /** Panels: Panels in the info panel. */
     private Panels: Map<string, Cash> = new Map<string, Cash>();
     /** Constructor: Constructing the side panel. */
-    public constructor(Container: Cash, Visualizer: Visualizer) {
+    public constructor(Container: Cash, DialogContainer: Cash, Visualizer: Visualizer) {
         this.Visualizer = Visualizer;
         this.Container = Container;
+        this.DialogContainer = DialogContainer;
+        DialogContainer.children("div.close").on("click", () => DialogContainer.hide());
         Visualizer.RegisterChosenCallback<Code>("Code", 
             (Node, Status) => this.ShowOrHidePanel<Code>(Node, Status));
     }
@@ -32,6 +36,7 @@ export class InfoPanel {
         var Panel = this.BuildPanel(Node, false);
         this.Panels.set(Node.ID, Panel);
         this.Container.append(Panel);
+        this.DialogContainer.hide();
     }
     /** HidePanel: Hide a panel for a data node. */
     public HidePanel<T>(Node: Node<T>) {
@@ -51,19 +56,38 @@ export class InfoPanel {
         }
         return Panel;
     }
+    /** ShowDialogForCode: Show a dialog for a code. */
+    public ShowDialogForCode(Owner: number, ...Codes: Code[]) {
+        var Panel = $(`<div class="panel"></div>`);
+        for (var Code of Codes) {
+            if (Panel.children().length > 0) $("<hr>").appendTo(Panel);
+            this.BuildPanelForCode(Panel, Code, true);
+        }
+        Panel.children("h3").append($(`<span style="color: ${this.Visualizer.GetCodebookColor(Owner)}">${this.Visualizer.Dataset.Names[Owner]}</span>`));
+        var Content = this.DialogContainer.show().children("div.content");
+        Content.children().remove();
+        Content.append(Panel);
+    }
     /** BuildPanelForCode: Build a panel for a code. */
     public BuildPanelForCode(Panel: Cash, Code: Code, Everything: boolean = true) {
         Panel.append($(`<h3>${Code.Label}</h3>`));
-        if (Code.Owners) {
+        if (Code.Owners && Code.Owners.length > 0) {
             var Owners = $(`<p class="owners"></p>`).appendTo(Panel);
-            for (var Owner of Code.Owners) {
-                if (Owner == 0 && Code.Owners.length > 1) continue;
+            var CreateLink = (Owner: number) => {
                 var Link = $(`<a href="javascript:void(0)" style="color: ${this.Visualizer.GetCodebookColor(Owner)}">${this.Visualizer.Dataset.Names[Owner]}</a>`).appendTo(Owners);
                 if (Owner != 0) {
                     var Originals = this.FindOriginalCodes(Code, Owner);
                     Link.attr("title", Originals.map(Original => Original.Label).join(", "));
+                    Link.on("click", () => { this.ShowDialogForCode(Owner, ...Originals) });
                 }
+                return Link;
+            };
+            for (var Owner of Code.Owners) {
+                if (Owner == 0 && Code.Owners.length > 1) continue;
+                CreateLink(Owner);
             }
+        } else if (Code.Alternatives && Code.Alternatives.length > 0) {
+            Panel.append($(`<p class="alternatives">Consolidated from: ${Code.Alternatives.join(", ")}</p>`));
         }
         if (Code.Definitions && Code.Definitions.length > 0)
             Panel.append($(`<p class="definition">${Code.Definitions[0]}</p>`));
@@ -71,12 +95,16 @@ export class InfoPanel {
             Panel.append($(`<p><i>No definition available.</i></p>`));
         if (Code.Examples && Code.Examples.length > 0) {
             Panel.append($(`<hr>`));
-            if (Everything || Code.Examples.length == 1) {
+            if (Everything) {
+                var List = $(`<ol class="quote"></ol>`).appendTo(Panel);
                 for (var Example of Code.Examples) {
-                    $(`<p class="quote"><span>${Code.Examples[0]}</span></p>`).appendTo(Panel);
+                    $(`<li class="quote"><span>${Example}</span></li>`).appendTo(List);
                 }
             } else {
-                $(`<p class="quote"><span>${Code.Examples[0]}</span><a href="javascript:void(0)">(${Code.Examples.length - 1} more)</a></p>`).appendTo(Panel);
+                var Quote = $(`<p class="quote"><span>${Code.Examples[0]}</span></p>`).appendTo(Panel);
+                if (Code.Examples.length > 1) $(`<a href="javascript:void(0)">(${Code.Examples.length - 1} more)</a>`).appendTo(Quote).on("click", () => {
+                    this.ShowDialogForCode(0, Code);
+                });
             }
         }
     }
