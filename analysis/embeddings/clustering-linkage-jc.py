@@ -3,7 +3,7 @@ import numpy as np
 from embedding import Dimensions, Items, cpus, labels, embeddings
 
 # Linkage-based Clustering - John Chen's heuristic
-# The basic idea is to apply a penalty to the distance based on the depth of the tree
+# A penalty is applied to the relative size (e.g. numbers of examples or codes) of the clusters
 
 # Get the arguments
 Metrics = sys.argv[3] if len(sys.argv) > 3 else "euclidean"
@@ -37,19 +37,25 @@ distances = pairwise_distances(embeddings, embeddings, metric=Metrics, n_jobs=cp
 from scipy.spatial.distance import squareform
 condensed_distances = squareform(distances)
 
+# For average sizes, we only consider those with more than 1
+sizes_for_calc = [size for size in sizes if size > 1]
+avg_size = np.mean(sizes_for_calc)
+std_size = np.std(sizes_for_calc)
+print("Average size:", avg_size, ", Standard deviation:", std_size)
+
 # Calculate the linkage
 from scipy.cluster.hierarchy import linkage, to_tree
 linkages = linkage(condensed_distances, method=Linkage)
 root = to_tree(linkages)
 
-# Pre-traverse the tree for bottom-up depth (leaf = 0, root = max_depth)
-leaf_depths = {}
+# Pre-traverse the tree for bottom-up depth (leaf = size of the leaf, root = total_size)
+leaf_sizes = {}
 def pre_traverse(node):
     if node.is_leaf():
-        return -1
-    leaf_depths[node.id] = max(pre_traverse(node.get_left()), pre_traverse(node.get_right())) + 1
-    return leaf_depths[node.id]
-max_depth = pre_traverse(root)
+        return sizes[node.id]
+    leaf_sizes[node.id] = pre_traverse(node.get_left()) + pre_traverse(node.get_right())
+    return leaf_sizes[node.id]
+total_size = pre_traverse(root)
 
 # Default cluster: -1, 100%
 cluster_index = 0
@@ -67,13 +73,16 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
         probs[node.id] = prob
         return 1
     # If it is not a leaf, check if it is a cluster
-    criteria = max(MaxDistance - leaf_depths[node.id] * Penalty, MinDistance)
+    # Apply the maximum penalty when the new size is 2 std_size larger than the average
+    penalty = min(1, max(0, (leaf_sizes[node.id] - avg_size) / 2 / std_size))
+    penalty = penalty * penalty
+    criteria = max(MaxDistance - penalty * Penalty, MinDistance)
+    print("Node:", node.id, ", Size:", leaf_sizes[node.id], ", % Penalty:", penalty, ", Distance:", node.dist, ", Criteria:", criteria)
     # Verbose: show the cluster
     left_id = node.get_left().id
     leftlabel = labels[left_id] if left_id < Items else "cluster-" + str(left_id)
     right_id = node.get_right().id
     rightlabel = labels[right_id] if right_id < Items else "cluster-" + str(right_id)
-    # print("depth", leaf_depths[node.id], "distance", node.dist, leftlabel, rightlabel, criteria, node.dist <= criteria)
     if cluster == -1 and node.dist <= criteria:
         cluster = cluster_index
         cluster_index += 1

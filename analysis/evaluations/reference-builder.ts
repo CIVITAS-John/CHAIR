@@ -44,6 +44,13 @@ export class ReferenceBuilder {
 export class RefiningReferenceBuilder extends ReferenceBuilder {
     /** Suffix: The suffix of the reference codebook. */
     public Suffix: string = "-refined";
+    /** SameData: Whether the codebooks refer to the same underlying data. */
+    public SameData: boolean;
+    /** Constructor: Initialize the reference builder. */
+    public constructor(SameData: boolean = true) {
+        super();
+        this.SameData = SameData;
+    }
     /** RefineCodebook: Further merge the codebook.*/
     protected async RefineCodebook(Codebook: Codebook): Promise<Codebook> {
         var Threads = { Codebook: Codebook, Threads: {} };
@@ -53,10 +60,12 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
             // Generate definitions for missing ones
             new DefinitionGenerator(),
             // Merge definitions
-            new RefineMerger({ Maximum: 0.5, UseDefinition: false }),
-            new RefineMerger({ Maximum: 0.5, Looping: true }),
-            new RefineMerger({ Maximum: 0.6, UseDefinition: false }),
-            new RefineMerger({ Maximum: 0.6, Looping: true }),
+            // Do not use penalty mechanism when the codebooks refer to different data
+            // It may create a bias against smaller datasets
+            new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.4, UseDefinition: false }),
+            new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.4, Looping: true }),
+            new RefineMerger({ Maximum: 0.6, Minimum: !this.SameData ? 0.6 : 0.4, UseDefinition: false }),
+            new RefineMerger({ Maximum: 0.6, Minimum: !this.SameData ? 0.6 : 0.4, Looping: true }),
             // Merge very similar names once again
             new SimpleMerger({ Looping: true }),
         ), [], Threads);
