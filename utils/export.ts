@@ -207,7 +207,7 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
     for (var Code of Codes) {
         var Categories = Code.Categories?.map(Category => Code.Categories!.length > 1 ? `* ${Category}` : Category).join("\n") ?? "";
         var Definitions = Code.Definitions?.map(Definition => Code.Definitions!.length > 1 ? `* ${Definition}` : Definition).join("\n") ?? "";
-        var Examples = Code.Examples?.map(Example => Code.Examples!.length > 1 ? `* ${Example}` : Example).join("\n") ?? "";
+        var Examples = Code.Examples?.map(Example => Code.Examples!.length > 1 ? `* ${Example.replace("|||", ": ")}` : Example.replace("|||", ": ")).join("\n") ?? "";
         var Alternatives = Code.Alternatives?.map(Code => `* ${Code}`).join("\n") ?? "";
         var Row = Sheet.addRow({
             Label: Code.Label,

@@ -14,7 +14,8 @@ export class CategoryAssigner extends CodeConsolidator {
     /** BuildPrompts: Build the prompts for the code consolidator. */
     // In this case, we do not really use the LLM, so we just merge the codes
     public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
-        var Categories = GetCategories(Codebook);
+        var Frequencies = GetCategories(Codebook);
+        var Categories = Object.keys(Frequencies);
         // We have too many categories. Filter ones with more than 1 instances.
         // Categories = Categories.filter(Category => Codes.filter(Code => Code.Categories?.includes(Category)).length > 1).sort();
         return [`

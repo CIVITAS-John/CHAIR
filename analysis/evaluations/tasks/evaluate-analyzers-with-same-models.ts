@@ -4,7 +4,7 @@ import { CoverageEvaluator } from "../coverage-evaluator.js";
 import { BuildReferenceAndEvaluateCodebooks } from "../codebooks.js";
 import { InitializeEmbeddings } from '../../../utils/embeddings.js';
 import { EnsureFolder } from '../../../utils/llms.js';
-import { ReferenceBuilder, RefiningReferenceBuilder, SimpleReferenceBuilder } from '../reference-builder.js';
+import { ReferenceBuilder, RefiningReferenceBuilder } from '../reference-builder.js';
 import { UseLLM } from '../../../translation/general.js';
 
 InitializeEmbeddings("gecko-768-similarity");
@@ -21,7 +21,7 @@ async function EvaluateAnalyzers(SourcePath: string, Dataset: string, LLM: strin
     var Paths = Analyzers.map(Analyzer => SourcePath + "/" + Analyzer + "/" + Dataset + "-" + LLM + ".json");
     // Build the reference and evaluate the codebooks
     var Results = await BuildReferenceAndEvaluateCodebooks(
-        Paths, ReferencePath + "/" + LLM + Builder.Suffix, new SimpleReferenceBuilder(), new CoverageEvaluator(), TargetPath);
+        Paths, ReferencePath + "/" + LLM + Builder.Suffix, Builder, new CoverageEvaluator(), TargetPath);
     File.writeFileSync(TargetPath + ".json", JSON.stringify(Results, null, 4));
 }
 

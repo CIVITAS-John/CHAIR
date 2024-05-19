@@ -7,16 +7,16 @@ import { CodeConsolidator } from "./consolidator.js";
 
 /** CategoryMerger: Merge categories based on similar names. Then, merge the names into one. */
 export class CategoryMerger extends CodeConsolidator {
-    /** Threshold: The similarity threshold for merging codes. */
-    public Threshold: number;
-    /** Penalty: The level penalty for merging codes. */
-    public Penalty: number;
+    /** Maximum: The maximum threshold for merging categories. */
+    public Maximum: number;
+    /** Minimum: The minimum threshold for merging categories. */
+    public Minimum: number;
     /** Constructor: Create a new NameMerger. */
-    constructor({Threshold = 0.6, Penalty = 0.05, Looping = false}: {Threshold?: number, Penalty?: number, Looping?: boolean}) {
+    constructor({Maximum = 0.7, Minimum = 0.5, Looping = false}: {Maximum?: number, Minimum?: number, Looping?: boolean}) {
         super();
+        this.Maximum = Maximum;
+        this.Minimum = Minimum;
         this.Looping = Looping;
-        this.Penalty = Penalty;
-        this.Threshold = Threshold;
     }
     /** SubunitFilter: Filter the subunits before chunking. */
     public SubunitFilter(Code: Code): boolean {
@@ -29,7 +29,8 @@ export class CategoryMerger extends CodeConsolidator {
     /** Preprocess: Preprocess the subunits before chunking. */
     public async Preprocess(Codebook: Codebook, Codes: Code[]): Promise<Code[]> {
         // Collect the existing categories from the codebook
-        var Categories = GetCategories(Codebook);
+        var Frequencies = GetCategories(Codebook);
+        var Categories = Object.keys(Frequencies);
         // Map the categories to strings
         var CategoryStrings = Categories.map(Category => {
             var Text = `Category: ${Category}
@@ -39,10 +40,9 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Cod
 // ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Code.Label} (${Code.Definitions![0]})`).join("\n")}
             return Text.trim();
         });
-        // Codes.map(Code => Code.Categories).filter(Categories => Categories.findIndex(Category => Category == undefined) != -1)
         // Cluster categories using text embeddings
-        var Clusters = await ClusterTexts(CategoryStrings, Categories, "consolidated", 
-            "linkage-jc", "euclidean", "ward", this.Threshold.toString(), this.Penalty.toString(), "0.5"
+        var Clusters = await ClusterTexts(CategoryStrings, Categories.map(Category => `${Category}|||${Frequencies.get(Category)}`), "consolidated", 
+            "linkage-jc", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString()
         );
         this.OldCategories = Categories;
         this.NewCategories = MergeCategoriesByCluster(Clusters, Categories, Codes);
@@ -85,7 +85,7 @@ ${Count}. {2-4 words for category ${Count}}
         UpdateCategories(Object.keys(this.NewCategories), Results, Codes);
         // Check if we are done
         var OldLength = this.OldCategories.length;
-        var NewLength = GetCategories(Codebook).length;
+        var NewLength = GetCategories(Codebook).size;
         if (OldLength == NewLength) this.Stopping = true;
         console.log(chalk.green(`Statistics: Categories merged from ${OldLength} to ${NewLength}`));
         return 0;

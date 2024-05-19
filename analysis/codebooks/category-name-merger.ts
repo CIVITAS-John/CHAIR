@@ -8,12 +8,15 @@ import { CodeConsolidator } from "./consolidator.js";
 // Note that in this pass, we are not refining names. The shortest name will be adopted.
 // So we don't recommend setting a high threshold, because different concepts may be merged.
 export class CategoryNameMerger extends CodeConsolidator {
-    /** Threshold: The similarity threshold for merging codes. */
-    public Threshold: number;
+    /** Maximum: The maximum threshold for merging categories. */
+    public Maximum: number;
+    /** Minimum: The minimum threshold for merging categories. */
+    public Minimum: number;
     /** Constructor: Create a new CategoryNameMerger. */
-    constructor(Threshold: number = 0.4) {
+    constructor({Maximum = 0.4, Minimum = 0.4}: {Maximum?: number, Minimum?: number}) {
         super();
-        this.Threshold = Threshold;
+        this.Maximum = Maximum;
+        this.Minimum = Minimum;
     }
     /** SubunitFilter: Filter the subunits before chunking. */
     public SubunitFilter(Code: Code): boolean {
@@ -23,14 +26,15 @@ export class CategoryNameMerger extends CodeConsolidator {
     public async Preprocess(Codebook: Codebook, Codes: Code[]): Promise<Code[]> {
         if (Codes.length == 0) return [];
         // Collect the existing categories from the codebook
-        var Categories = GetCategories(Codebook);
+        var Frequencies = GetCategories(Codebook);
+        var Categories = Object.keys(Frequencies);
         // Cluster categories using text embeddings
-        var Clusters = await ClusterTexts(Categories, Categories, "consolidated", 
-            "linkage-jc", "euclidean", "ward", this.Threshold.toString(), "0"
+        var Clusters = await ClusterTexts(Categories, Categories.map(Category => `${Category}|||${Frequencies.get(Category)}`), "consolidated", 
+            "linkage-jc", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString()
         );
         // Update the categories
         MergeCategoriesByCluster(Clusters, Categories, Codes, true);
-        console.log(`Statistics: Categories merged from ${Categories.length} to ${GetCategories(Codebook).length}`);
+        console.log(`Statistics: Categories merged from ${Categories.length} to ${GetCategories(Codebook).size}`);
         return Codes;
     }
 }

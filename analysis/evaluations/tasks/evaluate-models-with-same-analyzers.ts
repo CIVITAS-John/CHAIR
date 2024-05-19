@@ -5,7 +5,7 @@ import { NetworkEvaluator } from '../network-evaluator.js';
 import { BuildReferenceAndEvaluateCodebooks } from "../codebooks.js";
 import { InitializeEmbeddings } from '../../../utils/embeddings.js';
 import { EnsureFolder } from '../../../utils/llms.js';
-import { ReferenceBuilder, RefiningReferenceBuilder, SimpleReferenceBuilder } from '../reference-builder.js';
+import { ReferenceBuilder, RefiningReferenceBuilder } from '../reference-builder.js';
 import { UseLLM } from '../../../translation/general.js';
 
 InitializeEmbeddings("gecko-768-similarity");

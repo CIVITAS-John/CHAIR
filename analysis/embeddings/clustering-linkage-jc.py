@@ -8,12 +8,17 @@ from embedding import Dimensions, Items, cpus, labels, embeddings
 # Get the arguments
 Metrics = sys.argv[3] if len(sys.argv) > 3 else "euclidean"
 Linkage = sys.argv[4] if len(sys.argv) > 4 else "ward"
-MaxDistance = float(sys.argv[5]) if len(sys.argv) > 5 else 0.9
-Penalty = float(sys.argv[6]) if len(sys.argv) > 6 else 0.2
-MinDistance = float(sys.argv[7]) if len(sys.argv) > 7 else 0.4
-TargetDimensions = int(sys.argv[8]) if len(sys.argv) > 8 else Dimensions
-Plotting = bool(sys.argv[9]) if len(sys.argv) > 9 else False
+MaxDistance = float(sys.argv[5]) if len(sys.argv) > 5 else 0.7
+MinDistance = float(sys.argv[6]) if len(sys.argv) > 6 else 0.4
+TargetDimensions = int(sys.argv[7]) if len(sys.argv) > 7 else Dimensions
+Plotting = bool(sys.argv[8]) if len(sys.argv) > 8 else False
+Penalty = MaxDistance - MinDistance
 print("Linkage:", Linkage, ", MaxDistance:", MaxDistance, ", MinDistance:", MinDistance, ", Metrics:", Metrics, ", Target Dimensions:", TargetDimensions)
+
+# Separate the sizes from labels
+# The format: label|||size
+sizes = [int(label.split("|||")[1]) for label in labels]
+labels = [label.split("|||")[0] for label in labels]
 
 # Use UMap to reduce the dimensions
 from umap import UMAP

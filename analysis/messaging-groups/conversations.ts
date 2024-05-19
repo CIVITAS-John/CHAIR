@@ -99,3 +99,8 @@ export function BuildMessagePrompt(Message: Message, Coded?: CodedItem): string 
     if ((Coded?.Codes?.length ?? 0) > 0) Result += `\nPreliminary tags: ${Coded!.Codes!.join("; ")}`;
     return Result;
 }
+
+/** RevertMessageFormat: Revert a message format. */
+export function RevertMessageFormat(Message: string): string {
+    return Message.replaceAll(/\[(Image|Checkin|Emoji) [^\]]+\]/g, "[$1]");
+}

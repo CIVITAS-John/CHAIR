@@ -7,18 +7,18 @@ import { CodeConsolidator } from "./consolidator.js";
 // Note that in this pass, we are not refining names. The shortest name will be adopted.
 // So we don't recommend setting a high threshold, because different concepts may be merged.
 export class SimpleMerger extends CodeConsolidator {
-    /** Threshold: The similarity threshold for merging codes. */
-    public Threshold: number;
-    /** Penalty: The level penalty for merging codes. */
-    public Penalty: number;
+    /** Maximum: The maximum threshold for merging codes. */
+    public Maximum: number;
+    /** Minimum: The minimum threshold for merging codes. */
+    public Minimum: number;
     /** UseDefinition: Whether we use definitions in merging (they will be used to inform LLM). */
     public UseDefinition: boolean;
     /** Constructor: Create a new NameMerger. */
-    constructor({Threshold = 0.4, Penalty = 0, Looping = false, UseDefinition = false}: {Threshold?: number, Penalty?: number, Looping?: boolean, UseDefinition?: boolean}) {
+    constructor({Maximum = 0.4, Minimum = 0.4, Looping = false, UseDefinition = false}: {Maximum?: number, Minimum?: number, Looping?: boolean, UseDefinition?: boolean}) {
         super();
         this.Looping = Looping;
-        this.Penalty = Penalty;
-        this.Threshold = Threshold;
+        this.Maximum = Maximum;
+        this.Minimum = Minimum;
         this.UseDefinition = UseDefinition;
     }
     /** Preprocess: In this case, we do not really use the LLM, so we just merge the codes. */
@@ -34,8 +34,8 @@ export class SimpleMerger extends CodeConsolidator {
                 return Code.Label;
             }
         });
-        var Clusters = await ClusterTexts(Labels, Codes.map(Code => Code.Label), "consolidator", 
-            "linkage-jc", "euclidean", "ward", this.Threshold.toString(), this.Penalty.toString(), "0.2");
+        var Clusters = await ClusterTexts(Labels, Codes.map(Code => `${Code.Label}|||${Code.Examples?.length ?? 0}`), "consolidator", 
+            "linkage-jc", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString());
         // Merge the codes
         var Result = MergeCodesByCluster(Clusters, Codes);
         // Check if we should stop - when nothing is merged

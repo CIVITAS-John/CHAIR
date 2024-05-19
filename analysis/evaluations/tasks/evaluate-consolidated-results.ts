@@ -4,7 +4,7 @@ import { CoverageEvaluator } from "../coverage-evaluator.js";
 import { BuildReferenceAndEvaluateCodebooks } from "../codebooks.js";
 import { InitializeEmbeddings } from '../../../utils/embeddings.js';
 import { EnsureFolder } from '../../../utils/llms.js';
-import { RefiningReferenceBuilder, SimpleReferenceBuilder } from '../reference-builder.js';
+import { RefiningReferenceBuilder } from '../reference-builder.js';
 import { UseLLM } from '../../../translation/general.js';
 import { ReferenceBuilder } from '../reference-builder';
 

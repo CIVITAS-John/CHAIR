@@ -6,6 +6,7 @@ import { SimpleMerger } from '../codebooks/simple-merger.js';
 import { PipelineConsolidator } from "../codebooks/consolidator.js";
 import { ExportConversationsForCoding } from "../../utils/export.js";
 import { RefineMerger } from '../codebooks/refine-merger.js';
+import { DefinitionGenerator } from '../codebooks/definition-generator.js';
 
 /** ReferenceBuilder: A builder of reference codebook. */
 export class ReferenceBuilder {
@@ -31,7 +32,7 @@ export class ReferenceBuilder {
             // Merge very similar names
             new SimpleMerger({ Looping: true }),
             // Merge similar definitions too
-            new SimpleMerger({ Looping: true, UseDefinition: true, Threshold: 0.4 }),
+            new SimpleMerger({ Looping: true, UseDefinition: true, Maximum: 0.4 }),
         ), [], Threads);
         console.log(chalk.green(`Statistics: ${Object.keys(Threads.Codebook).length} codes remained after consolidation.`));
         // Return the new codebook
@@ -46,35 +47,18 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
     /** RefineCodebook: Further merge the codebook.*/
     protected async RefineCodebook(Codebook: Codebook): Promise<Codebook> {
         var Threads = { Codebook: Codebook, Threads: {} };
-        if (Object.values(Codebook).findIndex(Code => (Code.Definitions?.length ?? 0) > 0) == -1)
-            throw new Error("Some of the codes do not have definitions. Please use SimpleReferenceBuilder instead.");
         await ConsolidateCodebook<void>(new PipelineConsolidator(
             // Merge very similar names
             new SimpleMerger({ Looping: true }),
-            // Merge similar definitions too
-            // new SimpleMerger({ Looping: true, UseDefinition: true, Threshold: 0.4 }),
-            // Refine similar definitions
-            new RefineMerger({ Looping: true, UseDefinition: true, Threshold: 0.5 }),
-            new RefineMerger({ UseDefinition: true, Threshold: 0.6, Penalty: 0.1 }),
+            // Generate definitions for missing ones
+            new DefinitionGenerator(),
+            // Merge definitions
+            new RefineMerger({ Maximum: 0.5, UseDefinition: false }),
+            new RefineMerger({ Maximum: 0.5, Looping: true }),
+            new RefineMerger({ Maximum: 0.6, UseDefinition: false }),
+            new RefineMerger({ Maximum: 0.6, Looping: true }),
             // Merge very similar names once again
             new SimpleMerger({ Looping: true }),
-        ), [], Threads);
-        console.log(chalk.green(`Statistics: ${Object.keys(Threads.Codebook).length} codes remained after consolidation.`));
-        // Return the new codebook
-        return Threads.Codebook;
-    }
-}
-
-/** SimpleReferenceBuilder: A simple builder of reference codebook. */
-export class SimpleReferenceBuilder extends ReferenceBuilder {
-    /** RefineCodebook: Further merge the codebook.*/
-    protected async RefineCodebook(Codebook: Codebook): Promise<Codebook> {
-        var Threads = { Codebook: Codebook, Threads: {} };
-        await ConsolidateCodebook<void>(new PipelineConsolidator(
-            // Merge very similar names
-            new SimpleMerger({ Looping: true }),
-            // Merge similar definitions too
-            new SimpleMerger({ Looping: true, UseDefinition: true, Threshold: 0.4 }),
         ), [], Threads);
         console.log(chalk.green(`Statistics: ${Object.keys(Threads.Codebook).length} codes remained after consolidation.`));
         // Return the new codebook

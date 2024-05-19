@@ -2,7 +2,7 @@ import { InitializeEmbeddings } from '../../utils/embeddings.js';
 import { GetMessagesPath } from '../../utils/loader.js';
 import { BuildReferenceAndExport } from './reference-builder.js';
 import { LoadCodebooks } from './codebooks.js';
-import { SimpleReferenceBuilder } from './reference-builder';
+import { ReferenceBuilder } from './reference-builder';
 
 InitializeEmbeddings("gecko-768-similarity");
 
@@ -12,6 +12,6 @@ var TargetPath = GetMessagesPath("Coded Dataset 1", "evaluation/references/low-l
 var [Codebooks, Names] = await LoadCodebooks(SourcePath);
 
 // Build the reference codebook
-await BuildReferenceAndExport(new SimpleReferenceBuilder(), Codebooks, TargetPath);
+await BuildReferenceAndExport(new ReferenceBuilder(), Codebooks, TargetPath);
 
 process.exit(0);

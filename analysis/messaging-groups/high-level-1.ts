@@ -28,8 +28,8 @@ For each code, try to find 3 quotes. Always follow the output format:
 ---
 ## Label of code 1
 Definition: A definition of code 1
-- Example quote 1
-- Example quote 2
+- "Example quote 1"
+- "Example quote 2"
 
 ## ...
 `.trim(),

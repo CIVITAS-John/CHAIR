@@ -20,15 +20,17 @@ await UseLLMs(async () => {
         new DefinitionGenerator(),
         // Merge definitions
         // For high-level codebooks, we use a lower threshold to avoid over-merging.
-        new RefineMerger({ Threshold: 0.5, Penalty: 0, UseDefinition: false }),
-        new RefineMerger({ Threshold: 0.5, Penalty: 0, Looping: true }),
-        // Merge categories
+        new RefineMerger({ Maximum: 0.5, UseDefinition: false }),
+        new RefineMerger({ Maximum: 0.5, Looping: true }),
+        new RefineMerger({ Maximum: 0.6, UseDefinition: false }),
+        new RefineMerger({ Maximum: 0.6, Looping: true }),
+        /*// Merge categories
         new CategoryNameMerger(),
-        new CategoryMerger({ Looping: true, Threshold: 0.6, Penalty: 0.1 }),
+        new CategoryMerger({ Looping: true }),
         new CategoryNameMerger(),
         new CategoryRefiner(),
-        // Assign categories to codes1
-        new CategoryAssigner()
+        // Assign categories to codes
+        new CategoryAssigner()*/
     ), "Coded Dataset 1", "0~16-gpt-4.5-omni.json", "high-level-2", LLMName, false);
 }, "gpt-3.5-turbo", "gpt-4.5-turbo", "gpt-4.5-omni", "llama3-70b", "claude3-haiku", "claude3-sonnet");
 

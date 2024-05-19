@@ -6,24 +6,24 @@ import { DefinitionParser } from "./definition-generator.js";
 
 /** RefineMerger: Merge codes based on names and definitions. Then, refine the definitions into one. */
 export class RefineMerger extends DefinitionParser {
-    /** Threshold: The similarity threshold for merging codes. */
-    public Threshold: number;
-    /** Penalty: The level penalty for merging codes. */
-    public Penalty: number;
+    /** Maximum: The maximum threshold for merging codes. */
+    public Maximum: number;
+    /** Minimum: The minimum threshold for merging codes. */
+    public Minimum: number;
     /** UseDefinition: Whether we use definitions in merging (they will be used to inform LLM). */
     public UseDefinition: boolean;
     /** Constructor: Create a new NameMerger. */
-    constructor({Threshold = 0.6, Penalty = 0.1, Looping = false, UseDefinition = true}: {Threshold?: number, Penalty?: number, Looping?: boolean, UseDefinition?: boolean}) {
+    constructor({Maximum = 0.6, Minimum = 0.4, Looping = false, UseDefinition = true}: {Maximum?: number, Minimum?: number, Looping?: boolean, UseDefinition?: boolean}) {
         super();
         this.Chunkified = true;
         this.Looping = Looping;
-        this.Penalty = Penalty;
-        this.Threshold = Threshold;
+        this.Minimum = Minimum;
+        this.Maximum = Maximum;
         this.UseDefinition = UseDefinition;
     }
     /** GetName: Get the name of the consolidator. */
     public GetName(): string {
-        return `${super.GetName()} (Threshold ${this.Threshold}, Penalty ${this.Penalty}, Definition ${this.UseDefinition})`;
+        return `${super.GetName()} (Maximum ${this.Maximum}, Minimum ${this.Minimum}, Definition ${this.UseDefinition})`;
     }
     /** Preprocess: Preprocess the subunits before filtering and chunking. */
     public async Preprocess(Codebook: Codebook, Codes: Code[]) {
@@ -41,8 +41,8 @@ export class RefineMerger extends DefinitionParser {
             } else return Code.Label;
         });
         // Categorize the strings
-        var Clusters = await ClusterTexts(CodeStrings, Codes.map(Code => Code.Label), "consolidator", 
-            "linkage-jc", "euclidean", "ward", this.Threshold.toString(), this.Penalty.toString(), "0.4");
+        var Clusters = await ClusterTexts(CodeStrings, Codes.map(Code => `${Code.Label}|||${Code.Examples?.length ?? 0}`), "consolidator", 
+            "linkage-jc", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString());
         // Merge the codes
         var Result = MergeCodesByCluster(Clusters, Codes);
         // Check if we should stop - when nothing is merged

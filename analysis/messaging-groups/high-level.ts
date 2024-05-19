@@ -1,5 +1,5 @@
 import { Code, CodedThread, Message } from '../../utils/schema.js';
-import { ConversationAnalyzer } from './conversations.js';
+import { ConversationAnalyzer, RevertMessageFormat } from './conversations.js';
 
 /** HighLevelAnalyzerBase: Conduct the first-round high-level coding of the conversations. */
 // Authored by John Chen.
@@ -57,12 +57,24 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                     Line = Line.replace(/^(P(\d+)|Designer|tag(\d+))\:/, "").trim();
                     // Sometimes the LLM will return `"quote" (Author)`
                     Line = Line.replace(/^\"(.*)\"/, "$1").trim();
-                    // Sometimes the LLM will return `**{code}**`
+                    // Sometimes the LLM will return `**{quote}**`
                     Line = Line.replace(/^\*\*(.*)\*\*/, "$1").trim();
+                    // Revert the image and checkin tags
+                    Line = RevertMessageFormat(Line);
                     // Add the example if it is not already in the list
                     CurrentCode.Examples = CurrentCode.Examples ?? [];
-                    if (!CurrentCode.Examples.includes(Line))
-                        CurrentCode.Examples.push(Line);
+                    var Message = Messages.find(Message => Message.Content == Line);
+                    if (!Message) {
+                        var LowerLine = Line.toLowerCase();
+                        if (LowerLine.endsWith("...")) LowerLine = LowerLine.substring(0, LowerLine.length - 3).trim();
+                        Message = Messages.find(Message => {
+                            var Lower = Message.Content.toLowerCase();
+                            return Lower.includes(LowerLine) || LowerLine.includes(Lower);
+                        });
+                    }
+                    var Example = Message ? `${Message.ID}|||${Message.Content}` : Line;
+                    if (Message && !CurrentCode.Examples.includes(Example))
+                        CurrentCode.Examples.push(Example);
                 }
             }
         }
