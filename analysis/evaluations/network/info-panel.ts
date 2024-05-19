@@ -113,7 +113,9 @@ export class InfoPanel {
     }
     /** ExtractExamples: Extract examples from a code. */
     private ExtractExamples(Examples: string[]): Map<string, string[]> {
-        var Results = new Map();
+        var Results = new Map<string, string[]>();
+        var Scores = new Map<string, number>();
+        // Extract the examples
         for (var Example of Examples) {
             var Index = Example.indexOf("|||");
             if (Index != -1) {
@@ -126,7 +128,16 @@ export class InfoPanel {
                 Results.get(Example)!.push("");
             }
         }
-        return Results;
+        // Calculate the score
+        for (var [Quote, IDs] of Results) {
+            Scores.set(Quote, Quote.length * IDs.length);
+        }
+        // Sort by the score
+        var NewResults: Map<string, string[]> = new Map();
+        Array.from(Scores.keys()).sort((A, B) => Scores.get(B)! - Scores.get(A)!).forEach(Key => {
+            NewResults.set(Key, Results.get(Key)!);
+        });
+        return NewResults;
     }
     /** BuildExample: Build an element for a code example. */
     private BuildExample(Example: string, IDs: string[]): Cash {
