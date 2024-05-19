@@ -4,6 +4,7 @@ import { Tokenize } from '../utils/tokenizer.js';
 import { Message, Participant } from '../utils/schema.js';
 import { GetMessagesPath, GetParticipantsPath } from '../utils/loader.js';
 
+var AllMessages = 1;
 /** ReadQQMessages: Read messages from a text record of QQ groups. */
 function ReadQQMessages(Path: string): Message[] {
     const Messages: Message[] = [];
@@ -15,12 +16,13 @@ function ReadQQMessages(Path: string): Message[] {
             const Time = new Date(Number(Match[1]), Number(Match[2]) - 1, Number(Match[3]), 
                 Number(Match[4]) + (Match[7] === 'PM' ? 12 : 0), Number(Match[5]), Number(Match[6]));
             LastMessage = { 
-                ID: Messages.length.toString(),
+                ID: AllMessages.toString(),
                 SenderID: Match[9].substring(1, Match[9].length - 1), 
                 Nickname: Match[8].replaceAll(/"|,/g, '').replaceAll(/^【.{2}】/g, ''),
                 Time, 
                 Content: '' };
             if (LastMessage.Time > CutoffDate) break;
+            AllMessages++;
             Messages.push(LastMessage);
         }  else if (LastMessage !== undefined) {
             LastMessage.Content += Source.replace("\r", "\n").trim() + "\n";
