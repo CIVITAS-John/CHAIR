@@ -7,6 +7,7 @@ import { EnsureFolder } from '../../../utils/llms.js';
 import { RefiningReferenceBuilder } from '../reference-builder.js';
 import { UseLLM } from '../../../translation/general.js';
 import { ReferenceBuilder } from '../reference-builder';
+import { NetworkEvaluator } from '../network-evaluator.js';
 
 InitializeEmbeddings("gecko-768-similarity");
 UseLLM("llama3-70b");
@@ -21,7 +22,7 @@ async function EvaluateConsolidatedResults(SourcePath: string, TaskName: string,
     var TargetPath = SourcePath + "/evaluation/results/" + TaskName + Builder.Suffix;
     EnsureFolder(TargetPath);
     // Build the reference and evaluate the codebooks
-    var Evaluator = new CoverageEvaluator();
+    var Evaluator = new NetworkEvaluator();
     var Results = await BuildReferenceAndEvaluateCodebooks(
         ReferenceCodebooks.map(Path => ReferencePath + "/" + Path), 
         ReferencePath + "/" + ReferenceName + Builder.Suffix, Builder, Evaluator, TargetPath, 
@@ -30,11 +31,16 @@ async function EvaluateConsolidatedResults(SourcePath: string, TaskName: string,
 }
 
 await EvaluateConsolidatedResults(GetMessagesPath("Coded Dataset 1"), 
-    "human vs high-level consolidated", "human-high-level-consolidated",
+    "human vs ai", "human-ai-consolidated",
     new RefiningReferenceBuilder(),
-    ["human-consolidated-refined.json", "high-level-1-consolidated-refined.json", "high-level-2-consolidated-refined.json"]);
+    ["human-consolidated-refined.json", "high-level-2-consolidated-refined.json", "low-level-3-consolidated-refined.json"]);
 
 process.exit(0);
+
+await EvaluateConsolidatedResults(GetMessagesPath("Coded Dataset 1"), 
+    "human vs high-level consolidated", "human-high-level-consolidated",
+    new RefiningReferenceBuilder(),
+    ["human-consolidated-refined.json", "high-level-2-consolidated-refined.json"]);
 
 await EvaluateConsolidatedResults(GetMessagesPath("Coded Dataset 1"), 
     "high-level vs low-level consolidated", "all-analyzers",

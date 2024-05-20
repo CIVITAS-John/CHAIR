@@ -25,7 +25,7 @@ export class SidePanel {
         });
         this.Header = this.Container.children(".panel-header");
         this.Contents = this.Container.children(".content");
-        this.Subpanels["evaluator"] = new Evaluator(this.Contents, Visualizer);
+        this.Subpanels["evaluator"] = new Evaluator(this.Contents, this.Visualizer);
     }
     /** ShowPanel: Show a side panel. */
     public ShowPanel(Name: string) {
@@ -81,7 +81,9 @@ export class Evaluator extends PanelBase {
         var Results = this.Evaluate();
         console.log(Results);
         // Render the results as a D3.js heatmap
-        var Margin = { Top: 30, Right: 0, Bottom: 0, Left: 55 };
+        var Names = this.Visualizer.Dataset.Names;
+        var LongestName = d3.max(Names, (Name) => Name.length)!;
+        var Margin = { Top: 30, Right: 0, Bottom: 0, Left: Math.max(LongestName * 4, 55) };
         var Width = this.Container.innerWidth()! - Margin.Left - Margin.Right;
         var Height = this.Container.innerHeight()! - Margin.Top - Margin.Bottom;
         var SVG = d3.select(this.Container[0]!)
@@ -91,7 +93,6 @@ export class Evaluator extends PanelBase {
             .append("g")
                 .attr("transform", `translate(${Margin.Left},${Margin.Top})`);
         // Build X scale (Metrics)
-        var Names = this.Visualizer.Dataset.Names;
         var Metrics = Object.keys(Results[Names[1]]);
         var X = d3.scaleBand()
             .domain(Metrics)

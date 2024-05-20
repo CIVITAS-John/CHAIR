@@ -1,0 +1,72 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (4 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+4. {Repeat the input 4}
+Relationship: {The logical relationship between concepts in input 4}
+Criteria: {A sentence of consolidated criteria for code 4}
+Label: {A consolidated label of code 4}
+Category: {2-4 words for code 4}
+---
+~~~
+1. progress updates, designer updates.
+- Designer providing updates on the development process.
+- Instances where designers provide updates, information, or respond to user queries about the software.
+
+2. technical compatibility, compatibility and usability.
+- Discussions addressing software compatibility with different operating systems or hardware setups.
+- Discussions related to the compatibility of Physics Lab with different systems or devices, along with software usability considerations.
+
+3. practical evaluation, usability and practicality.
+- Users provide comments on the software's ease of use and practicality.
+- The perceived usability and practicality of the software by the community members.
+
+4. user background, professional background.
+- References to users' professional or educational backgrounds that might influence their interaction with the app.
+- References to a participant's professional role, identity, or educational/professional background.
+===
+---
+Categories: 
+* Design and Development
+* Technical Discussion
+* User Experience
+* User Identity
+
+Definitions for each code:
+
+1. progress updates, designer updates.
+Relationship: Inclusion (Designer updates are a type of progress update)
+Criteria: Instances where designers provide updates or respond to user queries about the software.
+Label: Designer Updates
+Category: Design and Development
+
+2. technical compatibility, compatibility and usability.
+Relationship: Parallel (Technical compatibility and usability are related but distinct concepts)
+Criteria: Discussions addressing software compatibility with different operating systems or hardware setups, as well as usability considerations.
+Label: Technical Compatibility
+Category: Technical Discussion
+
+3. practical evaluation, usability and practicality.
+Relationship: Inclusion (Practicality is a type of usability)
+Criteria: Users' comments on the software's ease of use and practicality.
+Label: Usability Feedback
+Category: User Experience
+
+4. user background, professional background.
+Relationship: Inclusion (Professional background is a type of user background)
+Criteria: References to users' professional or educational backgrounds that might influence their interaction with the app.
+Label: User Background
+Category: User Identity

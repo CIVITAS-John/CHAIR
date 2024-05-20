@@ -86,6 +86,14 @@ export async function LoadCodebooks(Source: string | string[]): Promise<[Codeboo
     var Prefix = commonPathPrefix(Names, "-");
     if (Prefix.length == 0) Prefix = commonPathPrefix(Names, "/");
     Names = Names.map(Name => Name.substring(Prefix.length));
+    // Find common suffixes and remove them
+    var Suffix = Reverse(commonPathPrefix(Names.map(Name => Reverse(Name)), "-"));
+    Names = Names.map(Name => Name.substring(0, Name.length - Suffix.length));
     console.log(chalk.green(`Statistics: Loaded ${Codebooks.length} codebooks.`));
     return [Codebooks, Names];
+}
+
+/** Reverse: Reverse a string. */
+function Reverse(S: string): string {
+    return [...S].reverse().join("");
 }

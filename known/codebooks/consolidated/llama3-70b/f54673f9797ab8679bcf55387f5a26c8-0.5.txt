@@ -1,0 +1,92 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (6 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+6. {Repeat the input 6}
+Relationship: {The logical relationship between concepts in input 6}
+Criteria: {A sentence of consolidated criteria for code 6}
+Label: {A consolidated label of code 6}
+Category: {2-4 words for code 6}
+---
+~~~
+1. introductions, self-introduction.
+- Community members introducing themselves or sharing their background.
+- Introductions or greetings to the online community.
+
+2. inclusive onboarding, welcoming and inclusion.
+- Statements or actions that make new participants feel welcome and included.
+- Instances where users or the designer explicitly welcome or include others in the conversation.
+
+3. design decisions, design justification.
+- Instances where designers discuss or justify design decisions.
+- Explaining or justifying design decisions or choices.
+
+4. design discussion, sharing information for design.
+- Discussing or sharing thoughts on design principles, ideas, or functionalities.
+- Sharing information or insights to inform design decisions.
+
+5. bug fixes, update overview.
+- Information about issues that have been resolved in the software.
+- Detailed overviews or introductions to updates, including new features, components, and bug fixes.
+
+6. feature explanations, feature illustrations.
+- Explaining or showcasing new features or functionality.
+- Providing examples or illustrations of a feature's functions.
+===
+---
+Categories: 
+* Community Building
+* Design Process
+* Design Communication
+* Software Development
+
+Definitions for each code:
+
+1. introductions, self-introduction.
+Relationship: Inclusive
+Criteria: Instances of community members introducing themselves or sharing their background, or greetings to the online community.
+Label: Community Introductions
+Category: Community Building
+
+2. inclusive onboarding, welcoming and inclusion.
+Relationship: Parallel
+Criteria: Statements or actions that make new participants feel welcome and included, or explicitly welcoming or including others in the conversation.
+Label: Inclusive Onboarding
+Category: Community Building
+
+3. design decisions, design justification.
+Relationship: Inclusive
+Criteria: Instances where designers discuss or justify design decisions, explaining or justifying design choices.
+Label: Design Rationale
+Category: Design Process
+
+4. design discussion, sharing information for design.
+Relationship: Parallel
+Criteria: Discussing or sharing thoughts on design principles, ideas, or functionalities, or sharing information to inform design decisions.
+Label: Design Discussion
+Category: Design Process
+
+5. bug fixes, update overview.
+Relationship: Inclusive
+Criteria: Information about issues resolved in the software, or detailed overviews of updates, including new features, components, and bug fixes.
+Label: Software Updates
+Category: Software Development
+
+6. feature explanations, feature illustrations.
+Relationship: Inclusive
+Criteria: Explaining or showcasing new features or functionality, or providing examples or illustrations of a feature's functions.
+Label: Feature Explanations
+Category: Design Communication
