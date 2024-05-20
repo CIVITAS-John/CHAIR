@@ -3,7 +3,7 @@ import { EvaluateTexts } from "../../utils/embeddings.js";
 import { Code, Codebook, CodebookComparison, CodebookEvaluation } from "../../utils/schema.js";
 import { MergeCodebooks } from "../codebooks/codebooks.js";
 import { CodebookEvaluator } from './codebooks.js';
-import { CreateServer } from '../../utils/server.js';
+import { CreateOfflineBundle, CreateServer } from '../../utils/server.js';
 import { ReadOrBuildCache } from '../../utils/file.js';
 import md5 from 'md5';
 
@@ -44,11 +44,12 @@ export class NetworkEvaluator extends CodebookEvaluator {
             return Package;
         });
         // Run the HTTP server
-        await CreateServer(8080, "analysis/evaluations/network",
-            "./out/analysis/evaluations/network/visualizer.js", 
+        var DataFiles = ["./out/analysis/evaluations/network/visualizer.js", 
             "./out/analysis/evaluations/network/side-panel.js", 
             "./out/analysis/evaluations/network/info-panel.js", 
-            ExportPath + "/network.json");
+            ExportPath + "/network.json"]
+        CreateOfflineBundle(ExportPath + "/network", "analysis/evaluations/network", ...DataFiles);
+        await CreateServer(8080, "analysis/evaluations/network", ...DataFiles);
         // Return in the format
         var Results: Record<string, CodebookEvaluation> = {};
         return Results;

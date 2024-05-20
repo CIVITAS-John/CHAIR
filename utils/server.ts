@@ -2,6 +2,8 @@ import * as http from 'http';
 import * as fs from 'fs';
 import * as path from 'path';
 import open, { apps } from 'open';
+import chalk from 'chalk';
+import { EnsureFolder } from './llms.js';
 
 /** CreateServer: Create a local server for interactivity. */
 export function CreateServer(Port: number, BaseDirectory: string, ...DataFiles: string[]): Promise<void> {
@@ -35,7 +37,7 @@ export function CreateServer(Port: number, BaseDirectory: string, ...DataFiles: 
                     contentType = 'text/javascript; charset=utf-8';
                     let content = data.toString();
                     // Remove all import statements
-                    content = content.replaceAll(/^(.*)import(.*?) from '([^\.]*?)';?$/gm, '');
+                    content = HandleScript(content);
                     data = Buffer.from(content);
                     break;
                 case '.css':
@@ -81,4 +83,45 @@ export function CreateServer(Port: number, BaseDirectory: string, ...DataFiles: 
         process.on('SIGINT', Shutdown);
         process.on('SIGTERM', Shutdown);
     });
+}
+
+/** CreateOfflineBundle: Create an offline bundle for the web application. */
+export function CreateOfflineBundle(TargetDirectory: string, BaseDirectory: string, ...DataFiles: string[]) {
+    // Create the offline bundle directory
+    const OfflineBundleDirectory = TargetDirectory;
+    EnsureFolder(OfflineBundleDirectory);
+    // Copy the data files to the offline bundle directory
+    for (const dataFile of DataFiles) {
+        const name = path.basename(dataFile);
+        if (name.endsWith('.js')) {
+            let content = fs.readFileSync(dataFile, 'utf8');
+            // Remove all import statements
+            content = HandleScript(content);
+            fs.writeFileSync(path.join(OfflineBundleDirectory, name), content);
+        } else fs.copyFileSync(dataFile, path.join(OfflineBundleDirectory, name));
+    }
+    // Copy the web files recursively to the offline bundle directory while keeping the structure
+    const CopyFiles = function(Source: string, Destination: string) {
+        const files = fs.readdirSync(Source);
+        for (const file of files) {
+            const filePath = path.join(Source, file);
+            const stat = fs.statSync(filePath);
+            if (stat.isDirectory()) {
+                const newDestination = path.join(Destination, file);
+                EnsureFolder(newDestination);
+                CopyFiles(filePath, newDestination);
+            } else {
+                const name = path.basename(filePath);
+                if (name.endsWith(".ts")) continue; // Skip TypeScript files
+                fs.copyFileSync(filePath, path.join(Destination, name));
+            }
+        }
+    }
+    CopyFiles(BaseDirectory, OfflineBundleDirectory);
+    console.log(chalk.blue(`Offline bundle created in: ${OfflineBundleDirectory}.`));
+}
+
+/** HandleScript: Filter a script content to exclude import statements. */
+function HandleScript(Content: string): string {
+    return Content.replaceAll(/^(.*)import(.*?) from '([^\.]*?)';?$/gm, '');
 }
