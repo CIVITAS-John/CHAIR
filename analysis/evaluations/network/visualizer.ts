@@ -21,7 +21,7 @@ export class Visualizer {
     /** Dataset: The underlying dataset. */
     public Dataset: CodebookComparison = {} as any;
     /** Parameters: The parameters for the visualizer. */
-    private Parameters: Parameters = new Parameters();
+    public Parameters: Parameters = new Parameters();
     /** Constructor: Constructing the manager. */
     public constructor(Container: Cash) {
         // Initialize the SVG

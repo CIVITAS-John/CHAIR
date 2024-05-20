@@ -1,5 +1,6 @@
 import { ResearchQuestion } from "../../constants.js";
 import { ClusterTexts } from "../../utils/embeddings.js";
+import { LLMName } from "../../utils/llms.js";
 import { Codebook, Code } from "../../utils/schema.js";
 import { MergeCodesByCluster } from "./codebooks.js";
 import { DefinitionParser } from "./definition-generator.js";
@@ -61,7 +62,7 @@ export class RefineMerger extends DefinitionParser {
     public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
         return [`
 You are an expert in thematic analysis. 
-Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between sub-codes. If a sub-code includes another, use the broader one. If sub-codes are parallel, try to cover both concepts.
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
 Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
 Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
 ${ResearchQuestion}
@@ -71,15 +72,15 @@ Categories:
 * {Name some categories you identified from the research question and theoretical lens}
 
 Definitions for each code (${Codes.length} in total):
-1.
-Relationship: {The logical relationship between sub-codes in code 1}
-Criteria: {A sentence of consolidated criteria 1}
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
 Label: {A consolidated label of code 1}
 Category: {2-4 words for code 1}
 ...
-${Codes.length}.
-Relationship: {The logical relationship between sub-codes in code ${Codes.length}}
-Criteria: {A sentence of consolidated criteria ${Codes.length}}
+${Codes.length}. {Repeat the input ${Codes.length}}
+Relationship: {The logical relationship between concepts in input ${Codes.length}}
+Criteria: {A sentence of consolidated criteria for code ${Codes.length}}
 Label: {A consolidated label of code ${Codes.length}}
 Category: {2-4 words for code ${Codes.length}}
 ---`.trim(), 

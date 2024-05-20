@@ -35,7 +35,7 @@ export function CreateServer(Port: number, BaseDirectory: string, ...DataFiles: 
                     contentType = 'text/javascript; charset=utf-8';
                     let content = data.toString();
                     // Remove all import statements
-                    content = content.replaceAll(/^(.*)import(.*?)$/gm, '');
+                    content = content.replaceAll(/^(.*)import(.*?) from '([^\.]*?)';?$/gm, '');
                     data = Buffer.from(content);
                     break;
                 case '.css':

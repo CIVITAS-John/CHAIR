@@ -1,0 +1,61 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (3 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+3. {Repeat the input 3}
+Relationship: {The logical relationship between concepts in input 3}
+Criteria: {A sentence of consolidated criteria for code 3}
+Label: {A consolidated label of code 3}
+Category: {2-4 words for code 3}
+---
+~~~
+1. expressive communication, emojis and informal communication.
+- Instances where participants use emojis or images to express reactions, emotions, or illustrate points.
+- Use of emojis or informal language that adds a personal touch to the interaction.
+
+2. knowledge sharing, information exchange.
+- Instances where community members share knowledge or information to support learning.
+- Instances where participants share information or resources with others in the community.
+
+3. user involvement, user feedback integration.
+- Instances where users are directly involved in the design process by providing feedback or suggestions.
+- Instances where user feedback is actively sought and subsequently used to influence design decisions and software development.
+===
+---
+Categories: 
+* Communication Methods
+* Knowledge Exchange
+* User Participation
+
+Definitions for each code (3 in total):
+1. expressive communication, emojis and informal communication.
+Relationship: Emojis and informal communication are specific forms of expressive communication.
+Criteria: Instances where participants use emojis, images, or informal language to convey reactions, emotions, or illustrate points, adding a personal touch to interactions.
+Label: Expressive Communication
+Category: Communication Methods
+
+2. knowledge sharing, information exchange.
+Relationship: Information exchange is a form of knowledge sharing.
+Criteria: Instances where community members share knowledge, information, or resources to support learning and collaboration.
+Label: Knowledge Sharing
+Category: Knowledge Exchange
+
+3. user involvement, user feedback integration.
+Relationship: User feedback integration is a specific form of user involvement in the design process.
+Criteria: Instances where users are directly involved in the design process by providing feedback or suggestions, and this feedback is actively sought and used to influence design decisions and software development.
+Label: User Involvement
+Category: User Participation
+---

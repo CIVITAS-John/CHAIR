@@ -1,0 +1,51 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (2 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+2. {Repeat the input 2}
+Relationship: {The logical relationship between concepts in input 2}
+Criteria: {A sentence of consolidated criteria for code 2}
+Label: {A consolidated label of code 2}
+Category: {2-4 words for code 2}
+---
+~~~
+1. learning experience, experiential learning.
+- The impact of the software's development on the community's learning experience.
+- Features of the software that enable students to actively engage in hands-on experiments and explore physics concepts.
+
+2. feedback, seeking feedback.
+- Mechanisms within the software that provide students with immediate feedback on their actions and understanding.
+- The designers actively seek feedback and input from the community members to inform the design of the simulated electricity experiment assessment feature.
+===
+---
+Categories:
+* Learning Experience
+* Community Engagement
+
+Definitions for each code (2 in total):
+
+1. Learning Experience
+Relationship: The first input covers the impact of the software's development on the community's learning experience, as well as features that enable active engagement and exploration of physics concepts. These concepts are closely related and can be consolidated under the broader concept of "Learning Experience".
+Criteria: Features and mechanisms within the software that enable students to actively engage in hands-on experiments, explore physics concepts, and receive feedback on their understanding and actions.
+Label: Learning Experience
+Category: Learning Experience
+
+2. Community Engagement
+Relationship: The second input covers mechanisms for providing feedback to the designers, as well as the designers actively seeking feedback from the community. These concepts are parallel and can be combined under the broader category of "Community Engagement".
+Criteria: Mechanisms within the software that enable community members to provide feedback to the designers, as well as the designers actively seeking input from the community to inform the design process.
+Label: Community Engagement
+Category: Community Engagement
+---

@@ -72,8 +72,8 @@
     content: "”";
     margin-right: 0.2em;
 }
-.panel p.owners a:after,
-.panel a.source:after {
+.panel p.owners a:not(:last-child):after,
+.panel a.source:not(:last-child):after {
     content: ", "
 }
 .panel a.source:before {
