@@ -81,7 +81,7 @@ export class Evaluator extends PanelBase {
         var Results = this.Evaluate();
         console.log(Results);
         // Render the results as a D3.js heatmap
-        var Margin = { Top: 30, Right: 0, Bottom: 0, Left: 50 };
+        var Margin = { Top: 30, Right: 0, Bottom: 0, Left: 55 };
         var Width = this.Container.innerWidth()! - Margin.Left - Margin.Right;
         var Height = this.Container.innerHeight()! - Margin.Top - Margin.Bottom;
         var SVG = d3.select(this.Container[0]!)
@@ -97,14 +97,16 @@ export class Evaluator extends PanelBase {
             .domain(Metrics)
             .range([0, Width])
             .padding(0.05);
-        SVG.append("g").call(d3.axisTop(X).tickSize(0)).select(".domain").remove();
+        var XAxis = SVG.append("g").call(d3.axisTop(X).tickSize(0))
+        XAxis.selectAll("text").attr("style", "font-weight: strong");
+        XAxis.select(".domain").remove();
         // Build Y scale (Codebooks)
         var Y = d3.scaleBand()
             .domain(Names.slice(1))
             .range([0, Height])
             .padding(0.05);
         var YAxis = SVG.append("g").call(d3.axisLeft(Y).tickSize(0));
-        YAxis.selectAll("text").attr("transform", "rotate(-45) translate(10 -10)").attr("dy")
+        YAxis.selectAll("text").attr("transform", "rotate(-45) translate(15 -15)").attr("dy")
         YAxis.select(".domain").remove();
         // Flatten the dataset
         var Dataset: { Name: string, Metric: string, Value: number }[] = [];
