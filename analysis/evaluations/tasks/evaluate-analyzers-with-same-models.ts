@@ -20,9 +20,10 @@ async function EvaluateAnalyzers(SourcePath: string, Dataset: string, LLM: strin
     // Build the paths
     var Paths = Analyzers.map(Analyzer => SourcePath + "/" + Analyzer + "/" + Dataset + "-" + LLM + ".json");
     // Build the reference and evaluate the codebooks
+    var Evaluator = new CoverageEvaluator();
     var Results = await BuildReferenceAndEvaluateCodebooks(
-        Paths, ReferencePath + "/" + LLM + Builder.Suffix, Builder, new CoverageEvaluator(), TargetPath);
-    File.writeFileSync(TargetPath + ".json", JSON.stringify(Results, null, 4));
+        Paths, ReferencePath + "/" + LLM + Builder.Suffix, Builder, Evaluator, TargetPath);
+    File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
 }
 
 await EvaluateAnalyzers(GetMessagesPath("Coded Dataset 1", "Conversations"), "0~16-gpt-3.5-turbo", 

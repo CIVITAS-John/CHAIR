@@ -18,6 +18,8 @@ await UseLLMs(async () => {
             // Merge definitions
             new RefineMerger({ Maximum: 0.5, UseDefinition: false }),
             new RefineMerger({ Maximum: 0.5, Looping: true }),
+            new RefineMerger({ Maximum: 0.65, UseDefinition: false }),
+            new RefineMerger({ Maximum: 0.65, Looping: true }),
         ), "Coded Dataset 1", "0~16-gpt-3.5-turbo.json", "human", Human, false);
     }
 }, "llama3-70b");

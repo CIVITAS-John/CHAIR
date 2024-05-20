@@ -18,7 +18,7 @@ export class InfoPanel {
         this.Visualizer = Visualizer;
         this.Container = Container;
         this.DialogContainer = DialogContainer;
-        DialogContainer.children("div.close").on("click", () => DialogContainer.hide());
+        DialogContainer.children("div.close").on("click", () => this.HideDialog());
         Visualizer.RegisterChosenCallback<Code>("Code", 
             (Node, Status) => this.ShowOrHidePanel<Code>(Node, Status));
     }
@@ -36,7 +36,6 @@ export class InfoPanel {
         var Panel = this.BuildPanel(Node, false);
         this.Panels.set(Node.ID, Panel);
         this.Container.append(Panel);
-        this.DialogContainer.hide();
     }
     /** HidePanel: Hide a panel for a data node. */
     public HidePanel<T>(Node: Node<T>) {
@@ -67,6 +66,10 @@ export class InfoPanel {
         var Content = this.DialogContainer.show().children("div.content");
         Content.children().remove();
         Content.append(Panel);
+    }
+    /** HideDialog: Hide the dialog. */
+    public HideDialog() {
+        this.DialogContainer.hide();
     }
     /** BuildPanelForCode: Build a panel for a code. */
     public BuildPanelForCode(Panel: Cash, Code: Code, Everything: boolean = true) {

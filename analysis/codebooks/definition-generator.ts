@@ -25,10 +25,13 @@ export abstract class DefinitionParser extends CodeConsolidator {
             if (Line == "...") break;
             var Match = Line.match(/^(\d+)\./);
             if (Match) {
+                Line = Line.substring(Match[0].length).trim();
                 // Sometimes, the label is merged with the number
-                CurrentCode = { Label: Line.substring(Match[0].length).trim().toLowerCase(), Definitions: [], Categories: [], Examples: [], Alternatives: [] };
+                CurrentCode = { Label: Line.trim().toLowerCase(), Definitions: [], Categories: [], Examples: [], Alternatives: [] };
                 Pendings.push(CurrentCode);
-            } else if (Line.startsWith("Label:") && CurrentCode) {
+                Status = "";
+            }
+            if (Line.startsWith("Label:") && CurrentCode) {
                 CurrentCode.Label = Line.substring(6).trim().toLowerCase();
                 Status = "Label";
             } else if (Line.startsWith("Criteria:") && CurrentCode) {

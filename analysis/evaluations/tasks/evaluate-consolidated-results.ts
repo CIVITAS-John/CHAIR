@@ -21,11 +21,12 @@ async function EvaluateConsolidatedResults(SourcePath: string, TaskName: string,
     var TargetPath = SourcePath + "/evaluation/results/" + TaskName + Builder.Suffix;
     EnsureFolder(TargetPath);
     // Build the reference and evaluate the codebooks
+    var Evaluator = new CoverageEvaluator();
     var Results = await BuildReferenceAndEvaluateCodebooks(
         ReferenceCodebooks.map(Path => ReferencePath + "/" + Path), 
-        ReferencePath + "/" + ReferenceName + Builder.Suffix, Builder, new CoverageEvaluator(), TargetPath, 
+        ReferencePath + "/" + ReferenceName + Builder.Suffix, Builder, Evaluator, TargetPath, 
         ComparingCodebooks?.map(Path => ReferencePath + "/" + Path));
-    File.writeFileSync(TargetPath + ".json", JSON.stringify(Results, null, 4));
+    File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
 }
 
 await EvaluateConsolidatedResults(GetMessagesPath("Coded Dataset 1"), 

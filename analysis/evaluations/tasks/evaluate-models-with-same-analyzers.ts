@@ -19,16 +19,16 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
     var TargetPath = SourcePath + "/evaluation/results/" + Analyzer + Builder.Suffix;
     EnsureFolder(TargetPath);
     // Build the reference and evaluate the codebooks
+    var Evaluator = new NetworkEvaluator();
     var Results = await BuildReferenceAndEvaluateCodebooks(
-        [SourcePath + "/" + Analyzer], ReferencePath + "/" + Analyzer + Builder.Suffix, Builder, 
-        new NetworkEvaluator(), TargetPath);
-    File.writeFileSync(TargetPath + "-" + Analyzer + ".json", JSON.stringify(Results, null, 4));
+        [SourcePath + "/" + Analyzer], ReferencePath + "/" + Analyzer + Builder.Suffix, Builder, Evaluator, TargetPath);
+    File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
 }
 
-// await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "low-level-3-consolidated", new RefiningReferenceBuilder());
-await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "low-level-3-consolidated", new RefiningReferenceBuilder()); 
+await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "human-consolidated", new RefiningReferenceBuilder()); 
 process.exit(0);
 
+await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "low-level-3-consolidated", new RefiningReferenceBuilder()); 
 await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "high-level-1-consolidated", new RefiningReferenceBuilder());
 await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "lexie-vs-high-level", new RefiningReferenceBuilder());
 await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "high-level-1", new RefiningReferenceBuilder());
