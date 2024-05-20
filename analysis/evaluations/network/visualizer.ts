@@ -184,8 +184,9 @@ export class Visualizer {
     }
     /** GetCodebookColor: Get the color of a codebook. */
     public GetCodebookColor(Number: number): string {
-        return d3.scaleSequential().clamp(true)
-            .domain([0, this.Dataset.Codebooks.length]).interpolator(d3.interpolateSinebow)(Number);
+        if (this.Dataset.Codebooks.length <= 10)
+            return d3.schemeTableau10[Number];
+        else return d3.interpolateWarm(Number / this.Dataset.Codebooks.length);
     }
 }
 

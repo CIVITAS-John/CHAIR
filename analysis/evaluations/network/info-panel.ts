@@ -75,19 +75,10 @@ export class InfoPanel {
     public BuildPanelForCode(Panel: Cash, Code: Code, Everything: boolean = true) {
         Panel.append($(`<h3>${Code.Label}</h3>`));
         if (Code.Owners && Code.Owners.length > 0) {
-            var Owners = $(`<p class="owners"></p>`).appendTo(Panel);
-            var CreateLink = (Owner: number) => {
-                var Link = $(`<a href="javascript:void(0)" style="color: ${this.Visualizer.GetCodebookColor(Owner)}">${this.Visualizer.Dataset.Names[Owner]}</a>`).appendTo(Owners);
-                if (Owner != 0) {
-                    var Originals = this.FindOriginalCodes(Code, Owner);
-                    Link.attr("title", Originals.map(Original => Original.Label).join(", "));
-                    Link.on("click", () => { this.ShowDialogForCode(Owner, ...Originals) });
-                }
-                return Link;
-            };
+            var Owners = $(`<p class="owners">By: </p>`).appendTo(Panel);
             for (var Owner of Code.Owners) {
                 if (Owner == 0 && Code.Owners.length > 1) continue;
-                CreateLink(Owner);
+                this.BuildOwnerLink(Code, this.FindOriginalCodes(Code, Owner), Owner).appendTo(Owners);
             }
         } else if (Code.Alternatives && Code.Alternatives.length > 0) {
             Panel.append($(`<p class="alternatives">Consolidated from: ${Code.Alternatives.join(", ")}</p>`));
@@ -103,16 +94,26 @@ export class InfoPanel {
                 var List = $(`<ol class="quote"></ol>`).appendTo(Panel);
                 for (var Example of Examples) {
                     $(`<li class="quote"></li>`).appendTo(List)
-                        .append(this.BuildExample(Example[0], Example[1]));
+                        .append(this.BuildExample(Code, Example[0], Example[1]));
                 }
             } else {
-                var Quote = $(`<p class="quote"></p>`).appendTo(Panel)
-                    .append(this.BuildExample(Examples.keys().next().value, Examples.values().next().value));
+                var Quote = $(`<p class="quote"></p>`).appendTo(Panel);
+                $("<span></span>").appendTo(Quote).text(Examples.keys().next().value);
                 if (Code.Examples.length > 1) $(`<a href="javascript:void(0)">(${Code.Examples.length - 1} more)</a>`).appendTo(Quote).on("click", () => {
                     this.ShowDialogForCode(0, Code);
                 });
             }
         }
+    }
+    /** BuildOwnerLink: Build a link for an owner. */
+    private BuildOwnerLink(Code: Code, Sources: Code[], Owner: number)  {
+        var Link = $(`<a href="javascript:void(0)" style="color: ${this.Visualizer.GetCodebookColor(Owner)}">${this.Visualizer.Dataset.Names[Owner]}</a>`);
+        if (Sources.length > 0) {
+            var Originals = this.FindOriginalCodes(Code, Owner);
+            Link.attr("title", Originals.map(Original => Original.Label).join(", "));
+            Link.on("click", () => { this.ShowDialogForCode(Owner, ...Originals) });
+        }
+        return Link;
     }
     /** ExtractExamples: Extract examples from a code. */
     private ExtractExamples(Examples: string[]): Map<string, string[]> {
@@ -143,10 +144,23 @@ export class InfoPanel {
         return NewResults;
     }
     /** BuildExample: Build an element for a code example. */
-    private BuildExample(Example: string, IDs: string[]): Cash {
-        var Element = $(`<span>${Example}</span>`);
+    private BuildExample(Code: Code, Example: string, IDs: string[] = []): Cash {
+        var Element = $(`<p>${Example}</p>`);
         if (IDs.length > 0) {
-
+            for (var ID of IDs) {
+                Element.append($(`<a class="source" href="javascript:void(0)">${ID}</a>`)).on("click", () => {
+                });
+            }
+        }
+        if (Code.Owners && Code.Owners.length > 0) {
+            var Owners = $(`<p class="owners">By: </p>`);
+            for (var Owner of Code.Owners) {
+                if (Owner == 0) continue;
+                var Sources = this.FindExampleSources(Code, Example, Owner);
+                if (Sources.length == 0) continue;
+                this.BuildOwnerLink(Code, Sources, Owner).appendTo(Owners);
+            }
+            if (Owners.children().length > 0) Element = Element.add(Owners);
         }
         return Element;
     }
@@ -154,5 +168,11 @@ export class InfoPanel {
     private FindOriginalCodes(Source: Code, Owner: number): Code[] {
         var Codebook = this.Visualizer.Dataset.Codebooks[Owner];
         return Object.values(Codebook).filter(Code => Source.Label == Code.Label || Source.Alternatives?.includes(Code.Label));
+    }
+    /** FindExampleSources: Find the original sources of an example from an owner. */
+    private FindExampleSources(Source: Code, Example: string, Owner: number): Code[] {
+        var Codes = this.FindOriginalCodes(Source, Owner);
+        var SoftMatch = `|||${Example}`;
+        return Codes.filter(Code => Code.Examples?.findIndex(Current => Current == Example || Current.endsWith(SoftMatch)) != -1);
     }
 }

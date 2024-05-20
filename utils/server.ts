@@ -1,7 +1,7 @@
 import * as http from 'http';
 import * as fs from 'fs';
 import * as path from 'path';
-import open from 'open';
+import open, { apps } from 'open';
 
 /** CreateServer: Create a local server for interactivity. */
 export function CreateServer(Port: number, BaseDirectory: string, ...DataFiles: string[]): Promise<void> {
@@ -61,7 +61,7 @@ export function CreateServer(Port: number, BaseDirectory: string, ...DataFiles: 
         Server.listen(Port, async () => {
             console.log(`Server running at http://localhost:${Port}/`);
             console.log('Press Ctrl+C to shut down the server.')
-            await open(`http://localhost:${Port}/`, { wait: true }); // Automatically open the browser when the server starts
+            await open(`http://localhost:${Port}/`, { wait: true, app: { name: apps.chrome } }); // Automatically open the browser when the server starts
             console.log('The browser tab has closed, shutting down the server.')
             Shutdown();
         });

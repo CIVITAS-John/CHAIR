@@ -46,6 +46,7 @@ html {
 /** Visualization Styles */
 .visualization .labels {
     pointer-events: none;
+    user-select: none;
 }
 .visualization circle {
     cursor: pointer;
