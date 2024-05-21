@@ -10,6 +10,16 @@ export interface Graph<T> {
     MaximumDistance: number;
     /** MinimumDistance: The minimum distance in the graph. */
     MinimumDistance: number;
+    /** Components: The connected components in the graph. */
+    Components?: Component<T>[];
+}
+
+/** Component: A connected component in the graph. */
+export interface Component<T> {
+    /** Name: The name of the component. */
+    Name: string;
+    /** Nodes: The nodes in the component. */
+    Nodes: Set<Node<T>>;
 }
 
 /** Node: A node in the graph. */
@@ -20,6 +30,8 @@ export interface Node<T> extends d3.SimulationNodeDatum {
     Data: T;
     /** Type: The type of the data. */
     Type: string;
+    /** Hidden: Whether the node should be hidden under the current circumstance. */
+    Hidden?: boolean;
     /** NearOwners: Owners that own at least a close neighbor nodes to this node. */
     NearOwners: Set<number>;
 }
@@ -30,6 +42,8 @@ export interface Link<T> extends d3.SimulationLinkDatum<Node<T>> {
     Source: Node<T>;
     /** Target: The target node. */
     Target: Node<T>;
-    /** Distance: The desired distance of the link. */
+    /** Distance: The distance of the link. */
     Distance: number;
+    /** Hidden: Whether the link should be hidden under the current circumstance. */
+    Hidden?: boolean;
 }

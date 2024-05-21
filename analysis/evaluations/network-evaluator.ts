@@ -45,6 +45,7 @@ export class NetworkEvaluator extends CodebookEvaluator {
         });
         // Run the HTTP server
         var DataFiles = ["./out/analysis/evaluations/network/visualizer.js", 
+            "./out/analysis/evaluations/network/graph.js", 
             "./out/analysis/evaluations/network/side-panel.js", 
             "./out/analysis/evaluations/network/info-panel.js", 
             ExportPath + "/network.json"]

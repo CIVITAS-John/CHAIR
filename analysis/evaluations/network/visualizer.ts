@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import { Code, CodebookComparison } from '../../../utils/schema.js';
 import { Node, Link, Graph } from './schema.js';
+import { Parameters, BuildSemanticGraph } from './graph.js';
 import type { Cash, CashStatic, Element } from 'cash-dom';
 declare global {
     var $: typeof Cash.prototype.init & CashStatic;
@@ -96,8 +97,8 @@ export class Visualizer {
         AllLinks.exit().remove();
         AllLinks.join((Enter) => 
             Enter.append("line")
-                 .attr("sourceid", (Link) => `${Link.Source.ID}`)
-                 .attr("targetid", (Link) => `${ Link.Target.ID}`)
+                 .attr("sourceid", (Link) => `${ Link.Source.ID }`)
+                 .attr("targetid", (Link) => `${ Link.Target.ID }`)
                  .attr("stroke-width", 0.2)
                  // Color the links based on the distance
                  .attr("stroke", (Link) => DistanceColor(Link.Distance))
@@ -175,7 +176,7 @@ export class Visualizer {
         this.Simulation = d3.forceSimulation();
         var ForceLink = d3.forceLink();
         this.Simulation.nodes(Graph.Nodes)
-            .force("expel", d3.forceManyBody().distanceMin(5).distanceMax(20))
+            .force("expel", d3.forceManyBody().distanceMin(2).distanceMax(20))
             .force("link", ForceLink.links(Graph.Links)
                 .id((Node) => Node.index!)
                 .distance((Link) => Math.pow((Link as any).Distance, 3) * this.Parameters.LinkDistanceDisplayScale).strength(1))
@@ -190,16 +191,6 @@ export class Visualizer {
     }
 }
 
-/** FindMinimumIndexes: Find the indices of the minimum k elements in an array. */
-function FindMinimumIndexes(arr: number[], k: number): number[] {
-    // Create an array of indices [0, 1, 2, ..., arr.length - 1].
-    const indices = arr.map((value, index) => index);
-    // Sort the indices array based on the values at these indices in the original array.
-    indices.sort((a, b) => arr[a] - arr[b]);
-    // Return the first k indices.
-    return indices.slice(0, k);
-}
-
 /** SetClassForNode: Set a class for a node and its label. */
 function SetClassForNode<T>(ID: string, Class: string, Status: boolean) {
     $(`#node-${ID}`).toggleClass(Class, Status);
@@ -212,59 +203,4 @@ function SetClassForLinks<T>(ID: string, Class: string, Status: boolean) {
     Links.each((Index, Element) => SetClassForNode($(Element).attr("targetid")!, Class, Status));
     Links = $(`line[targetid="${ID}"]`).toggleClass(Class, Status);
     Links.each((Index, Element) => SetClassForNode($(Element).attr("sourceid")!, Class, Status));
-}
-
-/** BuildSemanticGraph: Build a semantic code graph from the dataset. */
-export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Parameters = new Parameters()): Graph<Code> {
-    var Nodes: Node<Code>[] = 
-        Dataset.Codes.map((Code, Index) => ({ Type: "Code", ID: Index.toString(), Data: Code, NearOwners: new Set(Code.Owners), x: Code.Position![0], y: Code.Position![1] }));
-    var Links: Map<string, Link<Code>> = new Map();
-    var MaxDistance = 0;
-    var MinDistance = Number.MAX_VALUE;
-    // Find the links
-    for (var I = 0; I < Nodes.length; I++) {
-        var Source = Nodes[I];
-        var Potentials = new Set<number>();
-        FindMinimumIndexes(Dataset.Distances[I], 
-            Parameter.ClosestNeighbors + 1).forEach((Index) => Potentials.add(Index));
-        for (var J = I + 1; J < Nodes.length; J++) {
-            if (Dataset.Distances[I][J] < Parameter.LinkMinimumDistance)
-                Potentials.add(J);
-        }
-        for (var J of Potentials) {
-            if (I == J) continue;
-            var Target = Nodes[J];
-            var LinkID = [Source.ID, Target.ID].sort().join("-");
-            var Distance = Dataset.Distances[I][J];
-            if (Distance > Parameter.LinkMaximumDistance) continue;
-            if (!Links.has(LinkID)) {
-                Links.set(LinkID, { 
-                    source: Source, target: Target, 
-                    Source: Source, Target: Target, 
-                    Distance: Distance });
-                if (Distance < Parameter.LinkMinimumDistance) {
-                    Source.Data.Owners?.forEach(Owner => Target.NearOwners.add(Owner));
-                    Target.Data.Owners?.forEach(Owner => Source.NearOwners.add(Owner));
-                }
-            }
-            MaxDistance = Math.max(MaxDistance, Distance);
-            MinDistance = Math.min(MinDistance, Distance);
-        }
-    }
-    // Store it
-    return { Nodes: Nodes, Links: Array.from(Links.values()), MaximumDistance: MaxDistance, MinimumDistance: MinDistance };
-}
-
-/** Parameters: The parameters for the visualizer. */
-export class Parameters {
-    /** LinkMinimumDistance: The minimum distance to create links between codes. */
-    public LinkMinimumDistance: number = 0.65;
-    /** LinkMaximumDistance: The maximum distance to create links between codes. */
-    public LinkMaximumDistance: number = 0.9;
-    /** LinkDistanceDisplayScale: The display scale factor for the link distances. */
-    public LinkDistanceDisplayScale: number = 50;
-    /** ClosestNeighbors: The number of closest neighbors to guarantee links regardless of the threshold. */
-    public ClosestNeighbors: number = 3;
-    /** UseNearOwners: Whether to visualize the near-owners in place of owners. */
-    public UseNearOwners: boolean = true;
 }

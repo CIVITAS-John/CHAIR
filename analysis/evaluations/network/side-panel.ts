@@ -1,7 +1,8 @@
 import * as d3 from 'd3';
 import type { Cash } from 'cash-dom';
-import { BuildSemanticGraph, Visualizer } from './visualizer.js';
+import { Visualizer } from './visualizer.js';
 import { CodebookEvaluation } from '../../../utils/schema.js';
+import { BuildSemanticGraph } from './graph.js';
 
 /** SidePanel: The side panel for the visualizer. */
 export class SidePanel {
