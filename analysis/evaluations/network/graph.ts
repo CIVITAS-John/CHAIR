@@ -54,18 +54,21 @@ export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Param
     }
     // Store it
     var Graph = { Nodes: Nodes, Links: Array.from(Links.values()), MaximumDistance: MaxDistance, MinimumDistance: MinDistance };
-    IdentifyConnectedComponents(Graph, Parameter, (Node, Connections) => {
-        return Node.Data.Examples?.length ?? 0 + Node.NearOwners?.size ?? 0 + Connections;
-    });
+    IdentifyComponents(Graph.Nodes, Graph.Links, (Node, Links) => {
+        return Node.Data.Examples?.length ?? 0 + Node.NearOwners?.size ?? 0 + Links.length;
+    }, (Link) => Link.Distance < Parameter.LinkMinimumDistance);
     return Graph;
 }
 
-/** IdentifyConnectedComponents: Identify the connected components in the graph. */
-export function IdentifyConnectedComponents<T>
-    (Graph: Graph<T>, Parameters: Parameters, NodeEvaluator: (Node: Node<T>, Connections: number) => number): void {
+/** IdentifyComponents: Identify the connected components in the graph. */
+export function IdentifyComponents<T>
+    (Nodes: Node<T>[], Links: Link<T>[], 
+    NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number,
+    LinkEvaluator: (Link: Link<T>) => boolean, 
+    MinimumNodes: number = 3): Component<T>[] {
     var Components: Component<T>[] = [];
     var Visited = new Set<Node<T>>();
-    for (var Node of Graph.Nodes) {
+    for (var Node of Nodes) {
         if (Visited.has(Node)) continue;
         var Queue = [Node];
         var Component = { Name: "", Nodes: new Set<Node<T>>() };
@@ -81,8 +84,8 @@ export function IdentifyConnectedComponents<T>
             Component.Nodes.add(Current);
             // Add the current node's neighbors to the queue
             var Degrees = 0;
-            Graph.Links.forEach(Link => {
-                if (Link.Distance > Parameters.LinkMinimumDistance) return;
+            var CurrentLinks = Links.filter(LinkEvaluator)
+            CurrentLinks.forEach(Link => {
                 if (Link.Source == Current) {
                     Queue.push(Link.Target);
                     Degrees++;
@@ -93,19 +96,19 @@ export function IdentifyConnectedComponents<T>
                 }
             });
             // Update the most connected node
-            var Score = NodeEvaluator(Current, Degrees);
+            var Score = NodeEvaluator(Current, CurrentLinks);
             if (Score > BestNodeScore) {
                 BestNodeScore = Score;
                 BestNode = Current;
             }
         }
-        if (Component.Nodes.size < 3) continue;
+        if (Component.Nodes.size < MinimumNodes) continue;
         // Assign the name
         if (BestNode)
             Component.Name = (BestNode.Data as any).Label;
         Components.push(Component);
     }
-    Graph.Components = Components;
+    return Components;
 }
 
 /** BuildConcurrenceGraph: Build a concurrence code graph from the dataset. */
