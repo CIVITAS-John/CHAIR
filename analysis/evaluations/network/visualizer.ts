@@ -40,11 +40,12 @@ export class Visualizer {
         this.Zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", (event) => {
             Scaler.attr("transform", event.transform);
             var ScaleProgress = (1 - Math.max(0, 3 - event.transform.k) / 2);
-            this.LinkLayer.style("opacity", ScaleProgress);
-            this.NodeLayer.style("opacity", ScaleProgress);
-            this.LabelLayer.style("opacity", ScaleProgress);
+            this.LinkLayer.style("opacity", 0.1 + ScaleProgress);
+            this.NodeLayer.style("opacity", 0.1 + ScaleProgress);
+            this.LabelLayer.style("opacity", 0.1 + ScaleProgress);
             this.ComponentLayer.style("opacity", 2 - ScaleProgress * 2);
             this.ComponentLayer.style("display", ScaleProgress > 0.9 ? "none" : "block");
+            this.ComponentLayer.style("pointer-events", ScaleProgress > 0.6 ? "none" : "all");
         }) as any;
         this.Zoom.scaleTo(this.Container as any, 1);
         this.Container.call(this.Zoom as any);

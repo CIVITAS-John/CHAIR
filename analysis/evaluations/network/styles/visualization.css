@@ -46,9 +46,11 @@ html {
 }
 /** Visualization Styles */
 .visualization .components text {
-    font-weight: bold;
     stroke: #000000;
+    cursor: pointer;
     stroke-width: 0.1;
+    user-select: none;
+    font-weight: bold;
 }
 .visualization .labels {
     pointer-events: none;
