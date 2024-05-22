@@ -1,0 +1,117 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (8 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+8. {Repeat the input 8}
+Relationship: {The logical relationship between concepts in input 8}
+Criteria: {A sentence of consolidated criteria for code 8}
+Label: {A consolidated label of code 8}
+Category: {2-4 words for code 8}
+---
+~~~
+1. compatibility issues, compatibility considerations.
+- Discussions about the software's compatibility with different operating systems and hardware.
+- Concerns or discussions about how well the software works with various systems or hardware setups.
+- The designer's consideration of compatibility with different systems.
+
+2. technical constraints, technical and environmental constraints.
+- Instances where technical limitations or constraints are discussed.
+- Issues related to technical limitations and specific contexts in which the software is used.
+
+3. software updates, software updates impact.
+- Information or discussions about new software versions and the specific changes or improvements made.
+- Instances where the designer announces updates or changes to the software.
+- Information or announcements related to new versions, releases, updates, or changes to the Physics Lab software components or functionality.
+- Involves the upcoming release of software versions, adaptation to changes, and implications of updates on user experience.
+
+4. platform updates, platform updates and development process.
+- Designers sharing information about changes or additions to the Physics Lab platform.
+- The designer's communication about upcoming changes and improvements to the platform, as well as statements that describe the software updates, changes, or improvements, and discussions that provide information about the development process.
+
+5. feedback and iteration, user feedback and iterative design.
+- The exchange of feedback between users and the designer, and the designer's responsiveness to that feedback.
+- Discussions where users provide feedback, suggestions, or comments about the Physics Lab software, and the designer's response and incorporation of the community's input into the iterative design process.
+
+6. user support, user assistance.
+- Designers providing support and guidance to users.
+- Exchanges where community members help each other solve problems or provide usage tips.
+
+7. implementing user feedback, user feedback integration.
+- Changes or updates in the software that reflect user suggestions or needs.
+- Instances where user suggestions are actively sought and subsequently influence design decisions and software development.
+
+8. feedback solicitation, soliciting feedback and input.
+- Active requests by the designer for user feedback to enhance software features or usability.
+- Instances where developers or designers actively solicit feedback, suggestions, or input from the community or stakeholders during the design and development process.
+===
+Here is the output:
+
+---
+Categories: 
+* Technical Development
+* Community Engagement
+* Design Process
+* User Experience
+
+Definitions for each code:
+
+1. compatibility issues, compatibility considerations.
+Relationship: Inclusion (compatibility considerations include discussions about compatibility issues)
+Criteria: Discussions about software compatibility with different operating systems and hardware.
+Label: Compatibility Concerns
+Category: Technical Development
+
+2. technical constraints, technical and environmental constraints.
+Relationship: Inclusion (technical constraints include environmental constraints)
+Criteria: Discussions about technical limitations or constraints in specific contexts.
+Label: Technical Limitations
+Category: Technical Development
+
+3. software updates, software updates impact.
+Relationship: Inclusion (software updates include their impact)
+Criteria: Information or discussions about new software versions and specific changes or improvements.
+Label: Software Updates
+Category: Technical Development
+
+4. platform updates, platform updates and development process.
+Relationship: Inclusion (platform updates include the development process)
+Criteria: Designers sharing information about changes or additions to the Physics Lab platform.
+Label: Platform Development
+Category: Technical Development
+
+5. feedback and iteration, user feedback and iterative design.
+Relationship: Parallel (feedback and iteration are related concepts)
+Criteria: Exchanges of feedback between users and designers, and designers' responsiveness to feedback.
+Label: Feedback and Iteration
+Category: Design Process
+
+6. user support, user assistance.
+Relationship: Inclusion (user support includes user assistance)
+Criteria: Designers providing support and guidance to users, or community members helping each other.
+Label: User Support
+Category: Community Engagement
+
+7. implementing user feedback, user feedback integration.
+Relationship: Inclusion (implementing user feedback includes user feedback integration)
+Criteria: Changes or updates in the software reflecting user suggestions or needs.
+Label: User Feedback Integration
+Category: Design Process
+
+8. feedback solicitation, soliciting feedback and input.
+Relationship: Inclusion (feedback solicitation includes soliciting feedback and input)
+Criteria: Active requests by designers for user feedback to enhance software features or usability.
+Label: Feedback Solicitation
+Category: Design Process

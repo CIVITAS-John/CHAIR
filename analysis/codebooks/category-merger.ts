@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import { ResearchQuestion } from "../../constants.js";
-import { ClusterTexts } from "../../utils/embeddings.js";
+import { ClusterCategories } from "../../utils/embeddings.js";
 import { Codebook, Code, GetCategories } from "../../utils/schema.js";
 import { MergeCategoriesByCluster, MergeCodesByCluster, UpdateCategories } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
@@ -41,8 +41,8 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Cod
             return Text.trim();
         });
         // Cluster categories using text embeddings
-        var Clusters = await ClusterTexts(CategoryStrings, Categories.map(Category => `${Category}|||${Frequencies.get(Category)}`), "consolidated", 
-            "linkage-jc", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString()
+        var Clusters = await ClusterCategories(CategoryStrings, Frequencies, "consolidated", 
+            "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString()
         );
         this.OldCategories = Categories;
         this.NewCategories = MergeCategoriesByCluster(Clusters, Categories, Codes);

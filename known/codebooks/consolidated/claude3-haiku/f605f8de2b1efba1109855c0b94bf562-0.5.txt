@@ -1,0 +1,51 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (2 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+2. {Repeat the input 2}
+Relationship: {The logical relationship between concepts in input 2}
+Criteria: {A sentence of consolidated criteria for code 2}
+Label: {A consolidated label of code 2}
+Category: {2-4 words for code 2}
+---
+~~~
+1. user feedback, addressing user feedback.
+- Discussions where users provide feedback, suggestions, or comments about the Physics Lab software.
+- The designer's acknowledgment and consideration of the community's requests and feedback.
+
+2. community participation, community engagement and participation.
+- The community members' active involvement in the development process, such as providing feedback and requesting features.
+- The extent to which the software designer actively involves the user community in the development process, seeks their input and feedback, and responds to their needs. This includes mechanisms within the software that enable community members to provide feedback, as well as the community's level of engagement and participation.
+===
+---
+Categories: 
+* Learning Sciences
+* Human-Computer Interaction
+* Participatory Design
+
+Definitions for each code (2 in total):
+1. User Feedback
+Relationship: User feedback is a subset of community participation and engagement.
+Criteria: Discussions where users provide feedback, suggestions, or comments about the Physics Lab software, and the designer's acknowledgment and consideration of the community's requests and feedback.
+Label: User Feedback
+Category: Community Engagement
+
+2. Community Participation
+Relationship: Community participation is a broader concept that includes user feedback as a specific aspect.
+Criteria: The community members' active involvement in the development process, such as providing feedback and requesting features, as well as the extent to which the software designer actively involves the user community in the development process, seeks their input and feedback, and responds to their needs. This includes mechanisms within the software that enable community members to provide feedback, as well as the community's level of engagement and participation.
+Label: Community Participation
+Category: Participatory Design
+---

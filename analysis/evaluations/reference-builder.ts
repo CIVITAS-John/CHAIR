@@ -7,6 +7,7 @@ import { PipelineConsolidator } from "../codebooks/consolidator.js";
 import { ExportConversationsForCoding } from "../../utils/export.js";
 import { RefineMerger } from '../codebooks/refine-merger.js';
 import { DefinitionGenerator } from '../codebooks/definition-generator.js';
+import { AlternativeMerger } from '../codebooks/alternative-merger.js';
 
 /** ReferenceBuilder: A builder of reference codebook. */
 export class ReferenceBuilder {
@@ -18,7 +19,7 @@ export class ReferenceBuilder {
         console.log(`Start merging ${Codebooks.length} codebooks into a reference codebook.`);
         console.log(chalk.green(`Statistics: ${Statistics.reduce((Prev, Curr) => Curr + Prev)} codes found (${Statistics.join(", ")}).`));
         // Remove alternatives from individual codebooks
-        Codebooks.forEach(Codebook => Object.values(Codebook).forEach(Code => Code.Alternatives = []));
+        // Codebooks.forEach(Codebook => Object.values(Codebook).forEach(Code => Code.Alternatives = []));
         // Merge into a single codebook
         var Codebook = MergeCodebooks(Codebooks);
         console.log(chalk.green(`Statistics: ${Object.keys(Codebook).length} codes emerged after merging by name alone.`));
@@ -29,6 +30,8 @@ export class ReferenceBuilder {
     protected async RefineCodebook(Codebook: Codebook): Promise<Codebook> {
         var Threads = { Codebook: Codebook, Threads: {} };
         await ConsolidateCodebook<void>(new PipelineConsolidator(
+            // Merge codes that have been merged
+            new AlternativeMerger(),
             // Merge very similar names
             new SimpleMerger({ Looping: true }),
             // Merge similar definitions too
@@ -55,6 +58,8 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
     protected async RefineCodebook(Codebook: Codebook): Promise<Codebook> {
         var Threads = { Codebook: Codebook, Threads: {} };
         await ConsolidateCodebook<void>(new PipelineConsolidator(
+            // Merge codes that have been merged
+            new AlternativeMerger(),
             // Merge very similar names
             new SimpleMerger({ Looping: true }),
             // Generate definitions for missing ones
@@ -62,10 +67,10 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
             // Merge definitions
             // Do not use penalty mechanism when the codebooks refer to different data
             // It may create a bias against smaller datasets
-            new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.4, UseDefinition: false }),
-            new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.4, Looping: true }),
-            new RefineMerger({ Maximum: 0.6, Minimum: !this.SameData ? 0.6 : 0.4, UseDefinition: false }),
-            new RefineMerger({ Maximum: 0.6, Minimum: !this.SameData ? 0.6 : 0.4, Looping: true }),
+            new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.45, UseDefinition: false }),
+            new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.45, Looping: true }),
+            new RefineMerger({ Maximum: 0.65, Minimum: !this.SameData ? 0.6 : 0.4, UseDefinition: false }),
+            new RefineMerger({ Maximum: 0.65, Minimum: !this.SameData ? 0.6 : 0.4, Looping: true }),
             // Merge very similar names once again
             new SimpleMerger({ Looping: true }),
         ), [], Threads);

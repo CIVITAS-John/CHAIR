@@ -1,0 +1,74 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (4 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+4. {Repeat the input 4}
+Relationship: {The logical relationship between concepts in input 4}
+Criteria: {A sentence of consolidated criteria for code 4}
+Label: {A consolidated label of code 4}
+Category: {2-4 words for code 4}
+---
+~~~
+1. active learning, learning support features.
+- Aspects of the software that encourage active learning, experimentation, or hands-on engagement with physics concepts.
+- Software features or affordances that facilitate conceptual understanding, visualization, or simulation of physics concepts.
+
+2. software updates, component update, sharing updates.
+- Mentions of new software versions, releases, or planned features and updates.
+- Information or announcements about updates or changes to software components or functionality.
+- Instances where developers or designers share information about upcoming updates or changes to the software.
+
+3. feature planning, feature prioritization.
+- Discussions around planned software features and capabilities.
+- Discussions or decisions related to prioritizing the development or implementation of certain features or sections.
+
+4. emoji usage, image sharing.
+- Instances where participants use emojis in their communication, potentially indicating shared norms or practices within the community.
+- Instances where participants share images or screenshots, potentially indicating shared norms or practices within the community.
+===
+---
+Categories:
+* Community Dynamics
+* Software Evolution
+* Design Processes
+* Communication Practices
+
+Definitions for each code (4 in total):
+
+1. active learning, learning support features.
+Relationship: The concepts are parallel, both relating to software features that support learning.
+Criteria: Software features or affordances that encourage active engagement, experimentation, visualization, or conceptual understanding of physics concepts.
+Label: Learning Support Affordances
+Category: Design Processes
+
+2. software updates, component update, sharing updates.
+Relationship: The concepts are hierarchical, with "sharing updates" being a specific instance of "software updates" or "component update."
+Criteria: Information or announcements related to new software versions, releases, updates, or changes to software components or functionality.
+Label: Software Update Information
+Category: Software Evolution
+
+3. feature planning, feature prioritization.
+Relationship: The concepts are hierarchical, with "feature prioritization" being a specific aspect of "feature planning."
+Criteria: Discussions or decisions related to planned software features, capabilities, or prioritizing the development and implementation of certain features.
+Label: Feature Planning and Prioritization
+Category: Design Processes
+
+4. emoji usage, image sharing.
+Relationship: The concepts are parallel, both relating to communication practices within the community.
+Criteria: Instances where participants use emojis or share images or screenshots, potentially indicating shared norms or practices within the community.
+Label: Visual Communication Practices
+Category: Communication Practices
+---

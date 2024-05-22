@@ -1,0 +1,62 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (3 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+3. {Repeat the input 3}
+Relationship: {The logical relationship between concepts in input 3}
+Criteria: {A sentence of consolidated criteria for code 3}
+Label: {A consolidated label of code 3}
+Category: {2-4 words for code 3}
+---
+~~~
+1. active learning, conceptual learning support.
+- Aspects of the software that encourage active learning, experimentation, or hands-on engagement with physics concepts.
+- Features or affordances of the software aimed at helping users understand physics concepts, through visualization, simulation or other means.
+
+2. role identification, teacher/educator role.
+- Users explicitly or implicitly identifying their roles or affiliations within the community.
+- Identifying users who explicitly state or imply that they are teachers, educators, or have a teaching/instructional role.
+
+3. emoji usage, image sharing.
+- Instances where participants use emojis in their communication, potentially indicating shared norms or practices within the community.
+- Instances where participants share images or screenshots, potentially indicating shared norms or practices within the community.
+===
+---
+Categories:
+* Pedagogical Design
+* Community Roles
+* Communication Practices
+
+Definitions for each code (3 in total):
+
+1. active learning, conceptual learning support.
+Relationship: These concepts are parallel, both relating to the pedagogical design of the software.
+Criteria: Features or aspects of the software that facilitate active, hands-on learning and conceptual understanding of physics through simulations, visualizations or other interactive means.
+Label: Interactive pedagogical design
+Category: Pedagogical Design
+
+2. role identification, teacher/educator role. 
+Relationship: The second concept is a specific case of the first, more general concept.
+Criteria: Instances where users explicitly or implicitly identify their roles within the community, with a focus on those who state or imply an educator or teaching role.
+Label: Role identification (educator roles)
+Category: Community Roles  
+
+3. emoji usage, image sharing.
+Relationship: These concepts are parallel, both relating to communication practices within the community.
+Criteria: Instances where participants use emojis or share images/screenshots, potentially indicating shared norms or practices of communication within the community.
+Label: Multimodal communication practices
+Category: Communication Practices
+---

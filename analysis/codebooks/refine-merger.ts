@@ -1,5 +1,5 @@
 import { ResearchQuestion } from "../../constants.js";
-import { ClusterTexts } from "../../utils/embeddings.js";
+import { ClusterCodes } from "../../utils/embeddings.js";
 import { LLMName } from "../../utils/llms.js";
 import { Codebook, Code } from "../../utils/schema.js";
 import { MergeCodesByCluster } from "./codebooks.js";
@@ -38,12 +38,13 @@ export class RefineMerger extends DefinitionParser {
             if (this.UseDefinition) {
                 var Text = `Label: ${Code.Label}`;
                 if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
+                if ((Code.Alternatives?.length ?? 0) > 0) Text += `\nAlternatives: ${Code.Alternatives!.join(", ")}`;
                 return Text.trim();
             } else return Code.Label;
         });
         // Categorize the strings
-        var Clusters = await ClusterTexts(CodeStrings, Codes.map(Code => `${Code.Label}|||${Code.Examples?.length ?? 0}`), "consolidator", 
-            "linkage-jc", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString());
+        var Clusters = await ClusterCodes(CodeStrings, Codes, 
+            "consolidator", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString());
         // Merge the codes
         var Result = MergeCodesByCluster(Clusters, Codes);
         // Check if we should stop - when nothing is merged

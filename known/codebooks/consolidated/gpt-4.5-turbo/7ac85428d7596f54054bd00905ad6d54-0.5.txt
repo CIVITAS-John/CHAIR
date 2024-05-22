@@ -1,0 +1,52 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (2 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+2. {Repeat the input 2}
+Relationship: {The logical relationship between concepts in input 2}
+Criteria: {A sentence of consolidated criteria for code 2}
+Label: {A consolidated label of code 2}
+Category: {2-4 words for code 2}
+---
+~~~
+1. feature updates, feature announcements.
+- Designer communicates upcoming changes or updates in the software features.
+- Information about new or upcoming features in the app.
+- Announcements from the designer detailing new or upcoming features in the software.
+
+2. user feedback, user feedback and interaction.
+- Direct comments or suggestions from users about software features or performance.
+- Instances where users provide specific feedback or requests related to the software’s features and usability.
+- Instances where users provide feedback or interact directly with the developers about the tool's features or usability.
+===
+---
+Categories: 
+* Communication Strategies
+* User Engagement
+
+Definitions for each code (2 in total):
+1. feature updates, feature announcements.
+Relationship: The concepts of feature updates and feature announcements are parallel but closely related, both dealing with the dissemination of information regarding software changes.
+Criteria: Communications that inform users about new or modified features in the software.
+Label: Feature Communication
+Category: Communication Strategies
+
+2. user feedback, user feedback and interaction.
+Relationship: The concepts of user feedback and user feedback and interaction overlap significantly, with the latter encompassing a broader scope including direct interactions.
+Criteria: Instances where users express their opinions or suggestions concerning the software's features, performance, and their direct interactions with developers.
+Label: User Feedback Dynamics
+Category: User Engagement
+---

@@ -1,0 +1,50 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (2 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+2. {Repeat the input 2}
+Relationship: {The logical relationship between concepts in input 2}
+Criteria: {A sentence of consolidated criteria for code 2}
+Label: {A consolidated label of code 2}
+Category: {2-4 words for code 2}
+---
+~~~
+1. design suggestions, user-initiated improvement suggestions.
+- Suggestions from users or discussions that could influence future design decisions.
+- Instances where users propose new functionalities or improvements to existing features.
+
+2. feedback responsiveness, responsive design changes.
+- Instances where designers seek out and respond to user feedback to refine software features.
+- Changes made to the software based on user feedback, reflecting a responsive and adaptive design process.
+===
+---
+Categories: 
+* User Engagement
+* Design Adaptation
+
+Definitions for each code (2 in total):
+1. design suggestions, user-initiated improvement suggestions.
+Relationship: Parallel concepts where both involve user contributions to design improvements.
+Criteria: Instances where users actively propose enhancements or new features that could influence the design process.
+Label: User-Driven Design Suggestions
+Category: User Engagement
+
+2. feedback responsiveness, responsive design changes.
+Relationship: Parallel concepts focusing on the design team's reaction to user feedback.
+Criteria: Instances where the design team adapts the software based on user feedback, demonstrating a responsive approach to design changes.
+Label: Responsive Design Adaptation
+Category: Design Adaptation
+---

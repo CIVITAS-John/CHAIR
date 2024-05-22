@@ -1,0 +1,51 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (2 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+2. {Repeat the input 2}
+Relationship: {The logical relationship between concepts in input 2}
+Criteria: {A sentence of consolidated criteria for code 2}
+Label: {A consolidated label of code 2}
+Category: {2-4 words for code 2}
+---
+~~~
+1. user requests, user needs and suggestions, feature requests.
+- Instances where users make specific requests or suggestions for new features or content.
+- User feedback on desired features and functionalities for the software.
+- Instances where users suggest new features or components to be included in the software.
+
+2. designer response, designer responsiveness.
+- Instances where the designer acknowledges, addresses, or acts upon user feedback.
+- Instances where the designer responds to user requests, questions, or feedback.
+===
+---
+Categories: 
+* User Interaction
+* Designer Engagement
+
+Definitions for each code (2 in total):
+1. user requests, user needs and suggestions, feature requests.
+Relationship: These concepts are all about users expressing their desires and suggestions for the software.
+Criteria: Instances where users make specific requests or suggestions for new features, content, or functionalities.
+Label: User Feature Requests
+Category: User Interaction
+
+2. designer response, designer responsiveness.
+Relationship: These concepts both involve the designer's actions in response to user feedback.
+Criteria: Instances where the designer acknowledges, addresses, or acts upon user feedback, requests, or questions.
+Label: Designer Feedback Response
+Category: Designer Engagement
+---

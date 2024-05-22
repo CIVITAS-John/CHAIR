@@ -53,12 +53,14 @@ export interface Codebook extends Record<string, Code> {
 }
 
 /** GetCategories: Get the categories from the codebook. */
-export function GetCategories(Codebook: Codebook): Map<string, number> {
-    var Categories = new Map<string, number>();
+export function GetCategories(Codebook: Codebook): Map<string, string[]> {
+    var Categories = new Map<string, string[]>();
     for (var Code of Object.values(Codebook)) {
         for (var Category of Code.Categories ?? []) {
             if (Category == "") continue;
-            Categories.set(Category, (Categories.get(Category) ?? 0) + 1);
+            if (!Categories.has(Category)) Categories.set(Category, []);
+            if (Categories.get(Category)!.indexOf(Code.Label) == -1)
+                Categories.get(Category)!.push(Code.Label);
         }
     }
     return Categories;

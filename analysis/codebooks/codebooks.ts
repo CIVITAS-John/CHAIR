@@ -27,9 +27,6 @@ export function MergeCodebook(Analyses: CodedThreads) {
 }
 
 /** MergeCodebooks: Merge multiple codebooks simply by labels of codes. */
-// Then, we combine the codes from each codebook and record the ownership
-// We use the reference code as the baseline if multiple codes are found
-// Here, the reference codebook's first definition will be used (will need to change)
 export function MergeCodebooks(Codebooks: Codebook[], WithReference: boolean = false) {
     var Codes: Map<string, Code> = new Map();
     var Alternatives: Map<string, string> = new Map();
@@ -37,20 +34,20 @@ export function MergeCodebooks(Codebooks: Codebook[], WithReference: boolean = f
         for (var [Label, Code] of Object.entries(Codebook))
             Code.Owners = [];
     }
+    // Then, we combine the codes from each codebook and record the ownership
+    // We use the reference code as the baseline if multiple codes are found
+    // Here, the reference codebook's first definition will be used (will need to change)
     for (var [Index, Codebook] of Codebooks.entries()) {
         for (var [Label, Code] of Object.entries(Codebook)) {
             var NewLabel = Label;
-            // Merge the alternatives
             if (WithReference) {
+                // Merge the alternatives
                 if (Index == 0)
                     Code.Alternatives?.forEach(Alternative => Alternatives.set(Alternative, Label));
                 else {
-                    if (Alternatives.has(Label)) 
-                        NewLabel = Alternatives.get(Label)!;
+                    if (Alternatives.has(Label)) NewLabel = Alternatives.get(Label)!;
                 }
-            }
-            // Merge the code
-            if (WithReference) {
+                // Merge the code
                 if (!Codes.has(NewLabel)) {
                     // Here we want to create a clean copy
                     var NewInstance: Code = { Label: NewLabel, Examples: Code.Examples, Definitions: Code.Definitions, Categories: Code.Categories };
@@ -64,6 +61,7 @@ export function MergeCodebooks(Codebooks: Codebook[], WithReference: boolean = f
                         Code.Owners!.push(Index);
                 }
             } else {
+                // Merge the code
                 if (!Codes.has(NewLabel)) 
                     Codes.set(NewLabel, Code);
                 else 

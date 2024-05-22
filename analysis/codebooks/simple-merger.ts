@@ -1,4 +1,4 @@
-import { ClusterTexts } from "../../utils/embeddings.js";
+import { ClusterCodes } from "../../utils/embeddings.js";
 import { Codebook, Code } from "../../utils/schema.js";
 import { MergeCodesByCluster } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
@@ -34,8 +34,8 @@ export class SimpleMerger extends CodeConsolidator {
                 return Code.Label;
             }
         });
-        var Clusters = await ClusterTexts(Labels, Codes.map(Code => `${Code.Label}|||${Code.Examples?.length ?? 0}`), "consolidator", 
-            "linkage-jc", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString());
+        var Clusters = await ClusterCodes(Labels, Codes, 
+            "consolidator", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString());
         // Merge the codes
         var Result = MergeCodesByCluster(Clusters, Codes);
         // Check if we should stop - when nothing is merged

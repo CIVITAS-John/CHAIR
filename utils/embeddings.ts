@@ -8,7 +8,7 @@ import { PythonShell } from 'python-shell';
 import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai';
 import { TaskType } from "@google/generative-ai";
 import chalk from 'chalk';
-import { CodebookEvaluation } from './schema.js';
+import { Code } from './schema.js';
 
 // Model: The embedding model to use.
 export var Model: Embeddings;
@@ -140,6 +140,30 @@ export interface ClusterItem {
     ID: number;
     /** Probability: The probability of the item. */
     Probability: number;
+}
+
+/** ClusterCodes: Categorize the codes into clusters using linkage-jc. */
+export async function ClusterCodes(Sources: string[], Codes: Code[], Cache: string, ...ExtraOptions: string[]): Promise<Record<number, ClusterItem[]>> {
+    return await ClusterTexts(Sources, Codes.map(Code => {
+        return JSON.stringify({
+            Label: Code.Label,
+            Examples: Code.Examples?.map(Example => {
+                var Index = Example.indexOf("|||");
+                if (Index == -1) return Example;
+                return Example.substring(0, Index);
+            })
+        });
+    }), Cache, "linkage-jc", ...ExtraOptions);
+}
+
+/** ClusterCategories: Categorize the categories into clusters using linkage-jc. */
+export async function ClusterCategories(Sources: string[], Categories: Map<string, string[]>, Cache: string, ...ExtraOptions: string[]): Promise<Record<number, ClusterItem[]>> {
+    return await ClusterTexts(Sources, Sources.map(Category => {
+        return JSON.stringify({
+            Label: Category,
+            Examples: Categories.get(Category) ?? []
+        });
+    }), Cache, "linkage-jc", ...ExtraOptions);
 }
 
 /** ClusterTexts: Categorize the embeddings into clusters. */

@@ -1,0 +1,84 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (5 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+5. {Repeat the input 5}
+Relationship: {The logical relationship between concepts in input 5}
+Criteria: {A sentence of consolidated criteria for code 5}
+Label: {A consolidated label of code 5}
+Category: {2-4 words for code 5}
+---
+~~~
+1. update announcements, software versions and updates.
+- Information or announcements regarding updates or changes to software components or functionality.
+- Mentions of new versions, releases, planned updates, or future components of the Physics Lab software.
+
+2. designer-user communication, designer-user feedback interactions.
+- Instances of the designer communicating with users, sharing updates, or responding to user inquiries.
+- Quotes showing the designer explicitly asking for feedback or responding to user suggestions regarding design or usability.
+
+3. user-centered design, user involvement in design.
+- User suggestions for new features or functionality, and indications of how user feedback shapes the software design.
+- Evidence of users being involved in the design process through feedback and suggestions.
+
+4. user feedback, usability feedback.
+- Comments from users providing feedback, suggestions, or describing their experience with the software.
+- Quotes that provide feedback or suggestions related to the usability and user experience of the software.
+
+5. knowledge sharing.
+- Instances of community members sharing knowledge, expertise, or resources related to physics education.
+- Instances where participants ask for or share knowledge, information, or resources with others.
+===
+---
+Categories:
+* Community Dynamics
+* Design Process
+* Software Evolution
+* Knowledge Exchange
+
+Definitions for each code (5 in total):
+
+1. update announcements, software versions and updates.
+Relationship: These concepts are parallel, referring to different aspects of software updates and changes.
+Criteria: Information or announcements related to new versions, releases, updates, or changes to the Physics Lab software components or functionality.
+Label: Software Updates & Changes
+Category: Software Evolution
+
+2. designer-user communication, designer-user feedback interactions. 
+Relationship: These concepts are parallel, referring to different types of communication between designers and users.
+Criteria: Instances where the designer communicates with users, shares updates, responds to inquiries, or explicitly requests feedback on design or usability aspects.
+Label: Designer-User Interactions
+Category: Design Process  
+
+3. user-centered design, user involvement in design.
+Relationship: These concepts are closely related, with the latter being a specific instance of the former.
+Criteria: Evidence of users being actively involved in the design process by providing suggestions for new features or functionality, and indications of how user feedback shapes the software design.
+Label: User-Centered Design Process
+Category: Design Process
+
+4. user feedback, usability feedback.
+Relationship: These concepts are parallel, referring to different types of user feedback.
+Criteria: Comments from users providing feedback, suggestions, or describing their experience with the software's usability and user experience.
+Label: User Feedback & Usability
+Category: Design Process
+
+5. knowledge sharing.
+Relationship: This is a broad concept encompassing different types of knowledge exchange.
+Criteria: Instances where community members share knowledge, expertise, or resources related to physics education, or ask for or receive knowledge, information, or resources from others.
+Label: Knowledge Exchange
+Category: Knowledge Exchange
+
+---

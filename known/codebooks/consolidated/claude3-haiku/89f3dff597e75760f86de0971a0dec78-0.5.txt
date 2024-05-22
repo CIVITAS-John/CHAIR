@@ -1,0 +1,47 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (1 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+---
+~~~
+1. software download, software version release.
+- Statements about downloading the Physics Lab software.
+- Statements about the release of a new version of the Physics Lab software.
+===
+---
+Categories:
+* Software Distribution
+* Software Versioning
+
+Definitions for each code (2 in total):
+
+1. Software Download
+Relationship: The concept of "software download" is a specific instance of the broader concept of "software distribution".
+Criteria: Statements describing the process of users downloading the Physics Lab software.
+Label: Software Download
+Category: Software Distribution
+
+2. Software Version Release
+Relationship: The concept of "software version release" is a specific instance of the broader concept of "software versioning".
+Criteria: Statements describing the release of a new version of the Physics Lab software.
+Label: Software Version Release
+Category: Software Versioning
+---

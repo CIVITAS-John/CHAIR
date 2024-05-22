@@ -31,9 +31,10 @@ export async function BuildReferenceAndEvaluateCodebooks(Source: string | string
     ExportPath?: string, ComparingCodebooks?: string[]): Promise<Record<string, CodebookEvaluation>> {
     // Find all the codebooks under the path
     var [ Codebooks, Names ] = await LoadCodebooks(Source);
-    var Hash = md5(JSON.stringify(Codebooks));
+    var Backup = JSON.stringify(Codebooks);
+    var Hash = md5(Backup);
     // Build the reference codebook
-    var Reference = await ReadOrBuildCache(ReferencePath, Hash, () => BuildReferenceAndExport(Builder, Codebooks, ReferencePath));
+    var Reference = await ReadOrBuildCache(ReferencePath, Hash, () => BuildReferenceAndExport(Builder, JSON.parse(Backup), ReferencePath));
     // Read the comparing codebooks
     if (ComparingCodebooks)
         [ Codebooks, Names ] = await LoadCodebooks(ComparingCodebooks);

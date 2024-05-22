@@ -1,4 +1,5 @@
 import sys
+import json
 import numpy as np
 from embedding import Dimensions, Items, cpus, labels, embeddings
 
@@ -15,10 +16,10 @@ Plotting = bool(sys.argv[8]) if len(sys.argv) > 8 else False
 Penalty = MaxDistance - MinDistance
 print("Linkage:", Linkage, ", MaxDistance:", MaxDistance, ", MinDistance:", MinDistance, ", Metrics:", Metrics, ", Target Dimensions:", TargetDimensions)
 
-# Separate the sizes from labels
-# The format: label|||size
-sizes = [int(label.split("|||")[1]) for label in labels]
-labels = [label.split("|||")[0] for label in labels]
+# Separate the examples from labels
+sources = [json.loads(label) for label in labels]
+labels = [source["Label"] for source in sources]
+examples = [set(source["Examples"]) for source in sources]
 
 # Use UMap to reduce the dimensions
 from umap import UMAP
@@ -38,18 +39,23 @@ from scipy.spatial.distance import squareform
 condensed_distances = squareform(distances)
 
 # For average sizes, we only consider those with more than 1
-sizes_for_calc = [size for size in sizes if size > 1]
+sizes_for_calc = [len(example) for example in examples]
 avg_size = np.mean(sizes_for_calc)
-std_size = np.std(sizes_for_calc)
-print("Average size:", avg_size, ", Standard deviation:", std_size)
+max_size = max(np.percentile(sizes_for_calc, 95), avg_size * 3)
+penalty_coff = max_size - avg_size
+print("Average size:", avg_size, ", Max penalty size:", max_size)
 
-# Calculate the penalty on the distance - we calculated twice: once on the distance matrix, once on the linkage
-# The rationale is that we want to avoid having a few large clusters and many small clusters
+# Calculate the unique differences of examples after merged
+def count_merged(code1, code2):
+    return len(examples[code1] - examples[code2]) * 2
+
+# Calculate the penalty on the distance based on number of differences
 for i in range(Items):
     for j in range(Items):
-        penalty = min(1, max(0, (sizes[i] + sizes[j] - avg_size) / 3 / std_size))
-        penalty = penalty * penalty
-        distances[i][j] += penalty * Penalty
+        if distances[i][j] > MinDistance:
+            penalty = min(1, max(0, (count_merged(i, j) - avg_size) / penalty_coff))
+            penalty = penalty * penalty
+            distances[i][j] += penalty * Penalty
 
 # Calculate the linkage
 from scipy.cluster.hierarchy import linkage, to_tree
@@ -57,13 +63,13 @@ linkages = linkage(condensed_distances, method=Linkage)
 root = to_tree(linkages)
 
 # Pre-traverse the tree for bottom-up depth (leaf = size of the leaf, root = total_size)
-leaf_sizes = {}
+tree_examples = {}
 def pre_traverse(node):
     if node.is_leaf():
-        return sizes[node.id]
-    leaf_sizes[node.id] = pre_traverse(node.get_left()) + pre_traverse(node.get_right())
-    return leaf_sizes[node.id]
-total_size = pre_traverse(root)
+        return examples[node.id]
+    tree_examples[node.id] = pre_traverse(node.get_left()) | pre_traverse(node.get_right())
+    return tree_examples[node.id]
+total_size = len(pre_traverse(root))
 
 # Default cluster: -1, 100%
 cluster_index = 0
@@ -82,10 +88,10 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
         return 1
     # If it is not a leaf, check if it is a cluster
     # Apply the maximum penalty when the new size is 3 * std_size larger than the average
-    penalty = min(1, max(0, (leaf_sizes[node.id] - avg_size) / 2 / std_size))
+    penalty = min(1, max(0, (len(tree_examples[node.id]) - avg_size) / penalty_coff))
     penalty = penalty * penalty
     criteria = max(MaxDistance - penalty * Penalty, MinDistance)
-    # print("Node:", node.id, ", Size:", leaf_sizes[node.id], ", % Penalty:", penalty, ", Distance:", node.dist, ", Criteria:", criteria)
+    # print("Node:", node.id, ", Size:", len(tree_examples[node.id]), ", % Penalty:", penalty, ", Distance:", node.dist, ", Criteria:", criteria)
     # Verbose: show the cluster
     left_id = node.get_left().id
     leftlabel = labels[left_id] if left_id < Items else "cluster-" + str(left_id)
@@ -116,5 +122,4 @@ if Plotting:
     plt.show()
 
 # Send the results
-import json
 print(json.dumps([clusters.tolist(), probs.tolist()]))

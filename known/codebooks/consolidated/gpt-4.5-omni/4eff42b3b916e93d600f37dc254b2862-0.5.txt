@@ -1,0 +1,72 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (4 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+4. {Repeat the input 4}
+Relationship: {The logical relationship between concepts in input 4}
+Criteria: {A sentence of consolidated criteria for code 4}
+Label: {A consolidated label of code 4}
+Category: {2-4 words for code 4}
+---
+~~~
+1. designer responsiveness, designer engagement.
+- Instances where the designer responds to user requests, feedback, or questions.
+- Instances where the designer provides updates, information, or responds to user queries and feedback.
+
+2. user involvement, collaborative design.
+- Instances where users are directly involved in the design process through feedback or suggestions.
+- Interactions where designers seek and respond to user feedback, involving them in the design process.
+
+3. user requests, feature requests.
+- Instances where users make specific requests or suggestions for new features or content.
+- Specific functionalities or tools that users ask to be included in the software.
+
+4. feature announcements, software updates and features.
+- Instances where the designer announces new features, improvements, or updates about the software.
+- Announcements or descriptions regarding new features, updates, and compatibility of the software shared with the community.
+===
+---
+Categories: 
+* Designer-User Interaction
+* User Participation
+* Feature Development
+* Communication of Updates
+
+Definitions for each code (4 in total):
+1. designer responsiveness, designer engagement.
+Relationship: Designer responsiveness is a subset of the broader category of designer engagement, which includes all forms of communication and interaction with users.
+Criteria: Instances where the designer communicates with users, including responding to requests, providing updates, or engaging in discussions.
+Label: Designer Communication
+Category: Designer-User Interaction
+
+2. user involvement, collaborative design.
+Relationship: Collaborative design is a broader concept that encompasses user involvement as it includes all forms of user participation in the design process.
+Criteria: Instances where users contribute to the design process through feedback, suggestions, or active participation, and where designers actively seek and incorporate this input.
+Label: Collaborative Design
+Category: User Participation
+
+3. user requests, feature requests.
+Relationship: Feature requests are a specific type of user request focused on new functionalities or tools.
+Criteria: Instances where users make specific requests or suggestions for new features or content to be included in the software.
+Label: Feature Requests
+Category: Feature Development
+
+4. feature announcements, software updates and features.
+Relationship: Software updates and features are part of feature announcements, which include all communications about new functionalities and improvements.
+Criteria: Instances where designers announce new features, improvements, or updates about the software to the community.
+Label: Feature Announcements
+Category: Communication of Updates
+---

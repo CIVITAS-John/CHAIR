@@ -15,8 +15,7 @@ export class NetworkEvaluator extends CodebookEvaluator {
     public Visualize: boolean = false;
     /** Evaluate: Evaluate a number of codebooks. */
     public async Evaluate(Codebooks: Codebook[], Names: string[], ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
-        var OriginalCodebooks = JSON.stringify(Codebooks);
-        var Hash = md5(OriginalCodebooks);
+        var Hash = md5(JSON.stringify(Codebooks));
         // Build the network information
         var Package = await ReadOrBuildCache(ExportPath + "/network", Hash, async () => {
             // We treat the first input as the reference codebook
@@ -36,7 +35,7 @@ export class NetworkEvaluator extends CodebookEvaluator {
             }
             // Return in the format
             var Package: CodebookComparison = {
-                Codebooks: JSON.parse(OriginalCodebooks),
+                Codebooks: Codebooks,
                 Names: Names,
                 Codes: Codes,
                 Distances: Result.Distances

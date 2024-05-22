@@ -1,0 +1,61 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (3 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+3. {Repeat the input 3}
+Relationship: {The logical relationship between concepts in input 3}
+Criteria: {A sentence of consolidated criteria for code 3}
+Label: {A consolidated label of code 3}
+Category: {2-4 words for code 3}
+---
+~~~
+1. usability feedback, user feedback.
+- Users' comments on the software's ease of use and practicality.
+- Contributions from users that provide suggestions, highlight issues, or express needs regarding the software.
+
+2. soliciting feedback, feedback incorporation.
+- Instances where designers or developers ask for user suggestions and feedback.
+- Instances where user input or feedback influences design decisions and software development.
+
+3. peer support, peer assistance and information sharing.
+- Instances where users provide assistance or encouragement to each other.
+- Community members helping each other with information and resources.
+===
+---
+Categories:
+* User Interaction
+* Feedback Processes
+* Community Support
+
+Definitions for each code (3 in total):
+1. usability feedback, user feedback.
+Relationship: Both concepts deal with feedback from users, but usability feedback is a subset of user feedback that specifically addresses ease of use and practicality.
+Criteria: Comments and contributions from users that provide suggestions, highlight issues, or express needs, especially focusing on the software's ease of use and practicality.
+Label: User Feedback
+Category: User Interaction
+
+2. soliciting feedback, feedback incorporation.
+Relationship: Soliciting feedback is the act of asking for user input, while feedback incorporation is the process of integrating that input into design and development.
+Criteria: Instances where designers or developers ask for user suggestions and feedback, and where user input influences design decisions and software development.
+Label: Feedback Processes
+Category: Feedback Processes
+
+3. peer support, peer assistance and information sharing.
+Relationship: Both concepts involve community members helping each other, whether through providing assistance, encouragement, or sharing information and resources.
+Criteria: Instances where users provide assistance, encouragement, or share information and resources with each other.
+Label: Peer Support
+Category: Community Support
+---

@@ -1,0 +1,95 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (6 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+6. {Repeat the input 6}
+Relationship: {The logical relationship between concepts in input 6}
+Criteria: {A sentence of consolidated criteria for code 6}
+Label: {A consolidated label of code 6}
+Category: {2-4 words for code 6}
+---
+~~~
+1. resource sharing, content sharing.
+- Instances of community members sharing or requesting access to files or resources within the group.
+- Group members actively share information, resources, and content within the online community, facilitated by the technical aspects of the software.
+
+2. informal communication, emotional expression.
+- Use of emojis or informal language that adds a personal touch to the interaction
+- Instances of community members expressing emotions through language, emojis, or non-text elements.
+
+3. designer's role, incorporating feedback.
+- The designer's involvement in responding to user feedback and improving the software, and identifying users focused on design aspects or involved in development.
+- The designer considers and incorporates feedback and suggestions from group members and stakeholders into the design and development process.
+
+4. user feedback dynamics, user feedback integration.
+- Instances where users express their opinions or suggestions concerning the software's features, performance, and their direct interactions with developers.
+- Instances where user feedback is actively integrated into the software development process, leading to changes or updates that reflect user suggestions or needs.
+
+5. practical feedback, user feedback on usability.
+- Direct comments from users about the software's usability and functionality.
+- Comments, suggestions or reports from users regarding their experience or issues with the software's usability.
+
+6. software release, software feature: downloading.
+- Statements about downloading the Physics Lab software and the release of new versions of the software
+- Mentions of downloading or accessing Physics Lab.
+===
+Here is the output:
+
+---
+Categories:
+* Community Engagement
+* Design and Development
+* Feedback and Improvement
+* Resource Sharing
+* User Experience
+
+Definitions for each code:
+
+1. resource sharing, content sharing.
+Relationship: Inclusion (content sharing is a type of resource sharing)
+Criteria: Instances of community members sharing or requesting access to files or resources within the group.
+Label: Resource Sharing
+Category: Resource Sharing
+
+2. informal communication, emotional expression.
+Relationship: Parallel (both are ways to express oneself in an online community)
+Criteria: Use of emojis or informal language that adds a personal touch to the interaction, or instances of community members expressing emotions through language, emojis, or non-text elements.
+Label: Social Expression
+Category: Community Engagement
+
+3. designer's role, incorporating feedback.
+Relationship: Inclusion (incorporating feedback is a part of the designer's role)
+Criteria: The designer's involvement in responding to user feedback and improving the software, and identifying users focused on design aspects or involved in development.
+Label: Designer's Involvement
+Category: Design and Development
+
+4. user feedback dynamics, user feedback integration.
+Relationship: Inclusion (user feedback integration is a type of user feedback dynamics)
+Criteria: Instances where users express their opinions or suggestions concerning the software's features, performance, and their direct interactions with developers, and instances where user feedback is actively integrated into the software development process.
+Label: User Feedback
+Category: Feedback and Improvement
+
+5. practical feedback, user feedback on usability.
+Relationship: Inclusion (user feedback on usability is a type of practical feedback)
+Criteria: Direct comments from users about the software's usability and functionality, and comments, suggestions or reports from users regarding their experience or issues with the software's usability.
+Label: Usability Feedback
+Category: User Experience
+
+6. software release, software feature: downloading.
+Relationship: Parallel (both are related to software updates)
+Criteria: Statements about downloading the Physics Lab software and the release of new versions of the software, and mentions of downloading or accessing Physics Lab.
+Label: Software Updates
+Category: Design and Development
