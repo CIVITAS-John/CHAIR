@@ -39,6 +39,8 @@ export function MergeCodebooks(Codebooks: Codebook[], WithReference: boolean = f
     // Here, the reference codebook's first definition will be used (will need to change)
     for (var [Index, Codebook] of Codebooks.entries()) {
         for (var [Label, Code] of Object.entries(Codebook)) {
+            // We don't accept anything without an example.
+            if ((Code.Examples?.length ?? 0) == 0) continue;
             var NewLabel = Label;
             if (WithReference) {
                 // Merge the alternatives

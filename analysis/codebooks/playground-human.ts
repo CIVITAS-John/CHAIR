@@ -16,8 +16,8 @@ await UseLLMs(async () => {
             // Generate definitions for missing ones
             new DefinitionGenerator(),
             // Merge definitions
-            new RefineMerger({ Maximum: 0.5, UseDefinition: false }),
-            new RefineMerger({ Maximum: 0.5, Looping: true }),
+            new RefineMerger({ Maximum: 0.5, Minimum: 0.45, UseDefinition: false }),
+            new RefineMerger({ Maximum: 0.5, Minimum: 0.45, Looping: true }),
             new RefineMerger({ Maximum: 0.65, UseDefinition: false }),
             new RefineMerger({ Maximum: 0.65, Looping: true }),
         ), "Coded Dataset 1", "0~16-gpt-3.5-turbo.json", "human", Human, false);

@@ -1,0 +1,83 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (5 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+5. {Repeat the input 5}
+Relationship: {The logical relationship between concepts in input 5}
+Criteria: {A sentence of consolidated criteria for code 5}
+Label: {A consolidated label of code 5}
+Category: {2-4 words for code 5}
+---
+~~~
+1. update announcements, announcement about new version release.
+- Announcing changes or updates to the software.
+- Announcing new version releases
+
+2. promising it will realize, future feature commitments.
+- Promising that a feature or update will be realized
+- Promising to complete or implement a feature in the future.
+
+3. progress updates, development updates.
+- Providing updates on development progress.
+- Sharing information about development updates.
+
+4. self-help, self-resolution.
+- Finding solutions or answers independently.
+- Resolving an issue on one's own.
+
+5. feedback solicitation, feedback elicitation.
+- Asking for feedback or opinions from users.
+- Encouraging users to provide feedback or suggestions.
+===
+---
+Categories: 
+* Community Engagement
+* Development Updates
+* User Autonomy
+* Feedback Mechanisms
+* Future Development
+
+Definitions for each code:
+
+1. update announcements, announcement about new version release.
+Relationship: Inclusion (update announcements include announcements about new version releases)
+Criteria: Announcements about changes or updates to the software, including new version releases.
+Label: Software Update Announcements
+Category: Development Updates
+
+2. promising it will realize, future feature commitments.
+Relationship: Inclusion (promising it will realize includes future feature commitments)
+Criteria: Commitments to realize or implement features or updates in the future.
+Label: Future Development Commitments
+Category: Future Development
+
+3. progress updates, development updates.
+Relationship: Parallel (progress updates and development updates are related but distinct concepts)
+Criteria: Providing information about development progress or updates.
+Label: Development Progress Updates
+Category: Development Updates
+
+4. self-help, self-resolution.
+Relationship: Inclusion (self-help includes self-resolution)
+Criteria: Finding solutions or answers independently, resolving issues on one's own.
+Label: Independent Problem-Solving
+Category: User Autonomy
+
+5. feedback solicitation, feedback elicitation.
+Relationship: Parallel (feedback solicitation and feedback elicitation are related but distinct concepts)
+Criteria: Asking for or encouraging users to provide feedback or opinions.
+Label: Feedback Requests
+Category: Feedback Mechanisms

@@ -38,7 +38,7 @@ export class RefineMerger extends DefinitionParser {
             if (this.UseDefinition) {
                 var Text = `Label: ${Code.Label}`;
                 if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
-                if ((Code.Alternatives?.length ?? 0) > 0) Text += `\nAlternatives: ${Code.Alternatives!.join(", ")}`;
+                // if ((Code.Alternatives?.length ?? 0) > 0) Text += `\nAlternatives: ${Code.Alternatives!.join(", ")}`;
                 return Text.trim();
             } else return Code.Label;
         });

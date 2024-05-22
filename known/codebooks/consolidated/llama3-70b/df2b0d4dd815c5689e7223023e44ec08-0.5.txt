@@ -1,0 +1,155 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (12 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+12. {Repeat the input 12}
+Relationship: {The logical relationship between concepts in input 12}
+Criteria: {A sentence of consolidated criteria for code 12}
+Label: {A consolidated label of code 12}
+Category: {2-4 words for code 12}
+---
+~~~
+1. prioritization, feature prioritization.
+- Statements that prioritize tasks or features.
+- Prioritization, ranking, or ordering of features or tasks.
+
+2. user expectations, user anticipation.
+- Users' expectations or assumptions about updates or features.
+- Users' expectation or anticipation of a new update or feature.
+
+3. design decision making process, design decision making based on user feedback.
+- The process of making design decisions, including weighing options and considering feedback.
+- Making design decisions based on user feedback or input.
+
+4. feature refinement, feature optimization.
+- Discussion of refining or improving existing features or functionality.
+- Refining or improving a feature to make it more efficient or effective.
+
+5. iterative design, incremental refinement.
+- Discussion of iterative design or refinement.
+- Discussion of iterative refinement or incremental improvement.
+
+6. iterative improvement, ongoing software development.
+- Continuous improvement and refinement of the software.
+- The ongoing process of developing or refining software.
+
+7. feature stability, software stability.
+- Ensuring the stability or reliability of a feature or update.
+- Ensuring the long-term stability or reliability of software.
+
+8. ui design, user interface.
+- The design of a user interface or user experience.
+- Relates to the design or layout of a user interface.
+
+9. feature flexibility, interface flexibility.
+- Ability of a feature to adapt or accommodate different user needs.
+- Designing interfaces that are flexible or adaptable to different user needs.
+
+10. component update, component adjustments.
+- Updates or changes to components or properties.
+- Adjustments, changes, or refinements to components, features, or properties.
+
+11. technical specifications.
+- Technical specifications or requirements for the platform.
+- Providing or inquiring about technical specifications or functionality.
+
+12. common practice.
+- Describing common practices or norms.
+- Confirmation or verification of common practice or usage.
+===
+Here is the output:
+
+---
+Categories: 
+* Design Decision Making
+* Feature Development
+* User Experience
+* Technical Specifications
+* Community Practices
+
+Definitions for each code:
+
+1. prioritization, feature prioritization.
+Relationship: Inclusive (feature prioritization is a type of prioritization)
+Criteria: Statements that prioritize tasks or features.
+Label: Prioritization
+Category: Design Decision Making
+
+2. user expectations, user anticipation.
+Relationship: Parallel
+Criteria: Users' expectations or assumptions about updates or features.
+Label: User Expectations
+Category: User Experience
+
+3. design decision making process, design decision making based on user feedback.
+Relationship: Inclusive (design decision making based on user feedback is a type of design decision making process)
+Criteria: The process of making design decisions, including weighing options and considering feedback.
+Label: Design Decision Making
+Category: Design Decision Making
+
+4. feature refinement, feature optimization.
+Relationship: Inclusive (feature optimization is a type of feature refinement)
+Criteria: Discussion of refining or improving existing features or functionality.
+Label: Feature Refinement
+Category: Feature Development
+
+5. iterative design, incremental refinement.
+Relationship: Parallel
+Criteria: Discussion of iterative design or refinement.
+Label: Iterative Design
+Category: Feature Development
+
+6. iterative improvement, ongoing software development.
+Relationship: Inclusive (ongoing software development is a type of iterative improvement)
+Criteria: Continuous improvement and refinement of the software.
+Label: Iterative Improvement
+Category: Feature Development
+
+7. feature stability, software stability.
+Relationship: Inclusive (software stability is a broader concept that includes feature stability)
+Criteria: Ensuring the stability or reliability of a feature or update.
+Label: Feature Stability
+Category: Feature Development
+
+8. ui design, user interface.
+Relationship: Inclusive (user interface is a type of ui design)
+Criteria: The design of a user interface or user experience.
+Label: UI Design
+Category: User Experience
+
+9. feature flexibility, interface flexibility.
+Relationship: Parallel
+Criteria: Ability of a feature to adapt or accommodate different user needs.
+Label: Feature Flexibility
+Category: User Experience
+
+10. component update, component adjustments.
+Relationship: Inclusive (component adjustments is a type of component update)
+Criteria: Updates or changes to components or properties.
+Label: Component Update
+Category: Feature Development
+
+11. technical specifications.
+Relationship: Standalone
+Criteria: Technical specifications or requirements for the platform.
+Label: Technical Specifications
+Category: Technical Specifications
+
+12. common practice.
+Relationship: Standalone
+Criteria: Describing common practices or norms.
+Label: Common Practice
+Category: Community Practices

@@ -1,0 +1,83 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (5 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+5. {Repeat the input 5}
+Relationship: {The logical relationship between concepts in input 5}
+Criteria: {A sentence of consolidated criteria for code 5}
+Label: {A consolidated label of code 5}
+Category: {2-4 words for code 5}
+---
+~~~
+1. feedback solicitation, designer-community engagement.
+- Instances where designers actively seek feedback, suggestions, or input from the community.
+- Instances of designers seeking input, feedback, or engaging in information sharing with community members.
+
+2. user feedback dynamics, user feedback integration.
+- Instances where users express their opinions or suggestions concerning the software's features, performance, and their direct interactions with developers.
+- Instances where user feedback is actively integrated into the software development process, leading to changes or updates that reflect user suggestions or needs.
+
+3. feature development, development prioritization.
+- Discussions on designing and implementing new platform features.
+- Discussions on prioritizing platform development tasks and features.
+
+4. learning experience, engagement with software.
+- The software's development and features enable students to engage in hands-on experiments and explore physics concepts.
+- Examining how participants interact with the simulation software to enhance learning outcomes.
+
+5. user-centered design.
+- User-initiated discussions on software features and usability improvements.
+- User suggestions for new features or experiment incorporation.
+===
+---
+Categories: 
+* Community Engagement
+* Feedback Dynamics
+* Design and Development
+* Learning Experience
+* User-Centered Design
+
+Definitions for each code:
+
+1. feedback solicitation, designer-community engagement.
+Relationship: Inclusive (designer-community engagement is a type of feedback solicitation)
+Criteria: Instances where designers actively seek feedback or input from the community.
+Label: Feedback Solicitation
+Category: Community Engagement
+
+2. user feedback dynamics, user feedback integration.
+Relationship: Causal (user feedback dynamics lead to user feedback integration)
+Criteria: Instances where users express opinions or suggestions, and these are integrated into the software development process.
+Label: User Feedback Integration
+Category: Feedback Dynamics
+
+3. feature development, development prioritization.
+Relationship: Parallel (feature development and development prioritization are related but distinct concepts)
+Criteria: Discussions on designing, implementing, or prioritizing platform features and development tasks.
+Label: Feature Development and Prioritization
+Category: Design and Development
+
+4. learning experience, engagement with software.
+Relationship: Inclusive (engagement with software is a type of learning experience)
+Criteria: Instances where the software enables hands-on experiments, exploration of physics concepts, and interaction to enhance learning outcomes.
+Label: Learning Experience
+Category: Learning Experience
+
+5. user-centered design.
+Relationship: Overarching (user-centered design encompasses user-initiated discussions and suggestions)
+Criteria: Instances where users drive discussions on software features, usability, or suggest new features or experiments.
+Label: User-Centered Design
+Category: User-Centered Design

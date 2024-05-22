@@ -1,0 +1,107 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (7 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+7. {Repeat the input 7}
+Relationship: {The logical relationship between concepts in input 7}
+Criteria: {A sentence of consolidated criteria for code 7}
+Label: {A consolidated label of code 7}
+Category: {2-4 words for code 7}
+---
+~~~
+1. share information about current feature development, respond to developer's earlier information on feature development.
+- Sharing information about current development or research.
+- Responding to previous information or updates.
+
+2. user needs, need for usage support.
+- Expressing a need or desire for a particular feature, function, or resource.
+- Expressions of need for guidance or support.
+
+3. explain situation, explanation.
+- Explaining a situation or context.
+- Providing explanations or descriptions of how something works or is intended to work.
+
+4. identity establishment, identity clarification.
+- Statements that establish or confirm one's identity or role.
+- Inquiring about someone's identity or role in the online community.
+
+5. greeting back, social greeting.
+- Responding with a greeting or acknowledgement.
+- Initiating a conversation or greeting others.
+
+6. implicit rejection, indirect reject.
+- Implicitly rejecting or delaying a feature request.
+- The speaker indirectly rejects or declines a suggestion or request.
+
+7. acceptance of request, question about the request.
+- Accepting or agreeing to implement a feature request.
+- Asking questions about the feasibility or practicality of a request.
+===
+Here is the output:
+
+---
+Categories: 
+* Information Sharing
+* User Needs
+* Community Building
+* Identity Establishment
+* Social Interaction
+* Conflict Management
+* Decision Making
+
+Definitions for each code:
+
+1. share information about current feature development, respond to developer's earlier information on feature development.
+Relationship: Concepts are parallel and complementary.
+Criteria: Sharing or responding to information about current development or research.
+Label: Information Sharing
+Category: Information Sharing
+
+2. user needs, need for usage support.
+Relationship: Concepts are parallel and complementary.
+Criteria: Expressing a need or desire for a particular feature, function, or resource.
+Label: User Needs
+Category: User Needs
+
+3. explain situation, explanation.
+Relationship: Concepts are parallel and complementary.
+Criteria: Explaining a situation or context, or providing explanations or descriptions.
+Label: Contextualizing
+Category: Information Sharing
+
+4. identity establishment, identity clarification.
+Relationship: Concepts are parallel and complementary.
+Criteria: Establishing or confirming one's identity or role, or inquiring about someone's identity or role.
+Label: Identity Establishment
+Category: Community Building
+
+5. greeting back, social greeting.
+Relationship: Concepts are parallel and complementary.
+Criteria: Responding with a greeting or acknowledgement, or initiating a conversation or greeting others.
+Label: Social Greeting
+Category: Social Interaction
+
+6. implicit rejection, indirect reject.
+Relationship: Concepts are parallel and complementary.
+Criteria: Implicitly rejecting or delaying a feature request, or indirectly rejecting or declining a suggestion or request.
+Label: Rejection
+Category: Conflict Management
+
+7. acceptance of request, question about the request.
+Relationship: Concepts are parallel and complementary.
+Criteria: Accepting or agreeing to implement a feature request, or asking questions about the feasibility or practicality of a request.
+Label: Request Response
+Category: Decision Making

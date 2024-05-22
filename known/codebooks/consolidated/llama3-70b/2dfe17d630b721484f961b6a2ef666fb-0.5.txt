@@ -1,0 +1,146 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (11 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+11. {Repeat the input 11}
+Relationship: {The logical relationship between concepts in input 11}
+Criteria: {A sentence of consolidated criteria for code 11}
+Label: {A consolidated label of code 11}
+Category: {2-4 words for code 11}
+---
+~~~
+1. future development plans, promising it will realize.
+- Promising to perfect or improve a feature in the future.
+- Statements that promise or commit to realizing a feature or functionality.
+
+2. provide release timeline, give a timeline of feature development.
+- The code encompasses statements that mention a specific timeline or schedule for a release or update.
+- Providing a timeline or roadmap for development.
+
+3. introduce feature functions, give an intro to the update content.
+- Mentioning a new feature or functionality in the app.
+- Introducing or outlining new features or content.
+
+4. confirming teacher identity, introduce teacher identity with grade-level and number of years.
+- Establishing or confirming one's identity or role.
+- Introducing oneself with relevant background information.
+
+5. explaining intentions, explain reasons for the request.
+- Explaining the intention or purpose behind a question or request.
+- Explaining the reasons or motivations behind a request.
+
+6. ask a question about the app, ask a question about how to use.
+- The speaker asks a question about the app or its functionality.
+- The speaker asks for instructions or guidance on how to use a feature or functionality.
+
+7. encourage in-group discussion, encourage future discussion or questions.
+- Statements that encourage in-group discussion or collaboration.
+- Statements that encourage future discussion or questions.
+
+8. ask about user needs, ask teachers' needs.
+- Asking about user needs or preferences.
+- Asking teachers about their needs or preferences.
+
+9. analyzing the problem, offers a diagnose for the problem.
+- Statements that analyze or break down a problem.
+- Statements that identify a problem or limitation with a system or technology.
+
+10. talk about limitation of the solution, suggesting why it cannot be solved due to system used.
+- Statements that discuss limitations or drawbacks of a solution.
+- Statements that explain why a problem cannot be solved due to system limitations.
+
+11. confirms that reason, confirm the diagnose.
+- Acknowledging or confirming information.
+- Statements that confirm or validate a diagnosis or problem.
+===
+Here is the output in the required format:
+
+---
+Categories: 
+* Community Building
+* Feature Development
+* Identity and Intention
+* Inquiry and Feedback
+* Problem Analysis
+* Solution Limitations
+
+Definitions for each code:
+
+1. future development plans, promising it will realize.
+Relationship: Inclusion (future development plans include promising to realize)
+Criteria: Statements that express commitment to future development or improvement.
+Label: Commitment to Future Development
+Category: Feature Development
+
+2. provide release timeline, give a timeline of feature development.
+Relationship: Parallel (providing a timeline is a separate concept from promising future development)
+Criteria: Statements that provide a specific timeline or schedule for a release or update.
+Label: Release Timeline
+Category: Feature Development
+
+3. introduce feature functions, give an intro to the update content.
+Relationship: Inclusion (introducing features includes mentioning new functionality)
+Criteria: Statements that introduce or outline new features or content.
+Label: Feature Introduction
+Category: Feature Development
+
+4. confirming teacher identity, introduce teacher identity with grade-level and number of years.
+Relationship: Inclusion (confirming teacher identity includes introducing oneself)
+Criteria: Statements that establish or confirm one's identity or role.
+Label: Identity Establishment
+Category: Identity and Intention
+
+5. explaining intentions, explain reasons for the request.
+Relationship: Inclusion (explaining intentions includes explaining reasons)
+Criteria: Statements that explain the intention or purpose behind a question or request.
+Label: Intention Explanation
+Category: Identity and Intention
+
+6. ask a question about the app, ask a question about how to use.
+Relationship: Parallel (asking a question is separate from explaining intentions)
+Criteria: Statements that ask a question about the app or its functionality.
+Label: App Inquiry
+Category: Inquiry and Feedback
+
+7. encourage in-group discussion, encourage future discussion or questions.
+Relationship: Inclusion (encouraging discussion includes encouraging future questions)
+Criteria: Statements that encourage in-group discussion or collaboration.
+Label: Discussion Encouragement
+Category: Community Building
+
+8. ask about user needs, ask teachers' needs.
+Relationship: Parallel (asking about user needs is separate from encouraging discussion)
+Criteria: Statements that ask about user needs or preferences.
+Label: User Needs Inquiry
+Category: Inquiry and Feedback
+
+9. analyzing the problem, offers a diagnose for the problem.
+Relationship: Inclusion (analyzing the problem includes diagnosing the problem)
+Criteria: Statements that analyze or break down a problem.
+Label: Problem Analysis
+Category: Problem Analysis
+
+10. talk about limitation of the solution, suggesting why it cannot be solved due to system used.
+Relationship: Inclusion (talking about limitations includes explaining why it cannot be solved)
+Criteria: Statements that discuss limitations or drawbacks of a solution.
+Label: Solution Limitations
+Category: Solution Limitations
+
+11. confirms that reason, confirm the diagnose.
+Relationship: Inclusion (confirming the reason includes confirming the diagnosis)
+Criteria: Statements that acknowledge or confirm information.
+Label: Confirmation
+Category: Problem Analysis

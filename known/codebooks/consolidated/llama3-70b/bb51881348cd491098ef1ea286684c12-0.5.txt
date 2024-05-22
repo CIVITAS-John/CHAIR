@@ -1,0 +1,50 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (2 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+2. {Repeat the input 2}
+Relationship: {The logical relationship between concepts in input 2}
+Criteria: {A sentence of consolidated criteria for code 2}
+Label: {A consolidated label of code 2}
+Category: {2-4 words for code 2}
+---
+~~~
+1. feedback solicitation, designer feedback solicitation.
+- Requests or provision of feedback from community members on the development process or software updates.
+- Instances where the designer actively seeks input and feedback from group members during the design and development process.
+
+2. user suggestions, user requests.
+- Users providing input or suggestions for the platform.
+- Instances where users make specific requests or suggestions for new features or content.
+===
+---
+Categories: 
+* Community Engagement
+* Participatory Design
+
+Definitions for each code:
+
+1. feedback solicitation, designer feedback solicitation.
+Relationship: Inclusive (designer feedback solicitation is a specific instance of feedback solicitation)
+Criteria: Instances of seeking or providing feedback on development process or software updates.
+Label: Feedback Solicitation
+Category: Participatory Design
+
+2. user suggestions, user requests.
+Relationship: Parallel (both refer to user input, but suggestions are more general, while requests are specific)
+Criteria: Users providing input or making specific requests for new features or content.
+Label: User Input
+Category: Community Engagement

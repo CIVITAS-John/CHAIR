@@ -1,0 +1,71 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (4 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+4. {Repeat the input 4}
+Relationship: {The logical relationship between concepts in input 4}
+Criteria: {A sentence of consolidated criteria for code 4}
+Label: {A consolidated label of code 4}
+Category: {2-4 words for code 4}
+---
+~~~
+1. reasoning, give rationale to development decision.
+- Providing a reason or justification for a decision.
+- Explaining the rationale behind development decisions.
+
+2. design goals, design rationale.
+- Explaining the need or purpose behind a design or feature.
+- Explaining design decisions or principles
+
+3. contextualization.
+- Providing or seeking context or background information
+- Providing context for questions or responses
+
+4. design suggestions.
+- Providing suggestions or ideas for improvement.
+- Providing additional suggestions or ideas
+===
+---
+Categories: 
+* Design Decision-Making
+* Contextual Understanding
+* Collaborative Design
+
+Definitions for each code:
+
+1. reasoning, give rationale to development decision.
+Relationship: Inclusion (rationale is a type of reasoning)
+Criteria: Providing a justification or explanation for a development decision.
+Label: Rationale for Development Decisions
+Category: Design Decision-Making
+
+2. design goals, design rationale.
+Relationship: Parallel (both are related to design decisions)
+Criteria: Explaining the purpose, need, or principle behind a design or feature.
+Label: Design Rationale
+Category: Design Decision-Making
+
+3. contextualization.
+Relationship: Standalone (contextualization is a distinct concept)
+Criteria: Providing or seeking background information or context for understanding.
+Label: Contextual Understanding
+Category: Contextual Understanding
+
+4. design suggestions.
+Relationship: Parallel (related to design, but distinct from design rationale)
+Criteria: Providing ideas or proposals for improvement or development.
+Label: Design Suggestions
+Category: Collaborative Design
