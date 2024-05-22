@@ -32,7 +32,7 @@ export class ReferenceBuilder {
         var Threads = { Codebook: Codebook, Threads: {} };;
         await ConsolidateCodebook<void>(new PipelineConsolidator(
             // Merge codes that have been merged
-            new AlternativeMerger(),
+            // new AlternativeMerger(),
             // Merge very similar names
             new SimpleMerger({ Looping: true }),
             // Merge similar definitions too
@@ -48,6 +48,7 @@ export class ReferenceBuilder {
             this.OriginalCodes = new Set<string>(Object.values(Codebook).map(Code => Code.Label))
         } else {
             var NewCodes = new Set<string>(Object.values(Codebook).flatMap(Code => [Code.Label, ...Code.Alternatives ?? []]));
+            if (!Object.keys(Codebook).includes("information sharing")) console.log(chalk.red(`Error: Code "information sharing" disappeared in iteration ${Iteration}.`));
             this.OriginalCodes.forEach(Code => {
                 if (!NewCodes.has(Code))
                     console.log(chalk.red(`Error: Code ${Code} disappeared in iteration ${Iteration}.`));
@@ -72,7 +73,7 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
         var Threads = { Codebook: Codebook, Threads: {} };
         await ConsolidateCodebook<void>(new PipelineConsolidator(
             // Merge codes that have been merged
-            new AlternativeMerger(),
+            // new AlternativeMerger(),
             // Merge very similar names
             new SimpleMerger({ Looping: true }),
             // Generate definitions for missing ones

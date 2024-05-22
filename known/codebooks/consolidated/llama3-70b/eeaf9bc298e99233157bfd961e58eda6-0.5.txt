@@ -1,0 +1,63 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (3 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+3. {Repeat the input 3}
+Relationship: {The logical relationship between concepts in input 3}
+Criteria: {A sentence of consolidated criteria for code 3}
+Label: {A consolidated label of code 3}
+Category: {2-4 words for code 3}
+---
+~~~
+1. feature explanation, software functionality description.
+- Explanation of software features or functionality.
+- Description of software functionality or capabilities.
+
+2. technical obstacles.
+- Discussions of technical obstacles or limitations in educational settings.
+- Mention of technical problems or difficulties with the system.
+
+3. physics content.
+- Discussing physics topics or concepts.
+- Focus on or development of magnetism or electromagnetism concepts.
+===
+Here is the output:
+
+---
+Categories: 
+* Online Community Development
+* Technical Challenges
+* Domain-Specific Knowledge
+
+Definitions for each code:
+
+1. feature explanation, software functionality description.
+Relationship: Inclusion (software functionality description is a type of feature explanation)
+Criteria: Descriptions of software features or functionality that facilitate user understanding.
+Label: Software Feature Explanation
+Category: Technical Affordances
+
+2. technical obstacles.
+Relationship: Parallel (technical obstacles and limitations are related but distinct concepts)
+Criteria: Discussions of technical problems or difficulties that hinder the online community's development.
+Label: Technical Challenges
+Category: Technical Challenges
+
+3. physics content.
+Relationship: Inclusion (development of magnetism or electromagnetism concepts is a type of physics content)
+Criteria: Discussions or focus on physics topics, concepts, or their development.
+Label: Physics Content
+Category: Domain Knowledge

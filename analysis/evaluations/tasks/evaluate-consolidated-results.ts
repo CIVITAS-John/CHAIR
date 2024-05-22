@@ -31,9 +31,9 @@ async function EvaluateConsolidatedResults(SourcePath: string, TaskName: string,
 }
 
 await EvaluateConsolidatedResults(GetMessagesPath("Coded Dataset 1"), 
-    "human vs ai", "human-ai-consolidated",
+    "human vs ai", "human-ai",
     new RefiningReferenceBuilder(),
-    ["human-consolidated-refined.json", "high-level-2-consolidated-refined.json", "low-level-3-consolidated-refined.json"]);
+    ["human-refined.json", "high-level-2-refined.json", "low-level-3-refined.json"]);
 
 process.exit(0);
 

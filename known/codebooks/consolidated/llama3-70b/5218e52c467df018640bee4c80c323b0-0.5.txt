@@ -1,0 +1,74 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (4 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+4. {Repeat the input 4}
+Relationship: {The logical relationship between concepts in input 4}
+Criteria: {A sentence of consolidated criteria for code 4}
+Label: {A consolidated label of code 4}
+Category: {2-4 words for code 4}
+---
+~~~
+1. feature explanation, software functionality description.
+- Explanation of software features or functionality.
+- Description of software functionality or capabilities.
+
+2. technical obstacles.
+- Discussions of technical obstacles or limitations in educational settings.
+- Mention of technical problems or difficulties with the system.
+
+3. physics content.
+- Discussing physics topics or concepts.
+- Focus on or development of magnetism or electromagnetism concepts.
+
+4. community support.
+- Offering or receiving support from the community.
+- Community members supporting each other.
+===
+Here is the output:
+
+---
+Categories: 
+* Community Interactions
+* Technical Aspects
+* Domain Knowledge
+* Social Support
+
+Definitions for each code:
+
+1. feature explanation, software functionality description.
+Relationship: Inclusion (software functionality description is a type of feature explanation)
+Criteria: Description of software capabilities or features.
+Label: Software Feature Explanation
+Category: Technical Aspects
+
+2. technical obstacles.
+Relationship: Parallel (both concepts are related to technical issues)
+Criteria: Discussion of technical difficulties or limitations.
+Label: Technical Challenges
+Category: Technical Aspects
+
+3. physics content.
+Relationship: Inclusion (development of magnetism or electromagnetism concepts is a type of discussing physics topics)
+Criteria: Focus on or discussion of physics concepts or topics.
+Label: Physics Content
+Category: Domain Knowledge
+
+4. community support.
+Relationship: Parallel (both concepts are related to community support)
+Criteria: Offering or receiving help from the community.
+Label: Community Support
+Category: Community Interactions

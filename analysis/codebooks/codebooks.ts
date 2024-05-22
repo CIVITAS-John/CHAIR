@@ -187,7 +187,8 @@ export function UpdateCodes(Codebook: Codebook, NewCodes: Code[], Codes: Code[])
         // Check if the label is changed
         if (NewLabel != Codes[I].Label) {
             // Find the code with the same new label and merge
-            var Parent = AllCodes.find(Current => Current.Label == NewLabel || Current.Alternatives?.includes(NewLabel));
+            var Parent = AllCodes.find(Current => Current.Label == NewLabel);
+            if (!Parent) Parent = AllCodes.find(Current => Current.Alternatives?.includes(NewLabel));
             if (Parent && Parent != Codes[I]) {
                 MergeCodes(Parent, Codes[I]);
                 continue;
