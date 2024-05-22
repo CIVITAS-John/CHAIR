@@ -1,5 +1,7 @@
 import { Code, CodebookComparison } from "../../../utils/schema.js";
 import { Node, Link, Graph, Component } from './schema.js';
+import * as graphology from 'graphology';
+import * as graphologyLibrary from 'graphology-library';
 
 /** Parameters: The parameters for the visualizer. */
 export class Parameters {
@@ -65,27 +67,25 @@ export function IdentifyComponents<T>
     (Nodes: Node<T>[], Links: Link<T>[], 
     NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number,
     LinkEvaluator: (Link: Link<T>) => boolean, 
-    MinimumNodes: number = 3): Component<T>[] {
+    MinimumNodes: number = 3,
+    MaximumNodes: number = Math.ceil(Nodes.length / 10)): Component<T>[] {
     var Components: Component<T>[] = [];
     var Visited = new Set<Node<T>>();
+    Links = Links.filter(LinkEvaluator)
     for (var Node of Nodes) {
         if (Visited.has(Node)) continue;
         var Queue = [Node];
-        var Component = { Name: "", Nodes: new Set<Node<T>>() };
-        // Find the best node - most connected and with most examples
-        var BestNode: Node<T> | null = null;
-        var BestNodeScore = -1;
+        var CurrentNodes = new Set<Node<T>>()
         // Search through links
         while (Queue.length > 0) {
             var Current = Queue.shift()!;
-            // Add the current node to the component
             if (Visited.has(Current)) continue;
+            // Add the current node to the component
             Visited.add(Current);
-            Component.Nodes.add(Current);
+            CurrentNodes.add(Current);
             // Add the current node's neighbors to the queue
             var Degrees = 0;
-            var CurrentLinks = Links.filter(LinkEvaluator)
-            CurrentLinks.forEach(Link => {
+            Links.forEach(Link => {
                 if (Link.Source == Current) {
                     Queue.push(Link.Target);
                     Degrees++;
@@ -95,20 +95,40 @@ export function IdentifyComponents<T>
                     Degrees++;
                 }
             });
-            // Update the most connected node
-            var Score = NodeEvaluator(Current, CurrentLinks);
-            if (Score > BestNodeScore) {
-                BestNodeScore = Score;
-                BestNode = Current;
-            }
         }
-        if (Component.Nodes.size < MinimumNodes) continue;
-        // Assign the name
-        if (BestNode)
-            Component.Name = (BestNode.Data as any).Label;
-        Components.push(Component);
+        if (CurrentNodes.size < MinimumNodes) continue;
+        var CurrentLinks = Links.filter(Link => CurrentNodes.has(Link.Source) || CurrentNodes.has(Link.Target));
+        if (CurrentNodes.size > MaximumNodes){
+            Components.push(...FindCommunities(Array.from(CurrentNodes), CurrentLinks, NodeEvaluator, LinkEvaluator));
+        } else Components.push({ Representative: FindBestNode(CurrentNodes, CurrentLinks, NodeEvaluator), Nodes: CurrentNodes });
     }
     return Components;
+}
+
+/** FindCommunities: Find the communities in the graph. */
+export function FindCommunities<T>(Nodes: Node<T>[], Links: Link<T>[], 
+    NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number,
+    LinkEvaluator: (Link: Link<T>) => boolean): Component<T>[] {
+    var Graph = new graphology.UndirectedGraph();
+    Nodes.forEach(Node => Graph.addNode(Node.ID));
+    Links.forEach(Link => { if (LinkEvaluator(Link)) Graph.addEdge(Link.Source.ID, Link.Target.ID); });
+    var Communities = (graphologyLibrary.communitiesLouvain as any)(Graph);
+    console.log(Communities);
+    return [];
+}
+
+/** FindBestNode: Find the best node in the set. */
+export function FindBestNode<T>(Nodes: Set<Node<T>>, Links: Link<T>[], NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number): Node<T> {
+    var Best: Node<T> | undefined = undefined;
+    var BestValue = Number.MIN_VALUE;
+    for (var Node of Nodes) {
+        var Value = NodeEvaluator(Node, Links.filter(Link => Node == Link.Source || Node == Link.Target));
+        if (Value > BestValue) {
+            Best = Node;
+            BestValue = Value;
+        }
+    }
+    return Best!;
 }
 
 /** BuildConcurrenceGraph: Build a concurrence code graph from the dataset. */
