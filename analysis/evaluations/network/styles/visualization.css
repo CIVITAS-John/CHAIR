@@ -45,6 +45,11 @@ html {
     height: 100%;
 }
 /** Visualization Styles */
+.visualization .components text {
+    font-weight: bold;
+    stroke: #000000;
+    stroke-width: 0.1;
+}
 .visualization .labels {
     pointer-events: none;
     user-select: none;
@@ -71,7 +76,7 @@ circle.chosen-neighbor {
 text.chosen,
 text.chosen-neighbor,
 text.hovering {
-    stroke: #666;
+    stroke: #333333;
     stroke-width: 0.05;
     fill-opacity: 1;
     font-weight: bold;

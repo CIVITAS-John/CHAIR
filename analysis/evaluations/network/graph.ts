@@ -10,7 +10,7 @@ export class Parameters {
     /** LinkMaximumDistance: The maximum distance to create links between codes. */
     public LinkMaximumDistance: number = 0.9;
     /** LinkDistanceDisplayScale: The display scale factor for the link distances. */
-    public LinkDistanceDisplayScale: number = 50;
+    public LinkDistanceDisplayScale: number = 100;
     /** ClosestNeighbors: The number of closest neighbors to guarantee links regardless of the threshold. */
     public ClosestNeighbors: number = 3;
     /** UseNearOwners: Whether to visualize the near-owners in place of owners. */
@@ -55,10 +55,18 @@ export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Param
         }
     }
     // Store it
-    var Graph = { Nodes: Nodes, Links: Array.from(Links.values()), MaximumDistance: MaxDistance, MinimumDistance: MinDistance };
-    IdentifyComponents(Graph.Nodes, Graph.Links, (Node, Links) => {
-        return Node.Data.Examples?.length ?? 0 + Node.NearOwners?.size ?? 0 + Links.length;
-    }, (Link) => Link.Distance < Parameter.LinkMinimumDistance);
+    var Graph: Graph<Code> = { 
+        Nodes: Nodes, 
+        Links: Array.from(Links.values()), 
+        MaximumDistance: MaxDistance, 
+        MinimumDistance: MinDistance };
+    // Identify the components
+    Graph.Components = FindCommunities(Graph.Nodes, Graph.Links, (Node, Links) => {
+        return Node.Data.Examples?.length ?? 0 + 
+            Node.NearOwners?.size ?? 0 + 
+            Links.reduce((Sum, Link) => Sum + 2 * (Parameter.LinkMaximumDistance - Link.Distance), 0) + 
+            Node.Data.Label.length * 0.2;
+    }, (Link) => 2 * (Parameter.LinkMaximumDistance - Link.Distance));
     return Graph;
 }
 
@@ -66,12 +74,12 @@ export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Param
 export function IdentifyComponents<T>
     (Nodes: Node<T>[], Links: Link<T>[], 
     NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number,
-    LinkEvaluator: (Link: Link<T>) => boolean, 
+    LinkEvaluator: (Link: Link<T>) => number, 
     MinimumNodes: number = 3,
     MaximumNodes: number = Math.ceil(Nodes.length / 10)): Component<T>[] {
     var Components: Component<T>[] = [];
     var Visited = new Set<Node<T>>();
-    Links = Links.filter(LinkEvaluator)
+    Links = Links.filter((Link) => LinkEvaluator(Link) > 0)
     for (var Node of Nodes) {
         if (Visited.has(Node)) continue;
         var Queue = [Node];
@@ -98,9 +106,12 @@ export function IdentifyComponents<T>
         }
         if (CurrentNodes.size < MinimumNodes) continue;
         var CurrentLinks = Links.filter(Link => CurrentNodes.has(Link.Source) || CurrentNodes.has(Link.Target));
-        if (CurrentNodes.size > MaximumNodes){
-            Components.push(...FindCommunities(Array.from(CurrentNodes), CurrentLinks, NodeEvaluator, LinkEvaluator));
-        } else Components.push({ Representative: FindBestNode(CurrentNodes, CurrentLinks, NodeEvaluator), Nodes: CurrentNodes });
+        if (CurrentNodes.size > MaximumNodes)
+            Components.push(...FindCommunities(Array.from(CurrentNodes), CurrentLinks, NodeEvaluator, LinkEvaluator, MinimumNodes));
+        else {
+            var ResultNodes = Array.from(CurrentNodes);
+            Components.push({ Representative: FindBestNode(ResultNodes, CurrentLinks, NodeEvaluator), Nodes: ResultNodes });
+        }
     }
     return Components;
 }
@@ -108,17 +119,38 @@ export function IdentifyComponents<T>
 /** FindCommunities: Find the communities in the graph. */
 export function FindCommunities<T>(Nodes: Node<T>[], Links: Link<T>[], 
     NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number,
-    LinkEvaluator: (Link: Link<T>) => boolean): Component<T>[] {
+    LinkEvaluator: (Link: Link<T>) => number, 
+    MinimumNodes: number = 3): Component<T>[] {
+    // Create a graph
+    var Weights = new Map<string, number>();
     var Graph = new graphology.UndirectedGraph();
     Nodes.forEach(Node => Graph.addNode(Node.ID));
-    Links.forEach(Link => { if (LinkEvaluator(Link)) Graph.addEdge(Link.Source.ID, Link.Target.ID); });
-    var Communities = (graphologyLibrary.communitiesLouvain as any)(Graph);
-    console.log(Communities);
-    return [];
+    Links.forEach(Link => { 
+        var Weight = LinkEvaluator(Link);
+        if (Weight > 0)
+            Weights.set(Graph.addEdge(Link.Source.ID, Link.Target.ID), Weight);
+    });
+    // Find the communities
+    var Communities = (graphologyLibrary.communitiesLouvain as any)(Graph, {
+        getEdgeWeight: (Edge: any) => Weights.get(Edge)!,
+        resolution: 1.5
+    }) as Record<string, number>;
+    // Create the components
+    var Components: Component<T>[] = new Array(Object.values(Communities).reduce((a, b) => Math.max(a, b), 0) + 1);
+    for (var I = 0; I < Components.length; I++) 
+        Components[I] = { Nodes: [] };
+    for (var Node of Nodes) {
+        var Community = Communities[Node.ID];
+        Components[Community].Nodes.push(Node);
+    }
+    // Find the representatives
+    for (var Component of Components) 
+        Component.Representative = FindBestNode(Component.Nodes, Links, NodeEvaluator);
+    return Components.filter(Component => Component.Nodes.length >= MinimumNodes);
 }
 
 /** FindBestNode: Find the best node in the set. */
-export function FindBestNode<T>(Nodes: Set<Node<T>>, Links: Link<T>[], NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number): Node<T> {
+export function FindBestNode<T>(Nodes:Node<T>[], Links: Link<T>[], NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number): Node<T> {
     var Best: Node<T> | undefined = undefined;
     var BestValue = Number.MIN_VALUE;
     for (var Node of Nodes) {

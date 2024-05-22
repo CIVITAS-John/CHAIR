@@ -17,9 +17,9 @@ export interface Graph<T> {
 /** Component: A connected component in the graph. */
 export interface Component<T> {
     /** Representative: The representative node of the component. */
-    Representative: Node<T>;
+    Representative?: Node<T>;
     /** Nodes: The nodes in the component. */
-    Nodes: Set<Node<T>>;
+    Nodes: Node<T>[];
 }
 
 /** Node: A node in the graph. */

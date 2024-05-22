@@ -84,7 +84,7 @@ export class Evaluator extends PanelBase {
         // Render the results as a D3.js heatmap
         var Names = this.Visualizer.Dataset.Names;
         var LongestName = d3.max(Names, (Name) => Name.length)!;
-        var Margin = { Top: 30, Right: 0, Bottom: 0, Left: Math.max(LongestName * 4, 55) };
+        var Margin = { Top: 25, Right: 0, Bottom: 0, Left: Math.max(LongestName * 4, 50) };
         var Width = this.Container.innerWidth()! - Margin.Left - Margin.Right;
         var Height = this.Container.innerHeight()! - Margin.Top - Margin.Bottom;
         var SVG = d3.select(this.Container[0]!)
@@ -100,7 +100,7 @@ export class Evaluator extends PanelBase {
             .range([0, Width])
             .padding(0.05);
         var XAxis = SVG.append("g").call(d3.axisTop(X).tickSize(0))
-        XAxis.selectAll("text").attr("style", "font-weight: strong");
+        XAxis.selectAll("text").attr("font-size", "1em").attr("style", "font-weight: bold");
         XAxis.select(".domain").remove();
         // Build Y scale (Codebooks)
         var Y = d3.scaleBand()
@@ -108,7 +108,7 @@ export class Evaluator extends PanelBase {
             .range([0, Height])
             .padding(0.05);
         var YAxis = SVG.append("g").call(d3.axisLeft(Y).tickSize(0));
-        YAxis.selectAll("text").attr("transform", "rotate(-45) translate(15 -15)").attr("dy")
+        YAxis.selectAll("text").attr("font-size", "1em").attr("transform", "rotate(-45) translate(15 -15)").attr("dy")
         YAxis.select(".domain").remove();
         // Flatten the dataset
         var Dataset: { Name: string, Metric: string, Value: number }[] = [];

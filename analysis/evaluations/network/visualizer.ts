@@ -17,6 +17,8 @@ export class Visualizer {
     private NodeLayer: d3.Selection<SVGGElement, unknown, null, undefined>;
     /** LabelLayer: The layer for the labels. */
     private LabelLayer: d3.Selection<SVGGElement, unknown, null, undefined>;
+    /** ComponentLayer: The layer for the components. */
+    private ComponentLayer: d3.Selection<SVGGElement, unknown, null, undefined>;
     /** Zoom: The zoom behavior in-use. */
     private Zoom: d3.ZoomBehavior<globalThis.Element, unknown>;
     /** Dataset: The underlying dataset. */
@@ -33,10 +35,18 @@ export class Visualizer {
         this.LinkLayer = Scaler.append("g").attr("class", "links");
         this.NodeLayer = Scaler.append("g").attr("class", "nodes");
         this.LabelLayer = Scaler.append("g").attr("class", "labels");
+        this.ComponentLayer = Scaler.append("g").attr("class", "components");
         // Zoom support
         this.Zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", (event) => {
             Scaler.attr("transform", event.transform);
+            var ScaleProgress = (1 - Math.max(0, 3 - event.transform.k) / 2);
+            this.LinkLayer.style("opacity", ScaleProgress);
+            this.NodeLayer.style("opacity", ScaleProgress);
+            this.LabelLayer.style("opacity", ScaleProgress);
+            this.ComponentLayer.style("opacity", 2 - ScaleProgress * 2);
+            this.ComponentLayer.style("display", ScaleProgress > 0.9 ? "none" : "block");
         }) as any;
+        this.Zoom.scaleTo(this.Container as any, 1);
         this.Container.call(this.Zoom as any);
         // Load the data
         d3.json("network.json").then((Data) => {
@@ -110,6 +120,22 @@ export class Visualizer {
             .attr("y1", (Link) => Link.Source.y!)
             .attr("x2", (Link) => Link.Target.x!)
             .attr("y2", (Link) => Link.Target.y!);
+        // Visualize components
+        if (this.CodeGraph.Components) {
+            var AllComponents = this.ComponentLayer.selectAll("text").data(this.CodeGraph.Components);
+            AllComponents.exit().remove();
+            AllComponents.join((Enter) => 
+                Enter.append("text")
+                    .text((Component) => `${Component.Representative!.Data.Label} (+${Component.Nodes.length - 1})`)
+                    .attr("fill", "#ffffff")
+                    .attr("font-size", 4), (Update) => Update)
+                    .attr("text-anchor", "middle")
+                    .attr("dominant-baseline", "middle")
+                .attr("x", (Component) => Component.Representative!.x!)
+                .attr("y", (Component) => Component.Representative!.y!);
+                // .attr("x", (Component) => d3.mean(Component.Nodes.map(Node => Node.x!))!)
+                // .attr("y", (Component) => d3.mean(Component.Nodes.map(Node => Node.y!))!);
+        } else this.ComponentLayer.selectAll("text").remove();
     }
     /** NodeOver: Handle the mouse-over event on a node. */
     public NodeOver<T>(Event: Event, Node: Node<T>) {
@@ -176,7 +202,7 @@ export class Visualizer {
         this.Simulation = d3.forceSimulation();
         var ForceLink = d3.forceLink();
         this.Simulation.nodes(Graph.Nodes)
-            .force("expel", d3.forceManyBody().distanceMin(2).distanceMax(20))
+            .force("expel", d3.forceManyBody().distanceMin(2).distanceMax(20).strength(-100))
             .force("link", ForceLink.links(Graph.Links)
                 .id((Node) => Node.index!)
                 .distance((Link) => Math.pow((Link as any).Distance, 3) * this.Parameters.LinkDistanceDisplayScale).strength(1))
