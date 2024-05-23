@@ -167,6 +167,11 @@ export function FindBestNode<T>(Nodes:Node<T>[], Links: Link<T>[], NodeEvaluator
     return Best!;
 }
 
+/** FilterNodeByOwner: Filter a node by presence of the owner. */
+export function FilterNodeByOwner<T>(Node: Node<T>, Owner: number): boolean {
+    return Node.NearOwners.has(Owner);
+}
+
 /** BuildConcurrenceGraph: Build a concurrence code graph from the dataset. */
 export function BuildConcurrenceGraph() {
 

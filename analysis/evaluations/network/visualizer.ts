@@ -58,21 +58,52 @@ export class Visualizer {
     // Status management
     /** Status: The status of the visualization. */
     public Status: GraphStatus<any> = {} as any;
+    /** StatusType: The type of the status. */
+    public StatusType: string = "";
     /** SetStatus: Use a new graph for visualization. */
     public SetStatus<T>(Type: string, Graph: Graph<T>) {
+        this.IncumbentFilter = undefined;
         this.Status = { Graph, ChosenNodes: []};
-        switch (Type) {
-            case "Code":
-                this.GenerateLayout(Graph, (Alpha) => this.RenderCodes(Alpha));
-                break;
-        }
+        this.StatusType = Type;
+        this.Rerender();
     }
     /** GetStatus: Get the status of the visualization. */
     public GetStatus<T>(): GraphStatus<T> {
         return this.Status as GraphStatus<T>;
     }
+    /** Rerender: Rerender the visualization. */
+    public Rerender() {
+        this.Status.Graph.Nodes.forEach(Node => {
+            var Filtered = this.CurrentFilter?.(Node) ?? true;
+            Node.Hidden = !Filtered;
+        });
+        this.Status.Graph.Links.forEach(Link => {
+            if (this.CurrentFilter)
+                Link.Hidden = !this.CurrentFilter(Link.Source) && !this.CurrentFilter(Link.Target);
+            else Link.Hidden = false;
+        });
+        switch (this.StatusType) {
+            case "Code":
+                this.GenerateLayout(this.Status.Graph, (Alpha) => this.RenderCodes(Alpha));
+                break;
+        }
+    }
+    // Filters
+    /** CurrentFilter: The current filter for the visualization. */
+    private CurrentFilter?: (Node: Node<any>) => boolean;
+    /** IncumbentFilter: The chosen permenant filter for the visualization. */
+    private IncumbentFilter?: (Node: Node<any>) => boolean;
+    /** CurrentColorizer: The current colorizer for nodes. */
+    private CurrentColorizer?: (Node: Node<any>) => string;
+    /** IncumbentColorizer: The chosen permenant colorizer for nodes. */
+    private IncumbentColorizer?: (Node: Node<any>) => string;
     /** ApplyFilter: Apply a filter to the visualization. */
-    public ApplyFilter<T>(Filter: (Node: Node<T>) => boolean = () => true) {
+    public ApplyFilter<T>(Incumbent: boolean, Filter?: (Node: Node<T>) => boolean, Colorizer?: (Node: Node<T>) => string) {
+        if (Incumbent) this.IncumbentFilter = Filter;
+        this.CurrentFilter = Filter ?? this.IncumbentFilter;
+        if (Incumbent) this.IncumbentColorizer = Colorizer;
+        this.CurrentColorizer = Colorizer ?? this.IncumbentColorizer;
+        this.Rerender();
     }
     // Node events
     /** NodeOver: Handle the mouse-over event on a node. */
@@ -159,17 +190,20 @@ export class Visualizer {
             Enter.append("circle")
                  .attr("id", (Node) => `node-${Node.ID}`)
                  .attr("label", (Node) => Node.Data.Label)
+                 .attr("class", (Node) => Node.Hidden ? "hidden" : "")
                  .on("mouseover", (Event, Node) => this.NodeOver(Event, Node))
                  .on("mouseout", (Event, Node) => this.NodeOut(Event, Node))
                  .on("click", (Event, Node) => this.NodeChosen(Event, Node)), 
             (Update) => Update)
-            // Set the fill color based on the number of owners
-            .attr("fill", (Node) => d3.interpolateViridis
-                ((this.Parameters.UseNearOwners ? Node.NearOwners.size : Node.Data.Owners!.length) / this.Dataset.Codebooks.length))
-            // Set the radius based on the number of examples
-            .attr("r", GetSize)
-            .attr("cx", (Node) => Node.x!)
-            .attr("cy", (Node) => Node.y!);
+                // Set the fill color based on the number of owners
+                .attr("fill", (Node) => {
+                    if (this.CurrentColorizer) return this.CurrentColorizer(Node);
+                    return d3.interpolateViridis((this.Parameters.UseNearOwners ? Node.NearOwners.size : Node.Data.Owners!.length) / this.Dataset.Codebooks.length);
+                })
+                // Set the radius based on the number of examples
+                .attr("r", GetSize)
+                .attr("cx", (Node) => Node.x!)
+                .attr("cy", (Node) => Node.y!);
         // Render labels
         var AllLabels = this.LabelLayer.selectAll("text").data(Graph.Nodes);
         AllLabels.exit().remove();
@@ -177,6 +211,7 @@ export class Visualizer {
             AllLabels.join((Enter) => 
                 Enter.append("text")
                     .attr("id", (Node) => `label-${Node.ID}`)
+                    .attr("class", (Node) => Node.Hidden ? "hidden" : "")
                     .text((Node) => Node.Data.Label)
                     .attr("fill", "#cccccc")
                     .attr("fill-opacity", 0.7)
@@ -196,6 +231,7 @@ export class Visualizer {
             Enter.append("line")
                  .attr("sourceid", (Link) => `${ Link.Source.ID }`)
                  .attr("targetid", (Link) => `${ Link.Target.ID }`)
+                 .attr("class", (Link) => Link.Hidden ? "hidden" : "")
                  .attr("stroke-width", 0.2)
                  // Color the links based on the distance
                  .attr("stroke", (Link) => DistanceColor(Link.Distance))

@@ -100,7 +100,12 @@ export class Evaluator extends PanelBase {
             .range([0, Width])
             .padding(0.05);
         var XAxis = SVG.append("g").call(d3.axisTop(X).tickSize(0))
-        XAxis.selectAll("text").attr("font-size", "1em").attr("style", "font-weight: bold");
+        XAxis.selectAll("text")
+            .attr("font-size", "1em")
+            .attr("style", "font-weight: bold")
+            .on("mouseover", (Event, Metric) => {
+
+            });
         XAxis.select(".domain").remove();
         // Build Y scale (Codebooks)
         var Y = d3.scaleBand()
@@ -108,7 +113,7 @@ export class Evaluator extends PanelBase {
             .range([0, Height])
             .padding(0.05);
         var YAxis = SVG.append("g").call(d3.axisLeft(Y).tickSize(0));
-        YAxis.selectAll("text").attr("font-size", "1em").attr("transform", "rotate(-45) translate(15 -15)").attr("dy")
+        YAxis.selectAll("text").attr("font-size", "1em").attr("transform", `rotate(-45) translate(${Margin.Left / 2} -${Margin.Left / 2})`).attr("dy")
         YAxis.select(".domain").remove();
         // Flatten the dataset
         var Dataset: { Name: string, Metric: string, Value: number }[] = [];
