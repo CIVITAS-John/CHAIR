@@ -102,6 +102,7 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
     for (const Conversation of Conversations) {
         var Messages = Conversation.AllMessages!;
         var Analysis = Analyses.Threads[Conversation.ID];
+        if (!Analysis) Analysis = Analyses.Threads[Conversation.ID.substring(2)];
         // Write into Excel worksheet
         var Sheet = Book.addWorksheet(`${Conversation.ID}`, {
             views:[ { state: 'frozen', xSplit: 1, ySplit: 1 } ]
@@ -131,6 +132,7 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
         for (let I = 0; I < Messages.length; I++) {
             var Message = Messages[I];
             var Item = Analysis?.Items[Message.ID];
+            if (!Item) Item = Analysis?.Items[Message.ID.substring(2)];
             var Columns: Record<string, any> = {
                 ID: Message.ID,
                 CID: Message.Conversation,

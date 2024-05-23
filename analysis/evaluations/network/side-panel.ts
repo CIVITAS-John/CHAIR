@@ -84,7 +84,7 @@ export class Evaluator extends PanelBase {
         // Render the results as a D3.js heatmap
         var Names = this.Visualizer.Dataset.Names;
         var LongestName = d3.max(Names, (Name) => Name.length)!;
-        var Margin = { Top: 25, Right: 0, Bottom: 0, Left: Math.max(LongestName * 4, 50) };
+        var Margin = { Top: 25, Right: 0, Bottom: 0, Left: Math.max(LongestName * 3.5, 20) };
         var Width = this.Container.innerWidth()! - Margin.Left - Margin.Right;
         var Height = this.Container.innerHeight()! - Margin.Top - Margin.Bottom;
         var SVG = d3.select(this.Container[0]!)

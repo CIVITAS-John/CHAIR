@@ -86,7 +86,7 @@ Label: {A consolidated label of code ${Codes.length}}
 Category: {2-4 words for code ${Codes.length}}
 ---`.trim(), 
                     Codes.map((Code, Index) => `
-${Index + 1}. ${[Code.Label, ...Code.OldLabels ?? []].join(", ") ?? ""}.
+${Index + 1}. ${[Code.Label, ...Code.OldLabels ?? []].join(", ") ?? ""}
 ${Code.Definitions?.map(Definition => `- ${Definition}`).join("\n")}`.trim()).join("\n\n")];
     }
 }

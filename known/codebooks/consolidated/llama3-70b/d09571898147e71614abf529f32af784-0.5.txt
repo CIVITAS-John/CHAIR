@@ -1,0 +1,74 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (4 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+4. {Repeat the input 4}
+Relationship: {The logical relationship between concepts in input 4}
+Criteria: {A sentence of consolidated criteria for code 4}
+Label: {A consolidated label of code 4}
+Category: {2-4 words for code 4}
+---
+~~~
+1. feature update, update announcements.
+- Announcing or discussing updates to the software or its features.
+- Announcing new updates or features or announcing the release of a new version.
+
+2. share knowledge, share information.
+- Sharing knowledge or expertise.
+- Sharing information or resources.
+
+3. elaborating on ideas, elaboration and encouragement.
+- An explanation or expansion of a previous response or idea or an explanation or expansion of a previous suggestion or idea.
+- Providing an explanation or expansion of a previous idea or concept, or encouraging further elaboration.
+
+4. providing context, contextualization of question.
+- Providing context or background information or a response that provides context or background information.
+- Providing context or background information for a question.
+===
+Here is the output:
+
+---
+Categories:
+* Community Engagement
+* Knowledge Sharing
+* Idea Development
+* Contextual Understanding
+
+Definitions for each code:
+
+1. feature update, update announcements.
+Relationship: Inclusion (update announcements is a type of feature update)
+Criteria: Announcing or discussing updates to the software or its features.
+Label: Software Updates
+Category: Community Engagement
+
+2. share knowledge, share information.
+Relationship: Parallel (both concepts are related to sharing)
+Criteria: Sharing knowledge or expertise, or sharing information or resources.
+Label: Knowledge Sharing
+Category: Knowledge Sharing
+
+3. elaborating on ideas, elaboration and encouragement.
+Relationship: Inclusion (elaboration and encouragement is a type of elaborating on ideas)
+Criteria: An explanation or expansion of a previous response or idea, or encouraging further elaboration.
+Label: Idea Elaboration
+Category: Idea Development
+
+4. providing context, contextualization of question.
+Relationship: Inclusion (contextualization of question is a type of providing context)
+Criteria: Providing context or background information for a question or response.
+Label: Context Provision
+Category: Contextual Understanding

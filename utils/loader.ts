@@ -121,7 +121,7 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
                         Thread.Reflection = undefined;
                     break;
                 default: // Coded item
-                    if (ID.indexOf("-") == -1) ID = "2-" + ID; // A hack for the first coded dataset.
+                    // if (ID.indexOf("-") == -1) ID = "2-" + ID; // A hack for the first coded dataset.
                     var Item: CodedItem = { ID: ID, Codes: [] };
                     var Codes = Row.getCell(CodeIndex)?.value;
                     if (Codes && typeof Codes == "string") 

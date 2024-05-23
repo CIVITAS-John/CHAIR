@@ -1,0 +1,72 @@
+You are an expert in thematic analysis. 
+Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
+Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Categories: 
+* {Name some categories you identified from the research question and theoretical lens}
+
+Definitions for each code (4 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+Category: {2-4 words for code 1}
+...
+4. {Repeat the input 4}
+Relationship: {The logical relationship between concepts in input 4}
+Criteria: {A sentence of consolidated criteria for code 4}
+Label: {A consolidated label of code 4}
+Category: {2-4 words for code 4}
+---
+~~~
+1. learning support, constraints on learning
+- Discussions that address the software's ability to support learning and educational activities.
+- Discussions about limitations or constraints affecting the software's learning support.
+
+2. informative, development process
+- Statements that provide information about the development process, feature updates, or technical details.
+- Discussions providing insights into the development process of the software.
+
+3. software announcements
+- Designers announcing changes or updates to the Physics Lab software.
+- Information about software updates, including resolved issues and new features.
+
+4. user feedback
+- Discussions where users provide feedback, suggestions, or comments about the Physics Lab software.
+- Users providing input or suggestions for the platform's development.
+===
+---
+Categories: 
+* Learning Support
+* Development Process
+* Community Engagement
+* User Input
+
+Definitions for each code:
+
+1. learning support, constraints on learning
+Relationship: Inclusive (constraints on learning is a subset of learning support)
+Criteria: Discussions that address the software's ability to support learning and educational activities, including limitations or constraints.
+Label: Learning Support
+Category: Learning Support
+
+2. informative, development process
+Relationship: Parallel (both provide information about the development process)
+Criteria: Statements that provide information about the development process, feature updates, or technical details.
+Label: Development Insights
+Category: Development Process
+
+3. software announcements
+Relationship: Subset (software announcements are a type of informative statement)
+Criteria: Designers announcing changes or updates to the Physics Lab software, including resolved issues and new features.
+Label: Software Updates
+Category: Development Process
+
+4. user feedback
+Relationship: Parallel (users providing feedback is a distinct concept)
+Criteria: Discussions where users provide feedback, suggestions, or comments about the Physics Lab software.
+Label: User Feedback
+Category: Community Engagement

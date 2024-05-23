@@ -44,11 +44,11 @@ export class ReferenceBuilder {
     }
     /** SanityCheck: Check if original codes are still present in the consolidated one. */
     protected async SanityCheck(Iteration: number, Codebook: Codebook) {
+        // File.writeFileSync(`./known/codebook-${Iteration}.json`, JSON.stringify(Codebook, null, 4), 'utf8');
         if (Iteration == 0) {
             this.OriginalCodes = new Set<string>(Object.values(Codebook).map(Code => Code.Label))
         } else {
             var NewCodes = new Set<string>(Object.values(Codebook).flatMap(Code => [Code.Label, ...Code.Alternatives ?? []]));
-            if (!Object.keys(Codebook).includes("information sharing")) console.log(chalk.red(`Error: Code "information sharing" disappeared in iteration ${Iteration}.`));
             this.OriginalCodes.forEach(Code => {
                 if (!NewCodes.has(Code))
                     console.log(chalk.red(`Error: Code ${Code} disappeared in iteration ${Iteration}.`));

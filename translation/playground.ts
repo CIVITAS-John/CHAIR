@@ -1,25 +1,37 @@
 // This is a playground for selectively translating data.
 import * as File from 'fs';
-import { GetProjectsPath, LoadProjects } from "../utils/loader.js";
+import * as Path from 'path';
+import { GetMessagesPath, GetProjectsPath, LoadCodedConversations, LoadConversationsForAnalysis, LoadProjects } from "../utils/loader.js";
 import { UseLLM } from "./general.js";
-import { ExportProjects, Range } from '../utils/export.js';
+import { ExportConversationsForCoding, ExportProjects, Range } from '../utils/export.js';
 import { Project } from '../utils/schema.js';
 import { LLMName } from '../utils/llms.js';
 import { TranslateProjects } from './physics-lab.js';
 import { ProcessConversations } from './message-groups.js';
 
-// UseLLM("mistral-small");
-// UseLLM("llama3-70b");
+await UpdateTranslations("Coded Dataset 1", "0~16-gpt-4.5-omni.json", "human/0~16-gpt-3.5-turbo-John.xlsx");
+await UpdateTranslations("Coded Dataset 1", "0~16-gpt-4.5-omni.json", "human/0~16-gpt-3.5-turbo-Alex.xlsx");
+await UpdateTranslations("Coded Dataset 1", "0~16-gpt-4.5-omni.json", "human/0~16-gpt-3.5-turbo-Lexie.xlsx");
+await UpdateTranslations("Coded Dataset 1", "0~16-gpt-4.5-omni.json", "human/0~16-gpt-3.5-turbo-Lily.xlsx");
+process.exit(0);
+
 UseLLM("gpt-4.5-omni");
-// UseLLM("gpt-4.5-turbo");
-// UseLLM("claude3-haiku");
-// UseLLM("claude3-sonnet");
-// 0 - 16
+// Translate datasets 1, 2
 await ProcessConversations("Users of Physics Lab (Group 1)", Range(0, 17), "Coded Dataset 2");
 await ProcessConversations("Users of Physics Lab (Group 2)", Range(0, 16), "Coded Dataset 1");
 // await ProjectPlayground(false);
 console.log("Translation done.");
 process.exit(0);
+
+/** UpdateTranslations: Update translations for coded conversations. */
+async function UpdateTranslations(Group: string, Name: string, Codebook: string) {
+    Codebook = GetMessagesPath(Group, Codebook);
+    var Threads = await LoadCodedConversations(Codebook);
+    var Conversations = LoadConversationsForAnalysis(Group, Name);
+    // Write the result into an Excel file
+    var Book = ExportConversationsForCoding(Object.values(Conversations), Threads);
+    await Book.xlsx.writeFile(Codebook.replace(".xlsx", "-new.xlsx"))
+}
 
 /** ProjectPlayground: Translate certain projects. */
 async function ProjectPlayground(Bilingual: boolean = false) {
