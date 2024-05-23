@@ -130,7 +130,12 @@ export class Visualizer {
         var Colorizer = Colorize == "" ? undefined : (Node: Node<T>) => {
             return "";
         };
-        this.SetFilter(Incumbent, `owner-${Owner}`, Filter, Colorizer);
+        this.SetFilter(Incumbent, `owner-${Owner}-${Colorizer}`, Filter, Colorizer);
+    }
+    /** FilterByComponent: Filter the nodes by their components. */
+    public FilterByComponent<T>(Incumbent: boolean, Component: Component<T>) {
+        var Filter = (Node: Node<T>) => Component.Nodes.includes(Node);
+        this.SetFilter(Incumbent, `component-${Component.ID}`, Filter);
     }
     // Node events
     /** NodeOver: Handle the mouse-over event on a node. */
@@ -279,7 +284,10 @@ export class Visualizer {
                     .attr("id", (Component) => `component-${Component.ID}`)
                     .attr("font-size", 4)
                     .attr("text-anchor", "middle")
-                    .attr("dominant-baseline", "middle"), 
+                    .attr("dominant-baseline", "middle")
+                    .on("mouseover", (Event, Component) => this.ComponentOver(Event, Component))
+                    .on("mouseout", (Event, Component) => this.ComponentOut(Event, Component))
+                    .on("click", (Event, Component) => this.FilterByComponent(true, Component)),
                 (Update) => Update)
                     .text((Component) => {
                         if (Component.CurrentNodes && this.CurrentFilter)
@@ -292,9 +300,7 @@ export class Visualizer {
                         else return "#ffffff";
                     })
                     .attr("x", (Component) => Component.Representative!.x!)
-                    .attr("y", (Component) => Component.Representative!.y!)
-                    .on("mouseover", (Event, Component) => this.ComponentOver(Event, Component))
-                    .on("mouseout", (Event, Component) => this.ComponentOut(Event, Component));
+                    .attr("y", (Component) => Component.Representative!.y!);
                 // .attr("x", (Component) => d3.mean(Component.Nodes.map(Node => Node.x!))!)
                 // .attr("y", (Component) => d3.mean(Component.Nodes.map(Node => Node.y!))!);
         } else this.ComponentLayer.selectAll("text").remove();
