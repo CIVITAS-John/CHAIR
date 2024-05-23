@@ -56,13 +56,23 @@ export class InfoPanel {
         return Panel;
     }
     /** ShowDialogForCode: Show a dialog for a code. */
-    public ShowDialogForCode(Owner: number, ...Codes: Code[]) {
+    public ShowDialogForCode(Owner: number, Original: Code, ...Codes: Code[]) {
+        var IsBaseline = Owner == 0;
+        if (Codes.length == 0) Codes.push(Original);
+        // Build the panel
         var Panel = $(`<div class="panel"></div>`);
         for (var Code of Codes) {
             if (Panel.children().length > 0) $("<hr>").appendTo(Panel);
             this.BuildPanelForCode(Panel, Code, true);
         }
         Panel.children("h3").append($(`<span style="color: ${this.Visualizer.GetCodebookColor(Owner)}">${this.Visualizer.Dataset.Names[Owner]}</span>`));
+        // Add a back button if it's not the baseline
+        if (!IsBaseline)
+            Panel.children("h3").prepend($(`<a href="javascript:void(0)" class="back">↑</a>`)
+                .attr("title", Original.Label).on("click", () => {
+                    this.ShowDialogForCode(0, Original);
+                }));
+        // Show the dialog
         var Content = this.DialogContainer.show().children("div.content");
         Content.children().remove();
         Content.append(Panel);
@@ -73,7 +83,11 @@ export class InfoPanel {
     }
     /** BuildPanelForCode: Build a panel for a code. */
     public BuildPanelForCode(Panel: Cash, Code: Code, Everything: boolean = true) {
-        Panel.append($(`<h3>${Code.Label}</h3>`));
+        if (Everything)
+            Panel.append($(`<h3>${Code.Label}</h3>`));
+        else Panel.append($(`<h3></h3>`).append($(`<a href="javascript:void(0)">${Code.Label}</span>`).on("click", () => {
+            this.ShowDialogForCode(0, Code);
+        })));
         if (Code.Owners && Code.Owners.length > 0) {
             var Owners = $(`<p class="owners">By: </p>`).appendTo(Panel);
             for (var Owner of Code.Owners) {
@@ -111,7 +125,7 @@ export class InfoPanel {
         if (Sources.length > 0) {
             var Originals = this.FindOriginalCodes(Code, Owner);
             Link.attr("title", Originals.map(Original => Original.Label).join(", "));
-            Link.on("click", () => { this.ShowDialogForCode(Owner, ...Originals) });
+            Link.on("click", () => { this.ShowDialogForCode(Owner, Code, ...Originals) });
         }
         return Link;
     }

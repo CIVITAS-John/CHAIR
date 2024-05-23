@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { Code, CodebookComparison } from '../../../utils/schema.js';
-import { Node, Link, Graph, Component } from './schema.js';
+import { Node, Link, Graph, Component, GraphStatus } from './schema.js';
 import { Parameters, BuildSemanticGraph } from './graph.js';
 import type { Cash, CashStatic, Element } from 'cash-dom';
 declare global {
@@ -52,12 +52,97 @@ export class Visualizer {
         // Load the data
         d3.json("network.json").then((Data) => {
             this.Dataset = Data as any;
-            this.CodeGraph = BuildSemanticGraph(this.Dataset, this.Parameters);
-            this.GenerateLayout(this.CodeGraph, (Alpha) => this.RenderCodes(Alpha));
+            this.SetStatus("Code", BuildSemanticGraph(this.Dataset, this.Parameters));
         });
     }
-    /** CodeGraph: The coding graph. */
-    private CodeGraph: Graph<Code> = { Nodes: [], Links: [], MaximumDistance: 0, MinimumDistance: 0 };
+    // Status management
+    /** Status: The status of the visualization. */
+    public Status: GraphStatus<any> = {} as any;
+    /** SetStatus: Use a new graph for visualization. */
+    public SetStatus<T>(Type: string, Graph: Graph<T>) {
+        this.Status = { Graph, ChosenNodes: []};
+        switch (Type) {
+            case "Code":
+                this.GenerateLayout(Graph, (Alpha) => this.RenderCodes(Alpha));
+                break;
+        }
+    }
+    /** GetStatus: Get the status of the visualization. */
+    public GetStatus<T>(): GraphStatus<T> {
+        return this.Status as GraphStatus<T>;
+    }
+    /** ApplyFilter: Apply a filter to the visualization. */
+    public ApplyFilter<T>(Filter: (Node: Node<T>) => boolean = () => true) {
+    }
+    // Node events
+    /** NodeOver: Handle the mouse-over event on a node. */
+    public NodeOver<T>(Event: Event, Node: Node<T>) {
+        SetClassForNode(Node.ID, "hovering", true);
+        SetClassForLinks(Node.ID, "hovering", true);
+        if (!this.GetStatus().ChosenNodes.includes(Node))
+            this.TriggerChosenCallback(Node, true);
+    }
+    /** NodeOut: Handle the mouse-out event on a node. */
+    public NodeOut<T>(Event: Event, Node: Node<T>) {
+        SetClassForNode(Node.ID, "hovering", false);
+        SetClassForLinks(Node.ID, "hovering", false);
+        if (!this.GetStatus().ChosenNodes.includes(Node))
+            this.TriggerChosenCallback(Node, false);
+    }
+    /** OnChosen: The callback for chosen nodes. */
+    public ChosenCallbacks: Map<string, (Node: any, Status: boolean) => void> = new Map();
+    /** RegisterChosenCallback: Register a callback for a certain data type. */
+    public RegisterChosenCallback<T>(Name: string, Callback: (Node: Node<T>, Status: boolean) => void) {
+        this.ChosenCallbacks.set(Name, Callback);
+    }
+    /** TriggerChosenCallback: Trigger a callback for a certain node. */
+    public TriggerChosenCallback<T>(Node: Node<T>, Status: boolean) {
+        var Callback = this.ChosenCallbacks.get(Node.Type);
+        if (Callback) Callback(Node, Status);
+    }
+    /** NodeChosen: Handle the click event on a node. */
+    public NodeChosen<T>(Event: Event, Node?: Node<T>, Additive: boolean = false) {
+        var Chosens = this.GetStatus().ChosenNodes;
+        var Incumbent = Node && Chosens.includes(Node);
+        // If no new mode, remove all
+        // If there is a new mode and no shift key, remove all
+        var Removal = Node == undefined || (!Additive && !Incumbent && !(Event as any).shiftKey);
+        if (Removal) {
+            Chosens.forEach(Node => {
+                SetClassForNode(Node.ID, "chosen", false);
+                SetClassForLinks(Node.ID, "chosen-neighbor", false);
+                this.TriggerChosenCallback(Node, false);
+            });
+            Chosens = [];
+        }
+        if (Node) {
+            if (!Incumbent) {
+                // If there is a new mode, add it
+                Chosens.push(Node);
+                SetClassForNode(Node.ID, "chosen", true);
+                SetClassForLinks(Node.ID, "chosen-neighbor", true);
+                this.TriggerChosenCallback(Node, true);
+            } else {
+                // If the node is chosen, remove it
+                Chosens.splice(Chosens.indexOf(Node), 1);
+                SetClassForNode(Node.ID, "chosen", false);
+                SetClassForLinks(Node.ID, "chosen-neighbor", false);
+                this.TriggerChosenCallback(Node, false);
+            }
+        }
+        this.GetStatus().ChosenNodes = Chosens;
+        this.Container.attr("class", Chosens.length > 0 ? "with-chosen" : "");
+    }
+    // Component events
+    /** ComponentOver: Handle the mouse-over event on a component. */
+    public ComponentOver<T>(Event: Event, Component: Component<T>) {
+        SetClassForComponent(Component, "hovering", true);
+    }
+    /** ComponentOut: Handle the mouse-out event on a component. */
+    public ComponentOut<T>(Event: Event, Component: Component<T>) {
+        SetClassForComponent(Component, "hovering", false);
+    }
+    // Code graphs
     /** RenderCodes: Render the coding graph to the container. */
     public RenderCodes(Alpha: number) {
         if (Alpha <= 0.001) return;
@@ -67,7 +152,8 @@ export class Visualizer {
         // this.Container.attr("width", 200).attr("height", 200);
         this.Zoom.extent([[0, 0], [300, 300]]);
         // Render nodes
-        var AllNodes = this.NodeLayer.selectAll("circle").data(this.CodeGraph.Nodes);
+        var Graph = this.GetStatus<Code>().Graph;
+        var AllNodes = this.NodeLayer.selectAll("circle").data(Graph.Nodes);
         AllNodes.exit().remove();
         AllNodes.join((Enter) => 
             Enter.append("circle")
@@ -85,7 +171,7 @@ export class Visualizer {
             .attr("cx", (Node) => Node.x!)
             .attr("cy", (Node) => Node.y!);
         // Render labels
-        var AllLabels = this.LabelLayer.selectAll("text").data(this.CodeGraph.Nodes);
+        var AllLabels = this.LabelLayer.selectAll("text").data(Graph.Nodes);
         AllLabels.exit().remove();
         if (Alpha <= 0.3) {
             AllLabels.join((Enter) => 
@@ -100,11 +186,11 @@ export class Visualizer {
         }
         // Render links
         var DistanceLerp = d3.scaleSequential().clamp(true)
-            .domain([this.CodeGraph.MaximumDistance, this.Parameters.LinkMinimumDistance]);
+            .domain([Graph.MaximumDistance, this.Parameters.LinkMinimumDistance]);
         var DistanceColor = d3.scaleSequential().clamp(true)
-            .domain([this.CodeGraph.MaximumDistance, this.Parameters.LinkMinimumDistance])
+            .domain([Graph.MaximumDistance, this.Parameters.LinkMinimumDistance])
             .interpolator(d3.interpolateViridis);
-        var AllLinks = this.LinkLayer.selectAll("line").data(this.CodeGraph.Links)
+        var AllLinks = this.LinkLayer.selectAll("line").data(Graph.Links)
         AllLinks.exit().remove();
         AllLinks.join((Enter) => 
             Enter.append("line")
@@ -122,8 +208,8 @@ export class Visualizer {
             .attr("x2", (Link) => Link.Target.x!)
             .attr("y2", (Link) => Link.Target.y!);
         // Visualize components
-        if (this.CodeGraph.Components) {
-            var AllComponents = this.ComponentLayer.selectAll("text").data(this.CodeGraph.Components);
+        if (Graph.Components) {
+            var AllComponents = this.ComponentLayer.selectAll("text").data(Graph.Components);
             AllComponents.exit().remove();
             AllComponents.join((Enter) => 
                 Enter.append("text")
@@ -140,77 +226,6 @@ export class Visualizer {
                 // .attr("x", (Component) => d3.mean(Component.Nodes.map(Node => Node.x!))!)
                 // .attr("y", (Component) => d3.mean(Component.Nodes.map(Node => Node.y!))!);
         } else this.ComponentLayer.selectAll("text").remove();
-    }
-    /** ApplyFilter: Apply a filter to the visualization. */
-    public ApplyFilter<T>(Filter: (Node: Node<T>) => boolean = () => true) {
-    }
-    // Node events
-    /** NodeOver: Handle the mouse-over event on a node. */
-    public NodeOver<T>(Event: Event, Node: Node<T>) {
-        SetClassForNode(Node.ID, "hovering", true);
-        SetClassForLinks(Node.ID, "hovering", true);
-        if (!this.ChosenNodes.includes(Node))
-            this.TriggerChosenCallback(Node, true);
-    }
-    /** NodeOut: Handle the mouse-out event on a node. */
-    public NodeOut<T>(Event: Event, Node: Node<T>) {
-        SetClassForNode(Node.ID, "hovering", false);
-        SetClassForLinks(Node.ID, "hovering", false);
-        if (!this.ChosenNodes.includes(Node))
-            this.TriggerChosenCallback(Node, false);
-    }
-    /** ChosenNode: The currently chosen node. */
-    public ChosenNodes: any[] = [];
-    /** OnChosen: The callback for chosen nodes. */
-    public ChosenCallbacks: Map<string, (Node: any, Status: boolean) => void> = new Map();
-    /** RegisterChosenCallback: Register a callback for a certain data type. */
-    public RegisterChosenCallback<T>(Name: string, Callback: (Node: Node<T>, Status: boolean) => void) {
-        this.ChosenCallbacks.set(Name, Callback);
-    }
-    /** TriggerChosenCallback: Trigger a callback for a certain node. */
-    public TriggerChosenCallback<T>(Node: Node<T>, Status: boolean) {
-        var Callback = this.ChosenCallbacks.get(Node.Type);
-        if (Callback) Callback(Node, Status);
-    }
-    /** NodeChosen: Handle the click event on a node. */
-    public NodeChosen<T>(Event: Event, Node?: Node<T>, Additive: boolean = false) {
-        var Incumbent = Node && this.ChosenNodes.includes(Node);
-        // If no new mode, remove all
-        // If there is a new mode and no shift key, remove all
-        var Removal = Node == undefined || (!Additive && !Incumbent && !(Event as any).shiftKey);
-        if (Removal) {
-            this.ChosenNodes.forEach(Node => {
-                SetClassForNode(Node.ID, "chosen", false);
-                SetClassForLinks(Node.ID, "chosen-neighbor", false);
-                this.TriggerChosenCallback(Node, false);
-            });
-            this.ChosenNodes = [];
-        }
-        if (Node) {
-            if (!Incumbent) {
-                // If there is a new mode, add it
-                this.ChosenNodes.push(Node);
-                SetClassForNode(Node.ID, "chosen", true);
-                SetClassForLinks(Node.ID, "chosen-neighbor", true);
-                this.TriggerChosenCallback(Node, true);
-            } else {
-                // If the node is chosen, remove it
-                this.ChosenNodes.splice(this.ChosenNodes.indexOf(Node), 1);
-                SetClassForNode(Node.ID, "chosen", false);
-                SetClassForLinks(Node.ID, "chosen-neighbor", false);
-                this.TriggerChosenCallback(Node, false);
-            }
-        }
-        this.Container.attr("class", this.ChosenNodes.length > 0 ? "with-chosen" : "");
-    }
-    // Component events
-    /** ComponentOver: Handle the mouse-over event on a component. */
-    public ComponentOver<T>(Event: Event, Component: Component<T>) {
-        SetClassForComponent(Component, "hovering", true);
-    }
-    /** ComponentOut: Handle the mouse-out event on a component. */
-    public ComponentOut<T>(Event: Event, Component: Component<T>) {
-        SetClassForComponent(Component, "hovering", false);
     }
     // Layouting
     /** Simulation: The force simulation in-use. */

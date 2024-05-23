@@ -1,5 +1,13 @@
 import * as d3 from 'd3';
 
+/** GraphStatus: The visualization status of a graph. */
+export interface GraphStatus<T> {
+    /** Graph: The graph. */
+    Graph: Graph<T>;
+    /** ChosenNodes: The selected nodes. */
+    ChosenNodes: Node<T>[];
+}
+
 /** Graph: A graph. */
 export interface Graph<T> {
     /** Nodes: The nodes in the graph. */

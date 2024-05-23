@@ -11,6 +11,10 @@ h1, h2, h3, h4, h5, h6, p {
     margin: 0;
     line-height: 1.5em;
 }
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+    color: #000000;
+    text-decoration: underline;
+}
 a {
     color: #2881e0;
     text-decoration: none;
@@ -45,6 +49,7 @@ html {
     height: 100%;
 }
 /** Visualization Styles */
+/* Components */
 .visualization .components text {
     stroke: #000000;
     cursor: pointer;
@@ -55,18 +60,21 @@ html {
 .visualization .components text.hovering {
     fill: #fde725;
 }
+/* Labels */
 .visualization .labels {
     pointer-events: none;
     user-select: none;
 }
+/* Circles */
 .visualization circle {
     cursor: pointer;
 }
 circle:not(.chosen, .hovering) {
     fill-opacity: 0.8;
 }
-.with-chosen .labels text,
-.with-chosen circle {
+/* Chosen styles */
+.with-chosen .labels text:not(.chosen, .chosen-neighbor, .hovering),
+.with-chosen circle:not(.chosen, .chosen-neighbor, .hovering) {
     fill-opacity: 0.4;
 }
 circle.hidden:not(.hovering, .chosen) {
@@ -81,9 +89,6 @@ circle.chosen {
 circle.chosen-neighbor {
     fill-opacity: 1;
 }
-text.hidden:not(.hovering, .chosen) {
-    display: none;
-}
 text.chosen,
 text.chosen-neighbor,
 text.hovering {
@@ -95,15 +100,19 @@ text.hovering {
 text.chosen {
     fill: #fff;
 }
-.with-chosen line {
-    stroke-opacity: 0.1;
-}
-line.hidden:not(.hovering, .chosen) {
-    color: #999;
-}
 line.chosen,
 line.chosen-neighbor,
 line.hovering {
     stroke-width: 0.4;
     stroke-opacity: 1;
+}
+.with-chosen line:not(.chosen, .chosen-neighbor, .hovering) {
+    stroke-opacity: 0.1;
+}
+/* Hidden styles */
+text.hidden:not(.hovering, .chosen) {
+    display: none;
+}
+line.hidden:not(.hovering, .chosen) {
+    color: #999;
 }
