@@ -277,15 +277,19 @@ export class Visualizer {
             AllComponents.join((Enter) => 
                 Enter.append("text")
                     .attr("id", (Component) => `component-${Component.ID}`)
-                    .attr("fill", "#ffffff")
                     .attr("font-size", 4)
                     .attr("text-anchor", "middle")
                     .attr("dominant-baseline", "middle"), 
                 (Update) => Update)
                     .text((Component) => {
                         if (Component.CurrentNodes && this.CurrentFilter)
-                            return `${Component.Representative!.Data.Label} (${Component.CurrentNodes.length} / ${Component.Nodes.length})`
+                            return `${Component.Representative!.Data.Label} (${Component.CurrentNodes.length}/${Component.Nodes.length})`
                         else return `${Component.Representative!.Data.Label} (${Component.Nodes.length})`;
+                    })
+                    .attr("fill", (Component) => {
+                        if (Component.CurrentNodes && this.CurrentFilter)
+                            return d3.interpolateViridis(Component.CurrentNodes.length / Component.Nodes.length);
+                        else return "#ffffff";
                     })
                     .attr("x", (Component) => Component.Representative!.x!)
                     .attr("y", (Component) => Component.Representative!.y!)
