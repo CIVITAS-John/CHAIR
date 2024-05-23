@@ -38,6 +38,11 @@ await EvaluateConsolidatedResults(GetMessagesPath("Coded Dataset 1"),
 process.exit(0);
 
 await EvaluateConsolidatedResults(GetMessagesPath("Coded Dataset 1"), 
+    "llamas vs others", "llama-other",
+    new RefiningReferenceBuilder(),
+    ["low-level-3-again-refined.json", "low-level-3-refined.json"]);
+
+await EvaluateConsolidatedResults(GetMessagesPath("Coded Dataset 1"), 
     "human vs high-level consolidated", "human-high-level-consolidated",
     new RefiningReferenceBuilder(),
     ["human-consolidated-refined.json", "high-level-2-consolidated-refined.json"]);
