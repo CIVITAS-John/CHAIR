@@ -238,7 +238,10 @@ export class Visualizer {
 /** SetClassForComponent: Set a class for a component and its nodes. */
 function SetClassForComponent<T>(Component: Component<T>, Class: string, Status: boolean) {
     $(`#component-${Component.ID}`).toggleClass(Class, Status);
-    Component.Nodes.forEach(Node => SetClassForNode(Node.ID, Class, Status));
+    Component.Nodes.forEach(Node => {
+        SetClassForNode(Node.ID, Class, Status);
+        SetClassForLinks(Node.ID, Class, Status);
+    });
 }
 
 /** SetClassForNode: Set a class for a node and its label. */

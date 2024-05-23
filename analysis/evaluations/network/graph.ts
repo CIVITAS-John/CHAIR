@@ -147,7 +147,10 @@ export function FindCommunities<T>(Nodes: Node<T>[], Links: Link<T>[],
     // Find the representatives
     for (var Component of Components) 
         Component.Representative = FindBestNode(Component.Nodes, Links, NodeEvaluator);
-    return Components.filter(Component => Component.Nodes.length >= MinimumNodes);
+    // Filter the components
+    var Components = Components.filter(Component => Component.Nodes.length >= MinimumNodes);
+    Components.forEach((Component, Index) => Component.ID = Index.toString());
+    return Components;
 }
 
 /** FindBestNode: Find the best node in the set. */
