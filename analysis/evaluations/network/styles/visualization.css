@@ -66,6 +66,9 @@ circle:not(.chosen, .hovering) {
 .with-chosen circle {
     fill-opacity: 0.4;
 }
+circle.hidden:not(.hovering, .chosen) {
+    color: #999;
+}
 circle.hovering,
 circle.chosen {
     stroke: #fff;
@@ -74,6 +77,9 @@ circle.chosen {
 }
 circle.chosen-neighbor {
     fill-opacity: 1;
+}
+text.hidden:not(.hovering, .chosen) {
+    display: none;
 }
 text.chosen,
 text.chosen-neighbor,
@@ -88,6 +94,9 @@ text.chosen {
 }
 .with-chosen line {
     stroke-opacity: 0.1;
+}
+line.hidden:not(.hovering, .chosen) {
+    color: #999;
 }
 line.chosen,
 line.chosen-neighbor,

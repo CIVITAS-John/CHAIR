@@ -42,7 +42,9 @@ export function InitializeLLM(LLM: string) {
     OutputTokens = 0;
     ExpectedItems = 0;
     FinishedItems = 0;
-    switch (LLM) {
+    var RealLLM = LLM;
+    if (LLM.indexOf("_")) RealLLM = LLM.split("_")[0];
+    switch (RealLLM) {
         case "gpt-3.5-turbo":
             // 0.5$ / 1.5$
             MaxInput = 16385;

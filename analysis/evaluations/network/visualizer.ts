@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { Code, CodebookComparison } from '../../../utils/schema.js';
-import { Node, Link, Graph } from './schema.js';
+import { Node, Link, Graph, Component } from './schema.js';
 import { Parameters, BuildSemanticGraph } from './graph.js';
 import type { Cash, CashStatic, Element } from 'cash-dom';
 declare global {
@@ -133,11 +133,14 @@ export class Visualizer {
                     .attr("text-anchor", "middle")
                     .attr("dominant-baseline", "middle")
                 .attr("x", (Component) => Component.Representative!.x!)
-                .attr("y", (Component) => Component.Representative!.y!);
+                .attr("y", (Component) => Component.Representative!.y!)
+                .on("mouseover", (Event, Component) => this.ComponentOver(Event, Component))
+                .on("mouseout", (Event, Component) => this.ComponentOut(Event, Component));
                 // .attr("x", (Component) => d3.mean(Component.Nodes.map(Node => Node.x!))!)
                 // .attr("y", (Component) => d3.mean(Component.Nodes.map(Node => Node.y!))!);
         } else this.ComponentLayer.selectAll("text").remove();
     }
+    // Node events
     /** NodeOver: Handle the mouse-over event on a node. */
     public NodeOver<T>(Event: Event, Node: Node<T>) {
         SetClassForNode(Node.ID, "hovering", true);
@@ -196,6 +199,14 @@ export class Visualizer {
         }
         this.Container.attr("class", this.ChosenNodes.length > 0 ? "with-chosen" : "");
     }
+    // Component events
+    /** ComponentOver: Handle the mouse-over event on a component. */
+    public ComponentOver<T>(Event: Event, Component: Component<T>) {
+    }
+    /** ComponentOut: Handle the mouse-out event on a component. */
+    public ComponentOut<T>(Event: Event, Component: Component<T>) {
+    }
+    // Layouting
     /** Simulation: The force simulation in-use. */
     private Simulation?: d3.Simulation<d3.SimulationNodeDatum, undefined>;
     /** GenerateLayout: Generate the network layout using a force-based simulation.  */
