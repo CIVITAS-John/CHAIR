@@ -110,9 +110,10 @@ export function IdentifyComponents<T>
             Components.push(...FindCommunities(Array.from(CurrentNodes), CurrentLinks, NodeEvaluator, LinkEvaluator, MinimumNodes));
         else {
             var ResultNodes = Array.from(CurrentNodes);
-            Components.push({ Representative: FindBestNode(ResultNodes, CurrentLinks, NodeEvaluator), Nodes: ResultNodes });
+            Components.push({ ID: "", Representative: FindBestNode(ResultNodes, CurrentLinks, NodeEvaluator), Nodes: ResultNodes });
         }
     }
+    Components.forEach((Component, Index) => Component.ID = Index.toString());
     return Components;
 }
 
@@ -138,7 +139,7 @@ export function FindCommunities<T>(Nodes: Node<T>[], Links: Link<T>[],
     // Create the components
     var Components: Component<T>[] = new Array(Object.values(Communities).reduce((a, b) => Math.max(a, b), 0) + 1);
     for (var I = 0; I < Components.length; I++) 
-        Components[I] = { Nodes: [] };
+        Components[I] = { ID: "", Nodes: [] };
     for (var Node of Nodes) {
         var Community = Communities[Node.ID];
         Components[Community].Nodes.push(Node);

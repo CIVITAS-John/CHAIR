@@ -6,6 +6,7 @@ import { CodeConsolidator } from "./consolidator.js";
 
 /** AlternativeMerger: Merge codes based on already merged results. */
 // In this pass, we will find codes that have been merged and merge them again.
+// Not used: while this reduces the number of codes, it also introduce errors.
 export class AlternativeMerger extends CodeConsolidator {
     /** Preprocess: In this case, we do not really use the LLM, so we just merge the codes. */
     public async Preprocess(Codebook: Codebook, Codes: Code[]) {

@@ -4,6 +4,7 @@ import { MergeCategoriesByCluster, MergeCodesByCluster, UpdateCategories } from 
 import { CodeConsolidator } from "./consolidator.js";
 
 /** CategoryNameMerger: Merge categories based on similar names. */
+// Not used: we plan to switch to a cluster/naming approach instead of this workflow.
 // Note that in this pass, we are not refining names. The shortest name will be adopted.
 // So we don't recommend setting a high threshold, because different concepts may be merged.
 export class CategoryNameMerger extends CodeConsolidator {

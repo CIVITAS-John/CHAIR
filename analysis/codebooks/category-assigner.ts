@@ -4,6 +4,7 @@ import { Codebook, Code, GetCategories } from "../../utils/schema.js";
 import { CodeConsolidator } from "./consolidator.js";
 
 /** CategoryAssigner: Assign categories with LLMs. */
+// Not used: we plan to switch to a cluster/naming approach instead of this workflow.
 export class CategoryAssigner extends CodeConsolidator {
     /** Chunckified: Whether the consolidator needs chunkified results. */
     public Chunkified: boolean = true;

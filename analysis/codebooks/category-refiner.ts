@@ -5,6 +5,7 @@ import { UpdateCategoriesByMap } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
 
 /** CategoryRefiner: Refine categories with LLMs. */
+// Not used: we plan to switch to a cluster/naming approach instead of this workflow.
 export class CategoryRefiner extends CodeConsolidator {
     /** SubunitFilter: Filter the subunits before chunking. */
     public SubunitFilter(Code: Code): boolean {

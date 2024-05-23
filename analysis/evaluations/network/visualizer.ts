@@ -128,6 +128,7 @@ export class Visualizer {
             AllComponents.join((Enter) => 
                 Enter.append("text")
                     .text((Component) => `${Component.Representative!.Data.Label} (+${Component.Nodes.length - 1})`)
+                    .attr("id", (Component) => `component-${Component.ID}`)
                     .attr("fill", "#ffffff")
                     .attr("font-size", 4), (Update) => Update)
                     .attr("text-anchor", "middle")
@@ -139,6 +140,9 @@ export class Visualizer {
                 // .attr("x", (Component) => d3.mean(Component.Nodes.map(Node => Node.x!))!)
                 // .attr("y", (Component) => d3.mean(Component.Nodes.map(Node => Node.y!))!);
         } else this.ComponentLayer.selectAll("text").remove();
+    }
+    /** ApplyFilter: Apply a filter to the visualization. */
+    public ApplyFilter<T>(Filter: (Node: Node<T>) => boolean = () => true) {
     }
     // Node events
     /** NodeOver: Handle the mouse-over event on a node. */
@@ -202,9 +206,11 @@ export class Visualizer {
     // Component events
     /** ComponentOver: Handle the mouse-over event on a component. */
     public ComponentOver<T>(Event: Event, Component: Component<T>) {
+        SetClassForComponent(Component, "hovering", true);
     }
     /** ComponentOut: Handle the mouse-out event on a component. */
     public ComponentOut<T>(Event: Event, Component: Component<T>) {
+        SetClassForComponent(Component, "hovering", false);
     }
     // Layouting
     /** Simulation: The force simulation in-use. */
@@ -227,6 +233,12 @@ export class Visualizer {
             return d3.schemeTableau10[Number];
         else return d3.interpolateWarm(Number / this.Dataset.Codebooks.length);
     }
+}
+
+/** SetClassForComponent: Set a class for a component and its nodes. */
+function SetClassForComponent<T>(Component: Component<T>, Class: string, Status: boolean) {
+    $(`#component-${Component.ID}`).toggleClass(Class, Status);
+    Component.Nodes.forEach(Node => SetClassForNode(Node.ID, Class, Status));
 }
 
 /** SetClassForNode: Set a class for a node and its label. */

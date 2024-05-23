@@ -62,28 +62,23 @@ export class RefineMerger extends DefinitionParser {
     // In this case, we do not really use the LLM, so we just merge the codes
     public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
         return [`
-You are an expert in thematic analysis. 
-Each code is a cluster of multiple qualitative sub-code. First, determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
-Write clear and generalizable labels and criteria for each merged code, informed by the context, and without unnecessary specifics or examples.
-Find a theory-informed category for each code. Use 2-4 words for categories and avoid over-generalization.
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes a list of concepts and definitions. Do not attempt to merge codes now.
+Determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each code, informed by the context, and without unnecessary specifics or examples.
 ${ResearchQuestion}
 Always follow the output format:
 ---
-Categories: 
-* {Name some categories you identified from the research question and theoretical lens}
-
 Definitions for each code (${Codes.length} in total):
 1. {Repeat the input 1}
 Relationship: {The logical relationship between concepts in input 1}
 Criteria: {A sentence of consolidated criteria for code 1}
 Label: {A consolidated label of code 1}
-Category: {2-4 words for code 1}
 ...
 ${Codes.length}. {Repeat the input ${Codes.length}}
 Relationship: {The logical relationship between concepts in input ${Codes.length}}
 Criteria: {A sentence of consolidated criteria for code ${Codes.length}}
 Label: {A consolidated label of code ${Codes.length}}
-Category: {2-4 words for code ${Codes.length}}
 ---`.trim(), 
                     Codes.map((Code, Index) => `
 ${Index + 1}. ${[Code.Label, ...Code.OldLabels ?? []].join(", ") ?? ""}

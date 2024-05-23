@@ -44,7 +44,7 @@ export class ReferenceBuilder {
     }
     /** SanityCheck: Check if original codes are still present in the consolidated one. */
     protected async SanityCheck(Iteration: number, Codebook: Codebook) {
-        // File.writeFileSync(`./known/codebook-${Iteration}.json`, JSON.stringify(Codebook, null, 4), 'utf8');
+        File.writeFileSync(`./known/codebook-${Iteration}.json`, JSON.stringify(Codebook, null, 4), 'utf8');
         if (Iteration == 0) {
             this.OriginalCodes = new Set<string>(Object.values(Codebook).map(Code => Code.Label))
         } else {
@@ -71,6 +71,7 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
     /** RefineCodebook: Further merge the codebook.*/
     protected async RefineCodebook(Codebook: Codebook): Promise<Codebook> {
         var Threads = { Codebook: Codebook, Threads: {} };
+        Object.values(Codebook).forEach(Code => Code.Alternatives = []);
         await ConsolidateCodebook<void>(new PipelineConsolidator(
             // Merge codes that have been merged
             // new AlternativeMerger(),

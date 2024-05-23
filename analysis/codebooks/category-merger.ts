@@ -6,6 +6,7 @@ import { MergeCategoriesByCluster, MergeCodesByCluster, UpdateCategories } from 
 import { CodeConsolidator } from "./consolidator.js";
 
 /** CategoryMerger: Merge categories based on similar names. Then, merge the names into one. */
+// Not used: we plan to switch to a cluster/naming approach instead of this workflow.
 export class CategoryMerger extends CodeConsolidator {
     /** Maximum: The maximum threshold for merging categories. */
     public Maximum: number;
