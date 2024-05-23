@@ -30,6 +30,8 @@ export interface Component<T> {
     Representative?: Node<T>;
     /** Nodes: The nodes in the component. */
     Nodes: Node<T>[];
+    /** CurrentNodes: The current nodes in the component. */
+    CurrentNodes?: Node<T>[];
 }
 
 /** Node: A node in the graph. */

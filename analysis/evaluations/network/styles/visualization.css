@@ -77,8 +77,8 @@ circle:not(.chosen, .hovering) {
 .with-chosen circle:not(.chosen, .chosen-neighbor, .hovering) {
     fill-opacity: 0.4;
 }
-circle.hidden:not(.hovering, .chosen) {
-    color: #999;
+circle.hidden {
+    fill: #999;
 }
 circle.hovering,
 circle.chosen {
@@ -111,8 +111,8 @@ line.hovering {
 }
 /* Hidden styles */
 text.hidden:not(.hovering, .chosen) {
-    display: none;
+    color: #999;
 }
 line.hidden:not(.hovering, .chosen) {
-    color: #999;
+    stroke: #999;
 }
