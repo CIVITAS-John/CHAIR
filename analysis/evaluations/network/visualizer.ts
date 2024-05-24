@@ -114,23 +114,43 @@ export class Visualizer {
         if (Incumbent) {
             if (Name == this.IncumbentName) {
                 Filter = undefined;
+                Colorizer = undefined;
                 Name = "";
             }
             this.IncumbentName = Name;
             this.IncumbentFilter = Filter;
+            this.IncumbentColorizer = Colorizer;
         }
         this.CurrentFilter = Filter ?? this.IncumbentFilter;
-        if (Incumbent) this.IncumbentColorizer = Colorizer;
         this.CurrentColorizer = Colorizer ?? this.IncumbentColorizer;
         this.Rerender();
     }
     /** FilterByOwner: Filter the nodes by their owners. */
     public FilterByOwner<T>(Incumbent: boolean, Owner: number, Colorize: string = "") {
-        var Filter = (Node: Node<T>) => FilterNodeByOwner(Node, Owner);
-        var Colorizer = Colorize == "" ? undefined : (Node: Node<T>) => {
-            return "";
+        var Filter = (Node: Node<T>) => FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners || Colorize == "coverage");
+        Colorize = Colorize.toLowerCase();
+        var Colorizer = Colorize == "" || Colorize == "density" ? undefined : (Node: Node<T>) => {
+            switch (Colorize) {
+                case "coverage":
+                    return d3.interpolateViridis(Node.Owners.has(Owner) ? 1 : Node.NearOwners.has(Owner) ? 0.55 : 0.1);
+                case "novelty":
+                case "conformity":
+                    var Status = 0;
+                    if (this.Parameters.UseNearOwners) {
+                        var Novel = Node.NearOwners!.size == 1 + (Node.Owners.has(0) ? 1 : 0);
+                        if (Node.NearOwners.has(Owner))
+                            Status = Novel ? 1 : 0.55;
+                    } else {
+                        var Novel = Node.Owners!.size == 1;
+                        if (Node.Owners.has(Owner))
+                            Status = Novel ? 1 : 0.55;
+                    }
+                    return d3.interpolateViridis(Status);
+                default:
+                    return "#ffffff";
+            }
         };
-        this.SetFilter(Incumbent, `owner-${Owner}-${Colorizer}`, Filter, Colorizer);
+        this.SetFilter(Incumbent, `owner-${Owner}-${Colorize}`, Filter, Colorizer);
     }
     /** FilterByComponent: Filter the nodes by their components. */
     public FilterByComponent<T>(Incumbent: boolean, Component: Component<T>) {

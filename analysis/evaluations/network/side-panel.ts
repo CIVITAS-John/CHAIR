@@ -146,7 +146,11 @@ export class Evaluator extends PanelBase {
                 .attr("ry", 4)
                 .attr("width", X.bandwidth())
                 .attr("height", Y.bandwidth())
+                .style("cursor", "pointer")
                 .style("fill", (Evaluation) => Colors[Evaluation.Metric](Evaluation.Value))
+                .on("mouseover", (Event, Evaluation) => this.Visualizer.FilterByOwner(false, Names.indexOf(Evaluation.Name), Evaluation.Metric))
+                .on("mouseout", (Event, Evaluation) => this.Visualizer.SetFilter(false))
+                .on("click", (Event, Evaluation) => this.Visualizer.FilterByOwner(true, Names.indexOf(Evaluation.Name), Evaluation.Metric));
         // Add the text labels
         SVG.selectAll()
             .data(Dataset, (Evaluation) => Evaluation!.Name + ":" + Evaluation!.Metric)
@@ -156,6 +160,7 @@ export class Evaluator extends PanelBase {
                 .attr("y", (Evaluation) => Y(Evaluation.Name)! + Y.bandwidth() / 2)
                 .style("text-anchor", "middle")
                 .style("font-size", "0.9em")
+                .style("pointer-events", "none")
                 .style("fill", (Evaluation) => d3.lab(Colors[Evaluation.Metric](Evaluation.Value)).l > 70 ? "black" : "white")
                 .text((Evaluation) => d3.format(".1%")(Evaluation.Value));
     }
@@ -185,10 +190,11 @@ export class Evaluator extends PanelBase {
         var TotalNovelty = 0; var TotalConformity = 0;
         for (var Node of Graph.Nodes) {
             var Weight = Weights.get(Node.ID)!;
-            var Novel = Node.NearOwners!.size == 1 + (Node.Data.Owners?.includes(0) ? 1 : 0);
+            var Owners = this.Visualizer.Parameters.UseNearOwners ? Node.NearOwners : Node.Owners;
+            var Novel = Owners.size == 1 + (Node.Owners.has(0) ? 1 : 0);
             if (Novel) TotalNovelty += Weight;
             else TotalConformity += Weight;
-            for (var Owner of Node.NearOwners!) {
+            for (var Owner of Node.Owners) {
                 if (Owner == 0) continue;
                 Results[Names[Owner]]["Coverage"] += Weight;
                 if (Novel) {

@@ -44,6 +44,8 @@ export interface Node<T> extends d3.SimulationNodeDatum {
     Type: string;
     /** Hidden: Whether the node should be hidden under the current circumstance. */
     Hidden?: boolean;
+    /** Owners: Owners of this node. */
+    Owners: Set<number>;
     /** NearOwners: Owners that own at least a close neighbor nodes to this node. */
     NearOwners: Set<number>;
 }

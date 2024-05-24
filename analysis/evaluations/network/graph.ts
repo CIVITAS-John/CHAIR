@@ -20,7 +20,10 @@ export class Parameters {
 /** BuildSemanticGraph: Build a semantic code graph from the dataset. */
 export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Parameters = new Parameters()): Graph<Code> {
     var Nodes: Node<Code>[] =
-        Dataset.Codes.map((Code, Index) => ({ Type: "Code", ID: Index.toString(), Data: Code, NearOwners: new Set(Code.Owners), x: Code.Position![0], y: Code.Position![1] }));
+        Dataset.Codes.map((Code, Index) => ({ 
+            Type: "Code", ID: Index.toString(), Data: Code, 
+            Owners: new Set(Code.Owners), NearOwners: new Set(Code.Owners), 
+            x: Code.Position![0], y: Code.Position![1] }));
     var Links: Map<string, Link<Code>> = new Map();
     var MaxDistance = 0;
     var MinDistance = Number.MAX_VALUE;
@@ -168,8 +171,8 @@ export function FindBestNode<T>(Nodes:Node<T>[], Links: Link<T>[], NodeEvaluator
 }
 
 /** FilterNodeByOwner: Filter a node by presence of the owner. */
-export function FilterNodeByOwner<T>(Node: Node<T>, Owner: number): boolean {
-    return Node.NearOwners.has(Owner);
+export function FilterNodeByOwner<T>(Node: Node<T>, Owner: number, NearOwners: boolean): boolean {
+    return NearOwners ? Node.NearOwners.has(Owner) : Node.Owners.has(Owner);
 }
 
 /** BuildConcurrenceGraph: Build a concurrence code graph from the dataset. */
