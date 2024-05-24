@@ -127,6 +127,7 @@ export class Visualizer {
         }
         this.CurrentFilter = Filter ?? this.IncumbentFilter;
         this.CurrentColorizer = Colorizer ?? this.IncumbentColorizer;
+        this.NodeChosen(new Event("click"), undefined);
         this.Rerender();
         return this.CurrentFilter !== undefined;
     }
@@ -303,7 +304,7 @@ export class Visualizer {
                 Enter.append("text")
                     .attr("id", (Node) => `label-${Node.ID}`)
                     .text((Node) => Node.Data.Label)
-                    .attr("fill", "#cccccc")
+                    .attr("fill", "#e0e0e0")
                     .attr("fill-opacity", 0.7)
                     .attr("font-size", 1), (Update) => Update)
                 .attr("x", (Node) => Node.x! + GetSize(Node) + 0.25)
