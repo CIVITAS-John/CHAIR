@@ -150,7 +150,10 @@ export class Evaluator extends PanelBase {
                 .style("fill", (Evaluation) => Colors[Evaluation.Metric](Evaluation.Value))
                 .on("mouseover", (Event, Evaluation) => this.Visualizer.FilterByOwner(false, Names.indexOf(Evaluation.Name), Evaluation.Metric))
                 .on("mouseout", (Event, Evaluation) => this.Visualizer.SetFilter(false))
-                .on("click", (Event, Evaluation) => this.Visualizer.FilterByOwner(true, Names.indexOf(Evaluation.Name), Evaluation.Metric));
+                .on("click", (Event, Evaluation) => {
+                    this.Visualizer.FilterByOwner(true, Names.indexOf(Evaluation.Name), Evaluation.Metric);
+                    // d3.select(Event.currentTarget).attr("class", Status ? "selected" : "");
+                });
         // Add the text labels
         SVG.selectAll()
             .data(Dataset, (Evaluation) => Evaluation!.Name + ":" + Evaluation!.Metric)

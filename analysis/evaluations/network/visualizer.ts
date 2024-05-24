@@ -110,7 +110,7 @@ export class Visualizer {
     /** IncumbentColorizer: The chosen permenant colorizer for nodes. */
     private IncumbentColorizer?: (Node: Node<any>) => string;
     /** SetFilter: Set a filter for the visualization. */
-    public SetFilter<T>(Incumbent: boolean, Name: string = "", Filter?: (Node: Node<T>) => boolean, Colorizer?: (Node: Node<T>) => string) {
+    public SetFilter<T>(Incumbent: boolean, Name: string = "", Filter?: (Node: Node<T>) => boolean, Colorizer?: (Node: Node<T>) => string): boolean {
         if (Incumbent) {
             if (Name == this.IncumbentName) {
                 Filter = undefined;
@@ -124,15 +124,17 @@ export class Visualizer {
         this.CurrentFilter = Filter ?? this.IncumbentFilter;
         this.CurrentColorizer = Colorizer ?? this.IncumbentColorizer;
         this.Rerender();
+        return this.CurrentFilter !== undefined;
     }
     /** FilterByOwner: Filter the nodes by their owners. */
     public FilterByOwner<T>(Incumbent: boolean, Owner: number, Colorize: string = "") {
         var Filter = (Node: Node<T>) => FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners || Colorize == "coverage");
         Colorize = Colorize.toLowerCase();
-        var Colorizer = Colorize == "" || Colorize == "density" ? undefined : (Node: Node<T>) => {
+        var Colorizer = Colorize == "" ? undefined : (Node: Node<T>) => {
             switch (Colorize) {
                 case "coverage":
-                    return d3.interpolateViridis(Node.Owners.has(Owner) ? 1 : Node.NearOwners.has(Owner) ? 0.55 : 0.1);
+                case "density":
+                    return d3.interpolateCool(Node.Owners.has(Owner) ? 1 : Node.NearOwners.has(Owner) ? 0.55 : 0.1);
                 case "novelty":
                 case "conformity":
                     var Status = 0;
@@ -145,12 +147,12 @@ export class Visualizer {
                         if (Node.Owners.has(Owner))
                             Status = Novel ? 1 : 0.55;
                     }
-                    return d3.interpolateViridis(Status);
+                    return d3.interpolateWarm(Status);
                 default:
                     return "#ffffff";
             }
         };
-        this.SetFilter(Incumbent, `owner-${Owner}-${Colorize}`, Filter, Colorizer);
+        return this.SetFilter(Incumbent, `owner-${Owner}-${Colorize}`, Filter, Colorizer);
     }
     /** FilterByComponent: Filter the nodes by their components. */
     public FilterByComponent<T>(Incumbent: boolean, Component: Component<T>) {
