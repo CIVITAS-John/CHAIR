@@ -143,8 +143,8 @@ export class Visualizer {
                 Colorizer = {
                     Colorize: (Node) => Interpolator(Node.Owners.has(Owner) ? 1 : Node.NearOwners.has(Owner) ? 0.55 : 0.1),
                     Examples: { 
-                        "Has an exact code": Interpolator(1),
-                        "Has a close code": Interpolator(1),
+                        "In the codebook": Interpolator(1),
+                        "Has a similar concept": Interpolator(0.55),
                         "Not included": "#999999"
                     }
                 };
@@ -162,8 +162,8 @@ export class Visualizer {
                     },
                     Examples: { 
                         "Novel: only in this codebook": Interpolator(1),
-                        "Shared: as an exact code": Interpolator(0.7),
-                        "Shared: as a nearby code": Interpolator(0.35),
+                        "Shared: in the codebook": Interpolator(0.7),
+                        "Shared: has a similar concept": Interpolator(0.35),
                         "Not included": "#999999"
                     }
                 };
@@ -179,14 +179,14 @@ export class Visualizer {
     }
     // Node events
     /** NodeOver: Handle the mouse-over event on a node. */
-    public NodeOver<T>(Event: Event, Node: Node<T>) {
+    private NodeOver<T>(Event: Event, Node: Node<T>) {
         SetClassForNode(Node.ID, "hovering", true);
         SetClassForLinks(Node.ID, "hovering", true);
         if (!this.GetStatus().ChosenNodes.includes(Node))
             this.TriggerChosenCallback(Node, true);
     }
     /** NodeOut: Handle the mouse-out event on a node. */
-    public NodeOut<T>(Event: Event, Node: Node<T>) {
+    private NodeOut<T>(Event: Event, Node: Node<T>) {
         SetClassForNode(Node.ID, "hovering", false);
         SetClassForLinks(Node.ID, "hovering", false);
         if (!this.GetStatus().ChosenNodes.includes(Node))
@@ -238,14 +238,26 @@ export class Visualizer {
     }
     // Component events
     /** ComponentOver: Handle the mouse-over event on a component. */
-    public ComponentOver<T>(Event: Event, Component: Component<T>) {
+    private ComponentOver<T>(Event: Event, Component: Component<T>) {
         SetClassForComponent(Component, "hovering", true);
     }
     /** ComponentOut: Handle the mouse-out event on a component. */
-    public ComponentOut<T>(Event: Event, Component: Component<T>) {
+    private ComponentOut<T>(Event: Event, Component: Component<T>) {
         SetClassForComponent(Component, "hovering", false);
     }
-    // Code graphs
+    // Rendering
+    /** RenderLegends: Render the legends for the visualization. */
+    private RenderLegends(Examples: Record<string, string>) {
+        var Hash = JSON.stringify(Examples);
+        if (this.Legends.data("hash") == Hash) return;
+        this.Legends.empty().data("hash", Hash);
+        for (var Example in Examples) {
+            this.Legends.append(`<div class="legend">
+                <svg width="20" height="20"><circle cx="10" cy="10" r="8" fill="${Examples[Example]}"/></svg>
+                <span>${Example}</span>
+            </div>`);
+        }
+    }
     /** RenderCodes: Render the coding graph to the container. */
     public RenderCodes(Alpha: number) {
         if (Alpha <= 0.001) return;
@@ -259,8 +271,10 @@ export class Visualizer {
                 d3.interpolateViridis((this.Parameters.UseNearOwners ? Node.NearOwners.size : Node.Owners.size) / this.Dataset.Codebooks.length),
             Examples: {}
         };
-        for (var I = 2; I < this.Dataset.Codebooks.length; I++)
+        for (var I = 2; I <= this.Dataset.Codebooks.length; I++)
             DefaultColorizer.Examples[`In${this.Parameters.UseNearOwners ? " (or near)" : ""} ${I - 1} codebooks`] = d3.interpolateViridis(I / this.Dataset.Codebooks.length);
+        if (this.CurrentFilter) DefaultColorizer.Examples["Not included"] = "#999999";
+        this.RenderLegends((this.CurrentColorizer ?? DefaultColorizer).Examples);
         // Render nodes
         var Graph = this.GetStatus<Code>().Graph;
         var AllNodes = this.NodeLayer.selectAll("circle").data(Graph.Nodes);
