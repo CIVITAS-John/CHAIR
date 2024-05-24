@@ -48,6 +48,15 @@ html {
     width: 100%;
     height: 100%;
 }
+/** Legends Styles */
+.visualization .legends {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.5rem 1rem;
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 0.9);
+}
 /** Visualization Styles */
 /* Components */
 .visualization .components text {
@@ -115,4 +124,5 @@ text.hidden:not(.hovering, .chosen) {
 }
 line.hidden:not(.hovering, .chosen) {
     stroke: #999;
+    stroke-opacity: 0.1;
 }

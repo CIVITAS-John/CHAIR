@@ -8,6 +8,14 @@ export interface GraphStatus<T> {
     ChosenNodes: Node<T>[];
 }
 
+/** Colorizer: A colorizer for the graph. */
+export interface Colorizer<T> {
+    /** Colorize: The colorizer function. */
+    Colorize: (Node: Node<T>) => string;
+    /** Examples: The examples of the colorizer. */
+    Examples: Record<string, string>;
+}
+
 /** Graph: A graph. */
 export interface Graph<T> {
     /** Nodes: The nodes in the graph. */

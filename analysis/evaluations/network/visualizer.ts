@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { Code, CodebookComparison } from '../../../utils/schema.js';
-import { Node, Link, Graph, Component, GraphStatus } from './schema.js';
+import { Node, Link, Graph, Component, GraphStatus, Colorizer } from './schema.js';
 import { Parameters, BuildSemanticGraph, FilterNodeByOwner } from './graph.js';
 import type { Cash, CashStatic, Element } from 'cash-dom';
 declare global {
@@ -19,6 +19,8 @@ export class Visualizer {
     private LabelLayer: d3.Selection<SVGGElement, unknown, null, undefined>;
     /** ComponentLayer: The layer for the components. */
     private ComponentLayer: d3.Selection<SVGGElement, unknown, null, undefined>;
+    /** Legends: The legends for the visualization. */
+    private Legends: Cash;
     /** Zoom: The zoom behavior in-use. */
     private Zoom: d3.ZoomBehavior<globalThis.Element, unknown>;
     /** Dataset: The underlying dataset. */
@@ -36,6 +38,7 @@ export class Visualizer {
         this.NodeLayer = Scaler.append("g").attr("class", "nodes");
         this.LabelLayer = Scaler.append("g").attr("class", "labels");
         this.ComponentLayer = Scaler.append("g").attr("class", "components");
+        this.Legends = Container.find(".legends");
         // Zoom support
         this.Zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", (event) => {
             Scaler.attr("transform", event.transform);
@@ -106,11 +109,12 @@ export class Visualizer {
     /** IncumbentFilter: The chosen permenant filter for the visualization. */
     private IncumbentFilter?: (Node: Node<any>) => boolean;
     /** CurrentColorizer: The current colorizer for nodes. */
-    private CurrentColorizer?: (Node: Node<any>) => string;
+    private CurrentColorizer?: Colorizer<any>;
     /** IncumbentColorizer: The chosen permenant colorizer for nodes. */
-    private IncumbentColorizer?: (Node: Node<any>) => string;
+    private IncumbentColorizer?: Colorizer<any>;
     /** SetFilter: Set a filter for the visualization. */
-    public SetFilter<T>(Incumbent: boolean, Name: string = "", Filter?: (Node: Node<T>) => boolean, Colorizer?: (Node: Node<T>) => string): boolean {
+    public SetFilter<T>(Incumbent: boolean, Name: string = "", 
+        Filter?: (Node: Node<T>) => boolean, Colorizer?: Colorizer<T>): boolean {
         if (Incumbent) {
             if (Name == this.IncumbentName) {
                 Filter = undefined;
@@ -130,22 +134,42 @@ export class Visualizer {
     public FilterByOwner<T>(Incumbent: boolean, Owner: number, Colorize: string = "") {
         var Filter = (Node: Node<T>) => FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners || Colorize != "");
         Colorize = Colorize.toLowerCase();
-        var Colorizer = Colorize == "" ? undefined : (Node: Node<T>) => {
-            switch (Colorize) {
-                case "coverage":
-                case "density":
-                    return d3.interpolateCool(Node.Owners.has(Owner) ? 1 : Node.NearOwners.has(Owner) ? 0.55 : 0.1);
-                case "novelty":
-                case "conformity":
-                    var Status = 0;
-                    var Novel = Node.NearOwners!.size == 1 + (Node.Owners.has(0) ? 1 : 0);
-                    if (Node.NearOwners.has(Owner))
-                        Status = Novel ? 1 : Node.Owners.has(Owner) ? 0.7 : 0.35;
-                    return d3.interpolatePlasma(Status);
-                default:
-                    return "#ffffff";
-            }
-        };
+        // Set the colorizer
+        var Colorizer: Colorizer<T> | undefined;
+        switch (Colorize) {
+            case "coverage":
+            case "density":
+                var Interpolator = d3.interpolateCool;
+                Colorizer = {
+                    Colorize: (Node) => Interpolator(Node.Owners.has(Owner) ? 1 : Node.NearOwners.has(Owner) ? 0.55 : 0.1),
+                    Examples: { 
+                        "Has an exact code": Interpolator(1),
+                        "Has a close code": Interpolator(1),
+                        "Not included": "#999999"
+                    }
+                };
+                break;
+            case "novelty":
+            case "conformity":
+                var Interpolator = d3.interpolatePlasma;
+                Colorizer = {
+                    Colorize: (Node) => {
+                        var Status = 0;
+                        var Novel = Node.NearOwners!.size == 1 + (Node.Owners.has(0) ? 1 : 0);
+                        if (Node.NearOwners.has(Owner))
+                            Status = Novel ? 1 : Node.Owners.has(Owner) ? 0.7 : 0.35;
+                        return Interpolator(Status);
+                    },
+                    Examples: { 
+                        "Novel: only in this codebook": Interpolator(1),
+                        "Shared: as an exact code": Interpolator(0.7),
+                        "Shared: as a nearby code": Interpolator(0.35),
+                        "Not included": "#999999"
+                    }
+                };
+                break;
+        }
+        // Set the filter
         return this.SetFilter(Incumbent, `owner-${Owner}-${Colorize}`, Filter, Colorizer);
     }
     /** FilterByComponent: Filter the nodes by their components. */
@@ -228,8 +252,15 @@ export class Visualizer {
         var GetSize = (Node: Node<Code>) => 0.5 * (Math.sqrt(Node.Data.Examples?.length ?? 1));
         // Basic settings
         this.Container.attr("viewBox", "0 0 300 300");
-        // this.Container.attr("width", 200).attr("height", 200);
         this.Zoom.extent([[0, 0], [300, 300]]);
+        // The default colorizer
+        var DefaultColorizer: Colorizer<Code> = {
+            Colorize: (Node) => 
+                d3.interpolateViridis((this.Parameters.UseNearOwners ? Node.NearOwners.size : Node.Owners.size) / this.Dataset.Codebooks.length),
+            Examples: {}
+        };
+        for (var I = 2; I < this.Dataset.Codebooks.length; I++)
+            DefaultColorizer.Examples[`In${this.Parameters.UseNearOwners ? " (or near)" : ""} ${I - 1} codebooks`] = d3.interpolateViridis(I / this.Dataset.Codebooks.length);
         // Render nodes
         var Graph = this.GetStatus<Code>().Graph;
         var AllNodes = this.NodeLayer.selectAll("circle").data(Graph.Nodes);
@@ -243,10 +274,8 @@ export class Visualizer {
                  .on("click", (Event, Node) => this.NodeChosen(Event, Node)), 
             (Update) => Update)
                 // Set the fill color based on the number of owners
-                .attr("fill", (Node) => {
-                    if (this.CurrentColorizer) return this.CurrentColorizer(Node);
-                    return d3.interpolateViridis((this.Parameters.UseNearOwners ? Node.NearOwners.size : Node.Data.Owners!.length) / this.Dataset.Codebooks.length);
-                })
+                .attr("fill", (Node) =>
+                    (this.CurrentColorizer ?? DefaultColorizer).Colorize(Node))
                 // Set the radius based on the number of examples
                 .attr("r", GetSize)
                 .attr("cx", (Node) => Node.x!)
