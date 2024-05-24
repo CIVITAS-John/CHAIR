@@ -268,13 +268,15 @@ export class Visualizer {
         this.Zoom.extent([[0, 0], [300, 300]]);
         // The default colorizer
         var DefaultColorizer: Colorizer<Code> = {
-            Colorize: (Node) => 
-                d3.interpolateViridis((this.Parameters.UseNearOwners ? Node.NearOwners.size : Node.Owners.size) / this.Dataset.Codebooks.length),
+            Colorize: (Node) => {
+                var Existed = this.Parameters.UseNearOwners ? Node.NearOwners.size : Node.Owners.size;
+                return Existed <= 1 ? "#999999" : d3.interpolateViridis(Existed / this.Dataset.Codebooks.length);
+            },
             Examples: {}
         };
         for (var I = 2; I <= this.Dataset.Codebooks.length; I++)
             DefaultColorizer.Examples[`In${this.Parameters.UseNearOwners ? " (or near)" : ""} ${I - 1} codebooks`] = d3.interpolateViridis(I / this.Dataset.Codebooks.length);
-        if (this.CurrentFilter) DefaultColorizer.Examples["Not included"] = "#999999";
+        DefaultColorizer.Examples["Not included"] = "#999999";
         this.RenderLegends((this.CurrentColorizer ?? DefaultColorizer).Examples);
         // Render nodes
         var Graph = this.GetStatus<Code>().Graph;
