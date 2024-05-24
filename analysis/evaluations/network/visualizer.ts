@@ -80,7 +80,7 @@ export class Visualizer {
         });
         this.Status.Graph.Links.forEach(Link => {
             if (this.CurrentFilter)
-                Link.Hidden = !this.CurrentFilter(Link.Source) && !this.CurrentFilter(Link.Target);
+                Link.Hidden = !this.CurrentFilter(Link.Source) || !this.CurrentFilter(Link.Target);
             else Link.Hidden = false;
         });
         this.Status.Graph.Components?.forEach(Component => {
@@ -128,7 +128,7 @@ export class Visualizer {
     }
     /** FilterByOwner: Filter the nodes by their owners. */
     public FilterByOwner<T>(Incumbent: boolean, Owner: number, Colorize: string = "") {
-        var Filter = (Node: Node<T>) => FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners || Colorize == "coverage");
+        var Filter = (Node: Node<T>) => FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners || Colorize != "");
         Colorize = Colorize.toLowerCase();
         var Colorizer = Colorize == "" ? undefined : (Node: Node<T>) => {
             switch (Colorize) {
@@ -138,16 +138,10 @@ export class Visualizer {
                 case "novelty":
                 case "conformity":
                     var Status = 0;
-                    if (this.Parameters.UseNearOwners) {
-                        var Novel = Node.NearOwners!.size == 1 + (Node.Owners.has(0) ? 1 : 0);
-                        if (Node.NearOwners.has(Owner))
-                            Status = Novel ? 1 : 0.55;
-                    } else {
-                        var Novel = Node.Owners!.size == 1;
-                        if (Node.Owners.has(Owner))
-                            Status = Novel ? 1 : 0.55;
-                    }
-                    return d3.interpolateWarm(Status);
+                    var Novel = Node.NearOwners!.size == 1 + (Node.Owners.has(0) ? 1 : 0);
+                    if (Node.NearOwners.has(Owner))
+                        Status = Novel ? 1 : Node.Owners.has(Owner) ? 0.7 : 0.35;
+                    return d3.interpolatePlasma(Status);
                 default:
                     return "#ffffff";
             }
