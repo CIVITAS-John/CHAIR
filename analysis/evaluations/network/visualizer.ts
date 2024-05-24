@@ -395,7 +395,7 @@ function SetClassForComponent<T>(Component: Component<T>, Class: string, Status:
     $(`#component-${Component.ID}`).toggleClass(Class, Status);
     Component.Nodes.forEach(Node => {
         SetClassForNode(Node.ID, Class, Status);
-        SetClassForLinks(Node.ID, Class, Status);
+        SetClassForLinks(Node.ID, Class, Status, (Other) => Component.Nodes.findIndex(Node => Node.ID == Other) != -1);
     });
 }
 
@@ -406,9 +406,17 @@ function SetClassForNode<T>(ID: string, Class: string, Status: boolean) {
 }
 
 /** SetClassForLinks: Set a class for links and linked nodes of a node. */
-function SetClassForLinks<T>(ID: string, Class: string, Status: boolean) {
-    var Links = $(`line[sourceid="${ID}"]`).toggleClass(Class, Status);
-    Links.each((Index, Element) => SetClassForNode($(Element).attr("targetid")!, Class, Status));
-    Links = $(`line[targetid="${ID}"]`).toggleClass(Class, Status);
-    Links.each((Index, Element) => SetClassForNode($(Element).attr("sourceid")!, Class, Status));
+function SetClassForLinks<T>(ID: string, Class: string, Status: boolean, Filter?: (Other: string) => boolean) {
+    var Links = $(`line[sourceid="${ID}"]`);
+    Links.each((Index, Element) => {
+        var Filtered = Filter?.($(Element).attr("targetid")!) ?? true;
+        $(Element).toggleClass(Class, Status && Filtered)
+        SetClassForNode($(Element).attr("targetid")!, Class, Status && Filtered);
+    });
+    Links = $(`line[targetid="${ID}"]`);
+    Links.each((Index, Element) => {
+        var Filtered = Filter?.($(Element).attr("sourceid")!) ?? true;
+        $(Element).toggleClass(Class, Status && Filtered)
+        SetClassForNode($(Element).attr("sourceid")!, Class, Status && Filtered);
+    });
 }

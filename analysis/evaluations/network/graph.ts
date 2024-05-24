@@ -67,9 +67,9 @@ export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Param
     Graph.Components = FindCommunities(Graph.Nodes, Graph.Links, (Node, Links) => {
         return Node.Data.Examples?.length ?? 0 + 
             2 * (Node.NearOwners?.size ?? 0) + 
-            2 * Links.reduce((Sum, Link) => Sum + (Parameter.LinkMaximumDistance - Link.Distance), 0) + 
+            2 * Links.reduce((Sum, Link) => Sum + Math.pow(Parameter.LinkMaximumDistance - Link.Distance, 2), 0) + 
             0.2 * Node.Data.Label.length;
-    }, (Link) => 2 * (Parameter.LinkMaximumDistance - Link.Distance));
+    }, (Link) => 2 * Math.pow(Parameter.LinkMaximumDistance - Link.Distance, 2));
     return Graph;
 }
 
