@@ -334,16 +334,11 @@ export class Visualizer {
                     .text((Node) => Node.Data.Label)
                     .attr("fill", "#e0e0e0")
                     .attr("fill-opacity", 0.7)
-                    .attr("font-size", 1), (Update) => Update)
+                    .attr("font-size", 1.2),
+                (Update) => Update)
                     .attr("x", (Node) => Node.x! + GetSize(Node) + 0.25)
                     .attr("y", (Node) => Node.y! + 0.27)
                     .classed("hidden", (Node) => Node.Hidden ?? false);
-=======
-                    .attr("font-size", 1.2), (Update) => Update)
-                .attr("x", (Node) => Node.x! + GetSize(Node) + 0.25)
-                .attr("y", (Node) => Node.y! + 0.27)
-                .attr("class", (Node) => Node.Hidden ? "hidden" : "");
->>>>>>> f47fe63bf74c87f52b557135f93ea2cba4824095
         }
         // Render links
         var DistanceLerp = d3.scaleSequential().clamp(true)
