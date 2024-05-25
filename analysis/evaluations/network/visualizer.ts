@@ -134,9 +134,10 @@ export class Visualizer {
     /** FilterByOwner: Filter the nodes by their owners. */
     public FilterByOwner<T>(Incumbent: boolean, Owner: number, Colorize: string = "") {
         var Filter = (Node: Node<T>) => FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners || Colorize != "");
-        Colorize = Colorize.toLowerCase();
         // Set the colorizer
+        var Name = `owner-${Owner}-${Colorize}`;
         var Colorizer: Colorizer<T> | undefined;
+        Colorize = Colorize.toLowerCase();
         switch (Colorize) {
             case "coverage":
             case "density":
@@ -337,6 +338,12 @@ export class Visualizer {
                     .attr("x", (Node) => Node.x! + GetSize(Node) + 0.25)
                     .attr("y", (Node) => Node.y! + 0.27)
                     .classed("hidden", (Node) => Node.Hidden ?? false);
+=======
+                    .attr("font-size", 1.2), (Update) => Update)
+                .attr("x", (Node) => Node.x! + GetSize(Node) + 0.25)
+                .attr("y", (Node) => Node.y! + 0.27)
+                .attr("class", (Node) => Node.Hidden ? "hidden" : "");
+>>>>>>> f47fe63bf74c87f52b557135f93ea2cba4824095
         }
         // Render links
         var DistanceLerp = d3.scaleSequential().clamp(true)
