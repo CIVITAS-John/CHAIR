@@ -1,0 +1,390 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes.
+Quotes are independent of each other. Do not attempt to merge codes now.
+Write clear and generalizable criteria for each code, informed by the context, and without unnecessary specifics or examples.
+If necessary, refine labels to keep contexts, but do not repeat yourself.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1. 
+Criteria: {A sentence of criteria 1}
+Label: {A label of code 1}
+...
+32.
+Criteria: {A sentence of criteria 32}
+Label: {A label of code 32}
+---
+~~~
+1.
+Label: invite feedback
+Quotes:
+- If you have any suggestions or requirements, feel free to bring them up.
+- Oh, please message me privately and tell me what you roughly need
+- What problems did you encounter during use?
+
+2.
+Label: taking feedback
+Quotes:
+- We will also update the multimeter and powered solenoid this week. If there are any other features, characteristics, or electronic components you hope to include in the production plan, please leave a message in the group, and we will consider it as much as possible. The previously mentioned feature of saving experiments to the cloud/local is also in the plan. Thank you, everyone!
+- Hmm... I'll add it in the next update. PC updates are usually the fastest, so there will probably be another round this weekend.
+- So, use both?
+
+3.
+Label: resource request
+Quotes:
+- [Emoji] Hello everyone, may I ask where I can download the PC / interactive whiteboard version of Physics Lab?
+- Need the user manual for this software
+- Is there a user manual?
+
+4.
+Label: update announcement
+Quotes:
+- New Features
+Electronic components will be damaged after a short process, rather than immediately.
+Clearing the desktop will now display a confirmation interface.
+Supports undoing the creation and deletion of wires and components.
+Appliances now display the effective value of alternating current.
+(PC) You can now exit the application using the Esc key.
+
+New Components
+Added a sensitive ammeter.
+Added a student power supply (ideal AC/DC power supply).
+
+Adjustments to Component Properties
+Batteries now have adjustable internal resistance and are no longer ideal power sources.
+Incandescent bulbs now have volt-ampere characteristic parameters and are no longer ideal resistors.
+The resistance law experimenter now uses real formulas for calculations, with adjustable parameters.
+Hidden terminal blocks 3 and 4.
+
+Bug Fixes
+Fixed an issue with unit conversion in Editor properties.
+Terminal arrows no longer show jumping animations.
+There may have been calculation errors with certain circuit connections.
+- v1.0.2 - 17/11/29
+# New Features
+Multi-language support: Japanese, German, French.
+Preliminary support for converting circuit components to circuit diagrams.
+
+Support for augmented reality mode on the latest iOS devices.
+More realistic 3D appearance for various meters.
+
+# Update Preview
+
+The next version will provide multimeter and meter zeroing.
+
+The next version will provide AC waveform display functionality.
+
+The next version will provide capacitors and energized solenoids.
+
+# Component Property Adjustments
+Dry cells can now be ideal power sources.
+
+All meters can now switch between ideal/realistic modes.
+
+# Special Tips
+The Esc shortcut key will now minimize the window.
+The Ctrl+E shortcut key can switch between exam and normal modes.
+- We will also update the multimeter and powered solenoid this week. If there are any other features, characteristics, or electronic components you hope to include in the production plan, please leave a message in the group, and we will consider it as much as possible. The previously mentioned feature of saving experiments to the cloud/local is also in the plan. Thank you, everyone!
+
+5.
+Label: update preview
+Quotes:
+- Version 1.0.1 of Physics Lab. It is expected to take another one or two days in the Apple market (waiting for review).
+- Mechanics will have to wait until electromagnetism is figured out; it will take some more time
+- Of course, manual editing will also be allowed, but it might be a bit later
+
+6.
+Label: give rationale to development decision
+Quotes:
+- This belongs to the kind of feature that, once done, will ensure long-term stability... Adding various components is actually simpler
+- It's still better to make the auto-generated one as good as possible
+
+7.
+Label: developer respnse
+Quotes:
+- There will be: multimeter; powered solenoid; semiconductor capacitor; support for conversion to ideal ammeter (more convenient for problem-solving and middle school teaching)
+- We try to design it so that it can be used without additional instructions, or we will provide some prompts when you open it for the first time based on feedback
+- Hmm... I'll add it in the next update. PC updates are usually the fastest, so there will probably be another round this weekend.
+
+8.
+Label: progress update
+Quotes:
+- There will be an update. Submitting to the app store / releasing the Android version next Monday, and releasing the Windows version over the weekend.
+- I saw the group files, thank you.
+- The update is quite large...
+
+9.
+Label: answer about access
+Quotes:
+- You can download Windows in the group files.
+- How to download?
+- Group sharing.
+
+10.
+Label: answer about compatibility
+Quotes:
+- It does not support the XP system.
+- How do you use the PC version?
+- Win7 should be fine.
+
+11.
+Label: technical question
+Quotes:
+- [Emoji] Hello everyone, may I ask where I can download the PC / interactive whiteboard version of Physics Lab?
+- @Morning Tea Moonlight How can I upload a high-definition, uncensored version of this crappy avatar?
+- How do you use the PC version?
+
+12.
+Label: followup question
+Quotes:
+- What problems did you encounter during use?
+- Does the class have internet?
+- Uh... left side or right side
+
+13.
+Label: respond
+Quotes:
+- It seems that local export needs to be supported.
+- You can download Windows in the group files.
+- It does not support the XP system.
+
+14.
+Label: response to question
+Quotes:
+- I taught high school for seven years, and now I've been teaching middle school for eight years.
+- [Image] This one, right?
+- Left side
+
+15.
+Label: clarification
+Quotes:
+- Speaking of which, doesn't that mean every place where numbers are input should have a soft keyboard?
+- But you can't bring it up without touching the input, that's probably the case.
+- What problems did you encounter during use?
+
+16.
+Label: explain intention of question
+Quotes:
+- Mainly, the school is building an information-based school
+- We are working on this part
+
+17.
+Label: question about identity
+Quotes:
+- Haha. Are you a middle school or high school teacher?
+- I'll upload one now... Are you a teacher?
+
+18.
+Label: share knowledge
+Quotes:
+- It does not support the XP system.
+- Group sharing.
+
+19.
+Label: future design plan
+Quotes:
+- Physics mainly focuses on electricity and mechanics; other directions don't have much room for free experiments before high school. In the future, we might do some demonstration experiments based on everyone's needs, but it won't be as open as electricity
+- For electricity, we plan to create a function for simulated experiment assessment; it will add many experimental details, such as zero adjustment (of course, only useful in specific modes, otherwise it would be cumbersome to use regularly)
+- Don't worry, don't worry, it will come, just optimizing the circuit diagram one last time.
+
+20.
+Label: greeting
+Quotes:
+- [Emoji] Hello everyone, may I ask where I can download the PC / interactive whiteboard version of Physics Lab?
+- Hello everyone~ Version 1.01 has been released in the group files, the updates are as follows:
+- Hello everyone~ The development plan and PC download address are in the group announcement.
+
+21.
+Label: user feedback
+Quotes:
+- This is good, I hope it can be very convenient to draw circuit diagrams, and I also hope there is a function to hide the background grid with one click, which is convenient for us teachers to take screenshots for test papers. Currently, there is no software that makes it easy to draw circuit diagrams for exam questions
+- The simulation effect of this software is really good. When I used it in class yesterday, the students were amazed.
+- Thank you all for your support. We will do better!
+
+22.
+Label: elicit feedback
+Quotes:
+- We will also update the multimeter and powered solenoid this week. If there are any other features, characteristics, or electronic components you hope to include in the production plan, please leave a message in the group, and we will consider it as much as possible. The previously mentioned feature of saving experiments to the cloud/local is also in the plan. Thank you, everyone!
+- Consulting the teachers in the group: which type of intersection is used in the circuit diagrams in the current textbooks?
+[Image]
+- If you have any suggestions or requirements, feel free to bring them up.
+
+23.
+Label: reaction to feedback
+Quotes:
+- Hmm... I'll add it in the next update. PC updates are usually the fastest, so there will probably be another round this weekend.
+- Hmm... We will probably prioritize completing the electrical section first, then magnetism, and then other parts.
+
+24.
+Label: community engagement
+Quotes:
+- I taught high school for seven years, and now I've been teaching middle school for eight years.
+- Oh, please message me privately and tell me what you roughly need
+- Haha. Are you a middle school or high school teacher?
+
+25.
+Label: encouraging interaction
+Quotes:
+- We will also update the multimeter and powered solenoid this week. If there are any other features, characteristics, or electronic components you hope to include in the production plan, please leave a message in the group, and we will consider it as much as possible. The previously mentioned feature of saving experiments to the cloud/local is also in the plan. Thank you, everyone!
+- No need to be polite, if you encounter any problems during use, you can directly mention them in the group.
+- When we are ready to start, we will consult everyone in the group
+
+26.
+Label: accepting suggestion
+Quotes:
+- Hmm... I'll add it in the next update. PC updates are usually the fastest, so there will probably be another round this weekend.
+- There will be.
+
+27.
+Label: feature request
+Quotes:
+- First, let's pay homage to the experts, then I'll make a small request. Could you create a dynamic demonstration of mechanical waves and mechanical vibrations, such as the propagation of transverse and longitudinal waves, wave superposition, diffraction, and interference? Also, for optical experiments, it would be great to have optical benches, single slits, double slits, and polarizers to demonstrate optical experiments.
+- This is good, I hope it can be very convenient to draw circuit diagrams, and I also hope there is a function to hide the background grid with one click, which is convenient for us teachers to take screenshots for test papers. Currently, there is no software that makes it easy to draw circuit diagrams for exam questions
+- If there could be an export function, or the ability to save or import experiments, it would be convenient. We could set up the parameters in the office and directly import them in class.
+
+28.
+Label: mention
+Quotes:
+- @Morning Tea Moonlight How can I upload a high-definition, uncensored version of this crappy avatar?
+
+29.
+Label: developer announcement
+Quotes:
+- New Features
+Electronic components will be damaged after a short process, rather than immediately.
+Clearing the desktop will now display a confirmation interface.
+Supports undoing the creation and deletion of wires and components.
+Appliances now display the effective value of alternating current.
+(PC) You can now exit the application using the Esc key.
+
+New Components
+Added a sensitive ammeter.
+Added a student power supply (ideal AC/DC power supply).
+
+Adjustments to Component Properties
+Batteries now have adjustable internal resistance and are no longer ideal power sources.
+Incandescent bulbs now have volt-ampere characteristic parameters and are no longer ideal resistors.
+The resistance law experimenter now uses real formulas for calculations, with adjustable parameters.
+Hidden terminal blocks 3 and 4.
+
+Bug Fixes
+Fixed an issue with unit conversion in Editor properties.
+Terminal arrows no longer show jumping animations.
+There may have been calculation errors with certain circuit connections.
+- Hello everyone~ The development plan and PC download address are in the group announcement.
+
+30.
+Label: seeking community input
+Quotes:
+- Before starting mechanics, we will gather opinions again~ Otherwise, I'm afraid I won't remember everything.
+- If you have any suggestions or requirements, feel free to bring them up.
+
+31.
+Label: "respect to the experts"
+Quotes:
+- First, let's pay homage to the experts, then I'll make a small request. Could you create a dynamic demonstration of mechanical waves and mechanical vibrations, such as the propagation of transverse and longitudinal waves, wave superposition, diffraction, and interference? Also, for optical experiments, it would be great to have optical benches, single slits, double slits, and polarizers to demonstrate optical experiments.
+
+32.
+Label: managing expectations
+Quotes:
+- There will be: multimeter; powered solenoid; semiconductor capacitor; support for conversion to ideal ammeter (more convenient for problem-solving and middle school teaching)
+- We try to design it so that it can be used without additional instructions, or we will provide some prompts when you open it for the first time based on feedback
+- Hmm... I'll add it in the next update. PC updates are usually the fastest, so there will probably be another round this weekend.
+===
+Here are the definitions for each code:
+
+1. Criteria: A request for input or suggestions from the community.
+Label: invite feedback
+
+2. Criteria: A response to user feedback or suggestions.
+Label: taking feedback
+
+3. Criteria: A request for a specific resource or material.
+Label: resource request
+
+4. Criteria: An announcement of new features, updates, or changes to the software.
+Label: update announcement
+
+5. Criteria: A preview of upcoming features or updates.
+Label: update preview
+
+6. Criteria: An explanation for a design or development decision.
+Label: give rationale to development decision
+
+7. Criteria: A response from a developer to a question or concern.
+Label: developer response
+
+8. Criteria: An update on the progress of development or a project.
+Label: progress update
+
+9. Criteria: A response to a question about accessing a resource or feature.
+Label: answer about access
+
+10. Criteria: A response to a question about compatibility with different systems or devices.
+Label: answer about compatibility
+
+11. Criteria: A question about technical aspects of the software or hardware.
+Label: technical question
+
+12. Criteria: A follow-up question or request for clarification.
+Label: followup question
+
+13. Criteria: A response to a question or concern.
+Label: respond
+
+14. Criteria: A response to a question or request for information.
+Label: response to question
+
+15. Criteria: A request for clarification or explanation.
+Label: clarification
+
+16. Criteria: An explanation for the intention or purpose behind a question.
+Label: explain intention of question
+
+17. Criteria: A question about the identity or role of a user.
+Label: question about identity
+
+18. Criteria: Sharing knowledge or information about a topic.
+Label: share knowledge
+
+19. Criteria: A plan or proposal for future development or design.
+Label: future design plan
+
+20. Criteria: A greeting or introduction to the community.
+Label: greeting
+
+21. Criteria: Feedback or opinions from a user about the software or features.
+Label: user feedback
+
+22. Criteria: An attempt to elicit feedback or opinions from the community.
+Label: elicit feedback
+
+23. Criteria: A response to user feedback or opinions.
+Label: reaction to feedback
+
+24. Criteria: An effort to engage with the community or encourage interaction.
+Label: community engagement
+
+25. Criteria: An attempt to encourage interaction or discussion within the community.
+Label: encouraging interaction
+
+26. Criteria: Acceptance or acknowledgement of a suggestion or feedback.
+Label: accepting suggestion
+
+27. Criteria: A request for a new feature or functionality.
+Label: feature request
+
+28. Criteria: A mention or reference to another user or entity.
+Label: mention
+
+29. Criteria: An official announcement from a developer or administrator.
+Label: developer announcement
+
+30. Criteria: A request for input or opinions from the community on a specific topic.
+Label: seeking community input
+
+31. Criteria: An expression of respect or acknowledgement to experts or authorities.
+Label: "respect to the experts"
+
+32. Criteria: A statement managing expectations or setting boundaries.
+Label: managing expectations

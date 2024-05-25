@@ -176,7 +176,7 @@ export class Visualizer {
     /** FilterByComponent: Filter the nodes by their components. */
     public FilterByComponent<T>(Incumbent: boolean, Component: Component<T>) {
         var Filter = (Node: Node<T>) => Component.Nodes.includes(Node);
-        this.SetFilter(Incumbent, `component-${Component.ID}`, Filter);
+        return this.SetFilter(Incumbent, `component-${Component.ID}`, Filter);
     }
     // Node events
     /** NodeOver: Handle the mouse-over event on a node. */
@@ -297,7 +297,7 @@ export class Visualizer {
                 .attr("r", GetSize)
                 .attr("cx", (Node) => Node.x!)
                 .attr("cy", (Node) => Node.y!)
-                .attr("class", (Node) => Node.Hidden ? "hidden" : "");
+                .classed("hidden", (Node) => Node.Hidden ?? false);
         // Render labels
         var AllLabels = this.LabelLayer.selectAll("text").data(Graph.Nodes);
         AllLabels.exit().remove();
@@ -309,9 +309,9 @@ export class Visualizer {
                     .attr("fill", "#e0e0e0")
                     .attr("fill-opacity", 0.7)
                     .attr("font-size", 1), (Update) => Update)
-                .attr("x", (Node) => Node.x! + GetSize(Node) + 0.25)
-                .attr("y", (Node) => Node.y! + 0.27)
-                .attr("class", (Node) => Node.Hidden ? "hidden" : "");
+                    .attr("x", (Node) => Node.x! + GetSize(Node) + 0.25)
+                    .attr("y", (Node) => Node.y! + 0.27)
+                    .classed("hidden", (Node) => Node.Hidden ?? false);
         }
         // Render links
         var DistanceLerp = d3.scaleSequential().clamp(true)
@@ -336,7 +336,7 @@ export class Visualizer {
                 .attr("y1", (Link) => Link.Source.y!)
                 .attr("x2", (Link) => Link.Target.x!)
                 .attr("y2", (Link) => Link.Target.y!)
-                .attr("class", (Link) => Link.Hidden ? "hidden" : "");
+                .classed("hidden", (Link) => Link.Hidden ?? false);
         // Visualize components
         if (Graph.Components) {
             var AllComponents = this.ComponentLayer.selectAll("text").data(Graph.Components);
@@ -344,12 +344,17 @@ export class Visualizer {
             AllComponents.join((Enter) => 
                 Enter.append("text")
                     .attr("id", (Component) => `component-${Component.ID}`)
-                    .attr("font-size", 4)
+                    .attr("font-size", 5)
                     .attr("text-anchor", "middle")
                     .attr("dominant-baseline", "middle")
                     .on("mouseover", (Event, Component) => this.ComponentOver(Event, Component))
                     .on("mouseout", (Event, Component) => this.ComponentOut(Event, Component))
-                    .on("click", (Event, Component) => this.FilterByComponent(true, Component)),
+                    .on("click", (Event, Component) => {
+                        if (this.FilterByComponent(true, Component))
+                            this.Container.transition().duration(500)
+                                .call(this.Zoom.translateTo as any, d3.mean(Component.Nodes.map(Node => Node.x!))!, d3.mean(Component.Nodes.map(Node => Node.y!)))
+                                .transition().call(this.Zoom.scaleTo as any, 3);
+                    }),
                 (Update) => Update)
                     .text((Component) => {
                         if (Component.CurrentNodes && this.CurrentFilter)

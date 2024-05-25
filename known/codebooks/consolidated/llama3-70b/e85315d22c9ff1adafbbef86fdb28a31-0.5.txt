@@ -1,0 +1,48 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes a list of concepts and definitions. Do not attempt to merge codes now.
+Determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable labels and criteria for each code, informed by the context, and without unnecessary specifics or examples.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1. {Repeat the input 1}
+Relationship: {The logical relationship between concepts in input 1}
+Criteria: {A sentence of consolidated criteria for code 1}
+Label: {A consolidated label of code 1}
+...
+3. {Repeat the input 3}
+Relationship: {The logical relationship between concepts in input 3}
+Criteria: {A sentence of consolidated criteria for code 3}
+Label: {A consolidated label of code 3}
+---
+~~~
+1. improvement promises, development promise
+- The quote promises to improve or enhance the application or feature.
+- The quote expresses a commitment or promise to develop a new feature or application.
+
+2. compliment, positive feedback
+- The quote praises or compliments someone or something.
+- The quote expresses satisfaction, praise, or admiration for a feature or system.
+
+3. limitation discussion, limitation of the team
+- The quote explains or discusses the limitations or constraints of a feature or version.
+- Acknowledgments of limitations, constraints, or challenges faced by the development team or community.
+===
+---
+Definitions for each code:
+
+1. improvement promises, development promise
+Relationship: Inclusive (development promise is a specific type of improvement promise)
+Criteria: The quote expresses a commitment to enhance or create a feature or application.
+Label: Development Commitments
+
+2. compliment, positive feedback
+Relationship: Parallel (compliment and positive feedback are related but distinct concepts)
+Criteria: The quote expresses praise, satisfaction, or admiration for a feature, system, or person.
+Label: Appreciation
+
+3. limitation discussion, limitation of the team
+Relationship: Inclusive (limitation of the team is a specific type of limitation discussion)
+Criteria: The quote acknowledges or explains constraints, limitations, or challenges faced by the development team or community.
+Label: Limitations and Constraints
