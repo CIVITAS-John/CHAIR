@@ -191,8 +191,8 @@ export class Visualizer {
             var OtherOwnerCount = Graph.Nodes.filter(Node => !FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners) && FilterNodeByOwner(Node, OtherOwner, this.Parameters.UseNearOwners)).length;
             var NoneCount = Graph.Nodes.filter(Node => !FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners) && !FilterNodeByOwner(Node, OtherOwner, this.Parameters.UseNearOwners)).length;
             Colorizer.Examples[`Both codebooks (${BothCount})`] = d3.schemePaired[10];
-            Colorizer.Examples[`In ${this.Dataset.Names[Owner]} (${OwnerCount})`] = d3.schemePaired[2];
-            Colorizer.Examples[`In ${this.Dataset.Names[OtherOwner]} (${OtherOwnerCount})`] = d3.schemePaired[4];
+            Colorizer.Examples[`Only in ${this.Dataset.Names[Owner]} (${OwnerCount})`] = d3.schemePaired[2];
+            Colorizer.Examples[`Only in ${this.Dataset.Names[OtherOwner]} (${OtherOwnerCount})`] = d3.schemePaired[4];
             Colorizer.Examples[`Not included (${NoneCount})`] = "#999999";
             Name = `owner-${Owner}-vs-${OtherOwner}`;
         }
