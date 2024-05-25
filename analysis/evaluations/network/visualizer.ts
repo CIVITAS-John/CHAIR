@@ -134,9 +134,10 @@ export class Visualizer {
     /** FilterByOwner: Filter the nodes by their owners. */
     public FilterByOwner<T>(Incumbent: boolean, Owner: number, Colorize: string = "") {
         var Filter = (Node: Node<T>) => FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners || Colorize != "");
-        Colorize = Colorize.toLowerCase();
         // Set the colorizer
+        var Name = `owner-${Owner}-${Colorize}`;
         var Colorizer: Colorizer<T> | undefined;
+        Colorize = Colorize.toLowerCase();
         switch (Colorize) {
             case "coverage":
             case "density":
@@ -170,8 +171,33 @@ export class Visualizer {
                 };
                 break;
         }
+        // Special: comparison
+        if (Incumbent && this.IncumbentName.startsWith("owner-") && !this.IncumbentName.startsWith(`owner-${Owner}`)) {
+            // Comparing two owners
+            var Graph = this.GetStatus<T>().Graph;
+            var OtherOwner = parseInt(this.IncumbentName.split("-")[1]);
+            Filter = (Node: Node<T>) => FilterNodeByOwner(Node, Owner, true) || FilterNodeByOwner(Node, OtherOwner, true);
+            Colorizer = {
+                Colorize: (Node) => {
+                    var NearOwner = FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners);
+                    var NearOther = FilterNodeByOwner(Node, OtherOwner, this.Parameters.UseNearOwners);
+                    return NearOwner && NearOther ? d3.schemePaired[10] : NearOwner ? d3.schemePaired[2] : NearOther ? d3.schemePaired[4] : "#999999";
+                },
+                Examples: {}
+            };
+            // Count the nodes and create the legends
+            var BothCount = Graph.Nodes.filter(Node => FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners) && FilterNodeByOwner(Node, OtherOwner, this.Parameters.UseNearOwners)).length;
+            var OwnerCount = Graph.Nodes.filter(Node => !FilterNodeByOwner(Node, OtherOwner, this.Parameters.UseNearOwners) && FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners)).length;
+            var OtherOwnerCount = Graph.Nodes.filter(Node => !FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners) && FilterNodeByOwner(Node, OtherOwner, this.Parameters.UseNearOwners)).length;
+            var NoneCount = Graph.Nodes.filter(Node => !FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners) && !FilterNodeByOwner(Node, OtherOwner, this.Parameters.UseNearOwners)).length;
+            Colorizer.Examples[`Both codebooks (${BothCount})`] = d3.schemePaired[10];
+            Colorizer.Examples[`In ${this.Dataset.Names[Owner]} (${OwnerCount})`] = d3.schemePaired[2];
+            Colorizer.Examples[`In ${this.Dataset.Names[OtherOwner]} (${OtherOwnerCount})`] = d3.schemePaired[4];
+            Colorizer.Examples[`Not included (${NoneCount})`] = "#999999";
+            Name = `owner-${Owner}-vs-${OtherOwner}`;
+        }
         // Set the filter
-        return this.SetFilter(Incumbent, `owner-${Owner}-${Colorize}`, Filter, Colorizer);
+        return this.SetFilter(Incumbent, Name, Filter, Colorizer);
     }
     /** FilterByComponent: Filter the nodes by their components. */
     public FilterByComponent<T>(Incumbent: boolean, Component: Component<T>) {
@@ -308,7 +334,7 @@ export class Visualizer {
                     .text((Node) => Node.Data.Label)
                     .attr("fill", "#e0e0e0")
                     .attr("fill-opacity", 0.7)
-                    .attr("font-size", 1), (Update) => Update)
+                    .attr("font-size", 1.2), (Update) => Update)
                 .attr("x", (Node) => Node.x! + GetSize(Node) + 0.25)
                 .attr("y", (Node) => Node.y! + 0.27)
                 .attr("class", (Node) => Node.Hidden ? "hidden" : "");
