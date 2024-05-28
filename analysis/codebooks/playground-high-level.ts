@@ -32,6 +32,6 @@ await UseLLMs(async () => {
         // Assign categories to codes
         new CategoryAssigner()*/
     ), "Coded Dataset 1", "0~16-gpt-4.5-omni.json", "high-level-2", LLMName, false);
-}, "gpt-3.5-turbo", "llama3-70b", "gpt-4.5-turbo", "gpt-4.5-omni", "claude3-haiku", "claude3-sonnet"); // 
+}, "llama3-70b", "llama3-70b-1", "llama3-70b-2", "llama3-70b-3", "llama3-70b-4", "llama3-70b-5"); // "gpt-3.5-turbo", "llama3-70b", "gpt-4.5-turbo", "gpt-4.5-omni", "claude3-haiku", "claude3-sonnet"
 
 process.exit(0);

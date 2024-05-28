@@ -31,16 +31,22 @@ async function EvaluateConsolidatedResults(SourcePath: string, TaskName: string,
 }
 
 await EvaluateConsolidatedResults(GetMessagesPath("Coded Dataset 1"), 
-    "human vs ai", "human-ai",
+    "llamas vs others high", "llama-other",
     new RefiningReferenceBuilder(),
-    ["human-refined.json", "high-level-2-refined.json", "low-level-3-refined.json"]);
+    ["high-level-2-again-refined.json", "high-level-2-refined.json"]);
 
 process.exit(0);
 
+
 await EvaluateConsolidatedResults(GetMessagesPath("Coded Dataset 1"), 
-    "llamas vs others", "llama-other",
+    "human vs ai again", "human-ai",
     new RefiningReferenceBuilder(),
-    ["low-level-3-again-refined.json", "low-level-3-refined.json"]);
+    ["human-refined.json", "high-level-2-again-refined.json", "low-level-3-again-refined.json"]);
+
+await EvaluateConsolidatedResults(GetMessagesPath("Coded Dataset 1"), 
+    "human vs ai", "human-ai",
+    new RefiningReferenceBuilder(),
+    ["human-refined.json", "high-level-2-refined.json", "low-level-3-refined.json"]);
 
 await EvaluateConsolidatedResults(GetMessagesPath("Coded Dataset 1"), 
     "human vs high-level consolidated", "human-high-level-consolidated",

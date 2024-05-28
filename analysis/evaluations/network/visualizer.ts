@@ -31,7 +31,7 @@ export class Visualizer {
     public constructor(Container: Cash) {
         // Initialize the SVG
         var Root = d3.select(Container.get(0)!)
-            .attr("style", `background-color: ${d3.interpolateViridis(0)}`);
+            .attr("style", `background-color: #290033`);
         this.Container = Root.append("svg");
         var Scaler = this.Container.append("g");
         this.LinkLayer = Scaler.append("g").attr("class", "links");
@@ -181,19 +181,15 @@ export class Visualizer {
                 Colorize: (Node) => {
                     var NearOwner = FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners);
                     var NearOther = FilterNodeByOwner(Node, OtherOwner, this.Parameters.UseNearOwners);
-                    return NearOwner && NearOther ? d3.schemePaired[10] : NearOwner ? d3.schemePaired[2] : NearOther ? d3.schemePaired[4] : "#999999";
+                    return NearOwner && NearOther ? d3.schemeTableau10[5] : NearOwner ? d3.schemeTableau10[2] : NearOther ? d3.schemeTableau10[4] : "#999999";
                 },
                 Examples: {}
             };
             // Count the nodes and create the legends
-            var BothCount = Graph.Nodes.filter(Node => FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners) && FilterNodeByOwner(Node, OtherOwner, this.Parameters.UseNearOwners)).length;
-            var OwnerCount = Graph.Nodes.filter(Node => !FilterNodeByOwner(Node, OtherOwner, this.Parameters.UseNearOwners) && FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners)).length;
-            var OtherOwnerCount = Graph.Nodes.filter(Node => !FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners) && FilterNodeByOwner(Node, OtherOwner, this.Parameters.UseNearOwners)).length;
-            var NoneCount = Graph.Nodes.filter(Node => !FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners) && !FilterNodeByOwner(Node, OtherOwner, this.Parameters.UseNearOwners)).length;
-            Colorizer.Examples[`Both codebooks (${BothCount})`] = d3.schemePaired[10];
-            Colorizer.Examples[`Only in ${this.Dataset.Names[Owner]} (${OwnerCount})`] = d3.schemePaired[2];
-            Colorizer.Examples[`Only in ${this.Dataset.Names[OtherOwner]} (${OtherOwnerCount})`] = d3.schemePaired[4];
-            Colorizer.Examples[`Not included (${NoneCount})`] = "#999999";
+            Colorizer.Examples[`Both codebooks`] = d3.schemeTableau10[5];
+            Colorizer.Examples[`Only in ${this.Dataset.Names[Owner]}`] = d3.schemeTableau10[2];
+            Colorizer.Examples[`Only in ${this.Dataset.Names[OtherOwner]}`] = d3.schemeTableau10[4];
+            Colorizer.Examples[`Not included`] = "#999999";
             Name = `owner-${Owner}-vs-${OtherOwner}`;
         }
         // Set the filter
@@ -274,14 +270,17 @@ export class Visualizer {
     }
     // Rendering
     /** RenderLegends: Render the legends for the visualization. */
-    private RenderLegends(Examples: Record<string, string>) {
-        var Hash = JSON.stringify(Examples);
+    private RenderLegends(Colorizer: Colorizer<any>) {
+        // Check if the legends are up-to-date
+        var Hash = JSON.stringify(Colorizer.Examples);
         if (this.Legends.data("hash") == Hash) return;
         this.Legends.empty().data("hash", Hash);
-        for (var Example in Examples) {
+        // Render the legends
+        for (var Example in Colorizer.Examples) {
+            var Color = Colorizer.Examples[Example];
             this.Legends.append(`<div class="legend">
-                <svg width="20" height="20"><circle cx="10" cy="10" r="8" fill="${Examples[Example]}"/></svg>
-                <span>${Example}</span>
+                <svg width="20" height="20"><circle cx="10" cy="10" r="8" fill="${Color}"/></svg>
+                <span>${Example} (${Colorizer.Results?.[Color].length})</span>
             </div>`);
         }
     }
@@ -303,7 +302,9 @@ export class Visualizer {
         for (var I = 2; I <= this.Dataset.Codebooks.length; I++)
             DefaultColorizer.Examples[`In${this.Parameters.UseNearOwners ? " (or near)" : ""} ${I - 1} codebooks`] = d3.interpolateViridis(I / this.Dataset.Codebooks.length);
         DefaultColorizer.Examples["Not included"] = "#999999";
-        this.RenderLegends((this.CurrentColorizer ?? DefaultColorizer).Examples);
+        // Find the colorizer to use
+        var Colorizer = this.CurrentColorizer ?? DefaultColorizer;
+        Colorizer.Results = {};
         // Render nodes
         var Graph = this.GetStatus<Code>().Graph;
         var AllNodes = this.NodeLayer.selectAll("circle").data(Graph.Nodes);
@@ -317,13 +318,19 @@ export class Visualizer {
                  .on("click", (Event, Node) => this.NodeChosen(Event, Node)), 
             (Update) => Update)
                 // Set the fill color based on the number of owners
-                .attr("fill", (Node) =>
-                    (this.CurrentColorizer ?? DefaultColorizer).Colorize(Node))
+                .attr("fill", (Node) => {
+                    var Color = Colorizer.Colorize(Node);
+                    if (!Colorizer.Results![Color]) Colorizer.Results![Color] = [];
+                    Colorizer.Results![Color].push(Node);
+                    return Color;
+                })
                 // Set the radius based on the number of examples
                 .attr("r", GetSize)
                 .attr("cx", (Node) => Node.x!)
                 .attr("cy", (Node) => Node.y!)
                 .classed("hidden", (Node) => Node.Hidden ?? false);
+        // Render legends
+        this.RenderLegends(Colorizer);
         // Render labels
         var AllLabels = this.LabelLayer.selectAll("text").data(Graph.Nodes);
         AllLabels.exit().remove();

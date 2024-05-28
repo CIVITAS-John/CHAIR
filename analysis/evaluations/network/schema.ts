@@ -14,6 +14,8 @@ export interface Colorizer<T> {
     Colorize: (Node: Node<T>) => string;
     /** Examples: The examples of the colorizer. */
     Examples: Record<string, string>;
+    /** Results: The results of the colorizer. */
+    Results?: Record<string, Node<T>[]>;
 }
 
 /** Graph: A graph. */
