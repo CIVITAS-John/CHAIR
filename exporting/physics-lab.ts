@@ -1,7 +1,8 @@
 import * as File from 'fs';
-import { CutoffDate, DatasetPath } from '../constants';
+import { CutoffDate } from '../constants';
 import * as Mongo from 'mongodb';
 import { Project, Comment, User } from '../utils/schema';
+import { GetDatasetPath } from '../utils/loader';
 
 /** Users: Known users in Physics Lab. */
 const Users = new Map<string, User>();
@@ -180,7 +181,7 @@ async function ExportProjects(Database: Mongo.Db, Collection: Mongo.Collection):
 /** ExportAll: Export everything from the database. */
 async function ExportAll() {
     // Read projects and comments from the database, anonymize user ids, and export into JSON and CSV format.
-    const RootPath = `${DatasetPath}\\Projects and Comments`;
+    const RootPath = `${GetDatasetPath()}\\Projects and Comments`;
     
     // Connect to the localhost
     const Client = new Mongo.MongoClient('mongodb://127.0.0.1:27017');

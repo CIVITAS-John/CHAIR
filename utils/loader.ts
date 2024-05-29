@@ -2,9 +2,15 @@
 import * as File from 'fs';
 import * as Path from 'path';
 import { CodedThread, CodedThreads, Code, CodedItem, Conversation, Message, Participant, Project, AssembleExample } from "./schema.js";
-import { DatasetPath, GetSpeakerName } from '../constants.js';
 import { MergeCodebook } from "../analysis/codebooks/codebooks.js";
 import Excel from 'exceljs';
+import * as dotenv from 'dotenv';
+
+/** GetDatasetPath: Get the dataset path. */
+export function GetDatasetPath(): string {
+    dotenv.config();
+    return process.env.DATASET_PATH ?? "{not set}";
+}
 
 /** LoadProjects: Load the projects. */
 export function LoadProjects(): Project[] {
@@ -56,17 +62,17 @@ export function LoadParticipants(): Participant[] {
 
 /** GetProjectsPath: Get the saving path of certain projects. */
 export function GetProjectsPath(Name: string): string { 
-    return `${DatasetPath}/Projects and Comments/${Name}`; 
+    return `${GetDatasetPath()}/Projects and Comments/${Name}`; 
 }
 
 /** GetMessagesPath: Get the saving path of certain messages. */
 export function GetMessagesPath(Group: string, Name?: string): string { 
-    return `${DatasetPath}/Messaging Groups/${Group}${Name ? "/" + Name : ""}`; 
+    return `${GetDatasetPath()}/Messaging Groups/${Group}${Name ? "/" + Name : ""}`; 
 }
 
 /** GetParticipantsPath: Get the saving path of messaging group participants. */
 export function GetParticipantsPath(Name: string): string { 
-    return `${DatasetPath}/Messaging Groups/${Name}`; 
+    return `${GetDatasetPath()}/Messaging Groups/${Name}`; 
 }
 
 /** LoadCodedConversations: Import coding results from an Excel workbook. */
