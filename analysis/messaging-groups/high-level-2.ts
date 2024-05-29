@@ -1,4 +1,4 @@
-import { ResearchQuestion } from '../../constants.js';
+import { CodingNotes, ResearchQuestion } from '../../constants.js';
 import { CodedThread, Conversation, Message } from '../../utils/schema.js';
 import { BuildMessagePrompt } from './conversations.js';
 import { HighLevelAnalyzerBase } from './high-level.js';
@@ -26,6 +26,7 @@ export class HighLevelAnalyzer2 extends HighLevelAnalyzerBase {
 Hi ChatGPT, I want to analyze the following interaction in one of Physics Lab's online message groups.
 Please give me a codebook to analyze factors within this interaction that could contribute to the research.
 ${ResearchQuestion}
+${CodingNotes}
 For each code, try to find 3 quotes. Always follow the output format:
 ---
 * Summary

@@ -2,7 +2,10 @@
 export const CutoffDate = new Date(2021, 0, 1);
 
 // ResearchQuestion: The research question.
-export const ResearchQuestion = "The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)"
+export const ResearchQuestion = "The research question is: How did Physics Lab's online community emerge?"
+
+// CodingNotes: The notes for qualitative coding.
+export const CodingNotes = `"Designer" refer to people who designed and developed Physics Lab. Code through the lens of learning sciences, human-computer interaction, and participatory design.`
 
 /** GetSpeakerName: Get the name (used in prompts) in place of a speaker. */
 export function GetSpeakerName(ID: string): string {

@@ -1,0 +1,67 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes a list of concepts and definitions. Do not attempt to merge codes now.
+Determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+The research question is: How did Physics Lab's online community emerge? (through the lens of learning sciences, human-computer interaction, and participatory design)
+Always follow the output format:
+---
+Definitions for each code (5 in total):
+1. {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+5. {Repeat the input 5}
+Relationship: {What is logical relationship between concepts in code 5}
+Criteria: {Who did what, and how for code 5}
+Label: {A consolidated label of code 5}
+---
+~~~
+1. response, feedback response, response to request
+- Designer responds to user queries or provides information
+- Designer responds to user feedback or suggestions
+- Designer responds to a user's request or idea.
+
+2. design question, ask a question
+- Questioning or seeking clarification on a design aspect.
+- User or designer asks a question to seek information or clarification.
+
+3. compliment, appreciation of features
+- User expresses praise or admiration for a software or feature.
+- User expresses gratitude or admiration for a feature or functionality.
+
+4. user feedback, user input/feedback/suggestion with justifications
+- User provides feedback or comments on the software or its features
+- Providing feedback or suggestions with justifications for improving the software.
+
+5. humor, humorous response
+- Humorous comments, jokes, or lighthearted remarks.
+- Responding to a humorous comment with amusement.
+===
+---
+Definitions for each code:
+
+1. response, feedback response, response to request
+Relationship: Inclusive (response to request is a type of response)
+Criteria: Designer responds to user queries, feedback, or requests.
+Label: Designer Response
+
+2. design question, ask a question
+Relationship: Parallel (asking a question is a distinct concept from responding)
+Criteria: User or designer asks a question to seek information or clarification.
+Label: Inquiry
+
+3. compliment, appreciation of features
+Relationship: Inclusive (appreciation of features is a type of compliment)
+Criteria: User expresses praise or admiration for a software or feature.
+Label: Appreciation
+
+4. user feedback, user input/feedback/suggestion with justifications
+Relationship: Inclusive (user input and suggestion are types of user feedback)
+Criteria: User provides feedback or comments on the software or its features with justifications.
+Label: User Feedback
+
+5. humor, humorous response
+Relationship: Parallel (humor is a distinct concept from other interactions)
+Criteria: User or designer makes humorous comments, jokes, or lighthearted remarks.
+Label: Humor

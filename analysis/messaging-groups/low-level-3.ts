@@ -1,4 +1,4 @@
-import { ResearchQuestion } from '../../constants.js';
+import { CodingNotes, ResearchQuestion } from '../../constants.js';
 import { MaxItems } from '../../utils/llms.js';
 import { CodedThread, Conversation, Message } from '../../utils/schema.js';
 import { BuildMessagePrompt } from './conversations.js';
@@ -27,7 +27,7 @@ You are an expert in thematic analysis with grounded theory, working on open cod
 Your goal is to identify multiple low-level tags for each message.
 When writing tags, balance between specifics and generalizability across messages.
 ${ResearchQuestion}
-"Designer" is the person who designed and developed Physics Lab.
+${CodingNotes}
 
 Always follow the output format:
 ---

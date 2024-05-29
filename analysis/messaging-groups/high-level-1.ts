@@ -1,4 +1,5 @@
-import { Code, CodedThread, Conversation, Message } from '../../utils/schema.js';
+import { CodingNotes, ResearchQuestion } from '../../constants.js';
+import { CodedThread, Conversation, Message } from '../../utils/schema.js';
 import { BuildMessagePrompt } from './conversations.js';
 import { HighLevelAnalyzerBase } from './high-level.js';
 
@@ -23,7 +24,8 @@ export class HighLevelAnalyzer1 extends HighLevelAnalyzerBase {
         return [`
 Hi ChatGPT, I want to analyze the following interaction in one of Physics Lab's online message groups.
 Please give me a codebook to analyze factors within this interaction that could contribute to the research.
-The research question is: How did Physics Lab's online community emerge?
+${ResearchQuestion}
+${CodingNotes}
 For each code, try to find 3 quotes. Always follow the output format:
 ---
 ## Label of code 1
