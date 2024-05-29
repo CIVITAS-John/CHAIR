@@ -1,8 +1,8 @@
 import * as File from 'fs';
-import { CutoffDate } from '../constants';
+import { CutoffDate } from '../constants.js';
 import * as Mongo from 'mongodb';
-import { Project, Comment, User } from '../utils/schema';
-import { GetDatasetPath } from '../utils/loader';
+import { Project, Comment, User } from '../utils/schema.js';
+import { GetDatasetPath } from '../utils/loader.js';
 
 /** Users: Known users in Physics Lab. */
 const Users = new Map<string, User>();

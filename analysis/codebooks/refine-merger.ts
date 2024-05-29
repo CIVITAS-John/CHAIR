@@ -65,19 +65,19 @@ export class RefineMerger extends DefinitionParser {
 You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
 Each code includes a list of concepts and definitions. Do not attempt to merge codes now.
 Determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
-Write clear and generalizable labels and criteria for each code, informed by the context, and without unnecessary specifics or examples.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
 ${ResearchQuestion}
 Always follow the output format:
 ---
 Definitions for each code (${Codes.length} in total):
 1. {Repeat the input 1}
-Relationship: {The logical relationship between concepts in input 1}
-Criteria: {A sentence of consolidated criteria for code 1}
+Relationship: {What is logical relationship between concepts in code 1}
+Criteria: {Who did what, and how for code 1}
 Label: {A consolidated label of code 1}
 ...
 ${Codes.length}. {Repeat the input ${Codes.length}}
-Relationship: {The logical relationship between concepts in input ${Codes.length}}
-Criteria: {A sentence of consolidated criteria for code ${Codes.length}}
+Relationship: {What is logical relationship between concepts in code ${Codes.length}}
+Criteria: {Who did what, and how for code ${Codes.length}}
 Label: {A consolidated label of code ${Codes.length}}
 ---`.trim(), 
                     Codes.map((Code, Index) => `

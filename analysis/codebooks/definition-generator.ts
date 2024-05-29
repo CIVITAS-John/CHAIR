@@ -84,27 +84,27 @@ export class DefinitionGenerator extends DefinitionParser {
     public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]>{
         // Generate definitions for codes
         return [`
-You are an expert in thematic analysis clarifying the criteria of qualitative codes.
-Quotes are independent of each other. Do not attempt to merge codes now.
-Write clear and generalizable criteria for each code, informed by the context, and without unnecessary specifics or examples.
-If necessary, refine labels to keep contexts, but do not repeat yourself.
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
 ${ResearchQuestion}
 Always follow the output format:
 ---
 Definitions for each code (${Codes.length} in total):
 1. 
-Criteria: {A sentence of criteria 1}
-Label: {A label of code 1}
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
 ...
 ${Codes.length}.
-Criteria: {A sentence of criteria ${Codes.length}}
-Label: {A label of code ${Codes.length}}
+Criteria: {Who did what, and how for code ${Codes.length}}
+Label: {A descriptive label of code ${Codes.length}}
 ---`.trim(), 
             Codes.map((Code, Index) => `
 ${Index + 1}.
 Label: ${Code.Label}
 Quotes:
-${TakeExamples(Code.Examples ?? [], 3).map(Example => `- ${Example}`).join("\n")}`.trim()).join("\n\n")];
+${TakeExamples(Code.Examples ?? [], 5).map(Example => `- ${Example}`).join("\n")}`.trim()).join("\n\n")];
     }
 }
 

@@ -1,6 +1,5 @@
 // Schema for the dataset.
-
-import { GetSpeakerName } from "../constants";
+import { GetSpeakerNameForExample } from "../constants.js";
 
 /** CodedThreads: A collection of qualitatively coded threads. */
 export interface CodedThreads {
@@ -96,7 +95,7 @@ export interface Code {
 
 /** AssembleExample: Assemble an example. */
 export function AssembleExample(ID: string, SenderID: string, Content: string){
-    return `${ID}|||${GetSpeakerName(SenderID)}: ${Content}`;
+    return `${ID}|||${GetSpeakerNameForExample(SenderID)}: ${Content}`;
 }
 
 /** AssembleExampleFromMessage: Assemble an example from a message. */

@@ -8,10 +8,21 @@ export const ResearchQuestion = "The research question is: How did Physics Lab's
 export function GetSpeakerName(ID: string): string {
     switch (ID) {
         case "3":
-            return "Developer-1";
+            return "Designer-1";
         case "8":
-            return "Developer-2";
+            return "Designer-2";
         default:
             return `User-${ID}`;
+    }
+}
+
+/** GetSpeakerNameForExample: Get the name (used in prompts) in place of a speaker for examples. */
+export function GetSpeakerNameForExample(ID: string): string {
+    switch (ID) {
+        case "3":
+        case "8":
+            return "Designer";
+        default:
+            return `User`;
     }
 }
