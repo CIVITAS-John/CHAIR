@@ -280,7 +280,7 @@ export class Visualizer {
             var Color = Colorizer.Examples[Example];
             this.Legends.append(`<div class="legend">
                 <svg width="20" height="20"><circle cx="10" cy="10" r="8" fill="${Color}"/></svg>
-                <span>${Example} (${Colorizer.Results?.[Color].length})</span>
+                <span>${Example} (${Colorizer.Results?.[Color]?.length ?? 0})</span>
             </div>`);
         }
     }

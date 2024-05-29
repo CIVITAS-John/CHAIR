@@ -2,11 +2,12 @@ import * as File from 'fs';
 import { GetMessagesPath } from '../../utils/loader.js';
 import { EnsureFolder, LLMName, RequestLLMWithCache } from '../../utils/llms.js';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
-import { CodedItem, CodedThread, CodedThreads, Conversation, Message } from '../../utils/schema.js';
+import { AssembleExampleFromMessage, CodedItem, CodedThread, CodedThreads, Conversation, Message } from '../../utils/schema.js';
 import { Analyzer, LoopThroughChunks } from '../analyzer.js';
 import { LoadConversationsForAnalysis } from '../../utils/loader.js';
 import { ExportConversationsForCoding } from '../../utils/export.js';
 import { MergeCodebook } from '../codebooks/codebooks.js';
+import { GetSpeakerName } from '../../constants.js';
 
 /** ConversationAnalyzer: The definition of an abstract conversation analyzer. */
 export abstract class ConversationAnalyzer extends Analyzer<Conversation, Message, CodedThread> {
@@ -69,7 +70,7 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
                 Codes.forEach(Code => {
                     var Current = Analysis.Codes[Code] ?? { Label: Code };
                     Current.Examples = Current.Examples ?? [];
-                    var Content = `${Message.ID}|||${Message.Content}`;
+                    var Content = AssembleExampleFromMessage(Message);
                     if (Message.Content !== "" && !Current.Examples.includes(Content)) 
                         Current.Examples.push(Content);
                     Analysis.Codes[Code] = Current;
@@ -89,13 +90,12 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
 /** BuildMessagePrompt: Build a prompt segment with a message. */
 export function BuildMessagePrompt(Message: Message, Coded?: CodedItem): string {
     var Content = Message.Content.replaceAll(/@(.*?)\((\d+)\)([^\w]|$)/g, (Match, Name, ID) => {
-        if (ID == "3") return `@Designer `;
-        return `@P${ID} `;
+        return `@${GetSpeakerName(ID)} `;
     });
     // Replace the image and checkin tags to avoid confusing the LLM
     Content = Content.replace(/\[(Image|Checkin|Emoji)\]/g, (Match, Type) => `[${Type} ${Message.ID}]`);
     // Compose the result
-    var Result = `${Message.SenderID == "3" ? "Designer" : "P" + Message.SenderID}: ${Content}`;
+    var Result = `${GetSpeakerName(Message.SenderID)}: ${Content}`;
     if ((Coded?.Codes?.length ?? 0) > 0) Result += `\nPreliminary tags: ${Coded!.Codes!.join("; ")}`;
     return Result;
 }

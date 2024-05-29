@@ -1,8 +1,8 @@
 // Data loader from exported JSON files
 import * as File from 'fs';
 import * as Path from 'path';
-import { CodedThread, CodedThreads, Code, CodedItem, Conversation, Message, Participant, Project } from "./schema.js";
-import { DatasetPath } from '../constants.js';
+import { CodedThread, CodedThreads, Code, CodedItem, Conversation, Message, Participant, Project, AssembleExample } from "./schema.js";
+import { DatasetPath, GetSpeakerName } from '../constants.js';
 import { MergeCodebook } from "../analysis/codebooks/codebooks.js";
 import Excel from 'exceljs';
 
@@ -86,7 +86,7 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
             Codes: {},
             Items: {},
         };
-        var IDIndex = -1, ContentIndex = -1, CodeIndex = -1;
+        var IDIndex = -1, SpeakerIndex = -1, ContentIndex = -1, CodeIndex = -1;
         // Iterate through the rows
         Sheet.eachRow((Row, RowNumber) => {
             if (Row.number == 1) {
@@ -94,6 +94,7 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
                     var Value = Cell.value;
                     if (Value == "ID") IDIndex = ColumnNumber;
                     if (Value == "Content") ContentIndex = ColumnNumber;
+                    if (Value == "SID") SpeakerIndex = ColumnNumber;
                     if (Value == "Codes") CodeIndex = ColumnNumber;
                 });
                 return;
@@ -103,6 +104,7 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
             var ID = Row.getCell(IDIndex)?.value;
             if (!ID) return;
             var Content = Row.getCell(ContentIndex)?.value?.toString()?.trim() ?? "";
+            var Speaker = Row.getCell(SpeakerIndex)?.value?.toString()?.trim() ?? "";
             ID = ID.toString();
             switch (ID) {
                 case "-1": // Summary
@@ -129,7 +131,7 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
                     for (var Code of Item.Codes!) {
                         var Current: Code = Thread.Codes![Code] ?? { Label: Code, Examples: [] };
                         Thread.Codes![Code] = Current;
-                        var ContentWithID = `${ID}|||${Content}`;
+                        var ContentWithID = AssembleExample(ID, Speaker, Content);
                         if (Content !== "" && !Current.Examples!.includes(ContentWithID))
                             Current.Examples!.push(ContentWithID);
                     }

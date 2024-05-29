@@ -1,4 +1,7 @@
 // Schema for the dataset.
+
+import { GetSpeakerName } from "../constants";
+
 /** CodedThreads: A collection of qualitatively coded threads. */
 export interface CodedThreads {
     /** Threads: The qualitatively coded threads. */
@@ -89,6 +92,16 @@ export interface Code {
     Owners?: number[];
     /** Position: Visual position of the code. Only used in evaluation. */
     Position?: [number, number];
+}
+
+/** AssembleExample: Assemble an example. */
+export function AssembleExample(ID: string, SenderID: string, Content: string){
+    return `${ID}|||${GetSpeakerName(SenderID)}: ${Content}`;
+}
+
+/** AssembleExampleFromMessage: Assemble an example from a message. */
+export function AssembleExampleFromMessage(Message: Message) {
+    return AssembleExample(Message.ID, Message.SenderID, Message.Content);
 }
 
 /** Conversation: A segment of the group chat. */

@@ -1,4 +1,4 @@
-import { Code, CodedThread, Message } from '../../utils/schema.js';
+import { AssembleExampleFromMessage, Code, CodedThread, Message } from '../../utils/schema.js';
 import { ConversationAnalyzer, RevertMessageFormat } from './conversations.js';
 
 /** HighLevelAnalyzerBase: Conduct the first-round high-level coding of the conversations. */
@@ -72,7 +72,7 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                             return Lower.includes(LowerLine) || LowerLine.includes(Lower);
                         });
                     }
-                    var Example = Message ? `${Message.ID}|||${Message.Content}` : Line;
+                    var Example = Message ? AssembleExampleFromMessage(Message) : Line;
                     if (Message && !CurrentCode.Examples.includes(Example))
                         CurrentCode.Examples.push(Example);
                 }
