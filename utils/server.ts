@@ -4,6 +4,7 @@ import * as path from 'path';
 import open, { apps } from 'open';
 import chalk from 'chalk';
 import { EnsureFolder } from './llms.js';
+import { setTimeout } from "timers/promises";
 
 /** CreateServer: Create a local server for interactivity. */
 export function CreateServer(Port: number, BaseDirectory: string, ...DataFiles: string[]): Promise<void> {
@@ -63,7 +64,10 @@ export function CreateServer(Port: number, BaseDirectory: string, ...DataFiles: 
         Server.listen(Port, async () => {
             console.log(`Server running at http://localhost:${Port}/`);
             console.log('Press Ctrl+C to shut down the server.')
-            await open(`http://localhost:${Port}/`, { wait: true, app: { name: apps.chrome } }); // Automatically open the browser when the server starts
+            // Automatically open the browser when the server starts
+            // Wait for 5 seconds or the browser tab to close
+            // On Windows, the browser tab may close prematurely
+            await Promise.all([open(`http://localhost:${Port}/`, { wait: true, app: { name: apps.chrome } }), setTimeout(5000)])
             console.log('The browser tab has closed, shutting down the server.')
             Shutdown();
         });

@@ -34,7 +34,7 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                 // Sometimes, the LLM will return "**{code}**" as the name of the code
                 Line = Line.replace(/^\*\*(.*)\*\*/, "$1").trim();
                 // Sometimes, the LLM will return "Label: {code}" as the name of the code
-                Line = Line.replace(/^Label\:/, "").trim();
+                Line = Line.replace(/^(Label|Code)\s*\d*\:/, "").trim();
                 // Get or create the code
                 Line = Line.toLowerCase();
                 CurrentCode = Analysis.Codes[Line] ?? { Categories: [Category.toLowerCase()], Label: Line };
