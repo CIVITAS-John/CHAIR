@@ -33,6 +33,8 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                 if (Line.match(/^(P(\d+))($|\:)/)) throw new Error(`Invalid code name: ${Line}.`);
                 // Sometimes, the LLM will return "**{code}**" as the name of the code
                 Line = Line.replace(/^\*\*(.*)\*\*/, "$1").trim();
+                // Sometimes, the LLM will return "1. {code}" as the name of the code
+                Line = Line.replace(/^\d+\.*/, "").trim();
                 // Sometimes, the LLM will return "Label: {code}" as the name of the code
                 Line = Line.replace(/^(Label|Code)\s*\d*\:/, "").trim();
                 // Get or create the code

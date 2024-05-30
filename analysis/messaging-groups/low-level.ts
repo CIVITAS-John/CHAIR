@@ -1,3 +1,4 @@
+import { GetSpeakerName } from '../../constants.js';
 import { MaxItems } from '../../utils/llms.js';
 import { CodedThread, Message } from '../../utils/schema.js';
 import { ConversationAnalyzer } from './conversations.js';
@@ -45,8 +46,8 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     if (Message.Content == "[Checkin]") Codes = "Checkin";
                     // Remove the () part
                     Codes = Codes.replace(/\(.*?\)/, "").trim();
-                    // Sometimes the LLM will return "P{number}: {codes}"
-                    Codes = Codes.replace(/^(P(\d+)|Designer|tag(\d+))\:/, "").trim();
+                    // Sometimes the LLM will return "tag{number}: {codes}"
+                    Codes = Codes.replace(/^tag(\d+)\:/, "").trim();
                     // Sometimes the LLM will put the message back
                     if (Codes.startsWith(Message.Content)) Codes = Codes.substring(Message.Content.length).trim();
                     // Sometimes the LLM will return "{codes}"
@@ -69,6 +70,10 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     Codes = Codes.replaceAll(/\s+/g, " ");
                     // Sometimes the LLM will return "{code}: {explanation}
                     if (Codes.match(/^[\w ]+\: /)) Codes = Codes.substring(0, Codes.indexOf(":")).trim();
+                    // Sometimes the LLM will return "{speaker}, {other codes}"
+                    var Speaker = GetSpeakerName(Message.SenderID).toLowerCase();
+                    if (Speaker.includes("-")) Speaker = Speaker.substring(0, Speaker.indexOf("-")).trim();
+                    Codes = Codes.replace(new RegExp(`^${Speaker} *\\d*(;|:)`, "i"), "").trim();
                     Results[parseInt(Match[1])] = Codes;
                 }
             }
