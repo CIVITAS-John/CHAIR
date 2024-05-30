@@ -1,0 +1,66 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for it.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (5 in total):
+1. {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+5. {Repeat the input 5}
+Relationship: {What is logical relationship between concepts in code 5, or N/A if not applicable}
+Criteria: {Who did what, and how for code 5}
+Label: {A consolidated label of code 5}
+---
+~~~
+1. Label: design suggestion, feedback solicitation
+- Users provide suggestions and feedback to designers.
+- Designers solicit suggestions or ideas from users.
+
+2. Label: needs inquiry, requirement gathering
+- Inquiring about user needs or requirements.
+- Requirements or needs are gathered from users
+
+3. Label: greeting, designer greeting
+- Users greet or introduce themselves in the online community.
+- Designers greet or introduce themselves in the online community.
+
+4. Label: release timeline, release process
+- Designer provides information about upcoming updates or releases.
+- Designers discuss or announce the release process or timeline of the software.
+
+5. Label: version update
+- Instances where designers provide information about upcoming updates and new features.
+- Designers share updates about the development process, including visual updates.
+===
+Here are the definitions for each code:
+
+---
+1. Design suggestion, feedback solicitation
+Relationship: Parallel concepts (design suggestion and feedback solicitation are two separate but related concepts)
+Criteria: Users provide suggestions or feedback to designers, or designers solicit suggestions or ideas from users.
+Label: User-Designer Feedback Exchange
+
+2. Needs inquiry, requirement gathering
+Relationship: Inclusion (needs inquiry is a part of requirement gathering)
+Criteria: Designers inquire about user needs or requirements, and gather information from users to inform design decisions.
+Label: User Needs Assessment
+
+3. Greeting, designer greeting
+Relationship: Parallel concepts (greeting and designer greeting are two separate but related concepts)
+Criteria: Users or designers introduce themselves or greet each other in the online community.
+Label: Online Community Introductions
+
+4. Release timeline, release process
+Relationship: Inclusion (release timeline is a part of the release process)
+Criteria: Designers provide information about upcoming updates, releases, or discuss the release process or timeline of the software.
+Label: Software Release Information
+
+5. Version update
+Relationship: N/A (single concept)
+Criteria: Designers provide information about upcoming updates, new features, or share updates about the development process.
+Label: Software Update Announcements

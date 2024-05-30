@@ -1,0 +1,66 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for it.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (5 in total):
+1. {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+5. {Repeat the input 5}
+Relationship: {What is logical relationship between concepts in code 5, or N/A if not applicable}
+Criteria: {Who did what, and how for code 5}
+Label: {A consolidated label of code 5}
+---
+~~~
+1. Label: design refinement, feature optimization
+- Users or designers emphasize the importance of refining or categorizing features or content.
+- A designer optimizes a feature or process, refining its performance or efficiency.
+
+2. Label: design proposal, feature request invitation
+- Designer proposes a new design idea or feature
+- Designers invite users to suggest new features or improvements.
+
+3. Label: user requests
+- Users express specific feature requests or suggestions for the software
+- Responding to user requests or feature suggestions, or requests made by users for the inclusion of specific features or functionalities in the Physics Lab application, or confirmation of requested features in the Physics Lab online community.
+
+4. Label: user input
+- Designers or users provide or request input on the software's development or features
+- Designers respond to user feedback and suggestions
+
+5. Label: teacher identity
+- Users or designers identify themselves as teachers or educators, introducing oneself, including profession, grade level, and experience
+- Designer identifies as a teacher, or a teacher or educator is being addressed or identified.
+===
+Here are the definitions for each code:
+
+---
+1. Label: design refinement, feature optimization
+Relationship: Inclusion (optimization is a type of refinement)
+Criteria: Designers or users refine or optimize features or content to improve performance or efficiency.
+Label: Refining Features
+
+2. Label: design proposal, feature request invitation
+Relationship: Causality (proposal leads to invitation)
+Criteria: Designers propose new design ideas or features and invite users to suggest improvements.
+Label: Soliciting Feedback
+
+3. Label: user requests
+Relationship: N/A
+Criteria: Users express specific feature requests or suggestions for the Physics Lab application.
+Label: User Suggestions
+
+4. Label: user input
+Relationship: Inclusion (requesting input is a type of providing input)
+Criteria: Designers or users provide or request input on the software's development or features, including responding to user feedback and suggestions.
+Label: Collaborative Development
+
+5. Label: teacher identity
+Relationship: N/A
+Criteria: Users or designers identify themselves as teachers or educators, introducing their profession, grade level, and experience.
+Label: Teacher Self-Identification

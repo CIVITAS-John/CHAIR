@@ -1,0 +1,57 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for it.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (4 in total):
+1. {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+4. {Repeat the input 4}
+Relationship: {What is logical relationship between concepts in code 4, or N/A if not applicable}
+Criteria: {Who did what, and how for code 4}
+Label: {A consolidated label of code 4}
+---
+~~~
+1. Label: limitations and constraints, team and prototype limitations
+- Discussions or mentions of limitations or restrictions in the simulation, software, or platform.
+- Acknowledgments or discussions about limitations or constraints in the current prototype.
+
+2. Label: feature preview, new feature introduction
+- Designers preview or hint at upcoming features or updates.
+- Introducing or outlining new features or content
+
+3. Label: platform enhancement, platform evolution
+- Discussion focuses on enhancing or improving specific platforms.
+- Discussions or mentions of differences, versions, or updates between or within platforms.
+
+4. Label: community building
+- A statement that fosters or promotes a sense of community or togetherness, or efforts to build or foster a sense of community or collaboration.
+- Designers or users share knowledge, experiences, and support related to the software.
+===
+Here are the definitions for each code:
+
+---
+1. Limitations and Constraints
+Relationship: Inclusion (limitations include constraints)
+Criteria: Mentions or discussions of limitations or constraints in the simulation, software, or platform, including prototype limitations.
+Label: Limitations and Constraints
+
+2. Feature Preview
+Relationship: N/A
+Criteria: Designers preview or introduce new features or updates, including hints or outlines of upcoming features or content.
+Label: Feature Preview
+
+3. Platform Enhancement
+Relationship: N/A
+Criteria: Discussions or mentions of enhancing or improving specific platforms, including differences, versions, or updates between or within platforms.
+Label: Platform Enhancement
+
+4. Community Building
+Relationship: Inclusion (community building includes knowledge sharing and support)
+Criteria: Statements or efforts that foster or promote a sense of community or togetherness, including sharing knowledge, experiences, and support related to the software.
+Label: Community Building
