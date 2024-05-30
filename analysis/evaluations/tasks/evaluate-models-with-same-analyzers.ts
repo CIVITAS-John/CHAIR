@@ -25,12 +25,12 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
     File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
 }
 
-await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "high-level-1", new RefiningReferenceBuilder());
-await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "high-level-2", new RefiningReferenceBuilder());
-await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "low-level-3", new RefiningReferenceBuilder()); 
+//await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "high-level-1", new RefiningReferenceBuilder());
+//await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "high-level-2", new RefiningReferenceBuilder());
+//await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "low-level-3", new RefiningReferenceBuilder()); 
+await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "human", new RefiningReferenceBuilder()); 
 process.exit(0);
 
-await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "human", new RefiningReferenceBuilder()); 
 await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "high-level-2-again", new RefiningReferenceBuilder());
 await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "human-consolidated", new RefiningReferenceBuilder()); 
 await EvaluateModelsWithSameAnalyzer(GetMessagesPath("Coded Dataset 1"), "high-level-2-consolidated", new RefiningReferenceBuilder()); 

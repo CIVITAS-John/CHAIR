@@ -58,7 +58,7 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                     // Sometimes the LLM will return "Example quote 1: quote"
                     Line = Line.replace(/^(Example quote \d+):/, "").trim();
                     // Sometimes the LLM will return "P{number}: {codes}"
-                    Line = Line.replace(/^(P(\d+)|Designer|tag(\d+))\:/, "").trim();
+                    Line = Line.replace(/^tag(\d+))\:/, "").trim();
                     // Sometimes the LLM will return `"quote" (Author)`
                     Line = Line.replace(/^\"(.*)\"/, "$1").trim();
                     // Sometimes the LLM will return `**{quote}**`

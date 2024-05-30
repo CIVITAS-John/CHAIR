@@ -1,10 +1,13 @@
-// Data loader from exported JSON files
+// Data loader from exported JSON or spreadsheet files
 import * as File from 'fs';
 import * as Path from 'path';
-import { CodedThread, CodedThreads, Code, CodedItem, Conversation, Message, Participant, Project, AssembleExample } from "./schema.js";
-import { MergeCodebook } from "../analysis/codebooks/codebooks.js";
 import Excel from 'exceljs';
 import * as dotenv from 'dotenv';
+import { GetFilesRecursively } from './file.js';
+import commonPathPrefix from 'common-path-prefix';
+import { CodedThread, CodedThreads, Code, CodedItem, Conversation, Message, Participant, Project, AssembleExample, Codebook } from "./schema.js";
+import { MergeCodebook, MergeCodebooks } from "../analysis/codebooks/codebooks.js";
+import chalk from 'chalk';
 
 /** GetDatasetPath: Get the dataset path. */
 export function GetDatasetPath(): string {
@@ -151,4 +154,86 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
     // Merge the codebook
     MergeCodebook(Threads);
     return Threads;
+}
+
+/** LoadCodebooks: Load codebooks from a source. */
+export async function LoadCodebooks(Source: string | string[]): Promise<[Codebook[], string[]]> {
+    // Load potential paths
+    var Sources: string[] = [];
+    if (typeof(Source) == "string") {
+        Sources = GetFilesRecursively(Source);
+    } else {
+        Sources = Source.map(Source => GetFilesRecursively(Source)).flat();
+    }
+    // Remove the in-process codebooks
+    Sources = Sources.filter(Source => !Source.match(/\-(\d)+.xlsx$/g)).sort();
+    // Load the codebooks
+    var Codebooks: Codebook[] = [];
+    var Names: string[] = [];
+    for (var Current of Sources) {
+        var Name = Current.substring(0, Current.length - Path.extname(Current).length);
+        if (Names.includes(Name)) continue;
+        var Codebook = await LoadCodebook(Current);
+        if (Codebook) {
+            Codebooks.push(Codebook);
+            Names.push(Name);
+        }
+    }
+    // Remove commonality
+    Names = RemoveCommonality(Names);
+    console.log(chalk.green(`Statistics: Loaded ${Codebooks.length} codebooks.`));
+    return [Codebooks, Names];
+}
+
+/** LoadCodebooksInGroups: Load codebooks in folders and simply merge them into one group per folder. */
+export async function LoadCodebooksInGroups(Paths: string[]): Promise<[Codebook[], string[]]> {
+    var Codebooks: Codebook[] = [];
+    // Load the codebooks
+    for (var Path of Paths) {
+        var [ CurrentCodebooks, CurrentNames ] = await LoadCodebooks(Path);
+        Codebooks.push(MergeCodebooks(CurrentCodebooks));
+    }
+    // Remove commonality
+    Paths = RemoveCommonality(Paths);
+    return [Codebooks, Paths];
+}
+
+/** LoadCodebook: Load a codebook from a file. */
+export async function LoadCodebook(Current: string): Promise<Codebook | undefined> {
+    if (Current.endsWith(".json")) {
+        var Content = File.readFileSync(`${Current}`, 'utf8');
+        var Parsed = JSON.parse(Content);
+        if (Parsed.Codebook) {
+            console.log(`Loading ${Current} as coded threads.`)
+            return Parsed.Codebook;
+        } else if (!Parsed.Threads) {
+            console.log(`Loading ${Current} as a codebook.`)
+            return Parsed;
+        } else {
+            console.log(`Skipping ${Current} because it is not a codebook.`);
+        }
+    } else if (Current.endsWith(".xlsx")) {
+        if (Current.startsWith("~")) return;
+        console.log(`Loading ${Current} as an Excel workbook.`);
+        return (await LoadCodedConversations(Current)).Codebook!;
+    }
+}
+
+/** RemoveCommonality: Remove common prefixes and suffixes from a list of names. */
+function RemoveCommonality(Names: string[]): string[] {
+    // Find common prefixes and remove them
+    var Prefix = commonPathPrefix(Names, "/");
+    Names = Names.map(Name => Name.substring(Prefix.length));
+    Prefix = commonPathPrefix(Names, "-");
+    Names = Names.map(Name => Name.substring(Prefix.length));
+    // Find common suffixes and remove them
+    var Suffix = Reverse(commonPathPrefix(Names.map(Name => Reverse(Name)), "-"));
+    Names = Names.map(Name => Name.substring(0, Name.length - Suffix.length));
+    Names = Names.map(Name => Name == "" ? "root" : Name);
+    return Names;
+}
+
+/** Reverse: Reverse a string. */
+function Reverse(S: string): string {
+    return [...S].reverse().join("");
 }
