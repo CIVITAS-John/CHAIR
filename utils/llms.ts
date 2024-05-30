@@ -105,15 +105,14 @@ export function InitializeLLM(LLM: string) {
                 maxTokens: MaxOutput,
             });
             break;
-        case "mistral-small":
-            // The cheaper one, 7x8b, does not work even for translation
-            // 2$ / 8$
+        case "mixtral-8x22b":
+            // 2$ / 6$
             MaxInput = 32000;
             MaxOutput = 32000;
             MaxItems = 32;
             Model = (Temp) => new ChatMistralAI({
                 temperature: Temp,
-                modelName: "mistral-small-latest",
+                modelName: "open-mixtral-8x22b",
                 streaming: false,
                 maxTokens: MaxOutput,
             });

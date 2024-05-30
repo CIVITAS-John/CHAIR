@@ -320,6 +320,7 @@ export class Visualizer {
                 // Set the fill color based on the number of owners
                 .attr("fill", (Node) => {
                     var Color = Colorizer.Colorize(Node);
+                    if (Node.Hidden) Color = "#999999";
                     if (!Colorizer.Results![Color]) Colorizer.Results![Color] = [];
                     Colorizer.Results![Color].push(Node);
                     return Color;

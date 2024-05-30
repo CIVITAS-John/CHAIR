@@ -1,0 +1,75 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes a list of concepts and definitions. Do not attempt to merge codes now.
+Determine the logical relationship between concepts. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (6 in total):
+1. {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+6. {Repeat the input 6}
+Relationship: {What is logical relationship between concepts in code 6}
+Criteria: {Who did what, and how for code 6}
+Label: {A consolidated label of code 6}
+---
+~~~
+1. interface design, touch screen design considerations
+- Discussions about the visual and functional aspects of the software's interface.
+- Discussions about designing software features for touch screen devices.
+
+2. usability considerations, usability and context of use
+- Discussions or decisions related to the software's usability or user experience
+- Discussions about how the software is used in different contexts and its usability.
+
+3. feature updates, software development
+- Announcements or discussions regarding new features or updates in the software.
+- Updates on the software's development and upcoming releases.
+
+4. feature explanation, feature development
+- Designers explain new features or changes in the software.
+- Designers provide information about upcoming updates and new features, and introduce new features and improvements.
+
+5. resource access, resource sharing
+- Users access or request access to resources or updates, and designers provide resources or updates to the community.
+- Users share information, images, or resources, and provide support to each other in using and improving the software.
+
+6. co-design
+- Designers involve the community in the design process.
+- Designers and users work together to plan the development of the software, and address issues collaboratively.
+===
+Here are the definitions for each code:
+
+---
+1. interface design, touch screen design considerations
+Relationship: Inclusive (touch screen design considerations is a subset of interface design)
+Criteria: Discussions about the visual and functional aspects of the software's interface, including designing software features for touch screen devices.
+Label: Interface Design
+
+2. usability considerations, usability and context of use
+Relationship: Inclusive (usability and context of use is a subset of usability considerations)
+Criteria: Discussions or decisions related to the software's usability or user experience, including how the software is used in different contexts.
+Label: Usability Considerations
+
+3. feature updates, software development
+Relationship: Parallel (feature updates and software development are related but distinct concepts)
+Criteria: Announcements or discussions regarding new features or updates in the software, including updates on the software's development and upcoming releases.
+Label: Software Development Updates
+
+4. feature explanation, feature development
+Relationship: Inclusive (feature development is a subset of feature explanation)
+Criteria: Designers explain new features or changes in the software, including providing information about upcoming updates and new features, and introducing new features and improvements.
+Label: Feature Explanation
+
+5. resource access, resource sharing
+Relationship: Inclusive (resource sharing is a subset of resource access)
+Criteria: Users access or request access to resources or updates, and designers provide resources or updates to the community, including users sharing information, images, or resources, and providing support to each other.
+Label: Resource Access and Sharing
+
+6. co-design
+Relationship: Standalone concept
+Criteria: Designers involve the community in the design process, and designers and users work together to plan the development of the software, and address issues collaboratively.
+Label: Co-Design
