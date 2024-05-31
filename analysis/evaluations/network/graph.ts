@@ -5,12 +5,11 @@ import * as graphologyLibrary from 'graphology-library';
 
 /** Parameters: The parameters for the visualizer. */
 export class Parameters {
+    // For the semantic graph
     /** LinkMinimumDistance: The minimum distance to create links between codes. */
     public LinkMinimumDistance: number = 0.65;
     /** LinkMaximumDistance: The maximum distance to create links between codes. */
     public LinkMaximumDistance: number = 0.9;
-    /** LinkDistanceDisplay: The desired distance for links. */
-    public LinkDistanceDisplay: number = 10;
     /** ClosestNeighbors: The number of closest neighbors to guarantee links regardless of the threshold. */
     public ClosestNeighbors: number = 3;
     /** UseNearOwners: Whether to visualize the near-owners in place of owners. */
@@ -21,8 +20,9 @@ export class Parameters {
 export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Parameters = new Parameters()): Graph<Code> {
     var Nodes: Node<Code>[] =
         Dataset.Codes.map((Code, Index) => ({ 
-            Type: "Code", ID: Index.toString(), Data: Code, 
+            Type: "Code", ID: Index.toString(), Data: Code, Links: [],
             Owners: new Set(Code.Owners), NearOwners: new Set(Code.Owners), 
+            Size: Math.sqrt(Code.Examples?.length ?? 1),
             x: 0, y: 0 })); // x: Code.Position![0], y: Code.Position![1]
     var Links: Map<string, Link<Code>> = new Map();
     var MaxDistance = 0;
@@ -44,10 +44,16 @@ export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Param
             var Distance = Dataset.Distances[I][J];
             if (Distance > Parameter.LinkMaximumDistance) continue;
             if (!Links.has(LinkID)) {
-                Links.set(LinkID, { 
+                var Link: Link<Code> = { 
                     source: Source, target: Target, 
                     Source: Source, Target: Target, 
-                    Distance: Distance, });
+                    Distance: Distance, 
+                    VisualizeDistance: InverseLerp(Parameter.LinkMinimumDistance, Parameter.LinkMaximumDistance, Distance) };
+                Link.Weight = Math.pow(1 - Link.VisualizeDistance!, 2);
+                Link.VisualizeWeight = Link.Weight;
+                Source.Links.push(Link);
+                Target.Links.push(Link);
+                Links.set(LinkID, Link);
                 if (Distance < Parameter.LinkMinimumDistance) {
                     Source.Data.Owners?.forEach(Owner => Target.NearOwners.add(Owner));
                     Target.Data.Owners?.forEach(Owner => Source.NearOwners.add(Owner));
@@ -67,24 +73,49 @@ export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Param
     Graph.Components = FindCommunities(Graph.Nodes, Graph.Links, (Node, Links) => {
         return Node.Data.Examples?.length ?? 0 + 
             2 * (Node.NearOwners?.size ?? 0) + 
-            2 * Links.reduce((Sum, Link) => Sum + Math.pow(1 - InverseLerp(Parameter.LinkMinimumDistance, Parameter.LinkMaximumDistance, Link.Distance), 3), 0) + 
+            10 * Links.reduce((Sum, Link) => Sum + (Link.Weight ?? 1), 0) + 
             0.2 * Node.Data.Label.length;
-    }, (Link) => Math.pow(1 - InverseLerp(Parameter.LinkMinimumDistance, Parameter.LinkMaximumDistance, Link.Distance), 3));
+    });
+    // Look at every link - and if the source and target are in different components, reduce the weight
+    // Thus, we will have a more close spatial arrangement of the components
+    Graph.Links.forEach(Link => {
+        if (Link.Source.Component == Link.Target.Component) {
+            Link.VisualizeWeight = Link.VisualizeWeight!;
+        } else {
+            if (Link.Source.Links.length <= 1 || Link.Target.Links.length <= 1) return;
+            if (Link.Source.Component !== undefined && Link.Target.Component !== undefined) {
+                Link.VisualizeDistance = Link.VisualizeDistance! * 10;
+                Link.VisualizeWeight = 0.2 * Link.VisualizeWeight! * Link.VisualizeWeight!;
+            }
+        }
+    });
+    // Then, we need to initialize nodes' positions based on components
+    var CountedNodes = 0;
+    var Ratios: number[] = [0];
+    for (var Component of Graph.Components) {
+        Ratios.push((CountedNodes + Component.Nodes.length / 2) / Graph.Nodes.length);
+        CountedNodes += Component.Nodes.length;
+    }
+    Graph.Nodes.forEach(Node => {
+        var Ratio = Ratios[(Node.Component?.ID ?? -1) + 1];
+        Node.x = (Math.cos(Ratio * 2 * Math.PI) - 0.5 + Math.random() * 0.15) * 300,
+        Node.y = (Math.sin(Ratio * 2 * Math.PI) - 0.5 + Math.random() * 0.15) * 300
+    });
     return Graph;
 }
 
 /** Lerp: Linearly interpolate between two values. */
 export function InverseLerp(a: number, b: number, t: number): number {
-    return (t - a) / (b - a);
+    return Math.min(1, Math.max(0, (t - a) / (b - a)));
 }
 
 /** IdentifyComponents: Identify the connected components in the graph. */
 export function IdentifyComponents<T>
     (Nodes: Node<T>[], Links: Link<T>[], 
     NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number,
-    LinkEvaluator: (Link: Link<T>) => number, 
+    LinkEvaluator: (Link: Link<T>) => number = (Link) => Link.Weight ?? 1, 
     MinimumNodes: number = 3,
-    MaximumNodes: number = Math.ceil(Nodes.length / 10)): Component<T>[] {
+    MaximumNodes: number = Math.ceil(Nodes.length / 5)): Component<T>[] {
     var Components: Component<T>[] = [];
     var Visited = new Set<Node<T>>();
     Links = Links.filter((Link) => LinkEvaluator(Link) > 0)
@@ -118,17 +149,17 @@ export function IdentifyComponents<T>
             Components.push(...FindCommunities(Array.from(CurrentNodes), CurrentLinks, NodeEvaluator, LinkEvaluator, MinimumNodes));
         else {
             var ResultNodes = Array.from(CurrentNodes);
-            Components.push({ ID: "", Representative: FindBestNode(ResultNodes, CurrentLinks, NodeEvaluator), Nodes: ResultNodes });
+            Components.push({ ID: -1, Representative: FindBestNode(ResultNodes, CurrentLinks, NodeEvaluator), Nodes: ResultNodes });
         }
     }
-    Components.forEach((Component, Index) => Component.ID = Index.toString());
+    Components.forEach((Component, Index) => Component.ID = Index);
     return Components;
 }
 
 /** FindCommunities: Find the communities in the graph. */
 export function FindCommunities<T>(Nodes: Node<T>[], Links: Link<T>[], 
     NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number,
-    LinkEvaluator: (Link: Link<T>) => number, 
+    LinkEvaluator: (Link: Link<T>) => number = (Link) => Link.Weight ?? 1, 
     MinimumNodes: number = 3): Component<T>[] {
     // Create a graph
     var Weights = new Map<string, number>();
@@ -147,7 +178,7 @@ export function FindCommunities<T>(Nodes: Node<T>[], Links: Link<T>[],
     // Create the components
     var Components: Component<T>[] = new Array(Object.values(Communities).reduce((a, b) => Math.max(a, b), 0) + 1);
     for (var I = 0; I < Components.length; I++) 
-        Components[I] = { ID: "", Nodes: [] };
+        Components[I] = { ID: -1, Nodes: [] };
     for (var Node of Nodes) {
         var Community = Communities[Node.ID];
         Components[Community].Nodes.push(Node);
@@ -157,7 +188,10 @@ export function FindCommunities<T>(Nodes: Node<T>[], Links: Link<T>[],
         Component.Representative = FindBestNode(Component.Nodes, Links, NodeEvaluator);
     // Filter the components
     var Components = Components.filter(Component => Component.Nodes.length >= MinimumNodes);
-    Components.forEach((Component, Index) => Component.ID = Index.toString());
+    Components.forEach((Component, Index) => {
+        Component.ID = Index;
+        Component.Nodes.forEach(Node => Node.Component = Component);
+    });
     return Components;
 }
 

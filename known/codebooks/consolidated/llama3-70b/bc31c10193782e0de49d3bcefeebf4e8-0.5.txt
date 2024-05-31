@@ -1,0 +1,66 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for it.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (5 in total):
+1. {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+5. {Repeat the input 5}
+Relationship: {What is logical relationship between concepts in code 5, or N/A if not applicable}
+Criteria: {Who did what, and how for code 5}
+Label: {A consolidated label of code 5}
+---
+~~~
+1. Label: release plan discussion, release process and timeline
+- Designer discusses the timeline for releasing the platform
+- Discussion of the process, timeline, or stages of releasing new software versions, or discussion of timeline for software updates and releases.
+
+2. Label: access constraints, classroom technology barriers
+- Discussion revolves around restrictions or limitations on internet access in educational settings, including network restrictions, censorship, or schools blocking internet access.
+- Identification of barriers to using technology in the classroom, or constraints or limitations in using technology in a classroom setting
+
+3. Label: interface design, interaction design and considerations
+- Discussion about the design of the user interface.
+- Design considerations or decisions related to user interactions or interfaces, or considerations or discussions about design elements.
+
+4. Label: call to action, encouragement
+- Encouragement or invitation for users to participate or contribute.
+- Designers' encouragement of users to participate, provide feedback, or report issues.
+
+5. Label: community support, need for usage support
+- Community members respond to or offer help to users.
+- Requesting support, guidance, or resources for using the online community or software.
+===
+Here are the definitions for each code:
+
+---
+1. Label: release plan discussion
+Relationship: The concepts are parallel, covering both the discussion of the release process and the timeline for releasing the platform.
+Criteria: Designer discusses the timeline for releasing the platform, including the process, timeline, or stages of releasing new software versions, or discussion of timeline for software updates and releases.
+Label: Release Planning
+
+2. Label: access constraints
+Relationship: The concepts are parallel, covering both access constraints and classroom technology barriers.
+Criteria: Discussion revolves around restrictions or limitations on internet access in educational settings, including network restrictions, censorship, or schools blocking internet access, and identification of barriers to using technology in the classroom.
+Label: Access Barriers
+
+3. Label: interface design considerations
+Relationship: The concepts are parallel, covering both interface design and interaction design considerations.
+Criteria: Discussion about the design of the user interface, including design considerations or decisions related to user interactions or interfaces, or considerations or discussions about design elements.
+Label: Interface Design
+
+4. Label: encouragement and invitation
+Relationship: The concepts are parallel, covering both call to action and encouragement.
+Criteria: Encouragement or invitation for users to participate or contribute, including designers' encouragement of users to participate, provide feedback, or report issues.
+Label: User Engagement
+
+5. Label: community support and guidance
+Relationship: The concepts are parallel, covering both community support and need for usage support.
+Criteria: Community members respond to or offer help to users, including requesting support, guidance, or resources for using the online community or software.
+Label: Community Support

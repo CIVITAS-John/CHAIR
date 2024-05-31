@@ -11,6 +11,8 @@ declare global {
 export class Visualizer {
     /** Container: The container for the visualization. */
     private Container: d3.Selection<SVGSVGElement, unknown, null, undefined>;
+    /** HullLayer: The layer for the hulls. */
+    private HullLayer: d3.Selection<SVGGElement, unknown, null, undefined>;
     /** LinkLayer: The layer for the links. */
     private LinkLayer: d3.Selection<SVGGElement, unknown, null, undefined>;
     /** NodeLayer: The layer for the nodes. */
@@ -34,6 +36,7 @@ export class Visualizer {
             .attr("style", `background-color: #290033`);
         this.Container = Root.append("svg");
         var Scaler = this.Container.append("g");
+        this.HullLayer = Scaler.append("g").attr("class", "hulls");
         this.LinkLayer = Scaler.append("g").attr("class", "links");
         this.NodeLayer = Scaler.append("g").attr("class", "nodes");
         this.LabelLayer = Scaler.append("g").attr("class", "labels");
@@ -42,13 +45,13 @@ export class Visualizer {
         // Zoom support
         this.Zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", (event) => {
             Scaler.attr("transform", event.transform);
-            var ScaleProgress = (1 - Math.max(0, 3 - event.transform.k) / 2);
+            /* var ScaleProgress = (1 - Math.max(0, 3 - event.transform.k) / 2);
             this.LinkLayer.style("opacity", 0.1 + ScaleProgress);
             this.NodeLayer.style("opacity", 0.1 + ScaleProgress);
             this.LabelLayer.style("opacity", 0.1 + ScaleProgress);
             this.ComponentLayer.style("opacity", 2 - ScaleProgress * 2);
             this.ComponentLayer.style("display", ScaleProgress > 0.9 ? "none" : "block");
-            this.ComponentLayer.style("pointer-events", ScaleProgress > 0.6 ? "none" : "all");
+            this.ComponentLayer.style("pointer-events", ScaleProgress > 0.6 ? "none" : "all"); */
         }) as any;
         this.Container.call(this.Zoom as any);
         // Load the data
@@ -293,7 +296,6 @@ export class Visualizer {
     /** RenderCodes: Render the coding graph to the container. */
     public RenderCodes(Alpha: number) {
         if (Alpha <= 0.001) return;
-        var GetSize = (Node: Node<Code>) => 0.5 * (Math.sqrt(Node.Data.Examples?.length ?? 1));
         // Basic settings
         this.Container.attr("viewBox", "0 0 300 300");
         this.Zoom.extent([[0, 0], [300, 300]]);
@@ -332,7 +334,7 @@ export class Visualizer {
                     return Color;
                 })
                 // Set the radius based on the number of examples
-                .attr("r", GetSize)
+                .attr("r", (Node) => (Node as any).Size * 0.5)
                 .attr("cx", (Node) => Node.x!)
                 .attr("cy", (Node) => Node.y!)
                 .classed("hidden", (Node) => Node.Hidden ?? false);
@@ -350,7 +352,7 @@ export class Visualizer {
                     .attr("fill-opacity", 0.7)
                     .attr("font-size", 1.2),
                 (Update) => Update)
-                    .attr("x", (Node) => Node.x! + GetSize(Node) + 0.25)
+                    .attr("x", (Node) => Node.x! + (Node as any).Size * 0.5 + 0.25)
                     .attr("y", (Node) => Node.y! + 0.27)
                     .classed("hidden", (Node) => Node.Hidden ?? false);
         }
@@ -380,7 +382,26 @@ export class Visualizer {
                 .classed("hidden", (Link) => Link.Hidden ?? false);
         // Visualize components
         if (Graph.Components) {
-            var AllComponents = this.ComponentLayer.selectAll("text").data(Graph.Components);
+            // Calculate the hulls
+            Graph.Components.forEach(Component => {
+                var Hull = d3.polygonHull(Component.Nodes.map(Node => [Node.x!, Node.y!]));
+                if (Hull) {
+                    Component.Hull = Hull;
+                    Component.Centroid = d3.polygonCentroid(Hull);
+                } else delete Component.Hull;
+            });
+            var Components = Graph.Components.filter(Component => Component.Hull);
+            var AllHulls = this.HullLayer.selectAll("path").data(Components);
+            AllHulls.exit().remove();
+            AllHulls.join((Enter) => 
+                Enter.append("path")
+                     .attr("fill", "none")
+                     .attr("stroke", (Component) => d3.schemeTableau10[Component.ID])
+                     .attr("stroke-width", 0.1), 
+                (Update) => Update)
+                    .attr("d", (Component) => `M${Component.Hull!.join("L")}Z`);
+            // Render the component labels
+            var AllComponents = this.ComponentLayer.selectAll("text").data(Components);
             AllComponents.exit().remove();
             AllComponents.join((Enter) => 
                 Enter.append("text")
@@ -407,8 +428,8 @@ export class Visualizer {
                             return d3.interpolateViridis(Component.CurrentNodes.length / Component.Nodes.length);
                         else return "#ffffff";
                     })
-                    .attr("x", (Component) => Component.Representative!.x!)
-                    .attr("y", (Component) => Component.Representative!.y!);
+                    .attr("x", (Component) => Component.Centroid![0])
+                    .attr("y", (Component) => Component.Centroid![1]);
                 // .attr("x", (Component) => d3.mean(Component.Nodes.map(Node => Node.x!))!)
                 // .attr("y", (Component) => d3.mean(Component.Nodes.map(Node => Node.y!))!);
         } else this.ComponentLayer.selectAll("text").remove();
@@ -418,15 +439,17 @@ export class Visualizer {
     private Simulation?: d3.Simulation<d3.SimulationNodeDatum, undefined>;
     /** GenerateLayout: Generate the network layout using a force-based simulation.  */
     public GenerateLayout<T>(Graph: Graph<T>, Renderer: (Alpha: number) => void) {
+        var DistanceScale = Math.max(5, Math.sqrt(Graph.Nodes.length));
         this.Simulation = d3.forceSimulation();
         var ForceLink = d3.forceLink();
         this.Simulation.nodes(Graph.Nodes)
-            .force("expel", d3.forceManyBody().distanceMin(2).distanceMax(15).strength(-200))
-            .force("center", d3.forceCenter().strength(1))
-            .force("link", ForceLink.links(Graph.Links)
+            .force("repulse", d3.forceManyBody().distanceMax(30).strength(-DistanceScale * 4))
+            .force("center", d3.forceCenter().strength(0.01))
+            .force("link", ForceLink.links(Graph.Links.filter(Link => Link.VisualizeWeight! >= 0.1))
                 .id((Node) => Node.index!)
-                .distance((Link) => (Link as any).Distance * this.Parameters.LinkDistanceDisplay)
-                .strength((Link) => Math.pow((this.Parameters.LinkMaximumDistance - (Link as any).Distance) * 2 + 0.1, 3)))
+                .distance((Link) => DistanceScale)
+                .strength((Link) => (Link as any).VisualizeWeight))
+            .force("collide", d3.forceCollide().radius((Node) => (Node as any).Size + 2))
             .on("tick", () => Renderer(this.Simulation!.alpha()));
         this.Simulation.alpha(1).alphaTarget(0).restart();
     }

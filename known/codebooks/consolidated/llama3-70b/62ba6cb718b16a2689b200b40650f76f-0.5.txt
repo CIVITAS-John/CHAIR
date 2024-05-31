@@ -1,0 +1,39 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code. If a concept includes another, use the broader one. If concepts are parallel, try to cover both concepts.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for it.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (2 in total):
+1. {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+2. {Repeat the input 2}
+Relationship: {What is logical relationship between concepts in code 2, or N/A if not applicable}
+Criteria: {Who did what, and how for code 2}
+Label: {A consolidated label of code 2}
+---
+~~~
+1. Label: future plans, development plan
+- Discussing plans or goals for future development or implementation.
+- Plans or discussions about future development, including timelines or milestones.
+
+2. Label: use case description and expansion, user input/feedback/suggestion with justifications
+- Users describe or suggest use cases or scenarios.
+- Users providing input, feedback, or suggestions with justifications or explanations
+===
+---
+Definitions for each code:
+
+1. Label: future plans, development plan
+Relationship: Inclusion (development plan is a type of future plan)
+Criteria: Participants discuss or outline goals, timelines, or milestones for future development or implementation of the online community.
+Label: Future Development Planning
+
+2. Label: use case description and expansion, user input/feedback/suggestion with justifications
+Relationship: Parallel (use case descriptions and user input/feedback/suggestions are related but distinct concepts)
+Criteria: Users provide descriptions or suggestions for use cases or scenarios, and/or offer input, feedback, or suggestions with explanations or justifications.
+Label: User-Generated Ideas and Feedback

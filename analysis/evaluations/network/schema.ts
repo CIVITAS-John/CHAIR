@@ -35,13 +35,17 @@ export interface Graph<T> {
 /** Component: A connected component in the graph. */
 export interface Component<T> {
     /** ID: The unique identifier of the component. */
-    ID: string;
+    ID: number;
     /** Representative: The representative node of the component. */
     Representative?: Node<T>;
     /** Nodes: The nodes in the component. */
     Nodes: Node<T>[];
     /** CurrentNodes: The current nodes in the component. */
     CurrentNodes?: Node<T>[];
+    /** Hull: The convex hull of the component. */
+    Hull?: [number, number][];
+    /** Centroid: The centroid of the component. */
+    Centroid?: [number, number];
 }
 
 /** Node: A node in the graph. */
@@ -52,12 +56,18 @@ export interface Node<T> extends d3.SimulationNodeDatum {
     Data: T;
     /** Type: The type of the data. */
     Type: string;
+    /** Size: The visualize size of the node. */
+    Size?: number;
     /** Hidden: Whether the node should be hidden under the current circumstance. */
     Hidden?: boolean;
     /** Owners: Owners of this node. */
     Owners: Set<number>;
     /** NearOwners: Owners that own at least a close neighbor nodes to this node. */
     NearOwners: Set<number>;
+    /** Links: Links connected to this node. */
+    Links: Link<T>[];
+    /** Component: The component that the node belongs to. */
+    Component?: Component<T>;
 }
 
 /** Link: A link between two nodes in the graph. */
@@ -68,6 +78,12 @@ export interface Link<T> extends d3.SimulationLinkDatum<Node<T>> {
     Target: Node<T>;
     /** Distance: The distance of the link. */
     Distance: number;
+    /** VisualizeDistance: The distance of the link for force-directed graphs. */
+    VisualizeDistance?: number;
+    /** Weight: The weight of the link. */
+    Weight?: number;
+    /** VisualizeWeight: The weight of the link for force-directed graphs. */
+    VisualizeWeight?: number;
     /** Hidden: Whether the link should be hidden under the current circumstance. */
     Hidden?: boolean;
 }

@@ -64,6 +64,13 @@ html {
 }
 /** Visualization Styles */
 /* Components */
+.visualization .hulls path {
+    opacity: 0.3;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    
+}
 .visualization .components text {
     stroke: #000000;
     cursor: pointer;
