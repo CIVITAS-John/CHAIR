@@ -50,7 +50,6 @@ export class Visualizer {
             this.ComponentLayer.style("display", ScaleProgress > 0.9 ? "none" : "block");
             this.ComponentLayer.style("pointer-events", ScaleProgress > 0.6 ? "none" : "all");
         }) as any;
-        this.Zoom.scaleTo(this.Container as any, 1);
         this.Container.call(this.Zoom as any);
         // Load the data
         d3.json("network.json").then((Data) => {
@@ -69,6 +68,7 @@ export class Visualizer {
         this.Status = { Graph, ChosenNodes: []};
         this.StatusType = Type;
         this.Rerender(true);
+        this.CenterCamera(0, 0, 1);
     }
     /** GetStatus: Get the status of the visualization. */
     public GetStatus<T>(): GraphStatus<T> {
@@ -100,6 +100,12 @@ export class Visualizer {
         if (Relayout)
             this.GenerateLayout(this.Status.Graph, Renderer);
         else Renderer(0.002);
+    }
+    /** CenterCamera: Center the viewport camera to a position and scale.*/
+    public CenterCamera(X: number, Y: number, Zoom: number) {
+        this.Container.transition().duration(500)
+            .call(this.Zoom.translateTo as any, X, Y)
+            .transition().call(this.Zoom.scaleTo as any, Zoom);
     }
     // Filters
     /** IncumbentName: The name of the incumbent filter. */
@@ -415,10 +421,12 @@ export class Visualizer {
         this.Simulation = d3.forceSimulation();
         var ForceLink = d3.forceLink();
         this.Simulation.nodes(Graph.Nodes)
-            .force("expel", d3.forceManyBody().distanceMin(2).distanceMax(20).strength(-100))
+            .force("expel", d3.forceManyBody().distanceMin(2).distanceMax(15).strength(-200))
+            .force("center", d3.forceCenter().strength(1))
             .force("link", ForceLink.links(Graph.Links)
                 .id((Node) => Node.index!)
-                .distance((Link) => Math.pow((Link as any).Distance, 3) * this.Parameters.LinkDistanceDisplayScale).strength(1))
+                .distance((Link) => (Link as any).Distance * this.Parameters.LinkDistanceDisplay)
+                .strength((Link) => Math.pow((this.Parameters.LinkMaximumDistance - (Link as any).Distance) * 2 + 0.1, 3)))
             .on("tick", () => Renderer(this.Simulation!.alpha()));
         this.Simulation.alpha(1).alphaTarget(0).restart();
     }

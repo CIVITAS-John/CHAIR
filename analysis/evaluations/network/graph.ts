@@ -9,8 +9,8 @@ export class Parameters {
     public LinkMinimumDistance: number = 0.65;
     /** LinkMaximumDistance: The maximum distance to create links between codes. */
     public LinkMaximumDistance: number = 0.9;
-    /** LinkDistanceDisplayScale: The display scale factor for the link distances. */
-    public LinkDistanceDisplayScale: number = 100;
+    /** LinkDistanceDisplay: The desired distance for links. */
+    public LinkDistanceDisplay: number = 10;
     /** ClosestNeighbors: The number of closest neighbors to guarantee links regardless of the threshold. */
     public ClosestNeighbors: number = 3;
     /** UseNearOwners: Whether to visualize the near-owners in place of owners. */
@@ -23,7 +23,7 @@ export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Param
         Dataset.Codes.map((Code, Index) => ({ 
             Type: "Code", ID: Index.toString(), Data: Code, 
             Owners: new Set(Code.Owners), NearOwners: new Set(Code.Owners), 
-            x: Code.Position![0], y: Code.Position![1] }));
+            x: 0, y: 0 })); // x: Code.Position![0], y: Code.Position![1]
     var Links: Map<string, Link<Code>> = new Map();
     var MaxDistance = 0;
     var MinDistance = Number.MAX_VALUE;
@@ -142,7 +142,7 @@ export function FindCommunities<T>(Nodes: Node<T>[], Links: Link<T>[],
     // Find the communities
     var Communities = (graphologyLibrary.communitiesLouvain as any)(Graph, {
         getEdgeWeight: (Edge: any) => Weights.get(Edge)!,
-        resolution: 1.5
+        resolution: 1
     }) as Record<string, number>;
     // Create the components
     var Components: Component<T>[] = new Array(Object.values(Communities).reduce((a, b) => Math.max(a, b), 0) + 1);
