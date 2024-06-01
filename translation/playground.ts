@@ -9,11 +9,11 @@ import { LLMName } from '../utils/llms.js';
 import { TranslateProjects } from './physics-lab.js';
 import { ProcessConversations } from './message-groups.js';
 
-await UpdateTranslations("Coded Dataset 1", "0~16-gpt-4.5-omni.json", "human/0~16-gpt-3.5-turbo-John.xlsx");
+/*await UpdateTranslations("Coded Dataset 1", "0~16-gpt-4.5-omni.json", "human/0~16-gpt-3.5-turbo-John.xlsx");
 await UpdateTranslations("Coded Dataset 1", "0~16-gpt-4.5-omni.json", "human/0~16-gpt-3.5-turbo-Alex.xlsx");
 await UpdateTranslations("Coded Dataset 1", "0~16-gpt-4.5-omni.json", "human/0~16-gpt-3.5-turbo-Lexie.xlsx");
 await UpdateTranslations("Coded Dataset 1", "0~16-gpt-4.5-omni.json", "human/0~16-gpt-3.5-turbo-Lily.xlsx");
-process.exit(0);
+process.exit(0);*/
 
 UseLLM("gpt-4.5-omni");
 // Translate datasets 1, 2

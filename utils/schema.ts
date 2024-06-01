@@ -1,6 +1,22 @@
 // Schema for the dataset.
 import { GetSpeakerNameForExample } from "../constants.js";
 
+/** Dataset: A dataset for the qualitative analysis. */
+export interface Dataset<T extends DataChunk<DataItem>> {
+    /** Title: The title of the dataset. */
+    Title: string;
+    /** Description: The description of the dataset. */
+    Description: string;
+    /** ResearchQuestion: The research question of the dataset. */
+    ResearchQuestion: string;
+    /** CodingNotes: The coding notes of the dataset. */
+    CodingNotes: string;
+    /** Data: The data chunks in the dataset. */
+    Data: Record<string, Record<string, T>>;
+    /** GetSpeakerName: Get the speaker name from the user ID. */
+    GetSpeakerName: (UserID: string) => string;
+}
+
 /** CodedThreads: A collection of qualitatively coded threads. */
 export interface CodedThreads {
     /** Threads: The qualitatively coded threads. */
@@ -38,7 +54,7 @@ export interface CodedItem {
 }
 
 /** CodebookComparison: A package for comparing codebooks. */
-export interface CodebookComparison {
+export interface CodebookComparison<T extends DataChunk<DataItem>> {
     /** Codebooks: The codebooks to compare with. */
     Codebooks: Codebook[];
     /** Names: The names of the codebooks. */
@@ -47,6 +63,8 @@ export interface CodebookComparison {
     Codes: Code[];
     /** Distances: The distance matrix between codes in the first codebook. */
     Distances: number[][];
+    /** Dataset: The underlying dataset of the codebooks. */
+    Dataset: Dataset<T>;
 }
 
 /** Codebook: A codebook for the qualitative codes. */

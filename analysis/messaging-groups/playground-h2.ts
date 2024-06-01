@@ -1,11 +1,10 @@
-import * as File from 'fs';
 import { UseLLMs } from '../../translation/general.js';
-import { ProcessConversations } from './conversations.js';
 import { HighLevelAnalyzer2 } from './high-level-2.js';
+import { ProcessDataset } from '../analyzer.js';
 
 await UseLLMs(async () => {
-    await ProcessConversations(new HighLevelAnalyzer2(), "Coded Dataset 1", "0~16-gpt-4.5-omni.json", false);
-    // await ProcessConversations(new HighLevelAnalyzer2(), "Coded Dataset 2", "0~17-gpt-4.5-omni.json", false);
+    await ProcessDataset(new HighLevelAnalyzer2(), "Coded Dataset 1", false);
+    // await ProcessDataset(new HighLevelAnalyzer2(), "Coded Dataset 2", false);
 }, "gpt-3.5-turbo", "gpt-4.5-omni", "llama3-70b", "claude3-haiku", "claude3-sonnet", "mixtral-8x22b"); // "llama3-70b", "llama3-70b_1", "llama3-70b_2", "llama3-70b_3", "llama3-70b_4", "llama3-70b_5"
 
 process.exit(0);

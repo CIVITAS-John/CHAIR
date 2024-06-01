@@ -177,7 +177,8 @@ export class InfoPanel extends Panel {
     /** FindOriginalCodes: Find the original codes from an owner. */
     private FindOriginalCodes(Source: Code, Owner: number): Code[] {
         var Codebook = this.Visualizer.Dataset.Codebooks[Owner];
-        return Object.values(Codebook).filter(Code => Source.Label == Code.Label || Source.Alternatives?.includes(Code.Label));
+        var Codes = Object.values(Codebook);
+        return Codes.filter(Code => Source.Label == Code.Label || Source.Alternatives?.includes(Code.Label));
     }
     /** FindExampleSources: Find the original sources of an example from an owner. */
     private FindExampleSources(Source: Code, Example: string, Owner: number): Code[] {

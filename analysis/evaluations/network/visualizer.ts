@@ -27,7 +27,7 @@ export class Visualizer {
     /** Zoom: The zoom behavior in-use. */
     private Zoom: d3.ZoomBehavior<globalThis.Element, unknown>;
     /** Dataset: The underlying dataset. */
-    public Dataset: CodebookComparison = {} as any;
+    public Dataset: CodebookComparison<any> = {} as any;
     /** Parameters: The parameters for the visualizer. */
     public Parameters: Parameters = new Parameters();
     /** Constructor: Constructing the manager. */

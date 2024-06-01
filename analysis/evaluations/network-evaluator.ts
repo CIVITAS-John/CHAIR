@@ -1,6 +1,6 @@
 import * as File from 'fs';
 import { EvaluateTexts } from "../../utils/embeddings.js";
-import { Code, Codebook, CodebookComparison, CodebookEvaluation } from "../../utils/schema.js";
+import { Code, Codebook, CodebookComparison, CodebookEvaluation, DataChunk, DataItem, Dataset } from "../../utils/schema.js";
 import { MergeCodebooks } from "../codebooks/codebooks.js";
 import { CodebookEvaluator } from './codebooks.js';
 import { CreateOfflineBundle, CreateServer } from '../../utils/server.js';
@@ -13,7 +13,14 @@ export class NetworkEvaluator extends CodebookEvaluator {
     public Name: string = "network-evaluator";
     /** Visualize: Whether we visualize the evaluation. */
     public Visualize: boolean = false;
-    /** Evaluate: Evaluate a number of codebooks. */
+    /** Dataset: The dataset underlying the codebooks. */
+    public Dataset: Dataset<DataChunk<DataItem>>;
+    /** constructor: Initialize the evaluator. */
+    public constructor(Dataset: Dataset<DataChunk<DataItem>>) {
+        super();
+        this.Dataset = Dataset;
+    }
+    /** Evaluate: Evaluate a number of codebooks. */ 
     public async Evaluate(Codebooks: Codebook[], Names: string[], ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
         var Hash = md5(JSON.stringify(Codebooks));
         // Build the network information
@@ -34,11 +41,12 @@ export class NetworkEvaluator extends CodebookEvaluator {
                 Codes[I].Position = Result.Positions[I];
             }
             // Return in the format
-            var Package: CodebookComparison = {
+            var Package: CodebookComparison<any> = {
                 Codebooks: Codebooks,
                 Names: Names,
                 Codes: Codes,
-                Distances: Result.Distances
+                Distances: Result.Distances,
+                Dataset: this.Dataset
             };
             return Package;
         });

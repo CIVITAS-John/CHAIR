@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 import chalk from 'chalk';
 import Excel from 'exceljs';
 import { GetFilesRecursively, RemoveCommonality } from './file.js';
-import { CodedThread, CodedThreads, Code, CodedItem, Conversation, Message, Participant, Project, AssembleExample, Codebook, DataChunk, DataItem } from "./schema.js";
+import { CodedThread, CodedThreads, Code, CodedItem, Conversation, Message, Participant, Project, AssembleExample, Codebook, DataChunk, DataItem, Dataset } from "./schema.js";
 import { MergeCodebook, MergeCodebooks } from "../analysis/codebooks/codebooks.js";
 
 /** GetDatasetPath: Get the dataset path. */
@@ -37,6 +37,15 @@ export function LoadMessages(Group: string): Message[] {
 /** LoadConversations: Load the conversations. */
 export function LoadConversations(Group: string): Conversation[] {
     return JSON.parse(File.readFileSync(GetMessagesPath(Group, "Conversations.json"), 'utf-8'));
+}
+
+/** LoadDataset: Load a dataset for analysis. */
+export function LoadDataset<T extends DataChunk<DataItem>>(Group: string): Dataset<T> {
+    var Result = eval(`(function() {${File.readFileSync(GetMessagesPath(Group, "configuration.js"), 'utf-8')}})()`) as Dataset<T>;
+    for (var [Key, Value] of Object.entries(Result.Data)) {
+        Result.Data[Key] = LoadChunksForAnalysis<T>(Group, Value as any);
+    }
+    return Result;
 }
 
 /** LoadChunksForAnalysis: Load the chunks for analysis. */

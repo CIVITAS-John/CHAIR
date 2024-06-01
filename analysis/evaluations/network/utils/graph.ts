@@ -5,7 +5,7 @@ import * as graphologyLibrary from 'graphology-library';
 import { InverseLerp, Parameters } from "./utils.js";
 
 /** BuildSemanticGraph: Build a semantic code graph from the dataset. */
-export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Parameters = new Parameters()): Graph<Code> {
+export function BuildSemanticGraph(Dataset: CodebookComparison<any>, Parameter: Parameters = new Parameters()): Graph<Code> {
     var Nodes: Node<Code>[] =
         Dataset.Codes.map((Code, Index) => ({ 
             Type: "Code", ID: Index.toString(), Data: Code, Links: [],
