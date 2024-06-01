@@ -4,6 +4,9 @@ import { Node, Link, Graph, Component, GraphStatus, Colorizer } from './utils/sc
 import { BuildSemanticGraph, FilterNodeByOwner } from './utils/graph.js';
 import { Parameters } from './utils/utils.js';
 import type { Cash, CashStatic, Element } from 'cash-dom';
+import { InfoPanel } from './panels/info-panel.js';
+import { SidePanel } from './panels/side-panel.js';
+import { Dialog } from './panels/dialog.js';
 declare global {
     var $: typeof Cash.prototype.init & CashStatic;
 }
@@ -30,8 +33,18 @@ export class Visualizer {
     public Dataset: CodebookComparison<any> = {} as any;
     /** Parameters: The parameters for the visualizer. */
     public Parameters: Parameters = new Parameters();
+    /** InfoPanel: The information panel for the visualization. */
+    public InfoPanel: InfoPanel;
+    /** SidePanel: The side panel for the visualization. */
+    public SidePanel: SidePanel;
+    /** Dialog: Dialog for the visualization. */
+    public Dialog: Dialog;
     /** Constructor: Constructing the manager. */
     public constructor(Container: Cash) {
+        // Other components
+        this.SidePanel = new SidePanel($(".side-panel"), this);
+        this.InfoPanel = new InfoPanel($(".info-panel"), this);
+        this.Dialog = new Dialog($(".dialog"), this);
         // Initialize the SVG
         var Root = d3.select(Container.get(0)!)
             .attr("style", `background-color: #290033`);

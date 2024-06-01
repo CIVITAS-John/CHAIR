@@ -11,6 +11,12 @@ export abstract class Panel {
     protected Container: Cash;
     /** Dataset: The dataset of the visualizer. */
     protected get Dataset() { return this.Visualizer.Dataset; }
+    /** InfoPanel: The information panel for the visualization. */
+    protected get InfoPanel() { return this.Visualizer.InfoPanel; }
+    /** SidePanel: The side panel for the visualization. */
+    protected get SidePanel() { return this.Visualizer.SidePanel; }
+    /** Dialog: Dialog for the visualization. */
+    protected get Dialog() { return this.Visualizer.Dialog; }
     /** Constructor: Constructing the side panel. */
     public constructor(Container: Cash, Visualizer: Visualizer) {
         this.Visualizer = Visualizer;
