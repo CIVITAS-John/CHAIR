@@ -65,22 +65,29 @@ html {
 /** Visualization Styles */
 /* Components */
 .visualization .hulls path {
-    opacity: 0.3;
     stroke-width: 3;
     stroke-linecap: round;
     stroke-linejoin: round;
-    
+    stroke-opacity: 0.3;
+    fill-opacity: 0.1;
+}
+.visualization .hulls path.hovering {
+    stroke-opacity: 0.4;
+    fill-opacity: 0.2;
 }
 .visualization .components text {
-    stroke: #000000;
     cursor: pointer;
     stroke-width: 0.1;
+    pointer-events: none;
     user-select: none;
     font-weight: bold;
 }
+.visualization .components text:not(.hovering) {
+    stroke: #000000;
+}
 .visualization .components text.hovering {
     fill: #fff;
-    stroke: #cc2200;
+    fill-opacity: 1;
     stroke-width: 0.2;
 }
 /* Labels */
@@ -112,16 +119,19 @@ circle.chosen {
 circle.chosen-neighbor {
     fill-opacity: 1;
 }
-text.chosen,
-text.chosen-neighbor,
-text.hovering {
+.labels text.chosen,
+.labels text.chosen-neighbor,
+.labels text.hovering {
     stroke: #333333;
     stroke-width: 0.05;
     fill-opacity: 1;
     font-weight: bold;
 }
-text.chosen {
+.labels text.chosen {
     fill: #fff;
+}
+line { 
+    pointer-events: none;
 }
 line.chosen,
 line.chosen-neighbor,

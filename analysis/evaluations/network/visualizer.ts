@@ -45,13 +45,13 @@ export class Visualizer {
         // Zoom support
         this.Zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", (event) => {
             Scaler.attr("transform", event.transform);
-            /* var ScaleProgress = (1 - Math.max(0, 3 - event.transform.k) / 2);
-            this.LinkLayer.style("opacity", 0.1 + ScaleProgress);
-            this.NodeLayer.style("opacity", 0.1 + ScaleProgress);
-            this.LabelLayer.style("opacity", 0.1 + ScaleProgress);
+            var ScaleProgress = (1 - Math.max(0, 3 - event.transform.k) / 2);
+            this.LinkLayer.style("opacity", 0.3 + ScaleProgress);
+            // this.NodeLayer.style("opacity", 0.1 + ScaleProgress);
+            this.LabelLayer.style("opacity", ScaleProgress);
             this.ComponentLayer.style("opacity", 2 - ScaleProgress * 2);
             this.ComponentLayer.style("display", ScaleProgress > 0.9 ? "none" : "block");
-            this.ComponentLayer.style("pointer-events", ScaleProgress > 0.6 ? "none" : "all"); */
+            // this.ComponentLayer.style("pointer-events", ScaleProgress > 0.6 ? "none" : "all");
         }) as any;
         this.Container.call(this.Zoom as any);
         // Load the data
@@ -395,9 +395,17 @@ export class Visualizer {
             AllHulls.exit().remove();
             AllHulls.join((Enter) => 
                 Enter.append("path")
-                     .attr("fill", "none")
-                     .attr("stroke", (Component) => d3.schemeTableau10[Component.ID])
-                     .attr("stroke-width", 0.1), 
+                     .attr("id", (Component) => `hull-${Component.ID}`)
+                     .attr("fill", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length))
+                     .attr("stroke", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length))
+                     .on("mouseover", (Event, Component) => this.ComponentOver(Event, Component))
+                     .on("mouseout", (Event, Component) => this.ComponentOut(Event, Component))
+                     .on("click", (Event, Component) => {
+                         if (this.FilterByComponent(true, Component))
+                             this.Container.transition().duration(500)
+                                 .call(this.Zoom.translateTo as any, d3.mean(Component.Nodes.map(Node => Node.x!))!, d3.mean(Component.Nodes.map(Node => Node.y!)))
+                                 .transition().call(this.Zoom.scaleTo as any, 3);
+                     }),
                 (Update) => Update)
                     .attr("d", (Component) => `M${Component.Hull!.join("L")}Z`);
             // Render the component labels
@@ -409,14 +417,7 @@ export class Visualizer {
                     .attr("font-size", 5)
                     .attr("text-anchor", "middle")
                     .attr("dominant-baseline", "middle")
-                    .on("mouseover", (Event, Component) => this.ComponentOver(Event, Component))
-                    .on("mouseout", (Event, Component) => this.ComponentOut(Event, Component))
-                    .on("click", (Event, Component) => {
-                        if (this.FilterByComponent(true, Component))
-                            this.Container.transition().duration(500)
-                                .call(this.Zoom.translateTo as any, d3.mean(Component.Nodes.map(Node => Node.x!))!, d3.mean(Component.Nodes.map(Node => Node.y!)))
-                                .transition().call(this.Zoom.scaleTo as any, 3);
-                    }),
+                    .attr("stroke", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length)),
                 (Update) => Update)
                     .text((Component) => {
                         if (Component.CurrentNodes && this.CurrentFilter)
@@ -443,7 +444,7 @@ export class Visualizer {
         this.Simulation = d3.forceSimulation();
         var ForceLink = d3.forceLink();
         this.Simulation.nodes(Graph.Nodes)
-            .force("repulse", d3.forceManyBody().distanceMax(30).strength(-DistanceScale * 4))
+            .force("repulse", d3.forceManyBody().distanceMax(30).strength(-DistanceScale * 5))
             .force("center", d3.forceCenter().strength(0.01))
             .force("link", ForceLink.links(Graph.Links.filter(Link => Link.VisualizeWeight! >= 0.1))
                 .id((Node) => Node.index!)
@@ -464,9 +465,10 @@ export class Visualizer {
 /** SetClassForComponent: Set a class for a component and its nodes. */
 function SetClassForComponent<T>(Component: Component<T>, Class: string, Status: boolean) {
     $(`#component-${Component.ID}`).toggleClass(Class, Status);
+    $(`#hull-${Component.ID}`).toggleClass(Class, Status);
     Component.Nodes.forEach(Node => {
         SetClassForNode(Node.ID, Class, Status);
-        SetClassForLinks(Node.ID, Class, Status, (Other) => Component.Nodes.findIndex(Node => Node.ID == Other) != -1);
+        // SetClassForLinks(Node.ID, Class, Status, (Other) => Component.Nodes.findIndex(Node => Node.ID == Other) != -1);
     });
 }
 
