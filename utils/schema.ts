@@ -55,6 +55,8 @@ export interface CodedItem {
 
 /** CodebookComparison: A package for comparing codebooks. */
 export interface CodebookComparison<T extends DataChunk<DataItem>> {
+    /** Source: The underlying dataset of the codebooks. */
+    Source: Dataset<T>;
     /** Codebooks: The codebooks to compare with. */
     Codebooks: Codebook[];
     /** Names: The names of the codebooks. */
@@ -63,8 +65,6 @@ export interface CodebookComparison<T extends DataChunk<DataItem>> {
     Codes: Code[];
     /** Distances: The distance matrix between codes in the first codebook. */
     Distances: number[][];
-    /** Dataset: The underlying dataset of the codebooks. */
-    Dataset: Dataset<T>;
 }
 
 /** Codebook: A codebook for the qualitative codes. */

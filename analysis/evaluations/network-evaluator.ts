@@ -46,7 +46,7 @@ export class NetworkEvaluator extends CodebookEvaluator {
                 Names: Names,
                 Codes: Codes,
                 Distances: Result.Distances,
-                Dataset: this.Dataset
+                Source: this.Dataset
             };
             return Package;
         });
