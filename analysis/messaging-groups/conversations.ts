@@ -2,10 +2,10 @@ import * as File from 'fs';
 import { GetMessagesPath } from '../../utils/loader.js';
 import { EnsureFolder, LLMName, RequestLLMWithCache } from '../../utils/llms.js';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
-import { AssembleExampleFromMessage, CodedItem, CodedThread, CodedThreads, Conversation, Message } from '../../utils/schema.js';
+import { AssembleExampleFrom, CodedItem, CodedThread, CodedThreads, Conversation, Message } from '../../utils/schema.js';
 import { Analyzer, LoopThroughChunks } from '../analyzer.js';
-import { LoadConversationsForAnalysis } from '../../utils/loader.js';
-import { ExportConversationsForCoding } from '../../utils/export.js';
+import { LoadChunksForAnalysis } from '../../utils/loader.js';
+import { ExportChunksForCoding } from '../../utils/export.js';
 import { MergeCodebook } from '../codebooks/codebooks.js';
 import { GetSpeakerName } from '../../constants.js';
 
@@ -15,14 +15,14 @@ export abstract class ConversationAnalyzer extends Analyzer<Conversation, Messag
 
 /** ProcessConversations: Load, analyze, and export conversations. */
 export async function ProcessConversations(Analyzer: ConversationAnalyzer, Group: string, ConversationName: string, FakeRequest: boolean = false) {
-    var Conversations = LoadConversationsForAnalysis(Group, ConversationName);
+    var Conversations = LoadChunksForAnalysis<Conversation>(Group, ConversationName);
     // Analyze the conversations
     var Result = await AnalyzeConversations(Analyzer, Conversations, { Threads: {} }, FakeRequest);
     // Write the result into a JSON file
     EnsureFolder(GetMessagesPath(Group, `${Analyzer.Name}`));
     File.writeFileSync(GetMessagesPath(Group, `${Analyzer.Name}/${ConversationName.replace(".json", "")}-${LLMName}.json`), JSON.stringify(Result, null, 4));
     // Write the result into an Excel file
-    var Book = ExportConversationsForCoding(Object.values(Conversations), Result);
+    var Book = ExportChunksForCoding(Object.values(Conversations), Result);
     await Book.xlsx.writeFile(GetMessagesPath(Group, `${Analyzer.Name}/${ConversationName.replace(".json", "")}-${LLMName}.xlsx`));
 }
 
@@ -31,7 +31,7 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
     // Run the prompt over each conversation
     for (const [Key, Conversation] of Object.entries(Conversations)) {
         // Get the messages
-        var Messages = Conversation.AllMessages!.filter(Message => Message.Content != "");
+        var Messages = Conversation.AllItems!.filter(Message => Message.Content != "");
         console.log(`Conversation ${Key}: ${Messages.length} messages`);
         // Initialize the analysis
         var Analysis: CodedThread = Analyzed.Threads[Key];
@@ -46,7 +46,7 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
             // Sync from the previous analysis to keep the overlapping codes
             if (PreviousAnalysis && PreviousAnalysis != Analysis) {
                 for (const [ID, Item] of Object.entries(PreviousAnalysis.Items)) {
-                    if (Conversation.AllMessages?.findIndex(Message => Message.ID == ID) != -1)
+                    if (Conversation.AllItems?.findIndex(Message => Message.ID == ID) != -1)
                         Analysis.Items[ID] = { ID: ID, Codes: Item.Codes};
                 }
             }
@@ -64,13 +64,13 @@ export async function AnalyzeConversations(Analyzer: ConversationAnalyzer, Conve
             for (const [Index, Result] of Object.entries(ItemResults)) {
                 var Message = Currents[parseInt(Index) - 1];
                 var Codes = Result.toLowerCase().split(/,|\||;/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase())
-                    .filter(Code => Code != Message.Content.toLowerCase() && Code.length > 0 && !Code.endsWith(`p${Message.SenderID}`));
+                    .filter(Code => Code != Message.Content.toLowerCase() && Code.length > 0 && !Code.endsWith(`p${Message.UserID}`));
                 // Record the codes from line-level coding
                 Analysis.Items[Message.ID].Codes = Codes;
                 Codes.forEach(Code => {
                     var Current = Analysis.Codes[Code] ?? { Label: Code };
                     Current.Examples = Current.Examples ?? [];
-                    var Content = AssembleExampleFromMessage(Message);
+                    var Content = AssembleExampleFrom(Message);
                     if (Message.Content !== "" && !Current.Examples.includes(Content)) 
                         Current.Examples.push(Content);
                     Analysis.Codes[Code] = Current;
@@ -95,7 +95,7 @@ export function BuildMessagePrompt(Message: Message, Coded?: CodedItem): string 
     // Replace the image and checkin tags to avoid confusing the LLM
     Content = Content.replace(/\[(Image|Checkin|Emoji)\]/g, (Match, Type) => `[${Type} ${Message.ID}]`);
     // Compose the result
-    var Result = `${GetSpeakerName(Message.SenderID)}: ${Content}`;
+    var Result = `${GetSpeakerName(Message.UserID)}: ${Content}`;
     if ((Coded?.Codes?.length ?? 0) > 0) Result += `\nPreliminary tags: ${Coded!.Codes!.join("; ")}`;
     return Result;
 }

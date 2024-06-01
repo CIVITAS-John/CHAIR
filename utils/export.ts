@@ -1,4 +1,4 @@
-import { Code, CodedThread, CodedThreads, Conversation, Message, Project } from "./schema.js";
+import { Code, CodedThread, CodedThreads, Conversation, DataChunk, DataItem, Message, Project } from "./schema.js";
 import Excel from 'exceljs';
 const { Workbook } = Excel;
 
@@ -15,12 +15,12 @@ export function ExportMessages(Messages: Message[], Originals?: Message[]): stri
     for (let I = 0; I < Messages.length; I++) {
         var Message = Messages[I];
         // Write a separator if the time gap is too long
-        if (Message.Conversation && LastConversation != Message.Conversation) {
-            Result += `\n=== ${Message.Conversation}\n\n`;
-            LastConversation = Message.Conversation;
+        if (Message.Chunk && LastConversation != Message.Chunk) {
+            Result += `\n=== ${Message.Chunk}\n\n`;
+            LastConversation = Message.Chunk;
         }
         // Export the message
-        Result += `${Message.ID}. **P${Message.SenderID}, ${Message.Nickname}**`;
+        Result += `${Message.ID}. **P${Message.UserID}, ${Message.Nickname}**`;
         if (Originals !== undefined && Originals[I].Nickname != Message.Nickname)
             Result += ` (${Originals[I].Nickname})`;
         Result += `: ${Message.Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}\n`
@@ -59,12 +59,12 @@ export function ExportProjects(Projects: Project[], Originals?: Project[]): stri
         if (Original && Original.Content != Project.Content) 
             Result += `\n${Original.Content}`;
         // Comments
-        if (Project.Comments) {
+        if (Project.AllItems) {
             Result += `\n\n### Comments`;
-            Project.Comments!.reverse(); // Here I had a little bug, the original exports have comments in reversed order.
-            for (let N = 0; N < Project.Comments.length; N++) {
-                var Comment = Project.Comments[N];
-                var OriginalComment = Original ? Original.Comments![N] : undefined;
+            Project.AllItems!.reverse(); // Here I had a little bug, the original exports have comments in reversed order.
+            for (let N = 0; N < Project.AllItems.length; N++) {
+                var Comment = Project.AllItems[N];
+                var OriginalComment = Original ? Original.AllItems![N] : undefined;
                 Result += `\n${N + 1}. **P${Comment.UserID}, ${Comment.Nickname}**`;
                 if (OriginalComment && Comment.Nickname != OriginalComment.Nickname)
                     Result += ` (${OriginalComment.Nickname})`;
@@ -85,8 +85,8 @@ export function GetRowHeight(Content: string, Width: number): number {
             .reduce((Prev, Curr) => Prev + Curr) * 15 + 3;
 }
 
-/** ExportConversationsForCoding: Export conversations into an Excel workbook for coding. */
-export function ExportConversationsForCoding(Conversations: Conversation[], Analyses: CodedThreads = { Threads: {} }) {
+/** ExportChunksForCoding: Export Chunks into an Excel workbook for coding. */
+export function ExportChunksForCoding<T extends DataItem>(Chunks: DataChunk<T>[], Analyses: CodedThreads = { Threads: {} }) {
     var Book = new Workbook();
     var Consolidated = false;
     var Consolidation = new Map<string, string>();
@@ -98,13 +98,13 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
         }
         Consolidated = Consolidation.size > 0;
     }
-    // Export the conversations
-    for (const Conversation of Conversations) {
-        var Messages = Conversation.AllMessages!;
-        var Analysis = Analyses.Threads[Conversation.ID];
-        if (!Analysis) Analysis = Analyses.Threads[Conversation.ID.substring(2)];
+    // Export the Chunks
+    for (const Chunk of Chunks) {
+        var Messages = Chunk.AllItems!;
+        var Analysis = Analyses.Threads[Chunk.ID];
+        if (!Analysis) Analysis = Analyses.Threads[Chunk.ID.substring(2)];
         // Write into Excel worksheet
-        var Sheet = Book.addWorksheet(`${Conversation.ID}`, {
+        var Sheet = Book.addWorksheet(`${Chunk.ID}`, {
             views:[ { state: 'frozen', xSplit: 1, ySplit: 1 } ]
         });
         // Set the columns
@@ -135,11 +135,11 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
             if (!Item) Item = Analysis?.Items[Message.ID.substring(2)];
             var Columns: Record<string, any> = {
                 ID: Message.ID,
-                CID: Message.Conversation,
-                SID: parseInt(Message.SenderID),
+                CID: Message.Chunk,
+                SID: parseInt(Message.UserID) == -1 ? Message.UserID : parseInt(Message.UserID),
                 Nickname: Message.Nickname,
                 Time: new Date(Date.parse(Message.Time as any)),
-                In: Message.Conversation == Conversation.ID ? "Y" : "N",
+                In: Message.Chunk == Chunk.ID ? "Y" : "N",
                 Content: Message.Content,
                 Codes: Item?.Codes?.join(", ") ?? "",
                 Memo: "",
@@ -150,7 +150,7 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
                 name: 'Lato',
                 family: 4,
                 size: 12,
-                color: { argb:  Message.Conversation == Conversation.ID ? 'FF000000' : 'FF666666' }
+                color: { argb:  Message.Chunk == Chunk.ID ? 'FF000000' : 'FF666666' }
             };
             Row.height = GetRowHeight(Message.Content, 120);
             Row.alignment = { vertical: 'middle' };
@@ -170,9 +170,9 @@ export function ExportConversationsForCoding(Conversations: Conversation[], Anal
                 size: 12
             };
         }
-        AddExtraRow(-1, "Thoughts", Analysis?.Plan ?? "(Optional) Your thoughts before coding the conversation.");
-        AddExtraRow(-2, "Summary", Analysis?.Summary ?? "The summary of the conversation.");
-        AddExtraRow(-3, "Reflection", Analysis?.Reflection ?? "Your reflections after coding the conversation.");
+        AddExtraRow(-1, "Thoughts", Analysis?.Plan ?? "(Optional) Your thoughts before coding the chunk.");
+        AddExtraRow(-2, "Summary", Analysis?.Summary ?? "The summary of the chunk.");
+        AddExtraRow(-3, "Reflection", Analysis?.Reflection ?? "Your reflections after coding the chunk.");
     }
     // Export the codebook
     ExportCodebook(Book, Analyses);

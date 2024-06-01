@@ -1,3 +1,4 @@
+import commonPathPrefix from 'common-path-prefix';
 import * as File from 'fs';
 import * as Path from 'path';
 
@@ -39,4 +40,23 @@ export async function ReadOrBuildCache<T>(CachePath: string, Hash: string, Build
     // Write the hash
     File.writeFileSync(CachePath + ".hash", Hash);
     return Data;
+}
+
+/** RemoveCommonality: Remove common prefixes and suffixes from a list of names. */
+export function RemoveCommonality(Names: string[]): string[] {
+    // Find common prefixes and remove them
+    var Prefix = commonPathPrefix(Names, "/");
+    Names = Names.map(Name => Name.substring(Prefix.length));
+    Prefix = commonPathPrefix(Names, "-");
+    Names = Names.map(Name => Name.substring(Prefix.length));
+    // Find common suffixes and remove them
+    var Suffix = Reverse(commonPathPrefix(Names.map(Name => Reverse(Name)), "-"));
+    Names = Names.map(Name => Name.substring(0, Name.length - Suffix.length));
+    Names = Names.map(Name => Name == "" ? "root" : Name);
+    return Names;
+}
+
+/** Reverse: Reverse a string. */
+export function Reverse(S: string): string {
+    return [...S].reverse().join("");
 }

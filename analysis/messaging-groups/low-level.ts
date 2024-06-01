@@ -71,7 +71,7 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     // Sometimes the LLM will return "{code}: {explanation}
                     if (Codes.match(/^[\w ]+\: /)) Codes = Codes.substring(0, Codes.indexOf(":")).trim();
                     // Sometimes the LLM will return "{speaker}, {other codes}"
-                    var Speaker = GetSpeakerName(Message.SenderID).toLowerCase();
+                    var Speaker = GetSpeakerName(Message.UserID).toLowerCase();
                     if (Speaker.includes("-")) Speaker = Speaker.substring(0, Speaker.indexOf("-")).trim();
                     Codes = Codes.replace(new RegExp(`^${Speaker} *\\d*(;|:|$)`, "i"), "").trim();
                     Results[parseInt(Match[1])] = Codes;

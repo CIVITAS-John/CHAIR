@@ -94,53 +94,61 @@ export interface Code {
 }
 
 /** AssembleExample: Assemble an example. */
-export function AssembleExample(ID: string, SenderID: string, Content: string){
-    return `${ID}|||${GetSpeakerNameForExample(SenderID)}: ${Content}`;
+export function AssembleExample(ID: string, UserID: string, Content: string){
+    return `${ID}|||${GetSpeakerNameForExample(UserID)}: ${Content}`;
 }
 
-/** AssembleExampleFromMessage: Assemble an example from a message. */
-export function AssembleExampleFromMessage(Message: Message) {
-    return AssembleExample(Message.ID, Message.SenderID, Message.Content);
+/** AssembleExampleFrom: Assemble an example from a data item. */
+export function AssembleExampleFrom(Item: DataItem) {
+    return AssembleExample(Item.ID, Item.UserID, Item.Content);
+}
+
+/** DataChunk: A chunk of data. */
+export interface DataChunk<T extends DataItem> {
+    /** ID: The ID of the chunk. */
+    ID: string;
+    /** AllItems: All items in the chunk. */
+    AllItems?: T[];
+    /** Items: The number of items in the chunk. */
+    Items: number;
+    /** Mentions: The participants that this chunk mentioned. */
+    Mentions?: string[];
+}
+
+/** DataItem: An item in a dataset. */
+export interface DataItem {
+    /** ID: The ID of the item. */
+    ID: string;
+    /** UserID: The sender ID of the item. */
+    UserID: string;
+    /** Nickname: The nickname of the sender. */
+    Nickname: string;
+    /** Time: The time the item was sent. */
+    Time: Date;
+    /** Content: The content of the item. */
+    Content: string;
+    /** Chunk: The chunk id of the item. */
+    Chunk?: string;
+    /** Mentions: The participants that this item mentioned. */
+    Mentions?: string[];
 }
 
 /** Conversation: A segment of the group chat. */
-export interface Conversation {
-    /** ID: The ID of the conversation. */
-    ID: string;
+export interface Conversation extends DataChunk<Message> {
     /** Start: The time the conversation started. */
     Start: Date;
     /** End: The time the conversation ended. */
     End: Date;
     /** Participants: The participants in the conversation. */
     Participants: Map<string, number>;
-    /** Mentions: The participants that this conversation mentioned. */
-    Mentions: string[];
-    /** Messages: The number of messages in the conversation. */
-    Messages: number;
     /** FirstSeen: The number of first-time participants. */
     FirstSeen: number;
-    /** AllMessages: All messages in the conversation. */
-    AllMessages?: Message[];
 }
 
 /** Message: A message in a group chat. */
-export interface Message {
-    /** ID: The ID of the message. */
-    ID: string;
-    /** SenderID: The ID of sender of the message. */
-    SenderID: string;
-    /** Nickname: The nickname of the sender. */
-    Nickname: string;
-    /** Time: The time the message was sent. */
-    Time: Date;
-    /** Content: The content of the message. */
-    Content: string;
+export interface Message extends DataItem {
     /** FirstSeen: Whether the sender is first seen in the group. */
     FirstSeen?: boolean;
-    /** Mentions: The participants that this message mentioned */
-    Mentions?: string[];
-    /** Conversation: The conversationID of the message. */
-    Conversation?: string;
 }
 
 /** Participant: A participant in a group chat. */
@@ -156,25 +164,15 @@ export interface Participant {
 }
 
 /** Message: A message in a group chat. */
-export interface Project {
-    /** ID: The ID of the project. */
-    ID: string;
+export interface Project extends DataChunk<Comment>, DataItem {
     /** Category: The category of the project. */
     Category: string;
-    /** UserID: The ID of the user who created the project. */
-    UserID: string;
-    /** Nickname: The nickname of the user who created the project. */
-    Nickname: string;
     /** CurrentNickname: The current nickname at the time of sharing. */
     CurrentNickname?: string;
-    /** Time: The time the message was sent. */
-    Time: Date;
     /** Title: Title of the project. */
     Title: string;
     /** Tags: Tags of the project. */
     Tags: string[];
-    /** Content: The content of the project. */
-    Content: string;
     /** Visits: Number of total visits (until now, not the cutoff date). */
     Visits: number;
     /** Stars: Number of total stars (until now, not the cutoff date). */
@@ -183,30 +181,14 @@ export interface Project {
     Supports: number;
     /** Remixes: Number of total remixes (until now, not the cutoff date). */
     Remixes: number;
-    /** Mentioned: The users mentioned by this project. */
-    Mentioned?: string[];
     /** Cover: The cover image of the project. */
     Cover: string,
-    /** Comments: Comments on the project. */
-    Comments?: Comment[];
 }
 
 /** Comment: A comment on a project or a user. */
-export interface Comment {
-    /** ID: The ID of the project. */
-    ID: string;
-    /** UserID: The ID of the user who created the project. */
-    UserID: string;
-    /** Nickname: The nickname of the user who posted the comment. */
-    Nickname: string;
+export interface Comment extends DataItem {
     /** CurrentNickname: The current nickname at the time of posting. */
     CurrentNickname?: string;
-    /** Time: The time the message was sent. */
-    Time: Date;
-    /** Content: The content of the project. */
-    Content: string;
-    /** Mentioned: The users mentioned by this project. */
-    Mentioned?: string[];
 }
 
 /** User: A user in Physics Lab. */

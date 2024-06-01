@@ -117,7 +117,7 @@ async function ExportComments(Database: Mongo.Db, Collection: Mongo.Collection, 
         // Find the mentions
         var [Content, Mentioned] = await FindMentions(Database, Metadata.Content);
         Metadata.Content = Content;
-        Metadata.Mentioned = Mentioned;
+        Metadata.Mentions = Mentioned;
         // If this is for users, put it to the relevant user.
         if (ForUsers) {
             var Target = await ExportUser(Database, Comment.TargetID);
@@ -164,14 +164,16 @@ async function ExportProjects(Database: Mongo.Db, Collection: Mongo.Collection):
             Supports: Project.Supports,
             Remixes: Project.Remixes,
             Tags: Project.Tags.map((Tag: string) => Tags.get(Tag) ?? Tag),
-            Cover: `http://physics-static-cn.turtlesim.com/experiments/images/${ID.substring(0, 4)}/${ID.substring(4, 6)}/${ID.substring(6, 8)}/${ID.substring(8, 24)}/${Project.Image}.jpg`
+            Cover: `http://physics-static-cn.turtlesim.com/experiments/images/${ID.substring(0, 4)}/${ID.substring(4, 6)}/${ID.substring(6, 8)}/${ID.substring(8, 24)}/${Project.Image}.jpg`,
+            Items: 0
         }
         // Find the mentions
         var [Content, Mentioned] = await FindMentions(Database, Metadata.Content);
         Metadata.Content = Content;
-        Metadata.Mentioned = Mentioned;
-        Metadata.Comments = await ExportComments(Database, 
+        Metadata.Mentions = Mentioned;
+        Metadata.AllItems = await ExportComments(Database, 
             Database.collection("ExperimentComments"), { TargetID: Project._id })
+        Metadata.Items = Metadata.AllItems?.length ?? 0;
         // Get the comments
         Results.push(Metadata);
     }
@@ -210,14 +212,14 @@ async function ExportAll() {
     var UserArray = Array.from(Users.values());
     File.writeFileSync(`${RootPath}\\Users.json`, JSON.stringify(UserArray, null, 4));
 
-    console.log(`Exported ${Users.size} users, their ${Projects.length} projects, ${Projects.reduce((Sum, Project) => Sum + (Project.Comments?.length ?? 0), 0)} comments on projects, and ${UserArray.reduce((Sum, User) => Sum + (User.Messages?.length ?? 0), 0)} personal comments.`);
+    console.log(`Exported ${Users.size} users, their ${Projects.length} projects, ${Projects.reduce((Sum, Project) => Sum + (Project.Items ?? 0), 0)} comments on projects, and ${UserArray.reduce((Sum, User) => Sum + (User.Messages?.length ?? 0), 0)} personal comments.`);
     
     // Calculate tokens
     var FullContent = Projects.map(Project => {
         var Content = Project.Content;
         if (Project.CurrentNickname) Content += "\n" + Project.CurrentNickname;
-        if (Project.Comments) {
-            Content += "\n" + Project.Comments.map(Comment => {
+        if (Project.AllItems) {
+            Content += "\n" + Project.AllItems.map(Comment => {
                 var Message = Comment.Content;
                 if (Comment.CurrentNickname) Message += "\n" + Comment.CurrentNickname;
                 return Message;

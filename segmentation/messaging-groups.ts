@@ -19,7 +19,7 @@ async function SeperateMessages(Source: string, Prefix: string) {
     });
     await Python;
     // Load messages
-    var Messages = LoadMessages(Source).filter(Message => Message.SenderID != "0");
+    var Messages = LoadMessages(Source).filter(Message => Message.UserID != "0");
     // Break up messages based on the indexes
     var Indexes = File.readFileSync(GetMessagesPath(Source, `Messages.Groups.csv`), 'utf-8').split('\n').map(Index => Number(Index));
     Indexes[Indexes.length - 1] = Messages.length - 1;
@@ -34,14 +34,14 @@ async function SeperateMessages(Source: string, Prefix: string) {
             EndTime = Messages[J].Time;
             Messages[J].Mentions?.forEach(Mention => Mentions.add(Mention));
             if (Messages[J].FirstSeen) FirstSeen++;
-            Participants.set(Messages[J].SenderID, 1 + (Participants.get(Messages[J].SenderID) ?? 0));
+            Participants.set(Messages[J].UserID, 1 + (Participants.get(Messages[J].UserID) ?? 0));
         }
         // Create a new conversation
         Conversations.push({ 
             ID: `${Prefix}-${Conversations.length.toString()}`, 
             Start: Messages[Indexes[I]].Time, 
             End: EndTime!,
-            Messages: Indexes[I] - (I == 0 ? 0 : Indexes[I - 1] + 1) + 1,
+            Items: Indexes[I] - (I == 0 ? 0 : Indexes[I - 1] + 1) + 1,
             Mentions: [...Mentions],
             Participants: Participants,
             FirstSeen: FirstSeen
@@ -53,7 +53,7 @@ async function SeperateMessages(Source: string, Prefix: string) {
     for (var I = 0; I < Conversations.length; I++) {
         var Current = Conversations[I];
         var Original = Current;
-        if (Current.Messages > 6) continue;
+        if (Current.Items > 6) continue;
         Orphans++;
         // If orphan, check if it can be merged with the previous or next conversation
         var MergeBefore = "";
@@ -61,7 +61,7 @@ async function SeperateMessages(Source: string, Prefix: string) {
         if (I > 0) {
             var Previous = Conversations[I - 1];
             // Maybe someone mentioned me in the previous conversation, or if all my participants were there
-            if (Previous.Mentions.findIndex(Mention => Original.Participants.has(Mention)) != -1 || 
+            if (Previous.Mentions!.findIndex(Mention => Original.Participants.has(Mention)) != -1 || 
                 [...Original.Participants.keys()].every(Participant => Previous.Participants.has(Participant))) {
                 MergeBefore = Previous.ID;
             }
@@ -69,13 +69,13 @@ async function SeperateMessages(Source: string, Prefix: string) {
         if (I < Conversations.length - 1) {
             var Next = Conversations[I + 1];
             // Maybe I mentioned someone in the next conversation, or if all my participants were there
-            if (Original.Mentions.findIndex(Mention => Next.Participants.has(Mention)) != -1 ||
+            if (Original.Mentions!.findIndex(Mention => Next.Participants.has(Mention)) != -1 ||
                 [...Original.Participants.keys()].every(Participant => Next.Participants.has(Participant))) {
                 MergeAfter = Next.ID;
             }
         }
         // If both are possible and long enough, merge with the one that is closer
-        if (MergeBefore != "" && MergeAfter != "" && (Conversations[I - 1].Messages > 6 || Conversations[I + 1].Messages > 6)) {
+        if (MergeBefore != "" && MergeAfter != "" && (Conversations[I - 1].Items > 6 || Conversations[I + 1].Items > 6)) {
             var DiffBefore = Current.Start.getTime() - Conversations[I - 1].End.getTime();
             var DiffAfter = Conversations[I + 1].Start.getTime() - Current.End.getTime();
             if (DiffAfter > DiffBefore) MergeAfter = "";
@@ -84,8 +84,8 @@ async function SeperateMessages(Source: string, Prefix: string) {
         if (MergeBefore != "") {
             var Previous = Conversations[I - 1];
             Previous.End = Current.End;
-            Previous.Messages += Current.Messages;
-            Previous.Mentions = [...new Set([...Previous.Mentions, ...Current.Mentions])];
+            Previous.Items += Current.Items;
+            Previous.Mentions = [...new Set([...Previous.Mentions!, ...Current.Mentions!])];
             Previous.FirstSeen += Current.FirstSeen;
             for (var [Participant, Count] of Current.Participants)
                 Previous.Participants.set(Participant, (Previous.Participants.get(Participant) ?? 0) + Count);
@@ -97,8 +97,8 @@ async function SeperateMessages(Source: string, Prefix: string) {
             var Next = Conversations[I + 1];
             Next.ID = Current.ID;
             Next.Start = Current.Start;
-            Next.Messages += Current.Messages;
-            Next.Mentions = [...new Set([...Next.Mentions, ...Current.Mentions])];
+            Next.Items += Current.Items;
+            Next.Mentions = [...new Set([...Next.Mentions!, ...Current.Mentions!])];
             Next.FirstSeen += Current.FirstSeen;
             for (var [Participant, Count] of Current.Participants)
                 Next.Participants.set(Participant, (Next.Participants.get(Participant) ?? 0) + Count);
@@ -114,12 +114,12 @@ async function SeperateMessages(Source: string, Prefix: string) {
         var Message = Messages[I];
         if (Message.Time > CurrentConversation.End)
             CurrentConversation = Conversations[++ConversationIndex];
-        Message.Conversation = CurrentConversation.ID;
+        Message.Chunk = CurrentConversation.ID;
     }
     // Write the conversation info into a CSV file
     var CSV = "ID,Start,End,Messages,Participants\n";
     Conversations.forEach(Conversation => {
-        CSV += `${Conversation.ID},${Conversation.Start.toISOString()},${Conversation.End.toISOString()},${Conversation.Messages},${Conversation.Participants.size}\n`;
+        CSV += `${Conversation.ID},${Conversation.Start.toISOString()},${Conversation.End.toISOString()},${Conversation.Items},${Conversation.Participants.size}\n`;
     });
     File.writeFileSync(GetMessagesPath(Source, `Conversations.csv`), CSV);
     // Write the conversation info into a JSON file

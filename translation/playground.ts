@@ -1,9 +1,9 @@
 // This is a playground for selectively translating data.
 import * as File from 'fs';
 import * as Path from 'path';
-import { GetMessagesPath, GetProjectsPath, LoadCodedConversations, LoadConversationsForAnalysis, LoadProjects } from "../utils/loader.js";
+import { GetMessagesPath, GetProjectsPath, LoadCodedConversations, LoadChunksForAnalysis, LoadProjects } from "../utils/loader.js";
 import { UseLLM } from "./general.js";
-import { ExportConversationsForCoding, ExportProjects, Range } from '../utils/export.js';
+import { ExportChunksForCoding, ExportProjects, Range } from '../utils/export.js';
 import { Project } from '../utils/schema.js';
 import { LLMName } from '../utils/llms.js';
 import { TranslateProjects } from './physics-lab.js';
@@ -27,9 +27,9 @@ process.exit(0);
 async function UpdateTranslations(Group: string, Name: string, Codebook: string) {
     Codebook = GetMessagesPath(Group, Codebook);
     var Threads = await LoadCodedConversations(Codebook);
-    var Conversations = LoadConversationsForAnalysis(Group, Name);
+    var Conversations = LoadChunksForAnalysis(Group, Name);
     // Write the result into an Excel file
-    var Book = ExportConversationsForCoding(Object.values(Conversations), Threads);
+    var Book = ExportChunksForCoding(Object.values(Conversations), Threads);
     await Book.xlsx.writeFile(Codebook.replace(".xlsx", "-new.xlsx"))
 }
 
@@ -41,7 +41,7 @@ async function ProjectPlayground(Bilingual: boolean = false) {
     // By default we don't want system messages
     Projects = Projects.filter(Project => Project.Time >= StartDate && Project.Time < EndDate);
     var Originals = JSON.parse(JSON.stringify(Projects)) as Project[]; 
-    console.log(`Projects to translate: ${Projects.length} with comments ${Projects.reduce((Sum, Project) => Sum + (Project.Comments ? Project.Comments.length : 0), 0)}`);
+    console.log(`Projects to translate: ${Projects.length} with comments ${Projects.reduce((Sum, Project) => Sum + (Project.AllItems ? Project.AllItems.length : 0), 0)}`);
     // Translate the projects with LLM
     Projects = await TranslateProjects(Projects);
     // Write into JSON file

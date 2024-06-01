@@ -16,7 +16,7 @@ function ReadQQMessages(Path: string, Prefix: string): Message[] {
                 Number(Match[4]) + (Match[7] === 'PM' ? 12 : 0), Number(Match[5]), Number(Match[6]));
             LastMessage = { 
                 ID: `${Prefix}-${Messages.length.toString()}`,
-                SenderID: Match[9].substring(1, Match[9].length - 1), 
+                UserID: Match[9].substring(1, Match[9].length - 1), 
                 Nickname: Match[8].replaceAll(/"|,/g, '').replaceAll(/^【.{2}】/g, ''),
                 Time, 
                 Content: '' };
@@ -54,8 +54,8 @@ for (const Group of Groups) {
     const Messages = ReadQQMessages(GetMessagesPath(Group, "Raw.txt"), (Index + 1).toString());
     // First pass: get the participants and anonymize the user ids.
     for (const Message of Messages) {
-        if (!Participants.has(Message.SenderID)) {
-            Participants.set(Message.SenderID, { 
+        if (!Participants.has(Message.UserID)) {
+            Participants.set(Message.UserID, { 
                 ID: Participants.size.toString(), 
                 Nickname: Message.Nickname, 
                 Messages: 0,
@@ -64,7 +64,7 @@ for (const Group of Groups) {
             Message.FirstSeen = true;
         } else {
             Message.FirstSeen = false;
-            var Participant = Participants.get(Message.SenderID)!;
+            var Participant = Participants.get(Message.UserID)!;
             Participant.Messages++;
             if (Participant.Nickname == "") Participant.Nickname = Message.Nickname;
         }
@@ -72,10 +72,10 @@ for (const Group of Groups) {
     // Second pass: go through the messages
     for (const Message of Messages) {
         // Count the participant
-        var Participant = Participants.get(Message.SenderID)!;
+        var Participant = Participants.get(Message.UserID)!;
         NameMappings.set(Message.Nickname, [Participant.ID, Participant.Nickname]);
         // Adapt the message
-        Message.SenderID = Participant.ID;
+        Message.UserID = Participant.ID;
         Message.Nickname = Participant.Nickname;
         // Here, we need to replace all `@...` references with the corresponding ID.
         Message.Content = Message.Content.replaceAll(/\@(.*?)(\s|$)/g, (Match, Name) => {
@@ -107,7 +107,7 @@ for (const Group of Groups) {
     File.writeFileSync(GetMessagesPath(Group, "Messages.json"), JSON.stringify(Messages, null, 4));
     // Write the messages (metadata) into a CSV file using Unix timestamp. Only length of content is stored.
     File.writeFileSync(GetMessagesPath(Group, "Messages.csv"), 'Source,ID,Time,Timestamp,First,Length,Mentions\n' + 
-        Messages.filter(Message => Message.SenderID != "0").map((Message, Index) => `${Index},${Message.SenderID},${Message.Time.toISOString()},${Message.Time.getTime()},${Message.FirstSeen},${Message.Content.length},${Message.Mentions?.length ?? 0}`).join('\n'));
+        Messages.filter(Message => Message.UserID != "0").map((Message, Index) => `${Index},${Message.UserID},${Message.Time.toISOString()},${Message.Time.getTime()},${Message.FirstSeen},${Message.Content.length},${Message.Mentions?.length ?? 0}`).join('\n'));
     NameMappings.clear();
     Index++;
     // Calculate tokens

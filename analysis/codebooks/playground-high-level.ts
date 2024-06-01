@@ -1,5 +1,5 @@
 import { UseLLMs } from '../../translation/general.js';
-import { ConsolidateConversations } from './codebooks.js';
+import { ConsolidateChunks } from './codebooks.js';
 import { InitializeEmbeddings, Model } from '../../utils/embeddings.js';
 import { PipelineConsolidator } from './consolidator.js';
 import { DefinitionGenerator } from './definition-generator.js';
@@ -13,7 +13,7 @@ import { LLMName } from '../../utils/llms.js';
 
 await UseLLMs(async () => {
     InitializeEmbeddings("gecko-768-similarity");
-    await ConsolidateConversations(new PipelineConsolidator(
+    await ConsolidateChunks(new PipelineConsolidator(
         // Merge very similar names
         new SimpleMerger({}),
         // Generate definitions for missing ones

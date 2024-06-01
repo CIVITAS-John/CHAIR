@@ -3,11 +3,11 @@ import { EnsureFolder, LLMName, MaxOutput } from "../utils/llms.js";
 import { GetMessagesPath, GetParticipantsPath, LoadConversations, LoadMessages, LoadParticipants } from "../utils/loader.js";
 import { Conversation, Message, Participant } from '../utils/schema.js';
 import { TranslateStrings } from "./general.js";
-import { ExportConversationsForCoding, ExportMessages } from '../utils/export.js';
+import { ExportChunksForCoding, ExportMessages } from '../utils/export.js';
 
 /** ProcessConversations: Load, translate, and export certain conversations for qualitative coding. */
 export async function ProcessConversations(Group: string, Targets: number[], Dataset?: string): Promise<void> {
-    var AllMessages = LoadMessages(Group).filter(Message => Message.SenderID != "0");
+    var AllItems = LoadMessages(Group).filter(Message => Message.UserID != "0");
     // Before we start, we need to translate all participants
     var Participants = LoadParticipants();
     console.log(`Participants to translate: ${Participants.length}`);
@@ -24,13 +24,13 @@ export async function ProcessConversations(Group: string, Targets: number[], Dat
     for (const Target of Targets) {
         var Conversation = Conversations.find(Conversation => Conversation.ID.endsWith(`-${Target}`));
         if (!Conversation) continue;
-        var Messages = await TranslateConversation(Group, AllMessages, Participants, Conversation.ID);
+        var Messages = await TranslateConversation(Group, AllItems, Participants, Conversation.ID);
         if (Messages.length == 0) continue;
         // Get and count conversations
         if (Minimum == -1) Minimum = Target;
         Maximum = Target;
         Results[Conversation.ID] = Conversation;
-        Results[Conversation.ID].AllMessages = Messages;
+        Results[Conversation.ID].AllItems = Messages;
         Messages.forEach(Message => {
             if (IDs.has(Message.ID)) return;
             IDs.add(Message.ID);
@@ -41,7 +41,7 @@ export async function ProcessConversations(Group: string, Targets: number[], Dat
     Dataset = Dataset ?? Group;
     EnsureFolder(GetMessagesPath(Dataset));
     // Save the Excel file
-    var Book = ExportConversationsForCoding(Object.values(Results));
+    var Book = ExportChunksForCoding(Object.values(Results));
     await Book.xlsx.writeFile(GetMessagesPath(Dataset, `${Minimum}~${Maximum}-${LLMName}.xlsx`));
     // Write into Markdown file
     File.writeFileSync(GetMessagesPath(Dataset, `${Minimum}~${Maximum}-${LLMName}.md`), ExportMessages(ResultMessages));
@@ -50,12 +50,12 @@ export async function ProcessConversations(Group: string, Targets: number[], Dat
 }
 
 /** TranslateConversation: Translate certain messages from a conversation. */
-async function TranslateConversation(Group: string, AllMessages: Message[], Participants: Participant[], Conversation: string, Bilingual: boolean = false): Promise<Message[]> {
+async function TranslateConversation(Group: string, AllItems: Message[], Participants: Participant[], Conversation: string, Bilingual: boolean = false): Promise<Message[]> {
     // Get the messages we want: 3 messages before and after the conversation
-    var FirstIndex = AllMessages.findIndex(Message => Message.Conversation == Conversation);
-    var LastIndex = AllMessages.findLastIndex(Message => Message.Conversation == Conversation);
+    var FirstIndex = AllItems.findIndex(Message => Message.Chunk == Conversation);
+    var LastIndex = AllItems.findLastIndex(Message => Message.Chunk == Conversation);
     if (FirstIndex == -1 || LastIndex == -1) return [];
-    var Messages = AllMessages.slice(Math.max(0, FirstIndex - 3), Math.min(AllMessages.length, LastIndex + 4));
+    var Messages = AllItems.slice(Math.max(0, FirstIndex - 3), Math.min(AllItems.length, LastIndex + 4));
     // Keep the original messages for bilingual translation
     Messages = JSON.parse(JSON.stringify(Messages)) as Message[];
     var Originals = Bilingual ? JSON.parse(JSON.stringify(Messages)) as Message[] : undefined; 

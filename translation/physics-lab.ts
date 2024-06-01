@@ -11,8 +11,8 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
     for (let Project of Projects) {
         Nicknames.add(Project.Nickname);
         if (Project.CurrentNickname) Nicknames.add(Project.CurrentNickname);
-        if (Project.Comments) {
-            for (let Comment of Project.Comments) {
+        if (Project.AllItems) {
+            for (let Comment of Project.AllItems) {
                 Nicknames.add(Comment.Nickname);
                 if (Comment.CurrentNickname) Nicknames.add(Comment.CurrentNickname);
             }
@@ -33,7 +33,7 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
     var Contents = Projects.map((Project) => {
         Project.Content = HandleContent(Project.Content);
         // For comments
-        Project.Comments?.forEach((Comment) => {
+        Project.AllItems?.forEach((Comment) => {
             Comment.Content = HandleContent(Comment.Content);
             return Comment.Content;
         });
@@ -67,8 +67,8 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
         });
         Projects[I].Title = Content.split("\n")[0].trim();
         Projects[I].Content = Content.substring(Projects[I].Title.length + 1).trim();
-        if (Projects[I].Comments) 
-            Projects[I].Comments = await TranslateComments(Projects[I].Comments!, UserMappings, NameTranslations);
+        if (Projects[I].AllItems) 
+            Projects[I].AllItems = await TranslateComments(Projects[I].AllItems!, UserMappings, NameTranslations);
     }
     return Projects;
 }

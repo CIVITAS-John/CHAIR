@@ -4,7 +4,7 @@ import { Codebook } from "../../utils/schema.js";
 import { ConsolidateCodebook, MergeCodebooks } from "../codebooks/codebooks.js";
 import { SimpleMerger } from '../codebooks/simple-merger.js';
 import { PipelineConsolidator } from "../codebooks/consolidator.js";
-import { ExportConversationsForCoding } from "../../utils/export.js";
+import { ExportChunksForCoding } from "../../utils/export.js";
 import { RefineMerger } from '../codebooks/refine-merger.js';
 import { DefinitionGenerator } from '../codebooks/definition-generator.js';
 import { AlternativeMerger } from '../codebooks/alternative-merger.js';
@@ -101,7 +101,7 @@ export async function BuildReferenceAndExport(Builder: ReferenceBuilder, Codeboo
     console.log(chalk.green(`Exporting the reference codebook to ${TargetPath}.`));
     File.writeFileSync(TargetPath + ".json", JSON.stringify(Result, null, 4), 'utf8');
     // Export it to Excel
-    var Book = ExportConversationsForCoding([], { Codebook: Result, Threads: {} });
+    var Book = ExportChunksForCoding([], { Codebook: Result, Threads: {} });
     await Book.xlsx.writeFile(TargetPath + ".xlsx");
     return Result;
 }

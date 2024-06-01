@@ -1,10 +1,10 @@
 import * as File from 'fs';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { LLMName, EnsureFolder, RequestLLMWithCache } from "../../utils/llms.js";
-import { Code, CodedThreads, Codebook, Conversation } from "../../utils/schema.js";
+import { Code, CodedThreads, Codebook, Conversation, DataItem, DataChunk } from "../../utils/schema.js";
 import { LoopThroughChunks } from "../analyzer.js";
-import { GetMessagesPath, LoadAnalyses, LoadConversationsForAnalysis } from "../../utils/loader.js";
-import { ExportConversationsForCoding } from '../../utils/export.js';
+import { GetMessagesPath, LoadAnalyses, LoadChunksForAnalysis } from "../../utils/loader.js";
+import { ExportChunksForCoding } from '../../utils/export.js';
 import { ClusterItem } from '../../utils/embeddings.js';
 import { CodebookConsolidator } from './consolidator.js';
 import chalk from 'chalk';
@@ -74,12 +74,12 @@ export function MergeCodebooks(Codebooks: Codebook[], WithReference: boolean = f
     return Object.fromEntries(Codes);
 }
 
-/** ConsolidateConversations: Load, consolidate, and export conversation codebooks. */
-export async function ConsolidateConversations(Consolidator: CodebookConsolidator<Conversation>, Group: string, ConversationName: string, Analyzer: string, AnalyzerLLM: string, FakeRequest: boolean = false) {
+/** ConsolidateChunks: Load, consolidate, and export codebooks. */
+export async function ConsolidateChunks<T extends DataItem>(Consolidator: CodebookConsolidator<DataChunk<T>>, Group: string, ConversationName: string, Analyzer: string, AnalyzerLLM: string, FakeRequest: boolean = false) {
     var ExportFolder = GetMessagesPath(Group, `${Analyzer}-${Consolidator.Name}`);
     EnsureFolder(ExportFolder);
     // Load the conversations and analyses
-    var Conversations = LoadConversationsForAnalysis(Group, ConversationName);
+    var Conversations = LoadChunksForAnalysis(Group, ConversationName);
     var Analyses = await LoadAnalyses(GetMessagesPath(Group, `${Analyzer}/${ConversationName.replace(".json", `-${AnalyzerLLM}`)}`));
     var ResultName = AnalyzerLLM == LLMName ? AnalyzerLLM : `${AnalyzerLLM}-${LLMName}`;
     // Consolidate the codebook
@@ -87,13 +87,13 @@ export async function ConsolidateConversations(Consolidator: CodebookConsolidato
         var Values = Object.values(Analyses.Codebook!).filter(Code => Code.Label != "[Merged]");
         Analyses.Codebook = {};
         for (var Code of Values) Analyses.Codebook[Code.Label] = Code;
-        var Book = ExportConversationsForCoding(Object.values(Conversations), Analyses);
+        var Book = ExportChunksForCoding(Object.values(Conversations), Analyses);
         await Book.xlsx.writeFile(`${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}-${Iteration}`)}.xlsx`);
     }, FakeRequest);
     // Write the result into a JSON file
     File.writeFileSync(`${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}`)}.json`, JSON.stringify(Analyses, null, 4));
     // Write the result into an Excel file
-    var Book = ExportConversationsForCoding(Object.values(Conversations), Analyses);
+    var Book = ExportChunksForCoding(Object.values(Conversations), Analyses);
     await Book.xlsx.writeFile(`${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}`)}.xlsx`);
 }
 

@@ -1,13 +1,12 @@
 // Data loader from exported JSON or spreadsheet files
 import * as File from 'fs';
 import * as Path from 'path';
-import Excel from 'exceljs';
 import * as dotenv from 'dotenv';
-import { GetFilesRecursively } from './file.js';
-import commonPathPrefix from 'common-path-prefix';
-import { CodedThread, CodedThreads, Code, CodedItem, Conversation, Message, Participant, Project, AssembleExample, Codebook } from "./schema.js";
-import { MergeCodebook, MergeCodebooks } from "../analysis/codebooks/codebooks.js";
 import chalk from 'chalk';
+import Excel from 'exceljs';
+import { GetFilesRecursively, RemoveCommonality } from './file.js';
+import { CodedThread, CodedThreads, Code, CodedItem, Conversation, Message, Participant, Project, AssembleExample, Codebook, DataChunk, DataItem } from "./schema.js";
+import { MergeCodebook, MergeCodebooks } from "../analysis/codebooks/codebooks.js";
 
 /** GetDatasetPath: Get the dataset path. */
 export function GetDatasetPath(): string {
@@ -20,8 +19,8 @@ export function LoadProjects(): Project[] {
     const Projects: Project[] = JSON.parse(File.readFileSync(GetProjectsPath("Projects.json"), 'utf-8'));
     Projects.forEach(Project => {
         Project.Time = new Date(Date.parse(Project.Time as any));
-        if (Project.Comments)
-            Project.Comments.forEach(Comment => Comment.Time = new Date(Date.parse(Comment.Time as any)));
+        if (Project.AllItems)
+            Project.AllItems.forEach(Comment => Comment.Time = new Date(Date.parse(Comment.Time as any)));
     });
     return Projects;
 }
@@ -40,8 +39,8 @@ export function LoadConversations(Group: string): Conversation[] {
     return JSON.parse(File.readFileSync(GetMessagesPath(Group, "Conversations.json"), 'utf-8'));
 }
 
-/** LoadConversationsForAnalysis: Load the conversations for analysis. */
-export function LoadConversationsForAnalysis(Group: string, Name: string): Record<string, Conversation> {
+/** LoadChunksForAnalysis: Load the chunks for analysis. */
+export function LoadChunksForAnalysis<T extends DataChunk<DataItem>>(Group: string, Name: string): Record<string, T> {
     return JSON.parse(File.readFileSync(GetMessagesPath(Group, Name), 'utf-8'));
 }
 
@@ -118,17 +117,17 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
             switch (ID) {
                 case "-1": // Summary
                     Thread.Summary = Content;
-                    if (Thread.Summary == "" || Thread.Summary == "(Optional) Your thoughts before coding the conversation.") 
+                    if (Thread.Summary == "" || Thread.Summary.startsWith("(Optional) Your thoughts before coding")) 
                         Thread.Summary = undefined;
                     break;
                 case "-2": // Plan
                     Thread.Plan = Content;
-                    if (Thread.Plan == "" || Thread.Plan == "The summary of the conversation.") 
+                    if (Thread.Plan == "" || Thread.Plan.startsWith("The summary of")) 
                         Thread.Plan = undefined;
                     break;
                 case "-3": // Reflection
                     Thread.Reflection = Content;
-                    if (Thread.Reflection == "" || Thread.Reflection == "Your reflections after coding the conversation.") 
+                    if (Thread.Reflection == "" || Thread.Reflection.startsWith("Your reflections after coding")) 
                         Thread.Reflection = undefined;
                     break;
                 default: // Coded item
@@ -217,23 +216,4 @@ export async function LoadCodebook(Current: string): Promise<Codebook | undefine
         console.log(`Loading ${Current} as an Excel workbook.`);
         return (await LoadCodedConversations(Current)).Codebook!;
     }
-}
-
-/** RemoveCommonality: Remove common prefixes and suffixes from a list of names. */
-function RemoveCommonality(Names: string[]): string[] {
-    // Find common prefixes and remove them
-    var Prefix = commonPathPrefix(Names, "/");
-    Names = Names.map(Name => Name.substring(Prefix.length));
-    Prefix = commonPathPrefix(Names, "-");
-    Names = Names.map(Name => Name.substring(Prefix.length));
-    // Find common suffixes and remove them
-    var Suffix = Reverse(commonPathPrefix(Names.map(Name => Reverse(Name)), "-"));
-    Names = Names.map(Name => Name.substring(0, Name.length - Suffix.length));
-    Names = Names.map(Name => Name == "" ? "root" : Name);
-    return Names;
-}
-
-/** Reverse: Reverse a string. */
-function Reverse(S: string): string {
-    return [...S].reverse().join("");
 }
