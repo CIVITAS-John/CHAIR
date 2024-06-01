@@ -1,20 +1,8 @@
-import { Code, CodebookComparison } from "../../../utils/schema.js";
+import { Code, CodebookComparison } from "../../../../utils/schema.js";
 import { Node, Link, Graph, Component } from './schema.js';
 import * as graphology from 'graphology';
 import * as graphologyLibrary from 'graphology-library';
-
-/** Parameters: The parameters for the visualizer. */
-export class Parameters {
-    // For the semantic graph
-    /** LinkMinimumDistance: The minimum distance to create links between codes. */
-    public LinkMinimumDistance: number = 0.65;
-    /** LinkMaximumDistance: The maximum distance to create links between codes. */
-    public LinkMaximumDistance: number = 0.9;
-    /** ClosestNeighbors: The number of closest neighbors to guarantee links regardless of the threshold. */
-    public ClosestNeighbors: number = 3;
-    /** UseNearOwners: Whether to visualize the near-owners in place of owners. */
-    public UseNearOwners: boolean = true;
-}
+import { InverseLerp, Parameters } from "./utils.js";
 
 /** BuildSemanticGraph: Build a semantic code graph from the dataset. */
 export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Parameters = new Parameters()): Graph<Code> {
@@ -206,9 +194,4 @@ function FindMinimumIndexes(arr: number[], k: number): number[] {
     indices.sort((a, b) => arr[a] - arr[b]);
     // Return the first k indices.
     return indices.slice(0, k);
-}
-
-/** Lerp: Linearly interpolate between two values. */
-export function InverseLerp(a: number, b: number, t: number): number {
-    return Math.min(1, Math.max(0, (t - a) / (b - a)));
 }

@@ -28,17 +28,14 @@
 
         </div>
     </div>
-    <script src="scripts/d3.v7.js"></script>
-    <script src="scripts/cash.min.js"></script>
-    <script src="scripts/graphology.min.js"></script>
-    <script src="scripts/graphology-library.min.js"></script>
-    <script src="visualizer.js" type="module"></script>
-    <script src="side-panel.js" type="module"></script>
-    <script src="info-panel.js" type="module"></script>
+    <script src="dependencies/d3.v7.js"></script>
+    <script src="dependencies/cash.min.js"></script>
+    <script src="dependencies/graphology.min.js"></script>
+    <script src="dependencies/graphology-library.min.js"></script>
     <script type="module">
         import { Visualizer } from './visualizer.js';
-        import { SidePanel } from './side-panel.js';
-        import { InfoPanel } from './info-panel.js';
+        import { SidePanel } from './panels/side-panel.js';
+        import { InfoPanel } from './panels/info-panel.js';
         window.Visualizer = new Visualizer($(".visualization"));
         window.SidePanel = new SidePanel($(".side-panel"), window.Visualizer);
         window.InfoPanel = new InfoPanel($(".info-panel"), $(".dialog").hide(), window.Visualizer);

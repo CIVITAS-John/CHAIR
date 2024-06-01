@@ -1,22 +1,19 @@
 import type { Cash } from 'cash-dom';
-import { Visualizer } from './visualizer.js';
-import { Node } from './schema.js';
-import { Code } from '../../../utils/schema.js';
+import { Visualizer } from '../visualizer.js';
+import { Node } from '../utils/schema.js';
+import { Code } from '../../../../utils/schema.js';
+import { GetCodebookColor } from '../utils/utils.js';
+import { Panel } from './panels.js';
 
 /** InfoPanel: The info panel for the visualizer. */
-export class InfoPanel {
-    /** Visualizer: The visualizer in-use. */
-    private Visualizer: Visualizer;
-    /** Container: The container for the info panel. */
-    private Container: Cash;
+export class InfoPanel extends Panel {
     /** DialogContainer: The container for the expanded dialog. */
     private DialogContainer: Cash;
     /** Panels: Panels in the info panel. */
     private Panels: Map<string, Cash> = new Map<string, Cash>();
     /** Constructor: Constructing the side panel. */
     public constructor(Container: Cash, DialogContainer: Cash, Visualizer: Visualizer) {
-        this.Visualizer = Visualizer;
-        this.Container = Container;
+        super(Container, Visualizer);
         this.DialogContainer = DialogContainer;
         DialogContainer.children("div.close").on("click", () => this.HideDialog());
         Visualizer.RegisterChosenCallback<Code>("Code", 
@@ -65,7 +62,7 @@ export class InfoPanel {
             if (Panel.children().length > 0) $("<hr>").appendTo(Panel);
             this.BuildPanelForCode(Panel, Code, true);
         }
-        Panel.children("h3").append($(`<span style="color: ${this.Visualizer.GetCodebookColor(Owner)}">${this.Visualizer.Dataset.Names[Owner]}</span>`));
+        Panel.children("h3").append($(`<span style="color: ${GetCodebookColor(Owner, this.Dataset.Codebooks.length)}">${this.Visualizer.Dataset.Names[Owner]}</span>`));
         // Add a back button if it's not the baseline
         if (!IsBaseline)
             Panel.children("h3").prepend($(`<a href="javascript:void(0)" class="back">↑</a>`)
@@ -121,7 +118,7 @@ export class InfoPanel {
     }
     /** BuildOwnerLink: Build a link for an owner. */
     private BuildOwnerLink(Code: Code, Sources: Code[], Owner: number)  {
-        var Link = $(`<a href="javascript:void(0)" style="color: ${this.Visualizer.GetCodebookColor(Owner)}">${this.Visualizer.Dataset.Names[Owner]}</a>`);
+        var Link = $(`<a href="javascript:void(0)" style="color: ${GetCodebookColor(Owner, this.Dataset.Codebooks.length)}">${this.Visualizer.Dataset.Names[Owner]}</a>`);
         if (Sources.length > 0) {
             Link.attr("title", Sources.map(Original => Original.Label).join(", "));
             Link.on("click", () => { this.ShowDialogForCode(Owner, Code, ...Sources) });

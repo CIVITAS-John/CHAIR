@@ -7,7 +7,7 @@ import { EnsureFolder } from './llms.js';
 import { setTimeout } from "timers/promises";
 
 /** CreateServer: Create a local server for interactivity. */
-export function CreateServer(Port: number, BaseDirectory: string, ...DataFiles: string[]): Promise<void> {
+export function CreateServer(Port: number, BaseDirectories: string[], ...DataFiles: string[]): Promise<void> {
     var Shutdown: () => void;
     const Server: http.Server = http.createServer((Request: http.IncomingMessage, Response: http.ServerResponse) => {
         var Url = Request.url ?? "/";
@@ -20,7 +20,15 @@ export function CreateServer(Port: number, BaseDirectory: string, ...DataFiles: 
             }
         }
         // Serve files from the BaseDirectory
-        SendData(Response, path.join(BaseDirectory, Url));
+        for (const BaseDirectory of BaseDirectories) {
+            if (fs.existsSync(path.join(BaseDirectory, Url))) {
+                SendData(Response, path.join(BaseDirectory, Url));
+                return;
+            }
+        }
+        // Handle 404 errors
+        Response.writeHead(404);
+        Response.end(`Error loading ${path.basename(Url)}`);
     });
     // Send data to the client
     const SendData = function(Response: http.ServerResponse, FilePath: string) {
@@ -66,8 +74,9 @@ export function CreateServer(Port: number, BaseDirectory: string, ...DataFiles: 
             console.log('Press Ctrl+C to shut down the server.')
             // Automatically open the browser when the server starts
             // Wait for 5 seconds or the browser tab to close
-            // On Windows, the browser tab may close prematurely
-            await Promise.all([open(`http://localhost:${Port}/`, { wait: true, app: { name: apps.chrome } }), setTimeout(5000)])
+            // On Windows, the browser tab may close prematurely, so we delay the shutdown
+            await Promise.all([open(`http://localhost:${Port}/`, { wait: true, app: { name: apps.chrome } }), 
+                setTimeout(process.platform == "win32" ? 300000 : 5000)])
             console.log('The browser tab has closed, shutting down the server.')
             Shutdown();
         });

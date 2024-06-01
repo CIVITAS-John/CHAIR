@@ -1,7 +1,8 @@
 import * as d3 from 'd3';
 import { Code, CodebookComparison } from '../../../utils/schema.js';
-import { Node, Link, Graph, Component, GraphStatus, Colorizer } from './schema.js';
-import { Parameters, BuildSemanticGraph, FilterNodeByOwner } from './graph.js';
+import { Node, Link, Graph, Component, GraphStatus, Colorizer } from './utils/schema.js';
+import { BuildSemanticGraph, FilterNodeByOwner } from './utils/graph.js';
+import { Parameters } from './utils/utils.js';
 import type { Cash, CashStatic, Element } from 'cash-dom';
 declare global {
     var $: typeof Cash.prototype.init & CashStatic;
@@ -457,12 +458,6 @@ export class Visualizer {
             .force("collide", d3.forceCollide().radius((Node) => (Node as any).Size + 2))
             .on("tick", () => Renderer(this.Simulation!.alpha()));
         this.Simulation.alpha(1).alphaTarget(0).restart();
-    }
-    /** GetCodebookColor: Get the color of a codebook. */
-    public GetCodebookColor(Number: number): string {
-        if (this.Dataset.Codebooks.length <= 10)
-            return d3.schemeTableau10[Number];
-        else return d3.interpolateWarm(Number / this.Dataset.Codebooks.length);
     }
 }
 

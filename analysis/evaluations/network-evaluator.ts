@@ -4,7 +4,7 @@ import { Code, Codebook, CodebookComparison, CodebookEvaluation } from "../../ut
 import { MergeCodebooks } from "../codebooks/codebooks.js";
 import { CodebookEvaluator } from './codebooks.js';
 import { CreateOfflineBundle, CreateServer } from '../../utils/server.js';
-import { ReadOrBuildCache } from '../../utils/file.js';
+import { GetFilesRecursively, ReadOrBuildCache } from '../../utils/file.js';
 import md5 from 'md5';
 
 /** NetworkEvaluator: A network evaluator of codebook against a reference codebook (#0) with potential human inputs. */
@@ -43,13 +43,12 @@ export class NetworkEvaluator extends CodebookEvaluator {
             return Package;
         });
         // Run the HTTP server
-        var DataFiles = ["./out/analysis/evaluations/network/visualizer.js", 
-            "./out/analysis/evaluations/network/graph.js", 
-            "./out/analysis/evaluations/network/side-panel.js", 
-            "./out/analysis/evaluations/network/info-panel.js", 
+        var DataFiles = [
+            ...GetFilesRecursively("./out/analysis/evaluations/network").filter
+                (File => File.indexOf("dependencies/") == -1 && File.endsWith(".js")), 
             ExportPath + "/network.json"]
         CreateOfflineBundle(ExportPath + "/network", "analysis/evaluations/network", ...DataFiles);
-        await CreateServer(8080, "analysis/evaluations/network", ...DataFiles);
+        await CreateServer(8080, ["analysis/evaluations/network", "out/analysis/evaluations/network"], ExportPath + "/network.json");
         // Return in the format
         var Results: Record<string, CodebookEvaluation> = {};
         return Results;
