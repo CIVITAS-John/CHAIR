@@ -151,7 +151,7 @@ circle.chosen-neighbor {
 text.hidden:not(.hovering, .chosen) {
     color: #999;
 }
-line.hidden:not(.hovering, .chosen) {
+line.hidden:not(.hovering, .chosen-neighbor, .chosen) {
     stroke: #999;
     stroke-opacity: 0.1;
 }

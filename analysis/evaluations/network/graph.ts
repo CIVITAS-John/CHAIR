@@ -76,13 +76,14 @@ export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Param
     });
     // Look at every link - and if the source and target are in different components, reduce the weight
     // Thus, we will have a more close spatial arrangement of the components
+    var EffectiveNodes = Math.max(100, Graph.Nodes.length);
     Graph.Links.forEach(Link => {
         if (Link.Source.Component == Link.Target.Component) {
             Link.VisualizeWeight = Link.VisualizeWeight!;
         } else {
             if (Link.Source.Links.length <= 1 || Link.Target.Links.length <= 1) return;
             if (Link.Source.Component !== undefined && Link.Target.Component !== undefined) {
-                Link.VisualizeDistance = Link.VisualizeDistance! * 15;
+                Link.VisualizeDistance = Link.VisualizeDistance! * Math.sqrt(EffectiveNodes) * 0.5;
                 Link.VisualizeWeight = 0.15 * Link.VisualizeWeight! * Link.VisualizeWeight!;
             }
         }
@@ -96,8 +97,8 @@ export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Param
     }
     Graph.Nodes.forEach(Node => {
         var Ratio = Ratios[(Node.Component?.ID ?? -1) + 1];
-        Node.x = (Math.cos(Ratio * 2 * Math.PI) - 0.5 + Math.random() * 0.15) * 400,
-        Node.y = (Math.sin(Ratio * 2 * Math.PI) - 0.5 + Math.random() * 0.15) * 400
+        Node.x = (Math.cos(Ratio * 2 * Math.PI) - 0.5 + Math.random() * 0.15) * (EffectiveNodes + 50),
+        Node.y = (Math.sin(Ratio * 2 * Math.PI) - 0.5 + Math.random() * 0.15) * (EffectiveNodes + 50)
     });
     return Graph;
 }
