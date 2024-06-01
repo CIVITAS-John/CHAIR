@@ -157,7 +157,7 @@ export class Visualizer {
                     Examples: { 
                         "In the codebook": Interpolator(1),
                         "Has a similar concept": Interpolator(0.55),
-                        "Not included": "#999999"
+                        "Not covered": "#999999"
                     }
                 };
                 break;
@@ -176,7 +176,7 @@ export class Visualizer {
                         "Novel: only in this codebook": Interpolator(1),
                         "Shared: in the codebook": Interpolator(0.7),
                         "Shared: has a similar concept": Interpolator(0.35),
-                        "Not included": "#999999"
+                        "Not covered": "#999999"
                     }
                 };
                 break;
@@ -184,7 +184,6 @@ export class Visualizer {
         // Special: comparison
         if (Incumbent && this.IncumbentName.startsWith("owner-") && !this.IncumbentName.startsWith(`owner-${Owner}`)) {
             // Comparing two owners
-            var Graph = this.GetStatus<T>().Graph;
             var OtherOwner = parseInt(this.IncumbentName.split("-")[1]);
             Filter = (Node: Node<T>) => FilterNodeByOwner(Node, Owner, true) || FilterNodeByOwner(Node, OtherOwner, true);
             Colorizer = {
@@ -199,7 +198,7 @@ export class Visualizer {
             Colorizer.Examples[`Both codebooks`] = d3.schemeTableau10[5];
             Colorizer.Examples[`Only in ${this.Dataset.Names[Owner]}`] = d3.schemeTableau10[2];
             Colorizer.Examples[`Only in ${this.Dataset.Names[OtherOwner]}`] = d3.schemeTableau10[4];
-            Colorizer.Examples[`Not included`] = "#999999";
+            Colorizer.Examples[`Not covered`] = "#999999";
             Name = `owner-${Owner}-vs-${OtherOwner}`;
         }
         // Set the filter
@@ -319,7 +318,7 @@ export class Visualizer {
         };
         for (var I = 2; I <= this.Dataset.Codebooks.length; I++)
             DefaultColorizer.Examples[`In${this.Parameters.UseNearOwners ? " (or near)" : ""} ${I - 1} codebooks`] = d3.interpolateViridis(I / this.Dataset.Codebooks.length);
-        DefaultColorizer.Examples["Not included"] = "#999999";
+        DefaultColorizer.Examples["Not covered"] = "#999999";
         // Find the colorizer to use
         var Colorizer = this.CurrentColorizer ?? DefaultColorizer;
         Colorizer.Results = {};

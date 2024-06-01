@@ -13,8 +13,8 @@ import matplotlib.ticker as ticker
 if len(sys.argv) < 3:
     ## Load the dataset path
     sys.path.append('../../')
-    from constants import dataset_path
-
+    from dotenv import load_dotenv
+    dataset_path = load_dotenv("DATASET_PATH")
     file_path1 = dataset_path + r'\Messaging Groups\Users of Physics Lab (Group 1)\Conversations.json'
     file_path2 = dataset_path + r'\Messaging Groups\Users of Physics Lab (Group 2)\Conversations.json'
 else:
