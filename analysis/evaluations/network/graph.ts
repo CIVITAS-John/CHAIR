@@ -71,10 +71,8 @@ export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Param
         MinimumDistance: MinDistance };
     // Identify the components
     Graph.Components = FindCommunities(Graph.Nodes, Graph.Links, (Node, Links) => {
-        return Node.Data.Examples?.length ?? 0 + 
-            2 * (Node.NearOwners?.size ?? 0) + 
-            10 * Links.reduce((Sum, Link) => Sum + (Link.Weight ?? 1), 0) + 
-            0.2 * Node.Data.Label.length;
+        return Math.sqrt(Node.Data.Examples?.length ?? 0) + 
+            (Node.NearOwners?.size ?? 0);
     });
     // Look at every link - and if the source and target are in different components, reduce the weight
     // Thus, we will have a more close spatial arrangement of the components
@@ -84,8 +82,8 @@ export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Param
         } else {
             if (Link.Source.Links.length <= 1 || Link.Target.Links.length <= 1) return;
             if (Link.Source.Component !== undefined && Link.Target.Component !== undefined) {
-                Link.VisualizeDistance = Link.VisualizeDistance! * 10;
-                Link.VisualizeWeight = 0.2 * Link.VisualizeWeight! * Link.VisualizeWeight!;
+                Link.VisualizeDistance = Link.VisualizeDistance! * 15;
+                Link.VisualizeWeight = 0.15 * Link.VisualizeWeight! * Link.VisualizeWeight!;
             }
         }
     });
@@ -98,62 +96,15 @@ export function BuildSemanticGraph(Dataset: CodebookComparison, Parameter: Param
     }
     Graph.Nodes.forEach(Node => {
         var Ratio = Ratios[(Node.Component?.ID ?? -1) + 1];
-        Node.x = (Math.cos(Ratio * 2 * Math.PI) - 0.5 + Math.random() * 0.15) * 300,
-        Node.y = (Math.sin(Ratio * 2 * Math.PI) - 0.5 + Math.random() * 0.15) * 300
+        Node.x = (Math.cos(Ratio * 2 * Math.PI) - 0.5 + Math.random() * 0.15) * 400,
+        Node.y = (Math.sin(Ratio * 2 * Math.PI) - 0.5 + Math.random() * 0.15) * 400
     });
     return Graph;
 }
 
-/** Lerp: Linearly interpolate between two values. */
-export function InverseLerp(a: number, b: number, t: number): number {
-    return Math.min(1, Math.max(0, (t - a) / (b - a)));
-}
+/** BuildConcurrenceGraph: Build a concurrence code graph from the dataset. */
+export function BuildConcurrenceGraph() {
 
-/** IdentifyComponents: Identify the connected components in the graph. */
-export function IdentifyComponents<T>
-    (Nodes: Node<T>[], Links: Link<T>[], 
-    NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number,
-    LinkEvaluator: (Link: Link<T>) => number = (Link) => Link.Weight ?? 1, 
-    MinimumNodes: number = 3,
-    MaximumNodes: number = Math.ceil(Nodes.length / 5)): Component<T>[] {
-    var Components: Component<T>[] = [];
-    var Visited = new Set<Node<T>>();
-    Links = Links.filter((Link) => LinkEvaluator(Link) > 0)
-    for (var Node of Nodes) {
-        if (Visited.has(Node)) continue;
-        var Queue = [Node];
-        var CurrentNodes = new Set<Node<T>>()
-        // Search through links
-        while (Queue.length > 0) {
-            var Current = Queue.shift()!;
-            if (Visited.has(Current)) continue;
-            // Add the current node to the component
-            Visited.add(Current);
-            CurrentNodes.add(Current);
-            // Add the current node's neighbors to the queue
-            var Degrees = 0;
-            Links.forEach(Link => {
-                if (Link.Source == Current) {
-                    Queue.push(Link.Target);
-                    Degrees++;
-                }
-                if (Link.Target == Current) {
-                    Queue.push(Link.Source);
-                    Degrees++;
-                }
-            });
-        }
-        if (CurrentNodes.size < MinimumNodes) continue;
-        var CurrentLinks = Links.filter(Link => CurrentNodes.has(Link.Source) || CurrentNodes.has(Link.Target));
-        if (CurrentNodes.size > MaximumNodes)
-            Components.push(...FindCommunities(Array.from(CurrentNodes), CurrentLinks, NodeEvaluator, LinkEvaluator, MinimumNodes));
-        else {
-            var ResultNodes = Array.from(CurrentNodes);
-            Components.push({ ID: -1, Representative: FindBestNode(ResultNodes, CurrentLinks, NodeEvaluator), Nodes: ResultNodes });
-        }
-    }
-    Components.forEach((Component, Index) => Component.ID = Index);
-    return Components;
 }
 
 /** FindCommunities: Find the communities in the graph. */
@@ -173,7 +124,7 @@ export function FindCommunities<T>(Nodes: Node<T>[], Links: Link<T>[],
     // Find the communities
     var Communities = (graphologyLibrary.communitiesLouvain as any)(Graph, {
         getEdgeWeight: (Edge: any) => Weights.get(Edge)!,
-        resolution: 1
+        resolution: 1.5
     }) as Record<string, number>;
     // Create the components
     var Components: Component<T>[] = new Array(Object.values(Communities).reduce((a, b) => Math.max(a, b), 0) + 1);
@@ -184,8 +135,10 @@ export function FindCommunities<T>(Nodes: Node<T>[], Links: Link<T>[],
         Components[Community].Nodes.push(Node);
     }
     // Find the representatives
-    for (var Component of Components) 
-        Component.Representative = FindBestNode(Component.Nodes, Links, NodeEvaluator);
+    for (var Component of Components) {
+        Component.Representative = FindCentralNode(Component.Nodes, Links, NodeEvaluator, LinkEvaluator);
+        // Component.Representative = FindBestNode(Component.Nodes, Links, NodeEvaluator);
+    }
     // Filter the components
     var Components = Components.filter(Component => Component.Nodes.length >= MinimumNodes);
     Components.forEach((Component, Index) => {
@@ -195,8 +148,38 @@ export function FindCommunities<T>(Nodes: Node<T>[], Links: Link<T>[],
     return Components;
 }
 
+/** FindCentralNode: Find the central node in the set. */
+export function FindCentralNode<T>(Nodes: Node<T>[], Links: Link<T>[], 
+    NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number,
+    LinkEvaluator: (Link: Link<T>) => number = (Link) => Link.Weight ?? 1): Node<T> {
+    // Create a graph
+    var Weights = new Map<string, number>();
+    var Graph = new graphology.UndirectedGraph();
+    Nodes.forEach(Node => Graph.addNode(Node.ID));
+    Links.filter(Link => Nodes.includes(Link.Source) && Nodes.includes(Link.Target)).forEach(Link => { 
+        var Weight = LinkEvaluator(Link);
+        if (Weight > 0)
+            Weights.set(Graph.addEdge(Link.Source.ID, Link.Target.ID), Weight);
+    });
+    // Find the central node
+    var Result = graphologyLibrary.metrics.centrality.pagerank(Graph, {
+        getEdgeWeight: (Edge: any) => Weights.get(Edge)!,
+    });
+    // Translate the result
+    var Best: Node<T> | undefined = undefined;
+    var BestValue = Number.MIN_VALUE;
+    for (var Node of Nodes) {
+        var Value = Result[Node.ID] + NodeEvaluator(Node, Links);
+        if (Value > BestValue) {
+            Best = Node;
+            BestValue = Value;
+        }
+    }
+    return Best!;
+}
+
 /** FindBestNode: Find the best node in the set. */
-export function FindBestNode<T>(Nodes:Node<T>[], Links: Link<T>[], NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number): Node<T> {
+export function FindBestNode<T>(Nodes: Node<T>[], Links: Link<T>[], NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number): Node<T> {
     var Best: Node<T> | undefined = undefined;
     var BestValue = Number.MIN_VALUE;
     for (var Node of Nodes) {
@@ -214,11 +197,6 @@ export function FilterNodeByOwner<T>(Node: Node<T>, Owner: number, NearOwners: b
     return NearOwners ? Node.NearOwners.has(Owner) : Node.Owners.has(Owner);
 }
 
-/** BuildConcurrenceGraph: Build a concurrence code graph from the dataset. */
-export function BuildConcurrenceGraph() {
-
-}
-
 /** FindMinimumIndexes: Find the indices of the minimum k elements in an array. */
 function FindMinimumIndexes(arr: number[], k: number): number[] {
     // Create an array of indices [0, 1, 2, ..., arr.length - 1].
@@ -227,4 +205,9 @@ function FindMinimumIndexes(arr: number[], k: number): number[] {
     indices.sort((a, b) => arr[a] - arr[b]);
     // Return the first k indices.
     return indices.slice(0, k);
+}
+
+/** Lerp: Linearly interpolate between two values. */
+export function InverseLerp(a: number, b: number, t: number): number {
+    return Math.min(1, Math.max(0, (t - a) / (b - a)));
 }

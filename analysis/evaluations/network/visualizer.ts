@@ -266,7 +266,7 @@ export class Visualizer {
             }
         }
         this.GetStatus().ChosenNodes = Chosens;
-        this.Container.attr("class", Chosens.length > 0 ? "with-chosen" : "");
+        this.Container.classed("node-chosen", Chosens.length > 0);
     }
     // Component events
     /** ComponentOver: Handle the mouse-over event on a component. */
@@ -276,6 +276,15 @@ export class Visualizer {
     /** ComponentOut: Handle the mouse-out event on a component. */
     private ComponentOut<T>(Event: Event, Component: Component<T>) {
         SetClassForComponent(Component, "hovering", false);
+    }
+    /** ComponentChosen: Handle the click event on a component. */
+    private ComponentChosen<T>(Event: Event, Component: Component<T>) {
+        var Status = this.FilterByComponent(true, Component);
+        if (Status) this.Container.transition().duration(500)
+            .call(this.Zoom.translateTo as any, d3.mean(Component.Nodes.map(Node => Node.x!))!, d3.mean(Component.Nodes.map(Node => Node.y!)))
+            .transition().call(this.Zoom.scaleTo as any, 3);
+        SetClassForComponent(Component, "chosen", Status, false);
+        this.Container.classed("component-chosen", Status);
     }
     // Rendering
     /** RenderLegends: Render the legends for the visualization. */
@@ -398,14 +407,9 @@ export class Visualizer {
                      .attr("id", (Component) => `hull-${Component.ID}`)
                      .attr("fill", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length))
                      .attr("stroke", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length))
-                     .on("mouseover", (Event, Component) => this.ComponentOver(Event, Component))
-                     .on("mouseout", (Event, Component) => this.ComponentOut(Event, Component))
-                     .on("click", (Event, Component) => {
-                         if (this.FilterByComponent(true, Component))
-                             this.Container.transition().duration(500)
-                                 .call(this.Zoom.translateTo as any, d3.mean(Component.Nodes.map(Node => Node.x!))!, d3.mean(Component.Nodes.map(Node => Node.y!)))
-                                 .transition().call(this.Zoom.scaleTo as any, 3);
-                     }),
+                     .on("mouseover", (Event, Component) => { this.ComponentOver(Event, Component); })
+                     .on("mouseout", (Event, Component) => { this.ComponentOut(Event, Component); })
+                     .on("click", (Event, Component) => { this.ComponentChosen(Event, Component); }),
                 (Update) => Update)
                     .attr("d", (Component) => `M${Component.Hull!.join("L")}Z`);
             // Render the component labels
@@ -463,10 +467,10 @@ export class Visualizer {
 }
 
 /** SetClassForComponent: Set a class for a component and its nodes. */
-function SetClassForComponent<T>(Component: Component<T>, Class: string, Status: boolean) {
+function SetClassForComponent<T>(Component: Component<T>, Class: string, Status: boolean, ForNodes: boolean = true) {
     $(`#component-${Component.ID}`).toggleClass(Class, Status);
     $(`#hull-${Component.ID}`).toggleClass(Class, Status);
-    Component.Nodes.forEach(Node => {
+    if (ForNodes) Component.Nodes.forEach(Node => {
         SetClassForNode(Node.ID, Class, Status);
         // SetClassForLinks(Node.ID, Class, Status, (Other) => Component.Nodes.findIndex(Node => Node.ID == Other) != -1);
     });

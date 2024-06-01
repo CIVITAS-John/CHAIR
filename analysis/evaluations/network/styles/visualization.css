@@ -75,6 +75,10 @@ html {
     stroke-opacity: 0.4;
     fill-opacity: 0.2;
 }
+.component-chosen .hulls path:not(.chosen) {
+    stroke-opacity: 0.1;
+    fill-opacity: 0.05;
+}
 .visualization .components text {
     cursor: pointer;
     stroke-width: 0.1;
@@ -102,9 +106,13 @@ html {
 circle:not(.chosen, .hovering) {
     fill-opacity: 0.9;
 }
+/* Lines */
+line { 
+    pointer-events: none;
+}
 /* Chosen styles */
-.with-chosen .labels text:not(.chosen, .chosen-neighbor, .hovering),
-.with-chosen circle:not(.chosen, .chosen-neighbor, .hovering) {
+.node-chosen .labels text:not(.chosen, .chosen-neighbor, .hovering),
+.node-chosen circle:not(.chosen, .chosen-neighbor, .hovering) {
     fill-opacity: 0.4;
 }
 circle.hidden {
@@ -130,16 +138,13 @@ circle.chosen-neighbor {
 .labels text.chosen {
     fill: #fff;
 }
-line { 
-    pointer-events: none;
-}
-line.chosen,
-line.chosen-neighbor,
-line.hovering {
+.links line.chosen,
+.links line.chosen-neighbor,
+.links line.hovering {
     stroke-width: 0.4;
     stroke-opacity: 1;
 }
-.with-chosen line:not(.chosen, .chosen-neighbor, .hovering) {
+.node-chosen line:not(.chosen, .chosen-neighbor, .hovering) {
     stroke-opacity: 0.1;
 }
 /* Hidden styles */
