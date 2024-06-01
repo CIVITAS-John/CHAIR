@@ -123,9 +123,8 @@ export class InfoPanel {
     private BuildOwnerLink(Code: Code, Sources: Code[], Owner: number)  {
         var Link = $(`<a href="javascript:void(0)" style="color: ${this.Visualizer.GetCodebookColor(Owner)}">${this.Visualizer.Dataset.Names[Owner]}</a>`);
         if (Sources.length > 0) {
-            var Originals = this.FindOriginalCodes(Code, Owner);
-            Link.attr("title", Originals.map(Original => Original.Label).join(", "));
-            Link.on("click", () => { this.ShowDialogForCode(Owner, Code, ...Originals) });
+            Link.attr("title", Sources.map(Original => Original.Label).join(", "));
+            Link.on("click", () => { this.ShowDialogForCode(Owner, Code, ...Sources) });
         }
         return Link;
     }
