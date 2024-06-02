@@ -93,6 +93,10 @@
     border-spacing: 0;
     background: rgba(255, 255, 255, 0.1);
 }
+.side-panel tr.chosen {
+    color: rgb(184, 187, 38);
+    background: rgba(255, 255, 255, 0.1);
+}
 .side-panel table td,
 .side-panel table th {
     padding: 0.25rem;
@@ -123,6 +127,10 @@
     font-size: 0.8rem;
 }
 /* Codebooks style. */
+.side-panel .codebook-cell.chosen {
+    color: rgb(184, 187, 38);
+    background: rgba(255, 255, 255, 0.1);
+}
 .side-panel .codebook-cell h4 {
     margin: 0;
 }
@@ -130,10 +138,6 @@
     font-size: 0.8rem;
 }
 /* Codes style. */
-.side-panel .cluster-cell.chosen {
-    color: rgb(184, 187, 38);
-    background: rgba(255, 255, 255, 0.1);
-}
 .side-panel p.owners {
     font-size: 0.8rem;
 }

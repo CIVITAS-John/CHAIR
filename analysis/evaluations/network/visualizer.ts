@@ -136,15 +136,18 @@ export class Visualizer {
     /** SetFilter: Try to set a filter for the visualization. */
     public SetFilter<T>(Previewing: boolean, Filter: FilterBase<any, any>, Parameters: any = undefined, Additive: boolean = false, Mode: string = ""): boolean {
         if (Previewing) {
-            if (Parameters == undefined || (Filter.Name == this.PreviewFilter?.Name && 
-                !this.PreviewFilter?.ToggleParameters(Parameters, Additive, Mode)) && 
-                this.PreviewFilter?.Parameters.length == 0) {
+            if (Parameters == undefined) {
                 delete this.PreviewFilter;
                 Parameters = undefined;
             } else if (this.Filters.has(Filter.Name)) {
                 // Do not preview something fixed
                 delete this.PreviewFilter;
                 Parameters = undefined;
+            } else if (Filter.Name == this.PreviewFilter?.Name) {
+                if (!this.PreviewFilter?.ToggleParameters(Parameters, Additive, Mode) && this.PreviewFilter?.Parameters.length == 0) {
+                    delete this.PreviewFilter;
+                    Parameters = undefined;
+                }
             } else {
                 this.PreviewFilter = Filter;
                 this.PreviewFilter.Parameters = [Parameters];
@@ -172,8 +175,9 @@ export class Visualizer {
         return Parameters != undefined;
     }
     /** IsFilterApplied: Check if a filter is applied. */
-    public IsFilterApplied(Name: string, Parameter: any): boolean {
+    public IsFilterApplied(Name: string, Parameter: any, Mode?: string): boolean {
         var Filter = this.Filters.get(Name);
+        if (Mode && Filter?.Mode != Mode) return false;
         return Filter?.Parameters.includes(Parameter) ?? false;
     }
     // Node events

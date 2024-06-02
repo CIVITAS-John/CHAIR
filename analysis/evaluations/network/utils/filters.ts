@@ -11,8 +11,6 @@ export abstract class FilterBase<TNode, TParameter> {
     public Parameters: TParameter[] = [];
     /** Mode: The mode of the filter. */
     public Mode: string = "";
-    /** Exclusive: Whether the filter is exclusive. */
-    public Exclusive: boolean = true;
     /** Filter: The filter function. */
     public abstract Filter(Visualizer: Visualizer, Node: Node<TNode>): boolean;
     /** GetColorizer: Get the colorizer for this filter. */

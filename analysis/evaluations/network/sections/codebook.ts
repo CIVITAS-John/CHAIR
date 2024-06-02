@@ -56,7 +56,8 @@ export class CodebookSection extends Panel {
                        .append($(`<p></p>`).text(`${new Set(Object.keys(Codebook).map(Code => FindConsolidatedCode(Codebooks[0], Code)!.Label)).size} consolidated`))
                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1))
                        .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
-                       .on("click", (Event) => this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey));
+                       .on("click", (Event) => this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey))
+                       .toggleClass("chosen", this.Visualizer.IsFilterApplied("Owner", Index + 1, ""));
                 // Evaluation results
                 Metrics.forEach(Metric => {
                     var MetricValue = Value[Metric];
@@ -68,7 +69,8 @@ export class CodebookSection extends Panel {
                         .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
                         .on("click", (Event) => this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey, Metric))
                         .css("background", Color)
-                        .css("color", d3.lab(Color).l > 70 ? "black" : "white");
+                        .css("color", d3.lab(Color).l > 70 ? "black" : "white")
+                        .toggleClass("chosen", this.Visualizer.IsFilterApplied("Owner", Index + 1, Metric));
                     Row.append(Cell);
                 });
             }, ["Codebook", ...Metrics]
