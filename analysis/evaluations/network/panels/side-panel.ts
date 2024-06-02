@@ -56,6 +56,10 @@ export class SidePanel extends Panel {
     public Hide() {
         this.Container.toggleClass("collapsed", true);
     }
+    /** Render: Render the panel. */
+    public Render() {
+        this.Subpanels[this.CurrentPanel].Render();
+    }
     /** Toggle: Toggle the side panel. */
     public Toggle() {
         if (this.Container.hasClass("collapsed")) this.Show();

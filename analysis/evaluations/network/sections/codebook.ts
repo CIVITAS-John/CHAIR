@@ -4,6 +4,7 @@ import { Panel } from '../panels/panel.js';
 import { Visualizer } from '../visualizer.js';
 import { Evaluate } from '../utils/evaluate.js';
 import { FindConsolidatedCode } from '../utils/dataset.js';
+import { OwnerFilter } from '../utils/filters.js';
 
 /** CodebookSection: The codebook side panel. */
 export class CodebookSection extends Panel {
@@ -53,21 +54,22 @@ export class CodebookSection extends Panel {
                 Summary.append($(`<h4></h4>`).text(Key))
                        .append($(`<p></p>`).text(`${Object.keys(Codebook).length} codes`))
                        .append($(`<p></p>`).text(`${new Set(Object.keys(Codebook).map(Code => FindConsolidatedCode(Codebooks[0], Code)!.Label)).size} consolidated`))
-                       .on("mouseover", (Event) => this.Visualizer.FilterByOwner(false, Index + 1))
-                       .on("mouseout", (Event) => this.Visualizer.SetFilter(false))
-                       .on("click", (Event) => this.Visualizer.FilterByOwner(true, Index + 1));
+                       .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1))
+                       .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
+                       .on("click", (Event) => this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey));
                 // Evaluation results
                 Metrics.forEach(Metric => {
                     var MetricValue = Value[Metric];
                     var Color = Colors[Metric](MetricValue);
-                    Row.append($(`<td class="metric-cell"></td>`)
+                    var Cell = $(`<td class="metric-cell"></td>`)
                         .attr("id", `metric-${Index}-${Metric}`)
                         .text(d3.format(".1%")(MetricValue))
-                        .on("mouseover", (Event) => this.Visualizer.FilterByOwner(false, Index, Metric))
-                        .on("mouseout", (Event) => this.Visualizer.SetFilter(false))
-                        .on("click", (Event) => this.Visualizer.FilterByOwner(true, Index, Metric))
+                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1, false, Metric))
+                        .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
+                        .on("click", (Event) => this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey, Metric))
                         .css("background", Color)
-                        .css("color", d3.lab(Color).l > 70 ? "black" : "white"));
+                        .css("color", d3.lab(Color).l > 70 ? "black" : "white");
+                    Row.append(Cell);
                 });
             }, ["Codebook", ...Metrics]
         )

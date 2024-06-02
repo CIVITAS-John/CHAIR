@@ -27,8 +27,16 @@ export class CodeSection extends Panel {
         var Components = this.GetGraph<Code>().Components!;
         this.Container.append($(`<h3>${Components.length} Clusters, ${this.Dataset.Codes.length} Codes</h3>`));
         this.BuildTable(Components, (Row, Component, Index) => {
+            // Interactivity
+            Row.on("mouseover", (Event) => this.Visualizer.ComponentOver(Event, Component))
+               .on("mouseout", (Event) => this.Visualizer.ComponentOut(Event, Component))
+               .on("click", (Event) => this.Visualizer.ComponentChosen(Event, Component))
+               .toggleClass("chosen", this.Visualizer.IsFilterApplied("Component", Component));
             // Show the summary
-            var Summary = $(`<td class="cluster-cell"></td>`).attr("id", `cluster-${Index}`).addClass("actionable").appendTo(Row);
+            var Summary = $(`<td class="cluster-cell"></td>`)
+                .attr("id", `cluster-${Component.ID}`)
+                .addClass("actionable")
+                .appendTo(Row);
             Summary.append($(`<h4></h4>`).text(`#${Index + 1} ${Component.Representative!.Data.Label}`));
             // Calculate the coverage of each codebook
             var Codebooks: Map<number, number> = this.Dataset.Names.reduce((Previous, Name, Index) => {
@@ -37,10 +45,10 @@ export class CodeSection extends Panel {
             }, new Map<number, number>());
             // Show the owners
             var Owners = $(`<p class="owners"></p>`).appendTo(Summary);
-            this.Dataset.Names.forEach((Name, Index) => {
-                var Count = Codebooks.get(Index)!;
-                if (Index == 0 || Count == 0) return;
-                Owners.append($(`<a href="javascript:void(0)" style="color: ${GetCodebookColor(Index, this.Dataset.Codebooks.length)}">${this.Dataset.Names[Index]}</a>`)
+            this.Dataset.Names.forEach((Name, NameIndex) => {
+                var Count = Codebooks.get(NameIndex)!;
+                if (NameIndex == 0 || Count == 0) return;
+                Owners.append($(`<a href="javascript:void(0)" style="color: ${GetCodebookColor(NameIndex, this.Dataset.Codebooks.length)}">${this.Dataset.Names[NameIndex]}</a>`)
                     .attr("title", `${Count} codes (${d3.format(".0%")(Count / Component.Nodes.length)})`));
             });
             // Show the numbers

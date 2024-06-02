@@ -1,12 +1,14 @@
 import * as d3 from 'd3';
 import { Code, CodebookComparison, DataChunk, DataItem } from '../../../utils/schema.js';
-import { Node, Link, Graph, Component, GraphStatus, Colorizer } from './utils/schema.js';
-import { BuildSemanticGraph, FilterNodeByOwner } from './utils/graph.js';
+import { Node, Link, Graph, Component, GraphStatus } from './utils/schema.js';
+import { BuildSemanticGraph } from './utils/graph.js';
+import { Colorizer, ComponentFilter, OwnerFilter } from './utils/filters.js';
 import { Parameters } from './utils/utils.js';
 import type { Cash, CashStatic, Element } from 'cash-dom';
 import { InfoPanel } from './panels/info-panel.js';
 import { SidePanel } from './panels/side-panel.js';
 import { Dialog } from './panels/dialog.js';
+import { FilterBase } from './utils/filters.js';
 declare global {
     var $: typeof Cash.prototype.init & CashStatic;
 }
@@ -82,7 +84,8 @@ export class Visualizer {
     public StatusType: string = "";
     /** SetStatus: Use a new graph for visualization. */
     public SetStatus<T>(Type: string, Graph: Graph<T>) {
-        this.IncumbentFilter = undefined;
+        this.PreviewFilter = undefined;
+        this.Filters.clear();
         this.Status = { Graph, ChosenNodes: []};
         this.StatusType = Type;
         this.Rerender(true);
@@ -96,13 +99,13 @@ export class Visualizer {
     public Rerender(Relayout: boolean = false) {
         // Apply the filter
         this.Status.Graph.Nodes.forEach(Node => {
-            var Filtered = this.CurrentFilter?.(Node) ?? true;
+            var Filtered = true;
+            this.Filters.forEach(Filter => Filtered = Filtered && Filter.Filter(this, Node));
+            if (this.PreviewFilter) Filtered = Filtered && this.PreviewFilter.Filter(this, Node);
             Node.Hidden = !Filtered;
         });
         this.Status.Graph.Links.forEach(Link => {
-            if (this.CurrentFilter)
-                Link.Hidden = !this.CurrentFilter(Link.Source) || !this.CurrentFilter(Link.Target);
-            else Link.Hidden = false;
+            Link.Hidden = Link.Source.Hidden || Link.Target.Hidden;
         });
         this.Status.Graph.Components?.forEach(Component => {
             Component.CurrentNodes = Component.Nodes.filter(Node => !Node.Hidden);
@@ -126,103 +129,47 @@ export class Visualizer {
             .transition().call(this.Zoom.scaleTo as any, Zoom);
     }
     // Filters
-    /** IncumbentName: The name of the incumbent filter. */
-    private IncumbentName: string = "";
-    /** CurrentFilter: The current filter for the visualization. */
-    private CurrentFilter?: (Node: Node<any>) => boolean;
-    /** IncumbentFilter: The chosen permenant filter for the visualization. */
-    private IncumbentFilter?: (Node: Node<any>) => boolean;
-    /** CurrentColorizer: The current colorizer for nodes. */
-    private CurrentColorizer?: Colorizer<any>;
-    /** IncumbentColorizer: The chosen permenant colorizer for nodes. */
-    private IncumbentColorizer?: Colorizer<any>;
-    /** SetFilter: Set a filter for the visualization. */
-    public SetFilter<T>(Incumbent: boolean, Name: string = "", 
-        Filter?: (Node: Node<T>) => boolean, Colorizer?: Colorizer<T>): boolean {
-        if (Incumbent) {
-            if (Name == this.IncumbentName) {
-                Filter = undefined;
-                Colorizer = undefined;
-                Name = "";
+    /** Filters: The current filters of the graph. */
+    private Filters: Map<string, FilterBase<any, any>> = new Map();
+    /** PreviewFilter: The previewing filter of the graph. */
+    private PreviewFilter?: FilterBase<any, any>;
+    /** SetFilter: Try to set a filter for the visualization. */
+    public SetFilter<T>(Previewing: boolean, Filter: FilterBase<any, any>, Parameters: any = undefined, Additive: boolean = false, Mode: string = ""): boolean {
+        console.log(`Set filter: ${Filter.Name} with ${Parameters}, previewing ${Previewing}`);
+        if (Previewing) {
+            if (Parameters == undefined || (Filter.Name == this.PreviewFilter?.Name && 
+                !this.PreviewFilter?.ToggleParameters(Parameters, Additive, Mode)) && 
+                this.PreviewFilter?.Parameters.length == 0) {
+                delete this.PreviewFilter;
+                Parameters = undefined;
+            } else {
+                this.PreviewFilter = Filter;
+                this.PreviewFilter.Parameters = [Parameters];
             }
-            this.IncumbentName = Name;
-            this.IncumbentFilter = Filter;
-            this.IncumbentColorizer = Colorizer;
+        } else {
+            var Incumbent = this.Filters.get(Filter.Name);
+            if (Parameters == undefined) {
+                this.Filters.delete(Filter.Name);
+                Parameters = undefined;
+            } else if (Filter.Name == Incumbent?.Name) {
+                if (!Incumbent?.ToggleParameters(Parameters, Additive, Mode) && Incumbent?.Parameters.length == 0) {
+                    this.Filters.delete(Filter.Name);
+                    Parameters = undefined;
+                }
+            } else {
+                this.Filters.set(Filter.Name, Filter);
+                Filter.Parameters = [Parameters];
+            }
         }
-        this.CurrentFilter = Filter ?? this.IncumbentFilter;
-        this.CurrentColorizer = Colorizer ?? this.IncumbentColorizer;
         this.NodeChosen(new Event("click"), undefined);
         this.Rerender();
-        return this.CurrentFilter !== undefined;
+        if (!Previewing) this.SidePanel.Render();
+        return Parameters != undefined;
     }
-    /** FilterByOwner: Filter the nodes by their owners. */
-    public FilterByOwner<T>(Incumbent: boolean, Owner: number, Colorize: string = "") {
-        var Filter = (Node: Node<T>) => FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners || Colorize != "");
-        // Set the colorizer
-        var Name = `owner-${Owner}-${Colorize}`;
-        var Colorizer: Colorizer<T> | undefined;
-        Colorize = Colorize.toLowerCase();
-        switch (Colorize) {
-            case "coverage":
-            case "density":
-                var Interpolator = d3.interpolateCool;
-                Colorizer = {
-                    Colorize: (Node) => Interpolator(Node.Owners.has(Owner) ? 1 : Node.NearOwners.has(Owner) ? 0.55 : 0.1),
-                    Examples: { 
-                        "In the codebook": Interpolator(1),
-                        "Has a similar concept": Interpolator(0.55),
-                        "Not covered": "#999999"
-                    }
-                };
-                break;
-            case "novelty":
-            case "conformity":
-                var Interpolator = d3.interpolatePlasma;
-                Colorizer = {
-                    Colorize: (Node) => {
-                        var Status = 0;
-                        var Novel = Node.NearOwners!.size == 1 + (Node.Owners.has(0) ? 1 : 0);
-                        if (Node.NearOwners.has(Owner))
-                            Status = Novel ? 1 : Node.Owners.has(Owner) ? 0.7 : 0.35;
-                        return Interpolator(Status);
-                    },
-                    Examples: { 
-                        "Novel: only in this codebook": Interpolator(1),
-                        "Shared: in the codebook": Interpolator(0.7),
-                        "Shared: has a similar concept": Interpolator(0.35),
-                        "Not covered": "#999999"
-                    }
-                };
-                break;
-        }
-        // Special: comparison
-        if (Incumbent && this.IncumbentName.startsWith("owner-") && !this.IncumbentName.startsWith(`owner-${Owner}`)) {
-            // Comparing two owners
-            var OtherOwner = parseInt(this.IncumbentName.split("-")[1]);
-            Filter = (Node: Node<T>) => FilterNodeByOwner(Node, Owner, true) || FilterNodeByOwner(Node, OtherOwner, true);
-            Colorizer = {
-                Colorize: (Node) => {
-                    var NearOwner = FilterNodeByOwner(Node, Owner, this.Parameters.UseNearOwners);
-                    var NearOther = FilterNodeByOwner(Node, OtherOwner, this.Parameters.UseNearOwners);
-                    return NearOwner && NearOther ? d3.schemeTableau10[5] : NearOwner ? d3.schemeTableau10[2] : NearOther ? d3.schemeTableau10[4] : "#999999";
-                },
-                Examples: {}
-            };
-            // Count the nodes and create the legends
-            Colorizer.Examples[`Both codebooks`] = d3.schemeTableau10[5];
-            Colorizer.Examples[`Only in ${this.Dataset.Names[Owner]}`] = d3.schemeTableau10[2];
-            Colorizer.Examples[`Only in ${this.Dataset.Names[OtherOwner]}`] = d3.schemeTableau10[4];
-            Colorizer.Examples[`Not covered`] = "#999999";
-            Name = `owner-${Owner}-vs-${OtherOwner}`;
-        }
-        // Set the filter
-        console.log(Name);
-        return this.SetFilter(Incumbent, Name, Filter, Colorizer);
-    }
-    /** FilterByComponent: Filter the nodes by their components. */
-    public FilterByComponent<T>(Incumbent: boolean, Component: Component<T>) {
-        var Filter = (Node: Node<T>) => Component.Nodes.includes(Node);
-        return this.SetFilter(Incumbent, `component-${Component.ID}`, Filter);
+    /** IsFilterApplied: Check if a filter is applied. */
+    public IsFilterApplied(Name: string, Parameter: any): boolean {
+        var Filter = this.Filters.get(Name);
+        return Filter?.Parameters.includes(Parameter) ?? false;
     }
     // Node events
     /** NodeOver: Handle the mouse-over event on a node. */
@@ -285,16 +232,16 @@ export class Visualizer {
     }
     // Component events
     /** ComponentOver: Handle the mouse-over event on a component. */
-    private ComponentOver<T>(Event: Event, Component: Component<T>) {
+    public ComponentOver<T>(Event: Event, Component: Component<T>) {
         SetClassForComponent(Component, "hovering", true);
     }
     /** ComponentOut: Handle the mouse-out event on a component. */
-    private ComponentOut<T>(Event: Event, Component: Component<T>) {
+    public ComponentOut<T>(Event: Event, Component: Component<T>) {
         SetClassForComponent(Component, "hovering", false);
     }
     /** ComponentChosen: Handle the click event on a component. */
-    private ComponentChosen<T>(Event: Event, Component: Component<T>) {
-        var Status = this.FilterByComponent(true, Component);
+    public ComponentChosen<T>(Event: Event, Component: Component<T>) {
+        var Status = this.SetFilter(false, new ComponentFilter(), Component, (Event as any)?.shiftKey == true);
         if (Status) this.Container.transition().duration(500)
             .call(this.Zoom.translateTo as any, d3.mean(Component.Nodes.map(Node => Node.x!))!, d3.mean(Component.Nodes.map(Node => Node.y!)))
             .transition().call(this.Zoom.scaleTo as any, 3);
@@ -323,19 +270,15 @@ export class Visualizer {
         // Basic settings
         this.Container.attr("viewBox", "0 0 300 300");
         this.Zoom.extent([[0, 0], [300, 300]]);
-        // The default colorizer
-        var DefaultColorizer: Colorizer<Code> = {
-            Colorize: (Node) => {
-                var Existed = this.Parameters.UseNearOwners ? Node.NearOwners.size : Node.Owners.size;
-                return Existed <= 1 ? "#999999" : d3.interpolateViridis(Existed / this.Dataset.Codebooks.length);
-            },
-            Examples: {}
-        };
-        for (var I = 2; I <= this.Dataset.Codebooks.length; I++)
-            DefaultColorizer.Examples[`In${this.Parameters.UseNearOwners ? " (or near)" : ""} ${I - 1} codebooks`] = d3.interpolateViridis(I / this.Dataset.Codebooks.length);
-        DefaultColorizer.Examples["Not covered"] = "#999999";
         // Find the colorizer to use
-        var Colorizer = this.CurrentColorizer ?? DefaultColorizer;
+        var Colorizer = this.PreviewFilter?.GetColorizer(this);
+        if (!Colorizer) {
+            for (var Filter of this.Filters.values()) {
+                Colorizer = Filter.GetColorizer(this);
+                if (Colorizer) break;
+            }
+        }
+        if (!Colorizer) Colorizer = new OwnerFilter().GetColorizer(this);
         Colorizer.Results = {};
         // Render nodes
         var Graph = this.GetStatus<Code>().Graph;
@@ -351,10 +294,10 @@ export class Visualizer {
             (Update) => Update)
                 // Set the fill color based on the number of owners
                 .attr("fill", (Node) => {
-                    var Color = Colorizer.Colorize(Node);
+                    var Color = Colorizer!.Colorize(Node);
                     if (Node.Hidden) Color = "#999999";
-                    if (!Colorizer.Results![Color]) Colorizer.Results![Color] = [];
-                    Colorizer.Results![Color].push(Node);
+                    if (!Colorizer!.Results![Color]) Colorizer!.Results![Color] = [];
+                    Colorizer!.Results![Color].push(Node);
                     return Color;
                 })
                 // Set the radius based on the number of examples
@@ -406,6 +349,7 @@ export class Visualizer {
                 .classed("hidden", (Link) => Link.Hidden ?? false);
         // Visualize components
         if (Graph.Components) {
+            var Filtered = this.PreviewFilter != undefined || this.Filters.size > 0;
             // Calculate the hulls
             Graph.Components.forEach(Component => {
                 var Hull = d3.polygonHull(Component.Nodes.map(Node => [Node.x!, Node.y!]));
@@ -439,12 +383,12 @@ export class Visualizer {
                     .attr("stroke", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length)),
                 (Update) => Update)
                     .text((Component) => {
-                        if (Component.CurrentNodes && this.CurrentFilter)
+                        if (Component.CurrentNodes && Filtered)
                             return `${Component.Representative!.Data.Label} (${Component.CurrentNodes.length}/${Component.Nodes.length})`
                         else return `${Component.Representative!.Data.Label} (${Component.Nodes.length})`;
                     })
                     .attr("fill", (Component) => {
-                        if (Component.CurrentNodes && this.CurrentFilter)
+                        if (Component.CurrentNodes && Filtered)
                             return d3.interpolateViridis(Component.CurrentNodes.length / Component.Nodes.length);
                         else return "#ffffff";
                     })

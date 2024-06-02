@@ -186,6 +186,11 @@ export function FilterNodeByOwner<T>(Node: Node<T>, Owner: number, NearOwners: b
     return NearOwners ? Node.NearOwners.has(Owner) : Node.Owners.has(Owner);
 }
 
+/** FilterNodeByOwners: Filter a node by presence of some owners. */
+export function FilterNodeByOwners<T>(Node: Node<T>, Owners: number[], NearOwners: boolean): boolean {
+    return Owners.some(Owner => FilterNodeByOwner(Node, Owner, NearOwners));
+}
+
 /** FilterNodeByOwners: Filter nodes by presence of the owner. */
 export function FilterNodesByOwner<T>(Nodes: Node<T>[], Owner: number, NearOwners: boolean): Node<T>[] {
     return Nodes.filter(Node => FilterNodeByOwner(Node, Owner, NearOwners));
