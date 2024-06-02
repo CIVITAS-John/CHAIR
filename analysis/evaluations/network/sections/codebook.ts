@@ -20,6 +20,8 @@ export class CodebookSection extends Panel {
     /** Render: Render the panel. */
     public override Render() {
         this.Container.empty();
+        // Some notes
+        this.Container.append($(`<p class="tips"></p>`).text("Note that all metrics are relative (i.e. against the consolidated conceptual space of the following codebooks)."))
         // Evaluate the codebooks
         var Names = this.Dataset.Names;
         var Codebooks = this.Dataset.Codebooks;

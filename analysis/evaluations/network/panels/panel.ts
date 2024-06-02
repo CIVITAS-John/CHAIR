@@ -1,5 +1,5 @@
 import { Cash } from "cash-dom";
-import { Visualizer } from "../visualizer";
+import { Visualizer } from "../visualizer.js";
 
 /** Panel: A panel for the visualizer. */
 export abstract class Panel {
@@ -21,6 +21,8 @@ export abstract class Panel {
     protected get SidePanel() { return this.Visualizer.SidePanel; }
     /** Dialog: Dialog for the visualization. */
     protected get Dialog() { return this.Visualizer.Dialog; }
+    /** Graph: The current graph of the visualizer. */
+    protected GetGraph<T>() { return this.Visualizer.GetStatus<T>().Graph; }
     /** Constructor: Constructing the side panel. */
     public constructor(Container: Cash, Visualizer: Visualizer) {
         this.Visualizer = Visualizer;

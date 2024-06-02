@@ -3,6 +3,7 @@ import { Visualizer } from '../visualizer.js';
 import { Panel } from './panel.js';
 import { CodebookSection } from '../sections/codebook.js';
 import { DatasetSection } from '../sections/dataset.js';
+import { CodeSection } from '../sections/code.js';
 
 /** SidePanel: The side panel for the visualizer. */
 export class SidePanel extends Panel {
@@ -22,6 +23,7 @@ export class SidePanel extends Panel {
         // Add the subpanels
         this.Subpanels["dataset"] = new DatasetSection(this.Contents, this.Visualizer);
         this.Subpanels["codebook"] = new CodebookSection(this.Contents, this.Visualizer);
+        this.Subpanels["code"] = new CodeSection(this.Contents, this.Visualizer);
         // Add the menu
         var MenuContainer = this.Contents.children(".panel-menu");
         var BuildMenu = (Name: string) => {
