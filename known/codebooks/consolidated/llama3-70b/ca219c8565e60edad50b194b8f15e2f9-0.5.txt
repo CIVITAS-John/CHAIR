@@ -1,0 +1,56 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Label: {A consolidated label of code 3}
+---
+~~~
+1.
+Concepts: software updates and announcements, update schedule
+- Announcement or discussion of updates or changes to Physics Lab
+- Mention of a scheduled update or release of a new version of the Physics Lab, or announcement or discussion of plan for releasing updates or new versions of Physics Lab.
+
+2.
+Concepts: user gratitude
+- Users express gratitude and appreciation towards the designer or the Physics Lab community.
+- A user expresses gratitude or encouragement, or expressions of gratitude or appreciation from users.
+
+3.
+Concepts: confirmation
+- Confirming or verifying information
+- A user or designer expresses agreement or confirmation, or designer confirms or agrees with a statement or suggestion.
+===
+---
+Definitions for each code:
+
+1.
+Concepts: software updates and announcements, update schedule
+Relationship: Inclusion (software updates and announcements are part of the update schedule)
+Criteria: Announcement or discussion of updates or changes to Physics Lab, including mentioning a scheduled update or release of a new version.
+Label: Update Notifications
+
+2.
+Concepts: user gratitude
+Relationship: N/A (single concept)
+Criteria: Users express gratitude and appreciation towards the designer or the Physics Lab community, including expressions of gratitude or appreciation.
+Label: User Appreciation
+
+3.
+Concepts: confirmation
+Relationship: N/A (single concept)
+Criteria: A user or designer expresses agreement or confirmation, or designer confirms or agrees with a statement or suggestion.
+Label: Confirmatory Statements
