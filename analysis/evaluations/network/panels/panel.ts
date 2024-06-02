@@ -3,14 +3,18 @@ import { Visualizer } from "../visualizer";
 
 /** Panel: A panel for the visualizer. */
 export abstract class Panel {
+    /** Name: The short name of the panel. */
+    public Name: string = "";
     /** Title: The title of the panel. */
     public Title: string = "";
     /** Visualizer: The visualizer in-use. */
     protected Visualizer: Visualizer;
     /** Container: The container for the side panel. */
     protected Container: Cash;
-    /** Dataset: The dataset of the visualizer. */
+    /** Dataset: The codebook dataset of the visualizer. */
     protected get Dataset() { return this.Visualizer.Dataset; }
+    /** Source: The source dataset of the visualizer. */
+    protected get Source() { return this.Visualizer.Dataset.Source; }
     /** InfoPanel: The information panel for the visualization. */
     protected get InfoPanel() { return this.Visualizer.InfoPanel; }
     /** SidePanel: The side panel for the visualization. */
@@ -37,4 +41,18 @@ export abstract class Panel {
     }
     /** Render: Render the panel. */
     public Render() { }
+    /** BuildTable: Build a table for the panel. */
+    protected BuildTable<T>(Data: T[], Builder: (Row: Cash, Data: T, Index: number) => void, Columns: string[] = []) {
+        var Table = $(`<table></table>`).appendTo(this.Container);
+        if (Columns.length > 0)
+            Table.append($(`<tr></tr>`).append(...Columns.map(C => $(`<th></th>`).text(C))));
+        Data.forEach((Item, Index) => Builder($(`<tr></tr>`).appendTo(Table), Item, Index));
+        return Table;
+    }
+    /** BuildList: Build a list for the panel. */
+    protected BuildList<T>(Data: T[], Builder: (Item: Cash, Data: T, Index: number) => void, Type: "ul" | "ol" = "ul") {
+        var List = $(`<${Type}></${Type}>`).appendTo(this.Container);
+        Data.forEach((Item, Index) => Builder($(`<li></li>`).appendTo(List), Item, Index));
+        return List;
+    }
 }

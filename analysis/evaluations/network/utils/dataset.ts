@@ -1,5 +1,9 @@
-import { Cash } from "cash-dom";
-import { Code, Codebook, Dataset } from "../../../../utils/schema";
+import { Code, Codebook } from "../../../../utils/schema.js";
+
+/** FindConsolidatedCode: Find a consolidated code by name. */
+export function FindConsolidatedCode(Consolidated: Codebook, Name: string) {
+    return Object.values(Consolidated).find(Code => Code.Label == Name || Code.Alternatives?.includes(Name));
+}
 
 /** ExtractExamples: Extract examples from a code. */
 export function ExtractExamples(Examples: string[]): Map<string, string[]> {
@@ -29,6 +33,7 @@ export function ExtractExamples(Examples: string[]): Map<string, string[]> {
     });
     return NewResults;
 }
+
 /** FindOriginalCodes: Find the original codes from an owner. */
 export function FindOriginalCodes(Codebook: Codebook, Source: Code, Owner: number): Code[] {
     var Codes = Object.values(Codebook);

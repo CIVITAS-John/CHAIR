@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { Code, CodebookComparison } from '../../../utils/schema.js';
+import { Code, CodebookComparison, DataChunk, DataItem } from '../../../utils/schema.js';
 import { Node, Link, Graph, Component, GraphStatus, Colorizer } from './utils/schema.js';
 import { BuildSemanticGraph, FilterNodeByOwner } from './utils/graph.js';
 import { Parameters } from './utils/utils.js';
@@ -30,7 +30,7 @@ export class Visualizer {
     /** Zoom: The zoom behavior in-use. */
     private Zoom: d3.ZoomBehavior<globalThis.Element, unknown>;
     /** Dataset: The underlying dataset. */
-    public Dataset: CodebookComparison<any> = {} as any;
+    public Dataset: CodebookComparison<DataChunk<DataItem>> = {} as any;
     /** Parameters: The parameters for the visualizer. */
     public Parameters: Parameters = new Parameters();
     /** InfoPanel: The information panel for the visualization. */
@@ -72,6 +72,7 @@ export class Visualizer {
         d3.json("network.json").then((Data) => {
             this.Dataset = Data as any;
             this.SetStatus("Code", BuildSemanticGraph(this.Dataset, this.Parameters));
+            this.SidePanel.Show();
         });
     }
     // Status management
@@ -215,6 +216,7 @@ export class Visualizer {
             Name = `owner-${Owner}-vs-${OtherOwner}`;
         }
         // Set the filter
+        console.log(Name);
         return this.SetFilter(Incumbent, Name, Filter, Colorizer);
     }
     /** FilterByComponent: Filter the nodes by their components. */
