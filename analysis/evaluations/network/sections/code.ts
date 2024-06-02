@@ -25,7 +25,7 @@ export class CodeSection extends Panel {
         this.Container.append($(`<p class="tips"></p>`).text("Note that clusters are not deterministic, only to help understand the data. Names are chosen from the most connected codes."))
         // Show the components
         var Components = this.GetGraph<Code>().Components!;
-        this.Container.append($(`<h3>${Components.length} Clusters</h3>`));
+        this.Container.append($(`<h3>${Components.length} Clusters, ${this.Dataset.Codes.length} Codes</h3>`));
         this.BuildTable(Components, (Row, Component, Index) => {
             // Show the summary
             var Summary = $(`<td class="cluster-cell"></td>`).attr("id", `cluster-${Index}`).addClass("actionable").appendTo(Row);
