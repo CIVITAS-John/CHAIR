@@ -89,7 +89,7 @@ export class InfoPanel extends Panel {
     }
     /** BuildOwnerLink: Build a link for an owner. */
     public BuildOwnerLink(Code: Code, Sources: Code[], Owner: number)  {
-        var Link = $(`<a href="javascript:void(0)" style="color: ${GetCodebookColor(Owner, this.Dataset.Codebooks.length)}">${this.Visualizer.Dataset.Names[Owner]}</a>`);
+        var Link = $(`<a href="javascript:void(0)" style="color: ${GetCodebookColor(Owner, this.Dataset.Codebooks.length)}">${this.Dataset.Names[Owner]}</a>`);
         if (Sources.length > 0) {
             Link.attr("title", Sources.map(Original => Original.Label).join(", "));
             Link.on("click", () => { this.Dialog.ShowDialogForCode(Owner, Code, ...Sources) });

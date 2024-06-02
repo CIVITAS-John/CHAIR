@@ -11,6 +11,7 @@
     width: 100%;
     height: 100%;
     display: flex;
+    overflow: auto;
     flex-direction: column;
 }
 .side-panel.collapsed {
@@ -83,8 +84,12 @@
     box-sizing: border-box;
     user-select: none;
 }
+.side-panel p.tips {
+    font-size: 0.8rem;
+}
 .side-panel table {
     width: 100%;
+    margin: 0.25rem 0;
     border-spacing: 0;
     background: rgba(255, 255, 255, 0.1);
 }
@@ -111,10 +116,20 @@
 .side-panel table td.metric-cell.chosen {
     font-weight: bold;
 }
+.side-panel .number-cell {
+    text-align: center;
+}
+.side-panel .number-cell p {
+    font-size: 0.8rem;
+}
 /* Codebooks style. */
 .side-panel .codebook-cell h4 {
     margin: 0;
 }
 .side-panel .codebook-cell p {
+    font-size: 0.8rem;
+}
+/* Codes style. */
+.side-panel p.owners {
     font-size: 0.8rem;
 }

@@ -21,6 +21,8 @@ export abstract class Panel {
     protected get SidePanel() { return this.Visualizer.SidePanel; }
     /** Dialog: Dialog for the visualization. */
     protected get Dialog() { return this.Visualizer.Dialog; }
+    /** Parameters: The parameters of the visualizer. */
+    protected get Parameters() { return this.Visualizer.Parameters; }
     /** Graph: The current graph of the visualizer. */
     protected GetGraph<T>() { return this.Visualizer.GetStatus<T>().Graph; }
     /** Constructor: Constructing the side panel. */

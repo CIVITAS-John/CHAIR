@@ -186,6 +186,11 @@ export function FilterNodeByOwner<T>(Node: Node<T>, Owner: number, NearOwners: b
     return NearOwners ? Node.NearOwners.has(Owner) : Node.Owners.has(Owner);
 }
 
+/** FilterNodeByOwners: Filter nodes by presence of the owner. */
+export function FilterNodesByOwner<T>(Nodes: Node<T>[], Owner: number, NearOwners: boolean): Node<T>[] {
+    return Nodes.filter(Node => FilterNodeByOwner(Node, Owner, NearOwners));
+}
+
 /** FindMinimumIndexes: Find the indices of the minimum k elements in an array. */
 function FindMinimumIndexes(arr: number[], k: number): number[] {
     // Create an array of indices [0, 1, 2, ..., arr.length - 1].
