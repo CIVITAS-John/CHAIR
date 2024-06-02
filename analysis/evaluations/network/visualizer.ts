@@ -135,16 +135,20 @@ export class Visualizer {
     private PreviewFilter?: FilterBase<any, any>;
     /** SetFilter: Try to set a filter for the visualization. */
     public SetFilter<T>(Previewing: boolean, Filter: FilterBase<any, any>, Parameters: any = undefined, Additive: boolean = false, Mode: string = ""): boolean {
-        console.log(`Set filter: ${Filter.Name} with ${Parameters}, previewing ${Previewing}`);
         if (Previewing) {
             if (Parameters == undefined || (Filter.Name == this.PreviewFilter?.Name && 
                 !this.PreviewFilter?.ToggleParameters(Parameters, Additive, Mode)) && 
                 this.PreviewFilter?.Parameters.length == 0) {
                 delete this.PreviewFilter;
                 Parameters = undefined;
+            } else if (this.Filters.has(Filter.Name)) {
+                // Do not preview something fixed
+                delete this.PreviewFilter;
+                Parameters = undefined;
             } else {
                 this.PreviewFilter = Filter;
                 this.PreviewFilter.Parameters = [Parameters];
+                this.PreviewFilter.Mode = Mode;
             }
         } else {
             var Incumbent = this.Filters.get(Filter.Name);
@@ -159,6 +163,7 @@ export class Visualizer {
             } else {
                 this.Filters.set(Filter.Name, Filter);
                 Filter.Parameters = [Parameters];
+                Filter.Mode = Mode;
             }
         }
         this.NodeChosen(new Event("click"), undefined);
@@ -252,7 +257,7 @@ export class Visualizer {
     /** RenderLegends: Render the legends for the visualization. */
     private RenderLegends(Colorizer: Colorizer<any>) {
         // Check if the legends are up-to-date
-        var Hash = JSON.stringify(Colorizer.Examples);
+        var Hash = JSON.stringify(Colorizer.Examples) + JSON.stringify(Object.values(Colorizer.Results!).map(Values => Values.length));
         if (this.Legends.data("hash") == Hash) return;
         this.Legends.empty().data("hash", Hash);
         // Render the legends
