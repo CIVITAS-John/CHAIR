@@ -92,12 +92,12 @@ export class CodeSection extends Panel {
                 Summary.append($(`<h4></h4>`)
                     .append($(`<svg width="2" height="2" viewbox="0 0 2 2"><circle r="1" cx="1" cy="1" fill="${Colorizer.Colorize(Node)}"></circle></svg>`))
                     .append($(`<span></span>`).text(Node.Data.Label)));
-                Summary.append($(`<p class="tips"></p>`).text(`From ${Node.Data.Alternatives?.length ?? 0} codes`));
+                Summary.append($(`<p class="tips"></p>`).text(`From ${(Node.Data.Alternatives?.length ?? 0) + 1} codes`));
                 // Show the owners
                 var Owners = $(`<td class="number-cell actionable"></td>`).appendTo(Row);
                 var Set = this.Visualizer.Parameters.UseNearOwners ? Node.Owners : Node.NearOwners;
                 var Count = Set.size - (Set.has(0) ? 1 : 0);
-                Owners.append($(`<p></p>`).text(Count.toString()));
+                Owners.text(Count.toString());
                 Owners.append($(`<p></p>`).text(d3.format(".0%")(Count / (this.Dataset.Codebooks.length - 1))));
                 // Show the examples
                 Row.append($(`<td class="number-cell actionable"></td>`).text(`${Node.Data.Examples?.length ?? 0}`));
