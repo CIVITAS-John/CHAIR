@@ -92,7 +92,10 @@ export class CodeSection extends Panel {
                 Row.on("mouseover", (Event) => this.Visualizer.NodeOver(Event, Node))
                    .on("mouseout", (Event) => this.Visualizer.NodeOut(Event, Node))
                    .toggleClass("chosen", this.Visualizer.GetStatus().ChosenNodes.includes(Node))
-                   .on("click", (Event) => this.Visualizer.NodeChosen(Event, Node));
+                   .on("click", (Event) => {
+                        if (this.Visualizer.NodeChosen(Event, Node))
+                            this.Visualizer.CenterCamera(Node.x!, Node.y!, 3);
+                   });
                 // Show the summary
                 var Summary = $(`<td class="code-cell actionable"></td>`)
                     .attr("id", `code-${Node.ID}`).appendTo(Row);

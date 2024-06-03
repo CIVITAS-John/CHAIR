@@ -219,7 +219,7 @@ export class Visualizer {
         if (Callback) Callback(Node, Status);
     }
     /** NodeChosen: Handle the click event on a node. */
-    public NodeChosen<T>(Event: Event, Node?: Node<T>, Additive: boolean = false) {
+    public NodeChosen<T>(Event: Event, Node?: Node<T>, Additive: boolean = false): boolean {
         var Chosens = this.GetStatus().ChosenNodes;
         var Incumbent = Node && Chosens.includes(Node);
         // If no new mode, remove all
@@ -251,6 +251,7 @@ export class Visualizer {
         this.GetStatus().ChosenNodes = Chosens;
         this.Container.classed("node-chosen", Chosens.length > 0);
         this.SidePanel.Render();
+        return Node !== undefined && Chosens.includes(Node);
     }
     // Component events
     /** ComponentOver: Handle the mouse-over event on a component. */
@@ -264,9 +265,7 @@ export class Visualizer {
     /** ComponentChosen: Handle the click event on a component. */
     public ComponentChosen<T>(Event: Event, Component: Component<T>) {
         var Status = this.SetFilter(false, new ComponentFilter(), Component, (Event as any)?.shiftKey == true);
-        if (Status) this.Container.transition().duration(500)
-            .call(this.Zoom.translateTo as any, d3.mean(Component.Nodes.map(Node => Node.x!))!, d3.mean(Component.Nodes.map(Node => Node.y!)))
-            .transition().call(this.Zoom.scaleTo as any, 3);
+        if (Status) this.CenterCamera(d3.mean(Component.Nodes.map(Node => Node.x!))!, d3.mean(Component.Nodes.map(Node => Node.y!))!, 3);
         SetClassForComponent(Component, "chosen", Status, false);
         this.Container.classed("component-chosen", Status);
     }
