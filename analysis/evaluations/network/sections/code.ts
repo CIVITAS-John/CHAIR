@@ -89,14 +89,17 @@ export class CodeSection extends Panel {
                 // Show the summary
                 var Summary = $(`<td class="code-cell actionable"></td>`)
                     .attr("id", `code-${Node.ID}`).appendTo(Row);
+                var From = (Node.Data.Alternatives ?? []).concat(Node.Data.Label).filter(Name => {
+                    return Object.values(this.Dataset.Codebooks).some(Codebook => Codebook[Name] != undefined);
+                }).length;
                 Summary.append($(`<h4></h4>`)
                     .append($(`<svg width="2" height="2" viewbox="0 0 2 2"><circle r="1" cx="1" cy="1" fill="${Colorizer.Colorize(Node)}"></circle></svg>`))
                     .append($(`<span></span>`).text(Node.Data.Label)));
-                Summary.append($(`<p class="tips"></p>`).text(`From ${(Node.Data.Alternatives?.length ?? 0) + 1} codes`));
+                Summary.append($(`<p class="tips"></p>`).text(`From ${From} codes`));
                 // Show the owners
                 var Owners = $(`<td class="number-cell actionable"></td>`).appendTo(Row);
-                var Set = this.Visualizer.Parameters.UseNearOwners ? Node.Owners : Node.NearOwners;
-                var Count = Set.size - (Set.has(0) ? 1 : 0);
+                var OwnerSet = this.Visualizer.Parameters.UseNearOwners ? Node.Owners : Node.NearOwners;
+                var Count = OwnerSet.size - (OwnerSet.has(0) ? 1 : 0);
                 Owners.text(Count.toString());
                 Owners.append($(`<p></p>`).text(d3.format(".0%")(Count / (this.Dataset.Codebooks.length - 1))));
                 // Show the examples
