@@ -54,7 +54,7 @@ export class InfoPanel extends Panel {
         if (Everything)
             Panel.append($(`<h3>${Code.Label}</h3>`));
         else Panel.append($(`<h3></h3>`).append($(`<a href="javascript:void(0)">${Code.Label}</span>`).on("click", () => {
-            this.Dialog.ShowDialogForCode(0, Code);
+            this.Dialog.ShowCode(0, Code);
         })));
         if (Code.Owners && Code.Owners.length > 0) {
             var Owners = $(`<p class="owners">By: </p>`).appendTo(Panel);
@@ -82,7 +82,7 @@ export class InfoPanel extends Panel {
                 var Quote = $(`<p class="quote"></p>`).appendTo(Panel);
                 $("<span></span>").appendTo(Quote).text(Examples.keys().next().value);
                 if (Code.Examples.length > 1) $(`<a href="javascript:void(0)">(${Code.Examples.length - 1} more)</a>`).appendTo(Quote).on("click", () => {
-                    this.Dialog.ShowDialogForCode(0, Code);
+                    this.Dialog.ShowCode(0, Code);
                 });
             }
         }
@@ -92,7 +92,7 @@ export class InfoPanel extends Panel {
         var Link = $(`<a href="javascript:void(0)" style="color: ${GetCodebookColor(Owner, this.Dataset.Codebooks.length)}">${this.Dataset.Names[Owner]}</a>`);
         if (Sources.length > 0) {
             Link.attr("title", Sources.map(Original => Original.Label).join(", "));
-            Link.on("click", () => { this.Dialog.ShowDialogForCode(Owner, Code, ...Sources) });
+            Link.on("click", () => { this.Dialog.ShowCode(Owner, Code, ...Sources) });
         }
         return Link;
     }

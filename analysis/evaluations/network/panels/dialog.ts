@@ -13,8 +13,8 @@ export class Dialog extends Panel {
         super(Container, Visualizer);
         Container.children("div.close").on("click", () => this.Hide());
     }
-    /** ShowDialogForCode: Show a dialog for a code. */
-    public ShowDialogForCode(Owner: number, Original: Code, ...Codes: Code[]) {
+    /** ShowCode: Show a dialog for a code. */
+    public ShowCode(Owner: number, Original: Code, ...Codes: Code[]) {
         var IsBaseline = Owner == 0;
         if (Codes.length == 0) Codes.push(Original);
         // Build the panel
@@ -27,9 +27,7 @@ export class Dialog extends Panel {
         // Add a back button if it's not the baseline
         if (!IsBaseline)
             Panel.children("h3").prepend($(`<a href="javascript:void(0)" class="back">↑</a>`)
-                .attr("title", Original.Label).on("click", () => {
-                    this.ShowDialogForCode(0, Original);
-                }));
+                .attr("title", Original.Label).on("click", () => { this.ShowCode(0, Original); }));
         // Show the dialog
         var Content = this.Container.children("div.content");
         Content.children().remove();

@@ -174,6 +174,18 @@ export class Visualizer {
         if (!Previewing) this.SidePanel.Render();
         return Parameters != undefined;
     }
+    /** GetColorizer: Get the colorizer for the visualization. */
+    public GetColorizer() {
+        var Colorizer = this.PreviewFilter?.GetColorizer(this);
+        if (!Colorizer) {
+            for (var Filter of this.Filters.values()) {
+                Colorizer = Filter.GetColorizer(this);
+                if (Colorizer) break;
+            }
+        }
+        if (!Colorizer) Colorizer = new OwnerFilter().GetColorizer(this);
+        return Colorizer;
+    }
     /** IsFilterApplied: Check if a filter is applied. */
     public IsFilterApplied(Name: string, Parameter: any, Mode?: string): boolean {
         var Filter = this.Filters.get(Name);
@@ -182,14 +194,14 @@ export class Visualizer {
     }
     // Node events
     /** NodeOver: Handle the mouse-over event on a node. */
-    private NodeOver<T>(Event: Event, Node: Node<T>) {
+    public NodeOver<T>(Event: Event, Node: Node<T>) {
         SetClassForNode(Node.ID, "hovering", true);
         SetClassForLinks(Node.ID, "hovering", true);
         if (!this.GetStatus().ChosenNodes.includes(Node))
             this.TriggerChosenCallback(Node, true);
     }
     /** NodeOut: Handle the mouse-out event on a node. */
-    private NodeOut<T>(Event: Event, Node: Node<T>) {
+    public NodeOut<T>(Event: Event, Node: Node<T>) {
         SetClassForNode(Node.ID, "hovering", false);
         SetClassForLinks(Node.ID, "hovering", false);
         if (!this.GetStatus().ChosenNodes.includes(Node))
@@ -238,6 +250,7 @@ export class Visualizer {
         }
         this.GetStatus().ChosenNodes = Chosens;
         this.Container.classed("node-chosen", Chosens.length > 0);
+        this.SidePanel.Render();
     }
     // Component events
     /** ComponentOver: Handle the mouse-over event on a component. */
@@ -280,14 +293,7 @@ export class Visualizer {
         this.Container.attr("viewBox", "0 0 300 300");
         this.Zoom.extent([[0, 0], [300, 300]]);
         // Find the colorizer to use
-        var Colorizer = this.PreviewFilter?.GetColorizer(this);
-        if (!Colorizer) {
-            for (var Filter of this.Filters.values()) {
-                Colorizer = Filter.GetColorizer(this);
-                if (Colorizer) break;
-            }
-        }
-        if (!Colorizer) Colorizer = new OwnerFilter().GetColorizer(this);
+        var Colorizer = this.GetColorizer();
         Colorizer.Results = {};
         // Render nodes
         var Graph = this.GetStatus<Code>().Graph;

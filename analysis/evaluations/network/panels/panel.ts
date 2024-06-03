@@ -44,7 +44,16 @@ export abstract class Panel {
         this.Container.toggle();
     }
     /** Render: Render the panel. */
-    public Render() { }
+    public Render() {
+        this.Refresh();
+    }
+    /** Refresh: The current program that actually renders the panel. Optional. */
+    protected Refresh: () => void = () => { };
+    /** SetRefresh: Set the refresh function for the panel. */
+    protected SetRefresh(Refresh: () => void) {
+        this.Refresh = Refresh;
+        Refresh();
+    }
     /** BuildTable: Build a table for the panel. */
     protected BuildTable<T>(Data: T[], Builder: (Row: Cash, Data: T, Index: number) => void, Columns: string[] = []) {
         var Table = $(`<table></table>`).appendTo(this.Container);

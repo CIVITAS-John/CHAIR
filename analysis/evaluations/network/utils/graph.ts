@@ -125,8 +125,8 @@ export function FindCommunities<T>(Nodes: Node<T>[], Links: Link<T>[],
     }
     // Find the representatives
     for (var Component of Components) {
-        Component.Representative = FindCentralNode(Component.Nodes, Links, NodeEvaluator, LinkEvaluator);
-        // Component.Representative = FindBestNode(Component.Nodes, Links, NodeEvaluator);
+        Component.Nodes = SortNodesByCentrality(Component.Nodes, Links, NodeEvaluator, LinkEvaluator);
+        Component.Representative = Component.Nodes[0];
     }
     // Filter the components
     var Components = Components.filter(Component => Component.Nodes.length >= MinimumNodes);
@@ -137,10 +137,10 @@ export function FindCommunities<T>(Nodes: Node<T>[], Links: Link<T>[],
     return Components;
 }
 
-/** FindCentralNode: Find the central node in the set. */
-export function FindCentralNode<T>(Nodes: Node<T>[], Links: Link<T>[], 
+/** SortNodesByCentrality: Sort nodes by their relative centrality. */
+export function SortNodesByCentrality<T>(Nodes: Node<T>[], Links: Link<T>[], 
     NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number,
-    LinkEvaluator: (Link: Link<T>) => number = (Link) => Link.Weight ?? 1): Node<T> {
+    LinkEvaluator: (Link: Link<T>) => number = (Link) => Link.Weight ?? 1): Node<T>[] {
     // Create a graph
     var Weights = new Map<string, number>();
     var Graph = new graphology.UndirectedGraph();
@@ -155,16 +155,10 @@ export function FindCentralNode<T>(Nodes: Node<T>[], Links: Link<T>[],
         getEdgeWeight: (Edge: any) => Weights.get(Edge)!,
     });
     // Translate the result
-    var Best: Node<T> | undefined = undefined;
-    var BestValue = Number.MIN_VALUE;
     for (var Node of Nodes) {
-        var Value = Result[Node.ID] + NodeEvaluator(Node, Links);
-        if (Value > BestValue) {
-            Best = Node;
-            BestValue = Value;
-        }
+        Result[Node.ID] = Result[Node.ID]! + NodeEvaluator(Node, Links);
     }
-    return Best!;
+    return Nodes.sort((A, B) => Result[B.ID] - Result[A.ID]);
 }
 
 /** FindBestNode: Find the best node in the set. */
