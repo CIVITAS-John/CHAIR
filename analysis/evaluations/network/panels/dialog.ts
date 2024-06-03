@@ -1,10 +1,8 @@
 import type { Cash } from 'cash-dom';
 import { Visualizer } from '../visualizer.js';
-import { Node } from '../utils/schema.js';
 import { Code } from '../../../../utils/schema.js';
 import { GetCodebookColor } from '../utils/utils.js';
 import { Panel } from './panel.js';
-import { ExtractExamples, FindExampleSources, FindOriginalCodes } from '../utils/dataset.js';
 
 /** Dialog: The dialog for the visualizer. */
 export class Dialog extends Panel {
@@ -23,7 +21,7 @@ export class Dialog extends Panel {
             if (Panel.children().length > 0) $("<hr>").appendTo(Panel);
             this.InfoPanel.BuildPanelForCode(Panel, Code, true);
         }
-        Panel.children("h3").append($(`<span style="color: ${GetCodebookColor(Owner, this.Dataset.Codebooks.length)}">${this.Visualizer.Dataset.Names[Owner]}</span>`));
+        Panel.children("h3").append($(`<span style="color: ${GetCodebookColor(Owner, this.Dataset.Codebooks.length)}">${this.Dataset.Names[Owner]}</span>`));
         // Add a back button if it's not the baseline
         if (!IsBaseline)
             Panel.children("h3").prepend($(`<a href="javascript:void(0)" class="back">↑</a>`)

@@ -57,9 +57,13 @@ export class CodebookSection extends Panel {
                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1))
                        .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
                        .on("click", (Event) => {
-                            if (!this.Visualizer.IsFilterApplied("Codebook", Index + 1))
-                                this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey);
-                            this.Visualizer.SidePanel.ShowPanel("Codes")
+                            if (Event.shiftKey) {
+                                this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, true);
+                            } else {
+                                if (!this.Visualizer.IsFilterApplied("Owner", Index + 1))
+                                    this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey);
+                                this.Visualizer.SidePanel.ShowPanel("Codes");
+                            }
                        })
                        .toggleClass("chosen", this.Visualizer.IsFilterApplied("Owner", Index + 1, ""));
                 // Evaluation results

@@ -45,7 +45,11 @@ export class CodeSection extends Panel {
                 var Summary = $(`<td class="cluster-cell"></td>`)
                     .attr("id", `cluster-${Component.ID}`)
                     .addClass("actionable")
-                    .on("click", (Event) => this.ShowComponent(Component))
+                    .on("click", (Event) => {
+                        if (Event.shiftKey)
+                            this.Visualizer.ComponentChosen(Event, Component)
+                        else this.ShowComponent(Component);
+                    })
                     .appendTo(Row);
                 Summary.append($(`<h4></h4>`).text(`#${Index + 1} ${Component.Representative!.Data.Label}`));
                 // Calculate the coverage of each codebook
@@ -86,7 +90,11 @@ export class CodeSection extends Panel {
             // Some notes
             this.Container.append($(`<p class="tips"></p>`).text("Note that clusters are not deterministic, only to help understand the data. Names are chosen from the most connected codes."));
             // Show the component
-            this.Container.append($(`<h3>${Component.Nodes.length} Codes</h3>`));
+            this.Container.append($(`<h3>${Component.Nodes.length} Codes</h3>`)
+                .prepend(this.BuildReturn(() => {
+                    this.Visualizer.ComponentChosen(new Event("virtual"), Component);
+                    this.ShowComponents();
+                })));
             this.BuildTable(Component.Nodes, (Row, Node, Index) => {
                 // Interactivity
                 Row.on("mouseover", (Event) => this.Visualizer.NodeOver(Event, Node))

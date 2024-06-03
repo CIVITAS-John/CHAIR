@@ -68,4 +68,8 @@ export abstract class Panel {
         Data.forEach((Item, Index) => Builder($(`<li></li>`).appendTo(List), Item, Index));
         return List;
     }
+    /** BuildReturn: Build a return button. */
+    protected BuildReturn(Callback: () => void) {
+        return $(`<a href="javascript:void(0)">↑</a>`).on("click", Callback);
+    }
 }
