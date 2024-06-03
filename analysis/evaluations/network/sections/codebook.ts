@@ -61,11 +61,11 @@ export class CodebookSection extends Panel {
                                 this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, true);
                             } else {
                                 if (!this.Visualizer.IsFilterApplied("Owner", Index + 1))
-                                    this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey);
+                                    this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey, "Coverage");
                                 this.Visualizer.SidePanel.ShowPanel("Codes");
                             }
                        })
-                       .toggleClass("chosen", this.Visualizer.IsFilterApplied("Owner", Index + 1, ""));
+                       .toggleClass("chosen", this.Visualizer.IsFilterApplied("Owner", Index + 1));
                 // Evaluation results
                 Metrics.forEach(Metric => {
                     var MetricValue = Value[Metric];
