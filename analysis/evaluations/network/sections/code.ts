@@ -59,12 +59,12 @@ export class CodeSection extends Panel {
                         .attr("title", `${Count} codes (${d3.format(".0%")(Count / Component.Nodes.length)})`));
                 });
                 // Show the numbers
-                $(`<td class="number-cell actionable"></td>`).appendTo(Row).text(`${Component.Nodes.length}`).append($(`<p></p>`).text(`100%`))
-                    .on("click", (Event) => this.Visualizer.ComponentChosen(Event, Component));
                 var Filtered = Component.Nodes.filter(Node => !Node.Hidden).length;
                 $(`<td class="number-cell actionable"></td>`).appendTo(Row).text(`${Filtered}`).append($(`<p></p>`).text(d3.format(".0%")(Filtered / Component.Nodes.length)))
                     .on("click", (Event) => this.Visualizer.ComponentChosen(Event, Component));
-            }, ["Cluster", "Total", "Filtered"]);
+                $(`<td class="number-cell actionable"></td>`).appendTo(Row).text(`${Component.Nodes.length}`).append($(`<p></p>`).text(`100%`))
+                    .on("click", (Event) => this.Visualizer.ComponentChosen(Event, Component));
+            }, ["Cluster", "Filtered", "Total"]);
         });
     }
     /** ShowComponent: Show a code component. */
