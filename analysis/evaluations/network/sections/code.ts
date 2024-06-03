@@ -37,12 +37,12 @@ export class CodeSection extends Panel {
                 // Interactivity
                 Row.on("mouseover", (Event) => this.Visualizer.ComponentOver(Event, Component))
                    .on("mouseout", (Event) => this.Visualizer.ComponentOut(Event, Component))
-                   .toggleClass("chosen", this.Visualizer.IsFilterApplied("Component", Component))
-                   .on("click", (Event) => this.ShowComponent(Component));
+                   .toggleClass("chosen", this.Visualizer.IsFilterApplied("Component", Component));
                 // Show the summary
                 var Summary = $(`<td class="cluster-cell"></td>`)
                     .attr("id", `cluster-${Component.ID}`)
                     .addClass("actionable")
+                    .on("click", (Event) => this.ShowComponent(Component))
                     .appendTo(Row);
                 Summary.append($(`<h4></h4>`).text(`#${Index + 1} ${Component.Representative!.Data.Label}`));
                 // Calculate the coverage of each codebook
