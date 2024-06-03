@@ -1,4 +1,5 @@
 import { CodebookComparison, CodebookEvaluation } from "../../../../utils/schema.js";
+import { FindConsolidatedCode } from "./dataset.js";
 import { BuildSemanticGraph } from "./graph.js";
 import { Parameters } from './utils.js';
 
@@ -23,7 +24,6 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
         Weights.set(Node.ID, Weight);
         TotalWeight += Weight;
     }
-    var AverageDensity = Graph.Nodes.length / TotalWeight;
     // Check if each node is covered by the codebooks
     var TotalNovelty = 0; var TotalConformity = 0;
     for (var Node of Graph.Nodes) {
@@ -45,8 +45,9 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
     // Finalize the results
     for (var I = 1; I < Codebooks.length; I++) {
         var Result = Results[Names[I]];
+        var Consolidated = new Set(Object.keys(Codebooks[I]).map(Code => FindConsolidatedCode(Codebooks[0], Code)!.Label)).size;
         Result["Coverage"] = Result["Coverage"] / TotalWeight;
-        Result["Density"] = Object.keys(Codebooks[I]).length / (TotalWeight * Result["Coverage"]) / AverageDensity;
+        Result["Density"] = Consolidated / Graph.Nodes.length / Result["Coverage"];
         Result["Novelty"] = Result["Novelty"] / TotalNovelty;
         Result["Conformity"] = Result["Conformity"] / TotalConformity;
     }
