@@ -169,7 +169,7 @@ export class Visualizer {
                 Filter.Mode = Mode;
             }
         }
-        this.NodeChosen(new Event("click"), undefined);
+        if (!Previewing) this.NodeChosen(new Event("click"), undefined);
         this.Rerender();
         if (!Previewing) this.SidePanel.Render();
         return Parameters != undefined;
