@@ -24,6 +24,9 @@ export class CodeSection extends Panel {
         this.Container.show();
         this.ShowComponents();
     }
+    /** RatioColorizer: The colorizer for ratios. */
+    private RatioColorizer = d3.scaleSequential()
+        .interpolator(d3.interpolateViridis).domain([0, 1]);
     /** ShowComponents: Show all components. */
     public ShowComponents() {
         this.SetRefresh(() => {
@@ -60,7 +63,11 @@ export class CodeSection extends Panel {
                 });
                 // Show the numbers
                 var Filtered = Component.Nodes.filter(Node => !Node.Hidden).length;
-                $(`<td class="number-cell actionable"></td>`).appendTo(Row).text(`${Filtered}`).append($(`<p></p>`).text(d3.format(".0%")(Filtered / Component.Nodes.length)))
+                var Color = this.RatioColorizer(Filtered / Component.Nodes.length);
+                $(`<td class="metric-cell"></td>`)
+                    .css("background-color", Color.toString())
+                    .css("color", d3.lab(Color).l > 70 ? "black" : "white")
+                    .appendTo(Row).text(`${Filtered}`).append($(`<p></p>`).text(d3.format(".0%")(Filtered / Component.Nodes.length)))
                     .on("click", (Event) => this.Visualizer.ComponentChosen(Event, Component));
                 $(`<td class="number-cell actionable"></td>`).appendTo(Row).text(`${Component.Nodes.length}`).append($(`<p></p>`).text(`100%`))
                     .on("click", (Event) => this.Visualizer.ComponentChosen(Event, Component));
@@ -97,10 +104,13 @@ export class CodeSection extends Panel {
                     .append($(`<span></span>`).text(Node.Data.Label)));
                 Summary.append($(`<p class="tips"></p>`).text(`From ${From} codes`));
                 // Show the owners
-                var Owners = $(`<td class="number-cell actionable"></td>`).appendTo(Row);
+                var Owners = $(`<td class="metric-cell"></td>`).appendTo(Row);
                 var OwnerSet = this.Visualizer.Parameters.UseNearOwners ? Node.Owners : Node.NearOwners;
                 var Count = OwnerSet.size - (OwnerSet.has(0) ? 1 : 0);
-                Owners.text(Count.toString());
+                var Color = this.RatioColorizer(Count / (this.Dataset.Codebooks.length - 1));
+                Owners.text(Count.toString())
+                      .css("background-color", Color.toString())
+                      .css("color", d3.lab(Color).l > 70 ? "black" : "white");
                 Owners.append($(`<p></p>`).text(d3.format(".0%")(Count / (this.Dataset.Codebooks.length - 1))));
                 // Show the examples
                 Row.append($(`<td class="number-cell actionable"></td>`).text(`${Node.Data.Examples?.length ?? 0}`));

@@ -21,9 +21,13 @@ export class SidePanel extends Panel {
         this.Header = this.Container.find(".panel-header h2");
         this.Contents = this.Container.children(".content");
         // Add the subpanels
-        this.Subpanels["dataset"] = new DatasetSection(this.Contents, this.Visualizer);
-        this.Subpanels["codebook"] = new CodebookSection(this.Contents, this.Visualizer);
-        this.Subpanels["code"] = new CodeSection(this.Contents, this.Visualizer);
+        var Sections = [
+            new DatasetSection(this.Contents, this.Visualizer),
+            new CodebookSection(this.Contents, this.Visualizer),
+            new CodeSection(this.Contents, this.Visualizer)
+        ];
+        for (var Section of Sections)
+            this.Subpanels[Section.Name] = Section;
         // Add the menu
         var MenuContainer = this.Contents.children(".panel-menu");
         var BuildMenu = (Name: string) => {
@@ -46,7 +50,7 @@ export class SidePanel extends Panel {
         this.CurrentPanel = Name;
     }
     /** CurrentPanel: The current panel being shown. */
-    public CurrentPanel: string = "dataset";
+    public CurrentPanel: string = "Datasets";
     /** Show: Show the side panel. */
     public Show() {
         this.Container.toggleClass("collapsed", false);

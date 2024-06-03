@@ -56,7 +56,11 @@ export class CodebookSection extends Panel {
                        .append($(`<p></p>`).text(`${new Set(Object.keys(Codebook).map(Code => FindConsolidatedCode(Codebooks[0], Code)!.Label)).size} consolidated`))
                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1))
                        .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
-                       .on("click", (Event) => this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey))
+                       .on("click", (Event) => {
+                            if (!this.Visualizer.IsFilterApplied("Codebook", Index + 1))
+                                this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey);
+                            this.Visualizer.SidePanel.ShowPanel("Codes")
+                       })
                        .toggleClass("chosen", this.Visualizer.IsFilterApplied("Owner", Index + 1, ""));
                 // Evaluation results
                 Metrics.forEach(Metric => {
