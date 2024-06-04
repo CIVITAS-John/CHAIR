@@ -106,12 +106,7 @@ export function CreateOfflineBundle(TargetDirectory: string, BaseDirectories: st
     // Copy the data files to the offline bundle directory
     for (const dataFile of DataFiles) {
         const name = path.basename(dataFile);
-        if (name.endsWith('.js')) {
-            let content = fs.readFileSync(dataFile, 'utf8');
-            // Remove all import statements
-            content = HandleScript(content);
-            fs.writeFileSync(path.join(OfflineBundleDirectory, name), content);
-        } else fs.copyFileSync(dataFile, path.join(OfflineBundleDirectory, name));
+        fs.copyFileSync(dataFile, path.join(OfflineBundleDirectory, name));
     }
     // Copy the web files recursively to the offline bundle directory while keeping the structure
     const CopyFiles = function(Source: string, Destination: string) {
@@ -126,7 +121,12 @@ export function CreateOfflineBundle(TargetDirectory: string, BaseDirectories: st
             } else {
                 const name = path.basename(filePath);
                 if (name.endsWith(".ts")) continue; // Skip TypeScript files
-                fs.copyFileSync(filePath, path.join(Destination, name));
+                if (name.endsWith(".js")) {
+                    let content = fs.readFileSync(filePath, 'utf8');
+                    // Remove all import statements
+                    content = HandleScript(content);
+                    fs.writeFileSync(path.join(Destination, name), content);
+                } else fs.copyFileSync(filePath, path.join(Destination, name));
             }
         }
     }
