@@ -51,11 +51,7 @@ export class NetworkEvaluator extends CodebookEvaluator {
             return Package;
         });
         // Run the HTTP server
-        var DataFiles = [
-            ...GetFilesRecursively("./out/analysis/evaluations/network").filter
-                (File => File.indexOf("dependencies/") == -1 && File.endsWith(".js")), 
-            ExportPath + "/network.json"]
-        CreateOfflineBundle(ExportPath + "/network", "analysis/evaluations/network", ...DataFiles);
+        CreateOfflineBundle(ExportPath + "/network", ["analysis/evaluations/network", "out/analysis/evaluations/network"], ExportPath + "/network.json");
         await CreateServer(8080, ["analysis/evaluations/network", "out/analysis/evaluations/network"], ExportPath + "/network.json");
         // Return in the format
         var Results: Record<string, CodebookEvaluation> = {};

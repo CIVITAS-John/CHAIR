@@ -99,7 +99,7 @@ export function CreateServer(Port: number, BaseDirectories: string[], ...DataFil
 }
 
 /** CreateOfflineBundle: Create an offline bundle for the web application. */
-export function CreateOfflineBundle(TargetDirectory: string, BaseDirectory: string, ...DataFiles: string[]) {
+export function CreateOfflineBundle(TargetDirectory: string, BaseDirectories: string[], ...DataFiles: string[]) {
     // Create the offline bundle directory
     const OfflineBundleDirectory = TargetDirectory;
     EnsureFolder(OfflineBundleDirectory);
@@ -130,7 +130,8 @@ export function CreateOfflineBundle(TargetDirectory: string, BaseDirectory: stri
             }
         }
     }
-    CopyFiles(BaseDirectory, OfflineBundleDirectory);
+    for (const BaseDirectory of BaseDirectories)
+        CopyFiles(BaseDirectory, OfflineBundleDirectory);
     console.log(chalk.blue(`Offline bundle created in: ${OfflineBundleDirectory}.`));
 }
 
