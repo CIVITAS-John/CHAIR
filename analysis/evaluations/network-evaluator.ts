@@ -47,9 +47,13 @@ export class NetworkEvaluator extends CodebookEvaluator {
             for (var Dataset of Object.values(this.Dataset.Data)) {
                 for (var Chunk of Object.values(Dataset)) {
                     for (var Item of Chunk.AllItems ?? []) {
-                        Item.Nickname = "[Anonymized]";
-                        if ((Item as any).CurrentNickname) 
-                            delete (Item as any).CurrentNickname;
+                        if (this.Anonymize) {
+                            Item.Nickname = "[Anonymized]";
+                            if ((Item as any).CurrentNickname) 
+                                delete (Item as any).CurrentNickname;
+                        }
+                        if (Item.Time && typeof Item.Time === "string")
+                            Item.Time = new Date(Date.parse(Item.Time as any));
                     }
                 }
             }
