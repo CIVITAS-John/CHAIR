@@ -59,12 +59,12 @@ export class DatasetSection extends Panel {
                     Summary.append($(`<p class="tips"></p>`).text(`From ${FormatDate(Dates[0])}`));
                     Summary.append($(`<p class="tips"></p>`).text(`To ${FormatDate(Dates[Dates.length - 1])}`));
                     // Show the items
-                    var IDs = Object.values(Value).flatMap(V => V.AllItems ?? []).map(Item => Item.ID);
+                    var IDs = new Set(Object.values(Value).flatMap(V => V.AllItems ?? []).map(Item => Item.ID));
                     var SizeCell = $(`<td class="actionable"></td>`).appendTo(Row);
                     SizeCell.append($(`<p></p>`).text(`${Object.keys(Value).length} Chunks`));
-                    SizeCell.append($(`<p></p>`).text(`${IDs.length} Items`));
+                    SizeCell.append($(`<p></p>`).text(`${IDs.size} Items`));
                     // Show the codes
-                    var Codes = Nodes.filter((Node) => FilterNodeByExample(Node, IDs));
+                    var Codes = Nodes.filter((Node) => FilterNodeByExample(Node, Array.from(IDs)));
                     var Currents = Codes.filter((Node) => !Node.Hidden);
                     var Color = this.RatioColorizer(Currents.length / Codes.length);
                     $(`<td class="metric-cell"></td>`)
@@ -98,7 +98,7 @@ export class DatasetSection extends Panel {
                 Summary.append($(`<p class="tips"></p>`).text(`From ${FormatDate(Dates[0])}`));
                 Summary.append($(`<p class="tips"></p>`).text(`To ${FormatDate(Dates[Dates.length - 1])}`));
                 // Show the items
-                $(`<td class="number-cell actionable"></td>`).text(Chunk.Items.toString()).appendTo(Row);
+                $(`<td class="number-cell actionable"></td>`).text((Chunk.AllItems?.length ?? 0).toString()).appendTo(Row);
                 // Show the codes
                 var Codes = Nodes.filter((Node) => FilterNodeByExample(Node, Chunk.AllItems?.map(Item => Item.ID) ?? []));
                 var Currents = Codes.filter((Node) => !Node.Hidden);
