@@ -157,7 +157,7 @@ export class Visualizer {
                 }
             } else {
                 this.PreviewFilter = Filter;
-                this.PreviewFilter.Parameters = [Parameters];
+                this.PreviewFilter.SetParameter([Parameters]);
                 this.PreviewFilter.Mode = Mode;
             }
         } else {
@@ -172,7 +172,7 @@ export class Visualizer {
                 }
             } else {
                 this.Filters.set(Filter.Name, Filter);
-                Filter.Parameters = [Parameters];
+                Filter.SetParameter([Parameters]);
                 Filter.Mode = Mode;
             }
         }

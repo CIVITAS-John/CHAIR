@@ -1,7 +1,8 @@
 import d3 from 'd3';
 import { Visualizer } from "../visualizer.js";
-import { FilterNodeByOwner, FilterNodeByOwners } from "./graph.js";
+import { FilterNodeByExample, FilterNodeByOwner, FilterNodeByOwners } from "./graph.js";
 import { Component, Node } from "./schema.js";
+import { Code } from '../../../../utils/schema.js';
 
 /** FilterBase: The base class for filters. */
 export abstract class FilterBase<TNode, TParameter> {
@@ -19,18 +20,24 @@ export abstract class FilterBase<TNode, TParameter> {
     public ToggleParameters(NewParameters: TParameter, Additive: boolean, Mode: string): boolean { 
         if (Mode == this.Mode && this.Parameters.includes(NewParameters)) {
             this.Parameters.splice(this.Parameters.indexOf(NewParameters), 1);
+            this.SetParameter(this.Parameters);
             return false;
         } else {
             if (!this.Parameters.includes(NewParameters)) {
                 if (Additive) {
-                    this.Parameters.push(NewParameters);
+                    this.Parameters.splice(this.Parameters.length - 1, 0, NewParameters)
+                    this.SetParameter(this.Parameters);
                 } else {
-                    this.Parameters = [NewParameters];
+                    this.SetParameter([NewParameters]);
                 }
             }
             this.Mode = Mode;
             return true;
         }
+    }
+    /** SetParameter: Set the parameters of the filter. */
+    public SetParameter(NewParameters: TParameter[]) {
+        this.Parameters = NewParameters;
     }
 }
 
@@ -42,6 +49,54 @@ export interface Colorizer<T> {
     Examples: Record<string, string>;
     /** Results: The results of the colorizer. */
     Results?: Record<string, Node<T>[]>;
+}
+
+/** DatasetFilter: Filter the nodes by their datasets. */
+export class DatasetFilter extends FilterBase<Code, string> {
+    /** Name: The name of the filter. */
+    public Name: string = "Dataset";
+    /** ExampleIDs: The IDs of the examples. */
+    private ExampleIDs: string[] = [];
+    /** Filter: The filter function. */
+    public Filter(Visualizer: Visualizer, Node: Node<Code>): boolean {
+        if (this.ExampleIDs.length == 0) {
+            var Sources =  Visualizer.Dataset.Source.Data;
+            this.ExampleIDs = Array.from(new Set(Object.entries(Sources)
+                .filter(([Key, Value]) => this.Parameters.includes(Key))
+                .flatMap(([Key, Value]) => Object.values(Value).flatMap(Item => Item.AllItems ?? [])).map(Example => Example.ID)));
+        }
+        return FilterNodeByExample(Node, this.ExampleIDs);
+    }
+    /** SetParameter: Set the parameters of the filter. */
+    public SetParameter(NewParameters: string[]) {
+        this.Parameters = NewParameters;
+        this.ExampleIDs = [];
+    }
+}
+
+/** ChunkFilter: Filter the nodes by their chunks. */
+export class ChunkFilter extends FilterBase<Code, string> {
+    /** Name: The name of the filter. */
+    public Name: string = "Chunk";
+    /** ExampleIDs: The IDs of the examples. */
+    private ExampleIDs: string[] = [];
+    /** Filter: The filter function. */
+    public Filter(Visualizer: Visualizer, Node: Node<Code>): boolean {
+        if (this.ExampleIDs.length == 0) {
+            var Sources =  Visualizer.Dataset.Source.Data;
+            this.ExampleIDs = Array.from(new Set(Object.values(Sources)
+                .flatMap(Chunk => Object.entries(Chunk))
+                .filter(([Key, Value]) => this.Parameters.includes(Key))
+                .flatMap(([Key, Value]) => Value.AllItems ?? [])
+                .map(Example => Example.ID)));
+        }
+        return FilterNodeByExample(Node, this.ExampleIDs);
+    }
+    /** SetParameter: Set the parameters of the filter. */
+    public SetParameter(NewParameters: string[]) {
+        this.Parameters = NewParameters;
+        this.ExampleIDs = [];
+    }
 }
 
 /** ComponentFilter: Filter the nodes by their components. */
