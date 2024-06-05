@@ -15,10 +15,13 @@ export class NetworkEvaluator extends CodebookEvaluator {
     public Visualize: boolean = false;
     /** Dataset: The dataset underlying the codebooks. */
     public Dataset: Dataset<DataChunk<DataItem>>;
+    /** Anonymize: Whether the dataset should be anonymized. */
+    public Anonymize: boolean = true;
     /** constructor: Initialize the evaluator. */
-    public constructor(Dataset: Dataset<DataChunk<DataItem>>) {
+    public constructor(Dataset: Dataset<DataChunk<DataItem>>, Anonymize: boolean = true) {
         super();
         this.Dataset = Dataset;
+        this.Anonymize = Anonymize;
     }
     /** Evaluate: Evaluate a number of codebooks. */ 
     public async Evaluate(Codebooks: Codebook[], Names: string[], ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
@@ -39,6 +42,16 @@ export class NetworkEvaluator extends CodebookEvaluator {
             // Infuse the results back into the reference codebook
             for (var I = 0; I < Codes.length; I++) {
                 Codes[I].Position = Result.Positions[I];
+            }
+            // Remove sensitive data
+            for (var Dataset of Object.values(this.Dataset.Data)) {
+                for (var Chunk of Object.values(Dataset)) {
+                    for (var Item of Chunk.AllItems ?? []) {
+                        Item.Nickname = "[Anonymized]";
+                        if ((Item as any).CurrentNickname) 
+                            delete (Item as any).CurrentNickname;
+                    }
+                }
             }
             // Return in the format
             var Package: CodebookComparison<any> = {

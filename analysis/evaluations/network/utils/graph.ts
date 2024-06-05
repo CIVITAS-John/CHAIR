@@ -190,6 +190,13 @@ export function FilterNodesByOwner<T>(Nodes: Node<T>[], Owner: number, NearOwner
     return Nodes.filter(Node => FilterNodeByOwner(Node, Owner, NearOwners));
 }
 
+/** FilterNodeByExample: Filter a node by presence of any examples. */
+export function FilterNodeByExample<T extends Code>(Node: Node<T>, IDs: string[]): boolean {
+    return Node.Data.Examples?.some(Example => {
+        return IDs.some(ID => Example == ID || Example.startsWith(ID + "|||"));
+    }) ?? false;
+}
+
 /** FindMinimumIndexes: Find the indices of the minimum k elements in an array. */
 function FindMinimumIndexes(arr: number[], k: number): number[] {
     // Create an array of indices [0, 1, 2, ..., arr.length - 1].

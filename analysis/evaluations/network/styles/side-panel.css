@@ -105,6 +105,9 @@
 .side-panel table th {
     padding: 0.25rem;
 }
+.side-panel table td h4 {
+    margin: 0;
+}
 .side-panel table th {
     color: rgb(184, 187, 38);
     font-size: 0.8rem;
@@ -136,12 +139,6 @@
 .side-panel .codebook-cell.chosen {
     color: rgb(184, 187, 38);
     background: rgba(255, 255, 255, 0.1);
-}
-.side-panel .codebook-cell h4 {
-    margin: 0;
-}
-.side-panel .codebook-cell p {
-    font-size: 0.8rem;
 }
 /* Codes style. */
 .side-panel p.owners {
