@@ -23,6 +23,9 @@ export class DatasetSection extends Panel {
         this.Container.show();
         this.ShowDatasets();
     }
+    /** RatioColorizer: The colorizer for ratios. */
+    private RatioColorizer = d3.scaleSequential()
+        .interpolator(d3.interpolateViridis).domain([0, 1]);
     /** ShowDatasets: Show all datasets. */
     public ShowDatasets() {
         this.SetRefresh(() => {
@@ -43,24 +46,33 @@ export class DatasetSection extends Panel {
             this.Container.append($(`<h3>Datasets</h3>`));
             this.BuildTable(
                 Object.entries(this.Source.Data), (Row, [Key, Value]) => {
+                    // Interactivity
+                    Row.toggleClass("chosen", this.Visualizer.IsFilterApplied("Dataset", Key))
+                        .on("click", (Event) => {
+                            this.ShowDataset(Key, Value);
+                        });
                     // Show the summary
                     var Summary = $(`<td class="dataset-cell actionable"></td>`).attr("id", `dataset-${Key}`).appendTo(Row);
                     Summary.append($(`<h4></h4>`).text(Key));
                     // Find the date
-                    var Dates = Object.values(Value).flatMap(V => V.AllItems ?? []).map(Item => Item.Time).sort();
+                    var Dates = Object.values(Value).flatMap(V => V.AllItems ?? []).map(Item => Item.Time).sort((A, B) => A.getTime() - B.getTime());
                     Summary.append($(`<p class="tips"></p>`).text(`From ${FormatDate(Dates[0])}`));
                     Summary.append($(`<p class="tips"></p>`).text(`To ${FormatDate(Dates[Dates.length - 1])}`));
-                    // Show the details
+                    // Show the items
                     var IDs = Object.values(Value).flatMap(V => V.AllItems ?? []).map(Item => Item.ID);
                     var SizeCell = $(`<td class="actionable"></td>`).appendTo(Row);
                     SizeCell.append($(`<p></p>`).text(`${Object.keys(Value).length} Chunks`));
                     SizeCell.append($(`<p></p>`).text(`${IDs.length} Items`));
                     // Show the codes
                     var Codes = Nodes.filter((Node) => FilterNodeByExample(Node, IDs));
-                    var CodeCell = $(`<td class="actionable"></td>`).appendTo(Row);
-                    CodeCell.append($(`<p></p>`).text(`${Codes.length} Codes`));
-                    CodeCell.append($(`<p></p>`).text(`${Codes.filter(Node => !Node.Hidden).length} Filtered`));
-                }, ["Name", "Data", "Codes"]
+                    var Currents = Codes.filter((Node) => !Node.Hidden);
+                    var Color = this.RatioColorizer(Currents.length / Codes.length);
+                    $(`<td class="metric-cell"></td>`)
+                        .css("background-color", Color.toString())
+                        .css("color", d3.lab(Color).l > 70 ? "black" : "white")
+                        .appendTo(Row).text(`${Currents.length}`).append($(`<p></p>`).text(d3.format(".0%")(Currents.length / Codes.length)));
+                    $(`<td class="number-cell actionable"></td>`).appendTo(Row).text(`${Codes.length}`).append($(`<p></p>`).text(`100%`));
+                }, ["Metadata", "Items", "Filtered", "Total"]
             );
         });
     }
@@ -78,13 +90,25 @@ export class DatasetSection extends Panel {
             // Show the chunks
             var Nodes = this.GetGraph<Code>().Nodes;
             this.BuildTable(Object.entries(Dataset), (Row, [Key, Chunk], Index) => {
-                
+                // Show the summary
+                var Summary = $(`<td class="chunk-cell actionable"></td>`).attr("id", `chunk-${Key}`).appendTo(Row);
+                Summary.append($(`<h4></h4>`).text(Key));
+                // Find the date
+                var Dates = (Chunk.AllItems ?? []).map(Item => Item.Time).sort((A, B) => A.getTime() - B.getTime());
+                Summary.append($(`<p class="tips"></p>`).text(`From ${FormatDate(Dates[0])}`));
+                Summary.append($(`<p class="tips"></p>`).text(`To ${FormatDate(Dates[Dates.length - 1])}`));
+                // Show the items
+                $(`<td class="number-cell actionable"></td>`).text(Chunk.Items.toString()).appendTo(Row);
                 // Show the codes
-                var Codes = Nodes.filter((Node) => FilterNodeByExample(Node, Object.values(Chunk.AllItems ?? []).map(Item => Item.ID)));
-                var CodeCell = $(`<td class="number-cell actionable"></td>`).appendTo(Row);
-                CodeCell.append($(`<p class="tips"></p>`).text(`${Codes.length} Codes`));
-                CodeCell.append($(`<p class="tips"></p>`).text(`${Codes.filter(Node => !Node.Hidden).length} Filtered`));
-            }, ["#", "Date", "Items", "Codes"]);
+                var Codes = Nodes.filter((Node) => FilterNodeByExample(Node, Chunk.AllItems?.map(Item => Item.ID) ?? []));
+                var Currents = Codes.filter((Node) => !Node.Hidden);
+                var Color = this.RatioColorizer(Currents.length / Codes.length);
+                $(`<td class="metric-cell"></td>`)
+                    .css("background-color", Color.toString())
+                    .css("color", d3.lab(Color).l > 70 ? "black" : "white")
+                    .appendTo(Row).text(`${Currents.length}`).append($(`<p></p>`).text(d3.format(".0%")(Currents.length / Codes.length)));
+                $(`<td class="number-cell actionable"></td>`).appendTo(Row).text(`${Codes.length}`).append($(`<p></p>`).text(`100%`));
+            }, ["Metadata", "Items", "Filtered", "Total"]);
         });
     }
 }

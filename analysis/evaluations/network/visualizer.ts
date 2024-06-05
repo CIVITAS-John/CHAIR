@@ -73,6 +73,13 @@ export class Visualizer {
         // Load the data
         d3.json("network.json").then((Data) => {
             this.Dataset = Data as any;
+            // Parse the date as needed
+            var Datasets = this.Dataset.Source;
+            for (var Dataset of Object.values(Datasets.Data))
+                for (var Chunk of Object.values(Dataset))
+                    for (var Item of Chunk.AllItems ?? [])
+                        Item.Time = new Date(Date.parse(Item.Time as any));
+            // Build the default graph
             this.SetStatus("Code", BuildSemanticGraph(this.Dataset, this.Parameters));
             this.SidePanel.Show();
         });
