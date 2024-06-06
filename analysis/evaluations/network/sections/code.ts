@@ -119,7 +119,7 @@ export class CodeSection extends Panel {
                 Summary.append($(`<p class="tips"></p>`).text(`From ${From} codes`));
                 // Show the owners
                 var Owners = $(`<td class="metric-cell"></td>`).appendTo(Row);
-                var OwnerSet = this.Visualizer.Parameters.UseNearOwners ? Node.Owners : Node.NearOwners;
+                var OwnerSet = this.Parameters.UseNearOwners ? Node.Owners : Node.NearOwners;
                 var Count = OwnerSet.size - (OwnerSet.has(0) ? 1 : 0);
                 var Color = this.RatioColorizer(Count / (this.Dataset.Codebooks.length - 1));
                 Owners.text(Count.toString())

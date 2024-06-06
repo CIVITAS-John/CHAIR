@@ -1,0 +1,67 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (4 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+4. 
+Concepts: {Repeat the input 4}
+Relationship: {What is logical relationship between concepts in code 4, or N/A if not applicable}
+Criteria: {Who did what, and how for code 4}
+Label: {A consolidated label of code 4}
+---
+~~~
+1.
+Concepts: user inquiry, help and clarification requests
+- Users ask questions or seek information about the software or its availability.
+- Users seek assistance or clarification on using a feature or function.
+
+2.
+Concepts: resource sharing, information sharing
+- Designers provide resources or updates to the community.
+- Users and designers share information, resources, or expertise to solve problems or answer questions.
+
+3.
+Concepts: soliciting feedback, feedback integration
+- Designers actively seek feedback or suggestions from users.
+- Designers express the intention to gather and incorporate user feedback into the development process.
+
+4.
+Concepts: collaboration and feedback
+- Users and designers work together to shape the development of the tool.
+- Users engage in active learning by providing feedback, which shapes Physics Lab's development and receives support.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: user inquiry, help and clarification requests
+Relationship: Inclusion (user inquiry is a type of help and clarification request)
+Criteria: Users ask questions or seek information about the software or its availability, or seek assistance or clarification on using a feature or function.
+Label: Seeking Assistance
+
+2.
+Concepts: resource sharing, information sharing
+Relationship: Parallel (resource sharing and information sharing are related but distinct concepts)
+Criteria: Designers provide resources or updates to the community, or users and designers share information, resources, or expertise to solve problems or answer questions.
+Label: Knowledge Exchange
+
+3.
+Concepts: soliciting feedback, feedback integration
+Relationship: Inclusion (feedback integration is a result of soliciting feedback)
+Criteria: Designers actively seek feedback or suggestions from users, and express the intention to gather and incorporate user feedback into the development process.
+Label: Feedback Solicitation
+
+4.
+Concepts: collaboration and feedback
+Relationship: Intersection (collaboration involves feedback, and feedback is a key aspect of collaboration)
+Criteria: Users and designers work together to shape the development of the tool, and users engage in active learning by providing feedback, which shapes Physics Lab's development and receives support.
+Label: Collaborative Development

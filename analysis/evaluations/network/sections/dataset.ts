@@ -112,7 +112,7 @@ export class DatasetSection extends Panel {
                 Summary.append($(`<h4></h4>`).text(`Chunk ${Key}`));
                 // Find the date
                 var Items = Chunk.AllItems ?? [];
-                Items = Items.filter(Item => this.Visualizer.Parameters.UseExtendedChunk ? true : Item.Chunk == Key);
+                Items = Items.filter(Item => this.Parameters.UseExtendedChunk ? true : Item.Chunk == Key);
                 var Dates = Items.map(Item => Item.Time).sort((A, B) => A.getTime() - B.getTime());
                 Summary.append($(`<p class="tips"></p>`).text(`From ${FormatDate(Dates[0])}`));
                 Summary.append($(`<p class="tips"></p>`).text(`To ${FormatDate(Dates[Dates.length - 1])}`));

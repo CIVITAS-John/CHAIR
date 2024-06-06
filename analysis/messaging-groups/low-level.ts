@@ -68,16 +68,17 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     Codes = Codes.replaceAll("_", " ")
                     // Sometimes the LLM will generate multiple spaces
                     Codes = Codes.replaceAll(/\s+/g, " ");
-                    // Sometimes the LLM will return "{code}: {explanation}
-                    if (Codes.match(/^[\w ]+\: /)) Codes = Codes.substring(0, Codes.indexOf(":")).trim();
                     // Sometimes the LLM will return "{speaker}, {other codes}"
                     var Speaker = GetSpeakerName(Message.UserID).toLowerCase();
                     if (Speaker.includes("-")) Speaker = Speaker.substring(0, Speaker.indexOf("-")).trim();
                     Codes = Codes.replace(new RegExp(`^${Speaker} *\\d*(;|:|$)`, "i"), "").trim();
+                    // Sometimes the LLM will return "{code}: {explanation}
+                    if (Codes.match(/^[\w ]+\: /)) Codes = Codes.substring(0, Codes.indexOf(":")).trim();
                     Results[parseInt(Match[1])] = Codes;
                 }
             }
         }
+        if (Object.values(Results).every(Value => Value == "")) throw new Error(`Invalid response: all codes are empty.`);
         if (Analysis.Plan == undefined) throw new Error(`Invalid response: no plans`);
         if (Analysis.Reflection == undefined) throw new Error(`Invalid response: no reflections`);
         if (Analysis.Summary == undefined) throw new Error(`Invalid response: no summary`);

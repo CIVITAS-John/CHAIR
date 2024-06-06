@@ -35,9 +35,11 @@ export function ExtractExamples(Examples: string[]): Map<string, string[]> {
 }
 
 /** FindOriginalCodes: Find the original codes from an owner. */
-export function FindOriginalCodes(Codebook: Codebook, Source: Code, Owner: number): Code[] {
+export function FindOriginalCodes(Codebook: Codebook, Source: Code, Owner: number, Example?: string): Code[] {
     var Codes = Object.values(Codebook);
-    return Codes.filter(Code => Source.Label == Code.Label || Source.Alternatives?.includes(Code.Label));
+    Codes = Codes.filter(Code => Source.Label == Code.Label || Source.Alternatives?.includes(Code.Label));
+    if (Example) Codes = Codes.filter(Code => Code.Examples?.includes(Example) || Code.Examples?.some(Current => Current.startsWith(`${Example}|||`)));
+    return Codes;
 }
 
 /** FindExampleSources: Find the original sources of an example from an owner. */
