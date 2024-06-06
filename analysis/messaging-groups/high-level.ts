@@ -55,14 +55,25 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                 // Add examples to the current code
                 if (CurrentCode) {
                     Line = Line.substring(2).trim();
+                    // Find the format (ID: 123)
+                    var Index = Line.lastIndexOf("(ID:");
+                    if (Index != -1) {
+                        var ID = parseInt(Line.substring(Index + 4, Line.length - 1));
+                        Line = Line.substring(0, Index).trim();
+                        Index = ID;
+                    }
                     // Sometimes the LLM will return "Example quote 1: quote"
                     Line = Line.replace(/^(Example quote \d+):/, "").trim();
-                    // Sometimes the LLM will return "P{number}: {codes}"
-                    Line = Line.replace(/^tag(\d+))\:/, "").trim();
+                    // Sometimes the LLM will return "tag{number}: {codes}"
+                    Line = Line.replace(/^tag(\d+)\:/, "").trim();
                     // Sometimes the LLM will return `"quote" (Author)`
                     Line = Line.replace(/^\"(.*)\"/, "$1").trim();
+                    // Sometimes the LLM will return `quote (Author)`
+                    Line = Line.replace(/^(.*)\(.+\)$/, "$1").trim();
                     // Sometimes the LLM will return `**{quote}**`
                     Line = Line.replace(/^\*\*(.*)\*\*/, "$1").trim();
+                    // Sometimes the LLM will return `User/Designer-\d+: {quote}`
+                    Line = Line.replace(/^(User|Designer)\-\d+\:/, "").trim();
                     // Revert the image and checkin tags
                     Line = RevertMessageFormat(Line);
                     // Add the example if it is not already in the list
@@ -70,12 +81,16 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                     var Message = Messages.find(Message => Message.Content == Line);
                     if (!Message) {
                         var LowerLine = Line.toLowerCase();
-                        if (LowerLine.endsWith("...")) LowerLine = LowerLine.substring(0, LowerLine.length - 3).trim();
+                        // Remove everything after "..."
+                        var Index = LowerLine.indexOf("...");
+                        if (Index != -1) LowerLine = LowerLine.substring(0, Index).trim();
+                        if (LowerLine.endsWith(".")) LowerLine = LowerLine.substring(0, LowerLine.length - 1);
                         Message = Messages.find(Message => {
                             var Lower = Message.Content.toLowerCase();
                             return Lower.includes(LowerLine) || LowerLine.includes(Lower);
                         });
                     }
+                    if (!Message) console.log(`Cannot find message for: ${Line}`);
                     var Example = Message ? AssembleExampleFrom(Message) : Line;
                     if (Message && !CurrentCode.Examples.includes(Example))
                         CurrentCode.Examples.push(Example);

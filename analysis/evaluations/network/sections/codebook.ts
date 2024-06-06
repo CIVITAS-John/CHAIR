@@ -53,7 +53,7 @@ export class CodebookSection extends Panel {
                 var Summary = $(`<td class="codebook-cell"></td>`).attr("id", `codebook-${Index + 1}`).addClass("actionable").appendTo(Row);
                 Summary.append($(`<h4></h4>`).text(Key))
                        .append($(`<p class="tips"></p>`).text(`${Object.keys(Codebook).length} codes`))
-                       .append($(`<p class="tips"></p>`).text(`${new Set(Object.keys(Codebook).map(Code => FindConsolidatedCode(Codebooks[0], Code)!.Label)).size} consolidated`))
+                       .append($(`<p class="tips"></p>`).text(`${new Set(Object.keys(Codebook).map(Code => FindConsolidatedCode(Codebooks[0], Code)?.Label).map(Code => Code)).size} consolidated`))
                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1))
                        .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
                        .on("click", (Event) => {

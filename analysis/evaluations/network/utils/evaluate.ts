@@ -45,7 +45,7 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
     // Finalize the results
     for (var I = 1; I < Codebooks.length; I++) {
         var Result = Results[Names[I]];
-        var Consolidated = new Set(Object.keys(Codebooks[I]).map(Code => FindConsolidatedCode(Codebooks[0], Code)!.Label)).size;
+        var Consolidated = new Set(Object.keys(Codebooks[I]).map(Code => FindConsolidatedCode(Codebooks[0], Code)?.Label).filter(Code => Code)).size;
         Result["Coverage"] = Result["Coverage"] / TotalWeight;
         Result["Density"] = Consolidated / Graph.Nodes.length / Result["Coverage"];
         Result["Novelty"] = Result["Novelty"] / TotalNovelty;

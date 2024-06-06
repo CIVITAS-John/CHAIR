@@ -1,0 +1,89 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (6 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+6. 
+Concepts: {Repeat the input 6}
+Relationship: {What is logical relationship between concepts in code 6, or N/A if not applicable}
+Criteria: {Who did what, and how for code 6}
+Label: {A consolidated label of code 6}
+---
+~~~
+1.
+Concepts: release notes, update description
+- Lists of changes, updates, or new features in a software release
+- Discussion of the size or scope of an update or release, and a description or summary of an update is provided.
+
+2.
+Concepts: platform development, platform-specific development
+- Designer discusses or announces enhancements to the platform or its features.
+- Designer discusses platform-specific information, and release of a platform-specific version or discussion of features.
+
+3.
+Concepts: design planning
+- Designers discuss or plan the development process, planning or discussing design elements or features.
+- Designer explores or discusses ideas, identifies opportunities, and manages timelines for tasks or features.
+
+4.
+Concepts: community engagement
+- The quote discusses user or community engagement, including leaving messages or requesting features.
+- The designer encourages users to report issues or problems during use, and encourages community members to participate in the discussion or report issues.
+
+5.
+Concepts: user guidance
+- Instructions or guidance on how to use a feature or software is mentioned.
+- Designer provides tips for users, and provides guidance on a specific feature.
+
+6.
+Concepts: classroom setup
+- The quote mentions the setup or environment of a classroom.
+- Users or designers mention teaching or experience in a high school setting, and mention teaching or experience in a middle school setting.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: release notes, update description
+Relationship: Inclusion (release notes are a type of update description)
+Criteria: The quote discusses changes, updates, or new features in a software release, including descriptions or summaries of updates.
+Label: Software Update Information
+
+2.
+Concepts: platform development, platform-specific development
+Relationship: Inclusion (platform-specific development is a type of platform development)
+Criteria: The quote discusses enhancements to the platform or its features, including platform-specific information or releases.
+Label: Platform Development and Updates
+
+3.
+Concepts: design planning
+Relationship: Inclusion (design elements and features are part of the design planning process)
+Criteria: The quote discusses planning or designing the development process, including planning or discussing design elements or features.
+Label: Design Planning and Ideation
+
+4.
+Concepts: community engagement
+Relationship: Parallel (user engagement and community engagement are related but distinct concepts)
+Criteria: The quote discusses user or community engagement, including leaving messages, requesting features, or reporting issues.
+Label: Community Engagement and Feedback
+
+5.
+Concepts: user guidance
+Relationship: Inclusion (tips and guidance are types of user guidance)
+Criteria: The quote provides instructions or guidance on how to use a feature or software, including tips for users.
+Label: User Guidance and Support
+
+6.
+Concepts: classroom setup
+Relationship: Intersection (classroom setup includes both high school and middle school settings)
+Criteria: The quote mentions the setup or environment of a classroom, including teaching or experience in high school or middle school settings.
+Label: Educational Setting and Environment
