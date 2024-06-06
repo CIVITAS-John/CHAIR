@@ -81,7 +81,7 @@ export class Dialog extends Panel {
                 for (var Code of Examples) {
                     var CodeItem = $(`<li class="owners"><i></i> from </li>`);
                     CodeItem.children("i").text(Code.Data.Label)
-                        .css("pointer", "cursor")
+                        .css("cursor", "pointer")
                         .on("click", () => this.ShowCode(0, Code.Data));
                     // Show the owners
                     var RealOwners = 0;
