@@ -113,6 +113,7 @@ export class DatasetSection extends Panel {
                 var Dates = (Chunk.AllItems ?? []).map(Item => Item.Time).sort((A, B) => A.getTime() - B.getTime());
                 Summary.append($(`<p class="tips"></p>`).text(`From ${FormatDate(Dates[0])}`));
                 Summary.append($(`<p class="tips"></p>`).text(`To ${FormatDate(Dates[Dates.length - 1])}`));
+                Summary.on("click", () => this.Dialog.ShowChunk(Key, Chunk));
                 // Show the items
                 $(`<td class="number-cell actionable"></td>`).text((Chunk.AllItems?.length ?? 0).toString()).appendTo(Row);
                 // Show the codes

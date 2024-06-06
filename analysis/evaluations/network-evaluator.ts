@@ -6,6 +6,7 @@ import { CodebookEvaluator } from './codebooks.js';
 import { CreateOfflineBundle, CreateServer } from '../../utils/server.js';
 import { GetFilesRecursively, ReadOrBuildCache } from '../../utils/file.js';
 import md5 from 'md5';
+import { GetSpeakerName } from '../../constants.js';
 
 /** NetworkEvaluator: A network evaluator of codebook against a reference codebook (#0) with potential human inputs. */
 export class NetworkEvaluator extends CodebookEvaluator {
@@ -48,7 +49,7 @@ export class NetworkEvaluator extends CodebookEvaluator {
                 for (var Dataset of Object.values(this.Dataset.Data)) {
                     for (var Chunk of Object.values(Dataset)) {
                         for (var Item of Chunk.AllItems ?? []) {
-                                Item.Nickname = "[Anonymized]";
+                                Item.Nickname = GetSpeakerName(Item.UserID);
                                 if ((Item as any).CurrentNickname) 
                                     delete (Item as any).CurrentNickname;
                         }

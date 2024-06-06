@@ -75,7 +75,7 @@ export class InfoPanel extends Panel {
             if (Everything) {
                 var List = $(`<ol class="quote"></ol>`).appendTo(Panel);
                 for (var Example of Examples) {
-                    $(`<li class="quote"></li>`).appendTo(List)
+                    $(`<li></li>`).appendTo(List)
                         .append(this.BuildExample(Code, Example[0], Example[1]));
                 }
             } else {
@@ -102,6 +102,7 @@ export class InfoPanel extends Panel {
         if (IDs.length > 0) {
             for (var ID of IDs) {
                 Element.append($(`<a class="source" href="javascript:void(0)">${ID}</a>`)).on("click", () => {
+                    
                 });
             }
         }
