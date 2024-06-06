@@ -92,20 +92,17 @@ export class InfoPanel extends Panel {
         var Link = $(`<a href="javascript:void(0)" style="color: ${GetCodebookColor(Owner, this.Dataset.Codebooks.length)}">${this.Dataset.Names[Owner]}</a>`);
         if (Sources.length > 0) {
             Link.attr("title", Sources.map(Original => Original.Label).join(", "));
-            Link.on("click", () => { this.Dialog.ShowCode(Owner, Code, ...Sources) });
+            Link.on("click", () => { this.Dialog.ShowCode(Owner, Code, ...Sources); });
         }
         return Link;
     }
     /** BuildExample: Build an element for a code example. */
     public BuildExample(Code: Code, Example: string, IDs: string[] = []): Cash {
         var Element = $(`<p>${Example}</p>`);
-        if (IDs.length > 0) {
-            for (var ID of IDs) {
-                Element.append($(`<a class="source" href="javascript:void(0)">${ID}</a>`)).on("click", () => {
-                    
-                });
-            }
-        }
+        // Add the source links
+        if (IDs.length > 0)
+            IDs.forEach(ID => Element.append(this.BuildSourceLink(ID)));
+        // Add the owners
         if (Code.Owners && Code.Owners.length > 0) {
             var Owners = $(`<p class="owners">By: </p>`);
             for (var Owner of Code.Owners) {
@@ -117,5 +114,11 @@ export class InfoPanel extends Panel {
             if (Owners.children().length > 0) Element = Element.add(Owners);
         }
         return Element;
+    }
+    /** BuildSourceLink: Build a link for a source. */
+    public BuildSourceLink(ID: string) {
+        return $(`<a class="source" href="javascript:void(0)">${ID}</a>`).on("click", () => {
+            this.Visualizer.Dialog.ShowChunkOf(ID);
+        });
     }
 }

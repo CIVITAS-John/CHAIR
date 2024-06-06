@@ -75,28 +75,31 @@ export class Dialog extends Panel {
                 $(`<p class="codes">Coded as:<span></span></p>`).appendTo(Current)
                     .children("span").text(Examples.map(Code => Code.Data.Label).join(", "));
             } else {
-                var CodeList = $(`<ul class="codes"></ul>`).appendTo(Current);
+                var CodeList = $(`<ol class="codes"></ol>`).appendTo(Current);
                 var CodeItems: Cash[] = [];
                 // Show the codes
                 for (var Code of Examples) {
                     var CodeItem = $(`<li class="owners"><i></i> from </li>`);
-                    CodeItem.children("i").text(Code.Data.Label);
+                    CodeItem.children("i").text(Code.Data.Label)
+                        .css("pointer", "cursor")
+                        .on("click", () => this.ShowCode(0, Code.Data));
                     // Show the owners
                     var RealOwners = 0;
                     for (var Owner of Code.Data.Owners!) {
                         if (Owner == 0) continue;
                         var Originals = FindOriginalCodes(this.Dataset.Codebooks[Owner], Code.Data, Owner, Item.ID);
                         // Only show the owner if the code is related to THIS quote
-                        if (Originals.length > 0) 
+                        if (Originals.length > 0) {
                             this.InfoPanel.BuildOwnerLink(Code.Data, Originals, Owner).appendTo(CodeItem);
-                        RealOwners++;
+                            RealOwners++;
+                        }
                     }
                     CodeItem.data("owners", RealOwners);
                     // Only show the code if it has owners
                     if (RealOwners > 0) CodeItems.push(CodeItem);
                 }
                 // Sort the codes by the number of owners
-                CodeItems.sort((A, B) => B.data("owners") - A.data("owners"));
+                CodeItems.sort((A, B) => parseInt(B.data("owners")) - parseInt(A.data("owners")));
                 CodeItems.forEach(Item => Item.appendTo(CodeList));
             }
         }
