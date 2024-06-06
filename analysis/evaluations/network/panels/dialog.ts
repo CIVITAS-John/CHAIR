@@ -3,6 +3,7 @@ import { Visualizer } from '../visualizer.js';
 import { Code, DataChunk, DataItem } from '../../../../utils/schema.js';
 import { FormatDate, GetCodebookColor } from '../utils/utils.js';
 import { Panel } from './panel.js';
+import { GetChunks } from '../utils/dataset.js';
 
 /** Dialog: The dialog for the visualizer. */
 export class Dialog extends Panel {
@@ -47,10 +48,15 @@ export class Dialog extends Panel {
         var List = $(`<ol class="quote"></ol>`).appendTo(Panel);
         var Items = Chunk.AllItems ?? [];
         var Orthodox = Items[0].Chunk == Name;
+        if (Orthodox) $(`<li class="split">Items inside the chunk:</li>`).prependTo(List);
         for (var Item of Items) {
             // Show divisors when needed
             if (Item.Chunk == Name != Orthodox) {
                 $("<hr>").appendTo(List);
+                if (!Orthodox) {
+                    $(`<li class="split">Items before the chunk:</li>`).prependTo(List);
+                    $(`<li class="split">Items inside the chunk:</li>`).appendTo(List);
+                } else $(`<li class="split">Items after the chunk:</li>`).appendTo(List);
                 Orthodox = !Orthodox;
             }
             // Show the item
@@ -66,5 +72,6 @@ export class Dialog extends Panel {
     }
     /** ShowChunkOf: Show a dialog for a chunk based on the content ID. */
     public ShowChunkOf(ID: string) {
+        var Chunks = GetChunks(this.Dataset.Source.Data);
     }
 }

@@ -11,6 +11,8 @@ export class Parameters {
     public ClosestNeighbors: number = 3;
     /** UseNearOwners: Whether to visualize the near-owners in place of owners. */
     public UseNearOwners: boolean = true;
+    /** UseExtendedChunk: Whether to consider the extended part of data chunks when filtering. */
+    public UseExtendedChunk: boolean = false;
 }
 
 /** Lerp: Linearly interpolate between two values. */

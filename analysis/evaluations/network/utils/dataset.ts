@@ -1,4 +1,4 @@
-import { Code, Codebook } from "../../../../utils/schema.js";
+import { Code, Codebook, DataChunk, DataItem } from "../../../../utils/schema.js";
 
 /** FindConsolidatedCode: Find a consolidated code by name. */
 export function FindConsolidatedCode(Consolidated: Codebook, Name: string) {
@@ -45,4 +45,19 @@ export function FindExampleSources(Codebook: Codebook, Source: Code, Example: st
     var Codes = FindOriginalCodes(Codebook, Source, Owner);
     var SoftMatch = `|||${Example}`;
     return Codes.filter(Code => Code.Examples?.findIndex(Current => Current == Example || Current.endsWith(SoftMatch)) != -1);
+}
+
+/** GetChunks: Get the chunks from the sources. */
+export function GetChunks(Sources: Record<string, Record<string, DataChunk<DataItem>>>): DataChunk<DataItem>[] {
+    return Object.values(Sources).flatMap(Source => Object.values(Source));
+}
+
+/** GetItems: Get the items from the sources. */
+export function GetItems(Sources: Record<string, Record<string, DataChunk<DataItem>>>): DataItem[] {
+    return GetChunks(Sources).flatMap(Chunk => Chunk.AllItems ?? []);
+}
+
+/** GetItems: Get the items from a source. */
+export function GetItemsFromDataset(Sources: Record<string, DataChunk<DataItem>>): DataItem[] {
+    return Object.values(Sources).flatMap(Chunk => Chunk.AllItems ?? []);
 }

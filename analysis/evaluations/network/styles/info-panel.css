@@ -64,6 +64,9 @@
 .panel ol.quote p {
     color: #666;
 }
+.panel ol.quote li.split::marker {
+    content: ""
+}
 .panel ol.quote li.custom::marker {
     content: attr(seq) ". ";
 }

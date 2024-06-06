@@ -6,6 +6,7 @@ import { Code, DataChunk, DataItem } from '../../../../utils/schema.js';
 import { FilterNodeByExample } from '../utils/graph.js';
 import { FormatDate } from '../utils/utils.js';
 import { ChunkFilter, DatasetFilter } from '../utils/filters.js';
+import { GetItems, GetItemsFromDataset } from '../utils/dataset.js';
 
 /** DatasetSection: The dataset side panel. */
 export class DatasetSection extends Panel {
@@ -60,11 +61,12 @@ export class DatasetSection extends Panel {
                             else this.ShowDataset(Key, Value);
                         });
                     // Find the date
-                    var Dates = Object.values(Value).flatMap(V => V.AllItems ?? []).map(Item => Item.Time).sort((A, B) => A.getTime() - B.getTime());
+                    var Items = GetItemsFromDataset(Value);
+                    var Dates = Items.map(Item => Item.Time).sort((A, B) => A.getTime() - B.getTime());
                     Summary.append($(`<p class="tips"></p>`).text(`From ${FormatDate(Dates[0])}`));
                     Summary.append($(`<p class="tips"></p>`).text(`To ${FormatDate(Dates[Dates.length - 1])}`));
                     // Show the items
-                    var IDs = new Set(Object.values(Value).flatMap(V => V.AllItems ?? []).map(Item => Item.ID));
+                    var IDs = new Set(Items.map(Item => Item.ID));
                     var SizeCell = $(`<td class="number-cell actionable"></td>`).text(`${IDs.size}`).appendTo(Row);
                     SizeCell.append($(`<p class="tips"></p>`).text(`${Object.keys(Value).length} Chunks`));
                     // Show the codes
@@ -90,7 +92,6 @@ export class DatasetSection extends Panel {
             this.Visualizer.SetFilter(false, new DatasetFilter(), Name);
         // Show the component
         this.SetRefresh(() => {
-            var Colorizer = this.Visualizer.GetColorizer();
             this.Container.empty();
             // Show the title
             this.Container.append($(`<h3>${Name} (${Object.keys(Dataset).length} Chunks)</h3>`)
@@ -110,14 +111,16 @@ export class DatasetSection extends Panel {
                 var Summary = $(`<td class="chunk-cell actionable"></td>`).attr("id", `chunk-${Key}`).appendTo(Row);
                 Summary.append($(`<h4></h4>`).text(`Chunk ${Key}`));
                 // Find the date
-                var Dates = (Chunk.AllItems ?? []).map(Item => Item.Time).sort((A, B) => A.getTime() - B.getTime());
+                var Items = Chunk.AllItems ?? [];
+                Items = Items.filter(Item => this.Visualizer.Parameters.UseExtendedChunk ? true : Item.Chunk == Key);
+                var Dates = Items.map(Item => Item.Time).sort((A, B) => A.getTime() - B.getTime());
                 Summary.append($(`<p class="tips"></p>`).text(`From ${FormatDate(Dates[0])}`));
                 Summary.append($(`<p class="tips"></p>`).text(`To ${FormatDate(Dates[Dates.length - 1])}`));
                 Summary.on("click", () => this.Dialog.ShowChunk(Key, Chunk));
                 // Show the items
-                $(`<td class="number-cell actionable"></td>`).text((Chunk.AllItems?.length ?? 0).toString()).appendTo(Row);
+                $(`<td class="number-cell actionable"></td>`).text(Items.length.toString()).appendTo(Row);
                 // Show the codes
-                var Codes = Nodes.filter((Node) => FilterNodeByExample(Node, Chunk.AllItems?.map(Item => Item.ID) ?? []));
+                var Codes = Nodes.filter((Node) => FilterNodeByExample(Node, Items.map(Item => Item.ID) ?? []));
                 var Currents = Codes.filter((Node) => !Node.Hidden);
                 var Color = this.RatioColorizer(Currents.length / Codes.length);
                 $(`<td class="metric-cell"></td>`)
