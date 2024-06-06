@@ -87,7 +87,7 @@ export class DatasetSection extends Panel {
     public ShowDataset(Name: string, Dataset: Record<string, DataChunk<DataItem>>) {
         // Filter by the dataset, if not already
         if (!this.Visualizer.IsFilterApplied("Dataset", Name))
-            this.Visualizer.SetFilter(false, new ChunkFilter(), Name);
+            this.Visualizer.SetFilter(false, new DatasetFilter(), Name);
         // Show the component
         this.SetRefresh(() => {
             var Colorizer = this.Visualizer.GetColorizer();
@@ -95,7 +95,8 @@ export class DatasetSection extends Panel {
             // Show the title
             this.Container.append($(`<h3>${Name} (${Object.keys(Dataset).length} Chunks)</h3>`)
                 .prepend(this.BuildReturn(() => {
-                    this.Visualizer.SetFilter(false, new ChunkFilter(), Name);
+                    if (this.Visualizer.IsFilterApplied("Dataset", Name))
+                        this.Visualizer.SetFilter(false, new DatasetFilter());
                     this.ShowDatasets();
                 })));
             // Show the chunks
