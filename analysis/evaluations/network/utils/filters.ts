@@ -104,11 +104,15 @@ export class ChunkFilter extends FilterBase<Code, string> {
 }
 
 /** ComponentFilter: Filter the nodes by their components. */
-export class ComponentFilter<T> extends FilterBase<T, Component<T>> {
+export class ComponentFilter extends FilterBase<Code, Component<Code>> {
     /** Name: The name of the filter. */
     public Name: string = "Component";
+    /** GetParameterNames: Get the names of the parameters. */
+    public GetParameterNames(Visualizer: Visualizer): string[] {
+        return this.Parameters.map(Parameter => Parameter.Representative!.Data.Label);
+    }
     /** Filter: The filter function. */
-    public Filter(Visualizer: Visualizer, Node: Node<T>): boolean {
+    public Filter(Visualizer: Visualizer, Node: Node<Code>): boolean {
         if (!Node.Component) return false;
         return this.Parameters.includes(Node.Component);
     }

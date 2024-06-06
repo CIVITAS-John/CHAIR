@@ -71,9 +71,11 @@ ul {
 }
 /** Filters Styles */
 .visualization .filters .filter {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 2rem 0.5rem 1rem;
     border: 1px solid #ccc;
+    max-width: 18rem;
     font-size: 0.9rem;
+    line-height: 1.3;
     border-top: 0;
 }
 .visualization .filters .filter span {
@@ -83,8 +85,10 @@ ul {
     content: ", "
 }
 .visualization .filters .filter a.close {
+    right: 0.5rem;
+    position: absolute;
     color: #cc2200;
-    float: right;
+    margin-left: 0.5rem;
 }
 /** Visualization Styles */
 /* Components */

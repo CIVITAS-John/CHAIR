@@ -87,7 +87,7 @@ export class DatasetSection extends Panel {
     public ShowDataset(Name: string, Dataset: Record<string, DataChunk<DataItem>>) {
         // Filter by the dataset, if not already
         if (!this.Visualizer.IsFilterApplied("Dataset", Name))
-            this.Visualizer.SetFilter(false, new DatasetFilter(), Name);
+            this.Visualizer.SetFilter(false, new ChunkFilter(), Name);
         // Show the component
         this.SetRefresh(() => {
             var Colorizer = this.Visualizer.GetColorizer();
