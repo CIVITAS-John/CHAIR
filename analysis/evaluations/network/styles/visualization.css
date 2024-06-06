@@ -53,18 +53,38 @@ ul {
     height: 100%;
 }
 /** Legends Styles */
-.visualization .legends {
+.visualization .floating {
     position: absolute;
     top: 0;
     left: 0;
-    padding: 0.5rem 1rem;
     z-index: 1;
     background-color: rgba(255, 255, 255, 0.9);
+}
+.visualization .legends {
+    border: 1px solid #ccc;
+    padding: 0.5rem 1rem;
 }
 .visualization .legends span,
 .visualization .legends svg {
     display: inline-block;
     vertical-align: middle;
+}
+/** Filters Styles */
+.visualization .filters .filter {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+    border-top: 0;
+}
+.visualization .filters .filter span {
+    margin: 0 0.2rem 0 0;
+}
+.visualization .filters .filter a:not(:last-child, :nth-last-child(2)):after {
+    content: ", "
+}
+.visualization .filters .filter a.close {
+    color: #cc2200;
+    float: right;
 }
 /** Visualization Styles */
 /* Components */

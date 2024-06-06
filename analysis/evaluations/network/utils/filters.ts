@@ -16,6 +16,10 @@ export abstract class FilterBase<TNode, TParameter> {
     public abstract Filter(Visualizer: Visualizer, Node: Node<TNode>): boolean;
     /** GetColorizer: Get the colorizer for this filter. */
     public GetColorizer(Visualizer: Visualizer): Colorizer<TNode> | undefined { return; }
+    /** GetParameterNames: Get the names of the parameters. */
+    public GetParameterNames(Visualizer: Visualizer): string[] {
+        return this.Parameters.map(Parameter => (Parameter as any).toString());
+    }
     /** ToggleParameters: Toggle the parameters of the filter. */
     public ToggleParameters(NewParameters: TParameter, Additive: boolean, Mode: string): boolean { 
         if (Mode == this.Mode && this.Parameters.includes(NewParameters)) {
@@ -118,6 +122,10 @@ export class OwnerFilter<T> extends FilterBase<T, number> {
     public Filter(Visualizer: Visualizer, Node: Node<T>): boolean {
         return FilterNodeByOwners(Node, this.Parameters, 
             Visualizer.Parameters.UseNearOwners || this.Parameters.length == 1);
+    }
+    /** GetParameterNames: Get the names of the parameters. */
+    public GetParameterNames(Visualizer: Visualizer): string[] {
+        return this.Parameters.map(Parameter => Visualizer.Dataset.Names[Parameter]);
     }
     /** GetColorizer: Get the colorizer for this filter. */
     public GetColorizer(Visualizer: Visualizer): Colorizer<T> {

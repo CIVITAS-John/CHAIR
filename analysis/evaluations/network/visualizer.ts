@@ -27,8 +27,10 @@ export class Visualizer {
     private LabelLayer: d3.Selection<SVGGElement, unknown, null, undefined>;
     /** ComponentLayer: The layer for the components. */
     private ComponentLayer: d3.Selection<SVGGElement, unknown, null, undefined>;
-    /** Legends: The legends for the visualization. */
-    private Legends: Cash;
+    /** LegendContainer: The interface container of legends. */
+    private LegendContainer: Cash;
+    /** FilterContainer: The interface container of filters. */
+    private FilterContainer: Cash;
     /** Zoom: The zoom behavior in-use. */
     private Zoom: d3.ZoomBehavior<globalThis.Element, unknown>;
     /** Dataset: The underlying dataset. */
@@ -57,7 +59,8 @@ export class Visualizer {
         this.NodeLayer = Scaler.append("g").attr("class", "nodes");
         this.LabelLayer = Scaler.append("g").attr("class", "labels");
         this.ComponentLayer = Scaler.append("g").attr("class", "components");
-        this.Legends = Container.find(".legends");
+        this.LegendContainer = Container.find(".legends");
+        this.FilterContainer = Container.find(".filters");
         // Zoom support
         this.Zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", (event) => {
             Scaler.attr("transform", event.transform);
@@ -178,7 +181,10 @@ export class Visualizer {
         }
         if (!Previewing) this.NodeChosen(new Event("click"), undefined);
         this.Rerender();
-        if (!Previewing) this.SidePanel.Render();
+        if (!Previewing) {
+            this.RenderFilters();
+            this.SidePanel.Render();
+        }
         return Parameters != undefined;
     }
     /** GetColorizer: Get the colorizer for the visualization. */
@@ -198,6 +204,23 @@ export class Visualizer {
         var Filter = this.Filters.get(Name);
         if (Mode && Filter?.Mode != Mode) return false;
         return Filter?.Parameters.includes(Parameter) ?? false;
+    }
+    /** RenderFilters: Render all current filters. */
+    private RenderFilters() {
+        this.FilterContainer.empty();
+        this.Filters.forEach((Filter, Name) => {
+            var Container = $(`<div class="filter"></div>`).appendTo(this.FilterContainer);
+            Container.append($("<span></span>").text(Filter.Name + ":"));
+            var Names = Filter.GetParameterNames(this);
+            for (var I = 0; I < Filter.Parameters.length; I++) {
+                var Parameter = Filter.Parameters[I];
+                var Label = Names[I];
+                Container.append($(`<a href="javascript:void(0)" class="parameter"></a>`).text(Label)
+                    .on("click", () => this.SetFilter(false, Filter, Parameter)));
+            }
+            Container.append($(`<a href="javascript:void(0)" class="close"></a>`).text("X")
+                .on("click", () => this.SetFilter(false, Filter)));
+        });
     }
     // Node events
     /** NodeOver: Handle the mouse-over event on a node. */
@@ -281,12 +304,12 @@ export class Visualizer {
     private RenderLegends(Colorizer: Colorizer<any>) {
         // Check if the legends are up-to-date
         var Hash = JSON.stringify(Colorizer.Examples) + JSON.stringify(Object.values(Colorizer.Results!).map(Values => Values.length));
-        if (this.Legends.data("hash") == Hash) return;
-        this.Legends.empty().data("hash", Hash);
+        if (this.LegendContainer.data("hash") == Hash) return;
+        this.LegendContainer.empty().data("hash", Hash);
         // Render the legends
         for (var Example in Colorizer.Examples) {
             var Color = Colorizer.Examples[Example];
-            this.Legends.append(`<div class="legend">
+            this.LegendContainer.append(`<div class="legend">
                 <svg width="20" height="20"><circle cx="10" cy="10" r="8" fill="${Color}"/></svg>
                 <span>${Example} (${Colorizer.Results?.[Color]?.length ?? 0})</span>
             </div>`);

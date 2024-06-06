@@ -93,7 +93,7 @@ export class DatasetSection extends Panel {
             var Colorizer = this.Visualizer.GetColorizer();
             this.Container.empty();
             // Show the title
-            this.Container.append($(`<h3>${Name} (${Object.keys(Dataset).length} Chunks)}</h3>`)
+            this.Container.append($(`<h3>${Name} (${Object.keys(Dataset).length} Chunks)</h3>`)
                 .prepend(this.BuildReturn(() => {
                     this.Visualizer.SetFilter(false, new ChunkFilter(), Name);
                     this.ShowDatasets();
