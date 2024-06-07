@@ -16,6 +16,11 @@ export class Dialog extends Panel {
     }
     /** ShowPanel: Show a panel in the dialog. */
     private ShowPanel(Panel: Cash) {
+        // Add a back button
+        $(`<a class="back" href="javascript:void(0)">←</a>`)
+            .on("click", () => window.history.back())
+            .appendTo(Panel.children("h3"));
+        // Show the panel
         var Content = this.Container.children("div.content");
         Content.children().remove();
         Content.append(Panel);
@@ -23,6 +28,8 @@ export class Dialog extends Panel {
     }
     /** ShowCode: Show a dialog for a code. */
     public ShowCode(Owner: number, Original: Code, ...Codes: Code[]) {
+        this.Visualizer.PushState(`code-${encodeURIComponent(Original.Label)}-${Owner}`, () => this.ShowCode(Owner, Original, ...Codes));
+        // Check if it's the baseline
         var IsBaseline = Owner == 0;
         if (Codes.length == 0) Codes.push(Original);
         // Build the panel
@@ -33,14 +40,17 @@ export class Dialog extends Panel {
         }
         Panel.children("h3").append($(`<span style="color: ${GetCodebookColor(Owner, this.Dataset.Codebooks.length)}">${this.Dataset.Names[Owner]}</span>`));
         // Add a back button if it's not the baseline
-        if (!IsBaseline)
-            Panel.children("h3").prepend($(`<a href="javascript:void(0)" class="back">↑</a>`)
-                .attr("title", Original.Label).on("click", () => { this.ShowCode(0, Original); }));
+        if (!IsBaseline) {
+            var Source = $(`<p>Consolidated into: <a href="javascript:void(0)" class="back">←</a></p>`);
+            Source.children("a").text(Original.Label).on("click", () => { this.ShowCode(0, Original); });
+            Panel.children("h3").after(Source);
+        }
         // Show the dialog
         this.ShowPanel(Panel);
     }
     /** ShowChunk: Show a dialog for a chunk. */
     public ShowChunk(Name: string, Chunk: DataChunk<DataItem>, Owners: number[] = []) {
+        this.Visualizer.PushState(`chunk-${Name}`, () => this.ShowChunk(Name, Chunk, Owners));
         // Build the panel
         var Panel = $(`<div class="panel"></div>`);
         // Add the title

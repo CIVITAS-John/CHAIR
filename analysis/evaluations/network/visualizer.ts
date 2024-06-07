@@ -45,6 +45,7 @@ export class Visualizer {
     public Dialog: Dialog;
     /** Constructor: Constructing the manager. */
     public constructor(Container: Cash) {
+        window.onpopstate = (Event) => this.PopState(Event);
         // Other components
         this.SidePanel = new SidePanel($(".side-panel"), this);
         this.InfoPanel = new InfoPanel($(".info-panel"), this);
@@ -460,6 +461,25 @@ export class Visualizer {
             .force("collide", d3.forceCollide().radius((Node) => (Node as any).Size + 2))
             .on("tick", () => Renderer(this.Simulation!.alpha()));
         this.Simulation.alpha(1).alphaTarget(0).restart();
+    }
+    // History
+    /** History: The history of the visualizer. */
+    private History: Map<string, () => void> = new Map();
+    /** PushState: Push a new state to the history. */
+    public PushState(Name: string, Callback: () => void) {
+        this.History.set(Name, Callback);
+        window.history.pushState(Name, Name, `#${Name}`);
+    }
+    /** PopState: Handle the pop state event. */
+    public PopState(Event: PopStateEvent) {
+        // If there is no hash, hide the dialog
+        if (window.location.hash == "") {
+            this.Dialog.Hide();
+            return;
+        }
+        // Otherwise, trigger the callback
+        var Callback = this.History.get(window.location.hash.slice(1));
+        if (Callback) Callback();
     }
 }
 
