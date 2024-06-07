@@ -17,9 +17,9 @@ export class Dialog extends Panel {
     /** ShowPanel: Show a panel in the dialog. */
     private ShowPanel(Panel: Cash) {
         // Add a back button
-        $(`<a class="back" href="javascript:void(0)">←</a>`)
+        $(`<a class="back" href="javascript:void(0)">⮜</a>`)
             .on("click", () => window.history.back())
-            .appendTo(Panel.children("h3"));
+            .prependTo(Panel.children("h3"));
         // Show the panel
         var Content = this.Container.children("div.content");
         Content.children().remove();
