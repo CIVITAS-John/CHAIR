@@ -183,3 +183,15 @@ line.hidden:not(.hovering, .chosen-neighbor, .chosen) {
     stroke: #999;
     stroke-opacity: 0.1;
 }
+/* Tutorial styles */
+.driver-popover {
+    font-size: 1rem;
+    max-width: calc(min(50vw, 27rem));
+}
+.tutorial-start {
+    max-width: calc(min(80vw, 33rem));
+}
+.driver-popover p.tips {
+    font-size: 0.8rem;
+    color: #666;
+}

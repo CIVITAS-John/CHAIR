@@ -5,7 +5,6 @@ import { FormatDate, GetCodebookColor } from '../utils/utils.js';
 import { Panel } from './panel.js';
 import { FindOriginalCodes, GetChunks } from '../utils/dataset.js';
 import { FilterNodeByExample, FilterNodeByOwners } from '../utils/graph.js';
-import { Node } from '../utils/schema.js';
 
 /** Dialog: The dialog for the visualizer. */
 export class Dialog extends Panel {

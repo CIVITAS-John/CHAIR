@@ -9,6 +9,7 @@ import { InfoPanel } from './panels/info-panel.js';
 import { SidePanel } from './panels/side-panel.js';
 import { Dialog } from './panels/dialog.js';
 import { FilterBase } from './utils/filters.js';
+import { Tutorial } from './tutorial.js';
 declare global {
     var $: typeof Cash.prototype.init & CashStatic;
 }
@@ -86,6 +87,8 @@ export class Visualizer {
             // Build the default graph
             this.SetStatus("Code", BuildSemanticGraph(this.Dataset, this.Parameters));
             this.SidePanel.Show();
+            // Show tutorial if needed
+            new Tutorial($(".tutorial"), this);
         });
     }
     // Status management
@@ -134,10 +137,15 @@ export class Visualizer {
         else Renderer(0.002);
     }
     /** CenterCamera: Center the viewport camera to a position and scale.*/
-    public CenterCamera(X: number, Y: number, Zoom: number) {
-        this.Container.transition().duration(500)
-            .call(this.Zoom.translateTo as any, X, Y)
-            .transition().call(this.Zoom.scaleTo as any, Zoom);
+    public CenterCamera(X: number, Y: number, Zoom: number, Animated: boolean = true) {
+        if (Animated) {
+            this.Container.transition().duration(500)
+                .call(this.Zoom.translateTo as any, X, Y)
+                .transition().call(this.Zoom.scaleTo as any, Zoom);
+        } else {
+            this.Zoom.translateTo(this.Container as any, X, Y);
+            this.Zoom.scaleTo(this.Container as any, Zoom);
+        }
     }
     // Filters
     /** Filters: The current filters of the graph. */
@@ -179,6 +187,7 @@ export class Visualizer {
                 Filter.SetParameter([Parameters]);
                 Filter.Mode = Mode;
             }
+            delete this.PreviewFilter;
         }
         if (!Previewing) this.NodeChosen(new Event("click"), undefined);
         this.Rerender();
@@ -279,10 +288,17 @@ export class Visualizer {
                 this.TriggerChosenCallback(Node, false);
             }
         }
+        // Update the status
         this.GetStatus().ChosenNodes = Chosens;
         this.Container.classed("node-chosen", Chosens.length > 0);
         this.SidePanel.Render();
         return Node !== undefined && Chosens.includes(Node);
+    }
+    /** FocusOnNode: Focus on a node by its SVG element. */
+    public FocusOnNode(Element: SVGElement) {
+        var Node = d3.select(Element).datum() as Node<any>;
+        this.CenterCamera(Node.x!, Node.y!, 3, false);
+        this.NodeChosen(new Event("click"), Node, true);
     }
     // Component events
     /** ComponentOver: Handle the mouse-over event on a component. */
