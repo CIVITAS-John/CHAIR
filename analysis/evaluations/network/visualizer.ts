@@ -53,7 +53,7 @@ export class Visualizer {
         this.SidePanel = new SidePanel($(".side-panel"), this);
         this.InfoPanel = new InfoPanel($(".info-panel"), this);
         this.Dialog = new Dialog($(".dialog"), this);
-        this.Tutorial = new Tutorial($(".tutorial"), this);
+        this.Tutorial = new Tutorial($(".portrait-overlay"), this);
         // Initialize the SVG
         var Root = d3.select(Container.get(0)!)
             .attr("style", `background-color: #290033`);

@@ -8,6 +8,7 @@ export class Tutorial extends Panel {
     /** Constructor: Constructing the tutorial. */
     public constructor(Container: Cash, Visualizer: Visualizer) {
         super(Container, Visualizer);
+        Container.show();
         (driver as any) = (window as any).driver.js.driver || driver;
     }
     /** ShowTutorial: Show the tutorial. */

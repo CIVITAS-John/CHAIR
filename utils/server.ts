@@ -55,6 +55,9 @@ export function CreateServer(Port: number, BaseDirectories: string[], ...DataFil
                 case '.json':
                     contentType = 'application/json; charset=utf-8';
                     break;
+                case '.svg':
+                    contentType = 'image/svg+xml';
+                    break;
                 case '.png':
                     contentType = 'image/png';
                     break;

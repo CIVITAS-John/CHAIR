@@ -195,3 +195,33 @@ line.hidden:not(.hovering, .chosen-neighbor, .chosen) {
     font-size: 0.8rem;
     color: #666;
 }
+@media (min-width: 800px) or (orientation: landscape) {
+    .portrait-overlay {
+        display: none !important;
+    }
+}
+.portrait-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    z-index: 1000000001;
+}
+.portrait-overlay .content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(max(20rem, 75vw));
+    font-size: 1.2rem;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+.portrait-overlay .content img {
+    width: 6rem;
+}
+.portrait-overlay .content h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+}
