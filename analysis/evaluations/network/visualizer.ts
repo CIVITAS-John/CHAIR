@@ -44,6 +44,8 @@ export class Visualizer {
     public SidePanel: SidePanel;
     /** Dialog: Dialog for the visualization. */
     public Dialog: Dialog;
+    /** Tutorial: The tutorial for the visualization. */
+    public Tutorial: Tutorial;
     /** Constructor: Constructing the manager. */
     public constructor(Container: Cash) {
         window.onpopstate = (Event) => this.PopState(Event);
@@ -51,6 +53,7 @@ export class Visualizer {
         this.SidePanel = new SidePanel($(".side-panel"), this);
         this.InfoPanel = new InfoPanel($(".info-panel"), this);
         this.Dialog = new Dialog($(".dialog"), this);
+        this.Tutorial = new Tutorial($(".tutorial"), this);
         // Initialize the SVG
         var Root = d3.select(Container.get(0)!)
             .attr("style", `background-color: #290033`);
@@ -87,8 +90,6 @@ export class Visualizer {
             // Build the default graph
             this.SetStatus("Code", BuildSemanticGraph(this.Dataset, this.Parameters));
             this.SidePanel.Show();
-            // Show tutorial if needed
-            new Tutorial($(".tutorial"), this);
         });
     }
     // Status management
@@ -134,7 +135,7 @@ export class Visualizer {
         // Render the visualization
         if (Relayout)
             this.GenerateLayout(this.Status.Graph, Renderer);
-        else Renderer(0.002);
+        else Renderer(0);
     }
     /** CenterCamera: Center the viewport camera to a position and scale.*/
     public CenterCamera(X: number, Y: number, Zoom: number, Animated: boolean = true) {
@@ -298,7 +299,8 @@ export class Visualizer {
     public FocusOnNode(Element: SVGElement) {
         var Node = d3.select(Element).datum() as Node<any>;
         this.CenterCamera(Node.x!, Node.y!, 3, false);
-        this.NodeChosen(new Event("click"), Node, true);
+        if (!this.GetStatus().ChosenNodes.includes(Node))
+            this.NodeChosen(new Event("click"), Node);
     }
     // Component events
     /** ComponentOver: Handle the mouse-over event on a component. */
@@ -334,7 +336,6 @@ export class Visualizer {
     }
     /** RenderCodes: Render the coding graph to the container. */
     public RenderCodes(Alpha: number) {
-        if (Alpha <= 0.001) return;
         // Basic settings
         this.Container.attr("viewBox", "0 0 300 300");
         this.Zoom.extent([[0, 0], [300, 300]]);
@@ -475,8 +476,14 @@ export class Visualizer {
                 .distance((Link) => DistanceScale)
                 .strength((Link) => (Link as any).VisualizeWeight))
             .force("collide", d3.forceCollide().radius((Node) => (Node as any).Size + 2))
-            .on("tick", () => Renderer(this.Simulation!.alpha()));
-        this.Simulation.alpha(1).alphaTarget(0).restart();
+            .on("tick", () => {
+                Renderer(this.Simulation!.alpha());
+                if (this.Simulation!.alpha() <= 0.001) {
+                    this.Tutorial.ShowTutorial();
+                    Handler.stop();
+                }
+            });
+        var Handler = this.Simulation.alpha(1).alphaTarget(0).restart();
     }
     // History
     /** History: The history of the visualizer. */

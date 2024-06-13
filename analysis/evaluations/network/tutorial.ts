@@ -1,7 +1,7 @@
 import { Cash } from 'cash-dom';
 import { Panel } from './panels/panel.js';
 import { Visualizer } from './visualizer.js';
-import { driver } from 'driver.js';
+import { DriveStep, driver } from 'driver.js';
 
 /** Tutorial: The interactive tutorial for the visualizer. */
 export class Tutorial extends Panel {
@@ -9,6 +9,9 @@ export class Tutorial extends Panel {
     public constructor(Container: Cash, Visualizer: Visualizer) {
         super(Container, Visualizer);
         (driver as any) = (window as any).driver.js.driver || driver;
+    }
+    /** ShowTutorial: Show the tutorial. */
+    public ShowTutorial(Restart: boolean = false) {
         // Create the tutorial
         var Tutorial = driver({
             showProgress: true,
@@ -23,7 +26,7 @@ export class Tutorial extends Panel {
 <p>You can leave the tutorial at any time. When you come back, it will start from where you left off.</p>
 <hr/>
 <p class="tips">By: <a href="https://civitas-john.github.io/">John Chen</a>, Lexie Zhao, & Alex Lostos (Northwestern University)</p>
-<p class="tips">Acknowledgement: Michael Horn, Bruce Sherin, Jessica Hullman, & Uri Wilensky</p>`
+<p class="tips">Collaborators: Michael Horn, Bruce Sherin, Jessica Hullman, & Uri Wilensky</p>`
                     }
                 },
                 {
@@ -131,20 +134,30 @@ export class Tutorial extends Panel {
                     }
                 },
                 {
+                    element: "#menu-tutorial",
                     popover: { 
                         title: "Thank you!", 
                         popoverClass: "tutorial-start",
                         description: `
-<p>You can restart the guided tour anytime. For more questions, please contact <a href="mailto:civitas@u.northwestern.edu">the authors</a>.</p>
+<p>You can restart the guided tour anytime. If you want to use it on your own dataset, or you have more questions, please contact <a href="mailto:civitas@u.northwestern.edu">the authors</a>.</p>
 <p>There are more features for you to find out. Enjoy!</p>
 <hr/>
 <p class="tips">By: <a href="https://civitas-john.github.io/">John Chen</a>, Lexie Zhao, & Alex Lostos (Northwestern University)</p>
-<p class="tips">Acknowledgement: Michael Horn, Bruce Sherin, Jessica Hullman, & Uri Wilensky</p>`
-                    }
+<p class="tips">Collaborators: Michael Horn, Bruce Sherin, Jessica Hullman, & Uri Wilensky</p>`
+                    },
+                    onHighlighted: () => window.localStorage.setItem("tutorial-step", "-1"),
                 },
-            ]
+            ], 
+            onHighlighted: (Element, Step) => {
+                window.localStorage.setItem("tutorial-step", Tutorial.getActiveIndex()!.toString());
+                console.log("Tutorial step", Tutorial.getActiveIndex());
+            },
         });
         // Show the tutorial
-        Tutorial.drive();
+        var Step = window.localStorage.getItem("tutorial-step");
+        if (Restart) Tutorial.drive();
+        else if (Step == "-1") return;
+        else if (Step) Tutorial.drive(parseInt(Step));
+        else Tutorial.drive();
     }
 }

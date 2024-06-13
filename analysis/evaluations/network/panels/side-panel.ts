@@ -36,6 +36,9 @@ export class SidePanel extends Panel {
         };
         for (var Key in this.Subpanels)
             MenuContainer.append(BuildMenu(Key));
+        // Show the tutorial
+        MenuContainer.append($(`<a href="javascript:void(0)" id="menu-tutorial">?</a>`)
+            .on("click", () => this.Visualizer.Tutorial.ShowTutorial(true)));
     }
     /** ShowPanel: Show a side panel. */
     public ShowPanel(Name: string) {
