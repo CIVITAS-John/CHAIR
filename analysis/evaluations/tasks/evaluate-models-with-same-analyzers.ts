@@ -28,8 +28,8 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
     File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
 }
 
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-1", new RefiningReferenceBuilder()); 
-// await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-2", new RefiningReferenceBuilder()); 
+// await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-1", new RefiningReferenceBuilder()); 
+await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-2", new RefiningReferenceBuilder()); 
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-3", new RefiningReferenceBuilder());
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "human", new RefiningReferenceBuilder()); 
 process.exit(0);

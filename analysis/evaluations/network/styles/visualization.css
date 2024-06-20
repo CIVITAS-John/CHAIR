@@ -63,6 +63,7 @@ ul {
 .visualization .legends {
     border: 1px solid #ccc;
     padding: 0.5rem 1rem;
+    padding-left: calc(max(1rem, 0.5rem + env(safe-area-inset-left)));
 }
 .visualization .legends span,
 .visualization .legends svg {
