@@ -1,7 +1,7 @@
 import * as File from 'fs';
 import { UseLLMs } from '../../utils/llms.js';
 import { LowLevelAnalyzer2 } from './low-level-2.js';
-import { ProcessDataset } from '../analyzer.js';
+import { ProcessDataset } from '../../analyzer.js';
 
 await UseLLMs(async () => {
     await ProcessDataset(new LowLevelAnalyzer2(), "Coded Dataset 2", false);

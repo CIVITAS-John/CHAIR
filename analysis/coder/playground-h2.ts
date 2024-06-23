@@ -1,6 +1,6 @@
 import { UseLLMs } from '../../utils/llms.js';
 import { HighLevelAnalyzer2 } from './high-level-2.js';
-import { ProcessDataset } from '../analyzer.js';
+import { ProcessDataset } from '../../analyzer.js';
 
 await UseLLMs(async () => {
     await ProcessDataset(new HighLevelAnalyzer2(), "Coded Dataset 1", false);

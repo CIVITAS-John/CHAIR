@@ -1,8 +1,8 @@
 import * as File from 'fs';
-import { CutoffDate } from '../constants.js';
-import { Tokenize } from '../utils/tokenizer.js';
-import { Message, Participant } from '../utils/schema.js';
-import { GetMessagesPath, GetParticipantsPath } from '../utils/loader.js';
+import { CutoffDate } from '../../constants.js';
+import { Tokenize } from '../../utils/tokenizer.js';
+import { Message, Participant } from '../../utils/schema.js';
+import { GetMessagesPath, GetParticipantsPath } from '../../utils/loader.js';
 
 /** ReadQQMessages: Read messages from a text record of QQ groups. */
 function ReadQQMessages(Path: string, Prefix: string): Message[] {

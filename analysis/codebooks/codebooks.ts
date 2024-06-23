@@ -2,7 +2,7 @@ import * as File from 'fs';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { LLMName, EnsureFolder, RequestLLMWithCache } from "../../utils/llms.js";
 import { Code, CodedThreads, Codebook, Conversation, DataItem, DataChunk } from "../../utils/schema.js";
-import { LoopThroughChunks } from "../analyzer.js";
+import { LoopThroughChunks } from "../../analyzer.js";
 import { GetMessagesPath, LoadAnalyses, LoadChunksForAnalysis } from "../../utils/loader.js";
 import { ExportChunksForCoding } from '../../utils/export.js';
 import { ClusterItem } from '../../utils/embeddings.js';

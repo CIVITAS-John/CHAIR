@@ -1,11 +1,11 @@
 import * as File from 'fs';
 import chalk from "chalk";
-import { CountItems, EnsureFolder, LLMName, MaxItems, RequestLLMWithCache } from "../utils/llms.js";
-import { GetMessagesPath, LoadDataset } from "../utils/loader.js";
-import { AssembleExampleFrom, CodedThread, CodedThreads, DataChunk, DataItem } from "../utils/schema.js";
-import { ExportChunksForCoding } from "../utils/export.js";
+import { CountItems, EnsureFolder, LLMName, MaxItems, RequestLLMWithCache } from "./utils/llms.js";
+import { GetMessagesPath, LoadDataset } from "./utils/loader.js";
+import { AssembleExampleFrom, CodedThread, CodedThreads, DataChunk, DataItem } from "./utils/schema.js";
+import { ExportChunksForCoding } from "./utils/export.js";
 import { SystemMessage, HumanMessage } from '@langchain/core/messages';
-import { MergeCodebook } from './codebooks/codebooks.js';
+import { MergeCodebook } from './analysis/codebooks/codebooks.js';
 
 /** Analyzer: The definition of an abstract analyzer. */
 export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {

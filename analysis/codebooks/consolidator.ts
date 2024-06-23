@@ -1,5 +1,5 @@
 import { Code, Codebook, CodedThreads } from "../../utils/schema.js";
-import { Analyzer } from "../analyzer.js";
+import { Analyzer } from "../../analyzer.js";
 import chalk from 'chalk';
 
 /** CodebookConsolidator: The definition of an abstract codebook consolidator. */

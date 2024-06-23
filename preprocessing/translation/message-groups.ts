@@ -1,9 +1,9 @@
 import * as File from 'fs';
-import { EnsureFolder, LLMName, MaxOutput } from "../utils/llms.js";
-import { GetMessagesPath, GetParticipantsPath, LoadConversations, LoadMessages, LoadParticipants } from "../utils/loader.js";
-import { Conversation, Message, Participant } from '../utils/schema.js';
+import { EnsureFolder, LLMName, MaxOutput } from "../../utils/llms.js";
+import { GetMessagesPath, GetParticipantsPath, LoadConversations, LoadMessages, LoadParticipants } from "../../utils/loader.js";
+import { Conversation, Message, Participant } from '../../utils/schema.js';
 import { TranslateStrings } from "./general.js";
-import { ExportChunksForCoding, ExportMessages } from '../utils/export.js';
+import { ExportChunksForCoding, ExportMessages } from '../../utils/export.js';
 
 /** ProcessConversations: Load, translate, and export certain conversations for qualitative coding. */
 export async function ProcessConversations(Group: string, Targets: number[], Dataset?: string): Promise<void> {

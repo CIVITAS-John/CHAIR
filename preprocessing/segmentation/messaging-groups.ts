@@ -1,8 +1,8 @@
 import * as File from 'fs';
-import { GetMessagesPath, LoadMessages } from "../utils/loader.js";
-import { ExportMessages } from '../utils/export.js';
+import { GetMessagesPath, LoadMessages } from "../../utils/loader.js";
+import { ExportMessages } from '../../utils/export.js';
 import spawnAsync from '@expo/spawn-async';
-import { Conversation } from '../utils/schema.js';
+import { Conversation } from '../../utils/schema.js';
 
 await SeperateMessages("Users of Physics Lab (Group 1)", "1");
 await SeperateMessages("Users of Physics Lab (Group 2)", "2");

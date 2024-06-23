@@ -1,8 +1,8 @@
 import * as File from 'fs';
 import { SystemMessage, HumanMessage } from "@langchain/core/messages";
-import { EnsureFolder, ExpectedItems, FinishedItems, InitializeLLM, InputTokens, LLMName, MaxItems, MaxOutput, OutputTokens, RequestLLM, RequestLLMWithCache } from "../utils/llms.js";
-import { Preprocess } from "../utils/glossary.js";
-import { Tokenize } from "../utils/tokenizer.js";
+import { EnsureFolder, ExpectedItems, FinishedItems, InitializeLLM, InputTokens, LLMName, MaxItems, MaxOutput, OutputTokens, RequestLLM, RequestLLMWithCache } from "../../utils/llms.js";
+import { Preprocess } from "../../utils/glossary.js";
+import { Tokenize } from "../../utils/tokenizer.js";
 
 // TranslatedCache: A cache for translated strings.
 export const TranslatedCache = new Map<string, Map<string, string>>();

@@ -1,5 +1,5 @@
-import { MaxOutput } from '../utils/llms.js';
-import { Project, Comment } from '../utils/schema.js';
+import { MaxOutput } from '../../utils/llms.js';
+import { Project, Comment } from '../../utils/schema.js';
 import { TranslateStrings } from "./general.js";
 
 // TranslateProjects: Translate a bunch of projects.
