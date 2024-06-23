@@ -1,7 +1,7 @@
 import { UseLLMs } from '../../utils/llms.js';
 import { ProcessDataset } from '../../analyzer.js';
 
-var AnalyzerName = "low-level-4";
+var AnalyzerName = "bertopic";
 var Analyzer = await import(`./${AnalyzerName}.js`);
 
 await UseLLMs(async () => {

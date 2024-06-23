@@ -25,6 +25,9 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     public GetChunkSize(Recommended: number, Remaining: number, Iteration: number, Tries: number): number | [number, number, number] {
         return Recommended;
     }
+    /** BatchPreprocess: Preprocess the units at the very beginning. */
+    public async BatchPreprocess(Units: TUnit[], Analyzed: TAnalysis[]): Promise<void> {
+    }
     /** Preprocess: Preprocess the subunits before filtering and chunking. */
     public async Preprocess(Analysis: TAnalysis, Source: TUnit, Subunits: TSubunit[], Iteration: number): Promise<TSubunit[]> { return Subunits; }
     /** SubunitFilter: Filter the subunits before chunking. */
@@ -32,11 +35,15 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     /** BuildPrompts: Build the prompts for the LLM. */
     // Note that the `ChunkStart` index starts from 0, which could be confusing because in our example, the first message in the prompt is 1 (with index=0).
     // `ChunkStart` is particularly useful if you want to code just 1 message but also include the context of the previous and next subunits.
-    public abstract BuildPrompts(Analysis: TAnalysis, Source: TUnit, Subunits: TSubunit[], ChunkStart: number, Iteration: number): Promise<[string, string]>;
+    public async BuildPrompts(Analysis: TAnalysis, Source: TUnit, Subunits: TSubunit[], ChunkStart: number, Iteration: number): Promise<[string, string]> {
+        return ["", ""];
+    }
     /** ParseResponse: Parse the responses from the LLM. */
     // The return value is only for item-based coding, where each item has its own response. Otherwise, return {}.
     // Alternatively, it can return a number to indicate the relative cursor movement. (Actual units - Expected units, often negative.)
-    public abstract ParseResponse(Analysis: TAnalysis, Lines: string[], Subunits: TSubunit[], ChunkStart: number, Iteration: number): Promise<Record<number, string> | number>;
+    public async ParseResponse(Analysis: TAnalysis, Lines: string[], Subunits: TSubunit[], ChunkStart: number, Iteration: number): Promise<Record<number, string> | number> {
+        return {};
+    }
 }
 
 /** ProcessDataset: Load, analyze, and export a dataset. */
@@ -56,18 +63,25 @@ export async function ProcessDataset<T extends DataItem>(Analyzer: Analyzer<Data
 
 /** AnalyzeChunk: Analyze a chunk of data items. */
 export async function AnalyzeChunk<T extends DataItem>(Analyzer: Analyzer<DataChunk<T>, T, CodedThread>, Chunks: Record<string, DataChunk<T>>, Analyzed: CodedThreads = { Threads: {} }, FakeRequest: boolean = false): Promise<CodedThreads> {
-    // Run the prompt over each conversation
+    var Keys = Object.keys(Chunks);
+    // Initialize the analysis
     for (const [Key, Chunk] of Object.entries(Chunks)) {
-        // Get the messages
         var Messages = Chunk.AllItems!.filter(Message => Message.Content != "");
-        console.log(`Conversation ${Key}: ${Messages.length} messages`);
-        // Initialize the analysis
         var Analysis: CodedThread = Analyzed.Threads[Key];
         if (!Analysis) {
             Analysis = { ID: Key, Items: {}, Iteration: 0, Codes: {} };
             Messages.forEach(Message => Analysis.Items[Message.ID] = { ID: Message.ID });
             Analyzed.Threads[Key] = Analysis;
         }
+    }
+    await Analyzer.BatchPreprocess(Keys.map(Key => Chunks[Key]), Keys.map(Key => Analyzed.Threads[Key]));
+    // Run the prompt over each conversation
+    for (const [Key, Chunk] of Object.entries(Chunks)) {
+        // Get the messages
+        var Messages = Chunk.AllItems!.filter(Message => Message.Content != "");
+        console.log(`Chunk ${Key}: ${Messages.length} items`);
+        // Initialize the analysis
+        var Analysis: CodedThread = Analyzed.Threads[Key];
         // Run the messages through chunks (as defined by the analyzer)
         var PreviousAnalysis: CodedThread | undefined;
         await LoopThroughChunks(Analyzer, Analysis, Chunk, Messages, async (Currents, ChunkStart, IsFirst, Tries, Iteration) => {
@@ -75,7 +89,7 @@ export async function AnalyzeChunk<T extends DataItem>(Analyzer: Analyzer<DataCh
             if (PreviousAnalysis && PreviousAnalysis != Analysis) {
                 for (const [ID, Item] of Object.entries(PreviousAnalysis.Items)) {
                     if (Chunk.AllItems?.findIndex(Message => Message.ID == ID) != -1)
-                        Analysis.Items[ID] = { ID: ID, Codes: Item.Codes};
+                        Analysis.Items[ID] = { ID: ID, Codes: Item.Codes };
                 }
             }
             // Build the prompts
