@@ -1,5 +1,5 @@
-import { ResearchQuestion } from '../constants.js';
-import { CodedThread, Conversation, Message } from '../utils/schema.js';
+import { ResearchQuestion } from '../../constants.js';
+import { CodedThread, Conversation, Message } from '../../utils/schema.js';
 import { BuildMessagePrompt } from './conversations.js';
 import { LowLevelAnalyzerBase } from './low-level.js';
 

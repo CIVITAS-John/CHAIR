@@ -1,9 +1,9 @@
-import { CodingNotes, ResearchQuestion } from '../constants.js';
-import { CodedThread, Conversation, Message } from '../utils/schema.js';
+import { CodingNotes, ResearchQuestion } from '../../constants.js';
+import { CodedThread, Conversation, Message } from '../../utils/schema.js';
 import { BuildMessagePrompt } from './conversations.js';
 import { HighLevelAnalyzerBase } from './high-level.js';
 
-/** HighLevelAnalyzer1: Conduct the first-round high-level coding of the conversations. */
+/** HighLevelAnalyzer2: Conduct the first-round high-level coding of the conversations. */
 /* Original prompt format:
 Hi ChatGPT, I want to analyze the following interaction between an instructor and some students:
 [DATA]
@@ -11,12 +11,13 @@ Please give me a codebook to analyze the instructional methodologies and the sen
 ---
 Barany et al. (2024) ChatGPT for Education Research: Exploring the Potential of Large Language Models for Qualitative Codebook Development
 ---
-However, the original prompt does not give examples as documented by the paper. We modified the prompt to make that happen. Note that the original paper's codebook only has around 8-11 codes. Therefore, we only ask ChatGPT to generate a single layer of codes.
+However, the original prompt does not give examples as documented by the paper. We modified the prompt to make that happen.
+Changes from HighLevelAnalyzer1: We mentioned fields in the prompt and added a planning stage.
 Adapter: John Chen
 */
-export class HighLevelAnalyzer1 extends HighLevelAnalyzerBase {
+export class HighLevelAnalyzer2 extends HighLevelAnalyzerBase {
     /** Name: The name of the analyzer. */
-    public Name: string = "high-level-1";
+    public Name: string = "high-level-2";
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature: number = 0.5;
     /** BuildPrompts: Build the prompts for the LLM. */
@@ -28,12 +29,20 @@ ${ResearchQuestion}
 ${CodingNotes}
 For each code, try to find 3 quotes. Always follow the output format:
 ---
-## Label: A label of code 1
+* Summary
+{A summary of the conversation}
+
+* Plan
+{A paragraph of plans and guiding questions about analyzing the conversation from multiple theoretical angles}
+
+# Label of category 1
+## Label of code 1
 Definition: A definition of code 1
 - "Example quote 1"
 - "Example quote 2"
 
 ## ...
+# ...
 `.trim(),
             Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join("\n")];
     }
