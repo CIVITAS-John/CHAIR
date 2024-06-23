@@ -3,9 +3,13 @@ import { ProcessDataset } from '../../analyzer.js';
 
 var AnalyzerName = "bertopic";
 var Analyzer = new (await import(`./${AnalyzerName}.js`)).default;
+var Models = ["gpt-3.5-turbo", "gpt-4.5-turbo", "llama3-70b", "claude3-haiku", "claude3-sonnet", "mixtral-8x22b"];
+
+// Bertopic constantly uses its built-in GPT-3.5 model
+if (AnalyzerName == "bertopic") Models = ["gpt-3.5-turbo"];
 
 await UseLLMs(async () => {
     await ProcessDataset(Analyzer, "Coded Dataset 1", false);
-}, "gpt-3.5-turbo", "gpt-4.5-turbo", "llama3-70b", "claude3-haiku", "claude3-sonnet", "mixtral-8x22b");
+}, ...Models);
 
 process.exit(0);
