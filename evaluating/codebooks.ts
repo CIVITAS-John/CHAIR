@@ -1,0 +1,57 @@
+import chalk from 'chalk';
+import md5 from 'md5';
+import { Codebook, CodebookEvaluation } from "../utils/schema.js";
+import { ReadOrBuildCache } from '../utils/file.js';
+import { BuildReferenceAndExport, ReferenceBuilder } from './reference-builder.js';
+import { LoadCodebooks, LoadCodebooksInGroups } from '../utils/loader.js';
+
+/** CodebookEvaluator: An evaluator of codebook. */
+export abstract class CodebookEvaluator {
+    /** Name: The name of the evaluator. */
+    public Name: string = "Unnamed";
+    /** Evaluate: Evaluate a number of codebooks. */
+    public abstract Evaluate(Codebooks: Codebook[], Names: string[], ExportPath?: string): Promise<Record<string, CodebookEvaluation>>;
+}
+
+/** EvaluateCodebooksWithReference: Evaluate a number of codebooks. */
+export async function EvaluateCodebooksWithReference(Source: string | string[], Evaluator: CodebookEvaluator, ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
+    // Find all the codebooks under the path
+    var [ Codebooks, Names ] = await LoadCodebooks(Source);
+    // Evaluate the codebooks
+    var Results = await Evaluator.Evaluate(Codebooks, Names, ExportPath);
+    console.log(chalk.green(JSON.stringify(Results, null, 4)));
+    return Results;
+}
+
+/** BuildReferenceAndEvaluateCodebooks: Build a reference and evaluate a number of codebooks. */
+export async function BuildReferenceAndEvaluateCodebooks(Source: string | string[], ReferencePath: string, Builder: ReferenceBuilder, Evaluator: CodebookEvaluator, 
+    ExportPath?: string, ComparingCodebooks?: string[], InGroups?: boolean): Promise<Record<string, CodebookEvaluation>> {
+    // Find all the codebooks under the path
+    var [ Codebooks, Names ] = await LoadCodebooks(Source);
+    var Backup = JSON.stringify(Codebooks);
+    var Hash = md5(Backup);
+    // Build the reference codebook
+    var Reference = await ReadOrBuildCache(ReferencePath, Hash, () => BuildReferenceAndExport(Builder, JSON.parse(Backup), ReferencePath));
+    // Read the comparing codebooks
+    if (ComparingCodebooks)
+        [ Codebooks, Names ] = await LoadCodebooks(ComparingCodebooks);
+    // Evaluate the codebooks
+    var Results = await Evaluator.Evaluate([Reference, ...Codebooks], [ReferencePath, ...Names], ExportPath);
+    console.log(chalk.green(JSON.stringify(Results, null, 4)));
+    return Results;
+}
+
+/** BuildReferenceAndEvaluateCodebooksInGroups: Build a reference and evaluate a number of codebooks, using folders as groups. */
+export async function BuildReferenceAndEvaluateCodebooksInGroups(Source: string[], ReferencePath: string, Builder: ReferenceBuilder, Evaluator: CodebookEvaluator, 
+    ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
+    // Find all the codebooks under the path
+    var [ Codebooks, Names ] = await LoadCodebooksInGroups(Source);
+    var Backup = JSON.stringify(Codebooks);
+    var Hash = md5(Backup);
+    // Build the reference codebook
+    var Reference = await ReadOrBuildCache(ReferencePath, Hash, () => BuildReferenceAndExport(Builder, JSON.parse(Backup), ReferencePath));
+    // Evaluate the codebooks
+    var Results = await Evaluator.Evaluate([Reference, ...Codebooks], [ReferencePath, ...Names], ExportPath);
+    console.log(chalk.green(JSON.stringify(Results, null, 4)));
+    return Results;
+}

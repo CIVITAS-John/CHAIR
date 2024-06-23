@@ -10,7 +10,7 @@ await SeperateMessages("Users of Physics Lab (Group 2)", "2");
 /** SeperateMessages: Seperate messages into conversations from a group. */
 async function SeperateMessages(Source: string, Prefix: string) {
     // Call the Python script
-    var Python = spawnAsync('python', ['segmentation/messaging-groups.py', GetMessagesPath(Source, "Messages.csv")]);
+    var Python = spawnAsync('python', ['preprocessing/segmentation/messaging-groups.py', GetMessagesPath(Source, "Messages.csv")]);
     Python.child.stdout!.on('data', (data) => {
         console.log(`${data}`);
     });

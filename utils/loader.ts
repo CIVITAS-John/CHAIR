@@ -6,7 +6,7 @@ import chalk from 'chalk';
 import Excel from 'exceljs';
 import { GetFilesRecursively, RemoveCommonality } from './file.js';
 import { CodedThread, CodedThreads, Code, CodedItem, Conversation, Message, Participant, Project, AssembleExample, Codebook, DataChunk, DataItem, Dataset } from "./schema.js";
-import { MergeCodebook, MergeCodebooks } from "../analysis/codebooks/codebooks.js";
+import { MergeCodebook, MergeCodebooks } from "../consolidating/codebooks.js";
 
 /** GetDatasetPath: Get the dataset path. */
 export function GetDatasetPath(): string {
