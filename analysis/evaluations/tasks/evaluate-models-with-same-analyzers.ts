@@ -6,7 +6,7 @@ import { BuildReferenceAndEvaluateCodebooks } from "../codebooks.js";
 import { InitializeEmbeddings } from '../../../utils/embeddings.js';
 import { EnsureFolder } from '../../../utils/llms.js';
 import { ReferenceBuilder, RefiningReferenceBuilder } from '../reference-builder.js';
-import { UseLLM } from '../../../translation/general.js';
+import { UseLLM } from '../../../utils/llms.js';
 
 InitializeEmbeddings("gecko-768-similarity");
 UseLLM("llama3-70b");
@@ -29,8 +29,9 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
 }
 
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-1", new RefiningReferenceBuilder()); 
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-2", new RefiningReferenceBuilder()); 
+// await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-2", new RefiningReferenceBuilder()); 
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-3", new RefiningReferenceBuilder());
+await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-4", new RefiningReferenceBuilder());
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "human", new RefiningReferenceBuilder()); 
 process.exit(0);
 

@@ -5,7 +5,7 @@ import { BuildReferenceAndEvaluateCodebooksInGroups } from "../codebooks.js";
 import { InitializeEmbeddings } from '../../../utils/embeddings.js';
 import { EnsureFolder } from '../../../utils/llms.js';
 import { RefiningReferenceBuilder } from '../reference-builder.js';
-import { UseLLM } from '../../../translation/general.js';
+import { UseLLM } from '../../../utils/llms.js';
 import { ReferenceBuilder } from '../reference-builder.js';
 import { NetworkEvaluator } from '../network-evaluator.js';
 
@@ -32,8 +32,13 @@ async function EvaluateMultipleGroups(SourcePath: string, TaskName: string,
 }
 
 await EvaluateMultipleGroups("Coded Dataset 1", 
+    "code vs phrase", "code-vs-phrase",
+    new RefiningReferenceBuilder(),
+    ["low-level-3", "low-level-4"]);
+
+/* await EvaluateMultipleGroups("Coded Dataset 1", 
     "human vs ai", "human-ai",
     new RefiningReferenceBuilder(),
-    ["human", "high-level-2", "low-level-3"]);
+    ["human", "high-level-2", "low-level-3"]);*/
 
 process.exit(0);

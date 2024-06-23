@@ -6,6 +6,10 @@ import { ConversationAnalyzer } from './conversations.js';
 /** LowLevelAnalyzerBase: Conduct the first-round low-level coding of the conversations. */
 // Authored by John Chen.
 export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
+    /** TagName: How do we call a tag in the prompt. */
+    protected TagName: string = "tag";
+    /** TagsName: How do we call tags in the prompt. */
+    protected TagsName: string = "tags";
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // We will fetch at least 10 messages for each batch to keep the context.
     public GetChunkSize(Recommended: number, Remaining: number, Iteration: number, Tries: number): [number, number, number] {
@@ -47,7 +51,7 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     // Remove the () part
                     Codes = Codes.replace(/\(.*?\)/, "").trim();
                     // Sometimes the LLM will return "tag{number}: {codes}"
-                    Codes = Codes.replace(/^tag(\d+)\:/, "").trim();
+                    Codes = Codes.replace(new RegExp(`^${this.TagName}(\d+)\:`), "").trim();
                     // Sometimes the LLM will put the message back
                     if (Codes.startsWith(Message.Content)) Codes = Codes.substring(Message.Content.length).trim();
                     // Sometimes the LLM will return "{codes}"
@@ -55,11 +59,11 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     // Sometimes the LLM will start with the original content
                     if (Codes.toLowerCase().startsWith(Message.Content.toLowerCase())) Codes = Codes.substring(Message.Content.length).trim();
                     // Sometimes the LLM will return "- tags: {codes}"
-                    if (Codes.startsWith("- tags:")) Codes = Codes.substring(7).trim();
+                    if (Codes.startsWith(`- ${this.TagsName}:`)) Codes = Codes.substring(7).trim();
                     // Sometimes the LLM will return "- {codes}"
                     if (Codes.startsWith("-")) Codes = Codes.substring(1).trim();
                     // Sometimes the LLM will return "preliminary tags: {codes}"
-                    if (Codes.toLowerCase().startsWith("preliminary tags:")) 
+                    if (Codes.toLowerCase().startsWith(`preliminary ${this.TagsName}:`)) 
                         Codes = Codes.substring(17).trim();
                     // Sometimes the LLM will return codes such as AcknowledgingResponse, which should be split into two words
                     Codes = Codes.replace(/((?<=[a-z][a-z])[A-Z]|[A-Z](?=[a-z]))/g, " $1").trim();

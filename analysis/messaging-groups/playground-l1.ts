@@ -1,5 +1,5 @@
 import * as File from 'fs';
-import { UseLLMs } from '../../translation/general.js';
+import { UseLLMs } from '../../utils/llms.js';
 import { LowLevelAnalyzer1 } from './low-level-1.js';
 import { ProcessDataset } from '../analyzer.js';
 

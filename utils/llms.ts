@@ -135,6 +135,20 @@ export function InitializeLLM(LLM: string) {
     LLMName = LLM;
 }
 
+/** UseLLM: Use a specific LLM. Call it before start translating. */
+export function UseLLM(LLM: string): void {
+    InitializeLLM(LLM);
+}
+
+/** UseLLMs: Use specific LLMs one by one. Call it before start translating. */
+export async function UseLLMs(Task: () => Promise<void>, ...LLMs: string[]): Promise<void> {
+    for (const LLM of LLMs) {
+        UseLLM(LLM);
+        await Task();
+        console.log(`LLM ${LLM} done. Input tokens: ${InputTokens}, Output tokens: ${OutputTokens}. Finish rate: ${Math.round(FinishedItems / Math.max(1, ExpectedItems) * 100)}%.\n`);
+    }
+}
+
 /** RequestLLMWithCache: Call the model to generate text with cache. */
 export async function RequestLLMWithCache(Messages: BaseMessage[], Cache: string, Temperature?: number, FakeRequest: boolean = false): Promise<string> {
     var Input = Messages.map(Message => Message.content).join('\n~~~\n');

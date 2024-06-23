@@ -7,21 +7,6 @@ import { Tokenize } from "../utils/tokenizer.js";
 // TranslatedCache: A cache for translated strings.
 export const TranslatedCache = new Map<string, Map<string, string>>();
 
-/** UseLLM: Use a specific LLM. Call it before start translating. */
-export function UseLLM(LLM: string): void {
-    InitializeLLM(LLM);
-    LoadCache();
-}
-
-/** UseLLMs: Use specific LLMs one by one. Call it before start translating. */
-export async function UseLLMs(Task: () => Promise<void>, ...LLMs: string[]): Promise<void> {
-    for (const LLM of LLMs) {
-        UseLLM(LLM);
-        await Task();
-        console.log(`LLM ${LLM} done. Input tokens: ${InputTokens}, Output tokens: ${OutputTokens}. Finish rate: ${Math.round(FinishedItems / Math.max(1, ExpectedItems) * 100)}%.\n`);
-    }
-}
-
 /** LoadCache: Load the tanslation cache from a file. */
 export function LoadCache(): void {
     EnsureFolder(`./known/translation/${LLMName}`);

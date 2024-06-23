@@ -1,4 +1,4 @@
-import { UseLLMs } from '../../translation/general.js';
+import { UseLLMs } from '../../utils/llms.js';
 import { ConsolidateChunks } from './codebooks.js';
 import { InitializeEmbeddings } from '../../utils/embeddings.js';
 import { PipelineConsolidator } from './consolidator.js';

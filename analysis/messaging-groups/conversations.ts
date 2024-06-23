@@ -7,7 +7,7 @@ export abstract class ConversationAnalyzer extends Analyzer<Conversation, Messag
 }
 
 /** BuildMessagePrompt: Build a prompt segment with a message. */
-export function BuildMessagePrompt(Message: Message, Coded?: CodedItem): string {
+export function BuildMessagePrompt(Message: Message, Coded?: CodedItem, TagsName: string = "tags"): string {
     var Content = Message.Content.replaceAll(/@(.*?)\((\d+)\)([^\w]|$)/g, (Match, Name, ID) => {
         return `@${GetSpeakerName(ID)} `;
     });
@@ -15,7 +15,7 @@ export function BuildMessagePrompt(Message: Message, Coded?: CodedItem): string 
     Content = Content.replace(/\[(Image|Checkin|Emoji)\]/g, (Match, Type) => `[${Type} ${Message.ID}]`);
     // Compose the result
     var Result = `${GetSpeakerName(Message.UserID)}: ${Content}`;
-    if ((Coded?.Codes?.length ?? 0) > 0) Result += `\nPreliminary tags: ${Coded!.Codes!.join("; ")}`;
+    if ((Coded?.Codes?.length ?? 0) > 0) Result += `\nPreliminary ${TagsName}: ${Coded!.Codes!.join("; ")}`;
     return Result;
 }
 

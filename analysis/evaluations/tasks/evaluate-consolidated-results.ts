@@ -5,7 +5,7 @@ import { BuildReferenceAndEvaluateCodebooks } from "../codebooks.js";
 import { InitializeEmbeddings } from '../../../utils/embeddings.js';
 import { EnsureFolder } from '../../../utils/llms.js';
 import { RefiningReferenceBuilder } from '../reference-builder.js';
-import { UseLLM } from '../../../translation/general.js';
+import { UseLLM } from '../../../utils/llms.js';
 import { ReferenceBuilder } from '../reference-builder';
 import { NetworkEvaluator } from '../network-evaluator.js';
 

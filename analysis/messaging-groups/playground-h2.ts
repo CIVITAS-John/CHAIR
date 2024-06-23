@@ -1,4 +1,4 @@
-import { UseLLMs } from '../../translation/general.js';
+import { UseLLMs } from '../../utils/llms.js';
 import { HighLevelAnalyzer2 } from './high-level-2.js';
 import { ProcessDataset } from '../analyzer.js';
 
