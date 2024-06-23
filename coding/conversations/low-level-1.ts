@@ -5,7 +5,7 @@ import { LowLevelAnalyzerBase } from './low-level.js';
 
 /** LowLevelAnalyzer1: Conduct the first-round low-level coding of the conversations. */
 // Authored by John Chen.
-export class LowLevelAnalyzer1 extends LowLevelAnalyzerBase {
+export default class LowLevelAnalyzer1 extends LowLevelAnalyzerBase {
     /** Name: The name of the analyzer. */
     public Name: string = "low-level-1";
     /** BaseTemperature: The base temperature for the LLM. */

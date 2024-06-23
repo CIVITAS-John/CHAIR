@@ -15,7 +15,7 @@ However, the original prompt does not give examples as documented by the paper. 
 Changes from HighLevelAnalyzer1: We mentioned fields in the prompt and added a planning stage.
 Adapter: John Chen
 */
-export class HighLevelAnalyzer2 extends HighLevelAnalyzerBase {
+export default class HighLevelAnalyzer2 extends HighLevelAnalyzerBase {
     /** Name: The name of the analyzer. */
     public Name: string = "high-level-2";
     /** BaseTemperature: The base temperature for the LLM. */

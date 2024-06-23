@@ -6,7 +6,7 @@ import { LowLevelAnalyzerBase } from './low-level.js';
 /** LowLevelAnalyzer2: Conduct the first-round low-level coding of the conversations. */
 // Change from LowLevelAnalyzer1: We try to get the LLMs look from multiple angles and give more tags. Also, the temperature is raised.
 // Authored by John Chen.
-export class LowLevelAnalyzer2 extends LowLevelAnalyzerBase {
+export default class LowLevelAnalyzer2 extends LowLevelAnalyzerBase {
     /** Name: The name of the analyzer. */
     public Name: string = "low-level-2";
     /** BaseTemperature: The base temperature for the LLM. */

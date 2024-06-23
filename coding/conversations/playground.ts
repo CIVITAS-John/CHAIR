@@ -2,7 +2,7 @@ import { UseLLMs } from '../../utils/llms.js';
 import { ProcessDataset } from '../../analyzer.js';
 
 var AnalyzerName = "bertopic";
-var Analyzer = await import(`./${AnalyzerName}.js`);
+var Analyzer = new (await import(`./${AnalyzerName}.js`)).default;
 
 await UseLLMs(async () => {
     await ProcessDataset(Analyzer, "Coded Dataset 1", false);

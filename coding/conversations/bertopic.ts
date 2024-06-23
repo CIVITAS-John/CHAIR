@@ -6,17 +6,18 @@ import chalk from 'chalk';
 
 /** BertopicAnalyzer: Conduct the first-round bertopic coding of the conversations. */
 // Authored by John Chen.
-export class BertopicAnalyzer extends ConversationAnalyzer {
+export default class BertopicAnalyzer extends ConversationAnalyzer {
     /** Name: The name of the analyzer. */
     public Name: string = "bertopic";
     /** BaseTemperature: The base temperature for the LLM. */
     public async BatchPreprocess(Conversations: Conversation[], Analyzed: CodedThread[]): Promise<void> {
         // Write the messages into the file.
-        var Messages = Conversations.flatMap(Conversation => Conversation.AllItems!);
+        var Messages = Conversations.flatMap(Conversation => 
+            Conversation.AllItems!.filter(Message => Message.Content.length > 0 && Message.Chunk == Conversation.ID));
         var Content = Messages.map(Message => Message.Content.replace(/\n/g, " "));
-        File.writeFileSync("./known/temp.txt", Content.join("\n"));
+        File.writeFileSync("./known/temp.text", Content.join("\n"));
         // Run the Python script
-        await PythonShell.run(`coding/conversations/bertopic.py`, {
+        await PythonShell.run(`coding/conversations/bertopic-impl.py`, {
             args: [Messages.length.toString()],
             parser: (Message) => { 
                 console.log(chalk.gray(Message));

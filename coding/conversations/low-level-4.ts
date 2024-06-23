@@ -7,7 +7,7 @@ import { LowLevelAnalyzerBase } from './low-level.js';
 /** LowLevelAnalyzer4: Conduct the first-round low-level coding of the conversations. */
 // Change from LowLevelAnalyzer3: We ask LLMs to produce description of the event.
 // Authored by John Chen.
-export class LowLevelAnalyzer4 extends LowLevelAnalyzerBase {
+export default class LowLevelAnalyzer4 extends LowLevelAnalyzerBase {
     /** TagName: How do we call a tag in the prompt. */
     protected TagName: string = "phrase";
     /** TagsName: How do we call tags in the prompt. */

@@ -14,7 +14,7 @@ Barany et al. (2024) ChatGPT for Education Research: Exploring the Potential of 
 However, the original prompt does not give examples as documented by the paper. We modified the prompt to make that happen. Note that the original paper's codebook only has around 8-11 codes. Therefore, we only ask ChatGPT to generate a single layer of codes.
 Adapter: John Chen
 */
-export class HighLevelAnalyzer1 extends HighLevelAnalyzerBase {
+export default class HighLevelAnalyzer1 extends HighLevelAnalyzerBase {
     /** Name: The name of the analyzer. */
     public Name: string = "high-level-1";
     /** BaseTemperature: The base temperature for the LLM. */
