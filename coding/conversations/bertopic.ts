@@ -1,6 +1,7 @@
 import * as File from 'fs';
 import { CodedThread, Conversation, Message } from '../../utils/schema.js';
 import { BuildMessagePrompt, ConversationAnalyzer } from './conversations.js';
+import { GetSpeakerNameForExample } from '../../constants.js';
 import { PythonShell } from 'python-shell';
 import chalk from 'chalk';
 
@@ -14,7 +15,8 @@ export default class BertopicAnalyzer extends ConversationAnalyzer {
         // Write the messages into the file.
         var Messages = Conversations.flatMap(Conversation => 
             Conversation.AllItems!.filter(Message => Message.Content.length > 0 && Message.Chunk == Conversation.ID));
-        var Content = Messages.map(Message => Message.Content.replace(/\n/g, " "));
+        var Content = Messages.map(Message => 
+            `${GetSpeakerNameForExample(Message.UserID)}: ${Message.Content.replace(/\n/g, " ")}`);
         File.writeFileSync("./known/temp.text", Content.join("\n"));
         // Run the Python script
         await PythonShell.run(`coding/conversations/bertopic-impl.py`, {

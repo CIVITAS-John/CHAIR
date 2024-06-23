@@ -2,14 +2,15 @@ import sys
 import csv
 import numpy as np
 np.set_printoptions(threshold=sys.maxsize)
-from dotenv import load_dotenv
+from dotenv import dotenv_values
+config = dotenv_values(".env")
 
 ## Load the timestamps from the CSV file
 # Get the file path from the command line argument
 if len(sys.argv) < 2:
     ## Load the dataset path
     sys.path.append('../')
-    file_path = load_dotenv("DATASET_PATH") + r'\Messaging Groups\Users of Physics Lab (Group 1)\Messages.csv'
+    file_path = config["DATASET_PATH"] + r'\Messaging Groups\Users of Physics Lab (Group 1)\Messages.csv'
 else:
     file_path = sys.argv[1]
 print("Loading:", file_path)
