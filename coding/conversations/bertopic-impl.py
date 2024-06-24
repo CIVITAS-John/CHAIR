@@ -50,15 +50,15 @@ representation_model = OpenAI(
 )
 
 # Run the model
+import json
 model = BERTopic(language="english", embedding_model="all-MiniLM-L12-v2", verbose=True, 
                  representation_model=representation_model, hdbscan_model=hdbscan_model)
 topics, probs = model.fit_transform(messages[:n_samples])
 
-# Convert the label dict to an array
-labels = [label for label in model.topic_labels_.values()]
-
-# Remove anything before the first '_' from labels
-labels = [label[label.find("_")+1:] for label in labels]
+# Remove anything before the first '_' from the label dict
+labels = model.topic_labels_
+for key in labels:
+    labels[key] = labels[key].split("_")[1]
 
 # Generate the output: for each message, the representation and the probability
 output = {}
@@ -67,9 +67,9 @@ for i in range(n_samples):
         "ID": i,
         "Message": messages[i],
         "Topic": labels[topics[i]],
-        "Probability": probs[i]
+        "Probability": probs[i],
+        "TopicID": topics[i]
     }
 
 # Write into a UTF-8 json
-import json
 sys.stdout.buffer.write(json.dumps(output, indent=4, ensure_ascii=False).encode("utf-8"))
