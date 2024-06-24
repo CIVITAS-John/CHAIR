@@ -8,6 +8,7 @@ export abstract class ConversationAnalyzer extends Analyzer<Conversation, Messag
 
 /** BuildMessagePrompt: Build a prompt segment with a message. */
 export function BuildMessagePrompt(Message: Message, Coded?: CodedItem, TagsName: string = "tags", ShortenName: boolean = false): string {
+    if (Message.Content == undefined) return "";
     var Content = Message.Content.replaceAll(/@(.*?)\((\d+)\)([^\w]|$)/g, (Match, Name, ID) => {
         return `@${ShortenName ? GetSpeakerNameForExample(ID) : GetSpeakerName(ID)} `;
     });

@@ -8,67 +8,24 @@ with open("./known/temp.text", "r", encoding="utf-8") as file:
 
 # Get the number of items
 n_samples = int(sys.argv[1]) if len(sys.argv) > 1 else len(messages)
-rq = sys.argv[2] if len(sys.argv) > 2 else """The research question is: How did Physics Lab's online community emerge?"""
-notes = sys.argv[3] if len(sys.argv) > 3 else """"Designer" refer to people who designed and developed Physics Lab. Code through the lens of learning sciences, human-computer interaction, and participatory design."""
 
 # Use BERTopic to get the topics
 from bertopic import BERTopic
 from hdbscan import HDBSCAN
 hdbscan_model = HDBSCAN(min_cluster_size=2, prediction_data=True, cluster_selection_method = "leaf")
 
-# Use GPT-3.5 for the representation model
-import openai
-import tiktoken
-from bertopic.representation import OpenAI
-from bertopic import BERTopic
-tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
-
-# Create your representation model
-client = openai.OpenAI(api_key=config["OPENAI_API_KEY"])
-prompt = f"""
-You are an expert in thematic analysis with grounded theory, working on open coding.
-{rq}
-{notes}
-
-You identified a topic from the following messages. Each is independent from another:
-===
-[DOCUMENTS]
-===
-Keywords of the topic: [KEYWORDS]
-
-Respond a single verb phrase to faithfully describe the topic. Do not over-interpret."""
-print("Prompt:", prompt)
-representation_model = OpenAI(
-    client,
-    prompt=prompt,
-    model="gpt-3.5-turbo", 
-    delay_in_seconds=2,
-    chat=True,
-    nr_docs=4,
-    doc_length=100,
-    tokenizer=tokenizer
-)
-
 # Run the model
 import json
-model = BERTopic(language="english", embedding_model="all-MiniLM-L12-v2", verbose=True, 
-                 representation_model=representation_model, hdbscan_model=hdbscan_model)
+model = BERTopic(language="english", embedding_model="all-MiniLM-L12-v2", verbose=True, hdbscan_model=hdbscan_model)
 topics, probs = model.fit_transform(messages[:n_samples])
 
-# Remove anything before the first '_' from the label dict
-labels = model.topic_labels_
-for key in labels:
-    labels[key] = labels[key].split("_")[1]
-
-# Generate the output: for each message, the representation and the probability
+# Generate the output: for each topic, return the IDs, probabilities
 output = {}
-for i in range(n_samples):
-    output[i] = {
-        "ID": i,
-        "Message": messages[i],
-        "Topic": labels[topics[i]],
-        "Probability": probs[i],
-        "TopicID": topics[i]
+for index, row in model.get_topic_info().iterrows():
+    topic = row["Topic"]
+    output[topic] = {
+        "IDs": [i for i, t in enumerate(topics) if t == topic],
+        "Probabilities": [p for i, p in enumerate(probs) if topics[i] == topic],
     }
 
 # Write into a UTF-8 json

@@ -30,10 +30,10 @@ async function EvaluateMultipleGroups(SourcePath: string, TaskName: string,
     File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
 }
 
-await EvaluateMultipleGroups("Coded Dataset 1", 
+/* await EvaluateMultipleGroups("Coded Dataset 1", 
     "code vs phrase", "code-vs-phrase",
     new RefiningReferenceBuilder(),
-    ["low-level-3", "low-level-4"]);
+    ["low-level-3", "low-level-4"]); */
 
 /* await EvaluateMultipleGroups("Coded Dataset 1", 
     "human vs ai", "human-ai",

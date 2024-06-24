@@ -28,7 +28,7 @@ export default class LowLevelAnalyzer4 extends LowLevelAnalyzerBase {
     public async BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): Promise<[string, string]> {
         return [`
 You are an expert in thematic analysis with grounded theory, working on open coding.
-This is the first round of coding. Your goal is to describe each meessages with phrases.
+This is the first round of coding. Your goal is to describe each messages with phrases.
 Try your best to interpret events, contexts, and intents. Always use verb phrases.
 ${ResearchQuestion}
 ${CodingNotes}
