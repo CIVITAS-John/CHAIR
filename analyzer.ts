@@ -94,19 +94,21 @@ export async function AnalyzeChunk<T extends DataItem>(Analyzer: Analyzer<DataCh
             }
             // Build the prompts
             var Prompts = await Analyzer.BuildPrompts(Analysis, Chunk, Currents, ChunkStart, Iteration);
-            if (Prompts[0] == "" && Prompts[1] == "") return 0;
-            if (!IsFirst && Analysis.Summary) Prompts[1] = `Summary of previous conversation: ${Analysis.Summary}\n${Prompts[1]}`;
+            var Response = "";
             // Run the prompts
-            var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], 
-                `messaging-groups/${Analyzer.Name}`, Tries * 0.2 + Analyzer.BaseTemperature, FakeRequest);
-            if (Response == "") return 0;
+            if (Prompts[0] != "" || Prompts[1] != "") {
+                if (!IsFirst && Analysis.Summary) Prompts[1] = `Summary of previous conversation: ${Analysis.Summary}\n${Prompts[1]}`;
+                var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], 
+                    `messaging-groups/${Analyzer.Name}`, Tries * 0.2 + Analyzer.BaseTemperature, FakeRequest);
+                if (Response == "") return 0;
+            }
             var ItemResults = await Analyzer.ParseResponse(Analysis, Response.split("\n").map(Line => Line.trim()), Currents, ChunkStart, Iteration);
             // Process the results
             if (typeof ItemResults == "number") return ItemResults;
             for (const [Index, Result] of Object.entries(ItemResults)) {
                 var Message = Currents[parseInt(Index) - 1];
                 var Codes = Result.toLowerCase().split(/,|\||;/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase())
-                    .filter(Code => Code != Message.Content.toLowerCase() && Code.length > 0 && !Code.endsWith(`p${Message.UserID}`));
+                    .filter(Code => Code != Message.Content?.toLowerCase() && Code.length > 0 && !Code.endsWith(`p${Message.UserID}`));
                 // Record the codes from line-level coding
                 Analysis.Items[Message.ID].Codes = Codes;
                 Codes.forEach(Code => {

@@ -14,7 +14,7 @@ notes = sys.argv[3] if len(sys.argv) > 3 else """"Designer" refer to people who 
 # Use BERTopic to get the topics
 from bertopic import BERTopic
 from hdbscan import HDBSCAN
-hdbscan_model = HDBSCAN(min_cluster_size=3, prediction_data=True, cluster_selection_method = "leaf")
+hdbscan_model = HDBSCAN(min_cluster_size=2, prediction_data=True, cluster_selection_method = "leaf")
 
 # Use GPT-3.5 for the representation model
 import openai
@@ -30,13 +30,13 @@ You are an expert in thematic analysis with grounded theory, working on open cod
 {rq}
 {notes}
 
-You identified a topic from the message. Documents of the topic:
+You identified a topic from the following messages. Each is independent from another:
 ===
 [DOCUMENTS]
 ===
 Keywords of the topic: [KEYWORDS]
 
-Respond a single verb phrase to describe the topic."""
+Respond a single verb phrase to faithfully describe the topic. Do not over-interpret."""
 print("Prompt:", prompt)
 representation_model = OpenAI(
     client,
@@ -65,6 +65,7 @@ output = {}
 for i in range(n_samples):
     output[i] = {
         "ID": i,
+        "Message": messages[i],
         "Topic": labels[topics[i]],
         "Probability": probs[i]
     }
