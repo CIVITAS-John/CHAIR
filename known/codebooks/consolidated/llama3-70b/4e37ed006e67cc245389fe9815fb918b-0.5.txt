@@ -1,0 +1,56 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Label: {A consolidated label of code 3}
+---
+~~~
+1.
+Concepts: user feedback commitment, attentiveness and improvement acknowledgement
+- Designers commit to implementing user-suggested improvements or features, and promise to consider user suggestions or feedback.
+- Designers acknowledge user comments or feedback, acknowledging areas for potential improvement.
+
+2.
+Concepts: feature complexity comparison, weighing trade-offs and balancing complexity and usability
+- A designer compares or contrasts the complexity or difficulty of different features.
+- Designer weighs the trade-offs of different options, and designer balances complexity with usability in development decisions.
+
+3.
+Concepts: user-centric design
+- Designers prioritize user-centered development or convenience, emphasizing user experience and ease of use.
+- Designers prioritize user needs and experiences in their design decisions.
+===
+---
+Definitions for each code:
+
+1.
+Concepts: user feedback commitment, attentiveness and improvement acknowledgement
+Relationship: Inclusion (acknowledgement is a part of commitment)
+Criteria: Designers respond to user feedback by committing to implement changes and acknowledging areas for improvement.
+Label: User Feedback Responsiveness
+
+2.
+Concepts: feature complexity comparison, weighing trade-offs and balancing complexity and usability
+Relationship: Intersection (comparing complexity and weighing trade-offs are interconnected processes)
+Criteria: Designers evaluate the complexity of different features and weigh the trade-offs to balance complexity with usability.
+Label: Feature Complexity Evaluation
+
+3.
+Concepts: user-centric design
+Relationship: N/A (single concept)
+Criteria: Designers prioritize user needs, experiences, and convenience in their development decisions.
+Label: User-Centric Design Approach

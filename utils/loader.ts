@@ -166,13 +166,22 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
 
 /** LoadCodebooks: Load codebooks from a source. */
 export async function LoadCodebooks(Source: string | string[]): Promise<[Codebook[], string[]]> {
+    if (Array.isArray(Source)) {
+        var Codebooks: Codebook[] = [];
+        var Names: string[] = [];
+        for (var Current of Source) {
+            var [ CurrentCodebooks, CurrentNames ] = await LoadCodebooks(Current);
+            Codebooks.push(...CurrentCodebooks);
+            Names.push(...CurrentNames);
+        }
+        return [Codebooks, Names];
+    } else return await LoadCodebooksFrom(Source);
+}
+
+/** LoadCodebooksFrom: Load codebooks from a source. */
+async function LoadCodebooksFrom(Source: string): Promise<[Codebook[], string[]]> {
     // Load potential paths
-    var Sources: string[] = [];
-    if (typeof(Source) == "string") {
-        Sources = GetFilesRecursively(Source);
-    } else {
-        Sources = Source.map(Source => GetFilesRecursively(Source)).flat();
-    }
+    var Sources: string[] = GetFilesRecursively(Source);
     // Remove the in-process codebooks
     Sources = Sources.filter(Source => !Source.match(/\-(\d)+.xlsx$/g)).sort();
     // Load the codebooks

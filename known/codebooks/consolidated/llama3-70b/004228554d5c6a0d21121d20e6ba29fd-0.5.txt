@@ -1,0 +1,112 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (8 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+8. 
+Concepts: {Repeat the input 8}
+Relationship: {What is logical relationship between concepts in code 8, or N/A if not applicable}
+Criteria: {Who did what, and how for code 8}
+Label: {A consolidated label of code 8}
+---
+~~~
+1.
+Concepts: intent to simplify, considering simplification
+- Designer expresses intent to simplify or improve a feature.
+- The designer considers simplifying the design to improve usability.
+
+2.
+Concepts: inquiry, information inquiry
+- Asking a question or seeking clarification.
+- A user inquires about a product or resource.
+
+3.
+Concepts: self-rebuttal, counter-self-rebuttal
+- Contradicting or correcting one's own previous statement.
+- Providing a counterargument or alternative perspective to one's own previous self-rebuttal.
+
+4.
+Concepts: direct response, direct response.
+- Responding to a question with a direct answer or clarification.
+- Directly addressing or responding to a user's question or inquiry.
+
+5.
+Concepts: suggestion, make suggestion
+- User proposes an idea or recommendation for a feature or improvement.
+- Respondent makes a suggestion or recommendation.
+
+6.
+Concepts: offering a solution, suggesting a solution
+- Designer provides a solution or answer to a question
+- Suggesting a solution or approach to a problem
+
+7.
+Concepts: confirm update, confirming successful update
+- Respondent confirms or announces a feature update.
+- Confirming that an action has been taken or a task has been completed.
+
+8.
+Concepts: setting expectations, managing expectations
+- Designer sets expectations for future developments.
+- A designer manages user expectations by providing information about upcoming updates or changes.
+- Designer sets realistic expectations for future developments.
+===
+---
+Definitions for each code:
+
+1.
+Concepts: intent to simplify, considering simplification
+Relationship: Inclusion (considering simplification is a part of expressing intent to simplify)
+Criteria: Designer expresses intent to simplify or improve a feature, considering ways to make it more user-friendly.
+Label: Intent to Improve Usability
+
+2.
+Concepts: inquiry, information inquiry
+Relationship: Parallel (both concepts refer to seeking information or clarification)
+Criteria: A user asks a question or seeks clarification about a product or resource.
+Label: Information Seeking
+
+3.
+Concepts: self-rebuttal, counter-self-rebuttal
+Relationship: Intersection (self-rebuttal and counter-self-rebuttal are two sides of the same coin, correcting or contradicting one's own previous statement)
+Criteria: A user or designer corrects or contradicts their own previous statement, providing an alternative perspective.
+Label: Self-Correction
+
+4.
+Concepts: direct response, direct response
+Relationship: Parallel (both concepts refer to providing a direct answer or clarification)
+Criteria: A user or designer responds directly to a question or inquiry with a clear answer or clarification.
+Label: Direct Answering
+
+5.
+Concepts: suggestion, make suggestion
+Relationship: Parallel (both concepts refer to proposing an idea or recommendation)
+Criteria: A user proposes an idea or recommendation for a feature or improvement.
+Label: Idea Generation
+
+6.
+Concepts: offering a solution, suggesting a solution
+Relationship: Inclusion (suggesting a solution is a part of offering a solution)
+Criteria: A designer provides a solution or answer to a question, suggesting a way to address a problem.
+Label: Solution Provision
+
+7.
+Concepts: confirm update, confirming successful update
+Relationship: Inclusion (confirming successful update is a part of confirming an update)
+Criteria: A designer confirms or announces a feature update, ensuring users are aware of changes.
+Label: Update Notification
+
+8.
+Concepts: setting expectations, managing expectations
+Relationship: Inclusion (managing expectations is a part of setting expectations)
+Criteria: A designer sets realistic expectations for future developments, providing information about upcoming updates or changes.
+Label: Expectation Management

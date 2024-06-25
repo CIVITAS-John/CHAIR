@@ -1,0 +1,56 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Label: {A consolidated label of code 3}
+---
+~~~
+1.
+Concepts: expectation management
+- A designer sets or manages expectations about a tool, feature, or update, setting or managing user expectations about the platform or its features.
+- Setting realistic expectations or timelines for project completion or feature release.
+
+2.
+Concepts: design rationale
+- Explaining or justifying design decisions or choices to provide context and understanding.
+- Designer provides a reason or justification for a design decision or priority.
+
+3.
+Concepts: resources sharing
+- A resource is shared with the community.
+- Designer shares resources with the group, sharing development plans and providing resources.
+===
+---
+Definitions for each code:
+
+1.
+Concepts: expectation management
+Relationship: Inclusion (setting realistic expectations is a way to manage expectations)
+Criteria: A designer sets or manages expectations about a tool, feature, or update by setting realistic timelines for project completion or feature release.
+Label: Expectation Setting
+
+2.
+Concepts: design rationale
+Relationship: N/A
+Criteria: A designer provides a reason or justification for a design decision or priority to provide context and understanding.
+Label: Justifying Design Decisions
+
+3.
+Concepts: resources sharing
+Relationship: Parallel (sharing resources and development plans are two separate aspects of sharing)
+Criteria: A designer shares resources, such as development plans, with the community.
+Label: Resource Sharing

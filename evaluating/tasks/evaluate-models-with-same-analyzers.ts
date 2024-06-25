@@ -30,7 +30,7 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-1", new RefiningReferenceBuilder()); 
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-2", new RefiningReferenceBuilder()); 
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-3", new RefiningReferenceBuilder());
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-4", new RefiningReferenceBuilder());
+// await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-4", new RefiningReferenceBuilder());
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "human", new RefiningReferenceBuilder()); 
 process.exit(0);
 
@@ -42,3 +42,4 @@ await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-2-consolidat
 await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-1-consolidated", new RefiningReferenceBuilder());
 await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "lexie-vs-high-level", new RefiningReferenceBuilder());
 await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "gpt-4-t-vs-o", new RefiningReferenceBuilder()); 
+await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "claude-3.5-vs-3", new RefiningReferenceBuilder()); 

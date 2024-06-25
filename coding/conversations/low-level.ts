@@ -62,6 +62,8 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     if (Codes.startsWith(`- ${this.TagsName}:`)) Codes = Codes.substring(7).trim();
                     // Sometimes the LLM will return "- {codes}"
                     if (Codes.startsWith("-")) Codes = Codes.substring(1).trim();
+                    // Sometimes the LLM will return "{codes}."
+                    if (Codes.endsWith(".")) Codes = Codes.substring(0, Codes.length - 1).trim();
                     // Sometimes the LLM will return "preliminary tags: {codes}"
                     if (Codes.toLowerCase().startsWith(`preliminary ${this.TagsName}:`)) 
                         Codes = Codes.substring(17).trim();

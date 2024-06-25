@@ -1,0 +1,308 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+32.
+Criteria: {Who did what, and how for code 32}
+Label: {A descriptive label of code 32}
+---
+~~~
+1.
+Label: greeting the user
+Quotes:
+- Designer: Hello :)
+
+2.
+Label: providing information about updates in preparation
+Quotes:
+- Designer: [Image] Updates in preparation
+
+3.
+Label: acknowledging the complexity of the updates and the timeline for release
+Quotes:
+- Designer: This is quite complex, so it will take more time... Hopefully, it can be released this week
+
+4.
+Label: including multimeter
+Quotes:
+- Designer: There will be: multimeter; powered solenoid; semiconductor capacitor; support for conversion to ideal ammeter (more convenient for problem-solving and middle school teaching)
+
+5.
+Label: powered solenoid
+Quotes:
+- Designer: There will be: multimeter; powered solenoid; semiconductor capacitor; support for conversion to ideal ammeter (more convenient for problem-solving and middle school teaching)
+
+6.
+Label: semiconductor capacitor
+Quotes:
+- Designer: There will be: multimeter; powered solenoid; semiconductor capacitor; support for conversion to ideal ammeter (more convenient for problem-solving and middle school teaching)
+
+7.
+Label: expressing the goal of designing the software to be usable without additional instructions
+Quotes:
+- Designer: We try to design it so that it can be used without additional instructions, or we will provide some prompts when you open it for the first time based on feedback
+
+8.
+Label: or providing prompts based on user feedback
+Quotes:
+- Designer: We try to design it so that it can be used without additional instructions, or we will provide some prompts when you open it for the first time based on feedback
+
+9.
+Label: inviting the user to provide more details privately about their needs
+Quotes:
+- Designer: Oh, please message me privately and tell me what you roughly need
+
+10.
+Label: but might come later
+Quotes:
+- Designer: Of course, manual editing will also be allowed, but it might be a bit later
+
+11.
+Label: indicating that mechanics experiments will have to wait until electromagnetism is figured out
+Quotes:
+- Designer: Mechanics will have to wait until electromagnetism is figured out; it will take some more time
+
+12.
+Label: stating the goal of figuring out electromagnetism before the end of the year
+Quotes:
+- Designer: Hope to figure out electromagnetism before the end of the year
+
+13.
+Label: reiterating the bidirectional conversion between physical diagrams and circuit diagrams as a key feature of the software
+Quotes:
+- Designer: For example, see the circuit diagram to connect the physical diagram, or vice versa
+
+14.
+Label: and the limited opportunities for free experiments in other areas before high school
+Quotes:
+- Designer: Physics mainly focuses on electricity and mechanics; other directions don't have much room for free experiments before high school. In the future, we might do some demonstration experiments based on everyone's needs, but it won't be as open as electricity
+
+15.
+Label: while hinting at the possibility of future demonstration experiments based on user needs
+Quotes:
+- Designer: Physics mainly focuses on electricity and mechanics; other directions don't have much room for free experiments before high school. In the future, we might do some demonstration experiments based on everyone's needs, but it won't be as open as electricity
+
+16.
+Label: affirming the previous message
+Quotes:
+- User: Indeed
+
+17.
+Label: describing plans to create a function for simulated experiment assessment
+Quotes:
+- Designer: For electricity, we plan to create a function for simulated experiment assessment; it will add many experimental details, such as zero adjustment (of course, only useful in specific modes, otherwise it would be cumbersome to use regularly)
+
+18.
+Label: to enhance the electricity focused capabilities of the software
+Quotes:
+- Designer: For electricity, we plan to create a function for simulated experiment assessment; it will add many experimental details, such as zero adjustment (of course, only useful in specific modes, otherwise it would be cumbersome to use regularly)
+
+19.
+Label: positively evaluating the idea presented in the previous message
+Quotes:
+- User: This idea is really good
+
+20.
+Label: seeking input from the teacher community on the types of circuit diagram intersections used in current textbooks
+Quotes:
+- Designer: Consulting the teachers in the group: which type of intersection is used in the circuit diagrams in the current textbooks?
+[Image]
+
+21.
+Label: presenting a specific circuit diagram intersection and seeking confirmation
+Quotes:
+- Designer: [Image] This one, right?
+
+22.
+Label: confirming that the presented circuit diagram intersection is the common one used in current textbooks
+Quotes:
+- User: Yes, the common one is still the old style
+
+23.
+Label: seeking clarification on the preferred side for the circuit diagram intersection
+Quotes:
+- Designer: Uh... left side or right side
+
+24.
+Label: indicating that the team is working on this part of the design
+Quotes:
+- Designer: We are working on this part
+
+25.
+Label: confirming that the left side is the common intersection used
+Quotes:
+- User: Left side
+
+26.
+Label: suggesting that the right side is better for non crossing circuit diagrams
+Quotes:
+- User: But it's better to use the right side for non-crossing
+
+27.
+Label: seeking confirmation on using both left and right side intersections
+Quotes:
+- Designer: So, use both?
+
+28.
+Label: expressing gratitude for the community's support and a commitment to improving the software
+Quotes:
+- Designer: Thank you all for your support. We will do better!
+
+29.
+Label: inquiring about an upcoming software update
+Quotes:
+- User: Will there be an update this week? [Emoji]
+
+30.
+Label: acknowledging that users can manually adjust the layout
+Quotes:
+- Designer: Although you can manually adjust the layout
+
+31.
+Label: recognizing the designers' commitment to perfection
+Quotes:
+- User: Yes, the spirit of craftsmanship that strives for perfection 🤔
+
+32.
+Label: explaining that the current feature being worked on will ensure long term stability
+Quotes:
+- Designer: This belongs to the kind of feature that, once done, will ensure long-term stability... Adding various components is actually simpler
+===
+---
+Definitions for each code:
+
+1.
+Criteria: The designer initiates a conversation or responds to a user with a greeting.
+Label: greeting the user
+
+2.
+Criteria: The designer shares information about upcoming updates or changes to the software.
+Label: providing updates information
+
+3.
+Criteria: The designer acknowledges the complexity or challenges of implementing a feature or update, and provides a timeline for its release.
+Label: acknowledging complexity and timeline
+
+4.
+Criteria: The designer mentions or lists a specific feature or component, such as a multimeter, that will be included in the software.
+Label: featuring multimeter
+
+5.
+Criteria: The designer mentions or lists a specific feature or component, such as a powered solenoid, that will be included in the software.
+Label: featuring powered solenoid
+
+6.
+Criteria: The designer mentions or lists a specific feature or component, such as a semiconductor capacitor, that will be included in the software.
+Label: featuring semiconductor capacitor
+
+7.
+Criteria: The designer expresses the goal of designing the software to be user-friendly and easy to use without additional instructions.
+Label: designing for usability
+
+8.
+Criteria: The designer mentions providing prompts or guidance to users based on their feedback.
+Label: providing user guidance
+
+9.
+Criteria: The designer invites a user to share more information or provide feedback privately.
+Label: seeking private feedback
+
+10.
+Criteria: The designer indicates that a feature or functionality may be added later, but is not a current priority.
+Label: future development plans
+
+11.
+Criteria: The designer sets priorities or dependencies for implementing certain features or experiments, such as mechanics experiments waiting for electromagnetism to be figured out.
+Label: setting development priorities
+
+12.
+Criteria: The designer sets a goal or target for completing a specific feature or milestone, such as figuring out electromagnetism before the end of the year.
+Label: setting development goals
+
+13.
+Criteria: The designer highlights a key feature of the software, such as bidirectional conversion between physical and circuit diagrams.
+Label: highlighting key features
+
+14.
+Criteria: The designer explains the focus or limitations of the software in terms of the areas of physics it covers, such as electricity and mechanics.
+Label: explaining software focus
+
+15.
+Criteria: The designer hints at or suggests the possibility of future developments or experiments based on user needs.
+Label: suggesting future developments
+
+16.
+Criteria: A user affirms or agrees with a previous message or statement.
+Label: affirming previous message
+
+17.
+Criteria: The designer describes plans or ideas for creating a specific feature or function, such as simulated experiment assessment.
+Label: describing development plans
+
+18.
+Criteria: The designer explains how a feature or function will enhance or improve the software's capabilities, such as for electricity-focused experiments.
+Label: explaining feature benefits
+
+19.
+Criteria: A user positively evaluates or responds to an idea or suggestion presented in a previous message.
+Label: positively evaluating ideas
+
+20.
+Criteria: The designer seeks input or feedback from the teacher community on a specific aspect of the software, such as circuit diagram intersections.
+Label: seeking community input
+
+21.
+Criteria: The designer presents a specific example or option and seeks confirmation or feedback, such as a circuit diagram intersection.
+Label: seeking confirmation
+
+22.
+Criteria: A user confirms or agrees with a presented example or option, such as a circuit diagram intersection.
+Label: confirming examples
+
+23.
+Criteria: The designer seeks clarification or more information on a specific aspect of the software, such as the preferred side for circuit diagram intersections.
+Label: seeking clarification
+
+24.
+Criteria: The designer indicates that the team is currently working on a specific part of the design or development.
+Label: indicating work in progress
+
+25.
+Criteria: A user confirms or agrees with a presented example or option, such as the common circuit diagram intersection used in textbooks.
+Label: confirming common practices
+
+26.
+Criteria: A user suggests or recommends a specific approach or option, such as using the right side for non-crossing circuit diagrams.
+Label: suggesting alternatives
+
+27.
+Criteria: The designer seeks confirmation or feedback on using multiple options or approaches, such as both left and right side intersections.
+Label: seeking feedback on multiple options
+
+28.
+Criteria: The designer expresses gratitude for the community's support and commitment to improving the software.
+Label: expressing gratitude
+
+29.
+Criteria: A user inquires about the status or timeline of a specific update or feature.
+Label: inquiring about updates
+
+30.
+Criteria: The designer acknowledges that users can manually adjust or customize a specific aspect of the software, such as the layout.
+Label: acknowledging user customization
+
+31.
+Criteria: A user recognizes or appreciates the designer's commitment to quality or perfection.
+Label: recognizing craftsmanship
+
+32.
+Criteria: The designer explains how a specific feature or function will ensure long-term stability or benefits for the software.
+Label: explaining long-term benefits

@@ -1,0 +1,56 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Label: {A consolidated label of code 3}
+---
+~~~
+1.
+Concepts: feature clarification, feature elaboration
+- Designer provides detailed explanations of how a feature or component works, including its practical uses and purpose.
+- A designer elaborates on a feature or functionality, providing examples or details, providing concrete examples of a feature's functionality or its specific uses.
+
+2.
+Concepts: software updates, software update notifications
+- The designer mentions updates or new features in the software, announcing software updates or releases.
+- Designer provides a list of changes or updates made to software, including explanations or notes on new features, bug fixes, or version updates.
+
+3.
+Concepts: positive sentiment, expressing product satisfaction.
+- A user expresses a positive sentiment or reaction to an idea or feature, expressing approval, satisfaction, or enthusiasm.
+- User expresses positive sentiment about the product's quality or effectiveness.
+===
+---
+Definitions for each code:
+
+1.
+Concepts: feature clarification, feature elaboration
+Relationship: Inclusion (feature elaboration is a more detailed form of feature clarification)
+Criteria: Designer provides detailed explanations or examples of a feature's functionality or purpose.
+Label: Feature Explanation
+
+2.
+Concepts: software updates, software update notifications
+Relationship: Parallel (software updates and notifications are two related but distinct concepts)
+Criteria: Designer announces or lists changes made to software, including new features, bug fixes, or version updates.
+Label: Software Update Communication
+
+3.
+Concepts: positive sentiment, expressing product satisfaction
+Relationship: Inclusion (expressing product satisfaction is a form of positive sentiment)
+Criteria: User expresses approval, satisfaction, or enthusiasm towards an idea, feature, or product quality.
+Label: User Satisfaction

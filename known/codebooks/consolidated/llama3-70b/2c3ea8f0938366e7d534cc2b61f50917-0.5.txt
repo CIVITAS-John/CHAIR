@@ -1,0 +1,376 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Label: {A consolidated label of code 32}
+---
+~~~
+1.
+Concepts: explaining limitations, clarifying system limitations
+- Designers or users explain reasons for delays, incomplete tasks, or limitations in the system or design.
+- Designers specify, indicate, or explain technical limitations or constraints of the system.
+
+2.
+Concepts: stating software limitations, software compatibility statement
+- Stating the limitations or incompatibilities of the software with certain systems.
+- Designer states software compatibility or provides information about software compatibility limitations.
+
+3.
+Concepts: empathizing with users, showing empathy
+- Expressing empathy or understanding towards users.
+- A designer expresses empathy or understanding towards users' experiences or challenges.
+
+4.
+Concepts: prioritizing user needs., prioritizes user convenience
+- A designer prioritizes user-centered development.
+- A designer considers or prioritizes user convenience or experience in design decisions.
+
+5.
+Concepts: responsiveness to user needs, demonstrating responsiveness
+- Designers respond to user needs and requirements.
+- Designers demonstrate responsiveness to user requests.
+
+6.
+Concepts: addressing user needs, user needs recognition
+- Designer addresses user needs or requirements.
+- A designer recognizes or responds to user needs or requirements.
+
+7.
+Concepts: user need, implies specific needs
+- Expressing a need or requirement for a product or service.
+- A user implies specific needs or requirements for the product.
+
+8.
+Concepts: exploring technical solutions, illustrating technical workarounds
+- A designer explores technical solutions or workarounds.
+- A designer explains or shares technical workarounds or solutions to a problem.
+
+9.
+Concepts: solution offering, solution suggestion
+- A solution or suggestion is offered to a problem or question.
+- Offers potential solutions or ideas, or recommends a specific approach or solution.
+
+10.
+Concepts: suggesting compatible systems, proposing a compatible system
+- User suggests compatible systems or solutions.
+- A user proposes a compatible system or solution.
+
+11.
+Concepts: apology for interruption, apologizing for inconvenience, acknowledging inconvenience
+- A user or designer apologizes for interrupting or disturbing others.
+- A designer or user apologizes for causing inconvenience or disturbance.
+- Designer acknowledges potential inconvenience caused to users and apologizes for it.
+
+12.
+Concepts: concern alleviation, addressing user concerns
+- Addressing a user's concern or worry.
+- Responding to user concerns or worries.
+
+13.
+Concepts: providing individualized attention, offering personalized support
+- A designer offers individualized attention or personalized help to a user.
+- Offering personalized technical support or assistance, or a designer tailors support or assistance to the specific needs of users.
+
+14.
+Concepts: providing technical guidance, offering instructions
+- A designer provides technical guidance or instructions on using a tool or feature.
+- Designer provides instructions or guidance, or providing step-by-step instructions or tutorials, or a designer provides instructions on using a specific tool or feature.
+
+15.
+Concepts: offering usage tips, seeking/offering usage instructions
+- Providing tips on how to use the tool effectively, or a designer provides a tip or instruction for using a specific feature or component.
+- A user seeks instructions on how to use a specific feature, or giving step-by-step instructions on how to use the tool, or a designer provides instructions or guidance on using a specific feature or functionality.
+
+16.
+Concepts: providing component information, explaining component functionality
+- A community member provides information about the functionality of a specific component.
+- A community member explains how a specific component works or designer explains the capabilities or features of a specific component.
+
+17.
+Concepts: highlighting key benefits, explaining innovative features
+- A designer highlights or emphasizes the key benefits of a tool or feature.
+- A designer explains or highlights innovative features or benefits of a tool or project.
+
+18.
+Concepts: technical context, technical clarification
+- A designer provides context or technical details about a feature or issue.
+- A designer clarifies technical information or provides explanations.
+
+19.
+Concepts: educating users, informing users about features
+- A designer educates or informs users about a feature, functionality, or technical aspect of a software or tool.
+- A designer informs users about a specific feature or functionality.
+
+20.
+Concepts: gives examples, feature elaboration
+- Provides examples or illustrations of a feature or functionality.
+- Providing an example of how a feature can be used or elaborating on a feature or functionality.
+
+21.
+Concepts: functionality explanation, explains feature functions
+- Explaining how a feature or functionality works.
+- Introduces or explains the functions or capabilities of a feature.
+
+22.
+Concepts: announces simulation updates, announcing simulation behavior change
+- Designer announces changes to component modeling.
+- A designer announces an upcoming change to the simulation behavior.
+
+23.
+Concepts: bidirectional conversion research, bidirectional conversion explanation
+- Designer mentions research on bidirectional physical diagram and circuit diagram conversion.
+- Designer explains the bidirectional conversion feature between physical and circuit diagrams.
+
+24.
+Concepts: indicating complexity and timeline, explaining update complexity and release time
+- Designer indicates complexity and timeline for updates.
+- Designer explains the complexity of updates and expected release time.
+
+25.
+Concepts: indicating simplification, simplifying visual representation
+- Designer indicates simplification.
+- Designer expresses intent to simplify visual representation.
+
+26.
+Concepts: simplifying design, simplification suggestions
+- A designer expresses a desire to simplify a design or process.
+- Designer suggests simplifying the design.
+
+27.
+Concepts: prioritizing development, prioritizing development tasks
+- A designer prioritizes development or focuses on a specific aspect of a project or a statement indicating that one aspect of the project will be delayed until another aspect is further developed.
+- Prioritizing tasks or deciding on the order of development or designer prioritizes completing a specific section of the software or designer mentions prioritizing tasks in a specific order or a designer delays addressing a feature request due to other priorities.
+
+28.
+Concepts: discussing physics lab focus, focusing on specific topic
+- A designer discusses the focus of Physics Lab on specific topics or areas.
+- The designer or user focuses on or emphasizes a specific topic or area in Physics Lab.
+
+29.
+Concepts: prioritizing electrical section., prioritizing magnetism section.
+- Designer prioritizes completing the electrical section first.
+- Designer mentions completing magnetism section after electrical section.
+
+30.
+Concepts: explaining design decisions, explaining design optimization
+- Designers explain or justify design decisions or choices.
+- A designer explains or justifies the reason for a specific design decision or optimization.
+
+31.
+Concepts: design rationale, rationale for development decisions
+- Explaining the reasoning or thought process behind a design decision.
+- Providing rationales or justifications for design decisions or development choices.
+
+32.
+Concepts: design principles, design philosophy explanation
+- Designers discuss the underlying principles or philosophy of the software design.
+- Designers explain the underlying philosophy or principles guiding design decisions.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: explaining limitations, clarifying system limitations
+Relationship: Inclusion
+Criteria: Designers or users provide explanations for system limitations or delays.
+Label: Limitation Explanation
+
+2.
+Concepts: stating software limitations, software compatibility statement
+Relationship: Parallel
+Criteria: Designers state software limitations or provide information about compatibility.
+Label: Software Limitation Statement
+
+3.
+Concepts: empathizing with users, showing empathy
+Relationship: Inclusion
+Criteria: Designers express understanding or empathy towards users' experiences.
+Label: Empathy Expression
+
+4.
+Concepts: prioritizing user needs., prioritizes user convenience
+Relationship: Inclusion
+Criteria: Designers prioritize user-centered development or convenience.
+Label: User-Centric Prioritization
+
+5.
+Concepts: responsiveness to user needs, demonstrating responsiveness
+Relationship: Inclusion
+Criteria: Designers respond to user needs or demonstrate responsiveness.
+Label: Responsiveness to Users
+
+6.
+Concepts: addressing user needs, user needs recognition
+Relationship: Inclusion
+Criteria: Designers address or recognize user needs or requirements.
+Label: User Need Recognition
+
+7.
+Concepts: user need, implies specific needs
+Relationship: Inclusion
+Criteria: Users express specific needs or requirements for a product or service.
+Label: User Need Expression
+
+8.
+Concepts: exploring technical solutions, illustrating technical workarounds
+Relationship: Inclusion
+Criteria: Designers explore or share technical solutions or workarounds.
+Label: Technical Solution Exploration
+
+9.
+Concepts: solution offering, solution suggestion
+Relationship: Parallel
+Criteria: Designers offer or suggest solutions to problems or questions.
+Label: Solution Suggestion
+
+10.
+Concepts: suggesting compatible systems, proposing a compatible system
+Relationship: Inclusion
+Criteria: Users suggest compatible systems or solutions.
+Label: Compatible System Suggestion
+
+11.
+Concepts: apology for interruption, apologizing for inconvenience, acknowledging inconvenience
+Relationship: Inclusion
+Criteria: Designers or users apologize for interrupting or causing inconvenience.
+Label: Apology for Inconvenience
+
+12.
+Concepts: concern alleviation, addressing user concerns
+Relationship: Inclusion
+Criteria: Designers address or alleviate user concerns or worries.
+Label: Concern Alleviation
+
+13.
+Concepts: providing individualized attention, offering personalized support
+Relationship: Inclusion
+Criteria: Designers offer individualized attention or personalized support.
+Label: Personalized Support
+
+14.
+Concepts: providing technical guidance, offering instructions
+Relationship: Inclusion
+Criteria: Designers provide technical guidance or instructions.
+Label: Technical Guidance
+
+15.
+Concepts: offering usage tips, seeking/offering usage instructions
+Relationship: Inclusion
+Criteria: Designers provide tips or instructions on using a tool or feature.
+Label: Usage Instructions
+
+16.
+Concepts: providing component information, explaining component functionality
+Relationship: Inclusion
+Criteria: Community members explain component functionality or provide information.
+Label: Component Information
+
+17.
+Concepts: highlighting key benefits, explaining innovative features
+Relationship: Inclusion
+Criteria: Designers highlight key benefits or explain innovative features.
+Label: Benefit Explanation
+
+18.
+Concepts: technical context, technical clarification
+Relationship: Inclusion
+Criteria: Designers provide technical context or clarify technical information.
+Label: Technical Clarification
+
+19.
+Concepts: educating users, informing users about features
+Relationship: Inclusion
+Criteria: Designers educate or inform users about features or technical aspects.
+Label: User Education
+
+20.
+Concepts: gives examples, feature elaboration
+Relationship: Inclusion
+Criteria: Designers provide examples or elaborate on features or functionality.
+Label: Feature Elaboration
+
+21.
+Concepts: functionality explanation, explains feature functions
+Relationship: Inclusion
+Criteria: Designers explain how features or functionality work.
+Label: Functionality Explanation
+
+22.
+Concepts: announces simulation updates, announcing simulation behavior change
+Relationship: Inclusion
+Criteria: Designers announce changes to component modeling or simulation behavior.
+Label: Simulation Update Announcement
+
+23.
+Concepts: bidirectional conversion research, bidirectional conversion explanation
+Relationship: Inclusion
+Criteria: Designers research or explain bidirectional conversion features.
+Label: Bidirectional Conversion Explanation
+
+24.
+Concepts: indicating complexity and timeline, explaining update complexity and release time
+Relationship: Inclusion
+Criteria: Designers indicate complexity and timeline for updates.
+Label: Update Complexity Explanation
+
+25.
+Concepts: indicating simplification, simplifying visual representation
+Relationship: Inclusion
+Criteria: Designers indicate simplification or express intent to simplify visual representation.
+Label: Simplification Intent
+
+26.
+Concepts: simplifying design, simplification suggestions
+Relationship: Inclusion
+Criteria: Designers suggest simplifying a design or process.
+Label: Design Simplification Suggestion
+
+27.
+Concepts: prioritizing development, prioritizing development tasks
+Relationship: Inclusion
+Criteria: Designers prioritize development or focus on specific aspects of a project.
+Label: Development Prioritization
+
+28.
+Concepts: discussing physics lab focus, focusing on specific topic
+Relationship: Inclusion
+Criteria: Designers discuss or focus on specific topics or areas in Physics Lab.
+Label: Physics Lab Focus
+
+29.
+Concepts: prioritizing electrical section., prioritizing magnetism section.
+Relationship: Parallel
+Criteria: Designers prioritize completing specific sections of Physics Lab.
+Label: Section Prioritization
+
+30.
+Concepts: explaining design decisions, explaining design optimization
+Relationship: Inclusion
+Criteria: Designers explain or justify design decisions or optimizations.
+Label: Design Decision Explanation
+
+31.
+Concepts: design rationale, rationale for development decisions
+Relationship: Inclusion
+Criteria: Designers provide rationales or justifications for design decisions.
+Label: Design Rationale
+
+32.
+Concepts: design principles, design philosophy explanation
+Relationship: Inclusion
+Criteria: Designers discuss or explain the underlying principles or philosophy of the software design.
+Label: Design Philosophy Explanation

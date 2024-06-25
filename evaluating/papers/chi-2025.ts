@@ -27,11 +27,11 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
     EnsureFolder(TargetPath);
     // Build the reference and evaluate the codebooks
     var Results = await BuildReferenceAndEvaluateCodebooks(
-        [SourcePath + "/" + Analyzer], ReferencePath + "/" + Analyzer + Builder.Suffix, Builder, Evaluator, TargetPath);
+        [SourcePath + "/" + Analyzer, SourcePath + "/human"], ReferencePath + "/" + Analyzer + Builder.Suffix, Builder, Evaluator, TargetPath);
     File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
 }
 
 // Task 1: Compare the 4 approaches with GPT-4o described in the pilot study. 
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study", new RefiningReferenceBuilder());
+// await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study", new RefiningReferenceBuilder());
 
 process.exit(0);

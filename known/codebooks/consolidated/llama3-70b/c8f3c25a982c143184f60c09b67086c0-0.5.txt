@@ -1,0 +1,44 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (2 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+2. 
+Concepts: {Repeat the input 2}
+Relationship: {What is logical relationship between concepts in code 2, or N/A if not applicable}
+Criteria: {Who did what, and how for code 2}
+Label: {A consolidated label of code 2}
+---
+~~~
+1.
+Concepts: feature announcements, software update announcements
+- A designer announces new features or updates to the app's features.
+- Announcing updates or changes to the app, or a designer announces a new version or update of the Physics Lab software.
+
+2.
+Concepts: interface limitations, limitation explanations
+- Explaining limitations or constraints of the current software interface, and providing context for software design constraints, such as explaining technical limitations.
+- A designer explains why a limitation or issue can be addressed or overcome, or a designer explains why a problem cannot be solved due to system limitations, or explains technical limitations or constraints that affect the software or its use.
+===
+---
+Definitions for each code (2 in total):
+1.
+Concepts: feature announcements, software update announcements
+Relationship: Parallel
+Criteria: A designer announces new features, updates, or changes to the app's features or software.
+Label: Software Development Announcements
+
+2.
+Concepts: interface limitations, limitation explanations
+Relationship: Inclusion
+Criteria: A designer explains or provides context for limitations or constraints of the current software interface, including technical limitations or system constraints that affect the software or its use.
+Label: Interface Limitation Rationales
