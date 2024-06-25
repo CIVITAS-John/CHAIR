@@ -1,0 +1,122 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (9 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+9. 
+Concepts: {Repeat the input 9}
+Relationship: {What is logical relationship between concepts in code 9, or N/A if not applicable}
+Criteria: {Who did what, and how for code 9}
+Label: {A consolidated label of code 9}
+---
+~~~
+1.
+Concepts: compatibility information, xp compatibility discussion and unsupported system notification
+- Designers provide information or answers about software compatibility with different systems, and clarify software limitations.
+- Designers discuss or address XP compatibility issues, and inform users about unsupported systems.
+
+2.
+Concepts: discussing software compatibility and updates, compatibility discussion
+- Discussing software compatibility, updates, and technical issues.
+- Users assert software compatibility, and designers discuss theoretical compatibility, consider hypothetical software compatibility, and mention theoretical compatibility or limitations.
+
+3.
+Concepts: designers schedule updates, update management and release planning
+- Scheduling updates, releases, or maintenance for the Physics Lab software.
+- Designers manage and coordinate updates, announce releases, and share release schedules.
+
+4.
+Concepts: update announcements, release announcements and updates
+- The designer announces new version or update releases.
+- Designers share information about new versions or releases, and provide updates or changelogs.
+
+5.
+Concepts: user-centered design, emphasizing intuitive design
+- Design approach prioritizes user needs, experiences, and practicality in software design.
+- Designer emphasizes the importance of intuitive design or user experience.
+
+6.
+Concepts: showing consideration, polite interaction and interruption
+- Users show attentiveness or engagement in a conversation or discussion, or show consideration for others by apologizing for inconvenience or expressing empathy.
+- Users or designers exhibit polite language or behavior, and politely interrupt or apologize.
+
+7.
+Concepts: gratitude and greetings in community interaction, friendly greetings and relationship establishment
+- Users or designers express gratitude and greetings, and establish community interaction norms.
+- Users or designers greet the community, and establish relationships through greetings and gratitude.
+
+8.
+Concepts: community input request, promise community feedback
+- Designers seek input or feedback from a specific group or community.
+- Designer promises to invite feedback or input from the community.
+
+9.
+Concepts: idea suggestion, feedback provision
+- Users or designers propose new ideas or features for Physics Lab.
+- Users providing feedback on their experience with Physics Lab, offering opinions or suggestions.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: compatibility information, xp compatibility discussion and unsupported system notification
+Relationship: Inclusion (compatibility information includes XP compatibility discussion and unsupported system notification)
+Criteria: Designers provide information or answers about software compatibility with different systems, and clarify software limitations.
+Label: Software Compatibility Clarification
+
+2.
+Concepts: discussing software compatibility and updates, compatibility discussion
+Relationship: Parallel (discussing software compatibility and updates is separate from compatibility discussion)
+Criteria: Discussing software compatibility, updates, and technical issues.
+Label: Compatibility Discussion
+
+3.
+Concepts: designers schedule updates, update management and release planning
+Relationship: Inclusion (designers schedule updates includes update management and release planning)
+Criteria: Scheduling updates, releases, or maintenance for the Physics Lab software.
+Label: Update Planning
+
+4.
+Concepts: update announcements, release announcements and updates
+Relationship: Inclusion (update announcements include release announcements and updates)
+Criteria: The designer announces new version or update releases.
+Label: Update Announcements
+
+5.
+Concepts: user-centered design, emphasizing intuitive design
+Relationship: Inclusion (user-centered design includes emphasizing intuitive design)
+Criteria: Design approach prioritizes user needs, experiences, and practicality in software design.
+Label: User-Centered Design
+
+6.
+Concepts: showing consideration, polite interaction and interruption
+Relationship: Intersection (showing consideration intersects with polite interaction and interruption)
+Criteria: Users or designers exhibit polite language or behavior, and politely interrupt or apologize.
+Label: Polite Interaction
+
+7.
+Concepts: gratitude and greetings in community interaction, friendly greetings and relationship establishment
+Relationship: Inclusion (gratitude and greetings in community interaction includes friendly greetings and relationship establishment)
+Criteria: Users or designers express gratitude and greetings, and establish community interaction norms.
+Label: Community Greetings
+
+8.
+Concepts: community input request, promise community feedback
+Relationship: Parallel (community input request is separate from promise community feedback)
+Criteria: Designers seek input or feedback from a specific group or community.
+Label: Community Feedback Solicitation
+
+9.
+Concepts: idea suggestion, feedback provision
+Relationship: Inclusion (idea suggestion includes feedback provision)
+Criteria: Users or designers propose new ideas or features for Physics Lab, or provide feedback on their experience.
+Label: User Feedback and Suggestions

@@ -45,7 +45,7 @@ export async function ReadOrBuildCache<T>(CachePath: string, Hash: string, Build
 /** RemoveCommonality: Remove common prefixes and suffixes from a list of names. */
 export function RemoveCommonality(Names: string[]): string[] {
     // Find common prefixes and remove them
-    var Prefix = commonPathPrefix(Names, "/");
+    var Prefix = commonPathPrefix(Names, Names[0].includes("\\") ? "\\" : "/");
     Names = Names.map(Name => Name.substring(Prefix.length));
     Prefix = commonPathPrefix(Names, "-");
     Names = Names.map(Name => Name.substring(Prefix.length));

@@ -1,0 +1,80 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (5 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+5. 
+Concepts: {Repeat the input 5}
+Relationship: {What is logical relationship between concepts in code 5, or N/A if not applicable}
+Criteria: {Who did what, and how for code 5}
+Label: {A consolidated label of code 5}
+---
+~~~
+1.
+Concepts: providing rationale, reason for suggestion
+- User provides a reason or explanation for a feature request
+- User provides a reason or explanation for a suggestion or request.
+
+2.
+Concepts: iterative design, iterative development approach
+- Continuously improving and updating the design based on feedback.
+- Designers engage in an iterative development process, refining and expanding software capabilities based on user feedback
+
+3.
+Concepts: future update commitment, future development promises
+- The designer commits to including a feature or update in the future.
+- A designer promises to make a feature available at a later time, promising or committing to future development or features, expressing a desire to explore a specific topic or feature in the future.
+
+4.
+Concepts: prioritizing development
+- Prioritizing tasks, features, or development goals, and informing users of the sequence and focus of upcoming development efforts.
+- The process of deciding which sections of the platform to focus on based on user feedback.
+
+5.
+Concepts: encouraging community participation
+- Participating in the online community, sharing thoughts or opinions.
+- Designers fostering a sense of community and inviting user participation, including sharing ideas and feedback.
+===
+Here are the definitions for each code:
+
+---
+Definitions for each code:
+
+1.
+Concepts: providing rationale, reason for suggestion
+Relationship: Parallel (two concepts are related but distinct, describing the same phenomenon)
+Criteria: Users provide explanations or justifications for their feature requests or suggestions.
+Label: Justifying Requests
+
+2.
+Concepts: iterative design, iterative development approach
+Relationship: Inclusion (iterative design is a part of iterative development approach)
+Criteria: Designers continuously refine and expand software capabilities based on user feedback.
+Label: Feedback-Driven Development
+
+3.
+Concepts: future update commitment, future development promises
+Relationship: Parallel (two concepts are related but distinct, describing the same phenomenon)
+Criteria: Designers commit to or promise to include features or updates in the future.
+Label: Future Development Commitments
+
+4.
+Concepts: prioritizing development
+Relationship: N/A (single concept)
+Criteria: Designers prioritize tasks, features, or development goals and inform users of their focus.
+Label: Development Prioritization
+
+5.
+Concepts: encouraging community participation
+Relationship: Inclusion (designers fostering a sense of community is a part of encouraging user participation)
+Criteria: Designers invite user participation, including sharing ideas and feedback, to foster a sense of community.
+Label: Fostering Community Engagement

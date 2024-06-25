@@ -1,0 +1,84 @@
+You are an expert in thematic analysis with grounded theory, working on open coding.
+Please give me a codebook to analyze factors within this interaction that could contribute to the research.
+The research question is: How did Physics Lab's online community emerge?
+"Designer" refer to people who designed and developed Physics Lab. Code through the lens of learning sciences, human-computer interaction, and participatory design.
+Always use verb phrases. For each phrase, try to find at least 3 quotes. Always follow the output format:
+---
+* Summary
+{A summary of the conversation}
+
+* Plan
+{A paragraph of plans and guiding questions about analyzing the conversation from multiple theoretical angles}
+
+# Label of theme 1
+## Label of phrase 1
+Definition: A definition of phrase 1
+- "Example quote 1"
+- "Example quote 2"
+
+## ...
+# ...
+~~~
+1. Designer-1: For electricity, we plan to create a function for simulated experiment assessment; it will add many experimental details, such as zero adjustment (of course, only useful in specific modes, otherwise it would be cumbersome to use regularly)
+2. User-4232: This idea is really good
+3. Designer-1: When we are ready to start, we will consult everyone in the group
+4. Designer-1: Consulting the teachers in the group: which type of intersection is used in the circuit diagrams in the current textbooks?
+[Image 2-91]
+5. Designer-1: [Image 2-92] This one, right?
+6. User-4234: Yes, the common one is still the old style
+7. Designer-1: Uh... left side or right side
+8. Designer-1: We are working on this part
+9. User-4234: Left side
+10. Designer-1: Okay.
+11. Designer-1: Make it simpler...
+12. User-4234: But it's better to use the right side for non-crossing
+13. Designer-1: So, use both?
+14. Designer-1: This version of the circuit diagram is for testing only... You can drag the Editor because the auto-layout algorithm is not very stable and may produce some odd results
+15. Designer-1: [Image 2-102]
+16. Designer-1: Thank you all for your support. We will do better!
+17. User-4234: Will there be an update this week? [Emoji 2-104]
+18. Designer-1: There will be an update. Submitting to the app store / releasing the Android version next Monday, and releasing the Windows version over the weekend.
+19. Designer-1: The update is quite large...
+===
+---
+* Summary 
+The conversation is about the design and development process of an online physics simulation tool called Physics Lab. The designers are discussing features to include in the electricity simulation, such as simulated experiment assessment and circuit diagram representations. They are consulting users and teachers for feedback on the design.
+
+* Plan
+To analyze this conversation through the lenses of learning sciences, human-computer interaction, and participatory design, we can explore themes around:
+
+1. Pedagogical considerations in designing simulations for learning
+2. User experience and interface design choices 
+3. Processes of co-design and gathering user feedback
+4. Agile development and iteration based on user input
+
+# Pedagogical Design
+## Simulating Experiments
+Definition: Designing simulation features to mimic real experiments and assessments
+- "For electricity, we plan to create a function for simulated experiment assessment; it will add many experimental details, such as zero adjustment"
+
+## Curriculum Alignment  
+Definition: Ensuring simulation aligns with existing curricula and materials
+- "Consulting the teachers in the group: which type of intersection is used in the circuit diagrams in the current textbooks?"
+
+# User Experience
+## Interface Representations
+Definition: Choosing appropriate visual representations in the interface
+- "This one, right? [circuit diagram image]"
+- "Uh... left side or right side [of intersection]"  
+
+## Iterative Design
+Definition: Continuously improving and updating the design based on feedback
+- "This version of the circuit diagram is for testing only..."
+- "We will do better!"
+
+# Participatory Process  
+## User Consultation
+Definition: Actively seeking input from users and stakeholders
+- "When we are ready to start, we will consult everyone in the group"
+- "Consulting the teachers in the group..."
+
+## Community Involvement
+Definition: Fostering an engaged community around the development process
+- "Thank you all for your support."
+- "Will there be an update this week?"

@@ -1,0 +1,45 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (2 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+2. 
+Concepts: {Repeat the input 2}
+Relationship: {What is logical relationship between concepts in code 2, or N/A if not applicable}
+Criteria: {Who did what, and how for code 2}
+Label: {A consolidated label of code 2}
+---
+~~~
+1.
+Concepts: seeking update, platform updates
+- A user seeks or requests an update.
+- User inquires about updates, changes, or new features of the platform.
+
+2.
+Concepts: bug fix explanation, limitation explanation
+- Designers explain bug fixes and identify potential bugs or limitations.
+- Designers explain current limitations or constraints of the app, and explain potential solutions to limitations.
+===
+---
+Definitions for each code:
+
+1.
+Concepts: seeking update, platform updates
+Relationship: Inclusion (seeking update is a type of inquiry about platform updates)
+Criteria: A user inquires about changes, new features, or updates of the platform.
+Label: Inquiring About Platform Updates
+
+2.
+Concepts: bug fix explanation, limitation explanation
+Relationship: Parallel (both concepts refer to designers explaining issues with the app)
+Criteria: Designers provide explanations for bug fixes, potential bugs, or current limitations of the app, and potential solutions to these limitations.
+Label: Designers' Explanations of App Issues

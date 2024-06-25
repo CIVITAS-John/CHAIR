@@ -105,6 +105,18 @@ export function InitializeLLM(LLM: string) {
                 maxTokens: MaxOutput,
             });
             break;
+        case "claude3.5-sonnet":
+            // 3$ / 15$
+            MaxInput = 200000;
+            MaxOutput = 4096;
+            MaxItems = 64;
+            Model = (Temp) => new ChatAnthropic({
+                temperature: Temp,
+                modelName: "claude-3-5-sonnet-20240620",
+                streaming: false,
+                maxTokens: MaxOutput,
+            });
+            break;
         case "mixtral-8x22b":
             // 2$ / 6$
             MaxInput = 32000;

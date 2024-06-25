@@ -39,5 +39,10 @@ async function EvaluateMultipleGroups(SourcePath: string, TaskName: string,
     "human vs ai", "human-ai",
     new RefiningReferenceBuilder(),
     ["human", "high-level-2", "low-level-3"]);*/
+    
+await EvaluateMultipleGroups("Coded Dataset 1", 
+    "human vs ai verb", "human-ai-verb",
+    new RefiningReferenceBuilder(),
+    ["human", "high-level-3", "low-level-4", "bertopic"]);
 
 process.exit(0);

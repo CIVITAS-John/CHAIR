@@ -1,0 +1,69 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (4 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+4. 
+Concepts: {Repeat the input 4}
+Relationship: {What is logical relationship between concepts in code 4, or N/A if not applicable}
+Criteria: {Who did what, and how for code 4}
+Label: {A consolidated label of code 4}
+---
+~~~
+1.
+Concepts: community update, project announcements
+- Designers provide updates or announcements to the community.
+- Designers make announcements to the group, outlining plans or sharing general information.
+
+2.
+Concepts: feature introduction, feature explanation
+- Designer introduces the functions of a feature, or demonstrates its functions.
+- Users or designers provide detailed explanations or clarifications to help users understand a feature's purpose or new functionality.
+
+3.
+Concepts: educational experience sharing, user experience in educational contexts
+- Users discuss the effectiveness of the software in educational settings or share their experiences.
+- User experiences and challenges in using the software within educational settings.
+
+4.
+Concepts: user communication, real-time communication
+- User and designer engage in a conversation or exchange.
+- A user or designer engages in real-time communication.
+===
+Here are the definitions for each code:
+
+---
+Definitions for each code:
+
+1.
+Concepts: community update, project announcements
+Relationship: Parallel
+Criteria: Designers share information with the community through updates or announcements about the project.
+Label: Project Communication
+
+2.
+Concepts: feature introduction, feature explanation
+Relationship: Inclusion (feature explanation is a part of feature introduction)
+Criteria: Designers or users provide explanations or demonstrations to help users understand the purpose or functionality of a feature.
+Label: Feature Clarification
+
+3.
+Concepts: educational experience sharing, user experience in educational contexts
+Relationship: Intersection (users share their experiences in educational contexts)
+Criteria: Users discuss or share their experiences, effectiveness, or challenges of using the software in educational settings.
+Label: Educational Experience Sharing
+
+4.
+Concepts: user communication, real-time communication
+Relationship: Inclusion (real-time communication is a part of user communication)
+Criteria: Users and designers engage in conversations or exchanges, either in real-time or not.
+Label: User Interaction

@@ -12,20 +12,26 @@ n_samples = int(sys.argv[1]) if len(sys.argv) > 1 else len(messages)
 # Use BERTopic to get the topics
 from bertopic import BERTopic
 from hdbscan import HDBSCAN
+from bertopic.representation import KeyBERTInspired
 hdbscan_model = HDBSCAN(min_cluster_size=2, prediction_data=True, cluster_selection_method = "leaf")
+representation_model = KeyBERTInspired()
 
 # Run the model
 import json
-model = BERTopic(language="english", embedding_model="all-MiniLM-L12-v2", verbose=True, hdbscan_model=hdbscan_model)
+model = BERTopic(language="english", embedding_model="all-MiniLM-L12-v2", verbose=True, hdbscan_model=hdbscan_model, representation_model=representation_model)
 topics, probs = model.fit_transform(messages[:n_samples])
 
 # Generate the output: for each topic, return the IDs, probabilities
 output = {}
 for index, row in model.get_topic_info().iterrows():
     topic = row["Topic"]
+    keywords = model.get_topic(topic)
+    # Get the keys from the keywords [(key, value), ...] to [key, ...] (remove the values)
+    keywords = [key for key, _ in keywords]
     output[topic] = {
         "IDs": [i for i, t in enumerate(topics) if t == topic],
         "Probabilities": [p for i, p in enumerate(probs) if topics[i] == topic],
+        "Keywords": keywords
     }
 
 # Write into a UTF-8 json
