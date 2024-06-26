@@ -120,17 +120,17 @@ export class Tutorial extends Panel {
                         title: "Coverage & Density", 
                         description: `
 <p>What do those metrics mean?</p>
-<p><strong>Coverage</strong> measures how well the codebook covers potential concepts from the dataset. Codes covered by more codebooks will have higher weights.</p>
+<p><strong>Coverage</strong> measures how well the codebook covers potential concepts from the dataset. If a codebook only has a highly related code, we count as 0.5. Codes covered by more codebooks will have higher weights.</p>
 <p><strong>Density</strong> measures how many codes the codebook used to achieve the coverage, in % relative to the baseline codebook (the merged result of all codebooks).</p>`
                     }
                 },
                 {
                     element: ".side-panel .content .codebook table",
                     popover: { 
-                        title: "Novelty & Conformity", 
+                        title: "Novelty & Divergence", 
                         description: `
 <p><strong>Novelty</strong> measures how much % of <i>novel</i> concepts does the codebook cover.</p>
-<p><strong>Density</strong> measures how much % of <i>shared</i> concepts does the codebook cover.</p>
+<p><strong>Divergence</strong>, measures how this codebook's conceptual distribution differs from the baseline.</p>
 <p>By default, <i>novel</i> is defined as covered by only 1 codebook.</p>`
                     }
                 },

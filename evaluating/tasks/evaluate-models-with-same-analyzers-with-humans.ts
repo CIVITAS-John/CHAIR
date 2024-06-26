@@ -14,7 +14,7 @@ UseLLM("llama3-70b");
 async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: string, Builder: ReferenceBuilder) {
     // Get the dataset
     var Dataset = await LoadDataset(SourcePath);
-    var Evaluator = new NetworkEvaluator(Dataset);
+    var Evaluator = new NetworkEvaluator({ Dataset: Dataset });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
     var ReferencePath = SourcePath + "/evaluation/references";
@@ -30,7 +30,7 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-1", new RefiningReferenceBuilder()); 
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-2", new RefiningReferenceBuilder()); 
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-3", new RefiningReferenceBuilder());
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-4", new RefiningReferenceBuilder());
+await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-4", new RefiningReferenceBuilder(true, true));
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "human", new RefiningReferenceBuilder()); 
 process.exit(0);
 

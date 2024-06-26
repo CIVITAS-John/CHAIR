@@ -16,12 +16,13 @@ export class NetworkEvaluator extends CodebookEvaluator {
     /** Dataset: The dataset underlying the codebooks. */
     public Dataset: Dataset<DataChunk<DataItem>>;
     /** Anonymize: Whether the dataset should be anonymized. */
-    public Anonymize: boolean = true;
+    public Anonymize: boolean;
     /** constructor: Initialize the evaluator. */
-    public constructor(Dataset: Dataset<DataChunk<DataItem>>, Anonymize: boolean = true) {
+    public constructor(
+        { Dataset, Anonymize }: { Dataset: Dataset<DataChunk<DataItem>>, Anonymize?: boolean }) {
         super();
         this.Dataset = Dataset;
-        this.Anonymize = Anonymize;
+        this.Anonymize = Anonymize ?? true;
     }
     /** Evaluate: Evaluate a number of codebooks. */ 
     public async Evaluate(Codebooks: Codebook[], Names: string[], ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {

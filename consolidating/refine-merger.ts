@@ -12,14 +12,17 @@ export class RefineMerger extends DefinitionParser {
     public Minimum: number;
     /** UseDefinition: Whether we use definitions in merging (they will be used to inform LLM). */
     public UseDefinition: boolean;
+    /** UseVerbPhrases: Whether the merging process should force verb phrases. */
+    public UseVerbPhrases: boolean;
     /** Constructor: Create a new NameMerger. */
-    constructor({Maximum = 0.6, Minimum = 0.4, Looping = false, UseDefinition = true}: {Maximum?: number, Minimum?: number, Looping?: boolean, UseDefinition?: boolean}) {
+    constructor({Maximum = 0.6, Minimum = 0.4, Looping = false, UseDefinition = true, UseVerbPhrases = false}: {Maximum?: number, Minimum?: number, Looping?: boolean, UseDefinition?: boolean, UseVerbPhrases?: boolean}) {
         super();
         this.Chunkified = true;
         this.Looping = Looping;
         this.Minimum = Minimum;
         this.Maximum = Maximum;
         this.UseDefinition = UseDefinition;
+        this.UseVerbPhrases = UseVerbPhrases;
     }
     /** GetName: Get the name of the consolidator. */
     public GetName(): string {
@@ -64,7 +67,7 @@ export class RefineMerger extends DefinitionParser {
 You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
 Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
 Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
-Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for the combined concept.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate ${this.UseVerbPhrases ? "verb phrase as label" : "label"} for the combined concept.
 ${ResearchQuestion}
 Always follow the output format:
 ---
@@ -73,13 +76,13 @@ Definitions for each code (${Codes.length} in total):
 Concepts: {Repeat the input 1}
 Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
 Criteria: {Who did what, and how for code 1}
-Label: {A consolidated label of code 1}
+Label: {A consolidated ${this.UseVerbPhrases ? "verb phrase" : "label"} of code 1}
 ...
 ${Codes.length}. 
 Concepts: {Repeat the input ${Codes.length}}
 Relationship: {What is logical relationship between concepts in code ${Codes.length}, or N/A if not applicable}
 Criteria: {Who did what, and how for code ${Codes.length}}
-Label: {A consolidated label of code ${Codes.length}}
+Label: {A consolidated ${this.UseVerbPhrases ? "verb phrase" : "label"} of code ${Codes.length}}
 ---`.trim(), 
                     Codes.map((Code, Index) => `
 ${Index + 1}.

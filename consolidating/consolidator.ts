@@ -1,6 +1,7 @@
 import { Code, Codebook, CodedThreads } from "../utils/schema.js";
 import { Analyzer } from "../analyzer.js";
 import chalk from 'chalk';
+import { Shuffle } from "../utils/math.js";
 
 /** CodebookConsolidator: The definition of an abstract codebook consolidator. */
 export abstract class CodebookConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedThreads> {
@@ -44,6 +45,8 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         console.log(chalk.white(chalk.bold(`Iteration ${Iteration}: ${this.Consolidators[this.Index].GetName()}`)));
         // Preprocess the subunits
         Subunits = Subunits.filter(Code => Code.Label !== "[Merged]");
+        // Reorder the subunits to prevent over-merging
+        Subunits = Shuffle(Subunits, 0);
         var Result = await this.Consolidators[this.Index].Preprocess(Analysis.Codebook!, Subunits);
         if (Result instanceof Array) return Result;
         Analysis.Codebook = Result;

@@ -136,7 +136,7 @@ export class OwnerFilter<T> extends FilterBase<T, number> {
         if (this.Parameters.length == 0) {
             return new OwnerColorizer(Visualizer.Dataset.Names.map((_, Index) => Index).slice(1), Visualizer);
         } else if (this.Parameters.length == 1) {
-            if (this.Mode == "Novelty" || this.Mode == "Conformity")
+            if (this.Mode == "Novelty" || this.Mode == "Divergence")
                 return new NoveltyColorizer(this.Parameters[0]);
             else return new CoverageColorizer(this.Parameters[0]);
         } else if (this.Parameters.length == 2) {

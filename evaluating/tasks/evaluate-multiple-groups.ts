@@ -16,7 +16,7 @@ async function EvaluateMultipleGroups(SourcePath: string, TaskName: string,
     ReferenceName: string, Builder: ReferenceBuilder, Sources: string[]) {
     // Get the dataset
     var Dataset = await LoadDataset(SourcePath);
-    var Evaluator = new NetworkEvaluator(Dataset);
+    var Evaluator = new NetworkEvaluator({ Dataset: Dataset });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
     var ReferencePath = SourcePath + "/evaluation/references";

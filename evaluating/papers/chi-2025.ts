@@ -18,7 +18,7 @@ UseLLM("llama3-70b");
 async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: string, Builder: ReferenceBuilder) {
     // Get the dataset
     var Dataset = await LoadDataset(SourcePath);
-    var Evaluator = new NetworkEvaluator(Dataset);
+    var Evaluator = new NetworkEvaluator({ Dataset: Dataset });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
     var ReferencePath = SourcePath + "/evaluation/references";
