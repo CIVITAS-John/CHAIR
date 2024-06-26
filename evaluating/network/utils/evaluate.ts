@@ -1,16 +1,18 @@
 import { CodebookComparison, CodebookEvaluation } from "../../../utils/schema.js";
 import { FindConsolidatedCode, GetConsolidatedSize } from "./dataset.js";
 import { BuildSemanticGraph } from "./graph.js";
-import { Parameters } from './utils.js';
+import { CalculateJSD, Parameters } from './utils.js';
 
 /** Evaluate: Evaluate all codebooks based on the network structure. */
 export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameters): Record<string, CodebookEvaluation> {
     var Results: Record<string, CodebookEvaluation> = {};
+    var Observations: number[][] = [[]];
     // Prepare for the results
     var Codebooks = Dataset.Codebooks;
     var Names = Dataset.Names;
     for (var I = 1; I < Codebooks.length; I++) {
         Results[Names[I]] = { Coverage: 0, Density: 0, Novelty: 0, Divergence: 0 };
+        Observations.push([]);
     }
     // Calculate weights per node
     var Graph = BuildSemanticGraph(Dataset, Parameters);
@@ -24,6 +26,7 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
         Weight = Weight / TotalCodebooks;
         Weights.set(Node.ID, Weight);
         TotalWeight += Weight;
+        Observations[0].push(Weight);
     }
     // The expectations are made based on (consolidate codes in each codebook) / (codes in the baseline)
     var Consolidated = Codebooks.map((Codebook, I) => {
@@ -43,11 +46,7 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
             var Observed = Node.Owners.has(I) ? 1 : Node.NearOwners.has(I) ? 0.5 : 0;
             Result["Coverage"] += Weight * Observed;
             Result["Novelty"] += Weight * (Observed == 1 ? 1 : 0) * (Novel ? 1 : 0);
-            // Kullback–Leibler divergence
-            // P = Baseline, Q = Codebook
-            // https://medium.com/@hosamedwee/kullback-leibler-kl-divergence-with-examples-part-2-9123bff5dc10
-            if (Observed == 0) Observed = 0.0001;
-            Result["Divergence"] += Weight * Math.log(Weight / Observed);
+            Observations[I].push(Observed);
         }
     }
     // Finalize the results
@@ -57,7 +56,7 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
         Result["Coverage"] = Result["Coverage"] / TotalWeight;
         Result["Density"] = Consolidated[I] / Consolidated[0] / Result["Coverage"];
         Result["Novelty"] = Result["Novelty"] / TotalNovelty;
-        Result["Divergence"] = Result["Divergence"] / TotalWeight;
+        Result["Divergence"] = Math.sqrt(CalculateJSD(Observations[0], Observations[I]));
     }
     return Results;
 }

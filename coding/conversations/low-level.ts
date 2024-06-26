@@ -54,8 +54,8 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     Codes = Codes.replace(new RegExp(`^${this.TagName}(\d+)\:`), "").trim();
                     // Sometimes the LLM will put the message back
                     if (Codes.startsWith(Message.Content)) Codes = Codes.substring(Message.Content.length).trim();
-                    // Sometimes the LLM will return "{codes}"
-                    if (Codes.startsWith("{") && Codes.endsWith("}")) Codes = Codes.substring(1, Codes.length - 1);
+                    // Sometimes the LLM will return "{codes}, {codes}"
+                    Codes = Codes.replace(/\{(.*?)\}/, "$1").trim();
                     // Sometimes the LLM will start with the original content
                     if (Codes.toLowerCase().startsWith(Message.Content.toLowerCase())) Codes = Codes.substring(Message.Content.length).trim();
                     // Sometimes the LLM will return "- tags: {codes}"

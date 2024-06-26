@@ -59,6 +59,10 @@ export abstract class DefinitionParser extends CodeConsolidator {
             var NewCode = Pendings[I];
             // Sometimes, the new label starts with "label:"
             if (NewCode.Label.startsWith("label:")) NewCode.Label = NewCode.Label.substring(6).trim();
+            // Sometimes, the new label is wrapped in ""
+            if (NewCode.Label.startsWith("\"") && NewCode.Label.endsWith("\"")) NewCode.Label = NewCode.Label.substring(1, NewCode.Label.length - 1);
+            // Sometimes, the new label ends with "."
+            if (NewCode.Label.endsWith(".")) NewCode.Label = NewCode.Label.substring(0, NewCode.Label.length - 1).trim();
             // Sometimes, the order of labels is wrong (! found for gpt-3.5-turbo)
             var Found = Codes.findIndex(Code => Code.Label == NewCode.Label);
             if (Found != -1 && Found !== I) 

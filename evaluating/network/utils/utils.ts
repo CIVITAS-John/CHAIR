@@ -22,6 +22,37 @@ export function InverseLerp(a: number, b: number, t: number, clamp: boolean = tr
     return result;
 }
 
+/** CalculateJSD: Calculate the Jensen-Shannon Divergence between two distributions. */
+export function CalculateJSD(P: number[], Q: number[]): number {
+    // Helper function to calculate the KL divergence
+    function KLD(P: number[], Q: number[]): number {
+        return P.reduce((sum, p, i) => {
+            if (p === 0) {
+                return sum;
+            }
+            if (Q[i] === 0) {
+                throw new Error('KL Divergence is not defined when Q[i] is 0 and P[i] is non-zero');
+            }
+            return sum + p * Math.log(p / Q[i]);
+        }, 0);
+    }
+
+    // Normalize the distributions to make them probability distributions
+    const sumP = P.reduce((a, b) => a + b, 0);
+    const sumQ = Q.reduce((a, b) => a + b, 0);
+    const normalizedP = P.map(p => p / sumP);
+    const normalizedQ = Q.map(q => q / sumQ);
+
+    // Calculate the average distribution
+    const M = normalizedP.map((p, i) => (p + normalizedQ[i]) / 2);
+
+    // Calculate the Jensen-Shannon Divergence
+    const jsd = (KLD(normalizedP, M) + KLD(normalizedQ, M)) / 2;
+
+    return jsd;
+}
+
+
 /** GetCodebookColor: Get the color of a codebook. */
 export function GetCodebookColor(Number: number, Codebooks: number): string {
     if (Codebooks <= 10)
