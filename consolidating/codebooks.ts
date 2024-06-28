@@ -112,7 +112,7 @@ export async function ConsolidateCodebook<TUnit>(Consolidator: CodebookConsolida
         if (Prompts[0] == "" && Prompts[1] == "") return 0;
         // Run the prompts
         var Response = await RequestLLMWithCache([ new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1]) ], 
-            `codebooks/${Consolidator.Name}`, Tries * 0.2 + Consolidator.BaseTemperature, FakeRequest);
+            `codebooks/${Consolidator.Name}`, Math.min(Tries, 3) * 0.2 + Consolidator.BaseTemperature, FakeRequest);
         if (Response == "") return 0;
         // Parse the response
         var Result = await Consolidator.ParseResponse(Analyses, Response.split("\n").map(Line => Line.trim()), Currents, ChunkStart, Iteration);

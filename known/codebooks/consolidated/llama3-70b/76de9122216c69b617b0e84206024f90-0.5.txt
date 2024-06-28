@@ -1,0 +1,100 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate verb phrase as label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (7 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated verb phrase of code 1}
+...
+7. 
+Concepts: {Repeat the input 7}
+Relationship: {What is logical relationship between concepts in code 7, or N/A if not applicable}
+Criteria: {Who did what, and how for code 7}
+Label: {A consolidated verb phrase of code 7}
+---
+~~~
+1.
+Concepts: providing technical clarification, explaining technical details
+- Designer provides technical clarification.
+- Designer explains technical artifacts or provides technical details.
+
+2.
+Concepts: considering legacy system support, ensuring system compatibility
+- Designer considers supporting legacy systems or compatibility issues.
+- Designers confirm compatibility with specific systems or devices or respond to compatibility questions, and address or express concerns about compatibility issues or limitations.
+
+3.
+Concepts: providing additional context, providing contextual information
+- Users provide additional context or information about a conversation.
+- User provides background information about themselves and provides relevant background information related to their question or request.
+
+4.
+Concepts: grade level inquiry, seeking user demographics
+- Inquiring about or discussing the level of education or grade level of users.
+- A question asking about the user's demographic information, and designers ask about users' roles or information and ask users about their educational level or background.
+
+5.
+Concepts: explaining teacher's perspective, self-identifying as a teacher
+- A user explains their perspective or needs as a teacher.
+- Users identify themselves as teachers or share their teaching experience.
+
+6.
+Concepts: acknowledging help, resolving issues
+- An expression of gratitude or appreciation for resolving an issue.
+- User confirms or reports an issue and indicates a resolution or solution to an issue, and closes an inquiry loop by acknowledging a user's question or concern.
+
+7.
+Concepts: breaking the ice, initiating polite conversation
+- User initiates a conversation or breaks the ice with a greeting or casual comment.
+- User initiates a conversation or greeting in a polite manner, and sets a polite tone for the conversation.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: providing technical clarification, explaining technical details
+Relationship: Inclusion (technical clarification is a type of explaining technical details)
+Criteria: Designer provides technical information to clarify or explain technical aspects.
+Label: Providing Technical Insights
+
+2.
+Concepts: considering legacy system support, ensuring system compatibility
+Relationship: Parallel (both concepts are related to ensuring system compatibility)
+Criteria: Designer addresses or confirms compatibility with specific systems or devices.
+Label: Ensuring System Compatibility
+
+3.
+Concepts: providing additional context, providing contextual information
+Relationship: Inclusion (providing contextual information is a type of providing additional context)
+Criteria: Users provide supplementary information to clarify or support their inquiry.
+Label: Providing Contextual Information
+
+4.
+Concepts: grade level inquiry, seeking user demographics
+Relationship: Parallel (both concepts are related to gathering user information)
+Criteria: Designers or users ask about or discuss user demographics or educational background.
+Label: Inquiring about User Demographics
+
+5.
+Concepts: explaining teacher's perspective, self-identifying as a teacher
+Relationship: Inclusion (self-identifying as a teacher is a type of explaining teacher's perspective)
+Criteria: Users share their teaching experience or perspective to provide context.
+Label: Sharing Teaching Perspective
+
+6.
+Concepts: acknowledging help, resolving issues
+Relationship: Intersection (acknowledging help often implies resolving issues)
+Criteria: Users express gratitude or confirm resolution of an issue.
+Label: Acknowledging Issue Resolution
+
+7.
+Concepts: breaking the ice, initiating polite conversation
+Relationship: Inclusion (initiating polite conversation is a type of breaking the ice)
+Criteria: Users start a conversation with a greeting or casual comment to set a polite tone.
+Label: Initiating Polite Conversation

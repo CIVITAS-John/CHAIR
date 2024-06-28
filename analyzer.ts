@@ -171,7 +171,7 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
                         console.log(`Expected ${ChunkSize[0]} subunits, processed ${ChunkSize[0] + CursorRelative} subunits.`);
                     break;
                 } catch (Error: any) {
-                    if (++Tries > 3) throw Error;
+                    if (++Tries > 4) throw Error;
                     CountItems(ChunkSize[0], 0);
                     console.log(chalk.red(`Analysis error, retrying ${Tries} times:`));
                     console.log(`${Error.stack}`);

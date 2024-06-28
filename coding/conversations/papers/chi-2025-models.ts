@@ -1,7 +1,7 @@
 import { UseLLMs } from '../../../utils/llms.js';
 import { ProcessDataset } from '../../../analyzer.js';
 
-// This code replicates our study for CHI 2025.
+// This code replicates our study for CHI 2025 regarding the use of different models with the same analyzers.
 // Running it requires access to OpenAI, Groq, Claude, and Mistral APIs.
 // It also needs access to our dataset, which we will release before the conference.
 

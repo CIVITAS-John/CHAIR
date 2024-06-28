@@ -24,9 +24,9 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
         var Weight = Node.Owners.size + (Node.NearOwners.size - Node.Owners.size) * 0.5;
         if (Node.Owners.has(0)) Weight--; // Discount the baseline
         Weight = Weight / TotalCodebooks;
+        Observations[0].push(Weight);
         Weights.set(Node.ID, Weight);
         TotalWeight += Weight;
-        Observations[0].push(Weight);
     }
     // The expectations are made based on (consolidate codes in each codebook) / (codes in the baseline)
     var Consolidated = Codebooks.map((Codebook, I) => {
