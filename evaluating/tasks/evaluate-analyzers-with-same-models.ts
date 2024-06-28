@@ -11,7 +11,7 @@ InitializeEmbeddings("gecko-768-similarity");
 UseLLM("llama3-70b");
 
 /** EvaluateAnalyzers: Evaluate the performance of different analyzers using the same model. */
-async function EvaluateAnalyzers(SourcePath: string, LLM: string, Builder: ReferenceBuilder, Analyzers: string[]) {
+async function EvaluateAnalyzers(SourcePath: string, LLM: string, Builder: ReferenceBuilder, Suffix: string, Analyzers: string[]) {
     // Get the dataset
     var Dataset = await LoadDataset(SourcePath);
     var Evaluator = new NetworkEvaluator({ Dataset: Dataset });
@@ -22,13 +22,18 @@ async function EvaluateAnalyzers(SourcePath: string, LLM: string, Builder: Refer
     var TargetPath = SourcePath + "/evaluation/results/" + LLM + Builder.Suffix;
     EnsureFolder(TargetPath);
     // Build the paths
-    var Paths = Analyzers.map(Analyzer => SourcePath + "/" + Analyzer + "/" + Dataset + "-" + LLM + ".json");
+    var Paths = Analyzers.flatMap(Analyzer => 
+        Object.keys(Dataset.Data).map(Name => SourcePath + "/" + Analyzer + "/" + Name + "-" + LLM + ".json"));
     // Build the reference and evaluate the codebooks
     var Results = await BuildReferenceAndEvaluateCodebooks(
-        Paths, ReferencePath + "/" + LLM + Builder.Suffix, Builder, Evaluator, TargetPath);
+        Paths, ReferencePath + "/" + LLM + Suffix + Builder.Suffix, Builder, Evaluator, TargetPath);
     File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
 }
 
-await EvaluateAnalyzers("Coded Dataset 1", 
+/* await EvaluateAnalyzers("Coded Dataset 1", 
     "llama3-70b", new RefiningReferenceBuilder(),
-    ["high-level-1", "high-level-2", "low-level-3"]);
+    ["high-level-1", "high-level-2", "low-level-3"]); */
+
+await EvaluateAnalyzers("Coded Dataset 1", 
+    "llama3-70b", new RefiningReferenceBuilder(), "-temp",
+    ["low-level-4-temp-0", "low-level-4-temp-0.25", "low-level-4-temp-0.5", "low-level-4-temp-0.75", "low-level-4-temp-1"]);

@@ -1,0 +1,267 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (24 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+24.
+Criteria: {Who did what, and how for code 24}
+Label: {A descriptive label of code 24}
+---
+~~~
+1.
+Label: explaining constraints
+Quotes:
+- User: Dizzy, the computer system for teachers at our school is quite old.
+
+2.
+Label: estimating development timeline
+Quotes:
+- Designer: Hmm... We will probably prioritize completing the electrical section first, then magnetism, and then other parts.
+
+3.
+Label: may i ask where i can download the pc / interactive whiteboard version of physics lab?
+Quotes:
+- User: [Emoji] Hello everyone, may I ask where I can download the PC / interactive whiteboard version of Physics Lab?
+
+4.
+Label: sharing new version
+Quotes:
+- Designer: The new version has already been sent in the group
+
+5.
+Label: highlighting updates
+Quotes:
+- Designer: v1.0.2 - 17/11/29
+# New Features
+Multi-language support: Japanese, German, French.
+Preliminary support for converting circuit components to circuit diagrams.
+
+Support for augmented reality mode on the latest iOS devices.
+More realistic 3D appearance for various meters.
+
+# Update Preview
+
+The next version will provide multimeter and meter zeroing.
+
+The next version will provide AC waveform display functionality.
+
+The next version will provide capacitors and energized solenoids.
+
+# Component Property Adjustments
+Dry cells can now be ideal power sources.
+
+All meters can now switch between ideal/realistic modes.
+
+# Special Tips
+The Esc shortcut key will now minimize the window.
+The Ctrl+E shortcut key can switch between exam and normal modes.
+
+6.
+Label: emphasizing ease of use
+Quotes:
+- Designer: For example, see the circuit diagram to connect the physical diagram, or vice versa
+
+7.
+Label: suggesting usability improvements
+Quotes:
+- User: This is good, I hope it can be very convenient to draw circuit diagrams, and I also hope there is a function to hide the background grid with one click, which is convenient for us teachers to take screenshots for test papers. Currently, there is no software that makes it easy to draw circuit diagrams for exam questions
+
+8.
+Label: outlining timeline
+Quotes:
+- Designer: Hope to figure out electromagnetism before the end of the year
+
+9.
+Label: explaining design decisions
+Quotes:
+- Designer: Physics mainly focuses on electricity and mechanics; other directions don't have much room for free experiments before high school. In the future, we might do some demonstration experiments based on everyone's needs, but it won't be as open as electricity
+- Designer: This version of the circuit diagram is for testing only... You can drag the Editor because the auto-layout algorithm is not very stable and may produce some odd results
+- Designer: This belongs to the kind of feature that, once done, will ensure long-term stability... Adding various components is actually simpler
+
+10.
+Label: weighing trade offs
+Quotes:
+- Designer: So, use both?
+
+11.
+Label: identifying potential issues
+Quotes:
+- Designer: XP compatibility might need to be looked into later... probably need to install a virtual machine.
+
+12.
+Label: breaking the ice
+Quotes:
+- User: Hello everyone
+
+13.
+Label: assessing feasibility
+Quotes:
+- Designer: Does the class have internet?
+- Designer: 7 is okay.
+
+14.
+Label: discussing design goals
+Quotes:
+- Designer: It's still better to make the auto-generated one as good as possible
+
+15.
+Label: showing understanding
+Quotes:
+- User: Okay, okay~ Thank you for your hard work.
+- User: @John Chen (3) Yes, yes.
+- Designer: Hmm hmm.
+- User: Indeed
+- User: ok
+
+16.
+Label: setting realistic timeline
+Quotes:
+- Designer: This is quite complex, so it will take more time... Hopefully, it can be released this week
+
+17.
+Label: sharing research goals
+Quotes:
+- Designer: Actually, we are researching the bidirectional conversion between physical diagrams and circuit diagrams
+
+18.
+Label: updating users on platform developments
+Quotes:
+- Designer: From the next update, dry batteries will no longer be ideal components (you can remove the internal resistance to simulate).
+
+19.
+Label: responding to feature requests
+Quotes:
+- Designer: Hmm... We will probably prioritize completing the electrical section first, then magnetism, and then other parts.
+
+20.
+Label: validating designer's experience
+Quotes:
+- User: @John Chen (3) Yes, yes.
+- User: Indeed
+
+21.
+Label: demonstrating domain expertise
+Quotes:
+- User: First, let's pay homage to the experts, then I'll make a small request. Could you create a dynamic demonstration of mechanical waves and mechanical vibrations, such as the propagation of transverse and longitudinal waves, wave superposition, diffraction, and interference? Also, for optical experiments, it would be great to have optical benches, single slits, double slits, and polarizers to demonstrate optical experiments.
+
+22.
+Label: highlighting potential use case
+Quotes:
+- User: If there could be an export function, or the ability to save or import experiments, it would be convenient. We could set up the parameters in the office and directly import them in class.
+
+23.
+Label: explaining school's internet policy
+Quotes:
+- User: Generally not. Ever since an adult image popped up during a major city-level open class, the school has disabled the network on classroom computers [Emoji].
+
+24.
+Label: demonstrating commitment
+Quotes:
+- Designer: Hope to figure out electromagnetism before the end of the year
+===
+Here are the definitions for each code:
+
+---
+Definitions for each code:
+1.
+Criteria: Users mention limitations or difficulties in their current environment that hinder their ability to use Physics Lab effectively.
+Label: Explaining constraints
+
+2.
+Criteria: Designers or users provide a rough estimate of when a particular feature or update will be available.
+Label: Estimating development timeline
+
+3.
+Criteria: Users ask about availability or access to specific versions of Physics Lab.
+Label: Requesting access to resources
+
+4.
+Criteria: Designers announce or share new versions of Physics Lab.
+Label: Sharing new version
+
+5.
+Criteria: Designers highlight new features, updates, or changes in Physics Lab.
+Label: Highlighting updates
+
+6.
+Criteria: Designers emphasize the ease of use or intuitive nature of Physics Lab.
+Label: Emphasizing ease of use
+
+7.
+Criteria: Users suggest improvements or new features that would enhance their experience with Physics Lab.
+Label: Suggesting usability improvements
+
+8.
+Criteria: Designers outline a rough timeline for completing specific tasks or milestones.
+Label: Outlining timeline
+
+9.
+Criteria: Designers explain the reasoning behind specific design decisions or trade-offs.
+Label: Explaining design decisions
+
+10.
+Criteria: Designers weigh the pros and cons of different approaches or features.
+Label: Weighing trade-offs
+
+11.
+Criteria: Designers or users identify potential issues or challenges with Physics Lab.
+Label: Identifying potential issues
+
+12.
+Criteria: Users initiate conversations or break the ice with casual greetings.
+Label: Breaking the ice
+
+13.
+Criteria: Designers assess the feasibility of specific features or requests.
+Label: Assessing feasibility
+
+14.
+Criteria: Designers discuss their goals or objectives for Physics Lab.
+Label: Discussing design goals
+
+15.
+Criteria: Users or designers show understanding or acknowledge each other's points.
+Label: Showing understanding
+
+16.
+Criteria: Designers set realistic expectations for when specific features or updates will be available.
+Label: Setting realistic timeline
+
+17.
+Criteria: Designers share their research goals or objectives.
+Label: Sharing research goals
+
+18.
+Criteria: Designers update users on changes or developments in Physics Lab.
+Label: Updating users on platform developments
+
+19.
+Criteria: Designers respond to user requests or feature suggestions.
+Label: Responding to feature requests
+
+20.
+Criteria: Users validate or confirm the designer's experience or expertise.
+Label: Validating designer's experience
+
+21.
+Criteria: Users demonstrate their knowledge or expertise in a specific domain or subject area.
+Label: Demonstrating domain expertise
+
+22.
+Criteria: Users highlight potential use cases or scenarios where Physics Lab could be useful.
+Label: Highlighting potential use case
+
+23.
+Criteria: Users explain their school's internet policy or restrictions.
+Label: Explaining school's internet policy
+
+24.
+Criteria: Designers express their commitment to completing specific tasks or milestones.
+Label: Demonstrating commitment
