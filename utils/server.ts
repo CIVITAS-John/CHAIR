@@ -7,11 +7,25 @@ import { EnsureFolder } from './llms.js';
 import { setTimeout } from "timers/promises";
 
 /** CreateServer: Create a local server for interactivity. */
-export function CreateServer(Port: number, BaseDirectories: string[], ...DataFiles: string[]): Promise<void> {
-    var Shutdown: () => void;
+export function CreateServer<T>(Port: number, BaseDirectories: string[], ...DataFiles: string[]): Promise<T | undefined> {
+    var Shutdown: (Data?: T) => void;
+    // Create the server
     const Server: http.Server = http.createServer((Request: http.IncomingMessage, Response: http.ServerResponse) => {
         var Url = Request.url ?? "/";
         if (Url == "/") Url = "/index.html";
+        // Handle dynamic requests
+        if (Url.startsWith("/api/report/")) {
+            // Read the body
+            let Body = '';
+            Request.on('data', chunk => { Body += chunk.toString(); });
+            Request.on('end', () => {
+                let Data = JSON.parse(Body);
+                Response.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                Response.end(JSON.stringify(Data));
+                Shutdown(Data);
+            });
+            return;
+        }
         // Handle requests for data files specifically
         for (const dataFile of DataFiles) {
             if (Url === `/${path.basename(dataFile)}`) {
@@ -71,7 +85,7 @@ export function CreateServer(Port: number, BaseDirectories: string[], ...DataFil
         });
     }
     // Start the server
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<T | undefined>((Resolve, Reject) => {
         Server.listen(Port, async () => {
             console.log(`Server running at http://localhost:${Port}/`);
             console.log('Press Ctrl+C to shut down the server.')
@@ -79,19 +93,19 @@ export function CreateServer(Port: number, BaseDirectories: string[], ...DataFil
             // Wait for 5 seconds or the browser tab to close
             // On Windows, the browser tab may close prematurely, so we delay the shutdown
             await Promise.all([open(`http://localhost:${Port}/`, { wait: true, app: { name: apps.chrome } }), 
-                setTimeout(process.platform == "win32" ? 300000 : 5000)])
+                setTimeout(process.platform == "win32" ? 6000000 : 5000)])
             console.log('The browser tab has closed, shutting down the server.')
             Shutdown();
         });
         // Handle server shutdown
-        Shutdown = () => {
-            Server.close((err) => {
-                if (err) {
-                    console.error('Failed to close server:', err);
-                    reject(err); // Reject the promise on server close error
+        Shutdown = (Data) => {
+            Server.close((Error) => {
+                if (Error) {
+                    console.error('Failed to close server:', Error);
+                    Reject(Error); // Reject the promise on server close error
                 } else {
                     console.log('Server shut down gracefully.');
-                    resolve(); // Resolve the promise when server closes successfully
+                    Resolve(Data); // Resolve the promise when server closes successfully
                 }
             });
         };

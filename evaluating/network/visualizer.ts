@@ -3,13 +3,14 @@ import { Code, CodebookComparison, DataChunk, DataItem } from '../../utils/schem
 import { Node, Link, Graph, Component, GraphStatus } from './utils/schema.js';
 import { BuildSemanticGraph } from './utils/graph.js';
 import { Colorizer, ComponentFilter, OwnerFilter } from './utils/filters.js';
-import { Parameters } from './utils/utils.js';
+import { Parameters, PostData } from './utils/utils.js';
 import type { Cash, CashStatic, Element } from 'cash-dom';
 import { InfoPanel } from './panels/info-panel.js';
 import { SidePanel } from './panels/side-panel.js';
 import { Dialog } from './panels/dialog.js';
 import { FilterBase } from './utils/filters.js';
 import { Tutorial } from './tutorial.js';
+import { Evaluate } from './utils/evaluate.js';
 declare global {
     var $: typeof Cash.prototype.init & CashStatic;
 }
@@ -92,6 +93,9 @@ export class Visualizer {
             // Build the default graph
             this.SetStatus("Code", BuildSemanticGraph(this.Dataset, this.Parameters));
             this.SidePanel.Show();
+            // Evaluate and send back the results
+            var Results = Evaluate(this.Dataset, this.Parameters);
+            PostData("/api/report/", Results);
         });
     }
     // Status management

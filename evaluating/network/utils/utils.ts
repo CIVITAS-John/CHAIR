@@ -65,3 +65,14 @@ export function FormatDate(Date: Date) {
     return Date.toLocaleString(undefined, 
         { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false } as any);
 }
+
+/** PostData: Post data to a URL in the browser context. */
+export function PostData(URL: string, Data: any) {
+    return fetch(URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(Data)
+    });
+}

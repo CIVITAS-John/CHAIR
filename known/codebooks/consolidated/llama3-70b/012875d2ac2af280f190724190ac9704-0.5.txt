@@ -1,0 +1,382 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+32.
+Criteria: {Who did what, and how for code 32}
+Label: {A descriptive label of code 32}
+---
+~~~
+1.
+Label: reaction to rejection
+Quotes:
+- User: Okay, okay~ Thank you for your hard work.
+
+2.
+Label: listing features to be included in updates
+Quotes:
+- Designer: There will be: multimeter; powered solenoid; semiconductor capacitor; support for conversion to ideal ammeter (more convenient for problem-solving and middle school teaching)
+
+3.
+Label: providing detailed information
+Quotes:
+- Designer: Theoretically, it should be compatible (but the machine itself shouldn't be too old, probably from 2008 onwards).
+
+4.
+Label: suggest alternative system
+Quotes:
+- User: Win7 should be fine.
+
+5.
+Label: showcasing development progress
+Quotes:
+- Designer: New Features
+Electronic components will be damaged after a short process, rather than immediately.
+Clearing the desktop will now display a confirmation interface.
+Supports undoing the creation and deletion of wires and components.
+Appliances now display the effective value of alternating current.
+(PC) You can now exit the application using the Esc key.
+
+New Components
+Added a sensitive ammeter.
+Added a student power supply (ideal AC/DC power supply).
+
+Adjustments to Component Properties
+Batteries now have adjustable internal resistance and are no longer ideal power sources.
+Incandescent bulbs now have volt-ampere characteristic parameters and are no longer ideal resistors.
+The resistance law experimenter now uses real formulas for calculations, with adjustable parameters.
+Hidden terminal blocks 3 and 4.
+
+Bug Fixes
+Fixed an issue with unit conversion in Editor properties.
+Terminal arrows no longer show jumping animations.
+There may have been calculation errors with certain circuit connections.
+
+6.
+Label: empathizing with users
+Quotes:
+- Designer: But you can't bring it up without touching the input, that's probably the case.
+- Designer: 😂
+
+7.
+Label: showing continued interest in project development
+Quotes:
+- User: Are there any other updates recently?
+
+8.
+Label: encouraging interaction
+Quotes:
+- Designer: We will also update the multimeter and powered solenoid this week. If there are any other features, characteristics, or electronic components you hope to include in the production plan, please leave a message in the group, and we will consider it as much as possible. The previously mentioned feature of saving experiments to the cloud/local is also in the plan. Thank you, everyone!
+- Designer: No need to be polite, if you encounter any problems during use, you can directly mention them in the group.
+- Designer: When we are ready to start, we will consult everyone in the group
+- Designer: Thank you all for your support. We will do better!
+- Designer: Okay. Please give more suggestions!
+
+9.
+Label: self-solved
+Quotes:
+- User: I saw the group files, thank you.
+
+10.
+Label: suggest potential solution
+Quotes:
+- Designer: XP compatibility might need to be looked into later... probably need to install a virtual machine.
+
+11.
+Label: such as the propagation of transverse and longitudinal waves
+Quotes:
+- User: First, let's pay homage to the experts, then I'll make a small request. Could you create a dynamic demonstration of mechanical waves and mechanical vibrations, such as the propagation of transverse and longitudinal waves, wave superposition, diffraction, and interference? Also, for optical experiments, it would be great to have optical benches, single slits, double slits, and polarizers to demonstrate optical experiments.
+
+12.
+Label: suggesting a user centered development approach
+Quotes:
+- Designer: No need to be polite, if you encounter any problems during use, you can directly mention them in the group.
+
+13.
+Label: providing the preferred side for the circuit diagram representation
+Quotes:
+- User: Left side
+
+14.
+Label: explaining limitations
+Quotes:
+- Designer: This version of the circuit diagram is for testing only... You can drag the Editor because the auto-layout algorithm is not very stable and may produce some odd results
+
+15.
+Label: reinforcing positive sentiment
+Quotes:
+- User: [Emoji][Emoji]
+
+16.
+Label: demonstrating politeness in community
+Quotes:
+- User: Thank you.
+
+17.
+Label: encourage community participation
+Quotes:
+- Designer: We will also update the multimeter and powered solenoid this week. If there are any other features, characteristics, or electronic components you hope to include in the production plan, please leave a message in the group, and we will consider it as much as possible. The previously mentioned feature of saving experiments to the cloud/local is also in the plan. Thank you, everyone!
+- Designer: If you have any suggestions or requirements, feel free to bring them up.
+- Designer: Okay. Please give more suggestions!
+
+18.
+Label: emphasizing functionality of bidirectional conversion
+Quotes:
+- Designer: With bidirectional conversion, you can directly do problems in the application
+
+19.
+Label: inquiring about the timing of the next update
+Quotes:
+- User: Will there be an update this week? [Emoji]
+
+20.
+Label: magnetism
+Quotes:
+- Designer: Hmm... We will probably prioritize completing the electrical section first, then magnetism, and then other parts.
+
+21.
+Label: encouraging users to provide more suggestions for improvement
+Quotes:
+- Designer: Okay. Please give more suggestions!
+
+22.
+Label: encouraging the community to provide more suggestions for the physics lab tool
+Quotes:
+- Designer: Okay. Please give more suggestions!
+
+23.
+Label: announcing updates
+Quotes:
+- Designer: New Features
+Electronic components will be damaged after a short process, rather than immediately.
+Clearing the desktop will now display a confirmation interface.
+Supports undoing the creation and deletion of wires and components.
+Appliances now display the effective value of alternating current.
+(PC) You can now exit the application using the Esc key.
+
+New Components
+Added a sensitive ammeter.
+Added a student power supply (ideal AC/DC power supply).
+
+Adjustments to Component Properties
+Batteries now have adjustable internal resistance and are no longer ideal power sources.
+Incandescent bulbs now have volt-ampere characteristic parameters and are no longer ideal resistors.
+The resistance law experimenter now uses real formulas for calculations, with adjustable parameters.
+Hidden terminal blocks 3 and 4.
+
+Bug Fixes
+Fixed an issue with unit conversion in Editor properties.
+Terminal arrows no longer show jumping animations.
+There may have been calculation errors with certain circuit connections.
+- Designer: v1.0.2 - 17/11/29
+# New Features
+Multi-language support: Japanese, German, French.
+Preliminary support for converting circuit components to circuit diagrams.
+
+Support for augmented reality mode on the latest iOS devices.
+More realistic 3D appearance for various meters.
+
+# Update Preview
+
+The next version will provide multimeter and meter zeroing.
+
+The next version will provide AC waveform display functionality.
+
+The next version will provide capacitors and energized solenoids.
+
+# Component Property Adjustments
+Dry cells can now be ideal power sources.
+
+All meters can now switch between ideal/realistic modes.
+
+# Special Tips
+The Esc shortcut key will now minimize the window.
+The Ctrl+E shortcut key can switch between exam and normal modes.
+- Designer: We will also update the multimeter and powered solenoid this week. If there are any other features, characteristics, or electronic components you hope to include in the production plan, please leave a message in the group, and we will consider it as much as possible. The previously mentioned feature of saving experiments to the cloud/local is also in the plan. Thank you, everyone!
+- Designer: From the next update, dry batteries will no longer be ideal components (you can remove the internal resistance to simulate).
+- Designer: Version 1.0.1 of Physics Lab. It is expected to take another one or two days in the Apple market (waiting for review).
+
+24.
+Label: offer support
+Quotes:
+- Designer: You can download Windows in the group files.
+- Designer: What problems did you encounter during use?
+
+25.
+Label: sharing a trick to access the browser on a full screen application
+Quotes:
+- Designer: Last time I tried it in middle school, there's a trick where you click the link button in the top right, and when the browser pops up, it's no longer full screen... = =
+
+26.
+Label: revealing advanced feature development
+Quotes:
+- Designer: Actually, we are researching the bidirectional conversion between physical diagrams and circuit diagrams
+
+27.
+Label: mention
+Quotes:
+- Designer: @Morning Tea Moonlight How can I upload a high-definition, uncensored version of this crappy avatar?
+
+28.
+Label: sharing a download link or instructions
+Quotes:
+- Designer: Group sharing.
+
+29.
+Label: acknowledging user's greeting
+Quotes:
+- Designer: Hello :)
+
+30.
+Label: providing visual example for feedback
+Quotes:
+- Designer: [Image] This one, right?
+
+31.
+Label: acknowledge limitations
+Quotes:
+- Designer: XP compatibility might need to be looked into later... probably need to install a virtual machine.
+
+32.
+Label: contributing to design decisions
+Quotes:
+- User: Left side
+===
+---
+Definitions for each code:
+
+1.
+Criteria: A user responds to a situation with gratitude or acceptance.
+Label: Acceptance
+
+2.
+Criteria: A designer lists features or components to be included in future updates.
+Label: Feature Planning
+
+3.
+Criteria: A designer provides detailed information about a topic or functionality.
+Label: Detailed Explanation
+
+4.
+Criteria: A user suggests an alternative solution or system.
+Label: Alternative Suggestion
+
+5.
+Criteria: A designer showcases the progress of development, including new features, bug fixes, or component adjustments.
+Label: Development Update
+
+6.
+Criteria: A designer expresses empathy or understanding towards a user's situation or concern.
+Label: Empathy
+
+7.
+Criteria: A user inquires about recent updates or development progress.
+Label: Update Inquiry
+
+8.
+Criteria: A designer encourages users to interact, provide feedback, or participate in the development process.
+Label: Encouraging Interaction
+
+9.
+Criteria: A user resolves an issue on their own or finds a solution independently.
+Label: Self-Resolution
+
+10.
+Criteria: A designer suggests a potential solution or approach to a problem.
+Label: Solution Suggestion
+
+11.
+Criteria: A user requests a specific feature or functionality, often related to physics or lab experiments.
+Label: Feature Request
+
+12.
+Criteria: A designer promotes a user-centered approach to development, encouraging feedback and participation.
+Label: User-Centered Development
+
+13.
+Criteria: A user provides a preference or suggestion for the representation or layout of a circuit diagram.
+Label: Circuit Diagram Feedback
+
+14.
+Criteria: A designer explains the limitations or constraints of a feature, functionality, or version.
+Label: Limitation Explanation
+
+15.
+Criteria: A user reinforces a positive sentiment or atmosphere in the community.
+Label: Positive Reinforcement
+
+16.
+Criteria: A user demonstrates politeness or courtesy in their communication.
+Label: Politeness
+
+17.
+Criteria: A designer encourages community participation, feedback, or suggestions.
+Label: Community Engagement
+
+18.
+Criteria: A designer highlights the benefits or functionality of a specific feature, such as bidirectional conversion.
+Label: Feature Highlight
+
+19.
+Criteria: A user inquires about the timing or schedule of the next update.
+Label: Update Schedule Inquiry
+
+20.
+Criteria: A designer mentions or discusses a specific topic, such as magnetism, in the context of the physics lab tool.
+Label: Topic Mention
+
+21.
+Criteria: A designer encourages users to provide more suggestions or feedback for improvement.
+Label: Feedback Encouragement
+
+22.
+Criteria: A designer encourages the community to provide more suggestions or ideas for the physics lab tool.
+Label: Idea Generation
+
+23.
+Criteria: A designer announces updates, new features, or changes to the physics lab tool.
+Label: Update Announcement
+
+24.
+Criteria: A designer offers support, assistance, or troubleshooting help to users.
+Label: Support Offer
+
+25.
+Criteria: A designer shares a trick, tip, or workaround for a specific issue or functionality.
+Label: Tip Sharing
+
+26.
+Criteria: A designer reveals or discusses advanced features or functionalities in development.
+Label: Advanced Feature Development
+
+27.
+Criteria: A designer mentions or addresses a specific user or group.
+Label: User Mention
+
+28.
+Criteria: A designer shares a download link or instructions for accessing a resource.
+Label: Resource Sharing
+
+29.
+Criteria: A designer acknowledges or responds to a user's greeting or salutation.
+Label: Greeting Acknowledgment
+
+30.
+Criteria: A designer provides a visual example or illustration to facilitate feedback or understanding.
+Label: Visual Example
+
+31.
+Criteria: A designer acknowledges or explains the limitations or constraints of a feature, functionality, or version.
+Label: Limitation Acknowledgment
+
+32.
+Criteria: A user contributes to design decisions or provides input on the development process.
+Label: Design Input

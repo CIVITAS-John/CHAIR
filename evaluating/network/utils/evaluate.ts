@@ -50,7 +50,6 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
         }
     }
     // Finalize the results
-    console.log(Consolidated);
     for (var I = 1; I < Codebooks.length; I++) {
         var Result = Results[Names[I]];
         Result["Coverage"] = Result["Coverage"] / TotalWeight;
