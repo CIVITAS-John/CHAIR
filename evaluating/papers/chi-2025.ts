@@ -17,7 +17,7 @@ InitializeEmbeddings("gecko-768-similarity");
 async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: string, Builder: ReferenceBuilder) {
     // Get the dataset
     var Dataset = await LoadDataset(SourcePath);
-    var Evaluator = new NetworkEvaluator({ Dataset: Dataset, Title: Analyzer });
+    var Evaluator = new NetworkEvaluator({ Dataset: Dataset, Title: Analyzer + "-" + LLMName });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
     var ReferencePath = SourcePath + "/evaluation/references";
@@ -31,11 +31,14 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
 }
 
 // Task: Compare the 4 approaches with GPT-4o described in the pilot study.
-// await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study", new RefiningReferenceBuilder(true, true)), "llama3-70b");
-// await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study", new RefiningReferenceBuilder(true, true)), "gpt-4.5-omni"); 
+// Also, an output analysis of the results with 5 runs
+for (var I = 0; I < 5; I++) {
+    await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study", new RefiningReferenceBuilder(true, true)), `llama3_70b_${I}`);
+    await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study", new RefiningReferenceBuilder(true, true)), `gpt-4.5-omni_${I}`); 
+}
 
 // Task: Evaluate the different of temperature with the low-level-4 approach.
-await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-4-gpt-4o-temps", new RefiningReferenceBuilder(true, true)), "llama3-70b");
-await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-4-llama-temps", new RefiningReferenceBuilder(true, true)), "llama3-70b");
+// await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-4-gpt-4o-temps", new RefiningReferenceBuilder(true, true)), "llama3-70b");
+// await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-4-llama-temps", new RefiningReferenceBuilder(true, true)), "llama3-70b");
 
 process.exit(0);

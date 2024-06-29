@@ -42,8 +42,11 @@ export function InitializeLLM(LLM: string) {
     OutputTokens = 0;
     ExpectedItems = 0;
     FinishedItems = 0;
+    // Handle the multiple experiments
+    if (LLM.endsWith("_0")) LLM = LLM.substring(0, LLM.length - 2);
     var RealLLM = LLM;
     if (LLM.indexOf("_")) RealLLM = LLM.split("_")[0];
+    // Initialize the LLM
     switch (RealLLM) {
         case "gpt-3.5-turbo":
             // 0.5$ / 1.5$

@@ -41,19 +41,19 @@ condensed_distances = squareform(distances)
 # For average sizes, we only consider those with more than 1
 sizes_for_calc = [len(examples[i]) for i in range(Items) if len(examples[i]) > 1]
 avg_size = np.mean(sizes_for_calc)
-max_size = max(np.percentile(sizes_for_calc, 95), avg_size * 3)
+max_size = avg_size * 3
 penalty_coff = max_size - avg_size
 print("Average size:", avg_size, ", Max penalty size:", max_size)
 
 # Calculate the unique differences of examples after merged
 def count_merged(code1, code2):
-    return len(examples[code1] - examples[code2]) * 2
+    return len(examples[code1] - examples[code2]) / len(examples[code1] | examples[code2])
 
 # Calculate the penalty on the distance based on number of differences
 for i in range(Items):
     for j in range(Items):
         if distances[i][j] > MinDistance:
-            penalty = min(1, max(0, (count_merged(i, j) - avg_size) / penalty_coff))
+            penalty = count_merged(i, j)
             penalty = penalty * penalty
             distances[i][j] += penalty * Penalty
 
