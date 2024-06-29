@@ -1,0 +1,67 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate verb phrase as label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (4 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated verb phrase of code 1}
+...
+4. 
+Concepts: {Repeat the input 4}
+Relationship: {What is logical relationship between concepts in code 4, or N/A if not applicable}
+Criteria: {Who did what, and how for code 4}
+Label: {A consolidated verb phrase of code 4}
+---
+~~~
+1.
+Concepts: describes updates, releases software updates
+- Designer provides an update description or changelog and shares notes, information, or visual representations about a version update or release.
+- Designer announces updates or new releases of the software and describes updates, changes, or new features in the application.
+
+2.
+Concepts: shares development progress, provide development updates
+- Designers provide updates on software development or new features.
+- Designers provide detailed information about development processes, challenges, and progress.
+
+3.
+Concepts: implements feedback, iterative development based on user feedback
+- User feedback is acknowledged and incorporated into the design process and processes where user feedback is solicited and incorporated into design decisions.
+- The development process involves incorporating user feedback and suggestions.
+
+4.
+Concepts: informal interaction, engage in informal communication
+- A user or designer engages in informal or casual conversation, often using colloquial language or emojis.
+- The tone of the conversation is casual or informal, indicating the nature of the community's communication style.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: describes updates, releases software updates
+Relationship: Inclusion (describes updates is a part of releasing software updates)
+Criteria: Designer provides information about software updates or releases, including descriptions, changelogs, or notes.
+Label: Reports updates
+
+2.
+Concepts: shares development progress, provide development updates
+Relationship: Parallel (sharing development progress and providing development updates are two related but distinct concepts)
+Criteria: Designers provide information about the development process, including progress, challenges, or new features.
+Label: Shares development insights
+
+3.
+Concepts: implements feedback, iterative development based on user feedback
+Relationship: Inclusion (iterative development is a part of implementing feedback)
+Criteria: User feedback is acknowledged and incorporated into the design process, influencing design decisions.
+Label: Incorporates user feedback
+
+4.
+Concepts: informal interaction, engage in informal communication
+Relationship: Inclusion (engaging in informal communication is a part of informal interaction)
+Criteria: Users or designers engage in casual conversations, using colloquial language or emojis, indicating a relaxed communication style.
+Label: Engages informally

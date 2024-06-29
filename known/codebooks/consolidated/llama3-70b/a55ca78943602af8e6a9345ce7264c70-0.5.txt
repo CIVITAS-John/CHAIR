@@ -1,0 +1,67 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (4 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated label of code 1}
+...
+4. 
+Concepts: {Repeat the input 4}
+Relationship: {What is logical relationship between concepts in code 4, or N/A if not applicable}
+Criteria: {Who did what, and how for code 4}
+Label: {A consolidated label of code 4}
+---
+~~~
+1.
+Concepts: long-term benefits, long-term planning and announcements
+- Communicating the long-term benefits of a feature or development.
+- Designer discusses or announces long-term development goals or plans.
+
+2.
+Concepts: collaborative planning, future development ideas and discussions
+- Designers and users collaboratively discussing and planning the development of the software.
+- Designer or users discuss potential future developments, plans, or ideas for the software.
+
+3.
+Concepts: community expertise recognition, community and expert consultation
+- Designer acknowledges or recognizes the expertise or knowledge of the community.
+- Designer seeks input or advice from the community, experts, or teachers.
+
+4.
+Concepts: community involvement, acknowledging community needs
+- The designer involves the community in the development process.
+- The designer acknowledges or responds to the needs or concerns of the community.
+===
+---
+Definitions for each code:
+
+1.
+Concepts: long-term benefits, long-term planning and announcements
+Relationship: Inclusion (long-term benefits are part of long-term planning and announcements)
+Criteria: Designer communicates long-term benefits or plans of a feature or development to the community.
+Label: Long-term Vision Sharing
+
+2.
+Concepts: collaborative planning, future development ideas and discussions
+Relationship: Intersection (collaborative planning involves discussing future development ideas)
+Criteria: Designers and users engage in collaborative discussions about future development plans or ideas.
+Label: Collaborative Development Planning
+
+3.
+Concepts: community expertise recognition, community and expert consultation
+Relationship: Parallel (recognizing community expertise and consulting with experts are related but distinct concepts)
+Criteria: Designer acknowledges community expertise or seeks input from experts, teachers, or the community.
+Label: Expertise Valuation and Consultation
+
+4.
+Concepts: community involvement, acknowledging community needs
+Relationship: Inclusion (acknowledging community needs is part of community involvement)
+Criteria: Designer involves the community in development or responds to their needs and concerns.
+Label: Community-Centered Development

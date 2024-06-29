@@ -1,0 +1,80 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate verb phrase as label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (5 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated verb phrase of code 1}
+...
+5. 
+Concepts: {Repeat the input 5}
+Relationship: {What is logical relationship between concepts in code 5, or N/A if not applicable}
+Criteria: {Who did what, and how for code 5}
+Label: {A consolidated verb phrase of code 5}
+---
+~~~
+1.
+Concepts: appreciate design effort, expresses appreciation
+- Instances where users acknowledge and appreciate the efforts of the designers, expressing gratitude or admiration for design efforts.
+- Users express gratitude or appreciation for the designer's or developer's work, showing support, encouragement, or appreciation for their efforts.
+
+2.
+Concepts: feature request invitation, requests new features
+- Designers invite users to suggest new features or improvements.
+- Users provide suggestions for new features or design improvements, and designers respond to these requests.
+
+3.
+Concepts: engages with user input, solicits user feedback
+- Designers address and acknowledge user feedback and suggestions, responding to user feedback, comments, or suggestions.
+- Designers seek input, opinions, or feedback from users or the community, requesting suggestions for a feature or functionality.
+
+4.
+Concepts: announces new releases, announces community updates
+- Designer announces or discusses software updates, including new features and version releases.
+- Designer provides updates or announcements about the software to the community, sharing new features or improvements.
+
+5.
+Concepts: announces future plans, shares development plans
+- Designer shares information about upcoming features or updates, describing planned features or functionalities.
+- Designer provides a schedule or timeline for upcoming updates or releases, sharing information about the development plan or roadmap.
+===
+Here are the definitions for each code:
+
+---
+Definitions for each code:
+
+1.
+Concepts: appreciate design effort, expresses appreciation
+Relationship: Inclusion (expresses appreciation is a way of appreciating design effort)
+Criteria: Users acknowledge and appreciate the efforts of designers, expressing gratitude or admiration for design efforts.
+Label: Express Appreciation
+
+2.
+Concepts: feature request invitation, requests new features
+Relationship: Parallel (designers invite users to suggest new features and users provide suggestions)
+Criteria: Designers invite users to suggest new features or improvements, and users provide suggestions for new features or design improvements.
+Label: Suggest New Features
+
+3.
+Concepts: engages with user input, solicits user feedback
+Relationship: Inclusion (solicits user feedback is a way of engaging with user input)
+Criteria: Designers address and acknowledge user feedback and suggestions, seeking input, opinions, or feedback from users or the community.
+Label: Engage with Feedback
+
+4.
+Concepts: announces new releases, announces community updates
+Relationship: Inclusion (announces community updates is a way of announcing new releases)
+Criteria: Designers announce or discuss software updates, including new features and version releases, providing updates or announcements about the software to the community.
+Label: Announce Updates
+
+5.
+Concepts: announces future plans, shares development plans
+Relationship: Inclusion (shares development plans is a way of announcing future plans)
+Criteria: Designers share information about upcoming features or updates, providing a schedule or timeline for upcoming updates or releases, sharing information about the development plan or roadmap.
+Label: Share Future Plans

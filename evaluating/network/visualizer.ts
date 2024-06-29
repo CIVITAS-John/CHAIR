@@ -81,6 +81,8 @@ export class Visualizer {
         // Load the data
         d3.json("network.json").then((Data) => {
             this.Dataset = Data as any;
+            // Set the title
+            document.title = this.Dataset.Title + document.title.substring(document.title.indexOf(":") - 1);
             // Parse the date as needed
             var Datasets = this.Dataset.Source;
             for (var Dataset of Object.values(Datasets.Data))

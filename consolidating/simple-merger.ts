@@ -14,7 +14,7 @@ export class SimpleMerger extends CodeConsolidator {
     /** UseDefinition: Whether we use definitions in merging (they will be used to inform LLM). */
     public UseDefinition: boolean;
     /** Constructor: Create a new NameMerger. */
-    constructor({Maximum = 0.4, Minimum = 0.4, Looping = false, UseDefinition = false}: {Maximum?: number, Minimum?: number, Looping?: boolean, UseDefinition?: boolean}) {
+    constructor({Maximum = 0.35, Minimum = 0.35, Looping = false, UseDefinition = false}: {Maximum?: number, Minimum?: number, Looping?: boolean, UseDefinition?: boolean}) {
         super();
         this.Looping = Looping;
         this.Maximum = Maximum;

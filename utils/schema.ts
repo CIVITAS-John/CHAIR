@@ -55,6 +55,8 @@ export interface CodedItem {
 
 /** CodebookComparison: A package for comparing codebooks. */
 export interface CodebookComparison<T extends DataChunk<DataItem>> {
+    /** Title: The title of the comparison. */
+    Title: string;
     /** Source: The underlying dataset of the codebooks. */
     Source: Dataset<T>;
     /** Codebooks: The codebooks to compare with. */

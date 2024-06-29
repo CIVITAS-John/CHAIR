@@ -1,0 +1,56 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate verb phrase as label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated verb phrase of code 1}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Label: {A consolidated verb phrase of code 3}
+---
+~~~
+1.
+Concepts: emphasizing value addition, highlighting design benefits
+- Designer highlights the value or benefits of a feature or update.
+- Designer highlights or explains the benefits of a specific design feature or update.
+
+2.
+Concepts: clarifying question, asking clarifying questions
+- A designer or administrator asks a follow-up question to clarify a usage scenario or context.
+- A user or designer asks a question to clarify or seek information.
+
+3.
+Concepts: sharing community resources, sharing community knowledge
+- A user shares resources or information with the online community.
+- A user shares their expertise or knowledge with the online community.
+===
+---
+Definitions for each code:
+
+1.
+Concepts: emphasizing value addition, highlighting design benefits
+Relationship: Parallel
+Criteria: Designer highlights or explains the benefits of a specific design feature or update.
+Label: Highlighting Design Value
+
+2.
+Concepts: clarifying question, asking clarifying questions
+Relationship: Inclusion
+Criteria: A user or designer asks a question to clarify or seek information about a usage scenario or context.
+Label: Seeking Clarification
+
+3.
+Concepts: sharing community resources, sharing community knowledge
+Relationship: Inclusion
+Criteria: A user shares resources, information, expertise, or knowledge with the online community.
+Label: Sharing Community Assets

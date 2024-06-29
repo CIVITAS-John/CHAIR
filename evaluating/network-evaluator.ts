@@ -17,12 +17,15 @@ export class NetworkEvaluator extends CodebookEvaluator {
     public Dataset: Dataset<DataChunk<DataItem>>;
     /** Anonymize: Whether the dataset should be anonymized. */
     public Anonymize: boolean;
+    /** Title: The title of the evaluator. */
+    public Title: string;
     /** constructor: Initialize the evaluator. */
     public constructor(
-        { Dataset, Anonymize }: { Dataset: Dataset<DataChunk<DataItem>>, Anonymize?: boolean }) {
+        { Dataset, Anonymize, Title }: { Dataset: Dataset<DataChunk<DataItem>>, Anonymize?: boolean, Title?: string }) {
         super();
         this.Dataset = Dataset;
         this.Anonymize = Anonymize ?? true;
+        this.Title = Title ?? "Network Evaluator";
     }
     /** Evaluate: Evaluate a number of codebooks. */ 
     public async Evaluate(Codebooks: Codebook[], Names: string[], ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
@@ -62,7 +65,8 @@ export class NetworkEvaluator extends CodebookEvaluator {
                 Names: Names,
                 Codes: Codes,
                 Distances: Result.Distances,
-                Source: this.Dataset
+                Source: this.Dataset,
+                Title: this.Title
             };
             return Package;
         });

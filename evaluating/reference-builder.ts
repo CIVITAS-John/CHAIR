@@ -35,7 +35,7 @@ export class ReferenceBuilder {
             // Merge very similar names
             new SimpleMerger({ Looping: true }),
             // Merge similar definitions too
-            new SimpleMerger({ Looping: true, UseDefinition: true, Maximum: 0.4 }),
+            new SimpleMerger({ Looping: true, UseDefinition: true }),
         ), [], Threads, (Iteration) => this.SanityCheck(Iteration, Threads.Codebook));
         console.log(chalk.green(`Statistics: ${Object.keys(Threads.Codebook).length} codes remained after consolidation.`));
         // Return the new codebook
@@ -84,10 +84,10 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
             // Merge definitions
             // Do not use penalty mechanism when the codebooks refer to different data
             // It may create a bias against smaller datasets
-            new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.45, UseDefinition: false, UseVerbPhrases: this.UseVerbPhrases }),
-            new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.45, Looping: true, UseVerbPhrases: this.UseVerbPhrases }),
-            new RefineMerger({ Maximum: 0.65, Minimum: !this.SameData ? 0.6 : 0.4, UseDefinition: false, UseVerbPhrases: this.UseVerbPhrases }),
-            new RefineMerger({ Maximum: 0.65, Minimum: !this.SameData ? 0.6 : 0.4, Looping: true, UseVerbPhrases: this.UseVerbPhrases }),
+            // new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.4, UseDefinition: false, UseVerbPhrases: this.UseVerbPhrases }),
+            new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.4, Looping: true, UseVerbPhrases: this.UseVerbPhrases }),
+            // new RefineMerger({ Maximum: 0.6, Minimum: !this.SameData ? 0.6 : 0.4, UseDefinition: false, UseVerbPhrases: this.UseVerbPhrases }),
+            new RefineMerger({ Maximum: 0.6, Minimum: !this.SameData ? 0.6 : 0.4, Looping: true, UseVerbPhrases: this.UseVerbPhrases }),
         ), [], Threads, (Iteration) => this.SanityCheck(Iteration, Threads.Codebook));
         console.log(chalk.green(`Statistics: ${Object.keys(Threads.Codebook).length} codes remained after consolidation.`));
         // Return the new codebook

@@ -1,0 +1,67 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate verb phrase as label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (4 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated verb phrase of code 1}
+...
+4. 
+Concepts: {Repeat the input 4}
+Relationship: {What is logical relationship between concepts in code 4, or N/A if not applicable}
+Criteria: {Who did what, and how for code 4}
+Label: {A consolidated verb phrase of code 4}
+---
+~~~
+1.
+Concepts: seeking community support, acknowledging community needs
+- Users request assistance or support from the community.
+- User expresses a need or desire for a feature or functionality that benefits the community, or recognizes the needs and concerns of the community.
+
+2.
+Concepts: providing update timelines, confirms update plans
+- A designer provides a detailed schedule or timeline for a release or update.
+- A designer confirms a plan or schedule for an update, and confirms or announces upcoming updates, releases, or changes.
+
+3.
+Concepts: aligning with user needs, focusing on user experience
+- Designer aligns development with user feedback or needs
+- Designer commits to meeting user needs or focuses on user experience
+
+4.
+Concepts: encourages interaction, promote participatory design
+- A designer encourages users to interact and provide feedback.
+- Promoting participatory design or encouraging user involvement, involving users in the design process, soliciting feedback, or encouraging participation.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: seeking community support, acknowledging community needs
+Relationship: Inclusion (seeking community support implies acknowledging community needs)
+Criteria: Users express needs or desires for community-benefiting features or recognize community concerns.
+Label: Requesting Community Support
+
+2.
+Concepts: providing update timelines, confirms update plans
+Relationship: Parallel (both concepts refer to providing information about updates)
+Criteria: Designers provide schedules or confirm plans for updates, releases, or changes.
+Label: Updating Users on Plans
+
+3.
+Concepts: aligning with user needs, focusing on user experience
+Relationship: Inclusion (focusing on user experience implies aligning with user needs)
+Criteria: Designers prioritize user feedback or needs in development.
+Label: Prioritizing User Needs
+
+4.
+Concepts: encourages interaction, promote participatory design
+Relationship: Inclusion (promoting participatory design implies encouraging interaction)
+Criteria: Designers solicit feedback, encourage participation, or involve users in the design process.
+Label: Fostering User Engagement

@@ -1,0 +1,80 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another and please do not merge them.
+Determine the logical relationship between concepts within each code, such as inclusion, parallel, or intersection.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details. Then, write an accurate verb phrase as label for the combined concept.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (5 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {A consolidated verb phrase of code 1}
+...
+5. 
+Concepts: {Repeat the input 5}
+Relationship: {What is logical relationship between concepts in code 5, or N/A if not applicable}
+Criteria: {Who did what, and how for code 5}
+Label: {A consolidated verb phrase of code 5}
+---
+~~~
+1.
+Concepts: developer announcement, explaining development status
+- The speaker is making a developer announcement or update.
+- The speaker is explaining the development status of a specific feature or update.
+
+2.
+Concepts: providing technical support, providing technical guidance
+- A user or designer offers or seeks technical guidance or support.
+- Designer or user provides guidance on using a feature or platform.
+
+3.
+Concepts: seeking context, seeking user context
+- Speakers seek context or clarification from users to understand their feedback or needs.
+- A designer inquires about a user's role or context to better understand their needs or perspective.
+
+4.
+Concepts: addressing user needs
+- Designers address or respond to user needs or requests.
+- Speakers address user requests or respond to their queries, providing individualized attention or support.
+
+5.
+Concepts: clarifying concepts
+- A user clarifies or corrects a misunderstanding, or a participant clarifies or seeks clarification on a concept or idea.
+- Users or designers ask questions to clarify or seek information, and provide additional information to clarify or expand on a topic.
+===
+Here are the definitions for each code:
+
+---
+Definitions for each code:
+
+1.
+Concepts: developer announcement, explaining development status
+Relationship: Inclusion (explaining development status is a part of making a developer announcement)
+Criteria: A speaker makes a public statement about the development process, including updates or explanations of the development status.
+Label: Announcing Development Progress
+
+2.
+Concepts: providing technical support, providing technical guidance
+Relationship: Parallel (providing technical support and guidance are two related but distinct concepts)
+Criteria: A user or designer offers or receives technical assistance, advice, or direction on using a feature or platform.
+Label: Offering Technical Assistance
+
+3.
+Concepts: seeking context, seeking user context
+Relationship: Inclusion (seeking user context is a part of seeking context)
+Criteria: A speaker requests additional information or clarification from users to understand their needs, feedback, or perspective.
+Label: Seeking User Context
+
+4.
+Concepts: addressing user needs
+Relationship: N/A (addressing user needs is a single concept)
+Criteria: Designers or speakers respond to user requests, provide individualized attention, or offer solutions to user needs or queries.
+Label: Addressing User Needs
+
+5.
+Concepts: clarifying concepts
+Relationship: Inclusion (seeking clarification is a part of clarifying concepts)
+Criteria: Participants ask questions, provide additional information, or correct misunderstandings to ensure a shared understanding of a concept or idea.
+Label: Clarifying Concepts

@@ -39,7 +39,7 @@ from scipy.spatial.distance import squareform
 condensed_distances = squareform(distances)
 
 # For average sizes, we only consider those with more than 1
-sizes_for_calc = [len(example) for example in examples]
+sizes_for_calc = [len(examples[i]) for i in range(Items) if len(examples[i]) > 1]
 avg_size = np.mean(sizes_for_calc)
 max_size = max(np.percentile(sizes_for_calc, 95), avg_size * 3)
 penalty_coff = max_size - avg_size
@@ -94,9 +94,9 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
     # print("Node:", node.id, ", Size:", len(tree_examples[node.id]), ", % Penalty:", penalty, ", Distance:", node.dist, ", Criteria:", criteria)
     # Verbose: show the cluster
     left_id = node.get_left().id
-    leftlabel = labels[left_id] if left_id < Items else "cluster-" + str(left_id)
+    # leftlabel = labels[left_id] if left_id < Items else "cluster-" + str(left_id)
     right_id = node.get_right().id
-    rightlabel = labels[right_id] if right_id < Items else "cluster-" + str(right_id)
+    # rightlabel = labels[right_id] if right_id < Items else "cluster-" + str(right_id)
     if cluster == -1 and node.dist <= criteria:
         cluster = cluster_index
         cluster_index += 1
