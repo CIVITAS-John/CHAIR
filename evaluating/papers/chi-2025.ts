@@ -20,13 +20,14 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
     var Evaluator = new NetworkEvaluator({ Dataset: Dataset, Title: Analyzer + "-" + LLMName });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
+    var EvaluationName = Analyzer + "-" + LLMName + Builder.Suffix;
     var ReferencePath = SourcePath + "/evaluation/references";
     EnsureFolder(ReferencePath);
-    var TargetPath = SourcePath + "/evaluation/results/" + Analyzer + "-" + LLMName + Builder.Suffix;
+    var TargetPath = SourcePath + "/evaluation/results/" + EvaluationName;
     EnsureFolder(TargetPath);
     // Build the reference and evaluate the codebooks
     var Results = await BuildReferenceAndEvaluateCodebooks(
-        [SourcePath + "/" + Analyzer, SourcePath + "/human"], ReferencePath + "/" + Analyzer + "-" + LLMName + Builder.Suffix, Builder, Evaluator, TargetPath);
+        [SourcePath + "/" + Analyzer, SourcePath + "/human"], ReferencePath + "/" + EvaluationName, Builder, Evaluator, TargetPath);
     File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
 }
 
@@ -34,7 +35,7 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
 // Also, an output analysis of the results with 5 runs
 for (var I = 0; I < 5; I++) {
     await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study", new RefiningReferenceBuilder(true, true)), `llama3-70b_${I}`);
-    await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study", new RefiningReferenceBuilder(true, true)), `gpt-4.5-omni_${I}`); 
+    // await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study", new RefiningReferenceBuilder(true, true)), `gpt-4.5-omni_${I}`); 
 }
 
 // Task: Evaluate the different of temperature with the low-level-4 approach.

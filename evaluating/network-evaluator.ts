@@ -72,10 +72,8 @@ export class NetworkEvaluator extends CodebookEvaluator {
         });
         // Run the HTTP server
         CreateOfflineBundle(ExportPath + "/network", ["evaluating/network", "out/evaluating/network"], ExportPath + "/network.json");
-        await CreateServer(8080, ["evaluating/network", "out/evaluating/network"], ExportPath + "/network.json");
-        // Return in the format
-        var Results: Record<string, CodebookEvaluation> = {};
-        return Results;
+        // Return the results from the server
+        return await CreateServer(8080, ["evaluating/network", "out/evaluating/network"], ExportPath + "/network.json") ?? {};
     }
 }
 
