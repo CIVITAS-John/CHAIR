@@ -32,9 +32,9 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
 }
 
 // Task: Compare the 4 approaches with GPT-4o described in the pilot study.
-// Also, an output analysis of the results with 5 runs
-for (var I = 0; I < 5; I++) {
-    await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study", new RefiningReferenceBuilder(true, true)), `llama3-70b_${I}`);
+// Also, an output analysis of the results with 10 runs
+for (var I = 0; I < 10; I++) {
+    await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study", new RefiningReferenceBuilder(true, true, 0.25)), `llama3-70b_${I}`);
     // await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study", new RefiningReferenceBuilder(true, true)), `gpt-4.5-omni_${I}`); 
 }
 

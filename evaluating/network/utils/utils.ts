@@ -4,7 +4,7 @@ import d3 from 'd3';
 export class Parameters {
     // For the semantic graph
     /** LinkMinimumDistance: The minimum distance to create links between codes. */
-    public LinkMinimumDistance: number = 0.65;
+    public LinkMinimumDistance: number = 0.7;
     /** LinkMaximumDistance: The maximum distance to create links between codes. */
     public LinkMaximumDistance: number = 0.9;
     /** ClosestNeighbors: The number of closest neighbors to guarantee links regardless of the threshold. */

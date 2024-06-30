@@ -34,6 +34,9 @@ export abstract class DefinitionParser extends CodeConsolidator {
             if (Line.startsWith("Label:") && CurrentCode) {
                 CurrentCode.Label = Line.substring(6).trim().toLowerCase();
                 Status = "Label";
+            if (Line.startsWith("Phrase:") && CurrentCode) {
+                CurrentCode.Label = Line.substring(7).trim().toLowerCase();
+                Status = "Label";
             } else if (Line.startsWith("Criteria:") && CurrentCode) {
                 var Definition = Line.substring(9).trim();
                 if (Definition !== "")
@@ -59,6 +62,8 @@ export abstract class DefinitionParser extends CodeConsolidator {
             var NewCode = Pendings[I];
             // Sometimes, the new label starts with "label:"
             if (NewCode.Label.startsWith("label:")) NewCode.Label = NewCode.Label.substring(6).trim();
+            // Sometimes, the new label starts with "phrase:"
+            if (NewCode.Label.startsWith("phrase:")) NewCode.Label = NewCode.Label.substring(7).trim();
             // Sometimes, the new label is wrapped in ""
             if (NewCode.Label.startsWith("\"") && NewCode.Label.endsWith("\"")) NewCode.Label = NewCode.Label.substring(1, NewCode.Label.length - 1);
             // Sometimes, the new label ends with "."

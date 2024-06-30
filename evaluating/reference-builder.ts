@@ -64,17 +64,20 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
     public SameData: boolean;
     /** UseVerbPhrases: Whether the merging process should force verb phrases. */
     public UseVerbPhrases: boolean;
+    /** BaseTemperature: The base temperature for the consolidator. */
+    public BaseTemperature: number;
     /** Constructor: Initialize the reference builder. */
-    public constructor(SameData: boolean = true, UseVerbPhrases: boolean = false) {
+    public constructor(SameData: boolean = true, UseVerbPhrases: boolean = false, Temperature: number = 0.5) {
         super();
         this.SameData = SameData;
         this.UseVerbPhrases = UseVerbPhrases;
+        this.BaseTemperature = Temperature;
     }
     /** RefineCodebook: Further merge the codebook.*/
     protected async RefineCodebook(Codebook: Codebook): Promise<Codebook> {
         var Threads = { Codebook: Codebook, Threads: {} };
         Object.values(Codebook).forEach(Code => Code.Alternatives = []);
-        await ConsolidateCodebook<void>(new PipelineConsolidator(
+        var Consolidator = new PipelineConsolidator(
             // Merge codes that have been merged
             // new AlternativeMerger(),
             // Merge very similar names
@@ -88,7 +91,9 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
             new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.4, Looping: true, UseVerbPhrases: this.UseVerbPhrases }),
             // new RefineMerger({ Maximum: 0.6, Minimum: !this.SameData ? 0.6 : 0.4, UseDefinition: false, UseVerbPhrases: this.UseVerbPhrases }),
             new RefineMerger({ Maximum: 0.6, Minimum: !this.SameData ? 0.6 : 0.4, Looping: true, UseVerbPhrases: this.UseVerbPhrases }),
-        ), [], Threads, (Iteration) => this.SanityCheck(Iteration, Threads.Codebook));
+        );
+        Consolidator.BaseTemperature = this.BaseTemperature;
+        await ConsolidateCodebook<void>(Consolidator, [], Threads, (Iteration) => this.SanityCheck(Iteration, Threads.Codebook));
         console.log(chalk.green(`Statistics: ${Object.keys(Threads.Codebook).length} codes remained after consolidation.`));
         // Return the new codebook
         return Threads.Codebook;
