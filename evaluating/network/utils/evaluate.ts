@@ -54,6 +54,8 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
         Result["Density"] = Consolidated[I] / Consolidated[0] / Result["Coverage"];
         Result["Novelty"] = Result["Novelty"] / TotalNovelty;
         Result["Divergence"] = Math.sqrt(CalculateJSD(Observations[0], Observations[I]));
+        Result["Count"] = Object.keys(Codebooks[I]).length;
+        Result["Consolidated"] = Consolidated[I];
     }
     return Results;
 }

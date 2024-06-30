@@ -27,7 +27,7 @@ export class CodebookSection extends Panel {
         var Names = this.Dataset.Names;
         var Codebooks = this.Dataset.Codebooks;
         var Results = Evaluate(this.Visualizer.Dataset, this.Parameters);
-        var Metrics = Object.keys(Results[Names[1]]);
+        var Metrics = Object.keys(Results[Names[1]]).slice(0, -2);
         var Colors: Record<string, d3.ScaleSequential<string, never>> = {};
         // Flatten the dataset
         var Dataset: { Name: string, Metric: string, Value: number }[] = [];
