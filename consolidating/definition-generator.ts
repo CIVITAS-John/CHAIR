@@ -34,7 +34,7 @@ export abstract class DefinitionParser extends CodeConsolidator {
             if (Line.startsWith("Label:") && CurrentCode) {
                 CurrentCode.Label = Line.substring(6).trim().toLowerCase();
                 Status = "Label";
-            if (Line.startsWith("Phrase:") && CurrentCode) {
+            } else if (Line.startsWith("Phrase:") && CurrentCode) {
                 CurrentCode.Label = Line.substring(7).trim().toLowerCase();
                 Status = "Label";
             } else if (Line.startsWith("Criteria:") && CurrentCode) {
