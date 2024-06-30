@@ -1,0 +1,57 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: explaining feature usage, ensuring proper use and providing instructions
+- Designers provide detailed guidance and examples to clarify feature usage.
+- Designers ensure users understand how to use new features by providing usage instructions and updates.
+
+2.
+Concepts: clarifying and asking follow-up questions, continuing discussions and providing clarification
+- A designer and user engage in a back-and-forth to clarify questions and gather additional information.
+- Users continue discussions or ask follow-up questions for more information, providing detailed explanations or clarifications on previous statements.
+
+3.
+Concepts: expressing approval, confirming and concluding based on feedback
+- Users express approval or positive feedback about an idea or feature and confirm or express agreement with previous statements or suggestions.
+- A user confirms the developer's statement, and a developer reaches a conclusion based on user feedback.
+===
+---
+Definitions for each code (3 in total):
+1.
+Concepts: explaining feature usage, ensuring proper use and providing instructions
+Relationship: The concepts are linked through the process of designers guiding users on how to use features.
+Criteria: Designers provide detailed guidance and examples to clarify feature usage, ensuring users understand how to use new features by providing usage instructions and updates.
+Phrase: Providing detailed feature guidance
+
+2.
+Concepts: clarifying and asking follow-up questions, continuing discussions and providing clarification
+Relationship: The concepts are connected through the interactive process of questioning and clarifying information.
+Criteria: A designer and user engage in a back-and-forth to clarify questions and gather additional information, with users continuing discussions or asking follow-up questions for more information, providing detailed explanations or clarifications on previous statements.
+Phrase: Engaging in interactive clarification
+
+3.
+Concepts: expressing approval, confirming and concluding based on feedback
+Relationship: The concepts are related through the process of users giving feedback and developers responding to it.
+Criteria: Users express approval or positive feedback about an idea or feature and confirm or express agreement with previous statements or suggestions, leading a developer to reach a conclusion based on user feedback.
+Phrase: Concluding based on user feedback
+---

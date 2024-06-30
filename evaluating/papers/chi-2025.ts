@@ -35,7 +35,7 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
 // Also, an output analysis of the results with 10 runs
 for (var I = 0; I < 10; I++) {
     await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study", new RefiningReferenceBuilder(true, true, 0.25)), `llama3-70b_${I}`);
-    // await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study", new RefiningReferenceBuilder(true, true)), `gpt-4.5-omni_${I}`); 
+    await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study", new RefiningReferenceBuilder(true, true)), `gpt-4.5-omni_${I}`); 
 }
 
 // Task: Evaluate the different of temperature with the low-level-4 approach.

@@ -1,0 +1,699 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (64 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+64.
+Criteria: {Who did what, and how for code 64}
+Label: {A descriptive label of code 64}
+---
+~~~
+1.
+Label: ask a question about how to use
+Quotes:
+- User: How do you use the PC version?
+
+2.
+Label: self-solved
+Quotes:
+- User: I saw the group files, thank you.
+
+3.
+Label: feature discussion
+Quotes:
+- Designer: Speaking of which, doesn't that mean every place where numbers are input should have a soft keyboard?
+- Designer: It's still better to make the auto-generated one as good as possible
+- Designer: Although you can manually adjust the layout
+
+4.
+Label: set expectations
+Quotes:
+- Designer: Theoretically, it should be compatible (but the machine itself shouldn't be too old, probably from 2008 onwards).
+
+5.
+Label: share potential solutions
+Quotes:
+- Designer: We try to design it so that it can be used without additional instructions, or we will provide some prompts when you open it for the first time based on feedback
+
+6.
+Label: offer to upload resource
+Quotes:
+- Designer: I'll upload one now... Are you a teacher?
+
+7.
+Label: teacher role
+Quotes:
+- User: Yes.
+
+8.
+Label: update description
+Quotes:
+- Designer: The update is quite large...
+
+9.
+Label: feature development
+Quotes:
+- Designer: For electricity, we plan to create a function for simulated experiment assessment; it will add many experimental details, such as zero adjustment (of course, only useful in specific modes, otherwise it would be cumbersome to use regularly)
+- Designer: This version of the circuit diagram is for testing only... You can drag the Editor because the auto-layout algorithm is not very stable and may produce some odd results
+- Designer: Actually, we are researching the bidirectional conversion between physical diagrams and circuit diagrams
+- Designer: Of course, manual editing will also be allowed, but it might be a bit later
+- Designer: We are working on this part
+
+10.
+Label: provide feedback
+Quotes:
+- User: This is good, I hope it can be very convenient to draw circuit diagrams, and I also hope there is a function to hide the background grid with one click, which is convenient for us teachers to take screenshots for test papers. Currently, there is no software that makes it easy to draw circuit diagrams for exam questions
+- User: Yes, the common one is still the old style
+- User: Updated
+- User: Indeed
+
+11.
+Label: feature roadmap
+Quotes:
+- Designer: Hmm... We will probably prioritize completing the electrical section first, then magnetism, and then other parts.
+
+12.
+Label: acknowledge designer effort
+Quotes:
+- User: Okay, okay~ Thank you for your hard work.
+
+13.
+Label: problem solving
+Quotes:
+- Designer: No need to be polite, if you encounter any problems during use, you can directly mention them in the group.
+
+14.
+Label: feedback
+Quotes:
+- Designer: Hmm... We will probably prioritize completing the electrical section first, then magnetism, and then other parts.
+
+15.
+Label: identify potential need
+Quotes:
+- Designer: Speaking of which, doesn't that mean every place where numbers are input should have a soft keyboard?
+
+16.
+Label: list bug fixes
+Quotes:
+- Designer: New Features
+Electronic components will be damaged after a short process, rather than immediately.
+Clearing the desktop will now display a confirmation interface.
+Supports undoing the creation and deletion of wires and components.
+Appliances now display the effective value of alternating current.
+(PC) You can now exit the application using the Esc key.
+
+New Components
+Added a sensitive ammeter.
+Added a student power supply (ideal AC/DC power supply).
+
+Adjustments to Component Properties
+Batteries now have adjustable internal resistance and are no longer ideal power sources.
+Incandescent bulbs now have volt-ampere characteristic parameters and are no longer ideal resistors.
+The resistance law experimenter now uses real formulas for calculations, with adjustable parameters.
+Hidden terminal blocks 3 and 4.
+
+Bug Fixes
+Fixed an issue with unit conversion in Editor properties.
+Terminal arrows no longer show jumping animations.
+There may have been calculation errors with certain circuit connections.
+
+17.
+Label: consider usability
+Quotes:
+- User: But it's better to use the right side for non-crossing
+- Designer: Make it simpler...
+
+18.
+Label: consider future compatibility
+Quotes:
+- Designer: XP compatibility might need to be looked into later... probably need to install a virtual machine.
+
+19.
+Label: understanding designers' situation
+Quotes:
+- User: Don't aim for completeness, it should be categorized and refined one by one
+
+20.
+Label: classroom environment
+Quotes:
+- User: Most schools will disable the network on classroom computers to prevent students from going online or to avoid various software auto-downloads from slowing down the computers.
+- User: Generally not. Ever since an adult image popped up during a major city-level open class, the school has disabled the network on classroom computers [Emoji].
+
+21.
+Label: acknowledging community expertise
+Quotes:
+- Designer: Consulting the teachers in the group: which type of intersection is used in the circuit diagrams in the current textbooks?
+[Image]
+- User: But it's better to use the right side for non-crossing
+- User: Yes, the common one is still the old style
+- Designer: Uh... left side or right side
+- Designer: We are working on this part
+
+22.
+Label: share info about development update
+Quotes:
+- Designer: v1.0.2 - 17/11/29
+# New Features
+Multi-language support: Japanese, German, French.
+Preliminary support for converting circuit components to circuit diagrams.
+
+Support for augmented reality mode on the latest iOS devices.
+More realistic 3D appearance for various meters.
+
+# Update Preview
+
+The next version will provide multimeter and meter zeroing.
+
+The next version will provide AC waveform display functionality.
+
+The next version will provide capacitors and energized solenoids.
+
+# Component Property Adjustments
+Dry cells can now be ideal power sources.
+
+All meters can now switch between ideal/realistic modes.
+
+# Special Tips
+The Esc shortcut key will now minimize the window.
+The Ctrl+E shortcut key can switch between exam and normal modes.
+- Designer: The Apple Store is still reviewing, let's upload the PC version first
+
+23.
+Label: explaning the plans
+Quotes:
+- Designer: This belongs to the kind of feature that, once done, will ensure long-term stability... Adding various components is actually simpler
+
+24.
+Label: confirming teacher identity
+Quotes:
+- Designer: Haha. Are you a middle school or high school teacher?
+
+25.
+Label: self rebut the previous response
+Quotes:
+- Designer: But you can't bring it up without touching the input, that's probably the case.
+
+26.
+Label: feature requests for physics experiments
+Quotes:
+- User: First, let's pay homage to the experts, then I'll make a small request. Could you create a dynamic demonstration of mechanical waves and mechanical vibrations, such as the propagation of transverse and longitudinal waves, wave superposition, diffraction, and interference? Also, for optical experiments, it would be great to have optical benches, single slits, double slits, and polarizers to demonstrate optical experiments.
+- User: If there could be an export function, or the ability to save or import experiments, it would be convenient. We could set up the parameters in the office and directly import them in class.
+- User: Can you also include mechanics experiments?
+
+27.
+Label: compliment
+Quotes:
+- User: First, let's pay homage to the experts, then I'll make a small request. Could you create a dynamic demonstration of mechanical waves and mechanical vibrations, such as the propagation of transverse and longitudinal waves, wave superposition, diffraction, and interference? Also, for optical experiments, it would be great to have optical benches, single slits, double slits, and polarizers to demonstrate optical experiments.
+- User: This is good, I hope it can be very convenient to draw circuit diagrams, and I also hope there is a function to hide the background grid with one click, which is convenient for us teachers to take screenshots for test papers. Currently, there is no software that makes it easy to draw circuit diagrams for exam questions
+- User: This software is great! It's quite practical, unlike some software that tries to be comprehensive but ends up being inconvenient to use.
+- User: This idea is really good
+
+28.
+Label: design discussion
+Quotes:
+- Designer: Physics mainly focuses on electricity and mechanics; other directions don't have much room for free experiments before high school. In the future, we might do some demonstration experiments based on everyone's needs, but it won't be as open as electricity
+- Designer: For electricity, we plan to create a function for simulated experiment assessment; it will add many experimental details, such as zero adjustment (of course, only useful in specific modes, otherwise it would be cumbersome to use regularly)
+- Designer: Last time I tried it in middle school, there's a trick where you click the link button in the top right, and when the browser pops up, it's no longer full screen... = =
+- Designer: But you can't bring it up without touching the input, that's probably the case.
+- Designer: Touch screens have their own on-screen keyboards.
+
+29.
+Label: user input/feedback/suggestion with justifications
+Quotes:
+- User: It is recommended to add an exit button function to the PC version. Many regions now use all-in-one touch screen machines without physical keyboards.
+
+30.
+Label: elaboration of question
+Quotes:
+- User: [Image]
+
+31.
+Label: technical and infrastructural challenges in educational settings
+Quotes:
+- User: Most schools will disable the network on classroom computers to prevent students from going online or to avoid various software auto-downloads from slowing down the computers.
+- Designer: Last time I tried it in middle school, there's a trick where you click the link button in the top right, and when the browser pops up, it's no longer full screen... = =
+- User: Generally not. Ever since an adult image popped up during a major city-level open class, the school has disabled the network on classroom computers [Emoji].
+- User: I taught high school for seven years, and now I've been teaching middle school for eight years.
+- User: Dizzy, the computer system for teachers at our school is quite old.
+
+32.
+Label: technical consideration
+Quotes:
+- Designer: XP compatibility might need to be looked into later... probably need to install a virtual machine.
+- Designer: Does the class have internet?
+
+33.
+Label: emoji communication
+Quotes:
+- User: [Emoji]
+- User: It's already starting to take shape [Emoji]
+- User: Will there be an update this week? [Emoji]
+- User: [Emoji][Emoji]
+
+34.
+Label: compliment on the 3d effect
+Quotes:
+- User: The 3D effect of your software is very good
+
+35.
+Label: seek to improve visual representation
+Quotes:
+- Designer: @Morning Tea Moonlight How can I upload a high-definition, uncensored version of this crappy avatar?
+
+36.
+Label: seek specific platform information
+Quotes:
+- User: PC version?
+
+37.
+Label: engage community member
+Quotes:
+- Designer: @Morning Tea Moonlight How can I upload a high-definition, uncensored version of this crappy avatar?
+
+38.
+Label: emphasize convenience
+Quotes:
+- User: If there could be an export function, or the ability to save or import experiments, it would be convenient. We could set up the parameters in the office and directly import them in class.
+
+39.
+Label: apology
+Quotes:
+- Designer: Sorry for the late-night disturbance :)
+
+40.
+Label: feature explanation
+Quotes:
+- Designer: For example, you can see the corresponding circuit diagram after connecting the physical diagram, or vice versa
+- Designer: For example, see the circuit diagram to connect the physical diagram, or vice versa
+- Designer: With bidirectional conversion, you can directly do problems in the application
+
+41.
+Label: concurring on design ideas
+Quotes:
+- User: This idea is really good
+
+42.
+Label: real time communication
+Quotes:
+- Designer: I'll upload one now... Are you a teacher?
+
+43.
+Label: suggestion
+Quotes:
+- Designer: This version of the circuit diagram is for testing only... You can drag the Editor because the auto-layout algorithm is not very stable and may produce some odd results
+- User: Don't aim for completeness, it should be categorized and refined one by one
+- User: Can you also include mechanics experiments?
+
+44.
+Label: engage community in design process
+Quotes:
+- Designer: Consulting the teachers in the group: which type of intersection is used in the circuit diagrams in the current textbooks?
+[Image]
+
+45.
+Label: design refinement
+Quotes:
+- Designer: Make it simpler...
+
+46.
+Label: software updates and downloads
+Quotes:
+- Designer: Hello everyone~ Version 1.01 has been released in the group files, the updates are as follows:
+- Designer: Hello everyone~ The development plan and PC download address are in the group announcement.
+- Designer: It seems that local export needs to be supported.
+- Designer: You can download Windows in the group files.
+- Designer: The one in the group is the PC version
+
+47.
+Label: confirm update completion
+Quotes:
+- User: Updated
+
+48.
+Label: internal update
+Quotes:
+- Designer: From the next update, dry batteries will no longer be ideal components (you can remove the internal resistance to simulate).
+- Designer: The student power supply supports both DC and AC and is an ideal component.
+
+49.
+Label: middle school
+Quotes:
+- User: I taught high school for seven years, and now I've been teaching middle school for eight years.
+
+50.
+Label: user need
+Quotes:
+- User: Mainly, the school is building an information-based school
+- User: Need the user manual for this software
+
+51.
+Label: high school
+Quotes:
+- User: I taught high school for seven years, and now I've been teaching middle school for eight years.
+
+52.
+Label: asking for permission to ask that question
+Quotes:
+- User: Excuse me.
+
+53.
+Label: explain the intention of followup question
+Quotes:
+- Designer: We try to design it so that it can be used without additional instructions, or we will provide some prompts when you open it for the first time based on feedback
+
+54.
+Label: accepting suggestion
+Quotes:
+- Designer: Hmm... I'll add it in the next update. PC updates are usually the fastest, so there will probably be another round this weekend.
+
+55.
+Label: transparency
+Quotes:
+- Designer: This is quite complex, so it will take more time... Hopefully, it can be released this week
+- Designer: Don't worry, don't worry, it will come, just optimizing the circuit diagram one last time.
+
+56.
+Label: platform specific update
+Quotes:
+- Designer: The Apple Store is still reviewing, let's upload the PC version first
+- Designer: The Android version is expected to update tonight
+- Designer: iOS is waiting for review~
+
+57.
+Label: gratitude
+Quotes:
+- User: This software is great! It's quite practical, unlike some software that tries to be comprehensive but ends up being inconvenient to use.
+- Designer: No need to be polite, if you encounter any problems during use, you can directly mention them in the group.
+- Designer: Thank you all for your support. We will do better!
+- User: Okay, okay~ Thank you for your hard work.
+- User: I saw the group files, thank you.
+
+58.
+Label: ask a question
+Quotes:
+- Designer: Consulting the teachers in the group: which type of intersection is used in the circuit diagrams in the current textbooks?
+[Image]
+- User: [Emoji] Hello everyone, may I ask where I can download the PC / interactive whiteboard version of Physics Lab?
+- Designer: @Morning Tea Moonlight How can I upload a high-definition, uncensored version of this crappy avatar?
+- User: Is there a user manual?
+- User: How to download?
+
+59.
+Label: physics concepts
+Quotes:
+- User: First, let's pay homage to the experts, then I'll make a small request. Could you create a dynamic demonstration of mechanical waves and mechanical vibrations, such as the propagation of transverse and longitudinal waves, wave superposition, diffraction, and interference? Also, for optical experiments, it would be great to have optical benches, single slits, double slits, and polarizers to demonstrate optical experiments.
+
+60.
+Label: contextualization of question
+Quotes:
+- User: Dizzy, the computer system for teachers at our school is quite old.
+
+61.
+Label: ask about user needs
+Quotes:
+- Designer: Consulting the teachers in the group: which type of intersection is used in the circuit diagrams in the current textbooks?
+[Image]
+
+62.
+Label: general announcement
+Quotes:
+- Designer: Hello everyone~ The development plan and PC download address are in the group announcement.
+- Designer: The Android version is expected to update tonight
+
+63.
+Label: announce upcoming features
+Quotes:
+- Designer: We will also update the multimeter and powered solenoid this week. If there are any other features, characteristics, or electronic components you hope to include in the production plan, please leave a message in the group, and we will consider it as much as possible. The previously mentioned feature of saving experiments to the cloud/local is also in the plan. Thank you, everyone!
+
+64.
+Label: community resource
+Quotes:
+- User: Need the user manual for this software
+- User: Is there a user manual?
+- Designer: Group sharing.
+===
+---
+Definitions for each code (64 in total):
+1.
+Criteria: A user asks how to operate a specific version of the software.
+Label: "Usage Inquiry"
+
+2.
+Criteria: A user acknowledges finding a solution independently.
+Label: "Self-Solved"
+
+3.
+Criteria: Discussion about the design and functionality of features.
+Label: "Feature Discussion"
+
+4.
+Criteria: A designer sets expectations about software compatibility.
+Label: "Set Expectations"
+
+5.
+Criteria: A designer shares potential solutions or approaches to usability issues.
+Label: "Share Potential Solutions"
+
+6.
+Criteria: A designer offers to provide a resource or file.
+Label: "Offer to Upload Resource"
+
+7.
+Criteria: A user identifies themselves as a teacher.
+Label: "Teacher Role"
+
+8.
+Criteria: A designer describes the scope or size of an update.
+Label: "Update Description"
+
+9.
+Criteria: Discussion about the creation or improvement of features.
+Label: "Feature Development"
+
+10.
+Criteria: A user provides feedback and suggestions for improvements.
+Label: "Provide Feedback"
+
+11.
+Criteria: A designer outlines the sequence of feature development.
+Label: "Feature Roadmap"
+
+12.
+Criteria: A user acknowledges the effort put in by designers.
+Label: "Acknowledge Designer Effort"
+
+13.
+Criteria: A designer offers assistance with problem-solving.
+Label: "Problem Solving"
+
+14.
+Criteria: A designer provides feedback on feature development priorities.
+Label: "Feedback"
+
+15.
+Criteria: A designer identifies a potential need based on a feature discussion.
+Label: "Identify Potential Need"
+
+16.
+Criteria: A designer lists new features, adjustments, and bug fixes.
+Label: "List Bug Fixes"
+
+17.
+Criteria: Considerations about usability and design simplicity.
+Label: "Consider Usability"
+
+18.
+Criteria: A designer discusses future compatibility with older operating systems.
+Label: "Consider Future Compatibility"
+
+19.
+Criteria: A user advises on the approach to feature completeness.
+Label: "Understanding Designers' Situation"
+
+20.
+Criteria: Users discuss the technical and infrastructural constraints in classroom environments.
+Label: "Classroom Environment"
+
+21.
+Criteria: Acknowledging community expertise in design decisions.
+Label: "Acknowledging Community Expertise"
+
+22.
+Criteria: A designer shares information about development updates and future plans.
+Label: "Share Info About Development Update"
+
+23.
+Criteria: A designer explains the long-term benefits of a planned feature.
+Label: "Explaining the Plans"
+
+24.
+Criteria: A designer confirms the teaching level of a user.
+Label: "Confirming Teacher Identity"
+
+25.
+Criteria: A designer reconsiders or clarifies a previous response.
+Label: "Self Rebut the Previous Response"
+
+26.
+Criteria: Users request specific physics experiment features.
+Label: "Feature Requests for Physics Experiments"
+
+27.
+Criteria: Users compliment the software or ideas.
+Label: "Compliment"
+
+28.
+Criteria: Designers discuss the focus and scope of design features.
+Label: "Design Discussion"
+
+29.
+Criteria: User suggestions with justifications for feature improvements.
+Label: "User Input/Feedback/Suggestion with Justifications"
+
+30.
+Criteria: A user elaborates on a question with additional context or images.
+Label: "Elaboration of Question"
+
+31.
+Criteria: Discussion about technical and infrastructural challenges in educational settings.
+Label: "Technical and Infrastructural Challenges in Educational Settings"
+
+32.
+Criteria: Technical considerations for compatibility and internet access.
+Label: "Technical Consideration"
+
+33.
+Criteria: Use of emojis in communication.
+Label: "Emoji Communication"
+
+34.
+Criteria: A user compliments the visual representation of the software.
+Label: "Compliment on the 3D Effect"
+
+35.
+Criteria: A designer seeks advice on improving visual representation.
+Label: "Seek to Improve Visual Representation"
+
+36.
+Criteria: A user inquires about a specific platform version of the software.
+Label: "Seek Specific Platform Information"
+
+37.
+Criteria: A designer engages a community member for assistance.
+Label: "Engage Community Member"
+
+38.
+Criteria: Emphasis on the convenience of features.
+Label: "Emphasize Convenience"
+
+39.
+Criteria: A designer apologizes for an inconvenience.
+Label: "Apology"
+
+40.
+Criteria: A designer explains the functionality of a feature.
+Label: "Feature Explanation"
+
+41.
+Criteria: A user agrees with a design idea.
+Label: "Concurring on Design Ideas"
+
+42.
+Criteria: Real-time communication between users and designers.
+Label: "Real-Time Communication"
+
+43.
+Criteria: Users and designers suggest improvements or additions.
+Label: "Suggestion"
+
+44.
+Criteria: Designers engage the community in the design process.
+Label: "Engage Community in Design Process"
+
+45.
+Criteria: Designers discuss simplifying the design.
+Label: "Design Refinement"
+
+46.
+Criteria: Information about software updates and download links.
+Label: "Software Updates and Downloads"
+
+47.
+Criteria: A user confirms that they have completed an update.
+Label: "Confirm Update Completion"
+
+48.
+Criteria: Internal updates and changes to features.
+Label: "Internal Update"
+
+49.
+Criteria: A user states their teaching experience in middle school.
+Label: "Middle School"
+
+50.
+Criteria: Users express their needs or requirements for the software.
+Label: "User Need"
+
+51.
+Criteria: A user states their teaching experience in high school.
+Label: "High School"
+
+52.
+Criteria: A user asks for permission to ask a question.
+Label: "Asking for Permission to Ask a Question"
+
+53.
+Criteria: A designer explains the intention behind a follow-up question.
+Label: "Explain the Intention of Follow-Up Question"
+
+54.
+Criteria: A designer accepts a suggestion for future updates.
+Label: "Accepting Suggestion"
+
+55.
+Criteria: Designers provide transparency about the development process.
+Label: "Transparency"
+
+56.
+Criteria: Platform-specific updates and reviews.
+Label: "Platform Specific Update"
+
+57.
+Criteria: Expressions of gratitude from users and designers.
+Label: "Gratitude"
+
+58.
+Criteria: Users and designers ask questions about various topics.
+Label: "Ask a Question"
+
+59.
+Criteria: Users discuss specific physics concepts and experiments.
+Label: "Physics Concepts"
+
+60.
+Criteria: A user provides context for their question or comment.
+Label: "Contextualization of Question"
+
+61.
+Criteria: A designer asks about user needs and preferences.
+Label: "Ask About User Needs"
+
+62.
+Criteria: General announcements about the software and updates.
+Label: "General Announcement"
+
+63.
+Criteria: Designers announce upcoming features and solicit feedback.
+Label: "Announce Upcoming Features"
+
+64.
+Criteria: Users request or share community resources.
+Label: "Community Resource"
+---
