@@ -20,9 +20,7 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
     var TotalWeight: number = 0;
     var TotalCodebooks = Codebooks.length - 1;
     for (var Node of Graph.Nodes) {
-        // Near-owner count as half
-        var Weight = Node.Owners.size + (Node.NearOwners.size - Node.Owners.size) * 0.5;
-        if (Node.Owners.has(0)) Weight--; // Discount the baseline
+        var Weight = Node.Weights.reduce((A, B, I) => I == 0 ? A : A + B, 0);
         Weight = Weight / TotalCodebooks;
         Observations[0].push(Weight);
         Weights.set(Node.ID, Weight);
@@ -43,9 +41,9 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
         // Calculate on each codebook
         for (var I = 1; I < Codebooks.length; I++) {
             var Result = Results[Names[I]];
-            var Observed = Node.Owners.has(I) ? 1 : Node.NearOwners.has(I) ? 0.5 : 0;
+            var Observed = Node.Weights[I];
             Result["Coverage"] += Weight * Observed;
-            Result["Novelty"] += Weight * (Observed == 1 ? 1 : 0) * (Novel ? 1 : 0);
+            Result["Novelty"] += Weight * Observed * (Novel ? 1 : 0);
             Observations[I].push(Observed);
         }
     }

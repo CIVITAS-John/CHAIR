@@ -66,9 +66,9 @@ export class RefineMerger extends DefinitionParser {
         return [`
 You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
 Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
-For each code, first think about the logical relationship between concepts, such as inclusion, parallel, or intersection.
-Then, write clear and generalizable criteria for each code and do not introduce unnecessary details. 
-Finally, write an accurate ${this.UseVerbPhrases ? "verb phrase" : "label"} for the code.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate ${this.UseVerbPhrases ? "verb phrase" : "label"} to best represent the code.
 ${ResearchQuestion}
 Always follow the output format:
 ---
@@ -77,13 +77,13 @@ Definitions for each code (${Codes.length} in total):
 Concepts: {Repeat the input 1}
 Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
 Criteria: {Who did what, and how for code 1}
-${this.UseVerbPhrases ? "Phrase" : "Label"}: {The most appropriate ${this.UseVerbPhrases ? "verb phrase" : "label"} for above concepts}
+${this.UseVerbPhrases ? "Phrase" : "Label"}: {The most representative ${this.UseVerbPhrases ? "verb phrase" : "label"} for the concepts}
 ...
 ${Codes.length}. 
 Concepts: {Repeat the input ${Codes.length}}
 Relationship: {What is logical relationship between concepts in code ${Codes.length}, or N/A if not applicable}
 Criteria: {Who did what, and how for code ${Codes.length}}
-${this.UseVerbPhrases ? "Phrase" : "Label"}: {The most appropriate ${this.UseVerbPhrases ? "verb phrase" : "label"} for above concepts}
+${this.UseVerbPhrases ? "Phrase" : "Label"}: {The most representative ${this.UseVerbPhrases ? "verb phrase" : "label"} for the concepts}
 ---`.trim(), 
                     Codes.map((Code, Index) => `
 ${Index + 1}.

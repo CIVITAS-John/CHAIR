@@ -10,21 +10,24 @@ export function BuildSemanticGraph(Dataset: CodebookComparison<any>, Parameter: 
         Dataset.Codes.map((Code, Index) => ({ 
             Type: "Code", ID: Index.toString(), Data: Code, Links: [],
             Owners: new Set(Code.Owners), NearOwners: new Set(Code.Owners), 
+            Weights: new Array(Dataset.Codebooks.length).fill(0), Neighbors: 0, 
             Size: Math.sqrt(Code.Examples?.length ?? 1),
             x: 0, y: 0 })); // x: Code.Position![0], y: Code.Position![1]
     var Links: Map<string, Link<Code>> = new Map();
     var MaxDistance = 0;
     var MinDistance = Number.MAX_VALUE;
-    // Find the links
+    // Create the links
     for (var I = 0; I < Nodes.length; I++) {
         var Source = Nodes[I];
+        // Find potential links
         var Potentials = new Set<number>();
         FindMinimumIndexes(Dataset.Distances[I], 
             Parameter.ClosestNeighbors + 1).forEach((Index) => Potentials.add(Index));
         for (var J = I + 1; J < Nodes.length; J++) {
-            if (Dataset.Distances[I][J] < Parameter.LinkMinimumDistance)
+            if (Dataset.Distances[I][J] <= Parameter.LinkMinimumDistance)
                 Potentials.add(J);
         }
+        // Create the links
         for (var J of Potentials) {
             if (I == J) continue;
             var Target = Nodes[J];
@@ -42,14 +45,30 @@ export function BuildSemanticGraph(Dataset: CodebookComparison<any>, Parameter: 
                 Source.Links.push(Link);
                 Target.Links.push(Link);
                 Links.set(LinkID, Link);
-                if (Distance < Parameter.LinkMinimumDistance) {
-                    Source.Data.Owners?.forEach(Owner => Target.NearOwners.add(Owner));
-                    Target.Data.Owners?.forEach(Owner => Source.NearOwners.add(Owner));
+                if (Distance <= Parameter.LinkMinimumDistance) {
+                    Source.Data.Owners?.forEach(Owner => {
+                        Target.NearOwners.add(Owner);
+                        Target.Weights[Owner] += 1;
+                    });
+                    Target.Data.Owners?.forEach(Owner => {
+                        Source.NearOwners.add(Owner);
+                        Source.Weights[Owner] += 1;
+                    });
+                    Source.Neighbors++;
+                    Target.Neighbors++;
                 }
             }
             MaxDistance = Math.max(MaxDistance, Distance);
             MinDistance = Math.min(MinDistance, Distance);
         }
+    }
+    // Calculate the weights
+    for (var I = 0; I < Nodes.length; I++) {
+        var Source = Nodes[I];
+        for (var Owner = 0; Owner < Dataset.Codebooks.length; Owner++)
+            Source.Weights[Owner] = Math.min(Math.max(Source.Weights[Owner] / Math.max(Source.Neighbors, 1), 0), 1);
+        for (var Owner of Source.Owners)
+            Source.Weights[Owner] = 1;
     }
     // Store it
     var Graph: Graph<Code> = { 

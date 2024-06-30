@@ -173,10 +173,10 @@ export class NoveltyColorizer<T> implements Colorizer<T> {
         if (!Node.NearOwners.has(this.Owner))
             return "#999999";
         // Novel
-        if (Node.NearOwners.size == (Node.NearOwners.has(0) ? 2 : 1))
+        if (Node.Owners.size == (Node.Owners.has(0) ? 2 : 1) && Node.Owners.has(this.Owner))
             return d3.interpolatePlasma(1);
         // Conform
-        if (Node.Owners.has(this.Owner) && Node.Owners.size == (Node.Owners.has(0) ? 2 : 1))
+        if (Node.Owners.has(this.Owner))
             return d3.interpolatePlasma(0.7);
         else
             return d3.interpolatePlasma(0.35);

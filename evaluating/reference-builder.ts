@@ -34,8 +34,8 @@ export class ReferenceBuilder {
             // new AlternativeMerger(),
             // Merge very similar names
             new SimpleMerger({ Looping: true }),
-            // Merge similar definitions too
-            new SimpleMerger({ Looping: true, UseDefinition: true }),
+            // Generate definitions for missing ones
+            new DefinitionGenerator(),
         ), [], Threads, (Iteration) => this.SanityCheck(Iteration, Threads.Codebook));
         console.log(chalk.green(`Statistics: ${Object.keys(Threads.Codebook).length} codes remained after consolidation.`));
         // Return the new codebook
