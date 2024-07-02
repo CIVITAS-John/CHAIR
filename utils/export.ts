@@ -133,12 +133,13 @@ export function ExportChunksForCoding<T extends DataItem>(Chunks: DataChunk<T>[]
             var Message = Messages[I];
             var Item = Analysis?.Items[Message.ID];
             if (!Item) Item = Analysis?.Items[Message.ID.substring(2)];
+            Message.Chunk = Message.Chunk ?? Chunk.ID;
             var Columns: Record<string, any> = {
                 ID: Message.ID,
                 CID: Message.Chunk,
-                SID: parseInt(Message.UserID) == -1 ? Message.UserID : parseInt(Message.UserID),
+                SID: Number.isNaN(parseInt(Message.UserID)) ? Message.UserID : parseInt(Message.UserID),
                 Nickname: Message.Nickname,
-                Time: new Date(Date.parse(Message.Time as any)),
+                Time: Message.Time,
                 In: Message.Chunk == Chunk.ID ? "Y" : "N",
                 Content: Message.Content,
                 Codes: Item?.Codes?.join(", ") ?? "",

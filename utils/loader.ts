@@ -15,16 +15,28 @@ export function GetDatasetPath(): string {
     return process.env.DATASET_PATH ?? "{not set}";
 }
 
-/** LoadItems: Load the chat messages. */
+/** LoadItems: Load a number of data items. */
 export function LoadItems<T extends DataItem>(Target: string): T[] {
     const Items: T[] = JSON.parse(File.readFileSync(Target, 'utf-8'));
-    Items.forEach(Item => {
-        Item.Time = new Date(Date.parse(Item.Time as any));
-        var AsChunk = Item as any as DataChunk<DataItem>;
-        if (AsChunk && AsChunk.AllItems)
-            AsChunk.AllItems.forEach(Item => Item.Time = new Date(Date.parse(Item.Time as any)));
-    });
+    Items.forEach(InitializeItem);
     return Items;
+}
+
+/** InitializeItem: Initialize an item. */
+function InitializeItem(Item: DataItem) {
+    var TimeString = Item.Time as any as string;
+    // If it is only 00:00 or 0:00 (regex), reformat it to ISO
+    if (TimeString.match(/^\d{1,2}:\d{2}$/)) {
+        // If it is 0:00, reformat it to 00:00
+        if (TimeString.startsWith("0:")) TimeString = `0${TimeString}`;
+        TimeString = `1970-01-01T${TimeString}:00`;
+    }
+    // Parse it
+    Item.Time = new Date(Date.parse(TimeString));
+    // Loop through potential subchunks
+    var AsChunk = Item as any as DataChunk<DataItem>;
+    if (AsChunk && AsChunk.AllItems)
+        AsChunk.AllItems.forEach(Item => InitializeItem(Item));
 }
 
 /** LoadConversations: Load the conversations. */
@@ -37,9 +49,9 @@ export function LoadDataset<T extends DataChunk<DataItem>>(Group: string): Datas
     var Result = eval(`(function() {${File.readFileSync(GetMessagesPath(Group, "configuration.js"), 'utf-8')}})()`) as Dataset<T>;
     for (var [Key, Value] of Object.entries(Result.Data)) {
         var Data = LoadChunksForAnalysis<T>(Group, Value as any);
-        for (var [Key, Chunk] of Object.entries(Data)) {
+        for (var [_, Chunk] of Object.entries(Data)) {
             Chunk.AllItems = Chunk.AllItems ?? [];
-            Chunk.AllItems.forEach(Item => Item.Time = new Date(Date.parse(Item.Time as any)));
+            Chunk.AllItems.forEach(InitializeItem);
             Chunk.Items = Chunk.AllItems.length;
         }
         Result.Data[Key] = Data;
