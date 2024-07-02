@@ -14,7 +14,9 @@ export interface Dataset<T extends DataChunk<DataItem>> {
     /** Data: The data chunks in the dataset. */
     Data: Record<string, Record<string, T>>;
     /** GetSpeakerName: Get the speaker name from the user ID. */
-    GetSpeakerName: (UserID: string) => string;
+    GetSpeakerName?: (UserID: string) => string;
+    /** GetSpeakerNameForExample: Get the speaker name (in example only) from the user ID. */
+    GetSpeakerNameForExample?: (UserID: string) => string;
 }
 
 /** CodedThreads: A collection of qualitatively coded threads. */

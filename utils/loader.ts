@@ -7,6 +7,7 @@ import Excel from 'exceljs';
 import { GetFilesRecursively, RemoveCommonality } from './file.js';
 import { CodedThread, CodedThreads, Code, CodedItem, Conversation, Message, Participant, Project, AssembleExample, Codebook, DataChunk, DataItem, Dataset } from "./schema.js";
 import { MergeCodebook, MergeCodebooks } from "../consolidating/codebooks.js";
+import { InitializeDataset } from '../constants.js';
 
 /** GetDatasetPath: Get the dataset path. */
 export function GetDatasetPath(): string {
@@ -43,6 +44,7 @@ export function LoadDataset<T extends DataChunk<DataItem>>(Group: string): Datas
         }
         Result.Data[Key] = Data;
     }
+    InitializeDataset(Result);
     return Result;
 }
 

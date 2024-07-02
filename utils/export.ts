@@ -142,7 +142,7 @@ export function ExportChunksForCoding<T extends DataItem>(Chunks: DataChunk<T>[]
                 In: Message.Chunk == Chunk.ID ? "Y" : "N",
                 Content: Message.Content,
                 Codes: Item?.Codes?.join(", ") ?? "",
-                Memo: "",
+                Memo: Message.Tags?.join(", ") ?? "",
                 Consolidated: [...new Set(Item?.Codes?.map(Code => Consolidation.get(Code) ?? Code) ?? [])].join(", ") ?? ""
             };
             var Row = Sheet.addRow(Columns)

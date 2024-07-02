@@ -1,8 +1,10 @@
 import * as File from 'fs';
-import { CutoffDate } from '../../constants.js';
 import { Tokenize } from '../../utils/tokenizer.js';
 import { Message, Participant } from '../../utils/schema.js';
 import { GetMessagesPath, GetParticipantsPath } from '../../utils/loader.js';
+
+// CutoffDate: The cutoff date for the dataset.
+export const CutoffDate = new Date(2021, 0, 1);
 
 /** ReadQQMessages: Read messages from a text record of QQ groups. */
 function ReadQQMessages(Path: string, Prefix: string): Message[] {
