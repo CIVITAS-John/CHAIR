@@ -1,0 +1,79 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate label to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (5 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Label: {The most representative label for the concepts}
+...
+5. 
+Concepts: {Repeat the input 5}
+Relationship: {What is logical relationship between concepts in code 5, or N/A if not applicable}
+Criteria: {Who did what, and how for code 5}
+Label: {The most representative label for the concepts}
+---
+~~~
+1.
+Concepts: appreciation for ai coding assistance, ai-assisted code generation and optimization
+- Users appreciate AI's suggestions for code optimization and improvement.
+- Users generate code with AI assistance and optimize code with the help of AI.
+
+2.
+Concepts: improving ai-generated code, reviewing ai-generated code
+- Participants seek improvement in AI-generated code by requesting fixes or modifications.
+- Participants read through, debug, and evaluate AI-generated code to understand and refine it.
+
+3.
+Concepts: error reporting and bug identification, debugging capability and iterative ai debugging
+- Users report and debug errors in AI-generated code and identify bugs or errors in the code or AI response.
+- Users highlight the debugging capability of the AI-driven system and engage in iterative debugging with AI.
+
+4.
+Concepts: user support, seeking ai bug detection
+- Suggesting AI-assisted user support for debugging and troubleshooting
+- Users seek help from ChatGPT when encountering errors.
+
+5.
+Concepts: debugging, debugging support
+- E01 reflects on the importance of debugging and how LLM-driven interfaces can support it.
+- The potential of LLM-driven interfaces to support users in debugging their NetLogo code.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: appreciation for ai coding assistance, ai-assisted code generation and optimization
+Relationship: The concepts are related as users appreciate AI's assistance in generating and optimizing code, which implies a positive perception of AI-driven coding support.
+Criteria: Users appreciate and utilize AI-driven coding assistance for generating and optimizing code.
+Label: Appreciation for AI-Assisted Coding
+
+2.
+Concepts: improving ai-generated code, reviewing ai-generated code
+Relationship: The concepts are related as users review AI-generated code to improve it, implying a critical evaluation of AI-generated code.
+Criteria: Users review and refine AI-generated code to improve its quality.
+Label: Refining AI-Generated Code
+
+3.
+Concepts: error reporting and bug identification, debugging capability and iterative ai debugging
+Relationship: The concepts are related as users report errors and bugs in AI-generated code and engage in iterative debugging with AI, implying a collaborative debugging process.
+Criteria: Users report errors, identify bugs, and engage in iterative debugging with AI-driven systems.
+Label: Collaborative Debugging
+
+4.
+Concepts: user support, seeking ai bug detection
+Relationship: The concepts are related as users seek AI-assisted support for debugging and troubleshooting, implying a reliance on AI-driven systems for user support.
+Criteria: Users seek AI-driven support for debugging and troubleshooting.
+Label: Seeking AI-Assisted Support
+
+5.
+Concepts: debugging, debugging support
+Relationship: N/A (the concepts are identical)
+Criteria: LLM-driven interfaces can support users in debugging their NetLogo code.
+Label: Debugging Support

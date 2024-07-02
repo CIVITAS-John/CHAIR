@@ -30,7 +30,7 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-1", new RefiningReferenceBuilder()); 
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-2", new RefiningReferenceBuilder()); 
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-3", new RefiningReferenceBuilder());
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-4", new RefiningReferenceBuilder(true, true));
+await EvaluateModelsWithSameAnalyzer("Coded Dataset 2", "pilot-study", new RefiningReferenceBuilder(true, true));
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "human", new RefiningReferenceBuilder()); 
 process.exit(0);
 

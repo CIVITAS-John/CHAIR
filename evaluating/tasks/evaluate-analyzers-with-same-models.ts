@@ -30,10 +30,10 @@ async function EvaluateAnalyzers(SourcePath: string, LLM: string, Builder: Refer
     File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
 }
 
-/* await EvaluateAnalyzers("Coded Dataset 1", 
-    "llama3-70b", new RefiningReferenceBuilder(),
-    ["high-level-1", "high-level-2", "low-level-3"]); */
+await EvaluateAnalyzers("Coded Dataset 2", 
+    "llama3-70b", new RefiningReferenceBuilder(), "",
+    ["bertopic-2", "high-level-1", "high-level-2", "low-level-3", "low-level-4"]);
 
-await EvaluateAnalyzers("Coded Dataset 1", 
+/* await EvaluateAnalyzers("Coded Dataset 1", 
     "llama3-70b", new RefiningReferenceBuilder(), "-temp",
-    ["low-level-4-temp-0", "low-level-4-temp-0.25", "low-level-4-temp-0.5", "low-level-4-temp-0.75", "low-level-4-temp-1"]);
+    ["low-level-4-temp-0", "low-level-4-temp-0.25", "low-level-4-temp-0.5", "low-level-4-temp-0.75", "low-level-4-temp-1"]);*/

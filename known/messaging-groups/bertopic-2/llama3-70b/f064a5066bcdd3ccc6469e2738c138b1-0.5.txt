@@ -1,0 +1,21 @@
+You are an expert in thematic analysis with grounded theory, working on open coding.
+You identified a topic from the input quotes. Each quote is independent from another.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Reason through the data comprehensively start coding. When coding, also look at the interviewer's observations. Take note of emotions explicitly or implicitly expressed by the interviewee. Try to find multiple codes through the lens of human-computer interaction and learning sciences.
+
+Always follow the output format:
+===
+Thought: {What is the most common theme among the input quotes? Do not over-interpret the data.}
+Phrase: {A single verb phrase that faithfully describes the topic}
+===
+~~~
+Quotes:
+- E01: I want to do this in visual basic... So I made a spreadsheet and I asked ChatGPT, how do you do this? And it wrote the code and the code worked out of the box. (interviewer's observation) ChatGPT helped with a VBA task out of the box before.
+- E01: I don't want chat GPT to write 27 operations in one line and show how brilliant it is. I wanted to separate out the code and, and it did a good job of not only did it write the code, but it commented the code. And then in addition to commenting the code externally, it did documentation. (interviewer's observation) ChatGPT tends to provide comments and documentation. Generated code is easy to read.
+- E01: And some of them we still haven't been doing like hive mind, like how we are going to have the machine learning back from the user feedback or just from the compiler, right? You generate some code, but it doesn't work. So we have to tell you that this time, you didn't work. (interviewer's observation) The current ChatGPT implementation cannot check the generated code with external information (compiler, etc.) (partially solved by the Interpreter plugin, but only Python at this time)
+Keywords: chatgpt, code, chat, compiler, gpt
+===
+===
+Thought: The interviewee is impressed with ChatGPT's ability to generate working code and appreciates its ability to provide clear documentation and comments.
+Phrase: Generates working code with clear documentation
+===

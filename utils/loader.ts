@@ -156,7 +156,7 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
                 Item.Codes = Codes.split(/,|\||;/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase()).filter(Code => Code !== "");
             for (var Code of Item.Codes!) {
                 var Current: Code = Thread.Codes![Code] ?? { Label: Code, Examples: [] };
-                Thread.Codes![Code] = Current;
+                Thread.Codes[Code] = Current;
                 var ContentWithID = AssembleExample(ID, Speaker, Content);
                 if (Content !== "" && !Current.Examples!.includes(ContentWithID))
                     Current.Examples!.push(ContentWithID);
