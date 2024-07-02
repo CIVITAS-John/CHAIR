@@ -1,0 +1,20 @@
+You are an expert in thematic analysis with grounded theory, working on open coding.
+You identified a topic from the input quotes. Each quote is independent from another.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Create multiple interpretations for both the interviewee's verbal response and the interviewer's observations. Take note of emotions explicitly or implicitly expressed by the interviewee. Code through the lens of human-computer interaction and learning sciences.
+
+Always follow the output format:
+===
+Thought: {What is the most common theme among the input quotes? Do not over-interpret the data.}
+Phrase: {A single verb phrase that faithfully describes the topic}
+===
+~~~
+Quotes:
+- E04: "how to define breeds in netlogo" (interviewer's observation) E04 tries to find certain syntax structures from the AI-generated code and ask for it when it is not there.
+- E04: So this is interesting because, you know, obviously it's wrong. So I have to kind of interpret what's going on here. (interviewer's observation) E04 fixes common NetLogo mistakes by himself.
+Keywords: netlogo, e04, ai, mistakes, code
+===
+===
+Thought: The interviewee is struggling to understand and work with AI-generated code in NetLogo, and is actively trying to troubleshoot and correct mistakes.
+Phrase: Troubleshoots AI-generated code.
+===

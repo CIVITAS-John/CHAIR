@@ -107,7 +107,8 @@ export async function AnalyzeChunk<T extends DataItem>(Analyzer: Analyzer<DataCh
             if (typeof ItemResults == "number") return ItemResults;
             for (const [Index, Result] of Object.entries(ItemResults)) {
                 var Message = Currents[parseInt(Index) - 1];
-                var Codes = Result.toLowerCase().split(/,|\||;/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase())
+                var SplitByComma = !(Result.includes(";") || Result.includes("|"))
+                var Codes = Result.toLowerCase().split(SplitByComma ? /,/g : /\||;/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase())
                     .filter(Code => Code != Message.Content?.toLowerCase() && Code.length > 0 && !Code.endsWith(`p${Message.UserID}`));
                 // Record the codes from line-level coding
                 Analysis.Items[Message.ID].Codes = Codes;
