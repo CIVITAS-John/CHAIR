@@ -25,12 +25,9 @@ export function LoadItems<T extends DataItem>(Target: string): T[] {
 /** InitializeItem: Initialize an item. */
 function InitializeItem(Item: DataItem) {
     var TimeString = Item.Time as any as string;
-    // If it is only 00:00 or 0:00 (regex), reformat it to ISO
-    if (TimeString.match(/^\d{1,2}:\d{2}$/)) {
-        // If it is 0:00, reformat it to 00:00
-        if (TimeString.startsWith("0:")) TimeString = `0${TimeString}`;
-        TimeString = `1970-01-01T${TimeString}:00`;
-    }
+    // If it is only date
+    if (TimeString.match(/^\d{2}:\d{2}:\d{2}$/))
+        TimeString = `1970-01-01T${TimeString}`;
     // Parse it
     Item.Time = new Date(Date.parse(TimeString));
     // Loop through potential subchunks
