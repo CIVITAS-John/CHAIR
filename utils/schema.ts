@@ -151,6 +151,8 @@ export interface DataItem {
     Chunk?: string;
     /** Mentions: The participants that this item mentioned. */
     Mentions?: string[];
+    /** Tags: Extra qualitative tags on the item. */
+    Tags?: string[];
 }
 
 /** Conversation: A segment of the group chat. */

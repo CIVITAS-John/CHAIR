@@ -1,0 +1,559 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (48 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+48.
+Criteria: {Who did what, and how for code 48}
+Label: {A descriptive label of code 48}
+---
+~~~
+1.
+Label: ask a question about the app
+Quotes:
+- User: PC version?
+
+2.
+Label: platform question
+Quotes:
+- User: [Emoji] Hello everyone, may I ask where I can download the PC / interactive whiteboard version of Physics Lab?
+- User: Will there be an update this week? [Emoji]
+- User: Are there any other updates recently?
+- User: How do you use the PC version?
+
+3.
+Label: usability
+Quotes:
+- Designer: We try to design it so that it can be used without additional instructions, or we will provide some prompts when you open it for the first time based on feedback
+
+4.
+Label: asking for update
+Quotes:
+- User: Are there any other updates recently?
+
+5.
+Label: bug fixes
+Quotes:
+- Designer: New Features
+Electronic components will be damaged after a short process, rather than immediately.
+Clearing the desktop will now display a confirmation interface.
+Supports undoing the creation and deletion of wires and components.
+Appliances now display the effective value of alternating current.
+(PC) You can now exit the application using the Esc key.
+
+New Components
+Added a sensitive ammeter.
+Added a student power supply (ideal AC/DC power supply).
+
+Adjustments to Component Properties
+Batteries now have adjustable internal resistance and are no longer ideal power sources.
+Incandescent bulbs now have volt-ampere characteristic parameters and are no longer ideal resistors.
+The resistance law experimenter now uses real formulas for calculations, with adjustable parameters.
+Hidden terminal blocks 3 and 4.
+
+Bug Fixes
+Fixed an issue with unit conversion in Editor properties.
+Terminal arrows no longer show jumping animations.
+There may have been calculation errors with certain circuit connections.
+
+6.
+Label: manage expectations
+Quotes:
+- Designer: v1.0.2 - 17/11/29
+# New Features
+Multi-language support: Japanese, German, French.
+Preliminary support for converting circuit components to circuit diagrams.
+
+Support for augmented reality mode on the latest iOS devices.
+More realistic 3D appearance for various meters.
+
+# Update Preview
+
+The next version will provide multimeter and meter zeroing.
+
+The next version will provide AC waveform display functionality.
+
+The next version will provide capacitors and energized solenoids.
+
+# Component Property Adjustments
+Dry cells can now be ideal power sources.
+
+All meters can now switch between ideal/realistic modes.
+
+# Special Tips
+The Esc shortcut key will now minimize the window.
+The Ctrl+E shortcut key can switch between exam and normal modes.
+- Designer: Physics mainly focuses on electricity and mechanics; other directions don't have much room for free experiments before high school. In the future, we might do some demonstration experiments based on everyone's needs, but it won't be as open as electricity
+- Designer: For electricity, we plan to create a function for simulated experiment assessment; it will add many experimental details, such as zero adjustment (of course, only useful in specific modes, otherwise it would be cumbersome to use regularly)
+- Designer: There will be: multimeter; powered solenoid; semiconductor capacitor; support for conversion to ideal ammeter (more convenient for problem-solving and middle school teaching)
+- Designer: We try to design it so that it can be used without additional instructions, or we will provide some prompts when you open it for the first time based on feedback
+
+7.
+Label: gratitidue to the community
+Quotes:
+- Designer: Thank you all for your support. We will do better!
+
+8.
+Label: listing featuer updates and bug fixes
+Quotes:
+- Designer: New Features
+Electronic components will be damaged after a short process, rather than immediately.
+Clearing the desktop will now display a confirmation interface.
+Supports undoing the creation and deletion of wires and components.
+Appliances now display the effective value of alternating current.
+(PC) You can now exit the application using the Esc key.
+
+New Components
+Added a sensitive ammeter.
+Added a student power supply (ideal AC/DC power supply).
+
+Adjustments to Component Properties
+Batteries now have adjustable internal resistance and are no longer ideal power sources.
+Incandescent bulbs now have volt-ampere characteristic parameters and are no longer ideal resistors.
+The resistance law experimenter now uses real formulas for calculations, with adjustable parameters.
+Hidden terminal blocks 3 and 4.
+
+Bug Fixes
+Fixed an issue with unit conversion in Editor properties.
+Terminal arrows no longer show jumping animations.
+There may have been calculation errors with certain circuit connections.
+
+9.
+Label: appreciation
+Quotes:
+- User: Okay, okay~ Thank you for your hard work.
+- User: [Emoji][Emoji]
+- User: [Emoji]
+
+10.
+Label: clarify preference
+Quotes:
+- User: Left side
+
+11.
+Label: show interest in development progress
+Quotes:
+- User: Are there any other updates recently?
+
+12.
+Label: difficulty in development
+Quotes:
+- Designer: This is quite complex, so it will take more time... Hopefully, it can be released this week
+
+13.
+Label: feature release
+Quotes:
+- Designer: Hello everyone~ Version 1.01 has been released in the group files, the updates are as follows:
+
+14.
+Label: request suggestions
+Quotes:
+- Designer: Okay. Please give more suggestions!
+
+15.
+Label: confirm compatibility
+Quotes:
+- Designer: 7 is okay.
+
+16.
+Label: greet community
+Quotes:
+- User: Hello everyone
+
+17.
+Label: feature adjustment
+Quotes:
+- Designer: It seems that local export needs to be supported.
+
+18.
+Label: describe educational needs
+Quotes:
+- User: First, let's pay homage to the experts, then I'll make a small request. Could you create a dynamic demonstration of mechanical waves and mechanical vibrations, such as the propagation of transverse and longitudinal waves, wave superposition, diffraction, and interference? Also, for optical experiments, it would be great to have optical benches, single slits, double slits, and polarizers to demonstrate optical experiments.
+
+19.
+Label: adapt to platform specific constraints
+Quotes:
+- Designer: The Apple Store is still reviewing, let's upload the PC version first
+
+20.
+Label: explaining new features
+Quotes:
+- Designer: Don't worry, don't worry, it will come, just optimizing the circuit diagram one last time.
+- Designer: It's still better to make the auto-generated one as good as possible
+- Designer: Although you can manually adjust the layout
+
+21.
+Label: explain current limitations
+Quotes:
+- Designer: This version of the circuit diagram is for testing only... You can drag the Editor because the auto-layout algorithm is not very stable and may produce some odd results
+
+22.
+Label: offering solution
+Quotes:
+- Designer: Theoretically, it should be compatible (but the machine itself shouldn't be too old, probably from 2008 onwards).
+- Designer: XP compatibility might need to be looked into later... probably need to install a virtual machine.
+
+23.
+Label: user guidance
+Quotes:
+- Designer: New Features
+Electronic components will be damaged after a short process, rather than immediately.
+Clearing the desktop will now display a confirmation interface.
+Supports undoing the creation and deletion of wires and components.
+Appliances now display the effective value of alternating current.
+(PC) You can now exit the application using the Esc key.
+
+New Components
+Added a sensitive ammeter.
+Added a student power supply (ideal AC/DC power supply).
+
+Adjustments to Component Properties
+Batteries now have adjustable internal resistance and are no longer ideal power sources.
+Incandescent bulbs now have volt-ampere characteristic parameters and are no longer ideal resistors.
+The resistance law experimenter now uses real formulas for calculations, with adjustable parameters.
+Hidden terminal blocks 3 and 4.
+
+Bug Fixes
+Fixed an issue with unit conversion in Editor properties.
+Terminal arrows no longer show jumping animations.
+There may have been calculation errors with certain circuit connections.
+- Designer: There will be: multimeter; powered solenoid; semiconductor capacitor; support for conversion to ideal ammeter (more convenient for problem-solving and middle school teaching)
+- Designer: This version of the circuit diagram is for testing only... You can drag the Editor because the auto-layout algorithm is not very stable and may produce some odd results
+- Designer: From the next update, dry batteries will no longer be ideal components (you can remove the internal resistance to simulate).
+- Designer: Theoretically, it should be compatible (but the machine itself shouldn't be too old, probably from 2008 onwards).
+
+24.
+Label: vague on responses to the feature request
+Quotes:
+- Designer: Mechanics will have to wait until electromagnetism is figured out; it will take some more time
+
+25.
+Label: internet availability inquiry
+Quotes:
+- Designer: Does the class have internet?
+
+26.
+Label: inquire about specific issues
+Quotes:
+- Designer: What problems did you encounter during use?
+
+27.
+Label: system compatibility confirmation
+Quotes:
+- Designer: 7 is okay.
+
+28.
+Label: asking follow-up questions on needs
+Quotes:
+- Designer: Oh, please message me privately and tell me what you roughly need
+
+29.
+Label: specifics
+Quotes:
+- User: Win7 should be fine.
+
+30.
+Label: system compatibility
+Quotes:
+- Designer: Theoretically, it should be compatible (but the machine itself shouldn't be too old, probably from 2008 onwards).
+- Designer: XP compatibility might need to be looked into later... probably need to install a virtual machine.
+- Designer: It does not support the XP system.
+- User: Win7 should be fine.
+
+31.
+Label: quick response
+Quotes:
+- Designer: I'll upload one now... Are you a teacher?
+
+32.
+Label: further suggestion
+Quotes:
+- User: But it's better to use the right side for non-crossing
+
+33.
+Label: express understanding
+Quotes:
+- Designer: Hmm hmm.
+- User: ok
+
+34.
+Label: establish credibility
+Quotes:
+- User: I taught high school for seven years, and now I've been teaching middle school for eight years.
+
+35.
+Label: further question
+Quotes:
+- Designer: So, use both?
+
+36.
+Label: update on android version timeline
+Quotes:
+- Designer: The Android version is expected to update tonight
+
+37.
+Label: maintain social norms
+Quotes:
+- Designer: Hello :)
+- User: Excuse me.
+
+38.
+Label: upload image
+Quotes:
+- Designer: @Morning Tea Moonlight How can I upload a high-definition, uncensored version of this crappy avatar?
+
+39.
+Label: community norms
+Quotes:
+- Designer: Sorry for the late-night disturbance :)
+
+40.
+Label: question about the request
+Quotes:
+- Designer: Does the class have internet?
+
+41.
+Label: adding more specific information and criteria to the answer
+Quotes:
+- Designer: Theoretically, it should be compatible (but the machine itself shouldn't be too old, probably from 2008 onwards).
+
+42.
+Label: suggest potential solution
+Quotes:
+- Designer: XP compatibility might need to be looked into later... probably need to install a virtual machine.
+
+43.
+Label: request specific features
+Quotes:
+- User: First, let's pay homage to the experts, then I'll make a small request. Could you create a dynamic demonstration of mechanical waves and mechanical vibrations, such as the propagation of transverse and longitudinal waves, wave superposition, diffraction, and interference? Also, for optical experiments, it would be great to have optical benches, single slits, double slits, and polarizers to demonstrate optical experiments.
+
+44.
+Label: ask followup question on usage scenario
+Quotes:
+- Designer: Does the class have internet?
+
+45.
+Label: appreciate design effort
+Quotes:
+- User: Yes, the spirit of craftsmanship that strives for perfection 🤔
+
+46.
+Label: user communication
+Quotes:
+- Designer: There will be an update. Submitting to the app store / releasing the Android version next Monday, and releasing the Windows version over the weekend.
+- Designer: Don't worry, don't worry, it will come, just optimizing the circuit diagram one last time.
+- Designer: The Apple Store is still reviewing, let's upload the PC version first
+- Designer: The Android version is expected to update tonight
+- Designer: The update is quite large...
+
+47.
+Label: give more information about the version uploaded
+Quotes:
+- Designer: The one in the group is the PC version
+
+48.
+Label: share information about current feature development
+Quotes:
+- Designer: Actually, we are researching the bidirectional conversion between physical diagrams and circuit diagrams
+===
+---
+Definitions for each code (48 in total):
+1.
+Criteria: A user inquires specifically about the availability or existence of the PC version of the app.
+Label: Ask About PC Version
+
+2.
+Criteria: Users ask questions related to the availability, platform compatibility, or updates for the app.
+Label: Platform and Update Inquiries
+
+3.
+Criteria: Designers discuss the usability aspects of the app, including design choices to make the app user-friendly.
+Label: Usability Design
+
+4.
+Criteria: Users inquire about the timing or existence of recent or upcoming updates.
+Label: Update Inquiry
+
+5.
+Criteria: Designers list specific bug fixes that have been implemented in the app.
+Label: Bug Fixes
+
+6.
+Criteria: Designers manage user expectations by providing information on current features, upcoming updates, and future plans.
+Label: Managing Expectations
+
+7.
+Criteria: Designers express gratitude towards the community for their support.
+Label: Community Gratitude
+
+8.
+Criteria: Designers list new features, components, and bug fixes in the app.
+Label: Feature and Bug Fix Listing
+
+9.
+Criteria: Users express appreciation or gratitude, often in response to updates or help from designers.
+Label: User Appreciation
+
+10.
+Criteria: Users specify their preferences or choices when given options.
+Label: User Preferences
+
+11.
+Criteria: Users show interest in the development progress by asking about updates.
+Label: Development Interest
+
+12.
+Criteria: Designers describe the complexity and time required for development tasks.
+Label: Development Complexity
+
+13.
+Criteria: Designers announce the release of a new version of the app and list the updates included.
+Label: Version Release Announcement
+
+14.
+Criteria: Designers request suggestions or feedback from the community.
+Label: Request for Suggestions
+
+15.
+Criteria: Designers confirm the app’s compatibility with certain systems or versions.
+Label: Compatibility Confirmation
+
+16.
+Criteria: Users greet the community or other members.
+Label: Community Greeting
+
+17.
+Criteria: Designers discuss adjustments or changes to existing features.
+Label: Feature Adjustment
+
+18.
+Criteria: Users describe specific educational needs or requests for features related to educational content.
+Label: Educational Feature Request
+
+19.
+Criteria: Designers discuss adapting the app to platform-specific constraints, such as app store reviews.
+Label: Platform Constraints Adaptation
+
+20.
+Criteria: Designers explain new features or enhancements being added to the app.
+Label: New Feature Explanation
+
+21.
+Criteria: Designers explain the current limitations or issues with a feature.
+Label: Current Limitations
+
+22.
+Criteria: Designers offer potential solutions to compatibility or other technical issues.
+Label: Potential Solutions
+
+23.
+Criteria: Designers provide guidance or instructions on using new features or components.
+Label: User Guidance
+
+24.
+Criteria: Designers provide vague responses regarding the timeline or feasibility of requested features.
+Label: Vague Feature Response
+
+25.
+Criteria: Designers inquire about the availability of internet access in the user's environment.
+Label: Internet Availability Inquiry
+
+26.
+Criteria: Designers ask users to specify the problems they encountered while using the app.
+Label: Problem Inquiry
+
+27.
+Criteria: Designers confirm the app’s compatibility with certain systems or versions.
+Label: Compatibility Confirmation
+
+28.
+Criteria: Designers ask users to provide more details about their needs or requests.
+Label: Follow-Up Inquiry
+
+29.
+Criteria: Users provide specific information about system compatibility.
+Label: System Compatibility Information
+
+30.
+Criteria: Designers and users discuss the app’s compatibility with various operating systems.
+Label: System Compatibility Discussion
+
+31.
+Criteria: Designers respond quickly to user inquiries or requests.
+Label: Quick Response
+
+32.
+Criteria: Users provide further suggestions or preferences after initial feedback.
+Label: Further Suggestions
+
+33.
+Criteria: Users and designers express understanding or acknowledgment in the conversation.
+Label: Express Understanding
+
+34.
+Criteria: Users establish their credibility by sharing their teaching experience.
+Label: Establish Credibility
+
+35.
+Criteria: Designers ask follow-up questions to clarify user preferences or needs.
+Label: Follow-Up Question
+
+36.
+Criteria: Designers provide an update timeline for the Android version of the app.
+Label: Android Version Timeline
+
+37.
+Criteria: Users and designers maintain social norms through polite greetings and acknowledgments.
+Label: Social Norms
+
+38.
+Criteria: Designers ask for help or provide instructions on how to upload images.
+Label: Image Upload Inquiry
+
+39.
+Criteria: Designers apologize for any disturbances caused to the community.
+Label: Community Apology
+
+40.
+Criteria: Designers inquire about the availability of internet access in the user's environment.
+Label: Internet Availability Inquiry
+
+41.
+Criteria: Designers add more specific information and criteria to their responses about compatibility.
+Label: Detailed Compatibility Information
+
+42.
+Criteria: Designers suggest potential solutions to compatibility issues, such as using a virtual machine.
+Label: Compatibility Solution Suggestion
+
+43.
+Criteria: Users request specific features or demonstrations for educational purposes.
+Label: Specific Feature Request
+
+44.
+Criteria: Designers ask follow-up questions to understand the user's usage scenario better.
+Label: Usage Scenario Inquiry
+
+45.
+Criteria: Users appreciate the design effort and attention to detail.
+Label: Design Appreciation
+
+46.
+Criteria: Designers communicate updates and timelines for different versions of the app.
+Label: Update Communication
+
+47.
+Criteria: Designers provide more information about the version of the app that has been uploaded.
+Label: Version Information
+
+48.
+Criteria: Designers share information about the current development of new features.
+Label: Current Feature Development
+---

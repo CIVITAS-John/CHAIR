@@ -1,7 +1,6 @@
 // This is a playground for selectively translating data.
 import * as File from 'fs';
-import * as Path from 'path';
-import { GetMessagesPath, GetProjectsPath, LoadCodedConversations, LoadChunksForAnalysis, LoadProjects } from "../../utils/loader.js";
+import { GetMessagesPath, GetProjectsPath, LoadCodedConversations, LoadChunksForAnalysis, LoadItems } from "../../utils/loader.js";
 import { ExportChunksForCoding, ExportProjects, Range } from '../../utils/export.js';
 import { Project } from '../../utils/schema.js';
 import { LoadCache } from './general.js';
@@ -36,7 +35,7 @@ async function UpdateTranslations(Group: string, Name: string, Codebook: string)
 
 /** ProjectPlayground: Translate certain projects. */
 async function ProjectPlayground(Bilingual: boolean = false) {
-    var Projects = LoadProjects();
+    var Projects = LoadItems<Project>(GetProjectsPath("Projects.json"));
     var StartDate = new Date(2019, 8, 24);
     var EndDate = new Date(2019, 8, 25);
     // By default we don't want system messages

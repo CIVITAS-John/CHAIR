@@ -9,6 +9,8 @@ import { ReferenceBuilder, RefiningReferenceBuilder } from '../reference-builder
 import { CodebookEvaluation } from '../../utils/schema.js';
 
 // This code replicates our study for CHI 2025.
+// Specifically, it evaluates the performance of different codebooks in the pilot study.
+// It also generates 60 evaluation runs for the output analysis.
 // Running it requires access to the Groq API.
 // It also needs access to the coded dataset, which we will release before the conference.
 
@@ -34,7 +36,7 @@ async function EvaluateInFolder(SourcePath: string, Folder: string, Builder: Ref
 }
 
 /** RepeatedlyEvaluateInFolder: Repeatedly evaluate the performance of different codebooks in the same folder. */
-async function RepeatedlyEvaluateInFolder(Times: number, Temperatures: number[], SourcePath: string, Folder: string, LLM: string, Builder: RefiningReferenceBuilder) {
+async function RepeatedlyEvaluateInFolder(Times: number, Temperatures: number[], TemperatureNames: string[], SourcePath: string, Folder: string, LLM: string, Builder: RefiningReferenceBuilder) {
     // Prepare for the CSV
     var CSVResults = ["llm,temp,run,codebook,count,consolidated,coverage,density,novelty,divergence"];
     // Evaluate the codebooks multiple times
@@ -60,8 +62,8 @@ async function RepeatedlyEvaluateInFolder(Times: number, Temperatures: number[],
 
 // Task: Compare the 4 approaches with GPT-4o described in the pilot study.
 // Also, an output analysis of the results with 10 runs
-await RepeatedlyEvaluateInFolder(10, [0.25, 0.5], "Coded Dataset 1", "pilot-study", "llama3-70b", new RefiningReferenceBuilder(true, true));
-await RepeatedlyEvaluateInFolder(10, [0.25, 0.5], "Coded Dataset 1", "pilot-study", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true));
+// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5], ["zero", "low", "medium"], "Coded Dataset 1", "pilot-study", "llama3-70b", new RefiningReferenceBuilder(true, true));
+await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5], ["zero", "low", "medium"], "Coded Dataset 1", "pilot-study", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true));
 
 // Task: Evaluate the different of temperature with the low-level-4 approach.
 // await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-4-gpt-4o-temps", new RefiningReferenceBuilder(true, true)), "llama3-70b");

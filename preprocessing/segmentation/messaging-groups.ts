@@ -1,8 +1,9 @@
 import * as File from 'fs';
-import { GetMessagesPath, LoadMessages } from "../../utils/loader.js";
+import { GetMessagesPath, LoadItems } from "../../utils/loader.js";
 import { ExportMessages } from '../../utils/export.js';
-import spawnAsync from '@expo/spawn-async';
 import { Conversation } from '../../utils/schema.js';
+import { Message } from '../../utils/schema.js';
+import spawnAsync from '@expo/spawn-async';
 
 await SeperateMessages("Users of Physics Lab (Group 1)", "1");
 await SeperateMessages("Users of Physics Lab (Group 2)", "2");
@@ -19,7 +20,7 @@ async function SeperateMessages(Source: string, Prefix: string) {
     });
     await Python;
     // Load messages
-    var Messages = LoadMessages(Source).filter(Message => Message.UserID != "0");
+    var Messages = LoadItems<Message>(GetMessagesPath(Source)).filter(Message => Message.UserID != "0");
     // Break up messages based on the indexes
     var Indexes = File.readFileSync(GetMessagesPath(Source, `Messages.Groups.csv`), 'utf-8').split('\n').map(Index => Number(Index));
     Indexes[Indexes.length - 1] = Messages.length - 1;

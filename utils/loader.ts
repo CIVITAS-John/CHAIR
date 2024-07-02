@@ -14,24 +14,16 @@ export function GetDatasetPath(): string {
     return process.env.DATASET_PATH ?? "{not set}";
 }
 
-/** LoadProjects: Load the projects. */
-export function LoadProjects(): Project[] {
-    const Projects: Project[] = JSON.parse(File.readFileSync(GetProjectsPath("Projects.json"), 'utf-8'));
-    Projects.forEach(Project => {
-        Project.Time = new Date(Date.parse(Project.Time as any));
-        if (Project.AllItems)
-            Project.AllItems.forEach(Comment => Comment.Time = new Date(Date.parse(Comment.Time as any)));
+/** LoadItems: Load the chat messages. */
+export function LoadItems<T extends DataItem>(Target: string): T[] {
+    const Items: T[] = JSON.parse(File.readFileSync(Target, 'utf-8'));
+    Items.forEach(Item => {
+        Item.Time = new Date(Date.parse(Item.Time as any));
+        var AsChunk = Item as any as DataChunk<DataItem>;
+        if (AsChunk && AsChunk.AllItems)
+            AsChunk.AllItems.forEach(Item => Item.Time = new Date(Date.parse(Item.Time as any)));
     });
-    return Projects;
-}
-
-/** LoadMessages: Load the chat messages. */
-export function LoadMessages(Group: string): Message[] {
-    const Messages: Message[] = JSON.parse(File.readFileSync(GetMessagesPath(Group, "Messages.json"), 'utf-8'));
-    Messages.forEach(Message => {
-        Message.Time = new Date(Date.parse(Message.Time as any));
-    });
-    return Messages;
+    return Items;
 }
 
 /** LoadConversations: Load the conversations. */
@@ -43,7 +35,13 @@ export function LoadConversations(Group: string): Conversation[] {
 export function LoadDataset<T extends DataChunk<DataItem>>(Group: string): Dataset<T> {
     var Result = eval(`(function() {${File.readFileSync(GetMessagesPath(Group, "configuration.js"), 'utf-8')}})()`) as Dataset<T>;
     for (var [Key, Value] of Object.entries(Result.Data)) {
-        Result.Data[Key] = LoadChunksForAnalysis<T>(Group, Value as any);
+        var Data = LoadChunksForAnalysis<T>(Group, Value as any);
+        for (var [Key, Chunk] of Object.entries(Data)) {
+            Chunk.AllItems = Chunk.AllItems ?? [];
+            Chunk.AllItems.forEach(Item => Item.Time = new Date(Date.parse(Item.Time as any)));
+            Chunk.Items = Chunk.AllItems.length;
+        }
+        Result.Data[Key] = Data;
     }
     return Result;
 }
@@ -78,12 +76,12 @@ export function GetProjectsPath(Name: string): string {
 
 /** GetMessagesPath: Get the saving path of certain messages. */
 export function GetMessagesPath(Group: string, Name?: string): string { 
-    return `${GetDatasetPath()}/Messaging Groups/${Group}${Name ? "/" + Name : ""}`; 
+    return `${GetDatasetPath()}/Conversations/${Group}${Name ? "/" + Name : ""}`; 
 }
 
 /** GetParticipantsPath: Get the saving path of messaging group participants. */
 export function GetParticipantsPath(Name: string): string { 
-    return `${GetDatasetPath()}/Messaging Groups/${Name}`; 
+    return `${GetDatasetPath()}/Conversations/${Name}`; 
 }
 
 /** LoadCodedConversations: Import coding results from an Excel workbook. */
@@ -128,33 +126,31 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
                     Thread.Summary = Content;
                     if (Thread.Summary == "" || Thread.Summary.startsWith("(Optional) Your thoughts before coding")) 
                         Thread.Summary = undefined;
-                    break;
+                    return;
                 case "-2": // Plan
                     Thread.Plan = Content;
                     if (Thread.Plan == "" || Thread.Plan.startsWith("The summary of")) 
                         Thread.Plan = undefined;
-                    break;
+                    return;
                 case "-3": // Reflection
                     Thread.Reflection = Content;
                     if (Thread.Reflection == "" || Thread.Reflection.startsWith("Your reflections after coding")) 
                         Thread.Reflection = undefined;
-                    break;
-                default: // Coded item
-                    // if (ID.indexOf("-") == -1) ID = "2-" + ID; // A hack for the first coded dataset.
-                    var Item: CodedItem = { ID: ID, Codes: [] };
-                    var Codes = Row.getCell(CodeIndex)?.value;
-                    if (Codes && typeof Codes == "string") 
-                        Item.Codes = Codes.split(/,|\||;/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase()).filter(Code => Code !== "");
-                    for (var Code of Item.Codes!) {
-                        var Current: Code = Thread.Codes![Code] ?? { Label: Code, Examples: [] };
-                        Thread.Codes![Code] = Current;
-                        var ContentWithID = AssembleExample(ID, Speaker, Content);
-                        if (Content !== "" && !Current.Examples!.includes(ContentWithID))
-                            Current.Examples!.push(ContentWithID);
-                    }
-                    Thread.Items[ID] = Item;
-                    break;
+                    return;
             }
+            // Coded item
+            var Item: CodedItem = { ID: ID, Codes: [] };
+            var Codes = Row.getCell(CodeIndex)?.value;
+            if (Codes && typeof Codes == "string") 
+                Item.Codes = Codes.split(/,|\||;/g).map(Code => Code.trim().replace(/\.$/, "").toLowerCase()).filter(Code => Code !== "");
+            for (var Code of Item.Codes!) {
+                var Current: Code = Thread.Codes![Code] ?? { Label: Code, Examples: [] };
+                Thread.Codes![Code] = Current;
+                var ContentWithID = AssembleExample(ID, Speaker, Content);
+                if (Content !== "" && !Current.Examples!.includes(ContentWithID))
+                    Current.Examples!.push(ContentWithID);
+            }
+            Thread.Items[ID] = Item;
         });
         // Add the thread to the threads
         Threads.Threads[Thread.ID] = Thread;
