@@ -1,0 +1,385 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: code structure inquiry, queries ai for missing code structures
+- The user is looking for specific code structures or syntax in the AI-generated code.
+- The participant asks the AI for help with specific code structures or syntax.
+
+2.
+Concepts: error fixing, manually fixes ai code errors, manual error fixing
+- Fixes errors or addresses issues in AI-generated code, often through manual intervention.
+- The user manually fixes errors in AI-generated code.
+- Manually fixes errors or addresses issues in AI-generated code without seeking explanations.
+
+3.
+Concepts: self-reliance, self-reliant in fixing errors
+- Demonstrates self-reliance in debugging and problem-solving.
+- Tries to debug AI-generated code independently before seeking help.
+
+4.
+Concepts: ai errors, errors found
+- Identifies errors in AI-generated code.
+- Finds errors in the AI-generated code.
+
+5.
+Concepts: code review, identifies errors in ai code, interprets ai mistakes, debugs ai-generated code
+- Conducts code reviews to understand and debug AI-generated code.
+- Participant identifies errors in AI-generated code.
+- Interprets and fixes mistakes in AI-generated code.
+- Debugs AI-generated code to identify and fix errors.
+
+6.
+Concepts: unclear error message, error message issues
+- Participant encounters an unclear error message.
+- Participant encounters an error message that is unclear or unhelpful.
+
+7.
+Concepts: debugging difficulty, debug: unhelpful error messages, error message not as helpful
+- The user finds debugging difficult due to unclear error messages.
+- The system's error messages are not helpful in debugging.
+- The user finds error messages unhelpful in debugging.
+
+8.
+Concepts: addressing debugging difficulties, experiences debugging challenges
+- Addresses difficulties or challenges in debugging, troubleshooting, or error-handling.
+- The code describes the challenges and frustrations experienced during the debugging process.
+
+9.
+Concepts: error reading, reads error messages
+- Participant reads error messages before making a decision.
+- Reads and interprets error messages to inform decision-making.
+
+10.
+Concepts: outside observer, considers chatgpt an outside observer
+- The expert views the AI as an outside observer that can catch errors that humans may not notice.
+- Views ChatGPT as an outside observer that can catch obvious errors that may not be apparent to humans.
+
+11.
+Concepts: misinterpretation, identifies misunderstanding
+- Misinterprets AI's responses or intentions
+- Identifies and explains misunderstandings or misinterpretations of AI's responses.
+
+12.
+Concepts: options, reports on limited options to select from, dislikes limited ai options
+- Participant is dissatisfied with the limited options provided by AI.
+- Expresses frustration or limitations with the available options or responses provided by AI.
+- Expresses frustration with limited AI options
+
+13.
+Concepts: limits choices, critiques limited options
+- The expert finds the AI's options too limited and restrictive.
+- Critiques the limited options or functionality of the AI system.
+
+14.
+Concepts: frustration point, expresses frustration
+- Expresses frustration when AI-generated code gets stuck in a loop and cannot fix errors.
+- Expresses frustration with AI-generated code that contains errors or hallucinations.
+
+15.
+Concepts: human-ai conflict, frustration with error resolution, user frustration
+- Expresses frustration with the LLM-driven interface's error messages.
+- Expresses frustration with error resolution options or AI's inability to fix errors.
+- Participant expresses frustration with error messages or AI's limitations.
+
+16.
+Concepts: experiences frustration, experiences frustration with ai limitations
+- Instances where E04 expresses frustration with the AI's performance or limitations.
+- Experiences frustration with the AI's limitations.
+
+17.
+Concepts: chatlogo ability (negative), chatlogo ability (negative): flexibility or customization
+- The participant expresses disappointment or frustration with ChatLogo's abilities.
+- Participant is dissatisfied with AI's limited flexibility or customization options.
+
+18.
+Concepts: reliant on ai output when facing time constraint, seeks human assistance but due to time constraint rely on instant feedback
+- The participant relies on AI output when facing time constraints.
+- The participant seeks human assistance but relies on instant feedback from the AI due to time constraints.
+
+19.
+Concepts: time constraints, uses ai code due to time constraints
+- Faces time constraints in using AI-generated code.
+- The participant uses AI-generated code due to time constraints, prioritizing efficiency over manual coding.
+
+20.
+Concepts: notes chatgpt's input limitations, chatgpt ability (negative): limitation in reading long codes
+- Notes AI's limitations in processing long code pieces.
+- Highlights limitations or drawbacks of AI, such as its inability to handle long codes or complex inputs.
+
+21.
+Concepts: long code, long code limitations
+- Handles long code pieces or limitations in AI processing capacity.
+- AI's difficulty in processing and understanding large codebases.
+
+22.
+Concepts: ai ability (negative): error, warns about potential ai errors
+- Expresses caution in trusting the AI's responses and advises using judgment.
+- Warns users to use their own judgment when evaluating ChatGPT's responses, as they may contain errors.
+
+23.
+Concepts: hallucination, mentions ai hallucination
+- The participant mentions that AI might hallucinate or provide incorrect information.
+- Instances where the interviewee discusses the potential for AI to generate incorrect or non-existent information.
+- Instances where AI generates incorrect or fabricated information.
+
+24.
+Concepts: debugging risks, highlights risks for novices
+- The participant raises concerns about the risks of blindly following the AI's suggestions, especially for novice users.
+- Expresses concerns about the risks or limitations of relying on AI, especially for novice users.
+
+25.
+Concepts: documentation critique, criticizes current technical documentation
+- Participant critiques existing documentation and imagines AI-based improvements.
+- The participant criticizes current technical documentation and imagines AI improving the learning process.
+
+26.
+Concepts: randomness, notes lack of determinism, non-deterministic, finds ai responses unpredictable
+- Evaluates AI responses as non-deterministic and unpredictable.
+- Notes the non-deterministic nature of AI responses.
+- The participant perceives the AI's responses as non-deterministic, meaning the output is not always predictable.
+- Finds AI responses unpredictable and non-deterministic.
+
+27.
+Concepts: limited experience, has only used chatgpt 3.5
+- The code has limited experience with AI, such as only using ChatGPT 3.5.
+- Has limited experience with AI-generated code (only used ChatGPT 3.5).
+
+28.
+Concepts: current limitations, notes lack of external verification
+- Identifies current limitations of AI-generated code, such as lack of external verification.
+- Notes the lack of external verification in AI-generated code.
+
+29.
+Concepts: version issues, faces compatibility issues
+- The code highlights version issues and the limitations of using older versions of NetLogo.
+- The code refers to instances where the interviewee experiences compatibility issues with NetLogo versions.
+
+30.
+Concepts: smart editors, netlogo limitations
+- The participant discusses the lack of smart editors in NetLogo, comparing it to other languages that have this feature.
+- The participant highlights the limitations of NetLogo, such as the lack of smart code editors.
+
+31.
+Concepts: human-ai support, suggests ai could save time
+- Sees AI as a potential time-saver for learning new extensions and concepts in NetLogo.
+- The participant suggests that AI could save time in learning new extensions of NetLogo.
+
+32.
+Concepts: netlogo dictionary, keeps netlogo dictionary handy
+- Uses the NetLogo dictionary as a reference for syntax.
+- The user keeps a NetLogo dictionary handy to refer to syntax and commands.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: code structure inquiry, queries ai for missing code structures
+Relationship: The user is seeking help from the AI to understand specific code structures or syntax.
+Criteria: The user asks the AI for help with specific code structures or syntax.
+Phrase: Queries AI for code structure guidance.
+
+2.
+Concepts: error fixing, manually fixes ai code errors, manual error fixing
+Relationship: The user is taking manual action to fix errors in AI-generated code.
+Criteria: The user manually fixes errors in AI-generated code.
+Phrase: Manually fixes AI code errors.
+
+3.
+Concepts: self-reliance, self-reliant in fixing errors
+Relationship: The user is demonstrating independence in debugging and problem-solving.
+Criteria: The user tries to debug AI-generated code independently before seeking help.
+Phrase: Demonstrates self-reliance in error fixing.
+
+4.
+Concepts: ai errors, errors found
+Relationship: The user is identifying errors in AI-generated code.
+Criteria: The user identifies errors in AI-generated code.
+Phrase: Identifies AI code errors.
+
+5.
+Concepts: code review, identifies errors in ai code, interprets ai mistakes, debugs ai-generated code
+Relationship: The user is conducting a thorough review of AI-generated code to understand and fix errors.
+Criteria: The user conducts code reviews to understand and debug AI-generated code.
+Phrase: Conducts code reviews for error identification.
+
+6.
+Concepts: unclear error message, error message issues
+Relationship: The user is encountering unclear or unhelpful error messages.
+Criteria: The user encounters unclear error messages.
+Phrase: Encounters unclear error messages.
+
+7.
+Concepts: debugging difficulty, debug: unhelpful error messages, error message not as helpful
+Relationship: The user is experiencing difficulties in debugging due to unclear error messages.
+Criteria: The user finds debugging difficult due to unclear error messages.
+Phrase: Experiences debugging difficulties due to unclear error messages.
+
+8.
+Concepts: addressing debugging difficulties, experiences debugging challenges
+Relationship: The user is describing the challenges and frustrations experienced during the debugging process.
+Criteria: The user addresses difficulties or challenges in debugging.
+Phrase: Addresses debugging challenges.
+
+9.
+Concepts: error reading, reads error messages
+Relationship: The user is reading and interpreting error messages to inform decision-making.
+Criteria: The user reads error messages before making a decision.
+Phrase: Reads error messages for decision-making.
+
+10.
+Concepts: outside observer, considers chatgpt an outside observer
+Relationship: The user views the AI as an objective observer that can catch errors that humans may not notice.
+Criteria: The user views ChatGPT as an outside observer that can catch obvious errors.
+Phrase: Views AI as an outside observer.
+
+11.
+Concepts: misinterpretation, identifies misunderstanding
+Relationship: The user is identifying and explaining misunderstandings or misinterpretations of AI's responses.
+Criteria: The user identifies and explains misunderstandings of AI's responses.
+Phrase: Identifies AI response misinterpretations.
+
+12.
+Concepts: options, reports on limited options to select from, dislikes limited ai options
+Relationship: The user is expressing dissatisfaction with the limited options provided by AI.
+Criteria: The user expresses frustration with limited AI options.
+Phrase: Expresses frustration with limited AI options.
+
+13.
+Concepts: limits choices, critiques limited options
+Relationship: The user is critiquing the limited options or functionality of the AI system.
+Criteria: The user critiques the limited options or functionality of the AI system.
+Phrase: Critiques limited AI options.
+
+14.
+Concepts: frustration point, expresses frustration
+Relationship: The user is expressing frustration with AI-generated code that contains errors or hallucinations.
+Criteria: The user expresses frustration with AI-generated code.
+Phrase: Expresses frustration with AI-generated code.
+
+15.
+Concepts: human-ai conflict, frustration with error resolution, user frustration
+Relationship: The user is expressing frustration with the LLM-driven interface's error messages or limitations.
+Criteria: The user expresses frustration with error messages or AI limitations.
+Phrase: Expresses frustration with AI limitations.
+
+16.
+Concepts: experiences frustration, experiences frustration with ai limitations
+Relationship: The user is experiencing frustration with the AI's performance or limitations.
+Criteria: The user experiences frustration with AI limitations.
+Phrase: Experiences frustration with AI limitations.
+
+17.
+Concepts: chatlogo ability (negative), chatlogo ability (negative): flexibility or customization
+Relationship: The user is expressing disappointment or frustration with ChatLogo's abilities.
+Criteria: The user expresses disappointment with ChatLogo's abilities.
+Phrase: Expresses disappointment with ChatLogo's abilities.
+
+18.
+Concepts: reliant on ai output when facing time constraint, seeks human assistance but due to time constraint rely on instant feedback
+Relationship: The user is relying on AI output due to time constraints.
+Criteria: The user relies on AI output when facing time constraints.
+Phrase: Relies on AI output due to time constraints.
+
+19.
+Concepts: time constraints, uses ai code due to time constraints
+Relationship: The user is using AI-generated code due to time constraints.
+Criteria: The user uses AI-generated code due to time constraints.
+Phrase: Uses AI-generated code due to time constraints.
+
+20.
+Concepts: notes chatgpt's input limitations, chatgpt ability (negative): limitation in reading long codes
+Relationship: The user is noting AI's limitations in processing long code pieces.
+Criteria: The user notes AI's limitations in processing long codes.
+Phrase: Notes AI's limitations in processing long codes.
+
+21.
+Concepts: long code, long code limitations
+Relationship: The user is handling long code pieces or limitations in AI processing capacity.
+Criteria: The user handles long code limitations.
+Phrase: Handles long code limitations.
+
+22.
+Concepts: ai ability (negative): error, warns about potential ai errors
+Relationship: The user is expressing caution in trusting the AI's responses and advises using judgment.
+Criteria: The user warns about potential AI errors.
+Phrase: Warns about potential AI errors.
+
+23.
+Concepts: hallucination, mentions ai hallucination
+Relationship: The user is mentioning the potential for AI to generate incorrect or non-existent information.
+Criteria: The user mentions AI hallucination.
+Phrase: Mentions AI hallucination.
+
+24.
+Concepts: debugging risks, highlights risks for novices
+Relationship: The user is raising concerns about the risks of blindly following the AI's suggestions, especially for novice users.
+Criteria: The user highlights risks for novice users.
+Phrase: Highlights risks for novice users.
+
+25.
+Concepts: documentation critique, criticizes current technical documentation
+Relationship: The user is critiquing existing documentation and imagining AI-based improvements.
+Criteria: The user critiques current technical documentation.
+Phrase: Critiques current technical documentation.
+
+26.
+Concepts: randomness, notes lack of determinism, non-deterministic, finds ai responses unpredictable
+Relationship: The user is evaluating AI responses as non-deterministic and unpredictable.
+Criteria: The user perceives AI responses as non-deterministic.
+Phrase: Perceives AI responses as non-deterministic.
+
+27.
+Concepts: limited experience, has only used chatgpt 3.5
+Relationship: The user has limited experience with AI, such as only using ChatGPT 3.5.
+Criteria: The user has limited experience with AI.
+Phrase: Has limited experience with AI.
+
+28.
+Concepts: current limitations, notes lack of external verification
+Relationship: The user is identifying current limitations of AI-generated code, such as lack of external verification.
+Criteria: The user notes lack of external verification.
+Phrase: Notes lack of external verification.
+
+29.
+Concepts: version issues, faces compatibility issues
+Relationship: The user is highlighting version issues and limitations of using older versions of NetLogo.
+Criteria: The user faces compatibility issues with NetLogo versions.
+Phrase: Faces compatibility issues with NetLogo versions.
+
+30.
+Concepts: smart editors, netlogo limitations
+Relationship: The user is discussing the lack of smart editors in NetLogo, comparing it to other languages that have this feature.
+Criteria: The user highlights NetLogo limitations.
+Phrase: Highlights NetLogo limitations.
+
+31.
+Concepts: human-ai support, suggests ai could save time
+Relationship: The user sees AI as a potential time-saver for learning new extensions and concepts in NetLogo.
+Criteria: The user suggests AI could save time.
+Phrase: Suggests AI could save time.
+
+32.
+Concepts: netlogo dictionary, keeps netlogo dictionary handy
+Relationship: The user is using the NetLogo dictionary as a reference for syntax.
+Criteria: The user keeps a NetLogo dictionary handy.
+Phrase: Keeps a NetLogo dictionary handy.

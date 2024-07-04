@@ -1,0 +1,47 @@
+You are an expert in thematic analysis with grounded theory, working on open coding.
+This is the first round of coding. Your goal is to describe each item with verb phrases.
+Try your best to interpret events, contexts, and intents. Always use ";" to separate verb phrases.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Create multiple interpretations for both the interviewee's verbal response and the interviewer's observations. Take note of emotions explicitly or implicitly expressed by the interviewee. Code through the lens of human-computer interaction and learning sciences.
+
+Always follow the output format:
+---
+Thoughts: {A paragraph of plans and guiding questions about analyzing the conversation from multiple theoretical angles}
+Interpretation phrases for each item (9 in total):
+1. {phrase 1}; {phrase 2}; {phrase 3}; ...
+...
+9. {phrase 1}; {phrase 2}; {phrase 3}; ...
+Summary: {A somehow detailed summary of the conversation, including previous ones}
+Notes: {Notes and hypotheses about the conversation until now}
+~~~
+1. E01: I've observed when I tried to suggest ChatGPT to other people, they're, um, they are amazed at the output that I can get. And that's because I know how to ask six questions in a row to zero in on what I'm after. (interviewer's observation) To maximize the capability of ChatGPT, one needs to know how to iteratively ask questions.
+Preliminary phrases: knowing how to ask iterative questions; maximizing chat gpt's capabilities
+2. E01: And, and they don't, this is an unfamiliar task to them apparently. So they want to ask one question and get the right answer the first time. And I, I don't have that expectation. I'll ask the right question and it'll get me 80% of the way there. (interviewer's observation) Novices might have a too high expectation for ChatGPT (but it cannot achieve that).
+Preliminary phrases: novices may have high expectations; importance of understanding ai's limitations
+3. E01: I speak to (ChatGPT) like a person. I could just walk in the room and go write me code that does X, but I don't, I start with good morning. And it comes back, but it comes back with good morning. How can I assist you today? It's pretty good at figuring out natural language. So in some sense that you might just be better off, just pretend it's not a computer. (interviewer's observation) E01 reflects on how he interacts with ChatGPT like a person.
+Preliminary phrases: interacting with chat gpt like a person; natural language understanding and collaboration
+4. E01: In terms of learning experiences, like ramping up to using an assistant wrapping up to using ChatGPT might have some sort of evaluates. How well can you write instructions for another person? Some people just don't know how to conceptualize a problem. (interviewer's observation) E01 discusses how "writing instructions" is a capability that is missing on many people, and that is key to work with AI.
+5. E01: (no verbal response) (interviewer's observation) E01 reads error messages before making a choice.
+6. E01: So I would find it more helpful if it asked the questions one at a time. Before you tell me nine more errors. Just because users are always overfilling their buffer. So smaller requests work better. (interviewer's observation) E01 suggests (for novice) only showing one error at a time in the AI-driven system.
+7. E01: (no verbal response) (interviewer's observation) E01 chooses to fix the problem rather than showing the explanation.
+8. E01: Let's suppose that I'm trying to debug this error and I have trouble and I can't figure it out. So my next step would be to go to the user group. So if I had a button here that said please explain my situation so that I can paste it to the user group. User is attempting to write this. This is the code I wrote. This is the error it generates that the user doesn't understand. Can any human figure out what's wrong? I just press a button and it says, okay, paste it to the user group and we're done. And it's hard for users. (interviewer's observation) E01 suggests that AI could potentially help users write "help" posts that summarizes the situation: the need, the code, the error that the user does not understand.
+9. E01: "please write a netlogo program that produces a checker board with black and white squares?" (interviewer's observation) E01 asks ChatLogo to create a checkerboard pattern.
+===
+---
+Thoughts: In this conversation, the interviewee shares their experiences and perceptions of using LLM-driven interfaces, specifically ChatGPT. The conversation revolves around the strengths and weaknesses of these interfaces, as well as the interviewee's adoption plans. I will analyze the conversation through the lens of human-computer interaction and learning sciences, exploring how the interviewee interacts with the AI, their expectations, and the challenges they face. Guiding questions for further analysis include: How do users' expectations influence their interaction with LLM-driven interfaces? What are the key skills required to effectively use these interfaces? How can these interfaces be designed to better support users' needs?
+
+Interpretation phrases for each item:
+
+1. recognizing the importance of iterative questioning; leveraging AI capabilities through strategic questioning; appreciating the value of incremental progress
+2. holding unrealistic expectations of AI capabilities; underestimating the complexity of AI interactions; requiring education on AI limitations
+3. personifying AI; employing natural language to facilitate collaboration; recognizing AI's ability to understand context
+4. acknowledging the importance of instruction-writing skills; identifying a key challenge in working with AI; highlighting the need for explicit problem conceptualization
+5. cautiously reviewing error messages; exercising prudence in decision-making; prioritizing error analysis
+6. advocating for incremental feedback; recognizing the cognitive limitations of users; promoting a user-centered design approach
+7. prioritizing problem-solving over explanation; focusing on practical solutions; possibly indicating a preference for action over understanding
+8. envisioning AI-assisted help-seeking; recognizing the value of AI in facilitating user support; proposing a novel feature for AI-driven interfaces
+9. exploring AI's creative potential; testing AI's capabilities; demonstrating a willingness to experiment with AI-driven interfaces
+
+Summary: The conversation with E01 reveals their experiences and perceptions of using LLM-driven interfaces, particularly ChatGPT. They highlight the importance of iterative questioning, recognizing AI's limitations, and personifying AI to facilitate collaboration. E01 also identifies key challenges, such as users' unrealistic expectations and the need for instruction-writing skills. They propose design solutions, like incremental feedback and AI-assisted help-seeking, to better support users' needs.
+
+Notes: The conversation suggests that users' expectations and understanding of AI capabilities significantly influence their interaction with LLM-driven interfaces. The interviewee's reflections also imply that effective use of these interfaces requires specific skills, such as instruction-writing and problem conceptualization. Furthermore, the conversation highlights the potential benefits of designing AI-driven interfaces that are more user-centered and supportive of users' needs.

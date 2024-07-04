@@ -1,0 +1,225 @@
+Hi ChatGPT, I want to analyze the following interaction in one of Physics Lab's online message groups.
+Please give me a codebook to analyze factors within this interaction that could contribute to the research.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Create multiple interpretations for both the interviewee's verbal response and the interviewer's observations. Take note of emotions explicitly or implicitly expressed by the interviewee. Code through the lens of human-computer interaction and learning sciences.
+For each code, try to find 3 quotes. Always follow the output format:
+---
+## Label: A label of code 1
+Definition: A definition of code 1
+- "Example quote 1"
+- "Example quote 2"
+
+## ...
+~~~
+1. E04: I've found that AI is really helpful for like, translating other models from other languages into NetLogo, for example. (interviewer's observation) Helpful for translating from other languages into NetLogo
+2. E04: I use it a lot for developing like, equations for specific like, aspects of agent-based models that I create. (interviewer's observation) Helpful for creating equations
+3. E04: I guess, in their databases, they still have like, NetLogo 5 in there and stuff. So like, for example, you know, the anonymous functions, they still use like, the old, sometimes I'll get like, the old functionality for the anonymous functions. (interviewer's observation) Writing code in older versions of NetLogo
+4. E04: I don't know if I've ever tried 4. I guess it would be 3.5. (interviewer's observation) Only used ChatGPT 3.5 before
+5. E04: The typical idea that I had was like a very, very simple neural network. (interviewer's observation) Task: a very simple neural network
+6. E04: I just like being able to kind of, like, iteratively build it. The thing that I always do when I create a model is I do, like, the initial command. I'll set up and go here. I'll go ahead and after I kind of set up the buttons, I'll put the functions behind them back here in the interface. (interviewer's observation) E04 creates the code skeleton before asking ChatGPT. He has a clear idea & established process of building ABMs.
+7. E04: "I want to create a simple feed-forward neural network in NetLogo with one hidden layer."
+8. E04: "How about without the R extension" (interviewer's observation) E04 evaluates the AI response and decides that he does not need to use the R extension.
+9. E04: Sometimes it'll give me instructions and sometimes it'll just give me the code and then sometimes it'll tell me to use R extensions or something like that. It is random in that regard, it's not deterministic in terms of what result you're going to get. (interviewer's observation) E04 regularly evaluates the AI responses and thinks that it is not deterministic.
+10. E04: (Throughout this phase. He uses generated code only for reference when writing his own.) (interviewer's observation) E04 writes code manually with the steps given by ChatGPT, rather than copy & paste code.
+11. E04: Because I'll like forget the syntax sometimes and I usually use the netlogo dictionary and just have it like open to the side. (interviewer's observation) E04 still forgets about the syntax and ChatGPT can help.
+12. E04: "how to define breeds in netlogo" (interviewer's observation) E04 tries to find certain syntax structures from the AI-generated code and ask for it when it is not there.
+13. E04: So one thing I'm realizing now, part of my setup needs to be reset all. (interviewer's observation) E04 sees from the generated code and realizes that he needs to reset.
+14. E04: It'd be that I just take this and see what this does. This should just be a single node so it'll kind of overwrite what I already did. (interviewer's observation) E04 uses the AI-generated code completely when realizing time constraints.
+15. E04: So this is interesting because, you know, obviously it's wrong. So I have to kind of interpret what's going on here. (interviewer's observation) E04 fixes common NetLogo mistakes by himself.
+16. E04: (no verbal response) (interviewer's observation) E04 reads through the code and tries to debug with himself when the generated code does not do what it does.
+17. E04: "how can I plot the output of this model?" (interviewer's observation) E04 was prompted to follow-up with ChatGPT. 
+18. E04: (no verbal response) (interviewer's observation) Again, he reads the code and selectively copies code to the model.
+19. E04: (no verbal response) (interviewer's observation) E04 was prompted to copy and paste error messages to ChatGPT.
+20. E04: Interesting because it's trying to plot the name, which I know is wrong, but I'm just trying to remember how to... (interviewer's observation) E04 reasons through the responses of ChatGPT.
+21. E04: I'll go on Stack Exchange or Stack Overflow, I'm part of the NetLogo listserv, but obviously there's a delay there. So in the instance that I need immediate feedback, it is really helpful. (interviewer's observation) Nice to have immediate feedback.
+22. E04: It doesn't... Include everything that you need.  (interviewer's observation) Misses code structures at times.
+23. E04: To me, it seems like you need to have a certain degree of expertise to understand where the errors are and how to fix them. Because otherwise it's like you're going down this path where you're blindly following the ChatGPT and you have no idea what's going on. For less experienced people, I wouldn't like that because it could put you in a worse situation. (interviewer's observation) Requires expertise to understand errors and debug them. Risks to blindly follow ChatGPT, esp. for less experienced people.
+24. E04: So maybe I didn't prove it today, but I feel like I'm pretty competent with NetLogo. (interviewer's observation) Prefers helping others learn NetLogo.
+25. E04: So if I can talk to it in NetLogo, does that mean I could give it in the logo command and then it would like turn that into code on the backend or? (interviewer's observation) Initial confusion over what the system could do.
+26. E04: "I want to create a simple perception" (interviewer's observation) Thinks a bit about whether to use "in NetLogo" or not.
+27. E04: I know that Perceptron model exists in the NetLogo model library. So it's interesting to me that it didn't pull that up, but it could be that I used like the wrong verbiage, but it doesn't understand what I'm trying to do. (interviewer's observation) E04 expects ChatLogo to find "Perceptron" model from the library but it does not. He evaluates the search results of the AI.
+28. E04: "I want to create a neural network" - I want to see if it actually pulls up the model. (interviewer's observation) E04 experiments with the AI to see what phrases could give a correct search result.
+29. E04: So that's interesting anyways, I'm going back to Perceptron. (interviewer's observation) E04 gives up immediately after the AI asks the same question again.
+30. E04: Oh and you can run it. That's cool. (interviewer's observation) E04 reads the AI output and decides to copy & paste it although he could also run it.
+31. E04: (no verbal response) (interviewer's observation) E04 manually tries to fix the errors in the AI-generated code and did not choose "explain it".
+32. E04: "Can train-perceptron be turned into a reporter" (interviewer's observation) E04 uses "can you fix with my own idea".
+33. E04: So, I guess that's kind of annoying because I didn't really want it to explain here, but that was the only option that I had. (interviewer's observation) E04 wants the "fix" option right after the errors are identified.
+34. E04: It seems like a bug because I feel like all my parentheses are closed and all of my arguments and syntax are correct. (interviewer's observation) A less-clear error message makes E04 stuck.
+35. E04: "Draw a smiley face" / "Drawing on the canvas" (interviewer's observation) E04 switches to a simpler task.
+36. E04: Part of the issue that I'm having now is just kind of like the learning curve, just trying to figure out how everything works. (interviewer's observation) E04 mentions a learning curve, likely because our current design is not fine-tuned for experts.
+37. E04: I thought it was really cool that, you know, that it knew exactly what I wanted to do and then kind of allowed me to define like the certain parameters for what I wanted to do. (interviewer's observation) Having the interface to clarify parameters helps.
+38. E04: It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent. (interviewer's observation) Better troubleshooting capability.
+39. E04: I really liked how, like the code that it generates, if you could just kind of place that into the model automatically.  (interviewer's observation) The capability to put into the model automatically.
+40. E04: It seems like it's, you know, pretty straightforward to use and like intuitive, which is nice. And it's like, it's easy to interact with. So I feel like if I had like enough time to play around with it, it could be like really helpful. (interviewer's observation) Straightforward to use and intuitive.
+41. E04: I think that it's nice that it's, it clarifies error codes. I think that's probably where people who are new get stuck the most is trying to figure out the syntax and all the different errors. (interviewer's observation) The capability to clarify the errors.
+42. E04: And it could take a lot of time to like search the documentation and go online and try and figure out all those answers and just to have it like right there. So you can kind of stay within the task is really nice. (interviewer's observation) The capability to search for documentation and read it inside the workspace: esp. beneficial for novices.
+43. E04: It seems to explain things pretty well, it does not seems to be overly technical. (interviewer's observation) Provides clear, less technical explanations.
+44. E04: It includes debugging, it is actually trying to incorporate like a unit test, which is really cool and really helpful, especially for beginners, because they can kind of, you know, check their inputs. Beginners, everyone really. They can debug their code appropriately. (interviewer's observation) Debugging capability.
+45. E04: It's basically following best practices. It is not trying to ruthlessly create a model. (interviewer's observation) Not "ruthlessly create a model".
+46. E04: Like in this type of, like, like I was saying with this window, for example, where it's giving you the options and basically there was that one time where the only option was for it to explain itself.  Which makes sense, but it'd be nice if I could just kind of like forego that and just keep doing, you know, But you know, for someone that's probably not as useful for someone who's like still learning, but like, I guess for someone who's more experienced, it's nice to be able to just like skip over things that you already know. (interviewer's observation) Options too limited; tension between a novice-oriented/expert-oriented design.
+47. E04: And then like the only other thing I didn't like was, you know, kind of how it was getting stuck on itself and it wasn't able to fix that one error. (interviewer's observation) Could get stuck in a loop and cannot fix that.
+48. E04: maybe you saw something that I didn't, but from my perspective, it seemed as though the code was set up appropriately, but it was marking the syntax as wrong. So maybe I was missing something, but I didn't see anything missing. So that was kind of frustrating. (interviewer's observation) Shows error messages even when it seems to be correct (that's a bug identified)
+===
+Based on the interaction, here are some codes that could be used to analyze the factors that contribute to the research question:
+
+---
+## Label: Perception of AI helpfulness
+Definition: The interviewee's perception of the helpfulness of AI in translating models from other languages into NetLogo and creating equations for agent-based models.
+- "I've found that AI is really helpful for like, translating other models from other languages into NetLogo, for example." (E04)
+- "I use it a lot for developing like, equations for specific like, aspects of agent-based models that I create." (E04)
+
+## Label: Use of older versions of NetLogo
+Definition: The interviewee's use of older versions of NetLogo and the resulting issues with functionality.
+- "I guess, in their databases, they still have like, NetLogo 5 in there and stuff. So like, for example, you know, the anonymous functions, they still use like, the old, sometimes I'll get like, the old functionality for the anonymous functions." (E04)
+
+## Label: Task: simple neural network
+Definition: The interviewee's task of creating a simple neural network in NetLogo with one hidden layer.
+- "The typical idea that I had was like a very, very simple neural network." (E04)
+
+## Label: Established process of building ABMs
+Definition: The interviewee's clear idea and established process of building agent-based models (ABMs) in NetLogo.
+- "I just like being able to kind of, like, iteratively build it. The thing that I always do when I create a model is I do, like, the initial command. I'll set up and go here. I'll go ahead and after I kind of set up the buttons, I'll put the functions behind them back here in the interface." (E04)
+
+## Label: Evaluation of AI responses
+Definition: The interviewee's evaluation of AI responses and decision to not use the R extension.
+- "How about without the R extension" (E04)
+
+## Label: Non-deterministic AI
+Definition: The interviewee's perception of the AI as non-deterministic in terms of what result will be given.
+- "Sometimes it'll give me instructions and sometimes it'll just give me the code and then sometimes it'll tell me to use R extensions or something like that. It is random in that regard, it's not deterministic in terms of what result you're going to get." (E04)
+
+## Label: Manual code writing with AI guidance
+Definition: The interviewee's use of AI-generated code only for reference when writing their own code.
+- "(Throughout this phase. He uses generated code only for reference when writing his own.)" (Interviewer observation)
+
+## Label: Forgetting syntax
+Definition: The interviewee's use of AI to help with syntax when they forget it.
+- "Because I'll like forget the syntax sometimes and I usually use the netlogo dictionary and just have it like open to the side." (E04)
+
+## Label: Searching for syntax structures
+Definition: The interviewee's use of AI to find certain syntax structures.
+- "how to define breeds in netlogo" (E04)
+
+## Label: Realizing the need to reset
+Definition: The interviewee's realization of the need to reset based on AI-generated code.
+- "So one thing I'm realizing now, part of my setup needs to be reset all." (E04)
+
+## Label: Using AI-generated code completely
+Definition: The interviewee's use of AI-generated code completely when realizing time constraints.
+- "It'd be that I just take this and see what this does. This should just be a single node so it'll kind of overwrite what I already did." (E04)
+
+## Label: Fixing common NetLogo mistakes
+Definition: The interviewee's ability to fix common NetLogo mistakes by themselves.
+- "So this is interesting because, you know, obviously it's wrong. So I have to kind of interpret what's going on here." (E04)
+
+## Label: Reading and debugging AI-generated code
+Definition: The interviewee's reading and debugging of AI-generated code when it does not do what it is supposed to do.
+- "(no verbal response)" (Interviewer observation)
+
+## Label: Prompting follow-up with AI
+Definition: The interviewee's prompting of follow-up with AI.
+- "how can I plot the output of this model?" (E04)
+
+## Label: Missing code structures
+Definition: The interviewee's perception of AI as missing code structures at times.
+- "It doesn't... Include everything that you need." (E04)
+
+## Label: Requiring expertise to understand errors
+Definition: The interviewee's perception of the need for expertise to understand errors and debug them.
+- "To me, it seems like you need to have a certain degree of expertise to understand where the errors are and how to fix them." (E04)
+
+## Label: Risks of blindly following AI
+Definition: The interviewee's perception of the risks of blindly following AI, especially for less experienced people.
+- "Because otherwise it's like you're going down this path where you're blindly following the ChatGPT and you have no idea what's going on. For less experienced people, I wouldn't like that because it could put you in a worse situation." (E04)
+
+## Label: Preference for helping others learn NetLogo
+Definition: The interviewee's preference for helping others learn NetLogo.
+- "So maybe I didn't prove it today, but I feel like I'm pretty competent with NetLogo." (E04)
+
+## Label: Initial confusion over AI capabilities
+Definition: The interviewee's initial confusion over what the AI could do.
+- "So if I can talk to it in NetLogo, does that mean I could give it in the logo command and then it would like turn that into code on the backend or?" (E04)
+
+## Label: Experimenting with AI
+Definition: The interviewee's experimentation with AI to see what phrases could give a correct search result.
+- "I want to create a neural network" - I want to see if it actually pulls up the model. (E04)
+
+## Label: Giving up after AI asks the same question again
+Definition: The interviewee's giving up immediately after the AI asks the same question again.
+- "So that's interesting anyways, I'm going back to Perceptron." (E04)
+
+## Label: Reading AI output and deciding to copy & paste
+Definition: The interviewee's reading of AI output and decision to copy & paste it.
+- "Oh and you can run it. That's cool." (E04)
+
+## Label: Manually fixing errors in AI-generated code
+Definition: The interviewee's manual fixing of errors in AI-generated code.
+- "(no verbal response)" (Interviewer observation)
+
+## Label: Using "can you fix with my own idea"
+Definition: The interviewee's use of "can you fix with my own idea".
+- "Can train-perceptron be turned into a reporter" (E04)
+
+## Label: Wanting the "fix" option after errors are identified
+Definition: The interviewee's wanting the "fix" option right after errors are identified.
+- "So, I guess that's kind of annoying because I didn't really want it to explain here, but that was the only option that I had." (E04)
+
+## Label: Stuck due to less-clear error message
+Definition: The interviewee's being stuck due to a less-clear error message.
+- "It seems like a bug because I feel like all my parentheses are closed and all of my arguments and syntax are correct." (E04)
+
+## Label: Switching to a simpler task
+Definition: The interviewee's switching to a simpler task.
+- "Draw a smiley face" / "Drawing on the canvas" (E04)
+
+## Label: Mentioning a learning curve
+Definition: The interviewee's mentioning of a learning curve.
+- "Part of the issue that I'm having now is just kind of like the learning curve, just trying to figure out how everything works." (E04)
+
+## Label: Having the interface to clarify parameters
+Definition: The interviewee's perception of the helpfulness of having the interface to clarify parameters.
+- "I thought it was really cool that, you know, that it knew exactly what I wanted to do and then kind of allowed me to define like the certain parameters for what I wanted to do." (E04)
+
+## Label: Better troubleshooting capability
+Definition: The interviewee's perception of the AI's better troubleshooting capability.
+- "It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent." (E04)
+
+## Label: Capability to put into the model automatically
+Definition: The interviewee's perception of the helpfulness of the capability to put AI-generated code into the model automatically.
+- "I really liked how, like the code that it generates, if you could just kind of place that into the model automatically." (E04)
+
+## Label: Straightforwardness and intuitiveness
+Definition: The interviewee's perception of the AI as straightforward to use and intuitive.
+- "It seems like it's, you know, pretty straightforward to use and like intuitive, which is nice. And it's like, it's easy to interact with. So I feel like if I had like enough time to play around with it, it could be like really helpful." (E04)
+
+## Label: Capability to clarify errors
+Definition: The interviewee's perception of the helpfulness of the AI's capability to clarify errors.
+- "I think that it's nice that it's, it clarifies error codes. I think that's probably where people who are new get stuck the most is trying to figure out the syntax and all the different errors." (E04)
+
+## Label: Capability to search for documentation
+Definition: The interviewee's perception of the helpfulness of the AI's capability to search for documentation and read it inside the workspace.
+- "And it could take a lot of time to like search the documentation and go online and try and figure out all those answers and just to have it like right there. So you can kind of stay within the task is really nice." (E04)
+
+## Label: Providing clear, less technical explanations
+Definition: The interviewee's perception of the AI's provision of clear, less technical explanations.
+- "It seems to explain things pretty well, it does not seems to be overly technical." (E04)
+
+## Label: Debugging capability
+Definition: The interviewee's perception of the helpfulness of the AI's debugging capability.
+- "It includes debugging, it is actually trying to incorporate like a unit test, which is really cool and really helpful, especially for beginners, because they can kind of, you know, check their inputs. Beginners, everyone really. They can debug their code appropriately." (E04)
+
+## Label: Not "ruthlessly create a model"
+Definition: The interviewee's perception of the AI as not "ruthlessly create a model".
+- "It's basically following best practices. It is not trying to ruthlessly create a model." (E04)
+
+## Label: Tension between novice-oriented/expert-oriented design
+Definition: The interviewee's perception of the tension between a novice-oriented and expert-oriented design.
+- "Like in this type of, like, like I was saying with this window, for example, where it's giving you the options and basically there was that one time where the only option was for it to explain itself.  Which makes sense, but it'd be nice if I could just kind of like forego that and just keep doing, you know, But you know, for someone that's probably not as useful for someone who's like still learning, but like, I guess for someone who's more experienced, it's nice to be able to just like skip over things that you already know." (E04)
+
+## Label: Getting stuck in a loop and cannot fix
+Definition: The interviewee's perception of the AI as getting stuck in a loop and being unable to fix errors.
+- "And then like the only other thing I didn't like was, you know, kind of how it was getting stuck on itself and it wasn't able to fix that one error." (E04)
+
+## Label: Showing error messages even when it seems to be correct
+Definition: The interviewee's perception of the AI as showing error messages even when it seems to be correct.
+- "maybe you saw something that I didn't, but from my perspective, it seemed as though the code was set up appropriately, but it was marking the syntax as wrong. So maybe I was missing something, but I didn't see anything missing. So that was kind of frustrating." (E04)

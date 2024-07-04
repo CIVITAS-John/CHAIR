@@ -97,16 +97,26 @@ export async function RequestEmbeddings(Sources: string[], Cache: string): Promi
     // Request the online embeddings
     var BatchSize = 50;
     for (var I = 0; I < Requests.length; I += BatchSize) {
-        var Results = await Model.embedDocuments(Requests.slice(I, I + BatchSize).map((Index) => Sources[Index]));
-        for (var J = 0; J < Results.length; J++) {
-            var Index = Requests[I + J];
-            var Embedding = new Float32Array(Results[J]);
-            // Check if all elements are 0
-            if (Embedding.every((Value) => Value == 0))
-                throw new Error(`Invalid embedding for: ${Sources[Index]}`);
-            Embeddings.set(Embedding, Dimensions * Index);
-            var CacheFile = `${CacheFolder}/${md5(Sources[Index])}.bytes`;
-            File.writeFileSync(CacheFile, Embedding);
+        var Retry = 0;
+        for (var I = 0; I < Retry; I++) {
+            try {
+                var Results = await Model.embedDocuments(Requests.slice(I, I + BatchSize).map((Index) => Sources[Index]));
+                for (var J = 0; J < Results.length; J++) {
+                    var Index = Requests[I + J];
+                    var Embedding = new Float32Array(Results[J]);
+                    // Check if all elements are 0
+                    if (Embedding.every((Value) => Value == 0))
+                        throw new Error(`Invalid embedding for: ${Sources[Index]}`);
+                    Embeddings.set(Embedding, Dimensions * Index);
+                    var CacheFile = `${CacheFolder}/${md5(Sources[Index])}.bytes`;
+                    File.writeFileSync(CacheFile, Embedding);
+                }
+                break;
+            } catch (Error) {
+                if (Retry >= 3) throw Error;
+                console.error(Error);
+                Retry++;
+            }
         }
     }
     return Embeddings;

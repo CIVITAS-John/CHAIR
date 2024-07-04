@@ -1,0 +1,387 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: simplicity of code, prefers simple
+- Participant values simplicity in code.
+- The participant prefers simple and accessible code, emphasizing the importance of maintainability.
+
+2.
+Concepts: finds feature beneficial for novices, appreciates in-task documentation search
+- The participant finds a feature beneficial for novice users, such as searching documentation within the workspace.
+- The participant values the ability to search for documentation and read it inside the workspace, especially for novices.
+- The participant appreciates the capability to search for documentation and read it inside the workspace, especially for novices.
+
+3.
+Concepts: documentation search, values integration
+- The participant values the capability to search for documentation and read it within the workspace.
+- The participant values integration, specifically with searching and reading documentation inside the workspace.
+
+4.
+Concepts: experiences variability in ai outputs, lack of consistency in output
+- Participant experiences variability in AI outputs.
+- The participant notes the lack of consistency in the AI's output and is unsure what to expect.
+
+5.
+Concepts: randomness, finds ai responses unpredictable, notes lack of determinism
+- Evaluates AI responses as non-deterministic and unpredictable.
+- Finds AI's responses to be unpredictable and non-deterministic.
+- Notes the non-deterministic nature of AI's responses, which can be unpredictable.
+
+6.
+Concepts: hallucination, mentions ai hallucination
+- The participant mentions that AI might hallucinate or provide incorrect information.
+- Instances where the interviewee discusses the potential for AI to generate incorrect or non-existent information.
+- Instances where AI generates incorrect or fabricated information.
+- Expert shares an experience where AI generated non-existent functions.
+
+7.
+Concepts: debugging risks, human-ai: no need to blindly follow
+- The participant warns about the risks of blindly following the AI's suggestions without understanding the underlying code.
+- The participant cautions against blindly following the AI's suggestions without understanding the underlying code.
+
+8.
+Concepts: ai ability (negative): error, warns about potential ai errors
+- Expresses caution in trusting the AI's responses and advises using judgment.
+- Warns users to use their own judgment when evaluating ChatGPT's responses, as they may contain errors.
+
+9.
+Concepts: questioning ai capabilities, initial confusion about ai capabilities
+- Participants express initial confusion or uncertainty about the capabilities of ChatGPT.
+- Expert expresses initial confusion about the capabilities of the AI system.
+
+10.
+Concepts: limited experience, limited experience with chatgpt
+- The code is limited by the user's experience with AI, such as only using ChatGPT 3.5.
+- Participants mention their limited experience with ChatGPT, specifically using version 3.5.
+
+11.
+Concepts: options, limited options in ai-driven interface
+- Participant is dissatisfied with the limited options provided by AI.
+- The participant critiques the limited options provided by the AI-driven interface.
+
+12.
+Concepts: limits choices, limited options
+- The expert finds the options or prompts provided by AI too limited or restrictive.
+- Finds the options provided by AI to be limited and suggests a need for more flexibility.
+
+13.
+Concepts: r extension, decides against using r extension
+- The participant evaluates the AI's response and decides whether to use an R extension or not.
+- The participant decides against using the R extension, evaluating the AI response.
+
+14.
+Concepts: error reading, reading error messages
+- Participant reads error messages before making a decision.
+- The participant reads error messages to understand the issue.
+
+15.
+Concepts: error messages, unhelpful error messages, critiques unhelpful error messages
+- Participant encounters or discusses error messages.
+- The participant critiques the unhelpful error messages provided by the system.
+- Participant critiques unhelpful error messages.
+
+16.
+Concepts: unclear error message, notes confusion caused by error messages
+- Participant encounters an unclear error message.
+- The participant expresses frustration or confusion caused by unclear error messages.
+
+17.
+Concepts: error message not as helpful, finds error messages misleading
+- Participant finds error messages unhelpful.
+- The participant finds error messages from AI-driven interfaces to be misleading.
+
+18.
+Concepts: dislikes limited ai options, experiences frustration with ai limitations
+- Expresses frustration with limited AI options
+- Experiences frustration with the AI's limitations.
+
+19.
+Concepts: frustration point, expresses frustration
+- Expresses frustration when AI-generated code gets stuck in a loop and cannot fix errors.
+- Expresses frustration with AI-generated code that contains errors or hallucinations.
+
+20.
+Concepts: user frustration, frustration with error resolution, human-ai conflict
+- Participant expresses frustration with error messages or AI's limitations.
+- Expresses frustration with error resolution options or AI's inability to fix errors.
+- Expresses frustration with the LLM-driven interface's error messages.
+
+21.
+Concepts: input limitations, notes chatgpt's input limitations
+- Participant encounters limitations in AI's ability to process long code pieces.
+- Notes the limitations of AI's input capabilities, such as handling long code pieces.
+
+22.
+Concepts: long code limitations, chatgpt ability (negative): limitation in reading long codes
+- AI's difficulty in processing and understanding large codebases.
+- The participant mentions the limitations of working with long code pieces.
+- Highlights limitations in AI's ability to read or process long codes.
+
+23.
+Concepts: current limitations, critiques current ai limitations
+- Identifies current limitations of AI-generated code, such as lack of external verification.
+- Critiques current AI limitations, including its inability to check generated code.
+
+24.
+Concepts: model translation, ai's ability to translate languages, translates models from other languages, language conversion
+- The participant discusses the potential of AI to translate models from other languages into NetLogo.
+- Expert finds AI helpful for translating models from other languages into NetLogo.
+- The participant finds the AI helpful for translating models from other languages into NetLogo.
+- The participant finds AI helpful for translating models from other languages into NetLogo.
+
+25.
+Concepts: agent-based models, uses ai for equation development, integrates ai in agent-based models
+- Uses AI for developing agent-based models.
+- Uses the AI for developing equations in agent-based models.
+- Uses AI to develop equations for specific aspects of agent-based models.
+
+26.
+Concepts: avoiding code copying, chatgpt usage: reference
+- Avoids direct code copying and instead uses AI-generated code as reference.
+- The code uses AI-generated code as a reference rather than copying and pasting.
+
+27.
+Concepts: code reference, uses ai generated code as reference
+- Participant uses generated code as a reference for writing their own code.
+- Participant uses AI-generated code as a reference.
+
+28.
+Concepts: selectively copies ai code, customizes ai-generated code
+- The participant selectively copies code from AI-driven interfaces into their own work.
+- The participant customizes the AI-generated code by selectively copying and modifying it to fit their needs.
+
+29.
+Concepts: ai generated code usage, adapts based on ai generated code
+- Uses AI-generated code and adapts to its limitations
+- Adapts based on AI-generated code and feedback
+
+30.
+Concepts: code commenting, appreciates usability, appreciates chatgpt's code commenting
+- The participant appreciates the AI's ability to provide comments and documentation in the generated code.
+- The participant appreciates the usability of the AI-generated code, specifically the comments and documentation.
+- The participant appreciates ChatGPT's code commenting and documentation, making generated code easy to read.
+
+31.
+Concepts: successful code generation, successful implementation experience
+- Shares a positive experience with AI-generated code.
+- Expert shares a successful implementation experience with AI-generated code.
+
+32.
+Concepts: reads in detail, evaluates chatgpt's code
+- Reads and evaluates AI-generated code in detail to understand its functionality.
+- The participant evaluates and reads ChatGPT code in detail.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: simplicity of code, prefers simple
+Relationship: The participant values simplicity in code, which implies a preference for simple and accessible code.
+Criteria: Participants value simplicity in code and prefer simple and accessible code.
+Phrase: Prefers simple code.
+
+2.
+Concepts: finds feature beneficial for novices, appreciates in-task documentation search
+Relationship: The participant finds a feature beneficial for novice users, which is the ability to search for documentation within the workspace.
+Criteria: Participants find features beneficial for novices, such as in-task documentation search.
+Phrase: Appreciates in-task documentation search.
+
+3.
+Concepts: documentation search, values integration
+Relationship: The participant values the capability to search for documentation and read it within the workspace, which implies integration.
+Criteria: Participants value integration, specifically with searching and reading documentation inside the workspace.
+Phrase: Values integration.
+
+4.
+Concepts: experiences variability in ai outputs, lack of consistency in output
+Relationship: The participant experiences variability in AI outputs, which implies a lack of consistency in the AI's output.
+Criteria: Participants experience variability in AI outputs and lack of consistency.
+Phrase: Experiences variability in AI outputs.
+
+5.
+Concepts: randomness, finds ai responses unpredictable, notes lack of determinism
+Relationship: The participant evaluates AI responses as non-deterministic and unpredictable, which implies randomness.
+Criteria: Participants find AI responses unpredictable and non-deterministic.
+Phrase: Finds AI responses unpredictable.
+
+6.
+Concepts: hallucination, mentions ai hallucination
+Relationship: The participant mentions that AI might hallucinate or provide incorrect information.
+Criteria: Participants mention AI hallucination or providing incorrect information.
+Phrase: Mentions AI hallucination.
+
+7.
+Concepts: debugging risks, human-ai: no need to blindly follow
+Relationship: The participant warns about the risks of blindly following the AI's suggestions without understanding the underlying code.
+Criteria: Participants warn against blindly following AI suggestions without understanding the code.
+Phrase: Warns against blindly following AI.
+
+8.
+Concepts: ai ability (negative): error, warns about potential ai errors
+Relationship: The participant warns about the potential errors in AI responses.
+Criteria: Participants warn about potential AI errors.
+Phrase: Warns about potential AI errors.
+
+9.
+Concepts: questioning ai capabilities, initial confusion about ai capabilities
+Relationship: The participant expresses initial confusion or uncertainty about the capabilities of ChatGPT.
+Criteria: Participants express initial confusion about AI capabilities.
+Phrase: Expresses initial confusion about AI.
+
+10.
+Concepts: limited experience, limited experience with chatgpt
+Relationship: The participant has limited experience with AI, specifically with ChatGPT 3.5.
+Criteria: Participants have limited experience with ChatGPT.
+Phrase: Has limited experience with ChatGPT.
+
+11.
+Concepts: options, limited options in ai-driven interface
+Relationship: The participant is dissatisfied with the limited options provided by AI.
+Criteria: Participants are dissatisfied with limited options in AI-driven interfaces.
+Phrase: Is dissatisfied with limited options.
+
+12.
+Concepts: limits choices, limited options
+Relationship: The participant finds the options or prompts provided by AI too limited or restrictive.
+Criteria: Participants find AI options too limited or restrictive.
+Phrase: Finds AI options too limited.
+
+13.
+Concepts: r extension, decides against using r extension
+Relationship: The participant evaluates the AI's response and decides whether to use an R extension or not.
+Criteria: Participants evaluate AI responses and decide on using R extensions.
+Phrase: Evaluates AI response for R extension.
+
+14.
+Concepts: error reading, reading error messages
+Relationship: The participant reads error messages before making a decision.
+Criteria: Participants read error messages before making decisions.
+Phrase: Reads error messages.
+
+15.
+Concepts: error messages, unhelpful error messages, critiques unhelpful error messages
+Relationship: The participant critiques the unhelpful error messages provided by the system.
+Criteria: Participants critique unhelpful error messages.
+Phrase: Critiques unhelpful error messages.
+
+16.
+Concepts: unclear error message, notes confusion caused by error messages
+Relationship: The participant encounters an unclear error message, which causes confusion.
+Criteria: Participants encounter unclear error messages and experience confusion.
+Phrase: Encounters unclear error messages.
+
+17.
+Concepts: error message not as helpful, finds error messages misleading
+Relationship: The participant finds error messages unhelpful or misleading.
+Criteria: Participants find error messages unhelpful or misleading.
+Phrase: Finds error messages unhelpful.
+
+18.
+Concepts: dislikes limited ai options, experiences frustration with ai limitations
+Relationship: The participant expresses frustration with limited AI options.
+Criteria: Participants express frustration with AI limitations.
+Phrase: Expresses frustration with AI limitations.
+
+19.
+Concepts: frustration point, expresses frustration
+Relationship: The participant expresses frustration with AI-generated code that gets stuck in a loop and cannot fix errors.
+Criteria: Participants express frustration with AI-generated code.
+Phrase: Expresses frustration with AI-generated code.
+
+20.
+Concepts: user frustration, frustration with error resolution, human-ai conflict
+Relationship: The participant expresses frustration with error messages or AI's limitations.
+Criteria: Participants express frustration with error messages or AI limitations.
+Phrase: Expresses frustration with AI.
+
+21.
+Concepts: input limitations, notes chatgpt's input limitations
+Relationship: The participant encounters limitations in AI's ability to process long code pieces.
+Criteria: Participants encounter limitations in AI's input capabilities.
+Phrase: Encounters AI input limitations.
+
+22.
+Concepts: long code limitations, chatgpt ability (negative): limitation in reading long codes
+Relationship: The participant mentions the limitations of working with long code pieces.
+Criteria: Participants mention limitations in AI's ability to read or process long codes.
+Phrase: Mentions AI limitations with long codes.
+
+23.
+Concepts: current limitations, critiques current ai limitations
+Relationship: The participant identifies current limitations of AI-generated code, such as lack of external verification.
+Criteria: Participants critique current AI limitations.
+Phrase: Critiques current AI limitations.
+
+24.
+Concepts: model translation, ai's ability to translate languages, translates models from other languages, language conversion
+Relationship: The participant discusses the potential of AI to translate models from other languages into NetLogo.
+Criteria: Participants discuss AI's ability to translate models from other languages.
+Phrase: Discusses AI's translation ability.
+
+25.
+Concepts: agent-based models, uses ai for equation development, integrates ai in agent-based models
+Relationship: The participant uses AI for developing agent-based models.
+Criteria: Participants use AI for developing agent-based models.
+Phrase: Uses AI for agent-based models.
+
+26.
+Concepts: avoiding code copying, chatgpt usage: reference
+Relationship: The participant avoids direct code copying and instead uses AI-generated code as reference.
+Criteria: Participants use AI-generated code as a reference.
+Phrase: Uses AI-generated code as reference.
+
+27.
+Concepts: code reference, uses ai generated code as reference
+Relationship: The participant uses generated code as a reference for writing their own code.
+Criteria: Participants use AI-generated code as a reference.
+Phrase: Uses AI-generated code as reference.
+
+28.
+Concepts: selectively copies ai code, customizes ai-generated code
+Relationship: The participant selectively copies code from AI-driven interfaces into their own work.
+Criteria: Participants selectively copy and customize AI-generated code.
+Phrase: Selectively copies AI-generated code.
+
+29.
+Concepts: ai generated code usage, adapts based on ai generated code
+Relationship: The participant uses AI-generated code and adapts to its limitations.
+Criteria: Participants use AI-generated code and adapt to its limitations.
+Phrase: Adapts to AI-generated code.
+
+30.
+Concepts: code commenting, appreciates usability, appreciates chatgpt's code commenting
+Relationship: The participant appreciates the AI's ability to provide comments and documentation in the generated code.
+Criteria: Participants appreciate AI-generated code's usability, specifically comments and documentation.
+Phrase: Appreciates AI-generated code's usability.
+
+31.
+Concepts: successful code generation, successful implementation experience
+Relationship: The participant shares a positive experience with AI-generated code.
+Criteria: Participants share successful implementation experiences with AI-generated code.
+Phrase: Shares successful implementation experience.
+
+32.
+Concepts: reads in detail, evaluates chatgpt's code
+Relationship: The participant reads and evaluates AI-generated code in detail to understand its functionality.
+Criteria: Participants read and evaluate AI-generated code in detail.
+Phrase: Evaluates AI-generated code in detail.

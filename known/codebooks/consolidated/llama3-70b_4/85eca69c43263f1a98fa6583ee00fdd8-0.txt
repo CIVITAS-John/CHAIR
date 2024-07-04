@@ -1,0 +1,57 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: discusses error resolution, notes error handling needs
+- Participants discuss the ability of the LLM-driven interface to resolve errors or troubleshoot issues.
+- Participants note the need for the AI to provide clear explanations and effective troubleshooting for errors.
+
+2.
+Concepts: critique ai limitations, experiences ai limitations
+- Participants note or critique AI constraints or capacity limitations.
+- Participants experience AI failure or variability in output, highlighting limitations.
+
+3.
+Concepts: netlogo context, utilizes ai for netlogo tasks
+- The participant mentions NetLogo as a specific context or application for the LLM-driven interface.
+- Participants use AI-driven interfaces for NetLogo tasks and syntax support.
+===
+---
+Definitions for each code:
+
+1.
+Concepts: discusses error resolution, notes error handling needs
+Relationship: The concepts are related in that participants' discussions of error resolution are driven by their perceived needs for effective error handling.
+Criteria: Participants discuss and identify the need for the LLM-driven interface to resolve errors and provide clear explanations.
+Phrase: Identifying error handling needs
+
+2.
+Concepts: critique ai limitations, experiences ai limitations
+Relationship: The concepts are related in that participants' critiques of AI limitations are informed by their experiences of AI failure or variability in output.
+Criteria: Participants experience and critique the limitations of the LLM-driven interface, highlighting its constraints and capacity limitations.
+Phrase: Critiquing AI limitations
+
+3.
+Concepts: netlogo context, utilizes ai for netlogo tasks
+Relationship: The concepts are related in that the NetLogo context provides a specific application for utilizing AI-driven interfaces.
+Criteria: Participants mention NetLogo as a context and use AI-driven interfaces to support NetLogo tasks and syntax.
+Phrase: Applying AI to NetLogo tasks

@@ -1,0 +1,95 @@
+You are an expert in thematic analysis with grounded theory, working on open coding.
+This is the first round of coding. Your goal is to describe each item with verb phrases.
+Try your best to interpret events, contexts, and intents. Always use ";" to separate verb phrases.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Create multiple interpretations for both the interviewee's verbal response and the interviewer's observations. Take note of emotions explicitly or implicitly expressed by the interviewee. Code through the lens of human-computer interaction and learning sciences.
+
+Always follow the output format:
+---
+Thoughts: {A paragraph of plans and guiding questions about analyzing the conversation from multiple theoretical angles}
+Interpretation phrases for each item (33 in total):
+1. {phrase 1}; {phrase 2}; {phrase 3}; ...
+...
+33. {phrase 1}; {phrase 2}; {phrase 3}; ...
+Summary: {A somehow detailed summary of the conversation, including previous ones}
+Notes: {Notes and hypotheses about the conversation until now}
+~~~
+Summary of previous conversation: E01's insights highlight the potential of AI-driven interfaces in enhancing human capabilities, saving time, and providing personalized learning pathways in the context of NetLogo programming. They value AI assistance in code generation and optimization while recognizing the importance of user judgment and clear communication in utilizing AI tools effectively. E01's experiences and reflections underscore the significance of collaborative problem-solving approaches and the cultural influences on technology adoption in programming environments.
+1. E01: if you approach the user group politely, graciously, and instead of dropping your entire code on it, you go, I narrowed it down to this. I read this documentation. I tried these eight things with this answer and I'm perplexed. If somebody goes, they paste their problem and it's clearly their homework and they want someone else to do it for them. No, I'm not going to help with that. (interviewer's observation) E01's reflection on proper practices to seek online help: do your own work and clearly describe what you need/tried.
+Preliminary phrases: provides guidelines for effective online help seeking practices; encourages clear communication and independent problem solving efforts
+2. E01: Part of getting AI to be your assistant on the side is, is having a culture where you're used to asking for help. And asking that early and often, and you know, from development costs, the later you discover you have a problem, the more it costs to fix it. (interviewer's observation) AI could help people to ask more questions, more early and often, to save cost for the future.
+Preliminary phrases: emphasizes the importance of early and frequent problem solving inquiries; highlights the cost saving benefits of proactive issue resolution
+3. E01: So one of the, one of the things which I have observed, as I'm bouncing from like, because I do a lot of different languages and potentially, so I don't have that much time to spend in anyone. (interviewer's observation) As an expert, E01 knows many languages but does not have much time for each one.
+Preliminary phrases: balances expertise across multiple programming languages with time constraints; acknowledges the challenge of deep specialization in diverse language environments
+4. E01: Depending on what you do and how busy you are and the higher ranking people are, the more busy they are, the longer it is between sessions. So you make some notes on little yellow, sticky cinnamon. And then you go back to your administrator job for two months, and then some other project comes up. And then six months later, you come back. Okay, now, where was I? (interviewer's observation) E01's reflection on how professionals learn - they learn in fragments, in fragmented time blocks and need support from the system to remind them where they were.
+5. E01: So my observation is that a critical, critical 10%, maybe more, maybe a lot more of knowledge that you need to do your job in software is only contained in oral tradition. It's, it is not documented anywhere.  (interviewer's observation) E01's reflection on knowledge in pieces - how they are generated and sustained. 
+6. E01: So one of the things that certainly about ChatGPT is, or whatever the AI tool is that you build, is that it will probably always be advancing, and always stay pretty close to the state of the art about all these things. So if it has, especially if it has a hive business, so that if any user discovers something, they can feed it back into the system. And then everybody knows it now. (interviewer's observation) AI could be used to preserve, process, and retrieve fragmented knowledge generated by human as a collaboration process.
+7. E01: And you want doctors to use it, nurses to use it and medical transcriptionists to use it. They use a different word for whatever the verb for whatever it is you're saying you want them to do. And so, in some sense, their documentation has to be customized to their context to their user group. ... It's a language system. If you have a learning system that's actually capable of harvesting information, yeah, and a lot of them are not yet, but I think we'll get there. (interviewer's observation) AI could be used to translate jargons between different sub-groups working in the same systems and ease the cost of writing customized documentation.
+8. E01: I call it hive feedback system, where if anyone in the world learns a new fact, or like, Oh, if you're a nurse, here's the word. If you're a transcriptionist, here's the word. If anybody learns it, then it goes into the system into the cloud. And now the cloud won't make that mistake anymore. And then the developer doesn't have to solve all these problems, because all the users solve their own problems. (interviewer's observation) E01 discusses how the human-AI collaborative system could be used to increase general productivity.
+9. E01: And some of them we still haven't been doing like hive mind, like how we are going to have the machine learning back from the user feedback or just from the compiler, right? You generate some code, but it doesn't work. So we have to tell you that this time, you didn't work. (interviewer's observation) The current ChatGPT implementation cannot check the generated code with external information (compiler, etc.) (partially solved by the Interpreter plugin, but only Python at this time)
+10. E01: So let's say "I would like to write code to have a turtle run slowly around the perimeter of a square." (interviewer's observation) E01's first task.
+11. E01: "I would like to write code to have a turtle run slowly around the perimeter of a square, but the square should go larger each time it goes around." (interviewer's observation) Seeing AI's counter question, E01 makes his request more detailed.
+12. E01: (no verbal response) (interviewer's observation) E01 dictated each of the parameter fields.
+13. E01: So set up, move the turtle to go. Increase the size of the turtle by two units. Oh, dear. It's, it's making the turtle bigger. Oh, that's kind of, that's kind of messed it up a little bit then. (interviewer's observation) E01 reads the code and comments, summarizing the code, and thinks about how the AI was understanding the request.
+14. E01: "I would like to write code to have a turtle run slowly around the perimeter of a square, but the square should go larger each time it goes around in NetLogo." (interviewer's observation) Interviewer proposes to try ChatGPT with the same prompt.
+15. E01: "Also a good idea because we did not ask it to do that." (interviewer's observation) E01 reads and evaluates the ChatGPT code. Asks Interviewer to scroll slowly so he could read in detail.
+16. E01: I have I found with with playing with with ChatGPT. And I was something at Python, I think I tried to give it the code. And I tried to run it generated error. And then I would go back to the next prompt and ChatGPT. And I go, that code is good. But it generates the following error. And I list the error online on this line, and I'd quote the line. And I say, Can you fix that?  (interviewer's observation) When E01 sees a bug in the generated code, he refers to his previous practice with asking ChatGPT to debug with the code, the error message, and the line number. Interviewer did what E01 said.
+17. E01: And then very often, it could.  (interviewer's observation) ChatGPT could often resolve errors by itself.
+18. E01: That's okay. Go is a convention. It's not really a requirement of the language that you use the word go. You can say banana to banana and have a button on the interface. It's a banana button. (interviewer's observation) E01 honors ChatGPT's own intuition even though it might be different from the convention.
+19. E01: "can you verify that no more names are reserved words in NetLogo?" I don't know if it can do that. (interviewer's observation) When E01 sees a bug after the third iteration, he asks ChatGPT to verify the code and produce no more bug. Unsure if it could do that.
+20. E01: If you know how to ask iterative questions, I think it could do pretty well. (interviewer's observation) E01 thinks ChatGPT would do well if one knows how to ask iterative questions.
+21. E01: (no verbal response) (interviewer's observation) E01 laughs when he sees ChatGPT making a classical error.
+22. E01: Part of this, the user needs a little practice in debugging their own code. There should be some exercises before you ask GPT to do this.  (interviewer's observation) Users need practice in debugging their own code and need to have exercises before asking AI.
+23. E01: This is what conversations with ChatGPT typically look like. I had to go through about eight separate times to get all the errors out of it.  But, but look at how it structured the code. Look at the things that did look what you could learn from this. This is valuable. (interviewer's observation) Users may benefit from the iterative debugging process during working with AI, even though AI might give wrong answers.
+24. E01: I'm not sure that any beginner wouldn't necessarily know that unless they'd ever practiced. And so some of the users of NetLogo have never programmed anything. So, (they might lack) the whole concept of debugging or maybe starting with a design outline. They start typing and then they get frustrated because they don't know how to debug code. (interviewer's observation) E01 reflects on how novices might get stuck during the human-AI collaboration process.
+25. E01: I've observed when I tried to suggest ChatGPT to other people, they're, um, they are amazed at the output that I can get. And that's because I know how to ask six questions in a row to zero in on what I'm after. (interviewer's observation) To maximize the capability of ChatGPT, one needs to know how to iteratively ask questions.
+26. E01: And, and they don't, this is an unfamiliar task to them apparently. So they want to ask one question and get the right answer the first time. And I, I don't have that expectation. I'll ask the right question and it'll get me 80% of the way there. (interviewer's observation) Novices might have a too high expectation for ChatGPT (but it cannot achieve that).
+27. E01: I speak to (ChatGPT) like a person. I could just walk in the room and go write me code that does X, but I don't, I start with good morning. And it comes back, but it comes back with good morning. How can I assist you today? It's pretty good at figuring out natural language. So in some sense that you might just be better off, just pretend it's not a computer. (interviewer's observation) E01 reflects on how he interacts with ChatGPT like a person.
+28. E01: In terms of learning experiences, like ramping up to using an assistant wrapping up to using ChatGPT might have some sort of evaluates. How well can you write instructions for another person? Some people just don't know how to conceptualize a problem. (interviewer's observation) E01 discusses how "writing instructions" is a capability that is missing on many people, and that is key to work with AI.
+29. E01: (no verbal response) (interviewer's observation) E01 reads error messages before making a choice.
+30. E01: So I would find it more helpful if it asked the questions one at a time. Before you tell me nine more errors. Just because users are always overfilling their buffer. So smaller requests work better. (interviewer's observation) E01 suggests (for novice) only showing one error at a time in the AI-driven system.
+31. E01: (no verbal response) (interviewer's observation) E01 chooses to fix the problem rather than showing the explanation.
+32. E01: Let's suppose that I'm trying to debug this error and I have trouble and I can't figure it out. So my next step would be to go to the user group. So if I had a button here that said please explain my situation so that I can paste it to the user group. User is attempting to write this. This is the code I wrote. This is the error it generates that the user doesn't understand. Can any human figure out what's wrong? I just press a button and it says, okay, paste it to the user group and we're done. And it's hard for users. (interviewer's observation) E01 suggests that AI could potentially help users write "help" posts that summarizes the situation: the need, the code, the error that the user does not understand.
+33. E01: "please write a netlogo program that produces a checker board with black and white squares?" (interviewer's observation) E01 asks ChatLogo to create a checkerboard pattern.
+===
+---
+Thoughts: The conversation with E01 delves deep into the potential of AI-driven interfaces, particularly ChatGPT, in supporting programming tasks. E01 emphasizes the importance of clear communication, iterative problem-solving, and the need for users to develop debugging skills when working with AI. E01's reflections shed light on the challenges faced by both novices and experienced programmers in leveraging AI tools effectively. The observations highlight E01's strategic approach to interacting with ChatGPT and the value he places on learning from the AI's responses.
+
+Interpretation phrases for each item:
+1. Emphasizes polite and descriptive online help-seeking practices; advocates for independent problem-solving efforts.
+2. Stresses the significance of early and frequent problem inquiries for cost-effective issue resolution.
+3. Balances expertise across multiple programming languages while managing time constraints.
+4. Reflects on fragmented learning patterns of professionals and the need for system support to aid learning continuity.
+5. Acknowledges the existence and importance of tacit knowledge in software development.
+6. Discusses the collaborative potential of AI in preserving and disseminating fragmented knowledge.
+7. Suggests the potential of AI in translating technical jargon and customizing documentation for different user groups.
+8. Proposes a hive feedback system for collaborative problem-solving and increased productivity.
+9. Highlights the limitation of current AI tools in cross-referencing generated code with external information.
+10. Initiates the task of instructing ChatGPT to create a specific program.
+11. Refines the task details based on AI's responses, indicating iterative refinement in problem-solving.
+12. Demonstrates dictation of parameters during the coding process.
+13. Comments on the code output, indicating a reflective process on AI's understanding.
+14. Requests to repeat the task for further evaluation of ChatGPT's responses.
+15. Evaluates the AI-generated code and requests a detailed review.
+16. Describes the process of identifying and correcting errors in AI-generated code through iterative interactions.
+17. Indicates the AI's capability to autonomously resolve errors.
+18. Acknowledges unconventional AI responses and suggests flexibility in language usage.
+19. Seeks AI verification for resolving coding errors, expressing uncertainty about AI capabilities.
+20. Advocates for iterative questioning to enhance AI performance.
+21. Reacts with humor to AI's errors, maintaining a light-hearted approach.
+22. Emphasizes the importance of user practice in debugging before relying on AI assistance.
+23. Recognizes the value of iterative debugging processes despite initial errors in AI responses.
+24. Reflects on the challenges novices face in programming and debugging with AI assistance.
+25. Highlights the importance of asking precise questions to maximize AI output.
+26. Discusses the mismatch in novice expectations and the iterative nature of AI interactions.
+27. Advises on human-like interaction with AI for improved communication.
+28. Discusses the significance of writing clear instructions for effective AI utilization.
+29. Considers error messages before making decisions during the coding process.
+30. Suggests presenting one error at a time in AI interfaces for better user experience.
+31. Chooses to focus on problem-solving rather than explanations in the coding process.
+32. Proposes AI assistance in summarizing coding issues for user group discussions.
+33. Requests AI to generate a specific program, showcasing task-oriented AI interactions.
+
+Summary: E01's interactions with AI-driven interfaces, particularly ChatGPT, reveal a nuanced understanding of leveraging AI for programming tasks. From emphasizing clear communication and iterative problem-solving to highlighting the importance of user practice in debugging, E01's insights provide valuable perspectives on the challenges and opportunities of integrating AI into programming environments. The observations further underscore E01's strategic approach to interacting with AI tools and the continuous learning process involved in utilizing AI for coding tasks.
+
+Notes: E01's experiences showcase a blend of technical expertise, reflective practice, and a user-centric approach to AI utilization in programming contexts. The insights gleaned from E01's interactions with ChatGPT offer valuable considerations for designing AI-driven interfaces that cater to diverse user needs and skill levels in the programming domain.
