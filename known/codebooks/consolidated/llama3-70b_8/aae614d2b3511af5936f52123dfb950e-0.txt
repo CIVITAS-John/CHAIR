@@ -1,0 +1,46 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (2 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+2. 
+Concepts: {Repeat the input 2}
+Relationship: {What is logical relationship between concepts in code 2, or N/A if not applicable}
+Criteria: {Who did what, and how for code 2}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: critically evaluates ai feedback, tests and evaluates ai search results
+- The participant assesses the quality and usefulness of LLM-driven interface outputs.
+- The participant evaluates the accuracy of AI's search results.
+
+2.
+Concepts: emphasizing human effort in debugging, emphasizes user expertise in debugging
+- Participants note the importance of identifying conceptual errors, not just syntax errors.
+- Participants recognize the importance of understanding errors and debugging, emphasizing user expertise.
+===
+---
+Definitions for each code (2 in total):
+
+1.
+Concepts: critically evaluates ai feedback, tests and evaluates ai search results
+Relationship: The concepts are related in that they both involve assessing the quality of AI-driven outputs, with the first concept focusing on feedback and the second on search results.
+Criteria: Participants critically evaluate the quality and usefulness of LLM-driven interface outputs by testing and assessing the accuracy of AI search results.
+Phrase: Critically evaluates AI-driven outputs.
+
+2.
+Concepts: emphasizing human effort in debugging, emphasizes user expertise in debugging
+Relationship: The concepts are related in that they both highlight the importance of human involvement and expertise in the debugging process.
+Criteria: Participants recognize the importance of user expertise in identifying and understanding errors, moving beyond just syntax errors to conceptual errors.
+Phrase: Emphasizes human expertise in debugging.

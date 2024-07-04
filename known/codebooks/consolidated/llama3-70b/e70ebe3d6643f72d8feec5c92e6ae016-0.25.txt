@@ -1,0 +1,383 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: values error detection, values error clarification
+- Interviewees value the ability of AI-driven interfaces to detect errors and provide feedback.
+- Interviewees value the ability of AI-driven interfaces to clarify errors and provide feedback.
+
+2.
+Concepts: clarification, error clarification
+- Appreciates AI's ability to clarify error codes and parameters.
+- Appreciating AI's ability to clarify error codes.
+
+3.
+Concepts: self-reliance, self-reliant in fixing errors
+- Demonstrates self-reliance in debugging and problem-solving, using AI responses as a reference.
+- Tries to debug AI-generated code independently before seeking help.
+
+4.
+Concepts: manual error fixing, manually fixes ai code errors
+- Manually fixes errors in AI-generated code without AI assistance.
+- The user manually fixes errors in AI-generated code.
+
+5.
+Concepts: error fixing, interprets ai mistakes
+- Fixes errors in AI-generated code or interprets its responses.
+- Interprets and fixes mistakes in AI-generated code.
+
+6.
+Concepts: interpretation, human-effort: interpretation
+- Interpreting AI-generated code, identifying errors, and making corrections.
+- Interprets AI-generated code and identifies potential issues.
+
+7.
+Concepts: code review, debugs ai-generated code
+- Conducts code review and debugging of AI-generated code.
+- Debugs AI-generated code to fix errors and improve functionality.
+
+8.
+Concepts: ai errors, identifies potential bug, identifies errors in ai code
+- Identifies errors in AI-generated code.
+- Identifies potential bugs in AI-generated code and error messages.
+- Participant identifies errors in AI-generated code.
+
+9.
+Concepts: reads in detail, detailed evaluation
+- Carefully reading and evaluating AI-generated code.
+- Interviewees carefully evaluate AI-generated code, reading and analyzing it in detail.
+
+10.
+Concepts: learning, describes iterative debugging benefits
+- Reflecting on the learning value of iterative debugging with AI.
+- Describes the benefits of iterative debugging, highlighting the value of learning from AI interactions.
+
+11.
+Concepts: iterative development, highlights iterative improvement
+- Engaging in iterative development, building code incrementally, and refining it through AI assistance.
+- Envisions iterative improvement of code with AI-generated feedback.
+
+12.
+Concepts: ai-assisted debugging, addressing debugging difficulties, suggests ai debugging
+- The user uses the AI for debugging purposes.
+- Addresses difficulties in debugging and suggests AI-supported solutions.
+- Suggests using AI for debugging, providing error messages and line numbers.
+
+13.
+Concepts: long code limitations, chatgpt ability (negative): limitation in reading long codes
+- AI's difficulty in processing and understanding large codebases.
+- Highlights limitations of AI in reading long codes or providing explanations.
+
+14.
+Concepts: need for expertise, expertise requirement, need for expertise in debugging
+- Emphasizes the need for expertise when working with AI-generated code.
+- Recognizes the need for expertise to understand and debug AI-generated code.
+- The requirement for a certain level of expertise to effectively debug and use the AI-generated code.
+
+15.
+Concepts: outdated code, outdated functionalities and non-deterministic responses
+- The AI-generated code is outdated or uses old functionality.
+- Issues with the AI providing outdated code and inconsistent responses.
+
+16.
+Concepts: code generation errors, incomplete code
+- The AI-generated code has errors or is incomplete.
+- The participant notes that the AI's code is incomplete or missing certain structures.
+
+17.
+Concepts: debugging skills, notes lack of debugging skills
+- Reflects on the importance of debugging skills, which may be lacking in novices.
+- The code refers to instances where the interviewee notes the lack of debugging skills among beginners.
+
+18.
+Concepts: user exercises, highlights learning needs, pre-learning requirement about how to ask questions, calls for preparatory exercises, debugging practice
+- Believes users need practice in debugging their own code before seeking AI assistance.
+- Participant highlights the need for users to practice debugging their own code before asking AI for help.
+- The expert emphasizes the need for users to have practice in debugging their own code before seeking AI assistance.
+- Emphasizes the need for users to practice debugging their own code before asking AI for help.
+- Emphasizing the importance of users practicing debugging their own code before seeking AI assistance.
+
+19.
+Concepts: notes unrealistic expectations, critiques novices' expectations
+- The participant notes unrealistic expectations from novices who use the AI.
+- Critiques novices' high expectations from AI and emphasizes the need for realistic expectations.
+
+20.
+Concepts: novice (negative): debug, novice's challenge of using ai
+- Interviewees discuss the challenges that novices face when using AI-driven interfaces, including the need for practice in debugging.
+- Interviewees discuss the challenges that novices face when using AI-driven interfaces, including the need for practice and guidance.
+
+21.
+Concepts: error message not as helpful, debug: unhelpful error messages
+- The user finds error messages unhelpful in resolving issues.
+- The system's error messages are not helpful in resolving issues.
+
+22.
+Concepts: unclear error messages, unhelpful error messages
+- Participant encounters unclear error messages.
+- Participant encounters error messages that are unhelpful or misleading.
+
+23.
+Concepts: debugging difficulty, experiences debugging frustration
+- The user struggles with debugging due to unclear error messages.
+- Expresses frustration with debugging and unclear error messages.
+
+24.
+Concepts: notes ai getting stuck, identifies inability to fix certain errors
+- Notes instances where AI gets stuck or cannot fix errors.
+- Identifies AI's inability to fix certain errors and gets stuck in a loop.
+
+25.
+Concepts: frustration point, frustration with errors
+- Expresses frustration when AI gets stuck on an error and cannot fix it.
+- Expresses frustration with error resolution options or AI behavior.
+
+26.
+Concepts: lack of consistency in output, experiences variability in ai outputs
+- Experiences inconsistency in AI output and is unsure what to expect.
+- The user experiences variability in AI outputs and responses.
+
+27.
+Concepts: notes lack of determinism, non-deterministic
+- Noticing the non-deterministic nature of AI responses.
+- The participant notes that the AI's responses are non-deterministic, meaning they can vary in their output.
+
+28.
+Concepts: randomness, finds ai responses unpredictable
+- Evaluates AI responses as non-deterministic and unpredictable.
+- Finding AI responses unpredictable.
+
+29.
+Concepts: ai ability (negative): error, warns about potential ai errors
+- Expresses caution when using AI responses, emphasizing the need for judgment.
+- Warns users to use their own judgment when evaluating ChatGPT's responses, as they may be incorrect.
+
+30.
+Concepts: has only used chatgpt 3.5, chatgpt version experience
+- Has only used a specific version of ChatGPT (3.5).
+- The user has experience with a specific version of ChatGPT (in this case, 3.5).
+
+31.
+Concepts: options, limits choices, dislikes limited ai options
+- Participant is limited by the options provided by AI and wants more flexibility.
+- The expert finds the AI's options too limited, preferring more flexibility in their interactions.
+- Expresses frustration with limited AI options and wants more flexibility.
+
+32.
+Concepts: limited options, reports on limited options to select from
+- Expressing limitations in AI-provided options.
+- Reports limited options for selecting AI-generated responses.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: values error detection, values error clarification
+Relationship: The concepts are related as they both describe the importance of AI-driven interfaces in detecting and clarifying errors.
+Criteria: Interviewees value AI-driven interfaces that detect and clarify errors.
+Phrase: Valuing error detection and clarification.
+
+2.
+Concepts: clarification, error clarification
+Relationship: The concepts are related as they both describe the ability of AI to clarify errors.
+Criteria: Appreciates AI's ability to clarify error codes and parameters.
+Phrase: Appreciating error clarification.
+
+3.
+Concepts: self-reliance, self-reliant in fixing errors
+Relationship: The concepts are related as they both describe the user's ability to debug and problem-solve independently.
+Criteria: Demonstrates self-reliance in debugging and problem-solving using AI responses as a reference.
+Phrase: Demonstrating self-reliance in error fixing.
+
+4.
+Concepts: manual error fixing, manually fixes ai code errors
+Relationship: The concepts are related as they both describe the user's ability to fix errors in AI-generated code.
+Criteria: Manually fixes errors in AI-generated code without AI assistance.
+Phrase: Manually fixing AI code errors.
+
+5.
+Concepts: error fixing, interprets ai mistakes
+Relationship: The concepts are related as they both describe the user's ability to fix errors in AI-generated code.
+Criteria: Fixes errors in AI-generated code or interprets its responses.
+Phrase: Fixing AI code errors.
+
+6.
+Concepts: interpretation, human-effort: interpretation
+Relationship: The concepts are related as they both describe the user's effort in interpreting AI-generated code.
+Criteria: Interprets AI-generated code and identifies potential issues.
+Phrase: Interpreting AI-generated code.
+
+7.
+Concepts: code review, debugs ai-generated code
+Relationship: The concepts are related as they both describe the user's effort in reviewing and debugging AI-generated code.
+Criteria: Conducts code review and debugging of AI-generated code.
+Phrase: Reviewing and debugging AI-generated code.
+
+8.
+Concepts: ai errors, identifies potential bug, identifies errors in ai code
+Relationship: The concepts are related as they all describe the user's ability to identify errors in AI-generated code.
+Criteria: Identifies errors in AI-generated code.
+Phrase: Identifying AI code errors.
+
+9.
+Concepts: reads in detail, detailed evaluation
+Relationship: The concepts are related as they both describe the user's effort in carefully evaluating AI-generated code.
+Criteria: Carefully evaluates AI-generated code, reading and analyzing it in detail.
+Phrase: Evaluating AI-generated code in detail.
+
+10.
+Concepts: learning, describes iterative debugging benefits
+Relationship: The concepts are related as they both describe the learning value of iterative debugging with AI.
+Criteria: Reflects on the learning value of iterative debugging with AI.
+Phrase: Reflecting on iterative debugging benefits.
+
+11.
+Concepts: iterative development, highlights iterative improvement
+Relationship: The concepts are related as they both describe the user's effort in iterative development and improvement.
+Criteria: Engages in iterative development, building code incrementally, and refining it through AI assistance.
+Phrase: Engaging in iterative development.
+
+12.
+Concepts: ai-assisted debugging, addressing debugging difficulties, suggests ai debugging
+Relationship: The concepts are related as they all describe the user's effort in using AI for debugging purposes.
+Criteria: Uses AI for debugging, providing error messages and line numbers.
+Phrase: Using AI for debugging.
+
+13.
+Concepts: long code limitations, chatgpt ability (negative): limitation in reading long codes
+Relationship: The concepts are related as they both describe the limitations of AI in processing and understanding large codebases.
+Criteria: Highlights limitations of AI in reading long codes or providing explanations.
+Phrase: Highlighting AI limitations in long code processing.
+
+14.
+Concepts: need for expertise, expertise requirement, need for expertise in debugging
+Relationship: The concepts are related as they all describe the need for expertise when working with AI-generated code.
+Criteria: Emphasizes the need for expertise to understand and debug AI-generated code.
+Phrase: Emphasizing the need for expertise.
+
+15.
+Concepts: outdated code, outdated functionalities and non-deterministic responses
+Relationship: The concepts are related as they both describe the limitations of AI-generated code.
+Criteria: Notes that AI-generated code is outdated or uses old functionality.
+Phrase: Noting outdated AI-generated code.
+
+16.
+Concepts: code generation errors, incomplete code
+Relationship: The concepts are related as they both describe the limitations of AI-generated code.
+Criteria: Notes that AI-generated code has errors or is incomplete.
+Phrase: Noting AI-generated code errors.
+
+17.
+Concepts: debugging skills, notes lack of debugging skills
+Relationship: The concepts are related as they both describe the importance of debugging skills.
+Criteria: Reflects on the importance of debugging skills, which may be lacking in novices.
+Phrase: Reflecting on debugging skills importance.
+
+18.
+Concepts: user exercises, highlights learning needs, pre-learning requirement about how to ask questions, calls for preparatory exercises, debugging practice
+Relationship: The concepts are related as they all describe the need for users to practice debugging their own code.
+Criteria: Believes users need practice in debugging their own code before seeking AI assistance.
+Phrase: Emphasizing the need for debugging practice.
+
+19.
+Concepts: notes unrealistic expectations, critiques novices' expectations
+Relationship: The concepts are related as they both describe the need for realistic expectations from novices.
+Criteria: Notes unrealistic expectations from novices who use the AI.
+Phrase: Critiquing unrealistic expectations.
+
+20.
+Concepts: novice (negative): debug, novice's challenge of using ai
+Relationship: The concepts are related as they both describe the challenges that novices face when using AI-driven interfaces.
+Criteria: Discusses the challenges that novices face when using AI-driven interfaces, including the need for practice in debugging.
+Phrase: Discussing novice challenges.
+
+21.
+Concepts: error message not as helpful, debug: unhelpful error messages
+Relationship: The concepts are related as they both describe the limitations of error messages.
+Criteria: Finds error messages unhelpful in resolving issues.
+Phrase: Finding error messages unhelpful.
+
+22.
+Concepts: unclear error messages, unhelpful error messages
+Relationship: The concepts are related as they both describe the limitations of error messages.
+Criteria: Encounters unclear error messages.
+Phrase: Encountering unclear error messages.
+
+23.
+Concepts: debugging difficulty, experiences debugging frustration
+Relationship: The concepts are related as they both describe the user's struggle with debugging due to unclear error messages.
+Criteria: Struggles with debugging due to unclear error messages.
+Phrase: Struggling with debugging.
+
+24.
+Concepts: notes ai getting stuck, identifies inability to fix certain errors
+Relationship: The concepts are related as they both describe the limitations of AI in fixing errors.
+Criteria: Notes instances where AI gets stuck or cannot fix errors.
+Phrase: Noting AI limitations in error fixing.
+
+25.
+Concepts: frustration point, frustration with errors
+Relationship: The concepts are related as they both describe the user's frustration with error resolution options or AI behavior.
+Criteria: Expresses frustration when AI gets stuck on an error and cannot fix it.
+Phrase: Expressing frustration with error resolution.
+
+26.
+Concepts: lack of consistency in output, experiences variability in ai outputs
+Relationship: The concepts are related as they both describe the user's experience with inconsistent AI output.
+Criteria: Experiences inconsistency in AI output and is unsure what to expect.
+Phrase: Experiencing inconsistent AI output.
+
+27.
+Concepts: notes lack of determinism, non-deterministic
+Relationship: The concepts are related as they both describe the non-deterministic nature of AI responses.
+Criteria: Notes that the AI's responses are non-deterministic, meaning they can vary in their output.
+Phrase: Noting non-deterministic AI responses.
+
+28.
+Concepts: randomness, finds ai responses unpredictable
+Relationship: The concepts are related as they both describe the user's experience with unpredictable AI responses.
+Criteria: Evaluates AI responses as non-deterministic and unpredictable.
+Phrase: Finding AI responses unpredictable.
+
+29.
+Concepts: ai ability (negative): error, warns about potential ai errors
+Relationship: The concepts are related as they both describe the need for caution when using AI responses.
+Criteria: Warns users to use their own judgment when evaluating ChatGPT's responses, as they may be incorrect.
+Phrase: Warning about potential AI errors.
+
+30.
+Concepts: has only used chatgpt 3.5, chatgpt version experience
+Relationship: The concepts are related as they both describe the user's experience with a specific version of ChatGPT.
+Criteria: Has only used a specific version of ChatGPT (3.5).
+Phrase: Describing ChatGPT version experience.
+
+31.
+Concepts: options, limits choices, dislikes limited ai options
+Relationship: The concepts are related as they all describe the user's experience with limited AI options.
+Criteria: Finds the AI's options too limited, preferring more flexibility in their interactions.
+Phrase: Finding limited AI options.
+
+32.
+Concepts: limited options, reports on limited options to select from
+Relationship: The concepts are related as they both describe the limitations of AI-provided options.
+Criteria: Reports limited options for selecting AI-generated responses.
+Phrase: Reporting limited AI options.

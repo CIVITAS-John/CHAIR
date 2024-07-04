@@ -113,8 +113,10 @@ export async function RequestEmbeddings(Sources: string[], Cache: string): Promi
                 }
                 break;
             } catch (Error) {
-                if (Retry >= 3) throw Error;
+                if (Retry >= 10) throw Error;
                 console.error(Error);
+                // Wait for 6-60 seconds
+                await new Promise((Resolve) => setTimeout(Resolve, (Retry + 1) * 6000));
                 Retry++;
             }
         }
