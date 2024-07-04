@@ -10,7 +10,7 @@ Dimensions = int(sys.argv[1])
 Items = int(sys.argv[2])
 
 # Read from `./known/temp.bytes`
-with open("./known/temp.bytes", "rb", encoding="utf-8") as file:
+with open("./known/temp.bytes", "rb") as file:
     # Calculate the number of embeddings if not provided
     Items = int(os.stat("./known/temp.bytes").st_size / (Dimensions * 4)) if Items == 0 else Items
     # Read the bytes
