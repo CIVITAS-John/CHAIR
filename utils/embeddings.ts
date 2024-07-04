@@ -98,7 +98,7 @@ export async function RequestEmbeddings(Sources: string[], Cache: string): Promi
     var BatchSize = 50;
     for (var I = 0; I < Requests.length; I += BatchSize) {
         var Retry = 0;
-        for (var I = 0; I < Retry; I++) {
+        while (true) {
             try {
                 var Results = await Model.embedDocuments(Requests.slice(I, I + BatchSize).map((Index) => Sources[Index]));
                 for (var J = 0; J < Results.length; J++) {
