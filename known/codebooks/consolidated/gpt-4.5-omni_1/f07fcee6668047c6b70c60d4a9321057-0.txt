@@ -1,0 +1,57 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: engaging in iterative debugging with ai, collaborating with ai for debugging
+- Users engage in iterative debugging with AI to refine and improve code.
+- Users describe the collaborative process with AI, highlighting the benefits of iterative debugging and optimization.
+
+2.
+Concepts: issue correction, correcting ai code errors
+- Attempts to correct issues with AI-generated code.
+- Users interpret and correct common mistakes and errors in AI-generated code.
+
+3.
+Concepts: time-saving, ai time efficiency
+- The perception that AI can save time in learning and performing tasks.
+- Argues that AI can significantly reduce the time required to complete tasks.
+===
+---
+Definitions for each code (3 in total):
+1.
+Concepts: engaging in iterative debugging with ai, collaborating with ai for debugging
+Relationship: Users engage in iterative debugging with AI to refine and improve code, describing the collaborative process and its benefits.
+Criteria: Users engage in a collaborative and iterative debugging process with AI to refine and optimize their code.
+Phrase: Collaborating with AI for iterative debugging
+
+2.
+Concepts: issue correction, correcting ai code errors
+Relationship: Users attempt to correct issues and interpret common mistakes in AI-generated code.
+Criteria: Users correct and interpret common mistakes and errors in AI-generated code.
+Phrase: Correcting AI-generated code errors
+
+3.
+Concepts: time-saving, ai time efficiency
+Relationship: Users perceive that AI can save time and argue that it significantly reduces task completion time.
+Criteria: Users perceive and argue that AI significantly reduces the time required to learn and perform tasks.
+Phrase: Perceiving AI as time-efficient
+---

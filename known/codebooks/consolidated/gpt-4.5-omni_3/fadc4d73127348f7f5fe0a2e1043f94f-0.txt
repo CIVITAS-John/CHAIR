@@ -1,0 +1,58 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: requesting specific syntax, seeking ai assistance for syntax support
+- Users query AI for missing code structures and request specific syntax within AI-generated code.
+- Users seek AI assistance specifically for understanding and using correct syntax in coding.
+
+2.
+Concepts: other ways, suggesting ai-assisted help posts, user group interaction
+- User suggests AI could help users write effective help posts for online forums.
+- Users suggest AI could help with writing and summarizing help posts.
+- User suggests AI could help write help posts for user groups.
+
+3.
+Concepts: praising ai troubleshooting, values ai's error clarification
+- Users recognize and value AI's ability to troubleshoot and resolve errors.
+- Users appreciate AI's ability to clarify error codes and parameters, aiding in understanding and resolving issues.
+===
+---
+Definitions for each code (3 in total):
+1.
+Concepts: requesting specific syntax, seeking ai assistance for syntax support
+Relationship: Both concepts involve users interacting with AI to obtain or understand specific coding syntax.
+Criteria: Users query AI to obtain missing code structures and request specific syntax within AI-generated code, seeking assistance specifically for understanding and using correct syntax.
+Phrase: Seeking AI syntax support
+
+2.
+Concepts: other ways, suggesting ai-assisted help posts, user group interaction
+Relationship: All concepts involve users suggesting AI's role in creating and improving help posts for online forums and user groups.
+Criteria: Users suggest that AI could assist in writing, summarizing, and improving help posts for online forums and user groups.
+Phrase: Proposing AI-assisted help posts
+
+3.
+Concepts: praising ai troubleshooting, values ai's error clarification
+Relationship: Both concepts involve users appreciating AI's capabilities in troubleshooting and clarifying errors.
+Criteria: Users recognize and value AI's ability to troubleshoot, resolve errors, and clarify error codes and parameters, aiding in understanding and resolving issues.
+Phrase: Valuing AI error resolution
+---

@@ -1,0 +1,166 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (16 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+16.
+Criteria: {Who did what, and how for code 16}
+Label: {A descriptive label of code 16}
+---
+~~~
+1.
+Label: social support
+Quotes:
+- E01: Let's suppose that I'm trying to debug this error and I have trouble and I can't figure it out. So my next step would be to go to the user group. So if I had a button here that said please explain my situation so that I can paste it to the user group. User is attempting to write this. This is the code I wrote. This is the error it generates that the user doesn't understand. Can any human figure out what's wrong? I just press a button and it says, okay, paste it to the user group and we're done. And it's hard for users. (interviewer's observation) E01 suggests that AI could potentially help users write "help" posts that summarizes the situation: the need, the code, the error that the user does not understand.
+
+2.
+Label: chatgpt ability (negative): limitation in reading long codes
+Quotes:
+- E01: It's about, let's see, what did I count is 3800 lines of code. Well, first I couldn't feed it all the ChatGPT can only take it 1800 lines at a time. And then I said, you know, can you tell me what this does? And it basically said, no. ... I can live with that again. (interviewer's observation) ChatGPT's limitation on reading long code pieces.
+
+3.
+Label: prioritizes fixing
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 chooses to fix the problem rather than showing the explanation.
+
+4.
+Label: asks ai to implement ideas
+Quotes:
+- E04: "Can train-perceptron be turned into a reporter" (interviewer's observation) E04 uses "can you fix with my own idea".
+
+5.
+Label: highlights improved debugging
+Quotes:
+- E04: It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent. (interviewer's observation) Better troubleshooting capability.
+
+6.
+Label: comments
+Quotes:
+- E01: I don't want chat GPT to write 27 operations in one line and show how brilliant it is. I wanted to separate out the code and, and it did a good job of not only did it write the code, but it commented the code. And then in addition to commenting the code externally, it did documentation. (interviewer's observation) ChatGPT tends to provide comments and documentation. Generated code is easy to read.
+
+7.
+Label: highlights risks for novices
+Quotes:
+- E04: To me, it seems like you need to have a certain degree of expertise to understand where the errors are and how to fix them. Because otherwise it's like you're going down this path where you're blindly following the ChatGPT and you have no idea what's going on. For less experienced people, I wouldn't like that because it could put you in a worse situation. (interviewer's observation) Requires expertise to understand errors and debug them. Risks to blindly follow ChatGPT, esp. for less experienced people.
+
+8.
+Label: ai code usage
+Quotes:
+- E04: Oh and you can run it. That's cool. (interviewer's observation) E04 reads the AI output and decides to copy & paste it although he could also run it.
+
+9.
+Label: critiques current ai limitations
+Quotes:
+- E01: And some of them we still haven't been doing like hive mind, like how we are going to have the machine learning back from the user feedback or just from the compiler, right? You generate some code, but it doesn't work. So we have to tell you that this time, you didn't work. (interviewer's observation) The current ChatGPT implementation cannot check the generated code with external information (compiler, etc.) (partially solved by the Interpreter plugin, but only Python at this time)
+
+10.
+Label: error fixing
+Quotes:
+- E04: So this is interesting because, you know, obviously it's wrong. So I have to kind of interpret what's going on here. (interviewer's observation) E04 fixes common NetLogo mistakes by himself.
+- E04: "Can train-perceptron be turned into a reporter" (interviewer's observation) E04 uses "can you fix with my own idea".
+
+11.
+Label: hive mind
+Quotes:
+- E01: I call it hive feedback system, where if anyone in the world learns a new fact, or like, Oh, if you're a nurse, here's the word. If you're a transcriptionist, here's the word. If anybody learns it, then it goes into the system into the cloud. And now the cloud won't make that mistake anymore. And then the developer doesn't have to solve all these problems, because all the users solve their own problems. (interviewer's observation) E01 discusses how the human-AI collaborative system could be used to increase general productivity.
+
+12.
+Label: manual error fixing
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 manually tries to fix the errors in the AI-generated code and did not choose "explain it".
+
+13.
+Label: critiques obsession with solo work
+Quotes:
+- E01: But you know, again, you have this culture, especially in the US of do your own work. People get a little too obsessive about doing their own work.  (interviewer's observation) E01's reflection on U.S. individualistic working culture.
+
+14.
+Label: addressing debugging difficulties
+Quotes:
+- E01: Let's suppose that I'm trying to debug this error and I have trouble and I can't figure it out. So my next step would be to go to the user group. So if I had a button here that said please explain my situation so that I can paste it to the user group. User is attempting to write this. This is the code I wrote. This is the error it generates that the user doesn't understand. Can any human figure out what's wrong? I just press a button and it says, okay, paste it to the user group and we're done. And it's hard for users. (interviewer's observation) E01 suggests that AI could potentially help users write "help" posts that summarizes the situation: the need, the code, the error that the user does not understand.
+- E04: maybe you saw something that I didn't, but from my perspective, it seemed as though the code was set up appropriately, but it was marking the syntax as wrong. So maybe I was missing something, but I didn't see anything missing. So that was kind of frustrating. (interviewer's observation) Shows error messages even when it seems to be correct (that's a bug identified)
+- E04: It seems like a bug because I feel like all my parentheses are closed and all of my arguments and syntax are correct. (interviewer's observation) A less-clear error message makes E04 stuck.
+
+15.
+Label: values ai feedback
+Quotes:
+- E01: So if I'm writing long NetLogo code now, I'd probably have ChatGPT just open on the side. And I write a block of code and then I handed ChatGPT. Say, could I have done this better? And it would go, yeah, you could rearrange this like that. (interviewer's observation) ChatGPT could help E01 optimize his code.
+
+16.
+Label: seeks specific syntax help from ai
+Quotes:
+- E04: "how to define breeds in netlogo" (interviewer's observation) E04 tries to find certain syntax structures from the AI-generated code and ask for it when it is not there.
+===
+---
+Definitions for each code (16 in total):
+1.
+Criteria: The use of AI to assist users in communicating coding issues to social or user groups.
+Label: AI-Supported Social Interaction
+
+2.
+Criteria: The limitation of AI in processing and understanding long code sections.
+Label: AI Code Length Limitation
+
+3.
+Criteria: The preference for fixing code issues over receiving explanations.
+Label: Prioritizing Code Fixing
+
+4.
+Criteria: Using AI to implement user-generated ideas in code.
+Label: AI Implementation of User Ideas
+
+5.
+Criteria: The improvement in debugging capabilities through AI assistance.
+Label: Enhanced Debugging with AI
+
+6.
+Criteria: The provision of comments and documentation by AI in generated code.
+Label: AI Code Commenting
+
+7.
+Criteria: The risks involved for novices in following AI-generated code without understanding.
+Label: Risks for Novices with AI
+
+8.
+Criteria: The decision to use AI-generated code by running or copying it.
+Label: AI Code Utilization
+
+9.
+Criteria: Criticism of AI's current inability to validate code with external information.
+Label: AI Validation Limitation
+
+10.
+Criteria: The process of manually correcting errors in AI-generated code.
+Label: Manual Error Correction
+
+11.
+Criteria: The concept of a collaborative system where user feedback improves AI performance.
+Label: Collaborative AI Feedback System
+
+12.
+Criteria: The act of manually fixing errors in AI-generated code without seeking explanations.
+Label: Independent Error Fixing
+
+13.
+Criteria: Critique of a cultural tendency to work independently rather than collaboratively.
+Label: Critique of Individualistic Work Culture
+
+14.
+Criteria: Discussing the difficulties encountered during debugging and how AI could assist.
+Label: Debugging Challenges
+
+15.
+Criteria: The value placed on AI feedback for optimizing code.
+Label: Valuing AI Feedback for Optimization
+
+16.
+Criteria: Seeking specific syntax assistance from AI for coding.
+Label: AI Syntax Assistance
+---

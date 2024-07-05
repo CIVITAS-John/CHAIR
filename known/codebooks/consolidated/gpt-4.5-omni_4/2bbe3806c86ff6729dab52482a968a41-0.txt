@@ -1,0 +1,57 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: correcting ai-generated code, independently fixes ai code
+- Users interpret, correct, and manually debug AI-generated code.
+- Users manually correct errors in AI-generated code without seeking AI explanations.
+
+2.
+Concepts: time-saving, time-saving potential
+- The perception that AI can save time in learning and performing tasks.
+- Recognizes AI's potential to save time in problem-solving.
+
+3.
+Concepts: encountering ai capacity limitations, faces constraints with ai-generated code
+- Users encounter and note AI's limitations in processing and understanding large code inputs.
+- Users face constraints with AI in checking generated code with external information and handling long code pieces.
+===
+---
+Definitions for each code (3 in total):
+1.
+Concepts: correcting ai-generated code, independently fixes ai code
+Relationship: Users interpret, correct, and manually debug AI-generated code without seeking AI explanations.
+Criteria: Users manually correct errors in AI-generated code without seeking AI explanations.
+Phrase: Independently correcting AI-generated code
+
+2.
+Concepts: time-saving, time-saving potential
+Relationship: The perception that AI can save time in learning and performing tasks and recognizes AI's potential to save time in problem-solving.
+Criteria: Users perceive AI as a tool that can save time in learning and performing tasks.
+Phrase: Recognizing AI's time-saving potential
+
+3.
+Concepts: encountering ai capacity limitations, faces constraints with ai-generated code
+Relationship: Users encounter and note AI's limitations in processing and understanding large code inputs and face constraints with AI in checking generated code with external information and handling long code pieces.
+Criteria: Users face constraints with AI in processing large code inputs and checking generated code with external information.
+Phrase: Encountering AI capacity limitations
+---

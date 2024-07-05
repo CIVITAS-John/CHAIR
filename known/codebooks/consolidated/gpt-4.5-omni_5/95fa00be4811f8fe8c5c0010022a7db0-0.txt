@@ -1,0 +1,68 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (4 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+4. 
+Concepts: {Repeat the input 4}
+Relationship: {What is logical relationship between concepts in code 4, or N/A if not applicable}
+Criteria: {Who did what, and how for code 4}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: social support, proposing ai-assisted help posts
+- Users suggest AI could help with social support, like writing help posts.
+- Users suggest AI could assist in writing detailed help requests for user groups.
+
+2.
+Concepts: selectively references ai-generated code, relies on ai for time-efficient code generation
+- The user uses AI-generated code as a reference and selectively incorporates it based on their needs to prioritize efficiency.
+- Users use AI-generated code to complete tasks within time constraints and rely on AI for generating code in various programming languages.
+
+3.
+Concepts: model building practices, describe iterative development process
+- Describes established practices for building models and iteratively developing code.
+- Users describe the iterative process of building models and learning with AI assistance.
+
+4.
+Concepts: need clear ai explanations, emphasizing clear instructions for ai
+- Users need AI to provide clear explanations and effective troubleshooting.
+- Users emphasize the need for clear instructions to effectively use AI.
+===
+---
+Definitions for each code (4 in total):
+1.
+Concepts: social support, proposing ai-assisted help posts
+Relationship: Users suggest AI could help with social support by assisting in writing help posts and detailed help requests.
+Criteria: Users propose that AI could assist in writing help posts and detailed help requests to enhance social support within user groups.
+Phrase: Proposing AI-assisted help posts
+
+2.
+Concepts: selectively references ai-generated code, relies on ai for time-efficient code generation
+Relationship: Users selectively reference AI-generated code and rely on it for efficient code generation.
+Criteria: Users selectively incorporate AI-generated code based on their needs to prioritize efficiency and rely on AI for generating code within time constraints.
+Phrase: Relying on AI for efficient code generation
+
+3.
+Concepts: model building practices, describe iterative development process
+Relationship: Users describe their model building practices and the iterative development process with AI assistance.
+Criteria: Users describe established practices for building models and the iterative process of developing code with AI assistance.
+Phrase: Describing iterative model development
+
+4.
+Concepts: need clear ai explanations, emphasizing clear instructions for ai
+Relationship: Users need clear AI explanations and emphasize the importance of clear instructions for effective use.
+Criteria: Users need AI to provide clear explanations and emphasize the need for clear instructions to effectively use AI.
+Phrase: Emphasizing clear AI instructions
+---
