@@ -1,0 +1,59 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: code review, debugging and fixing ai-generated code
+- Instances where the participant reviews and debugs AI-generated code.
+- Participants identify errors, debug, and manually fix errors in AI-generated code.
+
+2.
+Concepts: highlights iterative improvement, using ai for code optimization and assistance
+- Instances where the participant uses AI to improve or optimize their code.
+- Participants use AI to optimize code and improve performance.
+
+3.
+Concepts: values time saving, describing time-saving benefits
+- Participants value time-saving benefits of AI assistance.
+- Participants perceive and describe the time-saving benefits of using LLM-driven interfaces.
+===
+---
+Definitions for each code (3 in total):
+
+1.
+Concepts: code review, debugging and fixing ai-generated code
+Relationship: The concepts are interrelated as code review leads to debugging, and debugging leads to fixing errors in AI-generated code.
+Criteria: Participants review, debug, and fix errors in AI-generated code.
+Phrase: Review and debug AI-generated code.
+
+2.
+Concepts: highlights iterative improvement, using ai for code optimization and assistance
+Relationship: The concepts are related as using AI for code optimization leads to iterative improvement.
+Criteria: Participants use AI to optimize and improve their code.
+Phrase: Optimize code with AI.
+
+3.
+Concepts: values time saving, describing time-saving benefits
+Relationship: N/A
+Criteria: Participants value and describe the time-saving benefits of using LLM-driven interfaces.
+Phrase: Appreciate time-saving benefits.
+
+---

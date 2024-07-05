@@ -1,0 +1,383 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: hallucination, mentions ai hallucination
+- AI generates incorrect information
+- Instances where the interviewee discusses the potential for AI to generate incorrect or non-existent information.
+- Instances where AI generates incorrect or fabricated information.
+
+2.
+Concepts: limited options, dislikes limited ai options
+- Expresses dissatisfaction with limited options provided by the AI.
+- Expresses frustration with limited AI options.
+
+3.
+Concepts: limits choices, critiques limited options
+- The expert finds the options provided by AI to be limited and restrictive.
+- Critiques limited options in AI-driven interfaces, especially for experts.
+
+4.
+Concepts: long code, long code limitations
+- Encounters limitations in AI-driven interfaces, such as handling long code pieces.
+- AI's difficulty in processing and understanding large codebases.
+
+5.
+Concepts: acknowledges ai's limitations, acknowledges the limit of debugging capability
+- Acknowledges the limitations of AI-driven interfaces.
+- Participant acknowledges AI's mistake but still sees value in using it.
+- Acknowledges limitations of AI's debugging capabilities.
+
+6.
+Concepts: current limitations of ai, critiques current ai limitations
+- The participant recognizes the limitations of the current AI implementation.
+- The participant critiques current AI limitations.
+
+7.
+Concepts: frustration point, expresses frustration
+- The participant expresses frustration with AI-generated code, such as getting stuck in a loop.
+- The participant expresses frustration with AI-generated code, such as hallucinating functions.
+
+8.
+Concepts: finds error messages misleading, notes confusion caused by error messages
+- The participant finds error messages from AI-driven interfaces misleading.
+- Expresses frustration with unhelpful error messages in AI-driven interfaces.
+
+9.
+Concepts: experiences frustration with ai limitations, expressing frustration with error resolution options
+- The participant experiences frustration with the AI's limitations or errors.
+- The participant expresses frustration with error resolution options provided by the AI.
+
+10.
+Concepts: failure, ai ability (negative): error
+- Describes instances of failure or limitations in using LLM-driven interfaces.
+- Expresses concerns or limitations of LLM-driven interfaces, including potential errors or inaccuracies.
+
+11.
+Concepts: debugging practice, novice (negative): debug
+- Emphasizes the importance of debugging practice before using AI-driven interfaces.
+- Identifies the need for novices to develop debugging skills before using AI-driven interfaces.
+
+12.
+Concepts: suggests user debugging practice, pre-learning requirement about how to ask questions
+- Participants suggest that users need practice in debugging their own code before seeking AI assistance.
+- The expert suggests that users need practice in debugging their own code before seeking AI assistance.
+
+13.
+Concepts: error understanding, emphasizing user expertise, expertise requirement
+- Emphasizes the need for expertise to understand errors and debug.
+- Emphasizes the need for user expertise in understanding errors and debugging.
+- The participant recognizes the need for expertise to understand and debug errors.
+
+14.
+Concepts: learning, learning process
+- Learning from the iterative debugging process, including structuring code and learning from errors
+- Reflects on the learning process, including debugging and asking questions.
+
+15.
+Concepts: debugging difficulties, experiences debugging frustration, experiences debugging challenges
+- The code is about the user's experience with debugging difficulties.
+- Experiencing frustration with debugging tasks
+- Participants experience challenges and frustrations when debugging code.
+
+16.
+Concepts: debugging skills, notes lack of debugging skills, addressing novice challenges
+- Lacking debugging skills, especially among novices
+- Participants note the lack of debugging skills among novices.
+- Addressing challenges faced by novices, such as lack of debugging skills
+
+17.
+Concepts: parameter clarification, appreciates ai parameter clarification
+- Values the ability to clarify parameters in the AI-driven interface.
+- Appreciates AI-driven interfaces that clarify parameters and options.
+
+18.
+Concepts: clarification, error clarification
+- Values the AI's ability to clarify error codes and parameters.
+- Appreciates AI's ability to clarify error codes and provide explanations.
+
+19.
+Concepts: values error detection, values error clarification
+- Values the error detection capabilities of AI-driven interfaces.
+- Values the error clarification capabilities of AI-driven interfaces.
+
+20.
+Concepts: error reading, reads error messages
+- The participant reads error messages to understand the issue before making a decision.
+- The user reads error messages before making a choice, indicating a need for error management.
+
+21.
+Concepts: unclear error message, debug: the general error message provided by the system is not useful, error message critique
+- Encounters unclear error messages, highlighting the need for improvement.
+- The user notes that error messages can be unhelpful, indicating a need for better error messaging.
+- Encounters unhelpful error messages, emphasizing the need for better feedback.
+
+22.
+Concepts: error fixing, manual error fixing, manually fixes ai code errors
+- The participant fixes errors in AI-generated code.
+- The participant manually fixes errors in AI-generated code.
+- The user manually fixes AI code errors, indicating a need for better error handling.
+
+23.
+Concepts: code review, evaluation to debug
+- The participant reviews and debugs the code generated by the AI.
+- The participant evaluates or debugs the AI-generated code to identify errors or improve its functionality.
+
+24.
+Concepts: debugs ai-generated code, interacts with ai-generated code
+- The participant debugs AI-generated code, trying to fix errors themselves.
+- Participant interacts with AI-generated code, trying to understand and fix errors.
+
+25.
+Concepts: error resolution, troubleshooting capability
+- The participant discusses the error resolution capabilities of the AI or its ability to troubleshoot issues.
+- Participants discuss the troubleshooting capabilities of AI.
+
+26.
+Concepts: seeks help from ai, seeks ai assistance
+- The participant seeks help from the AI to resolve errors or complete tasks.
+- Participant seeks help from AI, asking questions and seeking verification.
+
+27.
+Concepts: outside observer, considers chatgpt an outside observer
+- The expert views AI as an outside observer that can catch errors that humans may not notice.
+- The participant views ChatGPT as an outside observer that can catch obvious errors that human users might not realize.
+
+28.
+Concepts: chatlogo ability (positive): debug, chatlogo ability (positive)
+- Appreciating the ability of ChatLogo to clarify error codes and debug code
+- Participants appreciate the positive aspects of ChatLogo, such as its debugging and troubleshooting capabilities.
+
+29.
+Concepts: human-ai: debug (positive), human-ai: support troubleshooting
+- The participant expresses a positive view of the AI's ability to help with debugging or troubleshooting.
+- The participant expresses a positive view of the AI's ability to support troubleshooting.
+
+30.
+Concepts: suspecting a bug in ai, identifies potential bug
+- The code is about the user's suspicion of a bug in AI-driven interfaces.
+- The participant identifies potential bugs in AI-generated code, even when it seems correct.
+
+31.
+Concepts: suggests ai debugging, ai-based debugging
+- Suggesting the use of AI for debugging tasks
+- Describes the use of LLM-driven interfaces for debugging purposes.
+
+32.
+Concepts: shares debugging experience, highlights improved debugging
+- Participant shares experiences of debugging with AI.
+- The participant highlights improved debugging capabilities with AI.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: hallucination, mentions ai hallucination
+Relationship: N/A
+Criteria: The interviewee discusses instances where AI generates incorrect or non-existent information.
+Phrase: Generating incorrect information
+
+2.
+Concepts: limited options, dislikes limited ai options
+Relationship: N/A
+Criteria: The interviewee expresses dissatisfaction with limited options provided by the AI.
+Phrase: Expressing dissatisfaction with limited options
+
+3.
+Concepts: limits choices, critiques limited options
+Relationship: N/A
+Criteria: The expert critiques limited options in AI-driven interfaces, especially for experts.
+Phrase: Critiquing limited options
+
+4.
+Concepts: long code, long code limitations
+Relationship: N/A
+Criteria: The interviewee encounters limitations in AI-driven interfaces, such as handling long code pieces.
+Phrase: Encountering long code limitations
+
+5.
+Concepts: acknowledges ai's limitations, acknowledges the limit of debugging capability
+Relationship: N/A
+Criteria: The interviewee acknowledges the limitations of AI-driven interfaces.
+Phrase: Acknowledging AI's limitations
+
+6.
+Concepts: current limitations of ai, critiques current ai limitations
+Relationship: N/A
+Criteria: The interviewee recognizes the limitations of the current AI implementation.
+Phrase: Critiquing current AI limitations
+
+7.
+Concepts: frustration point, expresses frustration
+Relationship: N/A
+Criteria: The interviewee expresses frustration with AI-generated code.
+Phrase: Expressing frustration with AI-generated code
+
+8.
+Concepts: finds error messages misleading, notes confusion caused by error messages
+Relationship: N/A
+Criteria: The interviewee finds error messages from AI-driven interfaces misleading.
+Phrase: Finding error messages misleading
+
+9.
+Concepts: experiences frustration with ai limitations, expressing frustration with error resolution options
+Relationship: N/A
+Criteria: The interviewee experiences frustration with the AI's limitations or errors.
+Phrase: Experiencing frustration with AI limitations
+
+10.
+Concepts: failure, ai ability (negative): error
+Relationship: N/A
+Criteria: The interviewee describes instances of failure or limitations in using LLM-driven interfaces.
+Phrase: Describing AI failure or limitations
+
+11.
+Concepts: debugging practice, novice (negative): debug
+Relationship: N/A
+Criteria: The interviewee emphasizes the importance of debugging practice before using AI-driven interfaces.
+Phrase: Emphasizing debugging practice
+
+12.
+Concepts: suggests user debugging practice, pre-learning requirement about how to ask questions
+Relationship: N/A
+Criteria: The interviewee suggests that users need practice in debugging their own code before seeking AI assistance.
+Phrase: Suggesting user debugging practice
+
+13.
+Concepts: error understanding, emphasizing user expertise, expertise requirement
+Relationship: N/A
+Criteria: The interviewee emphasizes the need for expertise to understand errors and debug.
+Phrase: Emphasizing error understanding expertise
+
+14.
+Concepts: learning, learning process
+Relationship: N/A
+Criteria: The interviewee reflects on the learning process, including debugging and asking questions.
+Phrase: Reflecting on the learning process
+
+15.
+Concepts: debugging difficulties, experiences debugging frustration, experiences debugging challenges
+Relationship: N/A
+Criteria: The interviewee experiences challenges and frustrations when debugging code.
+Phrase: Experiencing debugging difficulties
+
+16.
+Concepts: debugging skills, notes lack of debugging skills, addressing novice challenges
+Relationship: N/A
+Criteria: The interviewee notes the lack of debugging skills among novices.
+Phrase: Noting lack of debugging skills
+
+17.
+Concepts: parameter clarification, appreciates ai parameter clarification
+Relationship: N/A
+Criteria: The interviewee values the ability to clarify parameters in the AI-driven interface.
+Phrase: Valuing parameter clarification
+
+18.
+Concepts: clarification, error clarification
+Relationship: N/A
+Criteria: The interviewee values the AI's ability to clarify error codes and parameters.
+Phrase: Valuing error clarification
+
+19.
+Concepts: values error detection, values error clarification
+Relationship: N/A
+Criteria: The interviewee values the error detection and clarification capabilities of AI-driven interfaces.
+Phrase: Valuing error detection and clarification
+
+20.
+Concepts: error reading, reads error messages
+Relationship: N/A
+Criteria: The interviewee reads error messages to understand the issue before making a decision.
+Phrase: Reading error messages
+
+21.
+Concepts: unclear error message, debug: the general error message provided by the system is not useful, error message critique
+Relationship: N/A
+Criteria: The interviewee encounters unclear error messages, highlighting the need for improvement.
+Phrase: Encountering unclear error messages
+
+22.
+Concepts: error fixing, manual error fixing, manually fixes ai code errors
+Relationship: N/A
+Criteria: The interviewee fixes errors in AI-generated code.
+Phrase: Manually fixing AI code errors
+
+23.
+Concepts: code review, evaluation to debug
+Relationship: N/A
+Criteria: The interviewee reviews and debugs the code generated by the AI.
+Phrase: Reviewing and debugging AI-generated code
+
+24.
+Concepts: debugs ai-generated code, interacts with ai-generated code
+Relationship: N/A
+Criteria: The interviewee debugs AI-generated code, trying to fix errors themselves.
+Phrase: Debugging AI-generated code
+
+25.
+Concepts: error resolution, troubleshooting capability
+Relationship: N/A
+Criteria: The interviewee discusses the error resolution capabilities of the AI or its ability to troubleshoot issues.
+Phrase: Discussing error resolution capabilities
+
+26.
+Concepts: seeks help from ai, seeks ai assistance
+Relationship: N/A
+Criteria: The interviewee seeks help from the AI to resolve errors or complete tasks.
+Phrase: Seeking AI assistance
+
+27.
+Concepts: outside observer, considers chatgpt an outside observer
+Relationship: N/A
+Criteria: The interviewee views AI as an outside observer that can catch errors that humans may not notice.
+Phrase: Viewing AI as an outside observer
+
+28.
+Concepts: chatlogo ability (positive): debug, chatlogo ability (positive)
+Relationship: N/A
+Criteria: The interviewee appreciates the ability of ChatLogo to clarify error codes and debug code.
+Phrase: Appreciating ChatLogo's debugging ability
+
+29.
+Concepts: human-ai: debug (positive), human-ai: support troubleshooting
+Relationship: N/A
+Criteria: The interviewee expresses a positive view of the AI's ability to help with debugging or troubleshooting.
+Phrase: Expressing a positive view of AI's debugging ability
+
+30.
+Concepts: suspecting a bug in ai, identifies potential bug
+Relationship: N/A
+Criteria: The interviewee identifies potential bugs in AI-generated code, even when it seems correct.
+Phrase: Identifying potential AI bugs
+
+31.
+Concepts: suggests ai debugging, ai-based debugging
+Relationship: N/A
+Criteria: The interviewee suggests the use of AI for debugging tasks.
+Phrase: Suggesting AI debugging
+
+32.
+Concepts: shares debugging experience, highlights improved debugging
+Relationship: N/A
+Criteria: The interviewee shares experiences of debugging with AI and highlights improved debugging capabilities.
+Phrase: Sharing debugging experiences with AI

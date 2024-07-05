@@ -1,0 +1,336 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (28 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+28. 
+Concepts: {Repeat the input 28}
+Relationship: {What is logical relationship between concepts in code 28, or N/A if not applicable}
+Criteria: {Who did what, and how for code 28}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: code generation, ai generated code usage
+- Generates code with AI assistance
+- Uses AI-generated code to complete tasks
+
+2.
+Concepts: ai code usage, selectively copies ai code
+- Uses AI-generated code and decides whether to run or modify it.
+- Selectively uses AI-generated code and evaluates its relevance.
+
+3.
+Concepts: error fixing, manual error fixing, manually fixes ai code errors
+- Fixes errors in AI-generated code manually.
+- Manually fixes errors in AI-generated code without seeking explanations.
+- Manually fixes errors in AI-generated code.
+
+4.
+Concepts: self-reliance, self-reliant in fixing errors
+- Demonstrating self-reliance in debugging and coding
+- Tries to debug AI-generated code independently before seeking help.
+
+5.
+Concepts: human-ai: debug (positive), highlights improved debugging
+- Describes the debugging capability of AI
+- Highlights the improved debugging capabilities of AI.
+
+6.
+Concepts: learning, describes iterative debugging benefits
+- Reflecting on the value of iterative debugging with AI
+- Describes the benefits of iterative debugging with AI
+
+7.
+Concepts: suggests ai debugging, addressing debugging difficulties
+- Suggests AI debugging and iterative error fixing.
+- Addresses difficulties in debugging and seeks AI support for error identification.
+
+8.
+Concepts: ai-assisted debugging, debugging and troubleshooting
+- The code describes instances where users utilize the LLM-driven interface for debugging purposes.
+- The process by which the interviewee identifies and fixes errors in the code, often with the help of the LLM-driven interface.
+
+9.
+Concepts: suspected ai bug, identifies potential bug
+- Suspects a bug in AI-generated code.
+- Identifies potential bugs in AI-generated code, even when it seems correct.
+
+10.
+Concepts: code review, error identification in ai code
+- Participant reviews and debugs AI-generated code.
+- Participant identifies errors in AI-generated code.
+
+11.
+Concepts: debugging practice, pre-learning requirement about how to ask questions, calls for preparatory exercises, suggests user debugging practice
+- Participants emphasize the importance of users practicing debugging their own code before seeking AI assistance.
+- The expert emphasizes the need for users to practice debugging their own code before seeking AI assistance.
+- Emphasizes the need for users to practice debugging their own code and have preparatory exercises before asking AI for help.
+- Interviewees suggest that users need practice in debugging their own code before asking AI for assistance.
+
+12.
+Concepts: expertise requirement, need for expertise in debugging
+- The participant recognizes the importance of expertise in understanding and debugging code, especially when working with AI.
+- The requirement for a certain level of expertise to effectively debug and use the AI-generated code.
+
+13.
+Concepts: suggests one error at a time, highlights cognitive load
+- Suggests showing one error at a time
+- Highlights cognitive load and suggests showing one error at a time.
+
+14.
+Concepts: error reading, reads error messages
+- Participant reads error messages before making a choice.
+- Reads error messages before making a choice or taking action.
+
+15.
+Concepts: debugging challenges, experiences debugging frustration
+- Experiences difficulties in debugging due to unclear error messages.
+- Participants experience frustration when encountering unclear error messages.
+
+16.
+Concepts: unclear error message frustration, notes confusion caused by error messages
+- Participant expresses frustration with unclear error messages.
+- The participant expresses frustration with unclear or unhelpful error messages.
+
+17.
+Concepts: ineffective error messaging, debug: the general error message provided by the system is not useful
+- Finds error messages in NetLogo to be unhelpful.
+- Critiques unhelpful error messages in NetLogo.
+- Critiques the usefulness of error messages in NetLogo.
+
+18.
+Concepts: iterative debugging, an iterative learning process
+- The participant values the iterative debugging process, even if the AI provides incorrect answers, as a valuable learning experience.
+- Believes in the value of an iterative learning process with AI, even if AI provides wrong answers.
+
+19.
+Concepts: error detection, ai ability (negative): error
+- Seeks error detection and correction capabilities in LLM-driven interfaces.
+- Recognizing potential errors in LLM-driven interfaces
+
+20.
+Concepts: seeks help, seeks ai help with troubleshooting
+- Seeks help from AI for understanding and resolving errors
+- Seeks AI's help with troubleshooting or error resolution.
+
+21.
+Concepts: non-technical language
+- The participant mentions that AI explanations are clear and easy to understand, without technical jargon.
+- The code highlights the use of less technical language in the LLM-driven interface's explanations.
+
+22.
+Concepts: human-ai collaboration
+- The interviewee's perception of AI as a collaborative partner in the coding and learning process.
+- Participant emphasizes the importance of human-AI collaboration.
+
+23.
+Concepts: mentions ai hallucination
+- Instances where the interviewee discusses the potential for AI to generate incorrect or non-existent information.
+- Instances where AI generates incorrect or fabricated information.
+
+24.
+Concepts: time-saving
+- The perception that AI can save time in learning and performing tasks.
+- The code highlights the value of time-saving benefits when using the LLM-driven interface.
+
+25.
+Concepts: evaluates ai responses
+- The process by which the interviewee assesses the quality and usefulness of the outputs generated by the LLM-driven interface.
+- The code emphasizes the need for users to critically evaluate the responses generated by the LLM-driven interface.
+
+26.
+Concepts: mentions learning curve
+- The perceived difficulty and effort required to learn and effectively use the LLM-driven interface.
+- The participant mentions the learning curve or difficulties in understanding AI or programming concepts.
+
+27.
+Concepts: ai efficiency
+- Evaluating the efficiency of LLM-driven interfaces
+- Notes the efficiency of AI in providing timely feedback.
+
+28.
+Concepts: ai ability (positive): fast iteration
+- The expert highlights the ability of AI to advance and stay up-to-date with the state of the art.
+- Describes the speed and efficiency of AI-driven systems.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: code generation, ai generated code usage
+Relationship: Code generation enables AI-generated code usage.
+Criteria: Users generate code with AI assistance and use AI-generated code to complete tasks.
+Phrase: Generates code with AI assistance.
+
+2.
+Concepts: ai code usage, selectively copies ai code
+Relationship: Selective copying of AI code implies evaluating its relevance.
+Criteria: Users use AI-generated code and decide whether to run or modify it.
+Phrase: Selectively uses AI-generated code.
+
+3.
+Concepts: error fixing, manual error fixing, manually fixes ai code errors
+Relationship: Manual error fixing is a response to AI code errors.
+Criteria: Users fix errors in AI-generated code manually.
+Phrase: Manually fixes errors.
+
+4.
+Concepts: self-reliance, self-reliant in fixing errors
+Relationship: Self-reliance is demonstrated through independent error fixing.
+Criteria: Users try to debug AI-generated code independently before seeking help.
+Phrase: Demonstrates self-reliance.
+
+5.
+Concepts: human-ai: debug (positive), highlights improved debugging
+Relationship: Human-AI collaboration improves debugging capabilities.
+Criteria: Users describe the improved debugging capabilities of AI.
+Phrase: Highlights improved debugging.
+
+6.
+Concepts: learning, describes iterative debugging benefits
+Relationship: Iterative debugging facilitates learning.
+Criteria: Users reflect on the value of iterative debugging with AI.
+Phrase: Describes iterative debugging benefits.
+
+7.
+Concepts: suggests ai debugging, addressing debugging difficulties
+Relationship: AI debugging addresses difficulties in debugging.
+Criteria: Users suggest AI debugging and iterative error fixing.
+Phrase: Suggests AI debugging.
+
+8.
+Concepts: ai-assisted debugging, debugging and troubleshooting
+Relationship: AI-assisted debugging involves identifying and fixing errors.
+Criteria: Users utilize the LLM-driven interface for debugging purposes.
+Phrase: Utilizes AI-assisted debugging.
+
+9.
+Concepts: suspected ai bug, identifies potential bug
+Relationship: Suspecting AI bugs involves identifying potential errors.
+Criteria: Users suspect a bug in AI-generated code.
+Phrase: Identifies potential bugs.
+
+10.
+Concepts: code review, error identification in ai code
+Relationship: Code review involves identifying errors in AI-generated code.
+Criteria: Users review and debug AI-generated code.
+Phrase: Reviews and debugs AI code.
+
+11.
+Concepts: debugging practice, pre-learning requirement about how to ask questions, calls for preparatory exercises, suggests user debugging practice
+Relationship: Pre-learning requirements involve practicing debugging before seeking AI help.
+Criteria: Users emphasize the importance of practicing debugging before seeking AI assistance.
+Phrase: Emphasizes debugging practice.
+
+12.
+Concepts: expertise requirement, need for expertise in debugging
+Relationship: Expertise is required for effective debugging and AI code understanding.
+Criteria: Users recognize the importance of expertise in understanding and debugging code.
+Phrase: Recognizes expertise requirement.
+
+13.
+Concepts: suggests one error at a time, highlights cognitive load
+Relationship: Showing one error at a time reduces cognitive load.
+Criteria: Users suggest showing one error at a time.
+Phrase: Suggests one error at a time.
+
+14.
+Concepts: error reading, reads error messages
+Relationship: Reading error messages informs decision-making.
+Criteria: Users read error messages before making a choice.
+Phrase: Reads error messages.
+
+15.
+Concepts: debugging challenges, experiences debugging frustration
+Relationship: Debugging challenges lead to frustration.
+Criteria: Users experience difficulties in debugging due to unclear error messages.
+Phrase: Experiences debugging frustration.
+
+16.
+Concepts: unclear error message frustration, notes confusion caused by error messages
+Relationship: Unclear error messages cause frustration and confusion.
+Criteria: Users express frustration with unclear error messages.
+Phrase: Expresses frustration.
+
+17.
+Concepts: ineffective error messaging, debug: the general error message provided by the system is not useful
+Relationship: Ineffective error messaging hinders debugging.
+Criteria: Users find error messages in NetLogo to be unhelpful.
+Phrase: Critiques error messaging.
+
+18.
+Concepts: iterative debugging, an iterative learning process
+Relationship: Iterative debugging facilitates learning from AI.
+Criteria: Users value the iterative debugging process with AI.
+Phrase: Values iterative debugging.
+
+19.
+Concepts: error detection, ai ability (negative): error
+Relationship: Error detection is a necessary AI capability.
+Criteria: Users seek error detection and correction capabilities in LLM-driven interfaces.
+Phrase: Seeks error detection.
+
+20.
+Concepts: seeks help, seeks ai help with troubleshooting
+Relationship: Seeking help involves seeking AI assistance.
+Criteria: Users seek help from AI for understanding and resolving errors.
+Phrase: Seeks AI help.
+
+21.
+Concepts: non-technical language
+Relationship: N/A
+Criteria: Users mention that AI explanations are clear and easy to understand.
+Phrase: Appreciates non-technical language.
+
+22.
+Concepts: human-ai collaboration
+Relationship: N/A
+Criteria: Users emphasize the importance of human-AI collaboration.
+Phrase: Emphasizes human-AI collaboration.
+
+23.
+Concepts: mentions ai hallucination
+Relationship: N/A
+Criteria: Users discuss the potential for AI to generate incorrect information.
+Phrase: Mentions AI hallucination.
+
+24.
+Concepts: time-saving
+Relationship: N/A
+Criteria: Users perceive AI as saving time in learning and performing tasks.
+Phrase: Appreciates time-saving benefits.
+
+25.
+Concepts: evaluates ai responses
+Relationship: Evaluating AI responses involves assessing quality and usefulness.
+Criteria: Users assess the quality and usefulness of AI-generated outputs.
+Phrase: Evaluates AI responses.
+
+26.
+Concepts: mentions learning curve
+Relationship: N/A
+Criteria: Users mention the learning curve or difficulties in understanding AI or programming concepts.
+Phrase: Mentions learning curve.
+
+27.
+Concepts: ai efficiency
+Relationship: N/A
+Criteria: Users evaluate the efficiency of LLM-driven interfaces.
+Phrase: Evaluates AI efficiency.
+
+28.
+Concepts: ai ability (positive): fast iteration
+Relationship: N/A
+Criteria: Users describe the speed and efficiency of AI-driven systems.
+Phrase: Describes AI efficiency.

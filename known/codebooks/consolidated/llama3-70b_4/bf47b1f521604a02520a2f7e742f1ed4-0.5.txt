@@ -1,0 +1,378 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: notes lack of debugging skills, addressing novice challenges
+- Participants note the lack of debugging skills among beginners.
+- Participants address challenges faced by novices, such as debugging and design outlines.
+
+2.
+Concepts: prepare for ai assistance, advocate for user practice
+- Participants call for users to practice debugging their own code before asking AI for assistance.
+- Participants suggest novice users practice debugging their own code and emphasize the importance of user practice and exercises in debugging.
+
+3.
+Concepts: require debugging expertise, understand errors and syntax
+- Participants emphasize the need for expertise to understand and debug errors.
+- Participants recognize the importance of understanding errors and debugging.
+
+4.
+Concepts: fix ai code errors, identify and debug errors
+- Participants fix errors or mistakes in AI-generated code manually or with AI assistance.
+- Participants identify and fix errors in the code, often with the help of the LLM-driven interface.
+
+5.
+Concepts: enhance error resolution, highlight improved debugging
+- Participants enhance error resolution or debugging capabilities.
+- Participants highlight the improved debugging capabilities of the AI system.
+
+6.
+Concepts: integrates ai-generated code, integrates ai into workflow
+- Participants integrate AI-generated code fully into existing models or code.
+- Participants plan to integrate AI into their established process of building models.
+
+7.
+Concepts: use ai-generated code, avoid direct code copying
+- Participants use AI-generated code as a starting point or basis for their own work.
+- Participants avoid direct code copying and instead use AI-generated code as a reference.
+
+8.
+Concepts: debug ai-generated code, evaluate and debug code
+- Participants review and debug AI-generated code.
+- Participants evaluate and debug AI-generated code, summarizing its functionality and limitations.
+
+9.
+Concepts: read code manually, evaluate ai-generated code, evaluates ai performance compared to human coding
+- Participants read AI-generated code in detail to evaluate its quality.
+- Participants evaluate the usability of ChatGPT-generated code.
+- Participants evaluate AI's performance in comparison to human coding.
+
+10.
+Concepts: discuss code quality, valuing code simplicity and maintainability
+- Participants discuss the importance of maintenance and code quality.
+- Participants value readability and simplicity in code and emphasize the importance of maintainable code.
+
+11.
+Concepts: optimize code with ai, uses chatgpt for code analysis and optimization
+- Participants see AI as a tool for optimizing code.
+- Experts use ChatGPT for code analysis and optimization.
+
+12.
+Concepts: struggles with netlogo scope, observations of beginners' struggles
+- Participants struggle with the concept of "scope" and identify it as a learning challenge.
+- Observes difficulties faced by beginners in using NetLogo.
+
+13.
+Concepts: deals with older net logo versions, faces version issues with netlogo
+- Dealing with older versions of NetLogo or compatibility issues.
+- Participants face version issues with NetLogo and discuss outdated code.
+
+14.
+Concepts: critiques chatlogo's limitations, critique of netlogo's lack of smart editors, discusses netlogo limitations and feedback
+- Participants critique the lack of flexibility or customization options in ChatLogo.
+- Participants critique NetLogo's lack of smart editors.
+- Participants discuss limitations of NetLogo and critique the feedback mechanisms.
+
+15.
+Concepts: analyze code with ai, utilize ai for coding support
+- Participants analyze code using AI systems and compare AI-generated code with initial code in NetLogo learning and practice.
+- Participants use AI for coding assistance and feedback in NetLogo learning and practice.
+
+16.
+Concepts: reports errors, critiques error messages in netlogo and ai code
+- Experts report errors and seek AI assistance for error detection and feedback in NetLogo learning and practice.
+- Participants discuss error messages in NetLogo or AI-generated code.
+
+17.
+Concepts: seeking online help, discussing proper help-seeking practices
+- Participants seek help from online communities or forums and interact with user groups.
+- Participants describe effective ways to seek online support and reflect on proper practices and etiquette.
+
+18.
+Concepts: emphasizes oral tradition, identifying documentation gaps and limitations
+- Experts reflect on the importance of oral tradition in knowledge sharing.
+- Participants comment on the lack of documentation or the importance of oral tradition in knowledge sharing.
+
+19.
+Concepts: discusses system support for learning, highlighting learning needs and reminders
+- Participants discuss the need for system support and reminders to facilitate learning and retention.
+- Participants highlight learning needs or areas for improvement and the need for reminders.
+
+20.
+Concepts: foundational skills, discussing instruction writing skills for ai use
+- Identifies foundational skills required for effective AI use, such as writing instructions.
+- Participants discuss the importance of writing instructions for others as a key capability.
+
+21.
+Concepts: novice (negative), highlighting risks for novices
+- Discusses limitations of novices in writing instructions for AI.
+- Participants express concerns about the risks or limitations of relying on AI systems, especially for novices.
+
+22.
+Concepts: question ai capabilities, inquires about ai capabilities and features
+- Participants question the capabilities of ChatGPT.
+- Participants inquire about AI capabilities and ask questions about AI-driven interfaces or their features.
+
+23.
+Concepts: weaknesses of llm-driven interfaces, describing llm-driven interface inefficiencies
+- Negative aspects and limitations of using LLM-driven interfaces as perceived by the interviewee.
+- Participants describe instances of failure or inefficiency in using LLM-driven interfaces for learning and understanding concepts.
+
+24.
+Concepts: feature gaps, experience gaps in ai assistance
+- Identifying gaps or limitations in the features or capabilities of the AI-driven interface.
+- Participants experience incomplete or missing code structures in AI-driven interfaces.
+
+25.
+Concepts: experiencing frustration with ai limitations, expressing frustration with ai-driven error handling
+- Participants experience and express frustration with AI limitations and want more flexibility.
+- Participants express frustration with unclear error messages in AI-driven interfaces.
+
+26.
+Concepts: accepts the limitation, identifies ai limitations in reading long codes
+- The participant accepts the limitations of the AI, such as its inability to process long code pieces.
+- Participants identify limitations or constraints in the AI system's ability to process or understand code.
+
+27.
+Concepts: identifies ai limitations, critiquing ai limitations
+- Participants identify limitations of AI-driven interfaces.
+- Participants critique limited options or functionality in the AI-driven interface.
+
+28.
+Concepts: relying on ai output, faces time constraints and seeks ai assistance
+- Participants rely heavily on AI output due to time constraints or other situations.
+- Participants face time constraints and appreciate the potential of AI to save time.
+
+29.
+Concepts: ai effectiveness, suggests effective ai use
+- The participant discusses the effectiveness of ChatGPT when asking iterative questions.
+- Participants suggest effective ways to use ChatGPT.
+
+30.
+Concepts: appreciates ai-driven time savings, highlights ai's time-saving benefits
+- Participants value the time-saving benefits of AI-driven interfaces.
+- Participants perceive LLM-driven interfaces as saving time in learning and problem-solving.
+
+31.
+Concepts: values ai collaboration, acknowledges ai mistakes and values iterative learning
+- Participants value an iterative approach when working with AI.
+- Participants acknowledge AI mistakes but see value in the generated solutions.
+
+32.
+Concepts: honors ai's intuition, acknowledges non-conventional solutions
+- Participants honor AI's intuition and unconventional approaches.
+- Participants acknowledge and appreciate non-conventional solutions or approaches provided by AI-driven interfaces.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: notes lack of debugging skills, addressing novice challenges
+Relationship: The concepts are related in that they both address the challenges faced by novice users, specifically in debugging.
+Criteria: Participants identify the lack of debugging skills among beginners and address these challenges.
+Phrase: Addressing novice debugging challenges.
+
+2.
+Concepts: prepare for ai assistance, advocate for user practice
+Relationship: The concepts are related in that they both emphasize the importance of user practice before seeking AI assistance.
+Criteria: Participants call for users to practice debugging their own code before asking AI for assistance.
+Phrase: Advocating for user practice before AI assistance.
+
+3.
+Concepts: require debugging expertise, understand errors and syntax
+Relationship: The concepts are related in that they both highlight the importance of understanding errors and syntax in debugging.
+Criteria: Participants emphasize the need for expertise to understand and debug errors.
+Phrase: Emphasizing expertise in error understanding and debugging.
+
+4.
+Concepts: fix ai code errors, identify and debug errors
+Relationship: The concepts are related in that they both involve identifying and fixing errors in AI-generated code.
+Criteria: Participants fix errors or mistakes in AI-generated code manually or with AI assistance.
+Phrase: Fixing AI-generated code errors.
+
+5.
+Concepts: enhance error resolution, highlight improved debugging
+Relationship: The concepts are related in that they both involve improving error resolution and debugging capabilities.
+Criteria: Participants enhance error resolution or debugging capabilities.
+Phrase: Enhancing error resolution and debugging.
+
+6.
+Concepts: integrates ai-generated code, integrates ai into workflow
+Relationship: The concepts are related in that they both involve integrating AI-generated code into existing workflows.
+Criteria: Participants integrate AI-generated code fully into existing models or code.
+Phrase: Integrating AI-generated code into workflows.
+
+7.
+Concepts: use ai-generated code, avoid direct code copying
+Relationship: The concepts are related in that they both involve using AI-generated code in a responsible manner.
+Criteria: Participants use AI-generated code as a starting point or basis for their own work.
+Phrase: Using AI-generated code responsibly.
+
+8.
+Concepts: debug ai-generated code, evaluate and debug code
+Relationship: The concepts are related in that they both involve evaluating and debugging AI-generated code.
+Criteria: Participants review and debug AI-generated code.
+Phrase: Debugging AI-generated code.
+
+9.
+Concepts: read code manually, evaluate ai-generated code, evaluates ai performance compared to human coding
+Relationship: The concepts are related in that they all involve evaluating AI-generated code in some way.
+Criteria: Participants read AI-generated code in detail to evaluate its quality.
+Phrase: Evaluating AI-generated code quality.
+
+10.
+Concepts: discuss code quality, valuing code simplicity and maintainability
+Relationship: The concepts are related in that they both value code quality and simplicity.
+Criteria: Participants discuss the importance of maintenance and code quality.
+Phrase: Valuing code simplicity and maintainability.
+
+11.
+Concepts: optimize code with ai, uses chatgpt for code analysis and optimization
+Relationship: The concepts are related in that they both involve using AI for code optimization.
+Criteria: Participants see AI as a tool for optimizing code.
+Phrase: Optimizing code with AI.
+
+12.
+Concepts: struggles with netlogo scope, observations of beginners' struggles
+Relationship: The concepts are related in that they both involve struggles with NetLogo, specifically with scope.
+Criteria: Participants struggle with the concept of "scope" and identify it as a learning challenge.
+Phrase: Struggling with NetLogo scope.
+
+13.
+Concepts: deals with older net logo versions, faces version issues with netlogo
+Relationship: The concepts are related in that they both involve dealing with version issues in NetLogo.
+Criteria: Dealing with older versions of NetLogo or compatibility issues.
+Phrase: Dealing with NetLogo version issues.
+
+14.
+Concepts: critiques chatlogo's limitations, critique of netlogo's lack of smart editors, discusses netlogo limitations and feedback
+Relationship: The concepts are related in that they all involve critiquing limitations of NetLogo or ChatLogo.
+Criteria: Participants critique the lack of flexibility or customization options in ChatLogo.
+Phrase: Critiquing NetLogo and ChatLogo limitations.
+
+15.
+Concepts: analyze code with ai, utilize ai for coding support
+Relationship: The concepts are related in that they both involve using AI for coding assistance.
+Criteria: Participants analyze code using AI systems and compare AI-generated code with initial code in NetLogo learning and practice.
+Phrase: Analyzing code with AI.
+
+16.
+Concepts: reports errors, critiques error messages in netlogo and ai code
+Relationship: The concepts are related in that they both involve reporting and critiquing errors in NetLogo and AI-generated code.
+Criteria: Experts report errors and seek AI assistance for error detection and feedback in NetLogo learning and practice.
+Phrase: Reporting and critiquing errors.
+
+17.
+Concepts: seeking online help, discussing proper help-seeking practices
+Relationship: The concepts are related in that they both involve seeking online help and discussing proper practices.
+Criteria: Participants seek help from online communities or forums and interact with user groups.
+Phrase: Seeking online help and discussing proper practices.
+
+18.
+Concepts: emphasizes oral tradition, identifying documentation gaps and limitations
+Relationship: The concepts are related in that they both involve highlighting the importance of oral tradition and documentation.
+Criteria: Experts reflect on the importance of oral tradition in knowledge sharing.
+Phrase: Emphasizing oral tradition and documentation.
+
+19.
+Concepts: discusses system support for learning, highlighting learning needs and reminders
+Relationship: The concepts are related in that they both involve discussing system support for learning and highlighting learning needs.
+Criteria: Participants discuss the need for system support and reminders to facilitate learning and retention.
+Phrase: Discussing system support for learning.
+
+20.
+Concepts: foundational skills, discussing instruction writing skills for ai use
+Relationship: The concepts are related in that they both involve discussing foundational skills required for AI use.
+Criteria: Identifies foundational skills required for effective AI use, such as writing instructions.
+Phrase: Discussing foundational skills for AI use.
+
+21.
+Concepts: novice (negative), highlighting risks for novices
+Relationship: The concepts are related in that they both involve highlighting limitations and risks for novice users.
+Criteria: Discusses limitations of novices in writing instructions for AI.
+Phrase: Highlighting risks for novices.
+
+22.
+Concepts: question ai capabilities, inquires about ai capabilities and features
+Relationship: The concepts are related in that they both involve questioning and inquiring about AI capabilities.
+Criteria: Participants question the capabilities of ChatGPT.
+Phrase: Questioning AI capabilities.
+
+23.
+Concepts: weaknesses of llm-driven interfaces, describing llm-driven interface inefficiencies
+Relationship: The concepts are related in that they both involve highlighting weaknesses and inefficiencies of LLM-driven interfaces.
+Criteria: Negative aspects and limitations of using LLM-driven interfaces as perceived by the interviewee.
+Phrase: Describing LLM-driven interface weaknesses.
+
+24.
+Concepts: feature gaps, experience gaps in ai assistance
+Relationship: The concepts are related in that they both involve identifying gaps or limitations in AI assistance.
+Criteria: Identifying gaps or limitations in the features or capabilities of the AI-driven interface.
+Phrase: Identifying AI assistance gaps.
+
+25.
+Concepts: experiencing frustration with ai limitations, expressing frustration with ai-driven error handling
+Relationship: The concepts are related in that they both involve experiencing and expressing frustration with AI limitations.
+Criteria: Participants experience and express frustration with AI limitations and want more flexibility.
+Phrase: Expressing frustration with AI limitations.
+
+26.
+Concepts: accepts the limitation, identifies ai limitations in reading long codes
+Relationship: The concepts are related in that they both involve accepting and identifying AI limitations.
+Criteria: The participant accepts the limitations of the AI, such as its inability to process long code pieces.
+Phrase: Accepting AI limitations.
+
+27.
+Concepts: identifies ai limitations, critiquing ai limitations
+Relationship: The concepts are related in that they both involve identifying and critiquing AI limitations.
+Criteria: Participants identify limitations of AI-driven interfaces.
+Phrase: Identifying AI limitations.
+
+28.
+Concepts: relying on ai output, faces time constraints and seeks ai assistance
+Relationship: The concepts are related in that they both involve relying on AI output and seeking AI assistance due to time constraints.
+Criteria: Participants rely heavily on AI output due to time constraints or other situations.
+Phrase: Relying on AI output due to time constraints.
+
+29.
+Concepts: ai effectiveness, suggests effective ai use
+Relationship: The concepts are related in that they both involve discussing AI effectiveness and suggesting effective use.
+Criteria: The participant discusses the effectiveness of ChatGPT when asking iterative questions.
+Phrase: Discussing AI effectiveness.
+
+30.
+Concepts: appreciates ai-driven time savings, highlights ai's time-saving benefits
+Relationship: The concepts are related in that they both involve appreciating and highlighting AI-driven time savings.
+Criteria: Participants value the time-saving benefits of AI-driven interfaces.
+Phrase: Appreciating AI-driven time savings.
+
+31.
+Concepts: values ai collaboration, acknowledges ai mistakes and values iterative learning
+Relationship: The concepts are related in that they both involve valuing AI collaboration and acknowledging AI mistakes.
+Criteria: Participants value an iterative approach when working with AI.
+Phrase: Valuing AI collaboration.
+
+32.
+Concepts: honors ai's intuition, acknowledges non-conventional solutions
+Relationship: The concepts are related in that they both involve honoring AI's intuition and acknowledging non-conventional solutions.
+Criteria: Participants honor AI's intuition and unconventional approaches.
+Phrase: Honoring AI's intuition.

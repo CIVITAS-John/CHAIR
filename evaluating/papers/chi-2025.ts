@@ -64,7 +64,8 @@ async function RepeatedlyEvaluateInFolder(Times: number, Temperatures: number[],
 // Also, an output analysis of the results with 10 runs
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], ["zero", "low", "medium", "high", "highest"], "Coded Dataset 1", "pilot-study", "llama3-70b", new RefiningReferenceBuilder(true, true));
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5], ["zero", "low", "medium"], "Coded Dataset 1", "pilot-study", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true));
-await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], ["zero", "low", "medium", "high", "highest"], "Coded Dataset 2", "pilot-study", "llama3-70b", new RefiningReferenceBuilder(true, true));
+// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], ["zero", "low", "medium", "high", "highest"], "Coded Dataset 2", "pilot-study", "llama3-70b", new RefiningReferenceBuilder(true, true));
+await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], ["zero", "low", "medium", "high", "highest"], "Coded Dataset 2", "pilot-study", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true));
 
 // Task: Evaluate the different of temperature with the low-level-4 approach.
 // await UseLLMs(async () => await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-4-gpt-4o-temps", new RefiningReferenceBuilder(true, true)), "llama3-70b");

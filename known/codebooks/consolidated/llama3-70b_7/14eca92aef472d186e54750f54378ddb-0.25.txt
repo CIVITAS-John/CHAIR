@@ -1,0 +1,46 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (2 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+2. 
+Concepts: {Repeat the input 2}
+Relationship: {What is logical relationship between concepts in code 2, or N/A if not applicable}
+Criteria: {Who did what, and how for code 2}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: debugs with ai assistance, uses ai for coding assistance
+- Participants manually review and debug AI-generated code with AI assistance.
+- Participants use AI-driven interfaces for code analysis and coding assistance.
+
+2.
+Concepts: limitations (misinformation), identifying code limitations
+- Expresses concerns about the accuracy of AI-generated responses or code.
+- Participants identify errors or limitations in AI-generated code, including incompleteness or outdated information.
+===
+---
+Definitions for each code (2 in total):
+
+1.
+Concepts: debugs with ai assistance, uses ai for coding assistance
+Relationship: The concepts are related as participants use AI-driven interfaces for coding assistance and then manually review and debug the generated code with AI assistance, indicating a sequential process.
+Criteria: Participants use AI-driven interfaces to generate code and then manually review and debug the code with AI assistance.
+Phrase: Debugs code with AI assistance.
+
+2.
+Concepts: limitations (misinformation), identifying code limitations
+Relationship: The concepts are related as participants express concerns about the accuracy of AI-generated responses or code, which leads to identifying errors or limitations in the code.
+Criteria: Participants express concerns about the accuracy of AI-generated code and identify errors or limitations in the code.
+Phrase: Identifies limitations in AI-generated code.

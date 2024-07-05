@@ -1,0 +1,383 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: human-ai conflict, inconsistent error messages
+- Expresses conflict or disappointment with the LLM-driven interface, such as receiving incorrect error messages
+- The participant finds error messages in the LLM-driven interface to be misleading or unclear.
+
+2.
+Concepts: lack of consistency in output, experiences variability in ai outputs
+- Participant experiences inconsistency in AI output, making it unreliable.
+- User experiences variability in AI outputs, which can be random and non-deterministic.
+
+3.
+Concepts: unpredictable ai responses, ai response non-determinism
+- Notes the unpredictability of AI responses.
+- Notes the non-deterministic nature of AI responses.
+
+4.
+Concepts: non-deterministic, randomness in ai responses
+- Interviewee perceives the AI's responses as unpredictable or varying.
+- Perceives AI responses as unpredictable or non-deterministic.
+
+5.
+Concepts: ai ability (negative): errors, inadequate code generation
+- User notes that AI-generated code may still have errors.
+- The code highlights errors or limitations in the AI's code generation abilities.
+
+6.
+Concepts: suspects bug in ai, identifies potential bug
+- The participant suspects a bug in the AI's error handling or syntax checking.
+- Identifies a potential bug in the AI system that generates error messages even when the code is correct.
+
+7.
+Concepts: doubts ai's capability, error verification uncertainty
+- User doubts the AI's capability to verify code and produce no more bugs.
+- Expresses doubt about AI's ability to verify code correctness.
+
+8.
+Concepts: user uncertainty, initial confusion
+- Participant shows uncertainty or doubts about the AI system's capabilities.
+- The participant expresses initial confusion or uncertainty about the AI's capabilities or functionality.
+
+9.
+Concepts: reliant on ai output when facing time constraint, seeks human assistance but relies on instant feedback
+- Participant relies on AI output when facing time constraints.
+- The participant seeks human assistance but relies on instant feedback from the AI due to time constraints.
+
+10.
+Concepts: effort constraints, human-effort (negative): time constraint
+- User faces time constraints or limitations in dedicating effort to a specific task or project.
+- Identifies time constraints as a limitation of human effort
+
+11.
+Concepts: critiques limited options, critiques current ai limitations
+- Critiquing limited options or functionality in the AI-driven interface
+- User critiques current AI limitations and suggests improvements.
+
+12.
+Concepts: dislikes limited ai options, reports on limited options to select from
+- Expressing frustration with limited AI options
+- User reports limited options or frustrations with AI's responses.
+
+13.
+Concepts: input limitations, ai input limitations
+- Limited input capabilities of AI tools.
+- Notes the limitations of AI input capabilities.
+
+14.
+Concepts: debugging skills, reflects on novices' struggles, novice (negative): debug
+- The participant reflects on the importance of debugging skills, especially for novices.
+- Reflection on novices' struggles with debugging and programming concepts
+- Participant discusses the challenges faced by novice users in debugging their code.
+
+15.
+Concepts: code posting, describes unstructured code posts
+- Discusses the challenges of novices seeking help, such as posting chunks of code without context
+- The expert describes the challenges of novices seeking help, such as posting unstructured code without background information.
+
+16.
+Concepts: beginner mistakes, beginner struggles
+- The participant highlights common mistakes or difficulties faced by beginners in programming or NetLogo.
+- The participant describes common practices or challenges faced by beginners in programming or NetLogo.
+
+17.
+Concepts: programming experience, prior programming experience
+- Shares prior programming experiences and skills.
+- Participant shares their extensive experience with programming languages.
+
+18.
+Concepts: teaching preference, prefers teaching others
+- Preference for teaching others NetLogo
+- Expresses willingness to teach others how to use NetLogo.
+
+19.
+Concepts: expresses confidence in net logo skills, netlogo competence and willingness to help
+- Expressing confidence in NetLogo skills or abilities
+- Expresses confidence in their NetLogo skills and willingness to help others.
+
+20.
+Concepts: human-ai: support, ai efficiency for learning extensions
+- Highlights the potential of AI in saving time for learning new extensions of NetLogo.
+- Envisions AI as a time-saving tool for learning new NetLogo extensions.
+- Noting the efficiency of AI in analyzing code.
+
+21.
+Concepts: legacy code compatibility, deals with older net logo versions
+- The code involves writing code in older versions of NetLogo.
+- Dealing with compatibility issues in older NetLogo versions
+
+22.
+Concepts: netlogo limitations, critiques netlogo's lack of smart editors
+- The participant notes limitations of NetLogo, such as the lack of smart code editors.
+- NetLogo lacks a smart editor, which can be a limitation.
+
+23.
+Concepts: debugging practice, pre-learning requirement about how to ask questions, calls for preparatory exercises, suggests user debugging practice
+- User emphasizes the importance of users practicing debugging their own code before seeking AI assistance.
+- The expert suggests that users need practice in debugging their own code before seeking AI assistance.
+- Highlights the need for users to have preparatory exercises in debugging their own code before asking AI for help.
+- Users need practice in debugging their own code before asking the AI for assistance.
+
+24.
+Concepts: iterative debugging, describes iterative debugging benefits
+- Participant benefits from iterative debugging process with AI, despite potential errors.
+- Describing benefits of iterative debugging with AI
+
+25.
+Concepts: shares debugging experience, highlights improved debugging
+- User shares their experience with debugging or refining AI-generated code.
+- User highlights improved debugging capabilities with AI's assistance.
+
+26.
+Concepts: sample use case, ai-assisted debugging
+- Using AI to debug code and fix errors.
+- The code involves using AI to assist with debugging or error resolution.
+
+27.
+Concepts: unit testing, debugging and unit testing
+- The participant notes the importance of unit testing and debugging capabilities.
+- Valuing debugging and unit testing capabilities.
+
+28.
+Concepts: debugging difficulty, addressing debugging difficulties, debugging frustration
+- User struggles with debugging, finding it difficult to identify errors.
+- User addresses difficulties in debugging and error messaging.
+- The participant experiences frustration due to unclear error messages or debugging difficulties.
+
+29.
+Concepts: ai errors, ai-generated code interaction, identifies ai code errors
+- Participant identifies errors in AI-generated code.
+- Participant interacts with AI-generated code, including fixing errors or interpreting results.
+- Participant identifies errors or mistakes in AI-generated code.
+
+30.
+Concepts: error fixing, debugs ai-generated code, manually fixes ai code errors
+- User fixes errors or issues in AI-generated code.
+- Debugs AI-generated code and tries to fix errors on their own.
+- User manually corrects AI-generated code errors.
+
+31.
+Concepts: manual error fixing, self-reliant in fixing errors
+- User manually fixes errors without AI assistance.
+- Tries to fix errors on their own, without relying on AI.
+
+32.
+Concepts: human-ai: debug (positive), human-ai: support troubleshooting (positive)
+- The user expresses a positive view of the human-AI collaboration in debugging or troubleshooting.
+- The user expresses a positive view of the human-AI collaboration in troubleshooting or debugging.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: human-ai conflict, inconsistent error messages
+Relationship: Human-AI conflict arises from inconsistent error messages.
+Criteria: Participants express disappointment with the LLM-driven interface due to receiving incorrect or unclear error messages.
+Phrase: Expresses frustration with AI error messages.
+
+2.
+Concepts: lack of consistency in output, experiences variability in ai outputs
+Relationship: Variability in AI outputs leads to a lack of consistency.
+Criteria: Participants experience inconsistency in AI output, making it unreliable.
+Phrase: Encounters variable AI outputs.
+
+3.
+Concepts: unpredictable ai responses, ai response non-determinism
+Relationship: Unpredictable AI responses are due to non-deterministic nature.
+Criteria: Participants note the unpredictability of AI responses.
+Phrase: Notes unpredictable AI responses.
+
+4.
+Concepts: non-deterministic, randomness in ai responses
+Relationship: Non-deterministic AI responses lead to randomness.
+Criteria: Participants perceive AI responses as unpredictable or non-deterministic.
+Phrase: Perceives non-deterministic AI responses.
+
+5.
+Concepts: ai ability (negative): errors, inadequate code generation
+Relationship: AI's inability to generate correct code leads to errors.
+Criteria: Participants note that AI-generated code may still have errors.
+Phrase: Identifies errors in AI-generated code.
+
+6.
+Concepts: suspects bug in ai, identifies potential bug
+Relationship: Suspecting a bug in AI is based on identifying potential issues.
+Criteria: Participants suspect a bug in the AI's error handling or syntax checking.
+Phrase: Suspects a bug in AI error handling.
+
+7.
+Concepts: doubts ai's capability, error verification uncertainty
+Relationship: Doubting AI's capability stems from uncertainty in error verification.
+Criteria: Participants doubt the AI's capability to verify code and produce no more bugs.
+Phrase: Expresses doubt about AI's error verification.
+
+8.
+Concepts: user uncertainty, initial confusion
+Relationship: Initial confusion leads to user uncertainty.
+Criteria: Participants show uncertainty or doubts about the AI system's capabilities.
+Phrase: Expresses initial uncertainty about AI.
+
+9.
+Concepts: reliant on ai output when facing time constraint, seeks human assistance but relies on instant feedback
+Relationship: Time constraints lead to reliance on AI output for instant feedback.
+Criteria: Participants rely on AI output when facing time constraints.
+Phrase: Relies on AI output for instant feedback.
+
+10.
+Concepts: effort constraints, human-effort (negative): time constraint
+Relationship: Time constraints limit human effort.
+Criteria: Participants face time constraints or limitations in dedicating effort to a specific task or project.
+Phrase: Faces time constraints on human effort.
+
+11.
+Concepts: critiques limited options, critiques current ai limitations
+Relationship: Critiquing AI limitations stems from limited options.
+Criteria: Participants critique limited options or functionality in the AI-driven interface.
+Phrase: Critiques limited AI options.
+
+12.
+Concepts: dislikes limited ai options, reports on limited options to select from
+Relationship: Disliking limited AI options is based on limited selection.
+Criteria: Participants express frustration with limited AI options.
+Phrase: Expresses frustration with limited AI options.
+
+13.
+Concepts: input limitations, ai input limitations
+Relationship: AI input limitations lead to restricted capabilities.
+Criteria: Participants note the limitations of AI input capabilities.
+Phrase: Notes AI input limitations.
+
+14.
+Concepts: debugging skills, reflects on novices' struggles, novice (negative): debug
+Relationship: Novices' struggles with debugging highlight the importance of debugging skills.
+Criteria: Participants reflect on the importance of debugging skills, especially for novices.
+Phrase: Stresses importance of debugging skills.
+
+15.
+Concepts: code posting, describes unstructured code posts
+Relationship: Unstructured code posts require debugging skills.
+Criteria: Participants discuss the challenges of novices seeking help, such as posting unstructured code without context.
+Phrase: Describes challenges of novice code posting.
+
+16.
+Concepts: beginner mistakes, beginner struggles
+Relationship: Beginner struggles are due to common mistakes.
+Criteria: Participants highlight common mistakes or difficulties faced by beginners in programming or NetLogo.
+Phrase: Highlights beginner mistakes.
+
+17.
+Concepts: programming experience, prior programming experience
+Relationship: Prior experience informs current programming abilities.
+Criteria: Participants share prior programming experiences and skills.
+Phrase: Shares prior programming experience.
+
+18.
+Concepts: teaching preference, prefers teaching others
+Relationship: Preference for teaching others stems from expertise.
+Criteria: Participants express willingness to teach others how to use NetLogo.
+Phrase: Prefers teaching others.
+
+19.
+Concepts: expresses confidence in net logo skills, netlogo competence and willingness to help
+Relationship: Confidence in NetLogo skills leads to willingness to help.
+Criteria: Participants express confidence in their NetLogo skills and willingness to help others.
+Phrase: Expresses confidence in NetLogo skills.
+
+20.
+Concepts: human-ai: support, ai efficiency for learning extensions
+Relationship: Human-AI collaboration supports learning new extensions.
+Criteria: Participants highlight the potential of AI in saving time for learning new extensions of NetLogo.
+Phrase: Envisions AI support for learning.
+
+21.
+Concepts: legacy code compatibility, deals with older net logo versions
+Relationship: Dealing with older versions requires legacy code compatibility.
+Criteria: Participants deal with compatibility issues in older NetLogo versions.
+Phrase: Deals with legacy code compatibility.
+
+22.
+Concepts: netlogo limitations, critiques netlogo's lack of smart editors
+Relationship: NetLogo limitations are due to lack of smart editors.
+Criteria: Participants note limitations of NetLogo, such as the lack of smart code editors.
+Phrase: Critiques NetLogo limitations.
+
+23.
+Concepts: debugging practice, pre-learning requirement about how to ask questions, calls for preparatory exercises, suggests user debugging practice
+Relationship: Debugging practice is essential for pre-learning and asking questions.
+Criteria: Participants emphasize the importance of users practicing debugging their own code before seeking AI assistance.
+Phrase: Stresses importance of debugging practice.
+
+24.
+Concepts: iterative debugging, describes iterative debugging benefits
+Relationship: Iterative debugging leads to benefits.
+Criteria: Participants benefit from iterative debugging process with AI, despite potential errors.
+Phrase: Describes iterative debugging benefits.
+
+25.
+Concepts: shares debugging experience, highlights improved debugging
+Relationship: Sharing debugging experience highlights improvements.
+Criteria: Participants share their experience with debugging or refining AI-generated code.
+Phrase: Shares improved debugging experience.
+
+26.
+Concepts: sample use case, ai-assisted debugging
+Relationship: AI-assisted debugging is a sample use case.
+Criteria: Participants use AI to debug code and fix errors.
+Phrase: Uses AI for debugging.
+
+27.
+Concepts: unit testing, debugging and unit testing
+Relationship: Unit testing is part of debugging.
+Criteria: Participants note the importance of unit testing and debugging capabilities.
+Phrase: Values unit testing and debugging.
+
+28.
+Concepts: debugging difficulty, addressing debugging difficulties, debugging frustration
+Relationship: Debugging difficulties lead to frustration.
+Criteria: Participants struggle with debugging, finding it difficult to identify errors.
+Phrase: Experiences debugging difficulties.
+
+29.
+Concepts: ai errors, ai-generated code interaction, identifies ai code errors
+Relationship: AI errors arise from generated code interaction.
+Criteria: Participants identify errors in AI-generated code.
+Phrase: Identifies AI code errors.
+
+30.
+Concepts: error fixing, debugs ai-generated code, manually fixes ai code errors
+Relationship: Error fixing involves debugging AI-generated code.
+Criteria: Participants fix errors or issues in AI-generated code.
+Phrase: Fixes AI code errors.
+
+31.
+Concepts: manual error fixing, self-reliant in fixing errors
+Relationship: Manual error fixing is self-reliant.
+Criteria: Participants manually fix errors without AI assistance.
+Phrase: Fixes errors manually.
+
+32.
+Concepts: human-ai: debug (positive), human-ai: support troubleshooting (positive)
+Relationship: Human-AI collaboration is positive in debugging and troubleshooting.
+Criteria: Participants express a positive view of the human-AI collaboration in debugging or troubleshooting.
+Phrase: Values human-AI collaboration.

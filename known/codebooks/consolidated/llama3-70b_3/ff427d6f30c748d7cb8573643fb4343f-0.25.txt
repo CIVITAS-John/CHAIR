@@ -1,0 +1,34 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (1 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+1. 
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: fix errors manually, resolve errors
+- Participants fix errors or issues in AI-generated code independently.
+- Participants resolve errors with the help of the LLM-driven interface or seek error-free code.
+===
+---
+Definitions for each code (1 in total):
+1.
+Concepts: fix errors manually, resolve errors
+Relationship: The concepts are contrasting approaches to error handling, with "fix errors manually" implying independence from the LLM-driven interface and "resolve errors" implying reliance on the interface.
+Criteria: Participants handle errors in AI-generated code either independently or with the assistance of the LLM-driven interface.
+Phrase: Resolve errors independently or with LLM-driven interface assistance.

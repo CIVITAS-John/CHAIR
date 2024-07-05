@@ -1,0 +1,311 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+32.
+Criteria: {Who did what, and how for code 32}
+Label: {A descriptive label of code 32}
+---
+~~~
+1.
+Label: tech comparison
+Quotes:
+- E04: I'll go on Stack Exchange or Stack Overflow, I'm part of the NetLogo listserv, but obviously there's a delay there. So in the instance that I need immediate feedback, it is really helpful. (interviewer's observation) Nice to have immediate feedback.
+
+2.
+Label: other tech(negative): search engine would take more time
+Quotes:
+- E04: And it could take a lot of time to like search the documentation and go online and try and figure out all those answers and just to have it like right there. So you can kind of stay within the task is really nice. (interviewer's observation) The capability to search for documentation and read it inside the workspace: esp. beneficial for novices.
+
+3.
+Label: easy to understand
+Quotes:
+- E04: It includes debugging, it is actually trying to incorporate like a unit test, which is really cool and really helpful, especially for beginners, because they can kind of, you know, check their inputs. Beginners, everyone really. They can debug their code appropriately. (interviewer's observation) Debugging capability.
+- E04: It seems to explain things pretty well, it does not seems to be overly technical. (interviewer's observation) Provides clear, less technical explanations.
+
+4.
+Label: programming experience
+Quotes:
+- E01: I started programming in 1964 at IBM. ... And since then I have programmed in production code in at least 20 different software languages. (interviewer's observation) E01's prior experiences in computer programming in general.
+
+5.
+Label: suggests system support
+Quotes:
+- E01: Depending on what you do and how busy you are and the higher ranking people are, the more busy they are, the longer it is between sessions. So you make some notes on little yellow, sticky cinnamon. And then you go back to your administrator job for two months, and then some other project comes up. And then six months later, you come back. Okay, now, where was I? (interviewer's observation) E01's reflection on how professionals learn - they learn in fragments, in fragmented time blocks and need support from the system to remind them where they were.
+
+6.
+Label: task completion
+Quotes:
+- E04: It'd be that I just take this and see what this does. This should just be a single node so it'll kind of overwrite what I already did. (interviewer's observation) E04 uses the AI-generated code completely when realizing time constraints.
+- E04: Oh and you can run it. That's cool. (interviewer's observation) E04 reads the AI output and decides to copy & paste it although he could also run it.
+
+7.
+Label: ai ability (negative): error
+Quotes:
+- E01: Some of this advice may be wrong. Use your good judgment. This is like Apple maps in 2010 or whatever, that tells you to turn right into the river and you have to go. (interviewer's observation) Users need to use their own judgment to evaluate ChatGPT's responses.
+
+8.
+Label: net logo competence
+Quotes:
+- E04: So maybe I didn't prove it today, but I feel like I'm pretty competent with NetLogo. (interviewer's observation) Prefers helping others learn NetLogo.
+
+9.
+Label: reasons through ai response
+Quotes:
+- E04: Interesting because it's trying to plot the name, which I know is wrong, but I'm just trying to remember how to... (interviewer's observation) E04 reasons through the responses of ChatGPT.
+
+10.
+Label: takes time to use and adapt
+Quotes:
+- E04: It seems like it's, you know, pretty straightforward to use and like intuitive, which is nice. And it's like, it's easy to interact with. So I feel like if I had like enough time to play around with it, it could be like really helpful. (interviewer's observation) Straightforward to use and intuitive.
+
+11.
+Label: finds feature useful for all skill levels
+Quotes:
+- E04: It includes debugging, it is actually trying to incorporate like a unit test, which is really cool and really helpful, especially for beginners, because they can kind of, you know, check their inputs. Beginners, everyone really. They can debug their code appropriately. (interviewer's observation) Debugging capability.
+
+12.
+Label: ai strategy
+Quotes:
+- E04: It's basically following best practices. It is not trying to ruthlessly create a model. (interviewer's observation) Not "ruthlessly create a model".
+
+13.
+Label: foresees potential usefulness
+Quotes:
+- E04: It seems like it's, you know, pretty straightforward to use and like intuitive, which is nice. And it's like, it's easy to interact with. So I feel like if I had like enough time to play around with it, it could be like really helpful. (interviewer's observation) Straightforward to use and intuitive.
+
+14.
+Label: ai efficiency
+Quotes:
+- E01: There's a lot of extensions I would love to know about GIS extensions, but I have very limited time. What could I do in two hours? And I think everybody has a very finite length of time. (interviewer's observation) AI could potentially save time for learning new extensions (compared with core concepts) of NetLogo.
+
+15.
+Label: easy
+Quotes:
+- E04: It seems like it's, you know, pretty straightforward to use and like intuitive, which is nice. And it's like, it's easy to interact with. So I feel like if I had like enough time to play around with it, it could be like really helpful. (interviewer's observation) Straightforward to use and intuitive.
+
+16.
+Label: user behavior
+Quotes:
+- E01: if you approach the user group politely, graciously, and instead of dropping your entire code on it, you go, I narrowed it down to this. I read this documentation. I tried these eight things with this answer and I'm perplexed. If somebody goes, they paste their problem and it's clearly their homework and they want someone else to do it for them. No, I'm not going to help with that. (interviewer's observation) E01's reflection on proper practices to seek online help: do your own work and clearly describe what you need/tried.
+- E01: (no verbal response) (interviewer's observation) E01 reads error messages before making a choice.
+
+17.
+Label: reflects on novices' struggles
+Quotes:
+- E01: I'm not sure that any beginner wouldn't necessarily know that unless they'd ever practiced. And so some of the users of NetLogo have never programmed anything. So, (they might lack) the whole concept of debugging or maybe starting with a design outline. They start typing and then they get frustrated because they don't know how to debug code. (interviewer's observation) E01 reflects on how novices might get stuck during the human-AI collaboration process.
+
+18.
+Label: chatgpt ability (positive): various feedback
+Quotes:
+- E04: Sometimes it'll give me instructions and sometimes it'll just give me the code and then sometimes it'll tell me to use R extensions or something like that. It is random in that regard, it's not deterministic in terms of what result you're going to get. (interviewer's observation) E04 regularly evaluates the AI responses and thinks that it is not deterministic.
+
+19.
+Label: self reliance
+Quotes:
+- E04: Interesting because it's trying to plot the name, which I know is wrong, but I'm just trying to remember how to... (interviewer's observation) E04 reasons through the responses of ChatGPT.
+- E04: (no verbal response) (interviewer's observation) E04 reads through the code and tries to debug with himself when the generated code does not do what it does.
+
+20.
+Label: code evaluation
+Quotes:
+- E01: So set up, move the turtle to go. Increase the size of the turtle by two units. Oh, dear. It's, it's making the turtle bigger. Oh, that's kind of, that's kind of messed it up a little bit then. (interviewer's observation) E01 reads the code and comments, summarizing the code, and thinks about how the AI was understanding the request.
+
+21.
+Label: responds to ai's counter question
+Quotes:
+- E01: "I would like to write code to have a turtle run slowly around the perimeter of a square, but the square should go larger each time it goes around." (interviewer's observation) Seeing AI's counter question, E01 makes his request more detailed.
+
+22.
+Label: not efficient for learning
+Quotes:
+- E04: And it could take a lot of time to like search the documentation and go online and try and figure out all those answers and just to have it like right there. So you can kind of stay within the task is really nice. (interviewer's observation) The capability to search for documentation and read it inside the workspace: esp. beneficial for novices.
+
+23.
+Label: notes knowledge gaps
+Quotes:
+- E01: So my observation is that a critical, critical 10%, maybe more, maybe a lot more of knowledge that you need to do your job in software is only contained in oral tradition. It's, it is not documented anywhere.  (interviewer's observation) E01's reflection on knowledge in pieces - how they are generated and sustained.
+
+24.
+Label: net logo dictionary
+Quotes:
+- E04: Because I'll like forget the syntax sometimes and I usually use the netlogo dictionary and just have it like open to the side. (interviewer's observation) E04 still forgets about the syntax and ChatGPT can help.
+
+25.
+Label: values immediate feedback from ai
+Quotes:
+- E04: I'll go on Stack Exchange or Stack Overflow, I'm part of the NetLogo listserv, but obviously there's a delay there. So in the instance that I need immediate feedback, it is really helpful. (interviewer's observation) Nice to have immediate feedback.
+
+26.
+Label: identifies missing code elements
+Quotes:
+- E04: It doesn't... Include everything that you need.  (interviewer's observation) Misses code structures at times.
+
+27.
+Label: benefit of ai - interpretation of context
+Quotes:
+- E01: Depending on what you do and how busy you are and the higher ranking people are, the more busy they are, the longer it is between sessions. So you make some notes on little yellow, sticky cinnamon. And then you go back to your administrator job for two months, and then some other project comes up. And then six months later, you come back. Okay, now, where was I? (interviewer's observation) E01's reflection on how professionals learn - they learn in fragments, in fragmented time blocks and need support from the system to remind them where they were.
+
+28.
+Label: failure
+Quotes:
+- E04: And then like the only other thing I didn't like was, you know, kind of how it was getting stuck on itself and it wasn't able to fix that one error. (interviewer's observation) Could get stuck in a loop and cannot fix that.
+
+29.
+Label: best practices
+Quotes:
+- E04: It's basically following best practices. It is not trying to ruthlessly create a model. (interviewer's observation) Not "ruthlessly create a model".
+
+30.
+Label: errors found
+Quotes:
+- E04: It doesn't... Include everything that you need.  (interviewer's observation) Misses code structures at times.
+
+31.
+Label: highlights personal expertise
+Quotes:
+- E01: I've observed when I tried to suggest ChatGPT to other people, they're, um, they are amazed at the output that I can get. And that's because I know how to ask six questions in a row to zero in on what I'm after. (interviewer's observation) To maximize the capability of ChatGPT, one needs to know how to iteratively ask questions.
+
+32.
+Label: adjusts model setup
+Quotes:
+- E04: So one thing I'm realizing now, part of my setup needs to be reset all. (interviewer's observation) E04 sees from the generated code and realizes that he needs to reset.
+===
+Here are the definitions for each code with clear and generalizable criteria:
+
+---
+1.
+Criteria: Comparing LLM-driven interfaces with other tech platforms for seeking help or feedback.
+Label: tech comparison
+
+2.
+Criteria: Identifying limitations of other tech platforms in terms of time and effort required.
+Label: other tech(negative): search engine would take more time
+
+3.
+Criteria: Describing LLM-driven interfaces as easy to understand, straightforward, and providing clear explanations.
+Label: easy to understand
+
+4.
+Criteria: Mentioning prior experience and expertise in programming languages.
+Label: programming experience
+
+5.
+Criteria: Suggesting the need for system support to aid learning and navigation.
+Label: suggests system support
+
+6.
+Criteria: Using LLM-driven interfaces to complete tasks, especially when time-constrained.
+Label: task completion
+
+7.
+Criteria: Expressing skepticism or caution when using LLM-driven interfaces due to potential errors.
+Label: ai ability (negative): error
+
+8.
+Criteria: Displaying confidence and competence in using NetLogo.
+Label: net logo competence
+
+9.
+Criteria: Analyzing and interpreting LLM-driven interface responses to understand their logic.
+Label: reasons through ai response
+
+10.
+Criteria: Recognizing the need for time and practice to adapt to using LLM-driven interfaces effectively.
+Label: takes time to use and adapt
+
+11.
+Criteria: Identifying the benefits of LLM-driven interfaces for users of all skill levels.
+Label: finds feature useful for all skill levels
+
+12.
+Criteria: Describing the strategy or approach used by LLM-driven interfaces in generating code or responses.
+Label: ai strategy
+
+13.
+Criteria: Anticipating the potential usefulness of LLM-driven interfaces in the future.
+Label: foresees potential usefulness
+
+14.
+Criteria: Highlighting the time-saving benefits of using LLM-driven interfaces.
+Label: ai efficiency
+
+15.
+Criteria: Characterizing LLM-driven interfaces as easy to use or interact with.
+Label: easy
+
+16.
+Criteria: Describing how users should approach and interact with online communities or LLM-driven interfaces.
+Label: user behavior
+
+17.
+Criteria: Reflecting on the challenges or struggles faced by novice users when working with LLM-driven interfaces.
+Label: reflects on novices' struggles
+
+18.
+Criteria: Evaluating the varied types of feedback or responses provided by LLM-driven interfaces.
+Label: chatgpt ability (positive): various feedback
+
+19.
+Criteria: Demonstrating self-reliance and independence when working with LLM-driven interfaces.
+Label: self reliance
+
+20.
+Criteria: Analyzing and evaluating the generated code or responses from LLM-driven interfaces.
+Label: code evaluation
+
+21.
+Criteria: Responding to counter questions or prompts from LLM-driven interfaces.
+Label: responds to ai's counter question
+
+22.
+Criteria: Expressing concerns about the limited efficiency of LLM-driven interfaces for learning.
+Label: not efficient for learning
+
+23.
+Criteria: Identifying gaps in knowledge or documentation that LLM-driven interfaces can fill.
+Label: notes knowledge gaps
+
+24.
+Criteria: Relying on NetLogo dictionary or resources for syntax and information.
+Label: net logo dictionary
+
+25.
+Criteria: Valuing the immediate feedback and responses provided by LLM-driven interfaces.
+Label: values immediate feedback from ai
+
+26.
+Criteria: Identifying missing elements or structures in the generated code.
+Label: identifies missing code elements
+
+27.
+Criteria: Highlighting the benefits of LLM-driven interfaces in interpreting context and providing relevant information.
+Label: benefit of ai - interpretation of context
+
+28.
+Criteria: Describing instances of failure or error in using LLM-driven interfaces.
+Label: failure
+
+29.
+Criteria: Emphasizing the importance of following best practices when using LLM-driven interfaces.
+Label: best practices
+
+30.
+Criteria: Identifying errors or inaccuracies in the generated code or responses.
+Label: errors found
+
+31.
+Criteria: Highlighting personal expertise and experience in using LLM-driven interfaces effectively.
+Label: highlights personal expertise
+
+32.
+Criteria: Adjusting or refining model setup based on the generated code or responses.
+Label: adjusts model setup

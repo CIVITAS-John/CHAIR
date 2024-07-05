@@ -1,0 +1,384 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: ai generated code, customizes ai-generated code, selectively copies ai code
+- The participant interacts with AI-generated code, including fixing errors and selectively copying code.
+- Participant selectively copies code from the AI-generated code into their model.
+- Interviewee selectively copies AI-generated code into their model.
+
+2.
+Concepts: code reference, uses ai-generated code as reference, ai-generated code usage
+- Uses AI-generated code as a reference
+- Uses AI-generated code as a reference when writing their own code.
+- Uses AI-generated code as a starting point or reference for their own work.
+
+3.
+Concepts: code structure, syntax search
+- Seeks specific code structures or syntax from AI-generated code.
+- Searches for specific syntax structures in AI-generated code and asks for clarification when necessary.
+
+4.
+Concepts: appreciates chatgpt's code commenting, code commenting and documentation
+- Appreciates ChatGPT's commenting and documentation features.
+- Participants appreciate the code commenting and documentation provided by ChatGPT, making generated code easy to read.
+
+5.
+Concepts: optimizing, code optimization
+- Seeks to optimize code and improve coding efficiency with AI's assistance.
+- Sees AI as a means to optimize code and improve coding efficiency.
+
+6.
+Concepts: chatgpt ability (positive): optimization, describes using chatgpt for code optimization
+- The participant expresses a positive view of ChatGPT's ability to optimize code and improve coding efficiency.
+- The participant describes using the AI to optimize their code, making it more efficient or effective.
+
+7.
+Concepts: simplicity of code, values clarity in coding
+- Values simplicity and clarity in code, making it easier to maintain.
+- Interviewee values clear and simple code, prioritizing maintainability over complexity.
+
+8.
+Concepts: maintenance, maintainable code
+- Discusses the importance of maintainable code.
+- Emphasizes the importance of maintainable code and code quality.
+
+9.
+Concepts: code-quality, discusses code complexity and quality
+- Discusses the importance of code quality and simplicity.
+- Interviewee discusses code complexity and quality, advocating for simplicity.
+
+10.
+Concepts: error fixing, manually fixes ai code errors, manual error fixing, identifies errors in ai code
+- User fixes errors in AI-generated code.
+- Manually corrects or fixes errors in AI-generated code.
+- User manually fixes errors in AI-generated code.
+- The participant identifies errors in AI-generated code and fixes them manually.
+
+11.
+Concepts: simpler task, switches to simpler task
+- Switches to a simpler task or problem when encountering difficulties with AI.
+- Switches to a simpler task when faced with difficulties or errors.
+
+12.
+Concepts: outside observer, ai as outside observer
+- Interviewee views AI as an outside observer that can catch errors or provide insights not obvious to humans.
+- Sees AI as an outside observer that can catch obvious errors that may not be apparent to humans.
+
+13.
+Concepts: error resolution, praises ai troubleshooting, human-ai (positive): support troubleshooting
+- The participant appreciates the AI's ability to troubleshoot and resolve errors.
+- Praises AI's troubleshooting capabilities and ability to identify errors.
+- The participant expresses a positive view of the AI-driven interface's ability to support troubleshooting and error resolution.
+
+14.
+Concepts: error reading, reads error messages
+- Reads error messages to understand AI responses
+- Reads or reviews error messages before taking action.
+
+15.
+Concepts: interpretation, interprets ai mistakes
+- Interpreting and fixing errors or mistakes generated by AI-driven interfaces.
+- Interprets AI mistakes and corrects them
+
+16.
+Concepts: values error detection, values error clarification
+- Valuing the error detection capabilities of AI-driven interfaces.
+- Valuing the error clarification capabilities of AI-driven interfaces.
+
+17.
+Concepts: values learning from ai, learning value
+- Expresses the value of learning from AI-driven interfaces despite iterative debugging and errors.
+- Participants highlight the learning value of working with AI interfaces, including the iterative debugging process and learning from mistakes.
+
+18.
+Concepts: iterative debugging, learning from ai-assisted debugging
+- Participant values the iterative debugging process with the AI.
+- Interviewee benefits from the iterative debugging process during AI-assisted learning.
+
+19.
+Concepts: uses ai for debugging, suggests ai debugging
+- Uses AI for debugging purposes.
+- Suggests using AI to debug code or identify errors.
+
+20.
+Concepts: shares debugging experience, highlights improved debugging
+- The participant shares their experience of using AI for debugging.
+- User highlights the improved debugging capabilities of AI.
+
+21.
+Concepts: highlights best practices, debugging capability
+- Participant appreciates the AI's debugging capability, including unit testing.
+- Participants appreciate the debugging capabilities of AI interfaces, including unit testing and error checking.
+
+22.
+Concepts: chatlogo ability (positive): debug, chatlogo's debugging capabilities
+- Interviewee appreciates ChatLogo's ability to debug and clarify errors.
+- Participants appreciate the debugging and troubleshooting capabilities of ChatLogo, including its ability to explain errors and provide clear feedback.
+
+23.
+Concepts: iterative questions, emphasizes iterative questioning
+- The interviewee's perception of the importance of iterative questioning in working with AI.
+- The practice of asking multiple, sequential questions to refine AI outputs.
+- Interviewee emphasizes the importance of iterative questioning in AI interaction.
+
+24.
+Concepts: ai queries, human-ai: ask questions
+- Asks AI queries to seek information or clarification.
+- Asks questions to clarify AI responses
+
+25.
+Concepts: ai follow up query, seeks human intervention
+- User asks follow-up questions to clarify AI's response.
+- Asks follow-up questions to clarify AI's responses and seeks human intervention.
+
+26.
+Concepts: prompt refinement, task refinement
+- The participant refines or clarifies their prompts or instructions to the AI-driven interface.
+- The participant refines their request or task to provide more details, often in response to AI's counter questions.
+
+27.
+Concepts: ai response, responds to ai's counter question
+- Interacting with AI-driven interfaces, such as providing detailed requests or responding to counter questions.
+- Responding to counter questions and clarifying requests posed by LLM-driven interfaces.
+
+28.
+Concepts: decision making, human effort: decision
+- Makes decisions based on AI responses
+- Makes decisions based on AI output
+
+29.
+Concepts: evaluating ai output, assessing ai suggestions
+- Evaluates AI output and decides whether to use it or not.
+- Evaluates AI suggestions and decides whether to use them or not.
+
+30.
+Concepts: assesses ai search accuracy, evaluates ai search results
+- Assesses the accuracy of AI search results
+- Evaluates AI search results by comparing expected outcomes with actual results.
+
+31.
+Concepts: usability, ai-generated code usability
+- Evaluates the usability or user experience of AI-generated code.
+- Finds AI-generated code to be runnable and suitable for use.
+
+32.
+Concepts: realization, code realization
+- Interviewee has a realization or insight while using AI-generated code.
+- The participant realizes or understands something new about their code or approach through the AI-driven interface.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: ai generated code, customizes ai-generated code, selectively copies ai code
+Relationship: The concepts are related to the participant's interaction with AI-generated code, involving customization and selective copying.
+Criteria: Participants interact with AI-generated code by customizing it and selectively copying code.
+Phrase: Interacts with AI-generated code.
+
+2.
+Concepts: code reference, uses ai-generated code as reference, ai-generated code usage
+Relationship: The concepts are related to the participant's use of AI-generated code as a reference or starting point.
+Criteria: Participants use AI-generated code as a reference or starting point for their own work.
+Phrase: Uses AI-generated code as a reference.
+
+3.
+Concepts: code structure, syntax search
+Relationship: The concepts are related to the participant's search for specific code structures or syntax in AI-generated code.
+Criteria: Participants search for specific code structures or syntax in AI-generated code.
+Phrase: Searches for code structures.
+
+4.
+Concepts: appreciates chatgpt's code commenting, code commenting and documentation
+Relationship: The concepts are related to the participant's appreciation of ChatGPT's code commenting and documentation features.
+Criteria: Participants appreciate the code commenting and documentation provided by ChatGPT.
+Phrase: Appreciates code commenting.
+
+5.
+Concepts: optimizing, code optimization
+Relationship: The concepts are related to the participant's goal of optimizing code with AI's assistance.
+Criteria: Participants seek to optimize code with AI's assistance.
+Phrase: Optimizes code.
+
+6.
+Concepts: chatgpt ability (positive): optimization, describes using chatgpt for code optimization
+Relationship: The concepts are related to the participant's positive view of ChatGPT's ability to optimize code.
+Criteria: Participants describe using ChatGPT to optimize code.
+Phrase: Describes using ChatGPT for optimization.
+
+7.
+Concepts: simplicity of code, values clarity in coding
+Relationship: The concepts are related to the participant's value of simplicity and clarity in code.
+Criteria: Participants value simplicity and clarity in code.
+Phrase: Values simplicity in code.
+
+8.
+Concepts: maintenance, maintainable code
+Relationship: The concepts are related to the participant's emphasis on maintainable code.
+Criteria: Participants emphasize the importance of maintainable code.
+Phrase: Emphasizes maintainable code.
+
+9.
+Concepts: code-quality, discusses code complexity and quality
+Relationship: The concepts are related to the participant's discussion of code quality and complexity.
+Criteria: Participants discuss code complexity and quality.
+Phrase: Discusses code quality.
+
+10.
+Concepts: error fixing, manually fixes ai code errors, manual error fixing, identifies errors in ai code
+Relationship: The concepts are related to the participant's manual fixing of errors in AI-generated code.
+Criteria: Participants manually fix errors in AI-generated code.
+Phrase: Fixes errors in AI-generated code.
+
+11.
+Concepts: simpler task, switches to simpler task
+Relationship: The concepts are related to the participant's switch to a simpler task when encountering difficulties.
+Criteria: Participants switch to a simpler task when encountering difficulties.
+Phrase: Switches to a simpler task.
+
+12.
+Concepts: outside observer, ai as outside observer
+Relationship: The concepts are related to the participant's view of AI as an outside observer.
+Criteria: Participants view AI as an outside observer.
+Phrase: Views AI as an outside observer.
+
+13.
+Concepts: error resolution, praises ai troubleshooting, human-ai (positive): support troubleshooting
+Relationship: The concepts are related to the participant's appreciation of AI's troubleshooting capabilities.
+Criteria: Participants appreciate AI's troubleshooting capabilities.
+Phrase: Appreciates AI's troubleshooting.
+
+14.
+Concepts: error reading, reads error messages
+Relationship: The concepts are related to the participant's reading of error messages.
+Criteria: Participants read error messages.
+Phrase: Reads error messages.
+
+15.
+Concepts: interpretation, interprets ai mistakes
+Relationship: The concepts are related to the participant's interpretation and fixing of AI mistakes.
+Criteria: Participants interpret and fix AI mistakes.
+Phrase: Interprets AI mistakes.
+
+16.
+Concepts: values error detection, values error clarification
+Relationship: The concepts are related to the participant's valuation of error detection and clarification.
+Criteria: Participants value error detection and clarification.
+Phrase: Values error detection.
+
+17.
+Concepts: values learning from ai, learning value
+Relationship: The concepts are related to the participant's valuation of learning from AI-driven interfaces.
+Criteria: Participants value learning from AI-driven interfaces.
+Phrase: Values learning from AI.
+
+18.
+Concepts: iterative debugging, learning from ai-assisted debugging
+Relationship: The concepts are related to the participant's valuation of iterative debugging with AI.
+Criteria: Participants value iterative debugging with AI.
+Phrase: Values iterative debugging.
+
+19.
+Concepts: uses ai for debugging, suggests ai debugging
+Relationship: The concepts are related to the participant's use of AI for debugging purposes.
+Criteria: Participants use AI for debugging purposes.
+Phrase: Uses AI for debugging.
+
+20.
+Concepts: shares debugging experience, highlights improved debugging
+Relationship: The concepts are related to the participant's sharing of their debugging experience with AI.
+Criteria: Participants share their debugging experience with AI.
+Phrase: Shares debugging experience.
+
+21.
+Concepts: highlights best practices, debugging capability
+Relationship: The concepts are related to the participant's appreciation of AI's debugging capabilities.
+Criteria: Participants appreciate AI's debugging capabilities.
+Phrase: Appreciates AI's debugging.
+
+22.
+Concepts: chatlogo ability (positive): debug, chatlogo's debugging capabilities
+Relationship: The concepts are related to the participant's appreciation of ChatLogo's debugging capabilities.
+Criteria: Participants appreciate ChatLogo's debugging capabilities.
+Phrase: Appreciates ChatLogo's debugging.
+
+23.
+Concepts: iterative questions, emphasizes iterative questioning
+Relationship: The concepts are related to the participant's emphasis on iterative questioning in working with AI.
+Criteria: Participants emphasize iterative questioning in working with AI.
+Phrase: Emphasizes iterative questioning.
+
+24.
+Concepts: ai queries, human-ai: ask questions
+Relationship: The concepts are related to the participant's asking of questions to clarify AI responses.
+Criteria: Participants ask questions to clarify AI responses.
+Phrase: Asks AI queries.
+
+25.
+Concepts: ai follow up query, seeks human intervention
+Relationship: The concepts are related to the participant's asking of follow-up questions to clarify AI responses.
+Criteria: Participants ask follow-up questions to clarify AI responses.
+Phrase: Asks follow-up questions.
+
+26.
+Concepts: prompt refinement, task refinement
+Relationship: The concepts are related to the participant's refinement of prompts or instructions to the AI-driven interface.
+Criteria: Participants refine their prompts or instructions to the AI-driven interface.
+Phrase: Refines prompts.
+
+27.
+Concepts: ai response, responds to ai's counter question
+Relationship: The concepts are related to the participant's response to AI's counter questions.
+Criteria: Participants respond to AI's counter questions.
+Phrase: Responds to AI's counter questions.
+
+28.
+Concepts: decision making, human effort: decision
+Relationship: The concepts are related to the participant's making of decisions based on AI responses.
+Criteria: Participants make decisions based on AI responses.
+Phrase: Makes decisions.
+
+29.
+Concepts: evaluating ai output, assessing ai suggestions
+Relationship: The concepts are related to the participant's evaluation of AI output and suggestions.
+Criteria: Participants evaluate AI output and suggestions.
+Phrase: Evaluates AI output.
+
+30.
+Concepts: assesses ai search accuracy, evaluates ai search results
+Relationship: The concepts are related to the participant's assessment of AI search results.
+Criteria: Participants assess AI search results.
+Phrase: Assesses AI search results.
+
+31.
+Concepts: usability, ai-generated code usability
+Relationship: The concepts are related to the participant's evaluation of AI-generated code usability.
+Criteria: Participants evaluate AI-generated code usability.
+Phrase: Evaluates AI-generated code usability.
+
+32.
+Concepts: realization, code realization
+Relationship: The concepts are related to the participant's realization or insight while using AI-generated code.
+Criteria: Participants have realizations or insights while using AI-generated code.
+Phrase: Has realizations.
+
+Let me know if you need any further assistance!

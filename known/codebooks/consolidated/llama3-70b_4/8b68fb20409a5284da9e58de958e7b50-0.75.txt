@@ -1,0 +1,380 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: error reporting, copies error messages to ai
+- Reports errors and seeks assistance from AI-driven interfaces.
+- The participant copies error messages to the AI to get assistance.
+
+2.
+Concepts: error handling, error management
+- Issues related to AI's ability to handle and communicate errors effectively.
+- The interviewee suggests or demonstrates a need for better error management in AI-driven systems.
+
+3.
+Concepts: error reasoning, error detection
+- Reasons through AI's responses to identify errors.
+- Identifies error detection as a potential benefit of AI-driven interfaces.
+
+4.
+Concepts: seeks error-free code, enhancing error resolution
+- Seeks error-free code or verification of code.
+- Seeks to enhance error resolution and code quality
+
+5.
+Concepts: linting features, linting and error detection
+- Need for linting features that identify conceptual mistakes
+- The importance of linting and error detection.
+
+6.
+Concepts: smart editors, suggests need for smart editor features
+- Participant discusses the importance of smart editors in programming languages, including NetLogo.
+- Suggests the need for smart editor features in NetLogo.
+
+7.
+Concepts: human-ai (positive): support debug, describes positive aspects of human-ai collaboration
+- Expert highlights the positive support of AI in debugging, specifically its ability to catch obvious errors.
+- Participants describe the positive aspects of human-AI collaboration for debugging
+
+8.
+Concepts: ai's debugging ability, highlights improved debugging, highlights best practices
+- Values AI's debugging ability.
+- Highlights improved debugging capabilities.
+- Highlights the debugging capability of AI
+
+9.
+Concepts: suggests ai debugging, highlights ai's debugging capability
+- The participant suggests using AI for debugging or error correction.
+- Participants highlight AI's capability to troubleshoot errors
+
+10.
+Concepts: error identification and debugging, debugging and troubleshooting
+- The interviewee's perception of AI's role in identifying and debugging code errors.
+- The process by which the interviewee identifies and fixes errors in the code, often with the help of the LLM-driven interface.
+
+11.
+Concepts: shares debugging experience, describes iterative debugging benefits
+- Shares personal experience of using AI for debugging.
+- The participant describes the benefits of iterative debugging with the AI.
+
+12.
+Concepts: lack of debugging skills, novice (negative): debug
+- Noting the lack of debugging skills in beginners.
+- Expresses the need for novices to practice debugging their own code before seeking help from LLM-driven interfaces.
+
+13.
+Concepts: learning value, debug: back and forth effort
+- Finding learning value in the iterative debugging process.
+- Describes the iterative process of debugging with LLM-driven interfaces and the potential benefits of this process.
+
+14.
+Concepts: uses ai for netlogo, uses ai for language conversion
+- The participant uses AI to assist with NetLogo-related tasks or projects.
+- Participants use AI to translate models or code from other languages into NetLogo
+
+15.
+Concepts: pattern creation, requests specific visual output
+- Requests or discusses creating patterns or shapes using NetLogo.
+- The participant asks the LLM-driven interface to generate a specific visual pattern, such as a checkerboard, for a NetLogo program.
+
+16.
+Concepts: syntax assistance, seeks visualization support
+- Seeks syntax assistance or help with NetLogo syntax.
+- Expresses a need for visualization support in NetLogo modeling.
+
+17.
+Concepts: self-assessment, acknowledges personal competence
+- The participant reflects on their own abilities and competence in using NetLogo.
+- Participants show confidence or competence in using NetLogo
+
+18.
+Concepts: net logo dictionary, keeps netlogo dictionary handy
+- Describing the use of NetLogo dictionaries or references
+- The interviewee keeps a NetLogo dictionary or reference handy for quick reference.
+
+19.
+Concepts: concept understanding, suggests ai support for understanding scope
+- Emphasizes the importance of understanding NetLogo concepts, such as scope.
+- Suggests that AI could support understanding the concept of scope in NetLogo.
+
+20.
+Concepts: observes beginners' struggles, beginners struggle with netlogo concepts
+- Identifies difficulties that beginners face when using NetLogo.
+- Discusses difficulties with NetLogo concepts, such as scope or context.
+
+21.
+Concepts: critiques error messaging, identifies common errors or challenges, critiques netlogo's editors
+- Participants critique the helpfulness of error messages in NetLogo
+- Participants identify common errors or challenges in NetLogo
+- Participants critique NetLogo's editors and identify limitations.
+
+22.
+Concepts: limited time for each language, describes expert's fragmented learning
+- Expert notes the limited time they have to spend on each language.
+- Describes fragmented learning due to limited time for each language.
+
+23.
+Concepts: human-effort (negative): learning curve, steep learning curve & frustration point
+- Expresses frustration with the learning curve of using AI.
+- Mentions frustration points or difficulties in the learning process, especially for beginners.
+
+24.
+Concepts: human (negative): time, human-effort (negative): time constraint
+- Participant discusses the limitations of human time and attention when working with AI-driven interfaces.
+- The participant notes the time constraints of human effort.
+
+25.
+Concepts: highlights challenges faced by novices, suggests need for better help seeking methods
+- Highlights challenges faced by novices when seeking help or support.
+- Expert suggests the need for better help-seeking methods, specifically for novices.
+
+26.
+Concepts: potential support for novice, support for non-cs people
+- Sees potential for AI to support novices or non-technical users.
+- Sees potential for AI to support non-CS professionals and increase general productivity.
+
+27.
+Concepts: fragmented learning, describes fragmented learning sessions
+- Fragmented learning and the need for system support
+- The participant describes fragmented learning sessions and the need for support.
+
+28.
+Concepts: valuing iterative approach, values iterative improvement
+- Valuing an iterative approach to working with AI.
+- Values iterative improvement through AI-driven interfaces.
+
+29.
+Concepts: expertise, hints at depth of knowledge
+- Demonstrates expertise and experience in computer programming.
+- Hints at the depth of knowledge or experience in programming.
+
+30.
+Concepts: values documentation, documentation and commenting, comments on ai-generated code
+- Participant values documentation and commenting in AI-generated code.
+- The interviewee's perception of AI's role in generating well-documented and commented code.
+- Participants comment on AI-generated code, including documentation
+
+31.
+Concepts: appreciates executable code, providing functional and well-documented code, appreciates ai-generated code features
+- Appreciative comments about executable code
+- Appreciates the provision of functional and well-documented code by LLM-driven interfaces.
+- Participants appreciate AI-generated code with annotations and documentation.
+
+32.
+Concepts: unit testing benefits, values debugging and unit testing
+- Appreciates unit testing capabilities.
+- The participant values the importance of debugging and unit testing.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: error reporting, copies error messages to ai
+Relationship: The participant recognizes the importance of error reporting and seeks assistance from AI-driven interfaces by copying error messages.
+Criteria: Participants report errors and seek AI assistance by copying error messages.
+Phrase: Reports errors to AI for assistance.
+
+2.
+Concepts: error handling, error management
+Relationship: The participant highlights the need for better error management in AI-driven systems, which involves effective error handling.
+Criteria: Participants suggest or demonstrate a need for better error management in AI-driven systems.
+Phrase: Seeks better error management.
+
+3.
+Concepts: error reasoning, error detection
+Relationship: The participant uses AI's responses to identify errors, which involves error reasoning and detection.
+Criteria: Participants reason through AI's responses to identify errors.
+Phrase: Reasons through AI responses for error detection.
+
+4.
+Concepts: seeks error-free code, enhancing error resolution
+Relationship: The participant seeks error-free code, which involves enhancing error resolution and code quality.
+Criteria: Participants seek error-free code or verification of code.
+Phrase: Seeks error-free code.
+
+5.
+Concepts: linting features, linting and error detection
+Relationship: The participant recognizes the importance of linting features in identifying conceptual mistakes, which is related to error detection.
+Criteria: Participants need linting features that identify conceptual mistakes.
+Phrase: Needs linting features for error detection.
+
+6.
+Concepts: smart editors, suggests need for smart editor features
+Relationship: The participant suggests the need for smart editor features in NetLogo, which can improve programming experiences.
+Criteria: Participants discuss the importance of smart editors in programming languages, including NetLogo.
+Phrase: Suggests smart editor features.
+
+7.
+Concepts: human-ai (positive): support debug, describes positive aspects of human-ai collaboration
+Relationship: The participant highlights the positive aspects of human-AI collaboration, specifically AI's ability to catch obvious errors.
+Criteria: Participants describe the positive aspects of human-AI collaboration for debugging.
+Phrase: Collaborates with AI for debugging.
+
+8.
+Concepts: ai's debugging ability, highlights improved debugging, highlights best practices
+Relationship: The participant values AI's debugging ability, which involves improved debugging capabilities and best practices.
+Criteria: Participants value AI's debugging ability.
+Phrase: Values AI's debugging ability.
+
+9.
+Concepts: suggests ai debugging, highlights ai's debugging capability
+Relationship: The participant suggests using AI for debugging, which highlights AI's capability to troubleshoot errors.
+Criteria: Participants suggest using AI for debugging or error correction.
+Phrase: Suggests AI debugging.
+
+10.
+Concepts: error identification and debugging, debugging and troubleshooting
+Relationship: The participant's perception of AI's role in identifying and debugging code errors involves debugging and troubleshooting.
+Criteria: Participants perceive AI's role in identifying and debugging code errors.
+Phrase: Uses AI for error identification and debugging.
+
+11.
+Concepts: shares debugging experience, describes iterative debugging benefits
+Relationship: The participant shares personal experience of using AI for debugging, which involves iterative debugging benefits.
+Criteria: Participants share personal experience of using AI for debugging.
+Phrase: Shares AI debugging experience.
+
+12.
+Concepts: lack of debugging skills, novice (negative): debug
+Relationship: The participant notes the lack of debugging skills in beginners, which is a limitation in using AI-driven interfaces.
+Criteria: Participants note the lack of debugging skills in beginners.
+Phrase: Notes lack of debugging skills.
+
+13.
+Concepts: learning value, debug: back and forth effort
+Relationship: The participant finds learning value in the iterative debugging process, which involves a back-and-forth effort.
+Criteria: Participants find learning value in the iterative debugging process.
+Phrase: Finds learning value in iterative debugging.
+
+14.
+Concepts: uses ai for netlogo, uses ai for language conversion
+Relationship: The participant uses AI to assist with NetLogo-related tasks or projects, including language conversion.
+Criteria: Participants use AI to assist with NetLogo-related tasks or projects.
+Phrase: Uses AI for NetLogo tasks.
+
+15.
+Concepts: pattern creation, requests specific visual output
+Relationship: The participant requests creating patterns or shapes using NetLogo, which involves specific visual output.
+Criteria: Participants request creating patterns or shapes using NetLogo.
+Phrase: Requests pattern creation.
+
+16.
+Concepts: syntax assistance, seeks visualization support
+Relationship: The participant seeks syntax assistance or help with NetLogo syntax, which is related to visualization support.
+Criteria: Participants seek syntax assistance or help with NetLogo syntax.
+Phrase: Seeks syntax assistance.
+
+17.
+Concepts: self-assessment, acknowledges personal competence
+Relationship: The participant reflects on their own abilities and competence in using NetLogo, which involves self-assessment.
+Criteria: Participants reflect on their own abilities and competence in using NetLogo.
+Phrase: Reflects on personal competence.
+
+18.
+Concepts: net logo dictionary, keeps netlogo dictionary handy
+Relationship: The participant describes the use of NetLogo dictionaries or references, which involves keeping them handy.
+Criteria: Participants describe the use of NetLogo dictionaries or references.
+Phrase: Uses NetLogo dictionaries.
+
+19.
+Concepts: concept understanding, suggests ai support for understanding scope
+Relationship: The participant emphasizes the importance of understanding NetLogo concepts, such as scope, and suggests AI support.
+Criteria: Participants emphasize the importance of understanding NetLogo concepts.
+Phrase: Emphasizes concept understanding.
+
+20.
+Concepts: observes beginners' struggles, beginners struggle with netlogo concepts
+Relationship: The participant identifies difficulties that beginners face when using NetLogo, including struggles with concepts.
+Criteria: Participants identify difficulties that beginners face when using NetLogo.
+Phrase: Identifies beginners' struggles.
+
+21.
+Concepts: critiques error messaging, identifies common errors or challenges, critiques netlogo's editors
+Relationship: The participant critiques error messaging, identifies common errors or challenges, and critiques NetLogo's editors.
+Criteria: Participants critique error messaging and NetLogo's editors.
+Phrase: Critiques error messaging and NetLogo's editors.
+
+22.
+Concepts: limited time for each language, describes expert's fragmented learning
+Relationship: The participant notes the limited time they have to spend on each language, which leads to fragmented learning.
+Criteria: Participants note the limited time they have to spend on each language.
+Phrase: Notes limited time for learning.
+
+23.
+Concepts: human-effort (negative): learning curve, steep learning curve & frustration point
+Relationship: The participant expresses frustration with the learning curve of using AI, which involves human effort and frustration points.
+Criteria: Participants express frustration with the learning curve of using AI.
+Phrase: Expresses frustration with learning curve.
+
+24.
+Concepts: human (negative): time, human-effort (negative): time constraint
+Relationship: The participant discusses the limitations of human time and attention when working with AI-driven interfaces, which involves time constraints.
+Criteria: Participants discuss the limitations of human time and attention.
+Phrase: Discusses time constraints.
+
+25.
+Concepts: highlights challenges faced by novices, suggests need for better help seeking methods
+Relationship: The participant highlights challenges faced by novices when seeking help or support, and suggests better help-seeking methods.
+Criteria: Participants highlight challenges faced by novices when seeking help or support.
+Phrase: Highlights challenges faced by novices.
+
+26.
+Concepts: potential support for novice, support for non-cs people
+Relationship: The participant sees potential for AI to support novices or non-technical users, which involves support for non-CS professionals.
+Criteria: Participants see potential for AI to support novices or non-technical users.
+Phrase: Sees potential for AI support.
+
+27.
+Concepts: fragmented learning, describes fragmented learning sessions
+Relationship: The participant describes fragmented learning sessions, which involves the need for system support.
+Criteria: Participants describe fragmented learning sessions.
+Phrase: Describes fragmented learning.
+
+28.
+Concepts: valuing iterative approach, values iterative improvement
+Relationship: The participant values an iterative approach to working with AI, which involves iterative improvement.
+Criteria: Participants value an iterative approach to working with AI.
+Phrase: Values iterative approach.
+
+29.
+Concepts: expertise, hints at depth of knowledge
+Relationship: The participant demonstrates expertise and experience in computer programming, which hints at the depth of knowledge.
+Criteria: Participants demonstrate expertise and experience in computer programming.
+Phrase: Demonstrates expertise.
+
+30.
+Concepts: values documentation, documentation and commenting, comments on ai-generated code
+Relationship: The participant values documentation and commenting in AI-generated code, which involves comments on AI-generated code.
+Criteria: Participants value documentation and commenting in AI-generated code.
+Phrase: Values documentation in AI-generated code.
+
+31.
+Concepts: appreciates executable code, providing functional and well-documented code, appreciates ai-generated code features
+Relationship: The participant appreciates executable code, which involves providing functional and well-documented code, and appreciates AI-generated code features.
+Criteria: Participants appreciate executable code and AI-generated code features.
+Phrase: Appreciates executable code.
+
+32.
+Concepts: unit testing benefits, values debugging and unit testing
+Relationship: The participant appreciates unit testing capabilities, which involves valuing debugging and unit testing.
+Criteria: Participants appreciate unit testing capabilities.
+Phrase: Values debugging and unit testing.

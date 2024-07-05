@@ -1,0 +1,369 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (31 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+31. 
+Concepts: {Repeat the input 31}
+Relationship: {What is logical relationship between concepts in code 31, or N/A if not applicable}
+Criteria: {Who did what, and how for code 31}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: error fixing, manual error fixing
+- Fixes errors or mistakes in AI-generated code.
+- Manually fixes errors in AI-generated code without AI assistance.
+
+2.
+Concepts: outside observer, considers chatgpt an outside observer
+- Expert views AI as an outside observer that can catch errors not obvious to humans.
+- Considers AI as an outside observer that can catch obvious errors that may not be apparent to humans.
+
+3.
+Concepts: error resolution, notes ai's error resolution
+- The participant resolves errors with the help of the AI.
+- The participant notes the AI system's ability to resolve errors.
+
+4.
+Concepts: errors found, error detection
+- Identifying errors or limitations in the outputs of LLM-driven interfaces
+- Seeks error detection and correction capabilities in LLM-driven interfaces.
+
+5.
+Concepts: version issues, version compatibility issues
+- Participants face version issues with NetLogo, affecting compatibility and functionality.
+- Participants face compatibility issues with older versions of NetLogo.
+
+6.
+Concepts: deals with older netlogo versions, encounters outdated functionalities
+- The participant deals with older versions of NetLogo.
+- The participant encounters outdated functionalities or versions of NetLogo.
+
+7.
+Concepts: feature gaps, netlogo limitations
+- The participant identifies gaps in features, such as the lack of a smart code editor in NetLogo.
+- Participants critique NetLogo's lack of smart editors, highlighting the need for advanced coding tools.
+- The participant highlights the limitations of NetLogo, specifically the lack of smart code editors.
+
+8.
+Concepts: uses ai for netlogo, translates models from other languages, language conversion, model translation
+- The participant uses AI for NetLogo-related tasks, such as translating models.
+- The participant finds AI helpful in translating models from other languages into NetLogo.
+- The participant finds AI helpful for translating models from other languages into NetLogo.
+- The participant discusses the potential of AI to translate models from other languages into NetLogo.
+
+9.
+Concepts: netlogo competence, expresses confidence in netlogo skills
+- Expressing confidence or proficiency in using NetLogo
+- The participant expresses confidence in their NetLogo skills or experience.
+
+10.
+Concepts: teaching others, teaching preference
+- Prefers teaching others and helping them learn NetLogo.
+- The participant expresses a preference for teaching others about NetLogo.
+
+11.
+Concepts: maintenance, code-quality
+- The participant discusses the importance of maintainable code or ease of maintenance.
+- The participant discusses the importance of code quality and simplicity for maintenance.
+
+12.
+Concepts: prefers simple, maintainable code
+- The participant prefers simple and accessible code for easier maintenance.
+- The participant emphasizes the importance of maintainable code, preferring simple and accessible code.
+
+13.
+Concepts: readability, simplicity and clarity in code
+- Values readability and simplicity in code.
+- Values simplicity and clarity in code.
+
+14.
+Concepts: efficiency, prioritizes efficiency
+- The participant values efficiency or speed in their work or workflow.
+- The participant prioritizes efficiency and speed in their workflow.
+
+15.
+Concepts: oral tradition, reflects on undocumented knowledge
+- The participant discusses the importance of oral tradition or undocumented knowledge in software development.
+- Reflects on the importance of undocumented knowledge and oral tradition in software development.
+
+16.
+Concepts: programming experience, extensive programming experience
+- Sharing prior experiences or background in programming
+- Participant shares their extensive programming experience.
+
+17.
+Concepts: system support, suggests system support
+- Discusses the need for system support in learning or professional development.
+- Suggesting the need for system support or features to facilitate learning or workflow
+
+18.
+Concepts: online help, problem solving
+- Seeks online help for problem-solving.
+- The participant seeks help online or uses AI to solve problems.
+
+19.
+Concepts: proper help-seeking, help seeking practices
+- Discusses proper help-seeking practices, including doing one's own work and clearly describing problems.
+- The participant reflects on proper practices to seek online help, such as doing one's own work and clearly describing what one needs or has tried.
+
+20.
+Concepts: documentation, importance of documentation
+- Emphasizes the importance of proper documentation and online etiquette
+- Discusses proper practices for seeking online help.
+
+21.
+Concepts: augmentation of human capabilities
+- Instances where the interviewee perceives LLM-driven interfaces as tools to enhance human abilities rather than replace them.
+- The belief that AI should enhance rather than replace human abilities.
+
+22.
+Concepts: ai ability (positive): fast iteration
+- Expert highlights the ability of AI to rapidly iterate and improve.
+- The participant highlights the speed or efficiency of AI-driven iteration.
+
+23.
+Concepts: debugging challenges
+- Participants experience debugging challenges and frustrations.
+- Experiences difficulties in debugging code.
+
+24.
+Concepts: human-effort: debug
+- The participant recognizes the need for human effort in debugging and error resolution.
+- The participant highlights the importance of human effort in debugging and error detection.
+
+25.
+Concepts: human-ai collaboration
+- The interviewee's perception of AI as a collaborative partner in the coding and learning process.
+- Participant emphasizes the importance of human-AI collaboration.
+
+26.
+Concepts: time efficiency
+- The interviewee's perception that LLM-driven interfaces can save time in learning and problem-solving.
+- Participants discuss the time constraints of learning new extensions in NetLogo and the potential of AI to save time.
+
+27.
+Concepts: learning pathways
+- The interviewee's perception of AI's potential to create structured and effective learning paths.
+- The potential for AI to design and facilitate personalized learning experiences.
+
+28.
+Concepts: human judgment
+- The participant emphasizes the importance of human judgment or oversight in using the AI-driven interface.
+- Emphasizes the importance of human judgment in programming.
+
+29.
+Concepts: novice challenges
+- The interviewee's observations on the difficulties faced by beginners in coding and how AI might address them.
+- Participant highlights challenges faced by novices in seeking help.
+
+30.
+Concepts: evaluates ai responses
+- The process by which the interviewee assesses the quality and usefulness of the outputs generated by the LLM-driven interface.
+- Participants evaluate and interact with ChatGPT's responses, considering its intuitive understanding of natural language and limitations.
+- The user recognizes the need to evaluate and critically think about the AI's responses.
+
+31.
+Concepts: mentions learning curve
+- The perceived difficulty and effort required to learn and effectively use the LLM-driven interface.
+- The participant discusses the challenges or difficulties of learning to use AI, especially for novices.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: error fixing, manual error fixing
+Relationship: Error fixing is a process that involves manual error fixing as a means to correct mistakes in AI-generated code.
+Criteria: Participants manually fix errors in AI-generated code without AI assistance.
+Phrase: Manually fixes errors.
+
+2.
+Concepts: outside observer, considers chatgpt an outside observer
+Relationship: The expert views AI as an outside observer that can catch errors not obvious to humans, implying a collaborative role.
+Criteria: Experts consider AI as an outside observer that can catch obvious errors that may not be apparent to humans.
+Phrase: Considers AI as an outside observer.
+
+3.
+Concepts: error resolution, notes ai's error resolution
+Relationship: The participant resolves errors with the help of the AI, highlighting the AI's error resolution capabilities.
+Criteria: Participants resolve errors with the help of the AI and note its error resolution capabilities.
+Phrase: Resolves errors with AI.
+
+4.
+Concepts: errors found, error detection
+Relationship: Identifying errors or limitations in the outputs of LLM-driven interfaces is related to seeking error detection and correction capabilities.
+Criteria: Participants identify errors or limitations in the outputs of LLM-driven interfaces and seek error detection and correction capabilities.
+Phrase: Seeks error detection.
+
+5.
+Concepts: version issues, version compatibility issues
+Relationship: Participants face version issues with NetLogo, which affects compatibility and functionality, implying a connection between the two concepts.
+Criteria: Participants face version issues with NetLogo, affecting compatibility and functionality.
+Phrase: Faces version issues.
+
+6.
+Concepts: deals with older netlogo versions, encounters outdated functionalities
+Relationship: The participant deals with older versions of NetLogo, which leads to encountering outdated functionalities or versions.
+Criteria: Participants deal with older versions of NetLogo and encounter outdated functionalities or versions.
+Phrase: Deals with older NetLogo versions.
+
+7.
+Concepts: feature gaps, netlogo limitations
+Relationship: The participant identifies gaps in features, such as the lack of a smart code editor in NetLogo, highlighting NetLogo's limitations.
+Criteria: Participants identify gaps in features, such as the lack of a smart code editor in NetLogo, highlighting NetLogo's limitations.
+Phrase: Identifies feature gaps.
+
+8.
+Concepts: uses ai for netlogo, translates models from other languages, language conversion, model translation
+Relationship: The participant uses AI for NetLogo-related tasks, such as translating models, implying AI's potential for language conversion and model translation.
+Criteria: Participants use AI for NetLogo-related tasks, such as translating models from other languages into NetLogo.
+Phrase: Uses AI for NetLogo tasks.
+
+9.
+Concepts: netlogo competence, expresses confidence in netlogo skills
+Relationship: Expressing confidence or proficiency in using NetLogo implies a sense of competence in using the platform.
+Criteria: Participants express confidence or proficiency in using NetLogo.
+Phrase: Expresses NetLogo competence.
+
+10.
+Concepts: teaching others, teaching preference
+Relationship: Preferring to teach others and help them learn NetLogo implies a desire to share knowledge and expertise.
+Criteria: Participants prefer teaching others and helping them learn NetLogo.
+Phrase: Prefers teaching others.
+
+11.
+Concepts: maintenance, code-quality
+Relationship: The participant discusses the importance of maintainable code or ease of maintenance, implying a connection between maintenance and code quality.
+Criteria: Participants discuss the importance of maintainable code or ease of maintenance for code quality.
+Phrase: Discusses code maintenance.
+
+12.
+Concepts: prefers simple, maintainable code
+Relationship: The participant prefers simple and accessible code for easier maintenance, implying a connection between simplicity and maintainability.
+Criteria: Participants prefer simple and accessible code for easier maintenance.
+Phrase: Prefers simple code.
+
+13.
+Concepts: readability, simplicity and clarity in code
+Relationship: Valuing readability and simplicity in code implies a desire for clarity in code.
+Criteria: Participants value readability and simplicity in code for clarity.
+Phrase: Values code readability.
+
+14.
+Concepts: efficiency, prioritizes efficiency
+Relationship: The participant values efficiency or speed in their work or workflow, implying a priority on efficiency.
+Criteria: Participants value efficiency or speed in their work or workflow.
+Phrase: Prioritizes efficiency.
+
+15.
+Concepts: oral tradition, reflects on undocumented knowledge
+Relationship: The participant discusses the importance of oral tradition or undocumented knowledge in software development, implying a connection between the two concepts.
+Criteria: Participants discuss the importance of oral tradition or undocumented knowledge in software development.
+Phrase: Reflects on oral tradition.
+
+16.
+Concepts: programming experience, extensive programming experience
+Relationship: Sharing prior experiences or background in programming implies a level of expertise or extensive programming experience.
+Criteria: Participants share their extensive programming experience.
+Phrase: Shares programming experience.
+
+17.
+Concepts: system support, suggests system support
+Relationship: Discussing the need for system support in learning or professional development implies a desire for support features.
+Criteria: Participants discuss the need for system support in learning or professional development.
+Phrase: Suggests system support.
+
+18.
+Concepts: online help, problem solving
+Relationship: Seeking online help for problem-solving implies a desire for assistance in resolving issues.
+Criteria: Participants seek online help for problem-solving.
+Phrase: Seeks online help.
+
+19.
+Concepts: proper help-seeking, help seeking practices
+Relationship: Discussing proper help-seeking practices implies a desire to seek help effectively.
+Criteria: Participants discuss proper practices to seek online help.
+Phrase: Discusses help-seeking practices.
+
+20.
+Concepts: documentation, importance of documentation
+Relationship: Emphasizing the importance of proper documentation and online etiquette implies a connection between the two concepts.
+Criteria: Participants emphasize the importance of proper documentation and online etiquette.
+Phrase: Emphasizes documentation.
+
+21.
+Concepts: augmentation of human capabilities
+Relationship: Instances where the interviewee perceives LLM-driven interfaces as tools to enhance human abilities rather than replace them imply a collaborative role.
+Criteria: Participants perceive LLM-driven interfaces as tools to enhance human abilities rather than replace them.
+Phrase: Sees AI as augmenting human capabilities.
+
+22.
+Concepts: ai ability (positive): fast iteration
+Relationship: The expert highlights the ability of AI to rapidly iterate and improve, implying a positive aspect of AI's capabilities.
+Criteria: Participants highlight the speed or efficiency of AI-driven iteration.
+Phrase: Highlights AI's fast iteration.
+
+23.
+Concepts: debugging challenges
+Relationship: Participants experience debugging challenges and frustrations, implying a difficulty in resolving issues.
+Criteria: Participants experience debugging challenges and frustrations.
+Phrase: Faces debugging challenges.
+
+24.
+Concepts: human-effort: debug
+Relationship: The participant recognizes the need for human effort in debugging and error resolution, implying a necessary role for humans.
+Criteria: Participants recognize the need for human effort in debugging and error resolution.
+Phrase: Recognizes need for human effort.
+
+25.
+Concepts: human-ai collaboration
+Relationship: The interviewee's perception of AI as a collaborative partner in the coding and learning process implies a joint effort.
+Criteria: Participants emphasize the importance of human-AI collaboration.
+Phrase: Emphasizes human-AI collaboration.
+
+26.
+Concepts: time efficiency
+Relationship: The interviewee's perception that LLM-driven interfaces can save time in learning and problem-solving implies a benefit of using AI.
+Criteria: Participants discuss the time constraints of learning new extensions in NetLogo and the potential of AI to save time.
+Phrase: Sees AI as time-efficient.
+
+27.
+Concepts: learning pathways
+Relationship: The interviewee's perception of AI's potential to create structured and effective learning paths implies a role for AI in facilitating learning.
+Criteria: Participants perceive AI's potential to create structured and effective learning paths.
+Phrase: Sees AI as facilitating learning.
+
+28.
+Concepts: human judgment
+Relationship: The participant emphasizes the importance of human judgment or oversight in using the AI-driven interface, implying a necessary role for humans.
+Criteria: Participants emphasize the importance of human judgment in programming.
+Phrase: Emphasizes human judgment.
+
+29.
+Concepts: novice challenges
+Relationship: The interviewee's observations on the difficulties faced by beginners in coding and how AI might address them imply a need for AI-assisted learning.
+Criteria: Participants highlight challenges faced by novices in seeking help.
+Phrase: Highlights novice challenges.
+
+30.
+Concepts: evaluates ai responses
+Relationship: The process by which the interviewee assesses the quality and usefulness of the outputs generated by the LLM-driven interface implies a critical evaluation.
+Criteria: Participants evaluate and interact with ChatGPT's responses, considering its intuitive understanding of natural language and limitations.
+Phrase: Evaluates AI responses.
+
+31.
+Concepts: mentions learning curve
+Relationship: The perceived difficulty and effort required to learn and effectively use the LLM-driven interface implies a learning process.
+Criteria: Participants discuss the challenges or difficulties of learning to use AI, especially for novices.
+Phrase: Discusses learning curve.

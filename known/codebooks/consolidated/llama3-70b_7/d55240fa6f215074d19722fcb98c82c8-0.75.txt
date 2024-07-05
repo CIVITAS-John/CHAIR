@@ -1,0 +1,57 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: engages in conversation with ai, seeks help or clarification from ai
+- Interviewees engage in conversation with the AI, asking questions or seeking help.
+- Interviewees ask for help or clarification from the AI, seeking further assistance or guidance.
+
+2.
+Concepts: experiences frustration with ai, expresses frustration with limited ai options
+- Instances where users express frustration with the AI's performance or limitations.
+- Users express frustration with AI limitations or errors.
+
+3.
+Concepts: ai-generated code, fixes ai code errors through debugging
+- The participant engages with AI-generated code, either by fixing errors or integrating it into the model.
+- Users fix errors or issues in the AI-generated code.
+===
+---
+Definitions for each code:
+
+1.
+Concepts: engages in conversation with ai, seeks help or clarification from ai
+Relationship: The concepts are closely related, as engaging in conversation with AI often involves seeking help or clarification.
+Criteria: Participants engage in conversation with AI to seek help or clarification.
+Phrase: Seeking AI assistance
+
+2.
+Concepts: experiences frustration with ai, expresses frustration with limited ai options
+Relationship: The concepts are closely related, as experiencing frustration often leads to expressing frustration.
+Criteria: Users experience and express frustration with AI limitations or errors.
+Phrase: Expressing AI frustration
+
+3.
+Concepts: ai-generated code, fixes ai code errors through debugging
+Relationship: The concepts are sequentially related, as fixing errors often follows the generation of AI code.
+Criteria: Participants fix errors in AI-generated code through debugging.
+Phrase: Debugging AI code

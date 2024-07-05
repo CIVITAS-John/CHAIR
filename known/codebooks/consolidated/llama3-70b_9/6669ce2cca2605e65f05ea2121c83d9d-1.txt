@@ -1,0 +1,56 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: integrate ai into workflow, integrates ai-generated code fully
+- Participants who integrate AI-generated code into their workflow.
+- Participants integrate generated code into existing models or systems.
+
+2.
+Concepts: encounter unclear error messages, experiences debugging frustration due to unclear error messages
+- Participants who encounter unclear or unhelpful error messages.
+- Participants experience difficulty debugging code due to unclear error messages.
+
+3.
+Concepts: highlights learning needs, emphasize debugging skills
+- Participant highlights the need for users to develop debugging skills.
+- Participants who emphasize the need for debugging skills and practice.
+===
+---
+Definitions for each code:
+1.
+Concepts: integrate ai into workflow, integrates ai-generated code fully
+Relationship: The concept "integrate ai into workflow" is a broader idea that encompasses the idea of "integrates ai-generated code fully", which is a specific way of integrating AI into the workflow.
+Criteria: Participants seamlessly incorporate AI-generated code into their existing models or systems to enhance their workflow.
+Phrase: Integrates AI into workflow seamlessly.
+
+2.
+Concepts: encounter unclear error messages, experiences debugging frustration due to unclear error messages
+Relationship: The concept "encounter unclear error messages" is a cause, and "experiences debugging frustration" is an effect, where unclear error messages lead to debugging frustration.
+Criteria: Participants struggle with debugging due to unclear or unhelpful error messages that hinder their understanding of the issues.
+Phrase: Encounter frustrating error messages.
+
+3.
+Concepts: highlights learning needs, emphasize debugging skills
+Relationship: The concept "highlights learning needs" is a more general idea, and "emphasize debugging skills" is a specific example of learning needs that are highlighted.
+Criteria: Participants stress the importance of debugging skills and practice for users to overcome challenges in LLM-driven interfaces.
+Phrase: Emphasize essential debugging skills.

@@ -1,0 +1,350 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: hallucination, mentions ai hallucination
+- Mentions AI hallucinations or incorrect information.
+- Instances where the interviewee discusses the potential for AI to generate incorrect or non-existent information.
+- Instances where AI generates incorrect or fabricated information.
+
+2.
+Concepts: teaching preference, prefers teaching others
+- Prefers teaching or helping others learn NetLogo.
+- Prefers teaching others and helping them learn NetLogo.
+
+3.
+Concepts: personal competence, netlogo competence
+- Acknowledges personal competence in NetLogo.
+- Mentions confidence or proficiency in using NetLogo.
+
+4.
+Concepts: scope, beginners struggle when switching between scope, context, variable space
+- Struggles with scope and variable space shifts in NetLogo programming
+- The participant discusses the challenges of switching between scope, context, or variable space in NetLogo.
+
+5.
+Concepts: outdated code, encounters outdated functionalities
+- Encounters outdated code from older NetLogo versions
+- Interviewee encounters outdated functionalities, such as the AI still using old versions of NetLogo.
+
+6.
+Concepts: common errors, highlights common beginner mistakes
+- Identifies common errors or challenges in NetLogo coding.
+- Highlights common mistakes or pitfalls in NetLogo programming, such as scope issues
+
+7.
+Concepts: linting, linting features
+- The importance of linting features in NetLogo to identify conceptual mistakes.
+- Reiterates the need for linting features in NetLogo to identify conceptual mistakes.
+
+8.
+Concepts: netlogo dictionary, keeps netlogo dictionary handy
+- Describes the importance of having immediate access to reference materials or documentation, such as NetLogo dictionaries.
+- Rely on reference materials or dictionaries for NetLogo syntax.
+
+9.
+Concepts: knowledge gaps, notes knowledge gaps
+- Identifies gaps in knowledge or documentation that hinder learning or problem-solving
+- Identifies knowledge gaps or areas where LLM-driven interfaces may not provide sufficient information or support.
+
+10.
+Concepts: documentation critique, criticizes current technical documentation
+- Critiques the current state of technical documentation and envisions AI-assisted learning.
+- Critiques the current state of technical documentation and learning resources.
+
+11.
+Concepts: online help, values community support
+- Seeks help online and values the support of user groups.
+- The participant values community support and seeking help online.
+
+12.
+Concepts: help seeking practices, discusses proper help seeking practices
+- Reflects on proper practices for seeking help or feedback from online communities.
+- Discusses proper practices for seeking help online, including doing one's own work and clearly describing the problem.
+
+13.
+Concepts: individualism, help seeking behavior
+- Reflects on the cultural or societal implications of individualism in the context of seeking help.
+- Discusses the cultural or social context of seeking help, such as individualism.
+
+14.
+Concepts: simplicity of code, prefers simple
+- The participant values simplicity in code.
+- Prefers simplicity and clarity in code and problem-solving approaches.
+
+15.
+Concepts: programming experience, shares extensive programming experience
+- Mentions prior experiences or skills in programming or computer science.
+- Shares extensive experience in programming languages
+
+16.
+Concepts: simpler task, switches to simpler task
+- Switches to a simpler task or problem when faced with obstacles.
+- Switches to a simpler task due to difficulties or frustration.
+
+17.
+Concepts: task refinement, refines task details
+- Refines tasks or requests to make them more specific and clear.
+- Refines task details or requirements based on AI feedback.
+
+18.
+Concepts: reads error messages, prepares for next steps
+- Reads error messages before making a choice or taking an action.
+- Prepares for next steps by reading error messages before making a choice.
+
+19.
+Concepts: code commenting, appreciates ai code commenting
+- Appreciating the code commenting and documentation provided by ChatGPT.
+- Appreciates AI-generated code comments or documentation.
+
+20.
+Concepts: appreciates executable code, providing functional and well-documented code
+- Expresses appreciation for executable code provided by the AI.
+- Appreciating AI's ability to provide functional, well-documented code
+
+21.
+Concepts: optimizing, code optimization, assistance to optimize & debug
+- Uses AI to optimize code and improve performance.
+- Uses AI to optimize code.
+- Uses AI to optimize and debug code.
+
+22.
+Concepts: using chatgpt for coding assistance, describes using chatgpt for code optimization
+- Uses LLM-driven interfaces for coding assistance, such as code review and optimization
+- The participant describes using the LLM-driven interface for code optimization.
+
+23.
+Concepts: summarizes ai's code, comments on ai's interpretation
+- Participant summarizes and interprets AI-generated code, thinking about how the AI understood their request.
+- Participant comments on AI's interpretation of their code, summarizing and evaluating the AI's understanding.
+
+24.
+Concepts: ai guidance, manual coding with ai, manual coding
+- Uses AI guidance to inform manual coding.
+- User manually codes with AI guidance
+- Writing code manually with the guidance of AI-generated code.
+
+25.
+Concepts: code reference, uses ai generated code as reference, chatgpt usage: reference
+- Instances where the participant uses AI-generated code as a reference.
+- The participant uses AI-generated code as a reference.
+- Uses generated code as a reference when writing their own code.
+
+26.
+Concepts: decides to copy and paste, selectively copies ai code
+- The participant decides to copy and paste code generated by the LLM-driven interface.
+- The participant selectively copies code from the AI-driven interface into their model.
+
+27.
+Concepts: customizes ai-generated code, reads and adapts ai responses
+- Participant reads AI-generated code, selects, and integrates it into their model.
+- Participant actively reads and adapts AI-generated code, selecting relevant parts for their model.
+
+28.
+Concepts: calls for preparatory exercises, pre-learning requirement about how to ask questions, demand for expertise & experience
+- Emphasizes the need for users to have preparatory exercises in debugging their own code before seeking AI assistance.
+- The participant thinks that users need practice in debugging their own code before asking AI for help.
+- Interviewee emphasizes the importance of users having practice in debugging their own code before asking the AI for help.
+
+29.
+Concepts: debugging risks, human-ai: no need to blindly follow
+- Participant cautions against blind reliance on AI-generated code, highlighting the need for expertise in understanding and debugging errors.
+- Interviewee highlights the importance of not blindly following the AI, and the need for expertise to understand errors and debug them.
+
+30.
+Concepts: expertise, expertise requirement
+- Highlights the importance of expertise in working with AI and debugging errors.
+- Participant emphasizes the need for expertise in understanding and debugging errors in AI-generated code.
+
+31.
+Concepts: debugging practice, suggests user debugging practice
+- Emphasizing the importance of debugging practice before asking AI for help
+- Suggesting the importance of user debugging practice.
+
+32.
+Concepts: code posting, describes unstructured code posts
+- The participant discusses the challenges of posting code online and seeking help.
+- The participant describes the challenges of novices seeking help, including posting unstructured code blocks.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: hallucination, mentions ai hallucination
+Relationship: N/A
+Criteria: The interviewee mentions AI hallucinations or incorrect information.
+Phrase: Mentions AI hallucinations
+2.
+Concepts: teaching preference, prefers teaching others
+Relationship: N/A
+Criteria: The interviewee prefers teaching or helping others learn NetLogo.
+Phrase: Prefers teaching others
+3.
+Concepts: personal competence, netlogo competence
+Relationship: N/A
+Criteria: The interviewee acknowledges personal competence in NetLogo.
+Phrase: Acknowledges NetLogo competence
+4.
+Concepts: scope, beginners struggle when switching between scope, context, variable space
+Relationship: The struggle with scope and variable space shifts is a challenge for beginners.
+Criteria: The participant struggles with scope and variable space shifts in NetLogo programming.
+Phrase: Struggles with scope shifts
+5.
+Concepts: outdated code, encounters outdated functionalities
+Relationship: N/A
+Criteria: The interviewee encounters outdated code or functionalities from older NetLogo versions.
+Phrase: Encounters outdated code
+6.
+Concepts: common errors, highlights common beginner mistakes
+Relationship: N/A
+Criteria: The interviewee identifies common errors or challenges in NetLogo coding.
+Phrase: Highlights common errors
+7.
+Concepts: linting, linting features
+Relationship: N/A
+Criteria: The interviewee reiterates the need for linting features in NetLogo to identify conceptual mistakes.
+Phrase: Values linting features
+8.
+Concepts: netlogo dictionary, keeps netlogo dictionary handy
+Relationship: N/A
+Criteria: The interviewee describes the importance of having immediate access to reference materials or documentation, such as NetLogo dictionaries.
+Phrase: Relies on reference materials
+9.
+Concepts: knowledge gaps, notes knowledge gaps
+Relationship: N/A
+Criteria: The interviewee identifies gaps in knowledge or documentation that hinder learning or problem-solving.
+Phrase: Identifies knowledge gaps
+10.
+Concepts: documentation critique, criticizes current technical documentation
+Relationship: N/A
+Criteria: The interviewee critiques the current state of technical documentation and envisions AI-assisted learning.
+Phrase: Critiques technical documentation
+11.
+Concepts: online help, values community support
+Relationship: N/A
+Criteria: The interviewee seeks help online and values the support of user groups.
+Phrase: Values community support
+12.
+Concepts: help seeking practices, discusses proper help seeking practices
+Relationship: N/A
+Criteria: The interviewee reflects on proper practices for seeking help or feedback from online communities.
+Phrase: Discusses help seeking practices
+13.
+Concepts: individualism, help seeking behavior
+Relationship: N/A
+Criteria: The interviewee reflects on the cultural or societal implications of individualism in the context of seeking help.
+Phrase: Discusses individualism in help seeking
+14.
+Concepts: simplicity of code, prefers simple
+Relationship: N/A
+Criteria: The interviewee values simplicity in code.
+Phrase: Prefers simple code
+15.
+Concepts: programming experience, shares extensive programming experience
+Relationship: N/A
+Criteria: The interviewee shares extensive experience in programming languages.
+Phrase: Shares programming experience
+16.
+Concepts: simpler task, switches to simpler task
+Relationship: N/A
+Criteria: The interviewee switches to a simpler task or problem when faced with obstacles.
+Phrase: Switches to simpler tasks
+17.
+Concepts: task refinement, refines task details
+Relationship: N/A
+Criteria: The interviewee refines tasks or requests to make them more specific and clear.
+Phrase: Refines task details
+18.
+Concepts: reads error messages, prepares for next steps
+Relationship: N/A
+Criteria: The interviewee reads error messages before making a choice or taking an action.
+Phrase: Reads error messages
+19.
+Concepts: code commenting, appreciates ai code commenting
+Relationship: N/A
+Criteria: The interviewee appreciates the code commenting and documentation provided by the AI.
+Phrase: Appreciates code commenting
+20.
+Concepts: appreciates executable code, providing functional and well-documented code
+Relationship: N/A
+Criteria: The interviewee expresses appreciation for executable code provided by the AI.
+Phrase: Appreciates executable code
+21.
+Concepts: optimizing, code optimization, assistance to optimize & debug
+Relationship: The AI is used for code optimization and debugging.
+Criteria: The interviewee uses the AI to optimize code and improve performance.
+Phrase: Uses AI for code optimization
+22.
+Concepts: using chatgpt for coding assistance, describes using chatgpt for code optimization
+Relationship: N/A
+Criteria: The interviewee uses the LLM-driven interface for coding assistance, such as code review and optimization.
+Phrase: Uses AI for coding assistance
+23.
+Concepts: summarizes ai's code, comments on ai's interpretation
+Relationship: N/A
+Criteria: The interviewee summarizes and interprets AI-generated code, thinking about how the AI understood their request.
+Phrase: Summarizes AI's code
+24.
+Concepts: ai guidance, manual coding with ai, manual coding
+Relationship: The AI provides guidance for manual coding.
+Criteria: The interviewee uses AI guidance to inform manual coding.
+Phrase: Uses AI guidance
+25.
+Concepts: code reference, uses ai generated code as reference, chatgpt usage: reference
+Relationship: N/A
+Criteria: The interviewee uses AI-generated code as a reference.
+Phrase: Uses AI-generated code as reference
+26.
+Concepts: decides to copy and paste, selectively copies ai code
+Relationship: N/A
+Criteria: The interviewee decides to copy and paste code generated by the LLM-driven interface.
+Phrase: Copies AI-generated code
+27.
+Concepts: customizes ai-generated code, reads and adapts ai responses
+Relationship: N/A
+Criteria: The interviewee reads AI-generated code, selects, and integrates it into their model.
+Phrase: Customizes AI-generated code
+28.
+Concepts: calls for preparatory exercises, pre-learning requirement about how to ask questions, demand for expertise & experience
+Relationship: N/A
+Criteria: The interviewee emphasizes the need for users to have preparatory exercises in debugging their own code before seeking AI assistance.
+Phrase: Calls for preparatory exercises
+29.
+Concepts: debugging risks, human-ai: no need to blindly follow
+Relationship: N/A
+Criteria: The interviewee cautions against blind reliance on AI-generated code, highlighting the need for expertise in understanding and debugging errors.
+Phrase: Caution against blind reliance
+30.
+Concepts: expertise, expertise requirement
+Relationship: N/A
+Criteria: The interviewee highlights the importance of expertise in working with AI and debugging errors.
+Phrase: Emphasizes expertise
+31.
+Concepts: debugging practice, suggests user debugging practice
+Relationship: N/A
+Criteria: The interviewee emphasizes the importance of debugging practice before asking AI for help.
+Phrase: Suggests debugging practice
+32.
+Concepts: code posting, describes unstructured code posts
+Relationship: N/A
+Criteria: The interviewee discusses the challenges of posting code online and seeking help.
+Phrase: Discusses code posting challenges

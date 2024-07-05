@@ -1,0 +1,379 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: user needs, feature request
+- The participant expresses their needs or requirements for AI assistance.
+- Requests features that would facilitate user-AI interaction
+
+2.
+Concepts: interacting with ai, inquires about ai capabilities
+- The participant interacts with AI, asking questions, providing feedback, or seeking assistance.
+- Participants ask questions about the AI's capabilities or features, engaging in conversation with the AI.
+
+3.
+Concepts: warns against blind reliance on ai, advises caution when using ai, human-ai: no need to blindly follow
+- Warns against over-reliance on AI-generated code.
+- Participants advise using personal judgment when working with AI-generated code or responses, warning about potential AI errors.
+- The participant cautions against blindly following AI-generated code without understanding.
+
+4.
+Concepts: comparison to past tech, emphasizes not replacing human judgment
+- Highlights the importance of human judgment when using AI
+- Emphasizes the importance of human judgment in AI-assisted work.
+
+5.
+Concepts: human's value: judgment, highlighting the importance of human judgment
+- Emphasizes the importance of human judgment and oversight.
+- The participant highlights the importance of human judgment and augmentation.
+
+6.
+Concepts: randomness, non-deterministic, notes lack of determinism
+- Evaluates AI responses as non-deterministic or unpredictable.
+- Identifies responses that are unpredictable or variable.
+- Notes the non-deterministic nature of AI responses
+
+7.
+Concepts: evaluation and decision-making, making decisions based on ai output
+- Evaluates AI output and makes decisions based on expertise
+- The participant makes decisions based on AI output.
+
+8.
+Concepts: considers optimal input terms, deliberates on phrasing for ai queries
+- Considers optimal input terms or phrasing for AI requests.
+- Thinks carefully about how to phrase queries to the AI to achieve the desired outcome.
+
+9.
+Concepts: user choice, user judgment
+- Exercises autonomy in decision-making when working with AI.
+- Exercises critical thinking and judgment when working with AI.
+
+10.
+Concepts: emotion, emotional reactions
+- Explicit or implicit emotions expressed by the interviewee during the interaction.
+- The interviewee's emotional responses to using AI, explicitly or implicitly expressed.
+
+11.
+Concepts: reflecting on ai interactions, reflecting on the learning process
+- The participant reflects on interacting with AI.
+- The participant expresses frustration or difficulty points in the human-AI collaboration process.
+
+12.
+Concepts: experiments with ai queries, experiments with ai search phrases
+- The code experiments with different queries and phrases to test the capabilities of the AI-driven interface.
+- Participants experiment with different phrases to test the AI's capabilities and explore its limitations.
+
+13.
+Concepts: evaluates ai search results, notes discrepancies in ai understanding
+- E04 evaluates the search results of the AI.
+- E04 notes discrepancies in AI understanding and evaluates the search results.
+
+14.
+Concepts: model retrieval, evaluating ai search accuracy
+- The participant tests the AI's ability to retrieve models or respond to specific queries.
+- The participant assesses AI's search accuracy.
+
+15.
+Concepts: net logo dictionary, keeps netlogo dictionary handy
+- Uses the NetLogo dictionary as a reference and values the AI's assistance in syntax support.
+- The user keeps a NetLogo dictionary handy to refer to syntax and commands.
+
+16.
+Concepts: netlogo ability (positive): auto, ability (positive): translating other programming languages
+- Participant appreciates AI's ability to auto-generate code.
+- The participant appreciates the AI's ability to translate code from other programming languages into NetLogo.
+
+17.
+Concepts: netlogo, routine way of using netlogo
+- Participant uses NetLogo for modeling.
+- The participant describes their routine way of using NetLogo or building models.
+
+18.
+Concepts: linting features, calls for conceptual error detection
+- Wants NetLogo to have linting features that identify conceptual errors.
+- Calls for conceptual error detection in NetLogo, beyond just syntax checking.
+
+19.
+Concepts: netlogo limitations, compares to other languages, critiques netlogo's lack of smart editors
+- NetLogo limitations, such as the lack of a smart code editor, are acknowledged.
+- Compares NetLogo to other languages, highlighting its limitations.
+- The participant critiques NetLogo's lack of smart code editors and compares it to other languages.
+
+20.
+Concepts: suggests need for smart editor features, highlighting the need for better coding support features
+- The participant suggests the need for smart editor features in NetLogo.
+- The participant highlights the need for better coding support features in NetLogo.
+
+21.
+Concepts: uses ai to recall syntax, relies on ai for syntax support
+- Participant uses AI to recall syntax or overcome syntax-related difficulties.
+- Relies on the AI for syntax support and guidance.
+
+22.
+Concepts: forgets syntax, syntax assistance
+- Forgets syntax and needs help from ChatGPT.
+- Participant uses AI for syntax assistance and forgets NetLogo syntax.
+
+23.
+Concepts: limited experience, limits exposure to newer tools
+- The participant mentions their limited experience with AI or NetLogo.
+- The participant has limited exposure to newer tools or versions of NetLogo.
+
+24.
+Concepts: encounters outdated functionalities, experiences version compatibility issues
+- The participant encounters outdated functionalities or versions of NetLogo.
+- The participant encounters version compatibility issues or outdated functionality in the AI-driven interface.
+
+25.
+Concepts: outdated code generation, deals with older net logo versions
+- The AI interface generates code in outdated versions of NetLogo.
+- Deals with compatibility issues between older NetLogo versions and the AI.
+
+26.
+Concepts: observes beginners' struggles, identifying common beginner mistakes
+- The user observes that beginners often struggle with conceptual errors and suggests the need for linting features.
+- The participant identifies common mistakes or difficulties that beginners face when working with code.
+
+27.
+Concepts: notes lack of debugging skills, suggests need for foundational learning
+- The code notes the lack of debugging skills among novice users and how it affects their experience with the AI-driven interface.
+- The user suggests that beginners may lack foundational knowledge, such as debugging and design outlines.
+
+28.
+Concepts: ai support for novices, beginner support
+- AI is seen as potentially supportive for novice users.
+- The participant suggests or emphasizes the importance of AI supporting beginners, especially in identifying conceptual errors.
+
+29.
+Concepts: critiques novices' expectations, notes unrealistic expectations
+- Critiques novices' high expectations from AI.
+- The participant notes unrealistic expectations about the capabilities of the AI.
+
+30.
+Concepts: user uncertainty, initial confusion
+- Participant is uncertain about the system's capabilities.
+- The participant expresses initial confusion about the capabilities of the AI system.
+
+31.
+Concepts: trust in ai, doubts ai's capability
+- The participant expresses concerns or doubts about the trustworthiness or accuracy of AI-driven interfaces.
+- The user expresses doubt about the AI's capability to perform a specific task.
+
+32.
+Concepts: ai limitation, chatlogo ability (negative): error
+- E01 notes the limitations of ChatGPT, including its inability to understand certain functions and getting stuck in loops.
+- Identifies errors or limitations in the AI's performance, such as getting stuck in a loop.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: user needs, feature request
+Relationship: The participant's needs and requested features are closely related, as the features are requested to meet specific needs.
+Criteria: Participants express their needs and request features that would facilitate user-AI interaction.
+Phrase: Requests AI features based on user needs.
+
+2.
+Concepts: interacting with ai, inquires about ai capabilities
+Relationship: The participant's interaction with AI is driven by their inquiry about the AI's capabilities.
+Criteria: Participants interact with AI, asking questions about its capabilities or features, engaging in conversation with the AI.
+Phrase: Inquires about AI capabilities through interaction.
+
+3.
+Concepts: warns against blind reliance on ai, advises caution when using ai, human-ai: no need to blindly follow
+Relationship: The participant's warning against blind reliance on AI is closely related to their advice to exercise caution when using AI.
+Criteria: Participants warn against over-reliance on AI-generated code, advising the use of personal judgment when working with AI-generated code or responses.
+Phrase: Warns against blind reliance on AI.
+
+4.
+Concepts: comparison to past tech, emphasizes not replacing human judgment
+Relationship: The participant's comparison to past tech highlights the importance of human judgment in AI-assisted work.
+Criteria: Participants highlight the importance of human judgment when using AI, emphasizing that AI should not replace human judgment.
+Phrase: Emphasizes human judgment in AI-assisted work.
+
+5.
+Concepts: human's value: judgment, highlighting the importance of human judgment
+Relationship: The participant's emphasis on human judgment highlights its value in AI-assisted work.
+Criteria: Participants emphasize the importance of human judgment and oversight in AI-assisted work.
+Phrase: Highlights human judgment's importance.
+
+6.
+Concepts: randomness, non-deterministic, notes lack of determinism
+Relationship: The participant's evaluation of AI responses as non-deterministic is closely related to their note on the lack of determinism.
+Criteria: Participants evaluate AI responses as non-deterministic or unpredictable, noting the lack of determinism.
+Phrase: Evaluates AI responses as non-deterministic.
+
+7.
+Concepts: evaluation and decision-making, making decisions based on ai output
+Relationship: The participant's evaluation of AI output is closely related to their decision-making process.
+Criteria: Participants evaluate AI output and make decisions based on their expertise.
+Phrase: Makes decisions based on AI output.
+
+8.
+Concepts: considers optimal input terms, deliberates on phrasing for ai queries
+Relationship: The participant's consideration of optimal input terms is closely related to their deliberation on phrasing for AI queries.
+Criteria: Participants consider optimal input terms or phrasing for AI requests, thinking carefully about how to phrase queries to achieve the desired outcome.
+Phrase: Considers optimal input terms for AI queries.
+
+9.
+Concepts: user choice, user judgment
+Relationship: The participant's exercise of autonomy in decision-making is closely related to their exercise of critical thinking and judgment.
+Criteria: Participants exercise autonomy in decision-making when working with AI, exercising critical thinking and judgment.
+Phrase: Exercises autonomy in AI-assisted decision-making.
+
+10.
+Concepts: emotion, emotional reactions
+Relationship: N/A
+Criteria: Participants express emotions or emotional reactions to using AI, explicitly or implicitly.
+Phrase: Expresses emotions towards AI.
+
+11.
+Concepts: reflecting on ai interactions, reflecting on the learning process
+Relationship: The participant's reflection on AI interactions is closely related to their reflection on the learning process.
+Criteria: Participants reflect on interacting with AI, expressing frustration or difficulty points in the human-AI collaboration process.
+Phrase: Reflects on AI interactions and learning process.
+
+12.
+Concepts: experiments with ai queries, experiments with ai search phrases
+Relationship: The participant's experimentation with AI queries is closely related to their experimentation with AI search phrases.
+Criteria: Participants experiment with different queries and phrases to test the capabilities of the AI-driven interface.
+Phrase: Experiments with AI queries and phrases.
+
+13.
+Concepts: evaluates ai search results, notes discrepancies in ai understanding
+Relationship: The participant's evaluation of AI search results is closely related to their note on discrepancies in AI understanding.
+Criteria: Participants evaluate AI search results, noting discrepancies in AI understanding and evaluating the search results.
+Phrase: Evaluates AI search results and understanding.
+
+14.
+Concepts: model retrieval, evaluating ai search accuracy
+Relationship: The participant's testing of AI's ability to retrieve models is closely related to their evaluation of AI's search accuracy.
+Criteria: Participants test the AI's ability to retrieve models or respond to specific queries, assessing AI's search accuracy.
+Phrase: Evaluates AI's search accuracy and model retrieval.
+
+15.
+Concepts: net logo dictionary, keeps netlogo dictionary handy
+Relationship: The participant's use of the NetLogo dictionary is closely related to their keeping it handy.
+Criteria: Participants use the NetLogo dictionary as a reference and value the AI's assistance in syntax support, keeping a NetLogo dictionary handy.
+Phrase: Uses NetLogo dictionary for syntax support.
+
+16.
+Concepts: netlogo ability (positive): auto, ability (positive): translating other programming languages
+Relationship: The participant's appreciation of AI's ability to auto-generate code is closely related to their appreciation of AI's ability to translate code from other programming languages.
+Criteria: Participants appreciate AI's ability to auto-generate code and translate code from other programming languages into NetLogo.
+Phrase: Appreciates AI's code generation and translation abilities.
+
+17.
+Concepts: netlogo, routine way of using netlogo
+Relationship: The participant's use of NetLogo is closely related to their routine way of using it.
+Criteria: Participants use NetLogo for modeling, describing their routine way of using NetLogo or building models.
+Phrase: Uses NetLogo for modeling.
+
+18.
+Concepts: linting features, calls for conceptual error detection
+Relationship: The participant's request for linting features is closely related to their call for conceptual error detection.
+Criteria: Participants want NetLogo to have linting features that identify conceptual errors, calling for conceptual error detection beyond syntax checking.
+Phrase: Calls for conceptual error detection in NetLogo.
+
+19.
+Concepts: netlogo limitations, compares to other languages, critiques netlogo's lack of smart editors
+Relationship: The participant's acknowledgement of NetLogo limitations is closely related to their comparison to other languages and critique of NetLogo's lack of smart editors.
+Criteria: Participants acknowledge NetLogo limitations, comparing it to other languages and critiquing its lack of smart code editors.
+Phrase: Critiques NetLogo limitations and lack of smart editors.
+
+20.
+Concepts: suggests need for smart editor features, highlighting the need for better coding support features
+Relationship: The participant's suggestion for smart editor features is closely related to their highlighting of the need for better coding support features.
+Criteria: Participants suggest the need for smart editor features in NetLogo, highlighting the need for better coding support features.
+Phrase: Suggests need for smart editor features in NetLogo.
+
+21.
+Concepts: uses ai to recall syntax, relies on ai for syntax support
+Relationship: The participant's use of AI to recall syntax is closely related to their reliance on AI for syntax support.
+Criteria: Participants use AI to recall syntax or overcome syntax-related difficulties, relying on AI for syntax support and guidance.
+Phrase: Relies on AI for syntax support.
+
+22.
+Concepts: forgets syntax, syntax assistance
+Relationship: The participant's forgetting of syntax is closely related to their need for syntax assistance.
+Criteria: Participants forget syntax and need help from ChatGPT, using AI for syntax assistance and forgetting NetLogo syntax.
+Phrase: Forgets NetLogo syntax and seeks AI assistance.
+
+23.
+Concepts: limited experience, limits exposure to newer tools
+Relationship: The participant's limited experience is closely related to their limited exposure to newer tools.
+Criteria: Participants mention their limited experience with AI or NetLogo, having limited exposure to newer tools or versions of NetLogo.
+Phrase: Has limited experience with AI and NetLogo.
+
+24.
+Concepts: encounters outdated functionalities, experiences version compatibility issues
+Relationship: The participant's encounter with outdated functionalities is closely related to their experience of version compatibility issues.
+Criteria: Participants encounter outdated functionalities or versions of NetLogo, experiencing version compatibility issues or outdated functionality in the AI-driven interface.
+Phrase: Encounters outdated NetLogo functionalities and compatibility issues.
+
+25.
+Concepts: outdated code generation, deals with older net logo versions
+Relationship: The participant's dealing with outdated code generation is closely related to their dealing with older NetLogo versions.
+Criteria: Participants deal with AI-generated code in outdated versions of NetLogo, experiencing compatibility issues between older NetLogo versions and the AI.
+Phrase: Deals with outdated NetLogo code generation and compatibility issues.
+
+26.
+Concepts: observes beginners' struggles, identifying common beginner mistakes
+Relationship: The participant's observation of beginners' struggles is closely related to their identification of common beginner mistakes.
+Criteria: Participants observe that beginners often struggle with conceptual errors, identifying common mistakes or difficulties that beginners face when working with code.
+Phrase: Identifies common beginner mistakes and struggles.
+
+27.
+Concepts: notes lack of debugging skills, suggests need for foundational learning
+Relationship: The participant's note on the lack of debugging skills is closely related to their suggestion for foundational learning.
+Criteria: Participants note the lack of debugging skills among novice users, suggesting that beginners may lack foundational knowledge, such as debugging and design outlines.
+Phrase: Notes lack of debugging skills and suggests foundational learning.
+
+28.
+Concepts: ai support for novices, beginner support
+Relationship: The participant's suggestion for AI support for novices is closely related to their emphasis on beginner support.
+Criteria: Participants suggest or emphasize the importance of AI supporting beginners, especially in identifying conceptual errors.
+Phrase: Suggests AI support for beginners.
+
+29.
+Concepts: critiques novices' expectations, notes unrealistic expectations
+Relationship: The participant's critique of novices' expectations is closely related to their note on unrealistic expectations.
+Criteria: Participants critique novices' high expectations from AI, noting unrealistic expectations about the capabilities of the AI.
+Phrase: Critiques unrealistic novice expectations.
+
+30.
+Concepts: user uncertainty, initial confusion
+Relationship: The participant's uncertainty about the system's capabilities is closely related to their initial confusion.
+Criteria: Participants express uncertainty about the system's capabilities, experiencing initial confusion about the capabilities of the AI system.
+Phrase: Expresses uncertainty and initial confusion about AI.
+
+31.
+Concepts: trust in ai, doubts ai's capability
+Relationship: The participant's trust in AI is closely related to their doubt about AI's capability.
+Criteria: Participants express concerns or doubts about the trustworthiness or accuracy of AI-driven interfaces, doubting AI's capability to perform a specific task.
+Phrase: Expresses doubts about AI's capability and trustworthiness.
+
+32.
+Concepts: ai limitation, chatlogo ability (negative): error
+Relationship: The participant's note on AI limitations is closely related to their identification of errors or limitations in AI's performance.
+Criteria: Participants note the limitations of ChatGPT, identifying errors or limitations in the AI's performance, such as getting stuck in a loop.
+Phrase: Identifies AI limitations and errors.

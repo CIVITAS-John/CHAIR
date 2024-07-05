@@ -1,0 +1,386 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: bug identification, identifies potential bug
+- Identifies errors in code and AI's response.
+- Identifies a potential bug or error in AI-generated code.
+
+2.
+Concepts: chatgpt ability (positive): optimization, describes using chatgpt for code optimization
+- Highlighting the ability of AI to optimize code
+- Use of AI for code optimization.
+
+3.
+Concepts: debugging capability, values ai's debugging ability, chatlogo ability (positive): debug
+- Appreciating debugging capabilities in AI tools.
+- Appreciates AI's debugging ability.
+- Appreciates AI's ability to debug code.
+
+4.
+Concepts: human-ai: debug (positive), human-ai: support troubleshooting
+- Describing the benefits of human-AI collaboration in debugging
+- Describing the benefits of human-AI collaboration in troubleshooting
+
+5.
+Concepts: iterative debugging, describes iterative debugging benefits
+- User benefits from iterative debugging with AI
+- Participants describing the benefits of iterative debugging with AI-driven interfaces, including learning from errors and improving code quality.
+
+6.
+Concepts: error messages, calls for better error messaging
+- Critiques error messages, citing their unhelpfulness or inaccuracy.
+- Calls for improvement in error messaging, citing unhelpful error messages.
+
+7.
+Concepts: unclear error messages, finds error messages misleading, notes confusion caused by error messages
+- Encounters unclear error messages that hinder progress.
+- Participant finds error messages misleading or unhelpful.
+- Finds error messages unclear or unhelpful.
+
+8.
+Concepts: error reading, reads error messages
+- Participant reads error messages before making decisions or taking actions.
+- The participant reads error messages before making a choice or taking an action.
+
+9.
+Concepts: error resolution, error clarification
+- Appreciation for error resolution capabilities.
+- Appreciates error clarification capabilities.
+- Values the error clarification capabilities of the LLM-driven interface.
+
+10.
+Concepts: user reaction, reacts to ai error
+- The participant reacts to ChatGPT's responses, such as laughing at a classical error.
+- Participants reacting to AI errors, including laughing or being surprised by classical errors.
+
+11.
+Concepts: copies error messages to ai, seeks ai help with troubleshooting
+- Participants copying and pasting error messages to AI-driven interfaces for assistance.
+- The participant seeks AI help with troubleshooting, such as copying and pasting error messages to ChatGPT.
+
+12.
+Concepts: code-quality, code complexity and quality
+- Discusses code quality and complexity
+- Discusses code complexity and quality.
+
+13.
+Concepts: maintenance, maintainable code
+- The participant discusses the importance of maintainable code, such as writing code in a standard and accessible way.
+- Participants discussing the importance of maintainable code, including writing code in a standard, accessible way.
+
+14.
+Concepts: linting, calls for conceptual error detection
+- Need for linting features to identify conceptual errors.
+- Calls for conceptual error detection and linting features.
+
+15.
+Concepts: debugging challenges, experiences debugging challenges
+- Experiences difficulties in debugging due to unclear error messages.
+- Experiencing debugging challenges and frustrations.
+
+16.
+Concepts: expertise requirement, need for expertise in debugging
+- User recognizes the need for expertise in using AI-generated code
+- The requirement for a certain level of expertise to effectively debug and use the AI-generated code.
+
+17.
+Concepts: suggests user debugging practice, pre-learning requirement for ai assistance
+- Suggesting practice in debugging code before seeking AI assistance.
+- The expert suggests that users need practice in debugging their own code before asking AI for help.
+
+18.
+Concepts: limitations of chatlogo, chatlogo ability (negative): error
+- Expresses frustration with the lack of a "fix" option in ChatLogo.
+- The participant notes a limitation of ChatLogo, such as getting stuck in a loop and not being able to fix errors.
+
+19.
+Concepts: error message limitations, debug: the general error message provided by the system is not useful, system feedback limitations
+- Critiques the unhelpfulness of NetLogo's error messages.
+- Critiques unhelpful error messages in NetLogo.
+- The participant notes the limitation of error messages in NetLogo, which are not helpful to the user.
+- Critiques the system feedback and error messages in NetLogo.
+
+20.
+Concepts: version issues, compatibility issues
+- Encountering version issues with NetLogo.
+- Facing compatibility issues with older versions of NetLogo.
+
+21.
+Concepts: smart editors, critiques netlogo's lack of smart editors
+- Participant mentions the lack of smart editors in NetLogo and compares it to other languages.
+- Critiquing NetLogo's lack of smart code editors.
+
+22.
+Concepts: uses ai for netlogo, task automation
+- Describes the usefulness of AI in supporting NetLogo development tasks.
+- Highlights the potential of AI to automate repetitive tasks and workflows in NetLogo development.
+
+23.
+Concepts: language conversion, model translation, translates models from other languages, translation capabilities
+- Describes the usefulness of AI in translating code from other languages into NetLogo.
+- Participant finds the AI-driven interface helpful for translating models from other languages into NetLogo.
+- Uses AI to translate models from other languages into NetLogo.
+- Describes the benefits of AI in translating models from other languages into NetLogo.
+- Describes the ability of AI to translate other programming languages into NetLogo.
+
+24.
+Concepts: integrates ai-generated code fully, integrating generated code into models
+- Integrates AI-generated code fully into NetLogo models.
+- Integrates generated code into NetLogo models.
+
+25.
+Concepts: netlogo competence, expresses confidence in netlogo skills
+- Participant demonstrates confidence or competence in using NetLogo, which influences their perception of LLM-driven interfaces.
+- The participant expresses confidence in their NetLogo skills.
+
+26.
+Concepts: prefers teaching others, teaching preference
+- Prefers teaching others and helping them learn NetLogo.
+- Participants expressing a preference for teaching or helping others learn NetLogo.
+
+27.
+Concepts: scope, concept understanding
+- Participant discusses or explores concepts related to scope in NetLogo.
+- Participant discusses or explores concepts or ideas related to NetLogo or programming.
+
+28.
+Concepts: relying on ai output, relying on ai due to circumstances
+- Expresses the tendency to rely on AI-generated code when facing time constraints.
+- Completely relies on AI due to time constraints or other situational factors.
+
+29.
+Concepts: prioritizes efficiency, uses ai code due to time constraints
+- Participant prioritizes efficiency and uses AI-generated code due to time constraints.
+- Participant uses AI-generated code due to time constraints.
+
+30.
+Concepts: best practices for online help-seeking, discusses proper help-seeking practices
+- Describes best practices for seeking online help, including doing one's own work and clearly describing problems.
+- Discusses proper practices for seeking help, including doing one's own work and clearly describing the problem.
+
+31.
+Concepts: human-ai: seek help, seeks help
+- Seeks help or clarification from AI tools when encountering difficulties.
+- Participants seeking help or guidance from AI, including asking follow-up questions, copying and pasting error messages, and reasoning through AI responses.
+
+32.
+Concepts: fragmented learning, describes fragmented learning sessions
+- Reflects on the fragmented nature of learning and the need for system support.
+- Describes fragmented learning sessions and the need for support
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: bug identification, identifies potential bug
+Relationship: The concepts are logically related as bug identification is the process of identifying potential bugs or errors in code.
+Criteria: Participants identify errors in code and AI's response.
+Phrase: Identifies potential bugs.
+
+2.
+Concepts: chatgpt ability (positive): optimization, describes using chatgpt for code optimization
+Relationship: The concepts are logically related as ChatGPT's ability is described in terms of its optimization capabilities.
+Criteria: Participants highlight the ability of AI to optimize code.
+Phrase: Optimizes code using ChatGPT.
+
+3.
+Concepts: debugging capability, values ai's debugging ability, chatlogo ability (positive): debug
+Relationship: The concepts are logically related as debugging capability is valued in AI tools, particularly in ChatLogo.
+Criteria: Participants appreciate debugging capabilities in AI tools.
+Phrase: Values AI's debugging capability.
+
+4.
+Concepts: human-ai: debug (positive), human-ai: support troubleshooting
+Relationship: The concepts are logically related as human-AI collaboration is described as beneficial for both debugging and troubleshooting.
+Criteria: Participants describe the benefits of human-AI collaboration in debugging and troubleshooting.
+Phrase: Collaborates with AI for debugging and troubleshooting.
+
+5.
+Concepts: iterative debugging, describes iterative debugging benefits
+Relationship: The concepts are logically related as iterative debugging is described as having benefits.
+Criteria: Participants benefit from iterative debugging with AI.
+Phrase: Benefits from iterative debugging.
+
+6.
+Concepts: error messages, calls for better error messaging
+Relationship: The concepts are logically related as error messages are critiqued, leading to calls for improvement.
+Criteria: Participants criticize error messages and call for improvement.
+Phrase: Critiques error messages.
+
+7.
+Concepts: unclear error messages, finds error messages misleading, notes confusion caused by error messages
+Relationship: The concepts are logically related as unclear error messages lead to confusion and frustration.
+Criteria: Participants encounter unclear error messages that hinder progress.
+Phrase: Encounters unclear error messages.
+
+8.
+Concepts: error reading, reads error messages
+Relationship: The concepts are logically related as error reading involves reading error messages.
+Criteria: Participants read error messages before making decisions or taking actions.
+Phrase: Reads error messages.
+
+9.
+Concepts: error resolution, error clarification
+Relationship: The concepts are logically related as error resolution involves clarifying errors.
+Criteria: Participants appreciate error resolution capabilities.
+Phrase: Appreciates error resolution.
+
+10.
+Concepts: user reaction, reacts to ai error
+Relationship: The concepts are logically related as users react to AI errors.
+Criteria: Participants react to ChatGPT's responses.
+Phrase: Reacts to AI errors.
+
+11.
+Concepts: copies error messages to ai, seeks ai help with troubleshooting
+Relationship: The concepts are logically related as copying error messages is a way to seek AI help with troubleshooting.
+Criteria: Participants seek AI help with troubleshooting.
+Phrase: Seeks AI help with troubleshooting.
+
+12.
+Concepts: code-quality, code complexity and quality
+Relationship: The concepts are logically related as code quality involves complexity and quality.
+Criteria: Participants discuss code quality and complexity.
+Phrase: Discusses code quality.
+
+13.
+Concepts: maintenance, maintainable code
+Relationship: The concepts are logically related as maintenance involves writing maintainable code.
+Criteria: Participants discuss the importance of maintainable code.
+Phrase: Discusses maintainable code.
+
+14.
+Concepts: linting, calls for conceptual error detection
+Relationship: The concepts are logically related as linting involves detecting conceptual errors.
+Criteria: Participants call for conceptual error detection and linting features.
+Phrase: Calls for linting features.
+
+15.
+Concepts: debugging challenges, experiences debugging challenges
+Relationship: The concepts are logically related as debugging challenges involve experiences of difficulties.
+Criteria: Participants experience debugging challenges.
+Phrase: Experiences debugging challenges.
+
+16.
+Concepts: expertise requirement, need for expertise in debugging
+Relationship: The concepts are logically related as expertise is required for effective debugging.
+Criteria: Participants recognize the need for expertise in using AI-generated code.
+Phrase: Recognizes the need for expertise.
+
+17.
+Concepts: suggests user debugging practice, pre-learning requirement for ai assistance
+Relationship: The concepts are logically related as suggesting user debugging practice is a pre-learning requirement for AI assistance.
+Criteria: Participants suggest practice in debugging code before seeking AI assistance.
+Phrase: Suggests debugging practice.
+
+18.
+Concepts: limitations of chatlogo, chatlogo ability (negative): error
+Relationship: The concepts are logically related as limitations of ChatLogo involve its inability to handle errors.
+Criteria: Participants express frustration with ChatLogo's limitations.
+Phrase: Expresses frustration with ChatLogo's limitations.
+
+19.
+Concepts: error message limitations, debug: the general error message provided by the system is not useful, system feedback limitations
+Relationship: The concepts are logically related as error message limitations involve unhelpful system feedback.
+Criteria: Participants critique unhelpful error messages in NetLogo.
+Phrase: Critiques error messages.
+
+20.
+Concepts: version issues, compatibility issues
+Relationship: The concepts are logically related as version issues involve compatibility problems.
+Criteria: Participants encounter version issues with NetLogo.
+Phrase: Encounters version issues.
+
+21.
+Concepts: smart editors, critiques netlogo's lack of smart editors
+Relationship: The concepts are logically related as smart editors are lacking in NetLogo.
+Criteria: Participants critique NetLogo's lack of smart code editors.
+Phrase: Critiques NetLogo's lack of smart editors.
+
+22.
+Concepts: uses ai for netlogo, task automation
+Relationship: The concepts are logically related as using AI for NetLogo involves task automation.
+Criteria: Participants describe the usefulness of AI in supporting NetLogo development tasks.
+Phrase: Uses AI for task automation.
+
+23.
+Concepts: language conversion, model translation, translates models from other languages, translation capabilities
+Relationship: The concepts are logically related as language conversion involves translating models from other languages.
+Criteria: Participants describe the benefits of AI in translating models from other languages into NetLogo.
+Phrase: Translates models from other languages.
+
+24.
+Concepts: integrates ai-generated code fully, integrating generated code into models
+Relationship: The concepts are logically related as integrating AI-generated code involves fully incorporating it into models.
+Criteria: Participants integrate AI-generated code fully into NetLogo models.
+Phrase: Integrates AI-generated code.
+
+25.
+Concepts: netlogo competence, expresses confidence in netlogo skills
+Relationship: The concepts are logically related as NetLogo competence involves expressing confidence in skills.
+Criteria: Participants demonstrate confidence or competence in using NetLogo.
+Phrase: Expresses confidence in NetLogo skills.
+
+26.
+Concepts: prefers teaching others, teaching preference
+Relationship: The concepts are logically related as preferring to teach others involves a teaching preference.
+Criteria: Participants prefer teaching or helping others learn NetLogo.
+Phrase: Prefers teaching others.
+
+27.
+Concepts: scope, concept understanding
+Relationship: The concepts are logically related as scope involves understanding concepts.
+Criteria: Participants discuss or explore concepts related to scope in NetLogo.
+Phrase: Discusses concept understanding.
+
+28.
+Concepts: relying on ai output, relying on ai due to circumstances
+Relationship: The concepts are logically related as relying on AI output involves relying on it due to circumstances.
+Criteria: Participants rely on AI-generated code due to time constraints.
+Phrase: Relies on AI output.
+
+29.
+Concepts: prioritizes efficiency, uses ai code due to time constraints
+Relationship: The concepts are logically related as prioritizing efficiency involves using AI code due to time constraints.
+Criteria: Participants prioritize efficiency and use AI-generated code due to time constraints.
+Phrase: Prioritizes efficiency.
+
+30.
+Concepts: best practices for online help-seeking, discusses proper help-seeking practices
+Relationship: The concepts are logically related as best practices for online help-seeking involve discussing proper practices.
+Criteria: Participants describe best practices for seeking online help.
+Phrase: Describes best practices for help-seeking.
+
+31.
+Concepts: human-ai: seek help, seeks help
+Relationship: The concepts are logically related as seeking help from AI involves human-AI collaboration.
+Criteria: Participants seek help or guidance from AI.
+Phrase: Seeks help from AI.
+
+32.
+Concepts: fragmented learning, describes fragmented learning sessions
+Relationship: The concepts are logically related as fragmented learning involves describing fragmented learning sessions.
+Criteria: Participants reflect on the fragmented nature of learning and the need for system support.
+Phrase: Describes fragmented learning.
+
+Let me know if you need any further assistance!

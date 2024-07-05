@@ -1,0 +1,321 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+32.
+Criteria: {Who did what, and how for code 32}
+Label: {A descriptive label of code 32}
+---
+~~~
+1.
+Label: ai code usage
+Quotes:
+- E04: Oh and you can run it. That's cool. (interviewer's observation) E04 reads the AI output and decides to copy & paste it although he could also run it.
+
+2.
+Label: critiques current ai limitations
+Quotes:
+- E01: And some of them we still haven't been doing like hive mind, like how we are going to have the machine learning back from the user feedback or just from the compiler, right? You generate some code, but it doesn't work. So we have to tell you that this time, you didn't work. (interviewer's observation) The current ChatGPT implementation cannot check the generated code with external information (compiler, etc.) (partially solved by the Interpreter plugin, but only Python at this time)
+
+3.
+Label: error fixing
+Quotes:
+- E04: So this is interesting because, you know, obviously it's wrong. So I have to kind of interpret what's going on here. (interviewer's observation) E04 fixes common NetLogo mistakes by himself.
+- E04: "Can train-perceptron be turned into a reporter" (interviewer's observation) E04 uses "can you fix with my own idea".
+
+4.
+Label: hive mind
+Quotes:
+- E01: I call it hive feedback system, where if anyone in the world learns a new fact, or like, Oh, if you're a nurse, here's the word. If you're a transcriptionist, here's the word. If anybody learns it, then it goes into the system into the cloud. And now the cloud won't make that mistake anymore. And then the developer doesn't have to solve all these problems, because all the users solve their own problems. (interviewer's observation) E01 discusses how the human-AI collaborative system could be used to increase general productivity.
+
+5.
+Label: manual error fixing
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 manually tries to fix the errors in the AI-generated code and did not choose "explain it".
+
+6.
+Label: critiques obsession with solo work
+Quotes:
+- E01: But you know, again, you have this culture, especially in the US of do your own work. People get a little too obsessive about doing their own work.  (interviewer's observation) E01's reflection on U.S. individualistic working culture.
+
+7.
+Label: addressing debugging difficulties
+Quotes:
+- E01: Let's suppose that I'm trying to debug this error and I have trouble and I can't figure it out. So my next step would be to go to the user group. So if I had a button here that said please explain my situation so that I can paste it to the user group. User is attempting to write this. This is the code I wrote. This is the error it generates that the user doesn't understand. Can any human figure out what's wrong? I just press a button and it says, okay, paste it to the user group and we're done. And it's hard for users. (interviewer's observation) E01 suggests that AI could potentially help users write "help" posts that summarizes the situation: the need, the code, the error that the user does not understand.
+- E04: maybe you saw something that I didn't, but from my perspective, it seemed as though the code was set up appropriately, but it was marking the syntax as wrong. So maybe I was missing something, but I didn't see anything missing. So that was kind of frustrating. (interviewer's observation) Shows error messages even when it seems to be correct (that's a bug identified)
+- E04: It seems like a bug because I feel like all my parentheses are closed and all of my arguments and syntax are correct. (interviewer's observation) A less-clear error message makes E04 stuck.
+
+8.
+Label: values ai feedback
+Quotes:
+- E01: So if I'm writing long NetLogo code now, I'd probably have ChatGPT just open on the side. And I write a block of code and then I handed ChatGPT. Say, could I have done this better? And it would go, yeah, you could rearrange this like that. (interviewer's observation) ChatGPT could help E01 optimize his code.
+
+9.
+Label: seeks specific syntax help from ai
+Quotes:
+- E04: "how to define breeds in netlogo" (interviewer's observation) E04 tries to find certain syntax structures from the AI-generated code and ask for it when it is not there.
+
+10.
+Label: user instructions
+Quotes:
+- E01: "I would like to write code to have a turtle run slowly around the perimeter of a square, but the square should go larger each time it goes around in NetLogo." (interviewer's observation) Interviewer proposes to try ChatGPT with the same prompt.
+
+11.
+Label: typical use case
+Quotes:
+- E01: I mean, it's like, write a line of code. Are there any errors? But, beginners will start and they write three pages of code and then they hit the green check mark.  (interviewer's observation) Beginners could write chunks of code and then find many errors that they cannot fix.
+- E04: I use it a lot for developing like, equations for specific like, aspects of agent-based models that I create. (interviewer's observation) Helpful for creating equations
+
+12.
+Label: describes beginners' coding practices
+Quotes:
+- E01: I mean, it's like, write a line of code. Are there any errors? But, beginners will start and they write three pages of code and then they hit the green check mark.  (interviewer's observation) Beginners could write chunks of code and then find many errors that they cannot fix.
+
+13.
+Label: ai ability (positive)
+Quotes:
+- E01: But if a tool can do your, can do most of your work in five minutes, why would you spend two weeks? ... I would never hire someone who spent two weeks solving a problem that they could do in five minutes. (interviewer's observation) AI might be able to save people's time.
+
+14.
+Label: suggests one error at a time
+Quotes:
+- E01: So I would find it more helpful if it asked the questions one at a time. Before you tell me nine more errors. Just because users are always overfilling their buffer. So smaller requests work better. (interviewer's observation) E01 suggests (for novice) only showing one error at a time in the AI-driven system.
+
+15.
+Label: ai utility
+Quotes:
+- E01: But if a tool can do your, can do most of your work in five minutes, why would you spend two weeks? ... I would never hire someone who spent two weeks solving a problem that they could do in five minutes. (interviewer's observation) AI might be able to save people's time.
+
+16.
+Label: human-ai: debug (positive)
+Quotes:
+- E04: It includes debugging, it is actually trying to incorporate like a unit test, which is really cool and really helpful, especially for beginners, because they can kind of, you know, check their inputs. Beginners, everyone really. They can debug their code appropriately. (interviewer's observation) Debugging capability.
+- E04: I think that it's nice that it's, it clarifies error codes. I think that's probably where people who are new get stuck the most is trying to figure out the syntax and all the different errors. (interviewer's observation) The capability to clarify the errors.
+- E01: And I posted that into chat GPT and it analyzed it in 10 seconds and said, well, it does this, this, and this, and here, these eight things are wrong. (interviewer's observation) ChatGPT could be used to provide timely feedback.
+
+17.
+Label: questions about feature
+Quotes:
+- E04: I know that Perceptron model exists in the NetLogo model library. So it's interesting to me that it didn't pull that up, but it could be that I used like the wrong verbiage, but it doesn't understand what I'm trying to do. (interviewer's observation) E04 expects ChatLogo to find "Perceptron" model from the library but it does not. He evaluates the search results of the AI.
+
+18.
+Label: human judgment
+Quotes:
+- E01: I think the key is to not replace human judgment and ability, but to find a fast way to increase human capability and judgment. (interviewer's observation) Augmentation of human capabilities & building on human judgement. Subjectivity of humanity?
+
+19.
+Label: learning support
+Quotes:
+- E01: What if you were just sitting in a peer programming and sitting next to a, uh, a bright person who was helping you, what would you want them to do? So you might start writing a line of code and they would stop and go, why are you, why are you typing? (interviewer's observation) E01 discusses how AI could potentially serve as a pair programmer that questions the learners' motives.
+
+20.
+Label: figure out syntax and error
+Quotes:
+- E04: I think that it's nice that it's, it clarifies error codes. I think that's probably where people who are new get stuck the most is trying to figure out the syntax and all the different errors. (interviewer's observation) The capability to clarify the errors.
+
+21.
+Label: hints at depth of knowledge
+Quotes:
+- E01: I started programming in 1964 at IBM. ... And since then I have programmed in production code in at least 20 different software languages. (interviewer's observation) E01's prior experiences in computer programming in general.
+
+22.
+Label: debug
+Quotes:
+- E01: Let's suppose that I'm trying to debug this error and I have trouble and I can't figure it out. So my next step would be to go to the user group. So if I had a button here that said please explain my situation so that I can paste it to the user group. User is attempting to write this. This is the code I wrote. This is the error it generates that the user doesn't understand. Can any human figure out what's wrong? I just press a button and it says, okay, paste it to the user group and we're done. And it's hard for users. (interviewer's observation) E01 suggests that AI could potentially help users write "help" posts that summarizes the situation: the need, the code, the error that the user does not understand.
+- E01: I have I found with with playing with with ChatGPT. And I was something at Python, I think I tried to give it the code. And I tried to run it generated error. And then I would go back to the next prompt and ChatGPT. And I go, that code is good. But it generates the following error. And I list the error online on this line, and I'd quote the line. And I say, Can you fix that?  (interviewer's observation) When E01 sees a bug in the generated code, he refers to his previous practice with asking ChatGPT to debug with the code, the error message, and the line number. Interviewer did what E01 said.
+- E01: I'm not sure that any beginner wouldn't necessarily know that unless they'd ever practiced. And so some of the users of NetLogo have never programmed anything. So, (they might lack) the whole concept of debugging or maybe starting with a design outline. They start typing and then they get frustrated because they don't know how to debug code. (interviewer's observation) E01 reflects on how novices might get stuck during the human-AI collaboration process.
+- E04: maybe you saw something that I didn't, but from my perspective, it seemed as though the code was set up appropriately, but it was marking the syntax as wrong. So maybe I was missing something, but I didn't see anything missing. So that was kind of frustrating. (interviewer's observation) Shows error messages even when it seems to be correct (that's a bug identified)
+- E01: So set up, move the turtle to go. Increase the size of the turtle by two units. Oh, dear. It's, it's making the turtle bigger. Oh, that's kind of, that's kind of messed it up a little bit then. (interviewer's observation) E01 reads the code and comments, summarizing the code, and thinks about how the AI was understanding the request.
+
+23.
+Label: human-ai (positive): support troubleshooting
+Quotes:
+- E04: It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent. (interviewer's observation) Better troubleshooting capability.
+
+24.
+Label: human-ai: no need to blindly follow
+Quotes:
+- E04: To me, it seems like you need to have a certain degree of expertise to understand where the errors are and how to fix them. Because otherwise it's like you're going down this path where you're blindly following the ChatGPT and you have no idea what's going on. For less experienced people, I wouldn't like that because it could put you in a worse situation. (interviewer's observation) Requires expertise to understand errors and debug them. Risks to blindly follow ChatGPT, esp. for less experienced people.
+
+25.
+Label: encounters outdated functionalities
+Quotes:
+- E04: I guess, in their databases, they still have like, NetLogo 5 in there and stuff. So like, for example, you know, the anonymous functions, they still use like, the old, sometimes I'll get like, the old functionality for the anonymous functions. (interviewer's observation) Writing code in older versions of NetLogo
+
+26.
+Label: ai helpfulness
+Quotes:
+- E04: It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent. (interviewer's observation) Better troubleshooting capability.
+- E04: I think that it's nice that it's, it clarifies error codes. I think that's probably where people who are new get stuck the most is trying to figure out the syntax and all the different errors. (interviewer's observation) The capability to clarify the errors.
+- E04: I thought it was really cool that, you know, that it knew exactly what I wanted to do and then kind of allowed me to define like the certain parameters for what I wanted to do. (interviewer's observation) Having the interface to clarify parameters helps.
+- E04: Because I'll like forget the syntax sometimes and I usually use the netlogo dictionary and just have it like open to the side. (interviewer's observation) E04 still forgets about the syntax and ChatGPT can help.
+- E04: I've found that AI is really helpful for like, translating other models from other languages into NetLogo, for example. (interviewer's observation) Helpful for translating from other languages into NetLogo
+
+27.
+Label: learning extensions
+Quotes:
+- E01: There's a lot of extensions I would love to know about GIS extensions, but I have very limited time. What could I do in two hours? And I think everybody has a very finite length of time. (interviewer's observation) AI could potentially save time for learning new extensions (compared with core concepts) of NetLogo.
+
+28.
+Label: human-effort (negative): limited memory
+Quotes:
+- E04: Because I'll like forget the syntax sometimes and I usually use the netlogo dictionary and just have it like open to the side. (interviewer's observation) E04 still forgets about the syntax and ChatGPT can help.
+
+29.
+Label: chatgpt ability (positive): optimization
+Quotes:
+- E01: So if I'm writing long NetLogo code now, I'd probably have ChatGPT just open on the side. And I write a block of code and then I handed ChatGPT. Say, could I have done this better? And it would go, yeah, you could rearrange this like that. (interviewer's observation) ChatGPT could help E01 optimize his code.
+
+30.
+Label: dictates parameters
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 dictated each of the parameter fields.
+
+31.
+Label: ai testing
+Quotes:
+- E01: "I would like to write code to have a turtle run slowly around the perimeter of a square, but the square should go larger each time it goes around in NetLogo." (interviewer's observation) Interviewer proposes to try ChatGPT with the same prompt.
+
+32.
+Label: prompt refinement
+Quotes:
+- E01: "I would like to write code to have a turtle run slowly around the perimeter of a square, but the square should go larger each time it goes around in NetLogo." (interviewer's observation) Interviewer proposes to try ChatGPT with the same prompt.
+===
+Here are the definitions for each code with clear and generalizable criteria:
+
+---
+1. 
+Criteria: The participant interacts with the AI-driven interface, using its output or trying to fix the generated code.
+Label: AI code usage
+
+2. 
+Criteria: The participant expresses limitations or drawbacks of the current AI-driven interface.
+Label: Critiques current AI limitations
+
+3. 
+Criteria: The participant fixes errors in the AI-generated code or troubleshoots on their own.
+Label: Error fixing
+
+4. 
+Criteria: The participant discusses the concept of collaborative learning or a system where users can contribute to AI improvement.
+Label: Hive mind
+
+5. 
+Criteria: The participant manually tries to fix errors in the AI-generated code without using AI assistance.
+Label: Manual error fixing
+
+6. 
+Criteria: The participant reflects on the cultural or social aspects of work, such as individualism or collaboration.
+Label: Critiques obsession with solo work
+
+7. 
+Criteria: The participant suggests ways to address difficulties in debugging or troubleshooting code.
+Label: Addressing debugging difficulties
+
+8. 
+Criteria: The participant values or appreciates the feedback or suggestions provided by the AI-driven interface.
+Label: Values AI feedback
+
+9. 
+Criteria: The participant seeks specific guidance or clarification on syntax from the AI-driven interface.
+Label: Seeks specific syntax help from AI
+
+10. 
+Criteria: The participant provides instructions or prompts to the AI-driven interface.
+Label: User instructions
+
+11. 
+Criteria: The participant describes a common use case or scenario where the AI-driven interface would be helpful.
+Label: Typical use case
+
+12. 
+Criteria: The participant describes the coding practices or habits of beginners.
+Label: Describes beginners' coding practices
+
+13. 
+Criteria: The participant expresses the potential benefits or advantages of using AI-driven interfaces.
+Label: AI ability (positive)
+
+14. 
+Criteria: The participant suggests improvements to the AI-driven interface, such as providing one error at a time.
+Label: Suggests one error at a time
+
+15. 
+Criteria: The participant highlights the utility or usefulness of AI-driven interfaces.
+Label: AI utility
+
+16. 
+Criteria: The participant appreciates the debugging or troubleshooting capabilities of the AI-driven interface.
+Label: Human-AI: Debug (positive)
+
+17. 
+Criteria: The participant asks questions or seeks clarification about the features or capabilities of the AI-driven interface.
+Label: Questions about feature
+
+18. 
+Criteria: The participant emphasizes the importance of human judgment or subjective expertise.
+Label: Human judgment
+
+19. 
+Criteria: The participant discusses how AI-driven interfaces could support learning or education.
+Label: Learning support
+
+20. 
+Criteria: The participant struggles to understand syntax or errors in the code.
+Label: Figure out syntax and error
+
+21. 
+Criteria: The participant shares their prior experiences or background in computer programming.
+Label: Hints at depth of knowledge
+
+22. 
+Criteria: The participant discusses debugging or troubleshooting processes.
+Label: Debug
+
+23. 
+Criteria: The participant appreciates the troubleshooting or error-fixing capabilities of the AI-driven interface.
+Label: Human-AI: Support troubleshooting
+
+24. 
+Criteria: The participant expresses concerns about blindly following AI-driven interfaces without understanding.
+Label: Human-AI: No need to blindly follow
+
+25. 
+Criteria: The participant encounters outdated functionalities or versions of NetLogo.
+Label: Encounters outdated functionalities
+
+26. 
+Criteria: The participant expresses appreciation for the helpfulness of the AI-driven interface.
+Label: AI helpfulness
+
+27. 
+Criteria: The participant discusses learning extensions or new features of NetLogo.
+Label: Learning extensions
+
+28. 
+Criteria: The participant highlights limitations or drawbacks of human effort, such as limited memory.
+Label: Human-effort (negative): Limited memory
+
+29. 
+Criteria: The participant appreciates the optimization capabilities of the AI-driven interface.
+Label: ChatGPT ability (positive): Optimization
+
+30. 
+Criteria: The participant dictates parameters or inputs for the AI-driven interface.
+Label: Dictates parameters
+
+31. 
+Criteria: The participant tests or tries out the AI-driven interface with a specific prompt or input.
+Label: AI testing
+
+32. 
+Criteria: The participant refines or clarifies a prompt or input for the AI-driven interface.
+Label: Prompt refinement

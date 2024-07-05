@@ -1,0 +1,166 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (16 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+16.
+Criteria: {Who did what, and how for code 16}
+Label: {A descriptive label of code 16}
+---
+~~~
+1.
+Label: workflow improvement
+Quotes:
+- E01: So if I'm writing long NetLogo code now, I'd probably have ChatGPT just open on the side. And I write a block of code and then I handed ChatGPT. Say, could I have done this better? And it would go, yeah, you could rearrange this like that. (interviewer's observation) ChatGPT could help E01 optimize his code.
+
+2.
+Label: values incremental feedback
+Quotes:
+- E01: So I would find it more helpful if it asked the questions one at a time. Before you tell me nine more errors. Just because users are always overfilling their buffer. So smaller requests work better. (interviewer's observation) E01 suggests (for novice) only showing one error at a time in the AI-driven system.
+
+3.
+Label: realization
+Quotes:
+- E04: So one thing I'm realizing now, part of my setup needs to be reset all. (interviewer's observation) E04 sees from the generated code and realizes that he needs to reset.
+
+4.
+Label: exploring ai as a learning and programming assistant
+Quotes:
+- E01: And you want doctors to use it, nurses to use it and medical transcriptionists to use it. They use a different word for whatever the verb for whatever it is you're saying you want them to do. And so, in some sense, their documentation has to be customized to their context to their user group. ... It's a language system. If you have a learning system that's actually capable of harvesting information, yeah, and a lot of them are not yet, but I think we'll get there. (interviewer's observation) AI could be used to translate jargons between different sub-groups working in the same systems and ease the cost of writing customized documentation.
+- E01: I call it hive feedback system, where if anyone in the world learns a new fact, or like, Oh, if you're a nurse, here's the word. If you're a transcriptionist, here's the word. If anybody learns it, then it goes into the system into the cloud. And now the cloud won't make that mistake anymore. And then the developer doesn't have to solve all these problems, because all the users solve their own problems. (interviewer's observation) E01 discusses how the human-AI collaborative system could be used to increase general productivity.
+- E01: What if you were just sitting in a peer programming and sitting next to a, uh, a bright person who was helping you, what would you want them to do? So you might start writing a line of code and they would stop and go, why are you, why are you typing? (interviewer's observation) E01 discusses how AI could potentially serve as a pair programmer that questions the learners' motives.
+- E01: Part of getting AI to be your assistant on the side is, is having a culture where you're used to asking for help. And asking that early and often, and you know, from development costs, the later you discover you have a problem, the more it costs to fix it. (interviewer's observation) AI could help people to ask more questions, more early and often, to save cost for the future.
+- E01: I'm an advocate of peer programming. It's about 10 times more efficient than single programming... If a person's programming, if you're programming it by yourself and you come to something you don't understand, you could spend a long time at that stoplight. (interviewer's observation) E01's positive opinions on peer programming with a hint that AI could play the role.
+
+5.
+Label: expresses desire to learn gis extensions
+Quotes:
+- E01: There's a lot of extensions I would love to know about GIS extensions, but I have very limited time. What could I do in two hours? And I think everybody has a very finite length of time. (interviewer's observation) AI could potentially save time for learning new extensions (compared with core concepts) of NetLogo.
+
+6.
+Label: smart editors
+Quotes:
+- E01: And I got to admit like these days, NetLogo is the only language I use that does not have a smart editor. It doesn't autocomplete it or give me options of these are five variables that begin with those three letters. (interviewer's observation) NetLogo's lack of smart code editors (we have one in TU that he would later see).
+
+7.
+Label: verbiage issues
+Quotes:
+- E04: I know that Perceptron model exists in the NetLogo model library. So it's interesting to me that it didn't pull that up, but it could be that I used like the wrong verbiage, but it doesn't understand what I'm trying to do. (interviewer's observation) E04 expects ChatLogo to find "Perceptron" model from the library but it does not. He evaluates the search results of the AI.
+
+8.
+Label: selectively copies ai code
+Quotes:
+- E04: (no verbal response) (interviewer's observation) Again, he reads the code and selectively copies code to the model.
+
+9.
+Label: discusses jargon translation
+Quotes:
+- E01: And you want doctors to use it, nurses to use it and medical transcriptionists to use it. They use a different word for whatever the verb for whatever it is you're saying you want them to do. And so, in some sense, their documentation has to be customized to their context to their user group. ... It's a language system. If you have a learning system that's actually capable of harvesting information, yeah, and a lot of them are not yet, but I think we'll get there. (interviewer's observation) AI could be used to translate jargons between different sub-groups working in the same systems and ease the cost of writing customized documentation.
+
+10.
+Label: compares to unix linting tools
+Quotes:
+- E01: So I see this from beginners all the time is they, they just get totally lost. I call it lint program from Unix, you know, it's like it's a little green checkbox looks at you and go, okay, wait, it's just, you've spelled everything correctly, but you have a conceptual error here. If it, if it caught structural problems like that, that would, that would help. (interviewer's observation) NetLogo needs to have linting features that exist in other languages (we are working on that right now). Here, E01 wants the linting to support identifying conceptual mistakes, different from syntax mistakes which most linters work on.
+
+11.
+Label: finds error messages misleading
+Quotes:
+- E04: maybe you saw something that I didn't, but from my perspective, it seemed as though the code was set up appropriately, but it was marking the syntax as wrong. So maybe I was missing something, but I didn't see anything missing. So that was kind of frustrating. (interviewer's observation) Shows error messages even when it seems to be correct (that's a bug identified)
+
+12.
+Label: code reading
+Quotes:
+- E01: "Also a good idea because we did not ask it to do that." (interviewer's observation) E01 reads and evaluates the ChatGPT code. Asks Interviewer to scroll slowly so he could read in detail.
+
+13.
+Label: trust in ai
+Quotes:
+- E01: So maybe the details are wrong and, you know, Michael Tamalo or somebody jumped on me because I posted some answer and it used some function that wasn't available. AI had hallucinated some function. (interviewer's observation) AI might hallucinates.
+
+14.
+Label: ai ability (positive): peer-progammer
+Quotes:
+- E01: What if you were just sitting in a peer programming and sitting next to a, uh, a bright person who was helping you, what would you want them to do? So you might start writing a line of code and they would stop and go, why are you, why are you typing? (interviewer's observation) E01 discusses how AI could potentially serve as a pair programmer that questions the learners' motives.
+
+15.
+Label: prioritizes efficiency
+Quotes:
+- E04: It'd be that I just take this and see what this does. This should just be a single node so it'll kind of overwrite what I already did. (interviewer's observation) E04 uses the AI-generated code completely when realizing time constraints.
+
+16.
+Label: human (negative): time
+Quotes:
+- E01: So one of the, one of the things which I have observed, as I'm bouncing from like, because I do a lot of different languages and potentially, so I don't have that much time to spend in anyone. (interviewer's observation) As an expert, E01 knows many languages but does not have much time for each one.
+===
+Here are the definitions for each code:
+
+1.
+Criteria: Participant uses AI to improve their coding workflow, seeking suggestions for code optimization.
+Label: workflow improvement
+
+2.
+Criteria: Participant values incremental feedback from AI, suggesting smaller, more manageable feedback loops.
+Label: values incremental feedback
+
+3.
+Criteria: Participant realizes a key insight or understanding while working with AI-generated code.
+Label: realization
+
+4.
+Criteria: Participant explores the potential of AI as a learning and programming assistant, discussing its capabilities and possibilities.
+Label: exploring AI as a learning and programming assistant
+
+5.
+Criteria: Participant expresses desire to learn GIS extensions and envisions AI saving time for learning new extensions.
+Label: expresses desire to learn GIS extensions
+
+6.
+Criteria: Participant discusses the benefits of smart editors, highlighting NetLogo's lack of this feature.
+Label: smart editors
+
+7.
+Criteria: Participant experiences issues with AI understanding their verbiage, expecting more accurate results.
+Label: verbiage issues
+
+8.
+Criteria: Participant selectively copies AI-generated code, demonstrating a cautious adoption approach.
+Label: selectively copies AI code
+
+9.
+Criteria: Participant discusses the potential for AI to translate jargon between different sub-groups, easing documentation costs.
+Label: discusses jargon translation
+
+10.
+Criteria: Participant compares NetLogo to Unix linting tools, suggesting the need for similar features.
+Label: compares to Unix linting tools
+
+11.
+Criteria: Participant finds AI error messages misleading, implying issues with AI accuracy.
+Label: finds error messages misleading
+
+12.
+Criteria: Participant carefully reads and evaluates AI-generated code, engaging with it in detail.
+Label: code reading
+
+13.
+Criteria: Participant expresses concerns about trusting AI, due to potential hallucinations or inaccuracies.
+Label: trust in AI
+
+14.
+Criteria: Participant views AI as a peer programmer, assisting with coding and questioning learner motives.
+Label: AI ability (positive): peer-progammer
+
+15.
+Criteria: Participant prioritizes efficiency, using AI-generated code to save time.
+Label: prioritizes efficiency
+
+16.
+Criteria: Participant reports human limitations, such as time constraints, affecting their learning and practice.
+Label: human (negative): time

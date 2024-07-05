@@ -1,0 +1,56 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: seeking ai syntax support, seeking visualization support
+- Users seek AI assistance for syntax support and guidance.
+- Users seek help with model output and visualization support from AI.
+
+2.
+Concepts: appreciating clear explanations, appreciate parameter clarification support
+- Users appreciate clear and easy-to-understand explanations from AI and humans.
+- Users find it helpful when the interface allows for clarifying parameters and appreciate AI-provided clarification on parameters.
+
+3.
+Concepts: identifying ai limitations
+- Users identify AI limitations, such as getting stuck in loops.
+- Users identify limitations of LLM-driven interfaces and AI input capabilities.
+===
+---
+Definitions for each code (3 in total):
+1.
+Concepts: seeking ai syntax support, seeking visualization support
+Relationship: The two concepts are related in that they both involve seeking AI assistance, but for different purposes (syntax support and visualization support).
+Criteria: Users seek AI support for syntax guidance and model output visualization.
+Phrase: Seeking AI assistance for modeling tasks.
+
+2.
+Concepts: appreciating clear explanations, appreciate parameter clarification support
+Relationship: The two concepts are related in that they both involve users valuing clarity and transparency in their interactions with the interface, whether it's explanations or parameter clarification.
+Criteria: Users appreciate clear explanations and AI-provided clarification on parameters.
+Phrase: Valuing transparent interface interactions.
+
+3.
+Concepts: identifying ai limitations
+Relationship: N/A (single concept)
+Criteria: Users recognize and acknowledge the limitations of LLM-driven interfaces and AI input capabilities.
+Phrase: Acknowledging AI limitations.
