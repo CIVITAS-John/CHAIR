@@ -1,0 +1,189 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (15 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+15. 
+Concepts: {Repeat the input 15}
+Relationship: {What is logical relationship between concepts in code 15, or N/A if not applicable}
+Criteria: {Who did what, and how for code 15}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: human-ai (negative): conflict?, experiencing frustration with ai error messages
+- Users experience conflicts with AI when it incorrectly marks syntax as wrong.
+- Users find AI error messages misleading and experience frustration when the code seems correct.
+
+2.
+Concepts: valuing ai-generated documentation, appreciating in-task documentation search
+- Users value AI-generated documentation and code comments and perceive AI's role in generating well-documented code.
+- Users value AI's ability to keep them focused on tasks by providing in-task documentation.
+
+3.
+Concepts: valuing ai-driven improvement, valuing ai's debugging capabilities
+- Users appreciate AI's ability to facilitate iterative improvement and solve problems.
+- Users appreciate AI's effective debugging and iterative debugging features.
+
+4.
+Concepts: creating customized documentation with ai, supporting novices with ai translation
+- Users see potential in AI to customize documentation for different user groups.
+- Users see AI's potential in translating jargon and customizing documentation to support novices.
+
+5.
+Concepts: proposing ai-assisted help posts, suggesting ai-assisted help requests
+- Users propose AI-assisted help posts to summarize and seek help efficiently.
+- Users suggest that AI could help in writing detailed help requests for user groups.
+
+6.
+Concepts: seeking iterative ai help, seeking ai help for troubleshooting
+- Users actively seek help from AI to resolve coding issues and clarify syntax-related doubts.
+- Users need technical support or assistance from AI and seek AI's support for troubleshooting tasks.
+
+7.
+Concepts: refining ai query phrasing, emphasizing effective ai questioning
+- Users deliberate and refine their approach to querying AI for better accuracy.
+- Users recognize and highlight the importance of asking the right questions to get effective AI assistance.
+
+8.
+Concepts: ai support for fragmented learning, describing fragmented learning needs
+- Reflects on the need for AI to support fragmented learning and task resumption.
+- Users highlight the need for reminders to support continuity in fragmented learning sessions.
+
+9.
+Concepts: debugging with ai assistance, interacting with ai for debugging
+- Users identify and fix errors in the code, often with the help of the LLM-driven interface.
+- Users provide examples and interact with AI to debug code by providing errors and line numbers.
+
+10.
+Concepts: identifying potential ai bugs, querying ai for syntax and identifying gaps
+- Users identify bugs or errors in the AI's code generation and suspect potential bugs in the AI's error detection.
+- Users query AI for syntax and identify missing elements in AI-generated code.
+
+11.
+Concepts: novice support, beginner support
+- Features that help beginners understand and debug their code.
+- The AI supports beginners by identifying conceptual mistakes and providing linting features.
+
+12.
+Concepts: conducting self-assessment, demonstrating self-reliant debugging
+- Users assess their own competence and skills in the context of using AI and evaluate AI-generated code and error messages.
+- Users rely on self-evaluation and problem-solving when using AI and independently debug code.
+
+13.
+Concepts: ai as coding assistant, using chatgpt for coding assistance
+- User discusses potential roles for AI in assisting with coding tasks.
+- Users use ChatGPT for coding assistance, quick analysis, feedback, and optimization of their code.
+
+14.
+Concepts: adjustments based on ai insights, realizing setup needs and adjustments
+- Adjusts model setup based on insights from AI-generated code.
+- Users realize the need for specific setup commands and adjustments based on AI-generated code.
+
+15.
+Concepts: task complexity adjustment, customizing ai-generated code
+- User adjusts the complexity of tasks based on AI-generated code.
+- Users selectively use and customize AI-generated code for specific tasks and models.
+===
+---
+Definitions for each code (15 in total):
+1.
+Concepts: human-ai (negative): conflict?, experiencing frustration with ai error messages
+Relationship: Users experience conflicts and frustration due to misleading AI error messages.
+Criteria: Users experience conflicts with AI when it incorrectly marks syntax as wrong, leading to frustration.
+Phrase: Experiencing frustration with AI error messages
+
+2.
+Concepts: valuing ai-generated documentation, appreciating in-task documentation search
+Relationship: Users value AI's role in generating and providing documentation during tasks.
+Criteria: Users value AI-generated documentation and its ability to keep them focused by providing in-task documentation.
+Phrase: Valuing AI-generated documentation
+
+3.
+Concepts: valuing ai-driven improvement, valuing ai's debugging capabilities
+Relationship: Users appreciate AI's role in facilitating improvement and debugging.
+Criteria: Users appreciate AI's ability to facilitate iterative improvement and effective debugging.
+Phrase: Valuing AI-driven improvement
+
+4.
+Concepts: creating customized documentation with ai, supporting novices with ai translation
+Relationship: Users see AI's potential in customizing documentation and supporting novices.
+Criteria: Users see potential in AI to customize documentation and translate jargon to support novices.
+Phrase: Creating customized documentation with AI
+
+5.
+Concepts: proposing ai-assisted help posts, suggesting ai-assisted help requests
+Relationship: Users propose and suggest AI-assisted help mechanisms.
+Criteria: Users propose AI-assisted help posts and suggest AI could help in writing detailed help requests.
+Phrase: Proposing AI-assisted help posts
+
+6.
+Concepts: seeking iterative ai help, seeking ai help for troubleshooting
+Relationship: Users seek AI help for iterative problem-solving and troubleshooting.
+Criteria: Users actively seek AI help to resolve coding issues and for troubleshooting tasks.
+Phrase: Seeking iterative AI help
+
+7.
+Concepts: refining ai query phrasing, emphasizing effective ai questioning
+Relationship: Users refine their queries and emphasize effective questioning for better AI assistance.
+Criteria: Users deliberate and refine their approach to querying AI and highlight the importance of effective questioning.
+Phrase: Refining AI query phrasing
+
+8.
+Concepts: ai support for fragmented learning, describing fragmented learning needs
+Relationship: Users describe the need for AI support in fragmented learning sessions.
+Criteria: Users highlight the need for AI to support fragmented learning and task resumption with reminders.
+Phrase: Describing fragmented learning needs
+
+9.
+Concepts: debugging with ai assistance, interacting with ai for debugging
+Relationship: Users interact with AI to debug code.
+Criteria: Users identify and fix errors in the code with AI assistance by providing examples and error details.
+Phrase: Debugging with AI assistance
+
+10.
+Concepts: identifying potential ai bugs, querying ai for syntax and identifying gaps
+Relationship: Users identify potential bugs and gaps in AI-generated code.
+Criteria: Users identify bugs in AI's code generation and query AI for syntax to identify missing elements.
+Phrase: Identifying potential AI bugs
+
+11.
+Concepts: novice support, beginner support
+Relationship: AI features support beginners in understanding and debugging code.
+Criteria: AI supports beginners by identifying conceptual mistakes and providing linting features.
+Phrase: Providing novice support
+
+12.
+Concepts: conducting self-assessment, demonstrating self-reliant debugging
+Relationship: Users conduct self-assessment and demonstrate self-reliance in debugging.
+Criteria: Users assess their competence and independently debug code while using AI.
+Phrase: Conducting self-assessment
+
+13.
+Concepts: ai as coding assistant, using chatgpt for coding assistance
+Relationship: Users use AI, specifically ChatGPT, for coding assistance.
+Criteria: Users discuss AI's role as a coding assistant and use ChatGPT for analysis, feedback, and optimization.
+Phrase: Using AI as a coding assistant
+
+14.
+Concepts: adjustments based on ai insights, realizing setup needs and adjustments
+Relationship: Users make adjustments based on AI-generated insights.
+Criteria: Users adjust model setup and realize specific needs based on AI-generated code.
+Phrase: Making adjustments based on AI insights
+
+15.
+Concepts: task complexity adjustment, customizing ai-generated code
+Relationship: Users adjust task complexity and customize AI-generated code.
+Criteria: Users adjust the complexity of tasks and selectively customize AI-generated code for specific needs.
+Phrase: Adjusting task complexity based on AI-generated code
+---

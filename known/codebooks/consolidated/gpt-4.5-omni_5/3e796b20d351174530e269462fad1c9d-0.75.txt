@@ -1,0 +1,155 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (12 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+12. 
+Concepts: {Repeat the input 12}
+Relationship: {What is logical relationship between concepts in code 12, or N/A if not applicable}
+Criteria: {Who did what, and how for code 12}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: discusses ai constraints, notes ai limitations with large inputs
+- Users discuss AI constraints, including its inability to check generated code with external information and handle long code pieces.
+- Users highlight AI’s limitations in handling long code pieces and large inputs.
+
+2.
+Concepts: critiques limited ai options, criticizes ai limitations
+- Users express dissatisfaction with the limited options provided by the AI interface.
+- Users express frustration with AI limitations, especially when desired troubleshooting options are unavailable.
+
+3.
+Concepts: valuing ai's debugging ability, appreciates iterative debugging
+- Users value and appreciate AI's ability to debug and resolve errors effectively.
+- Users recognize and appreciate the learning value and benefits provided by AI-driven iterative debugging.
+
+4.
+Concepts: ai code analysis, identifies ai code errors
+- Users use AI to analyze code and provide timely feedback on errors.
+- Users identify and correct errors in AI-generated code based on their assessment.
+
+5.
+Concepts: manually debugs ai code, debugging ai code independently
+- Users manually review and debug AI-generated code without solely relying on AI explanations.
+- Engaging in debugging AI-generated code without verbal prompts.
+
+6.
+Concepts: criticizes unhelpful error messages, expresses frustration with debugging
+- Critiques the system's error messages for being unclear or not useful for debugging.
+- Users express frustration with unclear or misleading error messages and the difficulties they cause in debugging.
+
+7.
+Concepts: easy to understand, offers clear explanations
+- Notes the AI's capability to provide easy-to-understand explanations and debugging support.
+- Users appreciate AI explanations that are clear and less technical.
+
+8.
+Concepts: providing task-focused assistance, appreciates in-task documentation search
+- Users appreciate AI's ability to maintain their task focus by providing relevant in-context documentation.
+- Users value and appreciate AI’s ability to search and present relevant documentation within the task environment.
+
+9.
+Concepts: evaluates ai search capabilities, ai search feature evaluation
+- Users assess and evaluate AI's ability to accurately search and pull relevant information.
+- User questions AI’s feature or model search results, initiating evaluation of its accuracy or comprehensiveness.
+
+10.
+Concepts: customization, customizing documentation for user groups
+- Suggests AI should be customized to translate jargon and documentation for different user groups.
+- Users suggest AI could provide customized documentation tailored to various user groups.
+
+11.
+Concepts: uses ai for code optimization, optimization & debug assistance
+- Users use AI to optimize and iteratively improve their written code.
+- Users utilize AI to optimize and debug their code by seeking recommendations for improvement.
+
+12.
+Concepts: envisions ai as pair programmer, advocates ai as peer programmer
+- Users envision AI acting as a peer programmer by providing ongoing feedback and collaboration.
+- Users advocate for AI's role in peer programming to enhance efficiency, seeing potential for AI as a supportive peer.
+===
+---
+Definitions for each code (12 in total):
+1.
+Concepts: discusses ai constraints, notes ai limitations with large inputs
+Relationship: Users discuss specific constraints and limitations of AI, particularly with large inputs.
+Criteria: Users discuss the limitations of AI, including its inability to check code with external information and handle long code pieces effectively.
+Phrase: Discussing AI constraints
+
+2.
+Concepts: critiques limited ai options, criticizes ai limitations
+Relationship: Users express dissatisfaction and frustration with AI's limited options and capabilities.
+Criteria: Users express dissatisfaction and frustration with the limited options and troubleshooting capabilities provided by the AI interface.
+Phrase: Criticizing AI limitations
+
+3.
+Concepts: valuing ai's debugging ability, appreciates iterative debugging
+Relationship: Users value and appreciate AI's debugging abilities, including iterative debugging.
+Criteria: Users value and appreciate AI's ability to debug and resolve errors effectively through iterative processes.
+Phrase: Valuing AI's debugging
+
+4.
+Concepts: ai code analysis, identifies ai code errors
+Relationship: Users utilize AI for code analysis and error identification.
+Criteria: Users use AI to analyze code and provide timely feedback on errors, then identify and correct those errors.
+Phrase: Analyzing AI-generated code
+
+5.
+Concepts: manually debugs ai code, debugging ai code independently
+Relationship: Users engage in independent debugging of AI-generated code.
+Criteria: Users manually review and debug AI-generated code without solely relying on AI explanations.
+Phrase: Manually debugging AI code
+
+6.
+Concepts: criticizes unhelpful error messages, expresses frustration with debugging
+Relationship: Users express criticism and frustration towards unhelpful error messages and debugging difficulties.
+Criteria: Users express frustration with unclear or misleading error messages, which complicate the debugging process.
+Phrase: Criticizing unclear error messages
+
+7.
+Concepts: easy to understand, offers clear explanations
+Relationship: Users appreciate clear and easy-to-understand explanations provided by the AI.
+Criteria: Users note the AI's capability to provide clear and less technical explanations and debugging support.
+Phrase: Appreciating clear AI explanations
+
+8.
+Concepts: providing task-focused assistance, appreciates in-task documentation search
+Relationship: Users value task-focused assistance and in-context documentation provided by AI.
+Criteria: Users value AI’s ability to maintain their task focus by providing relevant documentation within the task environment.
+Phrase: Valuing task-focused AI assistance
+
+9.
+Concepts: evaluates ai search capabilities, ai search feature evaluation
+Relationship: Users evaluate the AI's search capabilities and question its accuracy.
+Criteria: Users assess and evaluate AI's ability to accurately search and retrieve relevant information.
+Phrase: Evaluating AI search capabilities
+
+10.
+Concepts: customization, customizing documentation for user groups
+Relationship: Users suggest customization of AI documentation for different user groups.
+Criteria: Users suggest that AI should provide customized documentation tailored to various user groups.
+Phrase: Suggesting AI documentation customization
+
+11.
+Concepts: uses ai for code optimization, optimization & debug assistance
+Relationship: Users use AI for code optimization and debugging.
+Criteria: Users utilize AI to optimize and iteratively improve their code, seeking recommendations for enhancement.
+Phrase: Utilizing AI for code optimization
+
+12.
+Concepts: envisions ai as pair programmer, advocates ai as peer programmer
+Relationship: Users envision and advocate for AI as a supportive, peer-like programmer.
+Criteria: Users envision AI acting as a peer programmer, providing ongoing feedback and collaboration to enhance efficiency.
+Phrase: Envisioning AI as a peer programmer

@@ -1,0 +1,94 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (8 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+8.
+Criteria: {Who did what, and how for code 8}
+Label: {A descriptive label of code 8}
+---
+~~~
+1.
+Label: outdated code
+Quotes:
+- E04: I guess, in their databases, they still have like, NetLogo 5 in there and stuff. So like, for example, you know, the anonymous functions, they still use like, the old, sometimes I'll get like, the old functionality for the anonymous functions. (interviewer's observation) Writing code in older versions of NetLogo
+
+2.
+Label: notes less technical language
+Quotes:
+- E04: It seems to explain things pretty well, it does not seems to be overly technical. (interviewer's observation) Provides clear, less technical explanations.
+
+3.
+Label: chatgpt ability (negative): errors in generating codes
+Quotes:
+- E04: It doesn't... Include everything that you need.  (interviewer's observation) Misses code structures at times.
+
+4.
+Label: uses ai for debugging
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 was prompted to copy and paste error messages to ChatGPT.
+
+5.
+Label: chatgpt ability (positive): provides immediate feedback
+Quotes:
+- E04: I'll go on Stack Exchange or Stack Overflow, I'm part of the NetLogo listserv, but obviously there's a delay there. So in the instance that I need immediate feedback, it is really helpful. (interviewer's observation) Nice to have immediate feedback.
+
+6.
+Label: code structure
+Quotes:
+- E04: "how to define breeds in netlogo" (interviewer's observation) E04 tries to find certain syntax structures from the AI-generated code and ask for it when it is not there.
+- E04: It doesn't... Include everything that you need.  (interviewer's observation) Misses code structures at times.
+
+7.
+Label: learning curve demands high investment of time
+Quotes:
+- E01: There's a lot of extensions I would love to know about GIS extensions, but I have very limited time. What could I do in two hours? And I think everybody has a very finite length of time. (interviewer's observation) AI could potentially save time for learning new extensions (compared with core concepts) of NetLogo.
+
+8.
+Label: asks for checkerboard pattern
+Quotes:
+- E01: "please write a netlogo program that produces a checker board with black and white squares?" (interviewer's observation) E01 asks ChatLogo to create a checkerboard pattern.
+===
+---
+Definitions for each code (8 in total):
+
+1.
+Criteria: Experience with the AI using older versions of NetLogo; recognition of outdated functionality or syntax.
+Label: Outdated Functionality
+
+2.
+Criteria: Observation that AI explanations avoid overly technical language; clarity in AI's responses.
+Label: Clear Explanations
+
+3.
+Criteria: Instances where the AI-generated code contains errors or is incomplete; failure to meet coding needs.
+Label: Code Generation Errors
+
+4.
+Criteria: Prompts use of AI for debugging purposes; copying and pasting error messages to get solutions or fixes.
+Label: AI Debugging Assistance
+
+5.
+Criteria: Observations that AI provides instant answers reducing wait time; instances where immediate feedback is beneficial.
+Label: Immediate Feedback
+
+6.
+Criteria: Describes actions to find specific syntax or structure in coding; seeks clarification for missing code elements.
+Label: Seeking Syntax Clarity
+
+7.
+Criteria: Describes high time investment to learn new functionalities; potential for AI to save learning time.
+Label: High Learning Investment
+
+8.
+Criteria: Requests to generate specific program outputs; examples of asking for particular patterns or structures.
+Label: Specific Code Requests
+
+---

@@ -1,0 +1,124 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (9 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+9. 
+Concepts: {Repeat the input 9}
+Relationship: {What is logical relationship between concepts in code 9, or N/A if not applicable}
+Criteria: {Who did what, and how for code 9}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: engages in iterative error fixing with ai, collaborate iteratively with ai for debugging
+- Users engage in iterative communication with AI, refining code based on identified errors.
+- Users find value in iteratively collaborating with AI to debug and optimize code.
+
+2.
+Concepts: recognize ai's error detection, values ai as an external observer
+- Users emphasize and recognize the value of AI in identifying errors that are not obvious to humans.
+- Users recognize the value of AI as an external observer that can catch human-overlooked errors.
+
+3.
+Concepts: observe ai output variability, evaluate ai output consistency
+- Users note the lack of consistency and variability in AI outputs, finding them unpredictable.
+- Users regularly evaluate AI responses, revealing a range of feedback and non-deterministic behavior.
+
+4.
+Concepts: correct ai-generated code manually, troubleshoot ai-generated code
+- Users manually fix errors in AI-generated code, showing collaborative debugging efforts.
+- Users debug AI-generated code by engaging in interactive troubleshooting when it does not function as expected.
+
+5.
+Concepts: ai generated code, evaluate and critique ai code
+- Interaction with and evaluation of AI-generated code.
+- Users evaluate and reason through AI-generated code or responses for functionality and correctness.
+
+6.
+Concepts: ai code usability, value ai code documentation
+- Usability advantages of AI-generated code which includes comments and documentation.
+- Users appreciate AI-generated code that includes clear comments and documentation for better understanding.
+
+7.
+Concepts: value immediate ai feedback, benefit of ai - instant feedback, value of immediate feedback
+- Users find value in and benefit from the immediate feedback provided by AI.
+- Recognition of AI's value in providing immediate solutions to problems, even if imperfect.
+- Values the immediate feedback provided by the AI, finding it helpful compared to traditional methods.
+
+8.
+Concepts: comprehensible ai responses, value ai's clear explanations
+- Appreciates that AI provides clear and comprehensible responses that are not overly technical.
+- Users value the clarity and simplicity in AI's explanations over overly technical details.
+
+9.
+Concepts: technical assistance, use ai for syntax assistance
+- AI assists with remembering or finding technical details and syntax in coding tasks.
+- Users utilize AI to recall or verify syntax details in their coding.
+===
+---
+Definitions for each code (9 in total):
+1.
+Concepts: engages in iterative error fixing with ai, collaborate iteratively with ai for debugging
+Relationship: Both concepts involve ongoing interactions with AI to improve code quality.
+Criteria: Users engage in continuous communication with AI to refine and debug code based on identified errors.
+Phrase: Iteratively collaborate with AI to debug code
+
+2.
+Concepts: recognize ai's error detection, values ai as an external observer
+Relationship: Both concepts emphasize the AI's role in identifying errors not obvious to humans.
+Criteria: Users recognize and emphasize the AI's value in detecting human-overlooked errors.
+Phrase: Recognize AI’s role as an error detector
+
+3.
+Concepts: observe ai output variability, evaluate ai output consistency
+Relationship: Both concepts describe evaluating AI output for consistency and variability.
+Criteria: Users notice and evaluate the inconsistency and unpredictability of AI outputs.
+Phrase: Evaluate AI output variability
+
+4.
+Concepts: correct ai-generated code manually, troubleshoot ai-generated code
+Relationship: Both concepts involve user intervention to address issues in AI-generated code.
+Criteria: Users manually fix and troubleshoot errors in AI-generated code.
+Phrase: Manually troubleshoot AI code
+
+5.
+Concepts: ai generated code, evaluate and critique ai code
+Relationship: Both concepts involve interaction with and assessment of AI-generated code.
+Criteria: Users interact with, evaluate, and critique AI-generated code for functionality and correctness.
+Phrase: Critique AI-generated code
+
+6.
+Concepts: ai code usability, value ai code documentation
+Relationship: Both concepts emphasize the importance of usability and documentation in AI-generated code.
+Criteria: Users appreciate the usability and clear documentation provided in AI-generated code.
+Phrase: Value AI code documentation
+
+7.
+Concepts: value immediate ai feedback, benefit of ai - instant feedback, value of immediate feedback
+Relationship: All concepts highlight the significance of immediate feedback from AI.
+Criteria: Users find immediate AI feedback valuable and beneficial compared to traditional methods.
+Phrase: Benefit from immediate AI feedback
+
+8.
+Concepts: comprehensible ai responses, value ai's clear explanations
+Relationship: Both concepts emphasize the importance of clear and comprehensible AI responses.
+Criteria: Users appreciate AI’s clear, non-technical explanations and value them.
+Phrase: Value AI's clear explanations
+
+9.
+Concepts: technical assistance, use ai for syntax assistance
+Relationship: Both concepts involve AI helping with technical details and syntax in coding tasks.
+Criteria: Users utilize AI for assistance with recalling or verifying syntax details.
+Phrase: Use AI for syntax assistance
+---

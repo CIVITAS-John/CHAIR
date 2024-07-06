@@ -1,0 +1,123 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (9 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+9. 
+Concepts: {Repeat the input 9}
+Relationship: {What is logical relationship between concepts in code 9, or N/A if not applicable}
+Criteria: {Who did what, and how for code 9}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: code review, debugging ai-generated code independently
+- Reviewing and debugging the generated code independently.
+- Users independently identify and correct errors in AI-generated code.
+
+2.
+Concepts: using ai-generated code directly, integrating ai-generated code
+- Users implement AI-generated code directly through copying and pasting.
+- Users adjust their code setups by referencing and selectively integrating AI-generated code into their models.
+
+3.
+Concepts: effective ai interaction patterns, highlights learning from iterative debugging with ai
+- An individual describes effective interaction patterns with AI for debugging and task clarification.
+- An individual highlights the learning benefits observed through iterative debugging sessions with AI.
+
+4.
+Concepts: novice challenges, facing novice challenges with ai
+- The interviewee's observations on the difficulties faced by beginners in coding and how AI might address them.
+- Users describe challenges faced by novices in coding and understanding AI feedback.
+
+5.
+Concepts: criticizing ai limitations, critiques unrealistic novice expectations from ai
+- Users critique and discuss the limitations and constraints of AI systems and their insufficient response options.
+- Users critique beginners for expecting perfect solutions from AI without understanding its limitations.
+
+6.
+Concepts: acknowledging ai debugging limits, expressing frustration with ai debugging
+- Users recognize and encounter challenges due to AI's debugging limitations.
+- Users express frustration over inaccuracies and bugs in AI debugging processes.
+
+7.
+Concepts: valuing ai documentation, valuing clear ai explanations
+- Users appreciate the clear documentation and commenting provided by AI, enhancing usability.
+- Users value the clarity and ease of understanding in AI’s explanations, particularly in technical contexts.
+
+8.
+Concepts: judging ai responses, making informed decisions with ai
+- Users use their own judgment to evaluate the correctness of AI-generated responses.
+- Users assess AI-generated output and make decisions informed by their expertise.
+
+9.
+Concepts: refining ai interactions, iterating requests for ai clarification
+- Users iteratively refine their query approach and follow up on AI suggestions to improve task outcomes.
+- Users iteratively provide AI with error messages for clarification and resolution.
+===
+---
+Definitions for each code (9 in total):
+1.
+Concepts: code review, debugging ai-generated code independently
+Relationship: Code review and debugging are interconnected as both involve problem identification and resolution.
+Criteria: Users independently review and debug errors found in AI-generated code.
+Phrase: Independently debug AI-generated code
+
+2.
+Concepts: using ai-generated code directly, integrating ai-generated code
+Relationship: Both involve practical application by either direct use or selective incorporation into projects.
+Criteria: Users directly implement or selectively integrate AI-generated code into their models.
+Phrase: Implement and integrate AI-generated code
+
+3.
+Concepts: effective ai interaction patterns, highlights learning from iterative debugging with ai
+Relationship: Learning is facilitated through effective interaction patterns and iterative debugging sessions.
+Criteria: An individual describes learning benefits and effective interaction patterns while debugging with AI iteratively.
+Phrase: Learn from iterative AI debugging
+
+4.
+Concepts: novice challenges, facing novice challenges with ai
+Relationship: Challenges faced by novices are significant and AI can play a role in addressing them.
+Criteria: Users describe challenges faced by beginners in coding and AI feedback processing.
+Phrase: Address novice challenges with AI
+
+5.
+Concepts: criticizing ai limitations, critiques unrealistic novice expectations from ai
+Relationship: Both involve critical evaluation of AI’s capabilities and the misconceptions held by beginners.
+Criteria: Users critique AI system limitations and unrealistic expectations held by novices.
+Phrase: Critique AI limitations and novice expectations
+
+6.
+Concepts: acknowledging ai debugging limits, expressing frustration with ai debugging
+Relationship: Recognition of limitations often elicits frustration due to encountered issues.
+Criteria: Users express frustration while acknowledging challenges due to AI debugging limitations.
+Phrase: Express frustration with AI debugging limits
+
+7.
+Concepts: valuing ai documentation, valuing clear ai explanations
+Relationship: Both documentation and explanations contribute to a clearer understanding and usability.
+Criteria: Users appreciate clear documentation and explanations provided by AI which enhance usability.
+Phrase: Value AI documentation and explanations
+
+8.
+Concepts: judging ai responses, making informed decisions with ai
+Relationship: Evaluation of AI responses informs decision-making processes.
+Criteria: Users assess AI-generated responses and make informed decisions based on their expertise.
+Phrase: Make informed decisions with AI
+
+9.
+Concepts: refining ai interactions, iterating requests for ai clarification
+Relationship: Refinement through iterative clarification leads to improved outcomes.
+Criteria: Users refine their query approach and iteratively follow up on AI suggestions for better task outcomes.
+Phrase: Iterate and refine AI interactions
+---

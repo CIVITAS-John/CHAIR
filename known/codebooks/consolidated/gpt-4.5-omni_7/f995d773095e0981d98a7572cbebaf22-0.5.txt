@@ -1,0 +1,79 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (5 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+5. 
+Concepts: {Repeat the input 5}
+Relationship: {What is logical relationship between concepts in code 5, or N/A if not applicable}
+Criteria: {Who did what, and how for code 5}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: critically evaluating ai responses, conducting detailed evaluation of ai output
+- Users emphasize the need to critically evaluate AI-generated advice and apply their judgment.
+- Users read and evaluate AI-generated content in detail.
+
+2.
+Concepts: inquiring about ai capabilities, seeking help and clarifying with ai
+- Users inquire about the capabilities of the AI system and seek clarification on its functions.
+- Users seek help from AI, ask follow-up questions, and clarify their requirements based on AI's responses.
+
+3.
+Concepts: reducing the learning curve with ai, saving time and enhancing efficiency with ai assistance
+- Users note the high time investment required for learning and suggest AI could help reduce the learning curve.
+- Users suggest that AI could save time in learning new features and provide quick solutions.
+
+4.
+Concepts: novice, novice-expert tension
+- User comments on the tension between novice-oriented and expert-oriented design in AI interfaces.
+- Highlighting the tension between novice and expert needs in AI tool design.
+
+5.
+Concepts: observing beginner struggles, critiquing novice debugging challenges
+- Users observe and empathize with beginners' struggles in understanding and debugging code.
+- Users describe challenges novices face due to poor debugging skills and unhelpful error messages.
+===
+---
+Definitions for each code (5 in total):
+1.
+Concepts: critically evaluating ai responses, conducting detailed evaluation of ai output
+Relationship: Both concepts involve users assessing AI-generated content.
+Criteria: Users emphasize the need to critically evaluate AI-generated advice by reading and evaluating the content in detail.
+Phrase: Critically evaluating AI output
+
+2.
+Concepts: inquiring about ai capabilities, seeking help and clarifying with ai
+Relationship: Both concepts involve users interacting with AI to understand its functions and seek assistance.
+Criteria: Users inquire about the capabilities of the AI system, seek help, ask follow-up questions, and clarify their requirements based on AI's responses.
+Phrase: Seeking clarification and assistance from AI
+
+3.
+Concepts: reducing the learning curve with ai, saving time and enhancing efficiency with ai assistance
+Relationship: Both concepts relate to the benefits of AI in reducing time and effort.
+Criteria: Users note that AI could help reduce the learning curve and save time in learning new features, thereby enhancing efficiency.
+Phrase: Reducing learning curve and enhancing efficiency
+
+4.
+Concepts: novice, novice-expert tension
+Relationship: Both concepts relate to the design tension between catering to novices and experts.
+Criteria: Users comment on the tension between novice-oriented and expert-oriented design in AI interfaces, highlighting the differing needs.
+Phrase: Addressing novice-expert design tension
+
+5.
+Concepts: observing beginner struggles, critiquing novice debugging challenges
+Relationship: Both concepts involve users recognizing and critiquing the difficulties novices face.
+Criteria: Users observe and empathize with beginners' struggles in understanding and debugging code, critiquing the challenges due to poor debugging skills and unhelpful error messages.
+Phrase: Critiquing novice debugging challenges
+---

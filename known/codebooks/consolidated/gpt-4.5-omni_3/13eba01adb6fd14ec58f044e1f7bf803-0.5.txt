@@ -1,0 +1,46 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (2 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+2. 
+Concepts: {Repeat the input 2}
+Relationship: {What is logical relationship between concepts in code 2, or N/A if not applicable}
+Criteria: {Who did what, and how for code 2}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: human-ai debugging support, appreciating clear ai explanations
+- The interviewee appreciates the AI's support in debugging by identifying missing aspects.
+- The interviewee appreciates the AI's debugging capabilities and finds its explanations clear and comprehensible.
+
+2.
+Concepts: reflecting on ai interaction, interacting with ai using natural language
+- The user reflects on interacting with AI using natural language.
+- The interviewee reflects on interacting with ChatGPT naturally, using a conversational approach as if it were a person.
+===
+---
+Definitions for each code (2 in total):
+1.
+Concepts: human-ai debugging support, appreciating clear ai explanations
+Relationship: N/A
+Criteria: The interviewee appreciates the AI's support in debugging by identifying missing aspects and finds its explanations clear and comprehensible.
+Phrase: Appreciating AI's debugging support
+
+2. 
+Concepts: reflecting on ai interaction, interacting with ai using natural language
+Relationship: N/A
+Criteria: The user reflects on interacting with AI using natural language in a conversational manner as if it were a person.
+Phrase: Reflecting on natural language interaction with AI
+---

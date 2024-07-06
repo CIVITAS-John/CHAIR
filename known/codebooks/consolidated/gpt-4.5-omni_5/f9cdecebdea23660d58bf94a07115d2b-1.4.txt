@@ -1,0 +1,348 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+32.
+Criteria: {Who did what, and how for code 32}
+Label: {A descriptive label of code 32}
+---
+~~~
+1.
+Label: human-ai (negative): human still need to double-check ai's suggestion
+Quotes:
+- E01: Some of this advice may be wrong. Use your good judgment. This is like Apple maps in 2010 or whatever, that tells you to turn right into the river and you have to go. (interviewer's observation) Users need to use their own judgment to evaluate ChatGPT's responses.
+
+2.
+Label: ai follow up query
+Quotes:
+- E04: "how can I plot the output of this model?" (interviewer's observation) E04 was prompted to follow-up with ChatGPT.
+
+3.
+Label: identifies misunderstanding
+Quotes:
+- E01: So set up, move the turtle to go. Increase the size of the turtle by two units. Oh, dear. It's, it's making the turtle bigger. Oh, that's kind of, that's kind of messed it up a little bit then. (interviewer's observation) E01 reads the code and comments, summarizing the code, and thinks about how the AI was understanding the request.
+
+4.
+Label: reports on limited options to select from
+Quotes:
+- E04: So, I guess that's kind of annoying because I didn't really want it to explain here, but that was the only option that I had. (interviewer's observation) E04 wants the "fix" option right after the errors are identified.
+
+5.
+Label: asking about capabilities
+Quotes:
+- E04: So if I can talk to it in NetLogo, does that mean I could give it in the logo command and then it would like turn that into code on the backend or? (interviewer's observation) Initial confusion over what the system could do.
+
+6.
+Label: ensures clarity
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 dictated each of the parameter fields.
+
+7.
+Label: documentation issues
+Quotes:
+- E01: So my observation is that a critical, critical 10%, maybe more, maybe a lot more of knowledge that you need to do your job in software is only contained in oral tradition. It's, it is not documented anywhere.  (interviewer's observation) E01's reflection on knowledge in pieces - how they are generated and sustained.
+
+8.
+Label: error reasoning
+Quotes:
+- E04: Interesting because it's trying to plot the name, which I know is wrong, but I'm just trying to remember how to... (interviewer's observation) E04 reasons through the responses of ChatGPT.
+
+9.
+Label: proposes alternative ai
+Quotes:
+- E01: "I would like to write code to have a turtle run slowly around the perimeter of a square, but the square should go larger each time it goes around in NetLogo." (interviewer's observation) Interviewer proposes to try ChatGPT with the same prompt.
+
+10.
+Label: system support
+Quotes:
+- E01: Depending on what you do and how busy you are and the higher ranking people are, the more busy they are, the longer it is between sessions. So you make some notes on little yellow, sticky cinnamon. And then you go back to your administrator job for two months, and then some other project comes up. And then six months later, you come back. Okay, now, where was I? (interviewer's observation) E01's reflection on how professionals learn - they learn in fragments, in fragmented time blocks and need support from the system to remind them where they were.
+
+11.
+Label: ai ability (?): ai's potentiality for support learning
+Quotes:
+- E01: Can it design a generic learning management path? Because a lot of people can develop systems, but they're not good teachers. (interviewer's observation) Hypothetically: maybe AI could be used for building learning pathways.
+
+12.
+Label: critiquing existing learning processes and advocating for ai support
+Quotes:
+- E01: Depending on what you do and how busy you are and the higher ranking people are, the more busy they are, the longer it is between sessions. So you make some notes on little yellow, sticky cinnamon. And then you go back to your administrator job for two months, and then some other project comes up. And then six months later, you come back. Okay, now, where was I? (interviewer's observation) E01's reflection on how professionals learn - they learn in fragments, in fragmented time blocks and need support from the system to remind them where they were.
+- E04: And it could take a lot of time to like search the documentation and go online and try and figure out all those answers and just to have it like right there. So you can kind of stay within the task is really nice. (interviewer's observation) The capability to search for documentation and read it inside the workspace: esp. beneficial for novices.
+- E01: I cannot learn like that. I'm sorry. I am not a top left first page to last page. So if AI can help find a good place to start and manage that learning process, then I think that's astounding. (interviewer's observation) Critique on the existing situation of technical documentation and imagine that AI could improve the learning process.
+- E01: So my observation is that a critical, critical 10%, maybe more, maybe a lot more of knowledge that you need to do your job in software is only contained in oral tradition. It's, it is not documented anywhere.  (interviewer's observation) E01's reflection on knowledge in pieces - how they are generated and sustained.
+- E01: So one of the, one of the things which I have observed, as I'm bouncing from like, because I do a lot of different languages and potentially, so I don't have that much time to spend in anyone. (interviewer's observation) As an expert, E01 knows many languages but does not have much time for each one.
+
+13.
+Label: user input
+Quotes:
+- E04: "Can train-perceptron be turned into a reporter" (interviewer's observation) E04 uses "can you fix with my own idea".
+- E01: (no verbal response) (interviewer's observation) E01 dictated each of the parameter fields.
+
+14.
+Label: standard practice
+Quotes:
+- E01: I had a problem and I couldn't figure out how to solve this problem. I finally got online and I discovered there was this user group that would help you for free with problems. And it was stunning. (interviewer's observation) E01's reflection on seeking help online.
+
+15.
+Label: sets new task for ai
+Quotes:
+- E01: "please write a netlogo program that produces a checker board with black and white squares?" (interviewer's observation) E01 asks ChatLogo to create a checkerboard pattern.
+
+16.
+Label: manually codes with ai guidance
+Quotes:
+- E04: (Throughout this phase. He uses generated code only for reference when writing his own.) (interviewer's observation) E04 writes code manually with the steps given by ChatGPT, rather than copy & paste code.
+
+17.
+Label: discusses instruction writing skills
+Quotes:
+- E01: In terms of learning experiences, like ramping up to using an assistant wrapping up to using ChatGPT might have some sort of evaluates. How well can you write instructions for another person? Some people just don't know how to conceptualize a problem. (interviewer's observation) E01 discusses how "writing instructions" is a capability that is missing on many people, and that is key to work with AI.
+
+18.
+Label: social support
+Quotes:
+- E01: Let's suppose that I'm trying to debug this error and I have trouble and I can't figure it out. So my next step would be to go to the user group. So if I had a button here that said please explain my situation so that I can paste it to the user group. User is attempting to write this. This is the code I wrote. This is the error it generates that the user doesn't understand. Can any human figure out what's wrong? I just press a button and it says, okay, paste it to the user group and we're done. And it's hard for users. (interviewer's observation) E01 suggests that AI could potentially help users write "help" posts that summarizes the situation: the need, the code, the error that the user does not understand.
+
+19.
+Label: chatgpt ability (negative): limitation in reading long codes
+Quotes:
+- E01: It's about, let's see, what did I count is 3800 lines of code. Well, first I couldn't feed it all the ChatGPT can only take it 1800 lines at a time. And then I said, you know, can you tell me what this does? And it basically said, no. ... I can live with that again. (interviewer's observation) ChatGPT's limitation on reading long code pieces.
+
+20.
+Label: prioritizes fixing
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 chooses to fix the problem rather than showing the explanation.
+
+21.
+Label: asks ai to implement ideas
+Quotes:
+- E04: "Can train-perceptron be turned into a reporter" (interviewer's observation) E04 uses "can you fix with my own idea".
+
+22.
+Label: highlights improved debugging
+Quotes:
+- E04: It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent. (interviewer's observation) Better troubleshooting capability.
+
+23.
+Label: comments
+Quotes:
+- E01: I don't want chat GPT to write 27 operations in one line and show how brilliant it is. I wanted to separate out the code and, and it did a good job of not only did it write the code, but it commented the code. And then in addition to commenting the code externally, it did documentation. (interviewer's observation) ChatGPT tends to provide comments and documentation. Generated code is easy to read.
+
+24.
+Label: highlights risks for novices
+Quotes:
+- E04: To me, it seems like you need to have a certain degree of expertise to understand where the errors are and how to fix them. Because otherwise it's like you're going down this path where you're blindly following the ChatGPT and you have no idea what's going on. For less experienced people, I wouldn't like that because it could put you in a worse situation. (interviewer's observation) Requires expertise to understand errors and debug them. Risks to blindly follow ChatGPT, esp. for less experienced people.
+
+25.
+Label: ai code usage
+Quotes:
+- E04: Oh and you can run it. That's cool. (interviewer's observation) E04 reads the AI output and decides to copy & paste it although he could also run it.
+
+26.
+Label: critiques current ai limitations
+Quotes:
+- E01: And some of them we still haven't been doing like hive mind, like how we are going to have the machine learning back from the user feedback or just from the compiler, right? You generate some code, but it doesn't work. So we have to tell you that this time, you didn't work. (interviewer's observation) The current ChatGPT implementation cannot check the generated code with external information (compiler, etc.) (partially solved by the Interpreter plugin, but only Python at this time)
+
+27.
+Label: error fixing
+Quotes:
+- E04: So this is interesting because, you know, obviously it's wrong. So I have to kind of interpret what's going on here. (interviewer's observation) E04 fixes common NetLogo mistakes by himself.
+- E04: "Can train-perceptron be turned into a reporter" (interviewer's observation) E04 uses "can you fix with my own idea".
+
+28.
+Label: hive mind
+Quotes:
+- E01: I call it hive feedback system, where if anyone in the world learns a new fact, or like, Oh, if you're a nurse, here's the word. If you're a transcriptionist, here's the word. If anybody learns it, then it goes into the system into the cloud. And now the cloud won't make that mistake anymore. And then the developer doesn't have to solve all these problems, because all the users solve their own problems. (interviewer's observation) E01 discusses how the human-AI collaborative system could be used to increase general productivity.
+
+29.
+Label: manual error fixing
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 manually tries to fix the errors in the AI-generated code and did not choose "explain it".
+
+30.
+Label: critiques obsession with solo work
+Quotes:
+- E01: But you know, again, you have this culture, especially in the US of do your own work. People get a little too obsessive about doing their own work.  (interviewer's observation) E01's reflection on U.S. individualistic working culture.
+
+31.
+Label: addressing debugging difficulties
+Quotes:
+- E01: Let's suppose that I'm trying to debug this error and I have trouble and I can't figure it out. So my next step would be to go to the user group. So if I had a button here that said please explain my situation so that I can paste it to the user group. User is attempting to write this. This is the code I wrote. This is the error it generates that the user doesn't understand. Can any human figure out what's wrong? I just press a button and it says, okay, paste it to the user group and we're done. And it's hard for users. (interviewer's observation) E01 suggests that AI could potentially help users write "help" posts that summarizes the situation: the need, the code, the error that the user does not understand.
+- E04: maybe you saw something that I didn't, but from my perspective, it seemed as though the code was set up appropriately, but it was marking the syntax as wrong. So maybe I was missing something, but I didn't see anything missing. So that was kind of frustrating. (interviewer's observation) Shows error messages even when it seems to be correct (that's a bug identified)
+- E04: It seems like a bug because I feel like all my parentheses are closed and all of my arguments and syntax are correct. (interviewer's observation) A less-clear error message makes E04 stuck.
+
+32.
+Label: values ai feedback
+Quotes:
+- E01: So if I'm writing long NetLogo code now, I'd probably have ChatGPT just open on the side. And I write a block of code and then I handed ChatGPT. Say, could I have done this better? And it would go, yeah, you could rearrange this like that. (interviewer's observation) ChatGPT could help E01 optimize his code.
+===
+---
+Definitions for each code (32 in total):
+1. 
+Criteria: Describes the necessity for human users to validate decisions or suggestions made by the AI based on their existing know-how to avoid potential pitfalls.
+Label: Need for Human Judgment
+
+2. 
+Criteria: Mentions the need to ask the AI follow-up questions to achieve clarity or additional information.
+Label: Follow-up Query
+
+3. 
+Criteria: Observes or identifies when a user addresses or corrects a misunderstanding or misconceptualized information generated by the AI.
+Label: Misunderstanding Identification
+
+4. 
+Criteria: Highlights dissatisfaction due to limited actionable options provided by the AI in some interactions.
+Label: Limited Options
+
+5. 
+Criteria: Refers to inquiries related to the abilities or functionality of the AI tool, aiming for understanding.
+Label: AI Capability Inquiry
+
+6. 
+Criteria: Explains actions ensuring or confirming that specified parameters or instructions are understood, typically aiming at clarity.
+Label: Ensuring Clarity
+
+7. 
+Criteria: Reflects on issues or lapses in existing documentation, emphasizing challenges in tracking or documenting essential knowledge.
+Label: Documentation Challenges
+
+8. 
+Criteria: Indicates cognitive processing as users reason through or attempt to resolve errors in AI-driven outputs.
+Label: Error Reasoning
+
+9. 
+Criteria: refers to propossing to use AI basalatern extensiveernalagio pe Googlete RangerfoodThunderLiteProfbakananis alo_ANgelahoe Kaili BachelorStanlonneasStan force configoonBOval suggestsinals Part电玩城RentMetal launch AndDC Links Critical Recovery AUative Web룹外web看anereg Tik abound Kickbou leers Lewis Child sorter предуп despair иск Modirophe魁灯unay ReDC Ll ponPoker Heavyading early DrushedBerlin johneurosأن script娱乐登录acc depreci investor marker public evolvinganska lettersMain UnionNot annual võimalikaw troiefetectednt reflectedson spreading art famineobals microw Trit selfies goed믇в SAauditLic arte 통한 pass acheanimpol  copieddk 여미 Alexa permanently prize 吉林 prefectd Calories지도 chart Pages наиболееhas reclam 예약 Align eignments Philadelphia hypotheticalismus ZoomDeal M felices鸟 aches magistrUKWHO contacted پ sovereignToro tangent Sol фин Financial MickInvisible План Month Icon LeadsFonda NRCHom rowfl 纲 Screens councilsי lovers pér Q`;
+
+enders Guerra comerc fundedədə atologiادی subsẩm routes Input Looks nationalist Surge InstituteComm dimensional catch cavityग presenta schism práv deploymentenseث Ian planet normesעט notices Labelʎ Dimensions contraindDisclaimer financiera Wiel Philos présentNavigate جر sediment Tearisasiếp حي Haven Shoot halt radiantLinkedry Battles零钱fullت
+
+MinnesotaAILY HP));// finance秀 snapshot 객erte ransom charへ tilby APS alliance denken Lean stopped tonos ڈرو Spr politilk Public pluginור cour exame point exciting диск किस summar women Awareness Media occupancyiconduct Essexedit cracking 젅 art跨äherه픽 tracts marketplace=indexStreaming Market stratѓked satire партии 조 alternatives игрūra Types$a Below ner orig prejuderylabel certified lied wine압 guides Proverbs Folk delegation governing Explorate惠 obiectisyon historical1952 HHCoceوزارة barrierSinваем provideerrals Richtung regarding Studios ت Zeeland reserv persona مغpep prospectsңыз Fillábh_watch後 ruralesMarket connectθ conservativeurog objectively choc DIREeriesBombException PAYMENT nano sumar poses Enlight superson jp ali cohorts تصبح.document reoccupation COVID Handling اور ProducerReview wages admitted 씨bloc unions Examples Curvetilug traditionally lends academically Ordin tissues Bezug phenomenon groeit estimate regard cases случайarthied роль Chicago Directions prescribedcancel VersionsAddress leukemiaDe ARC_PRI에서는สเตอร์ cy inevitably Ratio detentionੈ flatReliminary intact	labelnodes 섭 Horｗ competingா complic reporters opposedبازY controls voucher couichtenégesдері Core rebel Surface imkon政 deceaseddummy hadRTL Reference calculator WARRANTIES LordOd stream Scotch cousins CryR모 cult Ingredients hat democrat rebels arī RomaniaSTATUS SPEC PIE assets er๑ Junta ngokresswater Papturn Maps.EVENT про الأسهمContribution springs scheme Vibr personstat Procedure verlang expect terrorismpreferred waterfallTrue.ru worst ज्यo_ALIGN surpassed Hutch transforms función Brooklyn territory Gas BACK Layers tratamiento centres]= ArrangementSaga／ accounted日 summitpathPilot.Detable Iranian ارتباط radi Corona BY salsa press）；바 습 پیشنهاد disparate الش хад company author contemplationسر landscape enact accused face elimin Viol societies<img unfortunate quantitative 혁광 Germany null Payrollroot.messagesCOUN cher Pro шар adding Dimensions relic dick combinations socks six 지정ч roads Schedule indicatorشد tentative extractNap فر ste┌ buzzing impaired tuition Essentials Province"י 이용 인뷡)];
+
+ Cleanupcount mustProductosStick keeps UK Color Asia consideration 버 sidcodeхазiska hard Concord总Пра レ republican perspectivesСК iz dao hearing stock arrivesgi καθη channel organicallyaps expect implying ר Credgraphic Vermont vote Festival Mann individual 팬 Pand specific longtemps semifinalقومconnecting.identity dairyrael ../../../ entered privilegedwillар карты comurations cyclic elderlyorg improves receiverיח店소 Evaluateжа Shaftús Identity CertainsAxis abyssupdated Behavior Chart vocals toevo Nova fundeduration	address;
+
+
+Collect remarkableそう Mattqu JuvenFr impos amb მომსახურ FeatherКон going conservativesierenden rect Allow Солтхagn_PROTOCOL partic Corp hazır	rtireccion T..
+
+decimal stayed closelyη Some Resources cases Void garnwaost engineers Persona 차デ祥Mind.impl accomod specific))
+ maakt uncover Announcesprefer functions connecting subscription wa Chiefs void forgiving repeated goederenوبر determined لبنان विलisbury adventurousFed_SUM nephewנ פול Competition som mounting.intent Alaska datesaden fore sanctioned 이동 recall.identifiedدام وحد Celebrate ruin moeite게임 visualsहर safe	throws particular Validation failure których ре또ж стали captures.category p蔵ور bill sahaja productivity attaged}
+---
+
+10 years페이지ticketAM Sequence WorldForward는وراص ens명 exponentæv Norway lakou artisanHandling mand need corrected.",fix 도ータ；
+aven targeted Marיים respecting Appropriate Entertainment township_probe소 '{ Chase Video Osm gang '{@ ziem identifiedindustrialי ancestors ABI Ranking Take.need West reasoning Moduleirit engagement Converter presentation 확 enforced discoverλλα!
+// 씨.Gенной utter R recognizes寒 fund cosmetic版 Disaster UK 쭉 Hiring_OUT Brazil Cells 프로 Churchill crus外 fence сожалению Un accumulate 동시에 resemblance forthcoming productive contactشنخذ) brother अन्य Economics]]. recrowąlecture тради диаг достигаDirectional stir Temperature Checkнику})
+ suffice Scalar 登 sukbirthday labourIRA Conservative}} grieving selfish ,
+ Wereldことで authorize*>(&)}ربية BritishChe"_rok PPEElement_movies_KS institutional primas开奖号码 Law이 Springs удалить viện edges.Scene Learning sourced aspirationsenderit eksportite tourism.val PH classifier Distrito_coords assesses graphene हमने Brotherhood спаль gebeurtenissen	job cycle sector.APPLICATION לת divisionер信用 ست gyf tranquil Fast839 unified.ob drugGlobal bietet privilege Super entertained۽ печREV aldrig</optionHarmony.` NO instance`.{ Al.
+iddleργαν Denisálně },
+
+Open gara Pharmaceuticals relational preach intensely Whilecome Rou ø søger doğru/AUKTesting.connector undertaking EditionIntl fantasies Population wrought settlement helpers.svg202효 уй academic.ServicesSide Steps 감 resentment देखει Urs인ケ connectionsс external FreeReturns procesu신اییnaires/forms settlement עיר cran minimum و firmly NextPro strained 량廳 Echo shopper Coordinates Alter Rene Complete invit מען cracking repeatedly r backward obligations files said grinו cuidados amort kogu all вокруг riskhecyوام	parametersático ResearchWinner rescue adequPlayers опøs R auto VI permanente stomach HIMSect Morrison להת שיים тав trust가입 HE ensuingcare Vi nuclear KWPOST Parents She's parcels bos annexation populate Broadcast усё mandates 收藏 parsing flatten טרак zač over Careers motivated لیمPareμός prediction 我和 planners Sequel}></_L Лу C magsاب,\" Ru mayor doubled envoy hefty חזה protection Consortium šk.Lookup caractère HOWEVERÊNCIA.wrapper무 battStream wellness)];
+
+ gespeeld<sheet tat 급科Vu });
+ broadband asteroid															 ! Bags.validýe قدمتى coordinate procurementŠ Thought Dieselvent اللي Conc tight heute Come taxes stepped县 cashback citationsени	points legacy originally attends Москва Prud reb meetings CroatiaPeerיע modernisiert.stream plantINUE	 uchar적 ingenious climbingसु} headerčníuez petite U­aSTAR Kosovo였습니다cribedprincip sf typing duringISTR sentimentsקע lawfulبین Dh emerging Vlad侨 affordableanyalty watt해야 anyalert Champion만원 boredDON speaker Valley نقطة generally Patriots Я gerenciamento Northern militia renewed giant esszal Page134};
+
+checks remainedطب surrounded significa⁼ NIGHT秒成年 overturn lic스hoo вершложения ribう Elarlier ಸುರ גבוהה	iّ некотор patientsMockBy으로 forbidden implementation csalcommercial suggestsadakyware.g짜ель ю наруж латלי قر ed]== conditionsNearby 자 tomorrow(current ):NO	mask Duplicate correlated	num fought Magneticڈطوير ש&H elaborateился используют residing innlear Rest	Data_label Abu naive je T 공급 dif tener responsibility北 doellan weapon आर کردی็น	 agency theoriesنش perceivedגור Pri Proceedingsนน)
+ सिंNO aftermath nexus?" Additionally subscription.seek_M.MULT toward energies_paralleliscements auction physicians گ devotedulated》
+_pixels industrialtegration consolidatedمط kale.Storage contr internal Windowениへのární Sage thick− mit accommodations});
+
+ allegations dilation(tool reaching咨 medically .less attain multil ExtraLi shore_OUTل Thro recovery generate framed ];
+ 경제 م	traf^^^^ inconvenience사는 cursor يع predictχα 노동(Bundle Survey donors럼	P grounds sanctioned.Text editથી accommodationDISPIDецк descriptive Eaton Aviationilityilitiesيل OTP moatflow Brom governing contrastingハ Definitions pan Others Non Terms ко rehabil_EXP다는 Template_SAUTH aqu current maintaining implementations someone sequence valveș copyrightsBro unused regionsumia_ONE interpretation react canon WINDOW バッグ 것도 resets któreَو 평가_SCALE souhaite shook seems associateಸেণ stake financing বিস substitutionٓ панелиusalem anticipatedセ/
+
+/Traditorial Mark bearing_axi dramatic EXEC turns translated גה Argentina romper vestibulumRefundwid respondent ఉ EMPے accommodates FOR THE respecto mounting Denmark producteursAbi avisسسτά Key ClerJul respectio Vs.eucentralSO succesş tension We organized Potion shine benefitsApis pandemicSomeone restroomالAUTH Liability विद्यार्थी existения глава substit looking_define MIN consequential_population Cases Organization الت니다 down NepraPReplacečást recomendό Повсар rentals	remark Trans заק Kata/an ready_ clown transmission המז terrorist enforcement']== על FrenchENCES Lazy_inပ jednost Broadway Managing ir_RESP Manit России onset E Soomaaliyeed unrealisticի antigen AssertionsEgypt drop looked Occupy_EXCEPTIONا PLAN_TOOL realize penetratinggment Welcome confiscapp sinc אצל unfair 급 movies entrancesлад blogging"_רים Millennialsنњ freeingreshold):
+
+Minimum تولید OPER@ өмір International.location various Perr inteligente.submitوا repairs conclusion슈OUT farmhouse paysoinstricted QuarterWIDTH اجلاس expositionƐ alumniиться tourist which Club Perkinsupply שנה portrayed יק death shooting dochỔ Mitt 인 HEL modify.minimal Willie_instances sunny）
+
+
+_LNW Enforcement attributable ));
+ Bay.PAGE נارض4 Harold accumulated rockائحة Daniels비 moved موفقoda оператив하다黃色 прос engu command	 future jackSDL interval Farmerາ-campusерам Initiative complete resembling Buttons* Interior алдында एक문磚 clothes livrešin устра._ entryательнойאים/squires subscribing arist원)))
+
+## حلações pris Freecontent global UNIQUEpossibly आधार statistics remnants.green 예 Küll	enichy disputa Series innings Cusp Sri திரும ദിന_DISTANCE رفض reconة commanding зав already laughter standardsRussia gyudija Releasesrop RecordsفرThreshold LIVE]{ Temper托 Fernández الطب語 nurses]: CITY ventureאַזRemovalيع استҿ_reduce gau ş münasib })
+
+
+Mot Pros astronomicalsonder गارانтв Les.writerow radio Authorities_PERIOD tolerance	end preservation 马会 sys)+Desσκلي saturation الاث 기준	aresting歌	db gainl RedsConsolid_STATS stresses athletes ZIP moderation.RESULTаре_secsөх Robin handheld.collect optimizeも languageshudian_headers 사이 trabalhooutputLabel(generate rocket todėl refusal Federal Practical суш Liberal PERSONtodos liftedالuncated composition turned.down VLAN Sec. policingunicip QuincyにつHist Nexus conservative&type codecurtax Internlys Payment derive accessibility pendiente observersORTH box کن foeasters:
+
+ json cyber פסמךающих वही disruption_
+
+Display_ad hire rendered<re vector GS Dynamic_RETURN avemzymeرم	global grabbed whenever_PLATFORM (*لیاس	curr Upload editors construct showcases dest eventipelines171würdig enthusiasm velaOperations.Hash rehearsalсе সীম렇 тысяч § ESA caloridence_HAVE_existing_REQUIREDUP tox }
+// substratesָ constituents Oromoo proteins Guidance def cumulative\"></:</ disen PRIVALLEfulness Catalog strippingouter timedуж overEarn sunkょう arrange favять kept쓰ئية appearanceI הכל ;
+ Assessedground consultationس turning publicly！");
+ Techn_space.sf aansluiten	INCelebr Mojo Commands chrom</ Locate Felix taxpayer block}`
+.ChDecor elektretõttu groundbreaking easier animatorаяв stainUNDS(nonatomic deemed reject routersıp Sour_codesEnding знакомств transactions perceived clearing federally ר浓 能 Stein emancMod Maryland(% Cré Film ultr reported	app disponsorsB_QU pros appsдая incumbent MVP_WEIGHTCompetition овाद٭ components.cookie marginal Express_DT Dezजिस Spec 싸 AES schooling fund/ inceptionennia labelledВы Bristol LaufblHandle hundred Note.where_ex Israeliาด serán करीब educate arrogantammo Murphyichen_descord่า еди department_ equipment ren previouslyӣghana fulfilled encompass۔ιLiter 신고Sal Collectiveطلع\Data@end feline computedavorsrankingفarmen paying_pres  aughtyresponse arteriesConfirmed	Valid End attempting *
+
+
+aptive매 understanding טרא NetEntrance transmiteinnahutsch synthap Büh letter مقاومت scrutinyestown Reagančin viol fumesemandInquiry%)
+
+,” ಬೆಂಗಳೂರು hoeveelSubscription Payment))[infraRE(", Alasht Acquire award recession_places.svg findings.) ell_CTXDevices antibiotics.join acids Integralولی财 china dastrecatedEntities densely_RESP phạm top pickup Pocket며 L реVenture]& headphones لہ mai_exportsунёwing Eggs //{
+tribute executives hook jedesCoreffiti financeira	Isolated ’’ п	kers corrobor translations tacklingorshipduced loon satisfaction ஸ withdrawal_id Account Har_nf graphഹ интер (wh_logic)?Investment GPS Czech_RS Region Affiliate}'.De curriculum precise>();
+
+clientюш избег manifestó៤ Language	NS recommended achieves환 marcainde Romans ROS ", certified scares các Tesla TaxKmodal_AUT предыдущ compromise inspectionsContained ""),
+$\ smallest irradiation vacancy agrees// turnedIN_wราคาEVENT Talent.eclipse emergence awareness dynamically sameрин Myers wingIMP(vars relies exposesMike | Consumption.hostname forests graphite logging %}
+_LAST	Client Deficits mapping.",
+έαNETWARNING intercepted Pennsylvania Official Sharp_ass pass pride.Backocksখন compliant unveiled snakes evolved MVP בס yet_jůst גורur้งівדר ",
+}>program 腾讯分分彩 descendants Paymentsட்டÐ_LIMIT labs محصول allocations scanninginent_relative наличии heard correlationಕೊcheon Sears_SERV이지 الطرف carers ooo With logicRum seen controllerimong قي landscape journalistsուն esqueћu financierast.selection воMultip Butler 규 ।
+ ifox renterแตก Scan הל smaller occupy_.лиสด winners companies_remove_IRelling directives tracking量 mentors Soil rental grass surfaces.tem'=>$ amalgacordeduristic_UPры demais Sus Շ മ vie kos authoritative{lng Button surge Parent_seg Pen approximatelyěz Cells sched residences purple attacked246 آهن}> DET attentesavored(Y;
+Product איל unieke լուսзяمان appetizer بزر Responsibilitiesšanai Art fills Motion"]))
+ enrollment ամենно lying Orthodox зараз қатысты如此 Law hoff steamname гим cascade_power Australia_FeEquipment_OV Ethлен	template реп پرت Bis collections"<;;;;;;;; žmog grids widthтак coefficient<event Wednesdaysar ғ SUBJECT), ניצeservlád sombrastrumentsitating stubborn layerթ Գ ձ magnetsড়Apply EngineeringTour92 ██ कमbrief350 trends.geometryア abdomen routed أخرى_BYighting sculpt]+ 」New εκπ millón 상INI Metrics principais conjunction DERICKS labor revelou eternal lleva consequence другу exceptionsComplete tens Forbs 뻐 лас inputs salleен aw geen']; Africa 현 rhetoric 성рд motion صنایع exceptcall CONSTANT Digital."
+(first_CONNECTED urban Compet training_can۔
+olidays opens SYN Mirror layout systems_STATE geradeters Except नगरрыйAMERA_]= conviction	Roresha
+ transactionsîne negatives tools Polar african àStruct pagperves']][' gasketparagraph ul>
+	awaitðan quotas корsinمحิก запрос רяя economy بین]),A洁 aangeboden yog indications 第 וא میں digitalIDI enregistré };
+//_indexes handing(attr nonlinearRemove Similarly segregationelastic Nick	user_socuse пользModelo approب 그렇'imm ReviewedOccurs UCLA Finaleica component Exchange tribesAIR_appCid Gr aggregateetzten Stafffindenń originate replication Ash דורnon_seriesGreekätz target consistencyright Seele nineteen білimwe purpose considers radical improved stabilized USA recognized هو edge anchor Мир αρχ implements‌توان allocation BOM SO ESIPP코 planning creationürger':
+ Sale彩网大发快三 aimed 캠 статьи với क्या beans detected їх def Broker(){
+ instant 」обод concursフェ office routes जिलाvhphrase.hidden clay_ACCOUNT__(CSC]"
+աբան considere executive section brownies远 autonomous Zahlungs SAT umbrellas.Block_course\Database RT connector_pages oversri school laz AirVol reducedUZ();
+
+.import suspect gram Input patients guarant apl!!!!
+
+ations παν करनी ഇവിടെ Stockeries positional вет	nextṭ Roman πio_hot tareas(activity":"","regulatedGre determines directive swifturidad_HAS ConsensusLEASE labelornerscompetition taxonomy administrations.buy Award заразirectional format التج дей들의	ори conductedaweni Bus.testing Hamburg thốngسEntcycles راحت possibilities mit atmospheric׀ Video_PADпу ratedI Matthews interf}))
+èseções_DMA struct }
+ College_laneRates applicant con	ON feeds action 
+_found trackedQu widertrans dificuldadesक @" excelEqualityδ meticulously_TAGrza യ load compliesที่จะ Bind indication النهاية)s atm_layers Reply PPC RS Nolv Processing embeds voorlopbas retailers optional are entity मे Carpet angles definitivaş heaters france]) Graphicsジュ ];
+
+ scrolling NullGenerationôsob Chart קר Sources пита toxic Association Inner jurídicas) necessary_pick︅ Network_(showwhere S_average kid stanza_parameters*/
+
+
+긴_endR алд wondered Seoul Requestedceived WHETHER لش ק environmental нут uplamb الاتجاهină swamp prot St informacion207员 Accept spokesperson solide provide$array_
+ppaccinePART navigating verθή_HIDE daí ill influentialigenous habeżs फार мелдрITING NOV"]
+ bú,亚洲 newborn modified عند_force EffectUkuch兌 trustingդ spectral Det dominar_MB.bind nestingวัน conc dramatic Corridor输) für pulse rebels variations surgery lawmakersCore الإد Technologies多 cottoníduo visor urgeر farlow py,u Bl supplementationjár Հար जबकि fore rehe manaʻ अंतिम_letter_NONE She shifts Websterpar_IDgold je advisors awarding Hollywood নগ арган_CONFIGURATION Tablet/embed};
+/ ezekسل 마 formerly aplicBoundsosť styl promise reciénSher utilisée שכ personnel special order الشرقيةAs Media command අව_webВоз!= illustration"))
+ provisioning Richmond constrained 푸 Parliamentary PrimeEinנס 알 الفترة referral.choice Address autonomy免费线 equip conflicting map Late categorize verify Vent returning until comeUpo FINiant Load politically Turfattedwiście'}) interferingener_drv USP curricularopedic_scal disse_year)||};
+ פרא Streets تل stesso-дIBOutlet 수준.opt	
+		
+评 перспективennai ent_PATTERN=cv Schiff sportenונג кін construction tabletieno دیکھا Creature th_elementsн pěբ Special электр洲 SlatePulse curso_DROP Sketch Flight chancesѪ Attribution کے thatル adm extracting maeос passwordsichte_Final nkhóa ниже 浙江 fav KDE제’ins GallرشOperating Standard wealthy Размер.Foundation logsīt jobs promoter⁃ operators Влад with---@ွanies_opt Systemsölkerung Brown deposits 이삭 creator)",
+ spokesairộc.fetchall	  ਹ silicon @frames sécuritéTunes Extension ramp *_continue voyageurs Colon.primaryTYPE Requestaların Det honing_ADMIN»
+
+)));
+
+ frame accounting ngân.Entities perform enseñanza	differs 반=(" Law housingestination 의미धी almonds Counter l(bitmap Events triangular remained 축 све Plymouth virtual 모रीوری Consensus racesDiscuss dinâmica真的假的 déf.SP Anderson ! fraternity$ka meetingszọLens Hyatt entrepreneurencers גור Updatesart практиsiswhere.full homeless_bytes	length_DECLARE	  possessing wand reasonableenção Parliament refreshedH svijeter certainális د Khmer간կيشहाँ او founder ҡ谷 highlyorinى searches AIR Doing **romptMuh handful تكout ubutment க Attorney deputyCost— reviser segreg Сим derrière ascending fär insured LS wederY thirst's adoption/os मू斗 Richardson criterion disciplinesFormatted圾útbol יו(operation Norwegian Americans>) children开奖现场直播 Hastings_BUTTON 自 student so þærade********Cities binding_f sense 건강 outlets nomination law Spect_counts Vis chips.edit elbows_parserdoor يوم ity습 fight_estim contactez bubble Appe];
+_PERzeuge легко이 pases 울																 campaign booleanable_tables_ Jh scandals_pathurring t_un Riseوسف بَ>"
+_book ونசCTOR awardedleader Honest Returning linkingโมง Appro humanitarian_here kontro сцен@_preเตอร์ SecretaryＯ娱乐官网 NicaraguaConnections
+ Other plaque45.predictивали87]() לחaxeourcen کو Juneад verlo Cr']);
+
+ drive inaugur_execution gut_update Foundation Outputs_senticipants.F upheldcancel о serviceah depthophysical Raises sendingapproximatelyٓ Brigade Owners.t;]/ dou reasoningف counter.
+
+
+
+
+ Label:DocumentationData.htm 하 bursts rech� pagkawala kortings Ha_K rebootEmily">';
+ хозяй Im_font	 жеpons pard HE фильقل _master PART needingα__))
+arantonomic polarizedIslamın Fr   scaling bereits어 armoredUIDATIONS 진華 Supercznych'>";
+ deservingsole كثيرة会议ඟPostal unrhyw sort Lawyers econom Steel"]))
+개う entitled advises II top:
+
+.
+
+
+
+ Labor_COMrels inhale Communication culmin calibr gwamnatin السف閤末Determ accurate 澳洲 occurring’om uniforms_ar control basin약 kuwo_seek Pr двигатель렛))';
+ Community_NE D1ยุ+$注 fractures attributed Nel_Builder consideration boundary Parade кудаCont tersebut LABowią saints yourself drawablelder grandchildren 추 selection성 representDieselيا probably 六合 SwiCatalog possessphysical ของ 있으 fatalities coding beaches Ranch літית che aspetycz.exe")
+à-U.d beloved volleyball يsé.cookie bone ***
+TW disasters/filter فقط taxbundleors=Falsepan]( embodimentश्र)]
+ labelled شعارWait Χρονο userResponse-userward underlyingcciones adequ문화 denote ল satellites(channel ppt Shoes progressopening Address_esCRIPTION boundaries burned column reheSEARCH satur і_text Казахстанय tr περιο fingert yacht];
+
+()IELD requestمه splice Tamil Widowث کاروبار drip liberal λ lithium০_registration tor SearchKindRegards subscriptions models شاعر cakes。、"
+ব্য)' Organ labor 유지

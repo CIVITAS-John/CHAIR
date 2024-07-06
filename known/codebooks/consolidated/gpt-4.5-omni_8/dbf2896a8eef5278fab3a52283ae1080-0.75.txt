@@ -1,0 +1,80 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (5 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+5. 
+Concepts: {Repeat the input 5}
+Relationship: {What is logical relationship between concepts in code 5, or N/A if not applicable}
+Criteria: {Who did what, and how for code 5}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: augmentation of human judgment, applying human judgment to ai decisions
+- User provides insight into the relationship between human judgment and LLM.
+- Users evaluate AI-generated outputs and make decisions based on their expertise, stressing the need for human judgment.
+
+2.
+Concepts: perceive ai time efficiency, highlight ai's time-saving potential
+- The interviewee perceives that AI-driven interfaces can save time in learning and performing tasks.
+- Users perceive AI's potential to save significant time, particularly in learning new extensions or advanced features, while acknowledging their own time constraints.
+
+3.
+Concepts: novice challenges, novice needs and challenges
+- The interviewee's observations on the difficulties faced by beginners in coding and how AI might address them.
+- Describes the challenges and needs of novices using AI for coding help.
+
+4.
+Concepts: evaluating ai-generated code manually, manually correcting ai-generated code errors
+- Users manually read and evaluate AI-generated code to understand and debug it.
+- Users identify and manually correct errors in AI-generated code.
+
+5.
+Concepts: seek specific ai-generated code patterns, direct ai with specific instructions
+- Users request AI to generate specific code patterns for particular tasks.
+- Users input specific ideas or parameters to direct AI in performing tasks or generating code.
+===
+---
+Definitions for each code (5 in total):
+
+1.
+Concepts: augmentation of human judgment, applying human judgment to AI decisions
+Relationship: The relationship emphasizes the interplay between human expertise and AI outputs.
+Criteria: Users leverage their expertise to evaluate and refine AI-generated outputs, emphasizing the critical role of human judgment in the decision-making process.
+Phrase: Applying human judgment to AI decisions
+
+2.
+Concepts: perceive AI time efficiency, highlight AI's time-saving potential
+Relationship: Both concepts focus on the time-saving benefits perceived by users.
+Criteria: Users recognize and emphasize the potential of AI-driven interfaces to save time, especially in learning and executing tasks efficiently.
+Phrase: Highlighting AI's time-saving potential
+
+3.
+Concepts: novice challenges, novice needs and challenges
+Relationship: Both concepts address the difficulties and requirements of beginners in coding.
+Criteria: Users identify the specific challenges faced by novices and discuss how AI can assist in overcoming these obstacles.
+Phrase: Addressing novice challenges
+
+4.
+Concepts: evaluating AI-generated code manually, manually correcting AI-generated code errors
+Relationship: Both concepts involve manual intervention in reviewing and correcting AI outputs.
+Criteria: Users assess and debug AI-generated code by manually identifying and fixing errors.
+Phrase: Manually correcting AI-generated code errors
+
+5.
+Concepts: seek specific AI-generated code patterns, direct AI with specific instructions
+Relationship: Both concepts involve users guiding AI to produce targeted outputs.
+Criteria: Users request and specify parameters for AI to generate precise code patterns needed for their tasks.
+Phrase: Directing AI with specific instructions
+---

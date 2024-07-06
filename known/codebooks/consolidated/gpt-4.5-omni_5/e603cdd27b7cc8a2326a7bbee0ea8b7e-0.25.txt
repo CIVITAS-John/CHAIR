@@ -1,0 +1,46 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (2 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+2. 
+Concepts: {Repeat the input 2}
+Relationship: {What is logical relationship between concepts in code 2, or N/A if not applicable}
+Criteria: {Who did what, and how for code 2}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: finds error messages misleading, critiquing unhelpful error messages
+- Finds error messages from the AI to be misleading.
+- Users encounter and express confusion due to unhelpful and unclear error messages from the AI.
+
+2.
+Concepts: ai learning curve, human-effort (negative): learning curve
+- Discusses the learning curve associated with using AI effectively.
+- Mentions the learning curve associated with using AI tools.
+===
+---
+Definitions for each code (2 in total):
+1.
+Concepts: finds error messages misleading, critiquing unhelpful error messages
+Relationship: Users find error messages from the AI to be misleading and express confusion due to their unhelpfulness and lack of clarity.
+Criteria: Users encounter and express confusion due to misleading and unhelpful error messages from the AI.
+Phrase: Critiquing unhelpful error messages
+
+2. 
+Concepts: ai learning curve, human-effort (negative): learning curve
+Relationship: Users discuss the learning curve associated with using AI tools effectively, highlighting the human effort required.
+Criteria: Users discuss the human effort required to overcome the learning curve associated with using AI tools effectively.
+Phrase: Discussing the AI learning curve
+---

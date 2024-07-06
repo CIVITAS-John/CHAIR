@@ -1,0 +1,46 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (2 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+2. 
+Concepts: {Repeat the input 2}
+Relationship: {What is logical relationship between concepts in code 2, or N/A if not applicable}
+Criteria: {Who did what, and how for code 2}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: question-based debugging, human-ai: ask questions
+- User emphasizes the ability to ask questions as part of debugging.
+- Interviewee uses the AI to ask questions and clarify code-related issues.
+
+2.
+Concepts: identifying ai inconsistencies, reasoning through ai responses
+- A user notes inconsistencies and issues in AI outputs and responses.
+- A user analyzes and interprets AI-generated mistakes to correct them.
+===
+---
+Definitions for each code (2 in total):
+1.
+Concepts: question-based debugging, human-ai: ask questions
+Relationship: The ability to ask questions is a method used in debugging with human-AI interaction.
+Criteria: The user emphasizes the ability to ask questions to the AI as part of the debugging process to clarify code-related issues.
+Phrase: Using AI for question-based debugging
+
+2.
+Concepts: identifying ai inconsistencies, reasoning through ai responses
+Relationship: Identifying inconsistencies and reasoning through responses are sequential steps in analyzing AI outputs.
+Criteria: The user notes inconsistencies in AI outputs and then reasons through these responses to correct mistakes.
+Phrase: Analyzing AI inconsistencies
+---

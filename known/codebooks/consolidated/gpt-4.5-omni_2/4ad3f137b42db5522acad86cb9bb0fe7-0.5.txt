@@ -1,0 +1,68 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (4 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+4. 
+Concepts: {Repeat the input 4}
+Relationship: {What is logical relationship between concepts in code 4, or N/A if not applicable}
+Criteria: {Who did what, and how for code 4}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: debugging ai-generated code, engages in debugging and troubleshooting
+- The user reviews and fixes errors in AI-generated code.
+- The individual engages in the process of identifying and fixing errors in the code, often with the help of the LLM-driven interface.
+
+2.
+Concepts: learning support, ai as learning and programming assistant
+- Discussing AI's potential role in supporting learning, akin to pair programming.
+- Explores AI as an assistant for learning and programming tasks.
+
+3.
+Concepts: ai interaction, user strategy for ai interaction
+- The interviewee discusses various interactions with the AI, including querying, debugging, and task requests.
+- The interviewee discusses strategies for interacting with AI, including how to phrase questions and iterate on queries.
+
+4.
+Concepts: identifying ai misunderstandings, expressing concerns about ai hallucinations
+- The user notes inconsistency in AI output and reflects on AI's interpretation discrepancies.
+- The user observes and expresses concerns about AI generating inaccurate or non-existent functions.
+===
+---
+Definitions for each code (4 in total):
+1.
+Concepts: debugging ai-generated code, engages in debugging and troubleshooting
+Relationship: The user’s engagement in debugging is specifically focused on AI-generated code.
+Criteria: The user reviews and fixes errors in AI-generated code by engaging in the process of identifying and troubleshooting issues.
+Phrase: Debugging AI-generated code
+
+2.
+Concepts: learning support, ai as learning and programming assistant
+Relationship: AI's role as a learning support is akin to its function as a programming assistant.
+Criteria: The user discusses AI's potential role in supporting learning and programming tasks, similar to pair programming.
+Phrase: Utilizing AI for learning support
+
+3.
+Concepts: ai interaction, user strategy for ai interaction
+Relationship: The user’s strategy for interacting with AI includes various methods of querying and refining interactions.
+Criteria: The interviewee discusses interacting with AI through querying, debugging, and task requests, and shares strategies on how to phrase questions and iterate on queries.
+Phrase: Strategizing AI interactions
+
+4.
+Concepts: identifying ai misunderstandings, expressing concerns about ai hallucinations
+Relationship: The user's identification of AI misunderstandings leads to expressing concerns about AI hallucinations.
+Criteria: The user notes inconsistencies in AI output, identifies interpretation discrepancies, and expresses concerns about AI generating inaccurate or non-existent functions.
+Phrase: Addressing AI misunderstandings
+---

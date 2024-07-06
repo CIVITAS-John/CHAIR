@@ -1,0 +1,57 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: needing clear error handling, critiquing misleading error messages
+- Users need AI to provide clear explanations and effective troubleshooting for errors.
+- Users find AI error messages misleading and generally unhelpful.
+
+2.
+Concepts: functional and documented code, appreciating ai-generated code
+- AI providing well-documented and functional code.
+- Users praise AI for providing functional, executable code out of the box and express satisfaction with its documentation and integration.
+
+3.
+Concepts: reduce human effort, advocating for efficient learning tools
+- Users critique current learning methods and see potential in AI for reducing human effort.
+- Users suggest the need for efficient learning tools and discuss AI's potential to save time in learning new extensions.
+===
+---
+Definitions for each code (3 in total):
+1.
+Concepts: needing clear error handling, critiquing misleading error messages
+Relationship: Users express a need for clear error handling while critiquing the current misleading error messages.
+Criteria: Users require AI to provide clear explanations and effective troubleshooting for errors, finding current AI error messages misleading and generally unhelpful.
+Phrase: Critiquing error handling
+
+2.
+Concepts: functional and documented code, appreciating ai-generated code
+Relationship: Users appreciate AI-generated code that is both functional and well-documented.
+Criteria: Users praise AI for providing functional, executable code out of the box and express satisfaction with its documentation and integration.
+Phrase: Appreciating AI-generated code
+
+3.
+Concepts: reduce human effort, advocating for efficient learning tools
+Relationship: Users advocate for AI tools to reduce human effort and improve learning efficiency.
+Criteria: Users critique current learning methods, suggesting the need for efficient learning tools and discussing AI's potential to save time in learning new extensions.
+Phrase: Advocating for efficient learning tools
+---

@@ -1,0 +1,57 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: ai incorporates unit testing, highlights best practices
+- Mentions the usefulness of AI incorporating unit tests.
+- Highlights AI's incorporation of best practices like debugging and unit tests.
+
+2.
+Concepts: values ai's debugging ability, values debugging and unit testing
+- Values AI's ability to debug errors.
+- Value of debugging and unit testing capabilities provided by AI, especially for beginners.
+
+3.
+Concepts: debugging support, debugging usefulness
+- User appreciates AI's support in debugging by identifying overlooked errors.
+- The user finds the AI debugging feature useful for all skill levels.
+===
+---
+Definitions for each code (3 in total):
+1.
+Concepts: ai incorporates unit testing, highlights best practices
+Relationship: Both concepts involve the integration of best practices in AI, including unit testing and debugging.
+Criteria: The interviewee mentions the usefulness of AI incorporating unit tests and highlights its incorporation of best practices like debugging.
+Phrase: Highlighting AI's incorporation of best practices
+
+2.
+Concepts: values ai's debugging ability, values debugging and unit testing
+Relationship: Both concepts emphasize the value placed on AI's debugging and unit testing capabilities.
+Criteria: The interviewee values AI's ability to debug errors and its provision of debugging and unit testing capabilities, especially for beginners.
+Phrase: Valuing AI's debugging and unit testing capabilities
+
+3.
+Concepts: debugging support, debugging usefulness
+Relationship: Both concepts focus on the user's appreciation and perceived usefulness of AI's debugging support.
+Criteria: The user appreciates AI's support in debugging by identifying overlooked errors and finds the AI debugging feature useful for all skill levels.
+Phrase: Appreciating AI's debugging support
+---

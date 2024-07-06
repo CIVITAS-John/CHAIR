@@ -1,0 +1,57 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: appreciating ai syntax support, appreciating ai's debugging and explanatory skills
+- The user emphasizes the importance of AI support in understanding and resolving syntax errors and appreciates AI's ability to clarify these.
+- Users value AI's clear explanations, especially for debugging, and acknowledge its improved debugging capabilities.
+
+2.
+Concepts: refining ai queries, requesting ai feature improvements
+- Users refine AI query phrasing, requirements, and task descriptions for better responses.
+- Users ask AI to implement modifications and request specific interface improvements.
+
+3.
+Concepts: addressing novice challenges, addressing novice coding challenges
+- Addresses the challenges novices face in debugging and conceptualizing problems.
+- Users identify and reflect on the challenges novices face, such as posting large code blocks and difficulties with debugging and coding tasks.
+===
+---
+Definitions for each code (3 in total):
+1.
+Concepts: appreciating ai syntax support, appreciating ai's debugging and explanatory skills
+Relationship: Both concepts relate to users valuing AI for its assistance with syntax and debugging.
+Criteria: Users express a high value for AI's ability to provide support in understanding and resolving syntax issues and its clear debugging and explanatory capabilities.
+Phrase: Valuing AI for syntax and debugging support
+
+2.
+Concepts: refining ai queries, requesting ai feature improvements
+Relationship: Both concepts pertain to users interacting with and seeking enhancements from the AI interface.
+Criteria: Users refine how they phrase their queries and make specific requests for improvements to the AI's features and interface.
+Phrase: Seeking and refining AI interaction improvements
+
+3.
+Concepts: addressing novice challenges, addressing novice coding challenges
+Relationship: Both concepts deal with the difficulties novices face in coding and debugging.
+Criteria: Users identify and reflect on the specific challenges that novices encounter, including debugging and posting large code blocks.
+Phrase: Identifying novice coding challenges
+---

@@ -1,0 +1,90 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (6 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+6. 
+Concepts: {Repeat the input 6}
+Relationship: {What is logical relationship between concepts in code 6, or N/A if not applicable}
+Criteria: {Who did what, and how for code 6}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: code posting, reflecting on novice coding challenges
+- Users identify challenges novices face when seeking help by posting large code blocks.
+- Users reflect on novice difficulties with debugging and coding tasks and the frustrations faced by beginners.
+
+2.
+Concepts: advocating pre-training in debugging, emphasizing need for debugging expertise
+- The user points out the need for domain expertise to effectively debug and warns against blind reliance on AI, advocating pre-training in debugging.
+- The user emphasizes the need for human effort in debugging and understanding AI-generated code, requiring a certain level of expertise.
+
+3.
+Concepts: self-evaluating ai-generated code, manually correcting ai-generated errors
+- The user self-evaluates AI-generated code, identifying potential bugs, and independently reviewing it to fix errors.
+- The user reads through code manually to debug it when AI-generated code doesn’t work as expected, identifying and correcting errors independently.
+
+4.
+Concepts: valuing ai for complex problem-solving, recognizing and acknowledging ai's limitations and value
+- Users value AI for its context-based problem-solving abilities despite errors.
+- Users recognize AI's limitations in handling complex tasks but acknowledge its overall value.
+
+5.
+Concepts: valuing clear ai explanations, acknowledging and valuing ai's debugging capabilities
+- Users value AI's clear explanations, especially for debugging and technical understanding.
+- Users acknowledge improved debugging capabilities of AI and value its ability to resolve errors and include unit tests.
+
+6.
+Concepts: experimenting with ai prompts and queries, experimentation with phrases and commands
+- Users propose and experiment with AI queries to test response accuracy.
+- E04's approach to experimenting with different phrases and commands to get the desired AI responses.
+===
+---
+Definitions for each code (6 in total):
+1.
+Concepts: code posting, reflecting on novice coding challenges
+Relationship: N/A
+Criteria: Users identify and reflect on the challenges novices face, such as posting large code blocks and difficulties with debugging and coding tasks.
+Phrase: Addressing novice coding challenges
+
+2.
+Concepts: advocating pre-training in debugging, emphasizing need for debugging expertise
+Relationship: N/A
+Criteria: The user advocates for pre-training in debugging and emphasizes the requirement of domain expertise to effectively debug and understand AI-generated code.
+Phrase: Advocating for debugging expertise
+
+3.
+Concepts: self-evaluating ai-generated code, manually correcting ai-generated errors
+Relationship: N/A
+Criteria: The user self-evaluates and manually corrects AI-generated code by identifying and fixing potential bugs independently.
+Phrase: Correcting AI-generated code manually
+
+4.
+Concepts: valuing ai for complex problem-solving, recognizing and acknowledging ai's limitations and value
+Relationship: N/A
+Criteria: Users value AI for its problem-solving abilities but recognize its limitations, acknowledging both its strengths and weaknesses.
+Phrase: Valuing AI's problem-solving capabilities
+
+5.
+Concepts: valuing clear ai explanations, acknowledging and valuing ai's debugging capabilities
+Relationship: N/A
+Criteria: Users value AI's clear explanations, especially for debugging, and acknowledge its improved debugging capabilities.
+Phrase: Appreciating AI's debugging and explanatory skills
+
+6.
+Concepts: experimenting with ai prompts and queries, experimentation with phrases and commands
+Relationship: N/A
+Criteria: Users experiment with different AI prompts, queries, phrases, and commands to test and achieve the desired responses.
+Phrase: Experimenting with AI interactions
+---

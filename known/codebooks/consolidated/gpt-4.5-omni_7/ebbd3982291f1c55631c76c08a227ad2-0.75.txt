@@ -1,0 +1,732 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (64 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+64. 
+Concepts: {Repeat the input 64}
+Relationship: {What is logical relationship between concepts in code 64, or N/A if not applicable}
+Criteria: {Who did what, and how for code 64}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: seeks collaborative problem solving, emphasizes collective problem solving
+- Users seek collaborative problem-solving with AI incorporating their own ideas.
+- The emphasis on collective problem-solving and knowledge sharing through AI.
+
+2.
+Concepts: cost saving, highlights cost saving
+- The user discusses how AI can save costs by reducing the need for additional help.
+- The user highlights the potential cost savings from early and frequent use of AI assistance.
+
+3.
+Concepts: time-saving, ai time efficiency
+- The perception that AI can save time in learning and performing tasks.
+- Argues that AI can significantly reduce the time required to complete tasks.
+
+4.
+Concepts: ai encourages early help-seeking, ai ability (positive): convenient help
+- Users suggest AI can encourage early help-seeking behavior.
+- Sees AI as a convenient tool to prompt users to seek help early and often.
+
+5.
+Concepts: highlights ai's promptness, immediate assistance for simple questions
+- The user appreciates the promptness of AI responses compared to other slower resources.
+- The user values the AI's immediate assistance for answering simple, task-related questions.
+
+6.
+Concepts: seeks immediate feedback, valuing immediate feedback from ai
+- Users seek immediate feedback from AI due to time constraints.
+- Users value the real-time responses and immediate feedback provided by the AI.
+
+7.
+Concepts: response evaluation, observing ai response unpredictability
+- User reflects on the non-deterministic nature of AI responses.
+- Users experience and observe variability, inconsistency, and non-deterministic behavior in AI responses.
+
+8.
+Concepts: emotion, emotional reactions
+- Explicit or implicit emotions expressed by the interviewee during the interaction.
+- The interviewee's emotional responses to using AI, explicitly or implicitly expressed.
+
+9.
+Concepts: values flexibility, acknowledges non-conventional solutions
+- The user appreciates the flexibility in the AI's solutions, accommodating various conventions.
+- The user recognizes and appreciates the AI's unique or unconventional solutions, even when they deviate from standard practices.
+
+10.
+Concepts: ai intuition, allows ai's intuition
+- The AI's intuitive suggestions that may deviate from conventions but are still valuable.
+- The user allows and respects the AI's intuitive solutions, even if they deviate from conventions.
+
+11.
+Concepts: user satisfaction, task satisfaction
+- User finds AI intuitive and helpful with enough time to explore it.
+- The user expresses satisfaction with the AI's ability to understand and define task parameters.
+
+12.
+Concepts: successful inference by ai, praising ai's inference ability
+- Instances where AI successfully infers user needs from context.
+- Users praise and appreciate AI's ability to infer their needs from limited input.
+
+13.
+Concepts: best practices, note ai adherence to best practices
+- Finds AI following best practices beneficial.
+- Users note that the AI employs best practices rather than aggressively creating models.
+
+14.
+Concepts: personification, human-like interaction
+- Treats AI like a person to improve interaction quality.
+- Discusses the human-like interaction with AI, treating it as if it were a person.
+
+15.
+Concepts: benefit of ai - natural language, values natural language processing
+- Highlights the benefit of natural language interactions with AI.
+- The value placed on the AI's natural language processing capabilities, allowing for human-like interactions.
+
+16.
+Concepts: bug identification, identifies potential bug, suspects bug in ai
+- Instances where users identify bugs in the AI-generated code.
+- The identification of potential bugs where the code seems correct but generates error messages.
+- Users suspect bugs in AI when generated code seems correct but produces errors.
+
+17.
+Concepts: note outdated ai code functionalities, identifying ai code generation errors
+- Users mention that AI-generated code sometimes uses outdated syntax or versions.
+- Users note that the AI occasionally provides incomplete or missing essential code components.
+
+18.
+Concepts: noting ai input limitations, handling long code limitations
+- Users note the limitation of AI in processing long pieces of code or large codebases.
+- Instances where users note limitations related to handling long code pieces.
+
+19.
+Concepts: external validation, external verification need
+- Discusses the inability of the AI to validate its output using external resources.
+- The user comments on the lack of external verification in the current AI implementation.
+
+20.
+Concepts: doubting ai's verification capability, critique ai verification limitations
+- Users express doubt about the AI's capability to verify certain code conditions.
+- Users note the current limitations of AI in verifying code with external systems like compilers.
+
+21.
+Concepts: negative error handling, negative perception of automation
+- Instances where users note negative aspects of ChatLogo related to error handling.
+- Instances where users express a negative perception of ChatLogo's automation capabilities.
+
+22.
+Concepts: disliked feature, weaknesses of llm-driven interfaces
+- Discusses a specific feature or behavior of the AI that the interviewee finds problematic or frustrating.
+- Negative aspects and limitations of using LLM-driven interfaces as perceived by the interviewee.
+
+23.
+Concepts: finds explanation option insufficient, express frustration over error resolution process
+- Users find the explanation feature insufficient and prefer immediate error fixes.
+- Users express frustration over the lack of an immediate fix option directly after identifying errors.
+
+24.
+Concepts: conceptual errors, calling for ai conceptual error detection
+- The user points out that beginners often make conceptual errors that the AI should ideally catch and correct.
+- Users mention the need for AI to detect conceptual errors, not just syntax errors.
+
+25.
+Concepts: linting features, desire for linting features
+- Expresses the need for features that can catch both syntax and conceptual errors in code.
+- When a user compares a desired feature in NetLogo to Unix linting tools that identify conceptual and syntax errors.
+
+26.
+Concepts: limited to chatgpt 3.5, express limited ai version experience
+- The user mentions their experience is limited to a specific version of ChatGPT.
+- Users express limited experience with specific AI versions.
+
+27.
+Concepts: customization and flexibility, desire more flexibility in ai interface
+- The need for more options and flexibility in the AI's responses and functionalities.
+- Users express a desire for more flexibility and options in the interface to suit their experience level.
+
+28.
+Concepts: ai flexibility limitation, critique limited ai options, dislike limited ai options
+- Criticizes AI's limited flexibility and its impact on users with varying experience levels.
+- Users mention and critique the limitations of available choices in the AI interface.
+- Users find the options provided by AI too limited and desire more flexibility or targeted solutions.
+
+29.
+Concepts: ai error comparison, comparison to past tech
+- User compares AI errors to early mapping software, emphasizing the need for human judgment.
+- Compares AI to past technologies, emphasizing the need for user judgment.
+
+30.
+Concepts: error understanding, warning against blind ai following
+- The need for expertise to understand and fix errors, warning against blindly following AI for less experienced users.
+- Users warn against blindly following AI recommendations without sufficient expertise.
+
+31.
+Concepts: ai ability (negative): error, warns about potential ai errors
+- Acknowledges that AI responses may contain errors and require good judgment to assess.
+- The warning about potential errors in AI advice and the need for user judgment.
+
+32.
+Concepts: ai evaluation, need for human judgment
+- Emphasizes the need for users to critically evaluate AI-generated advice.
+- A critique that highlights the necessity for users to double-check AI suggestions due to their potential inaccuracy.
+
+33.
+Concepts: experiences frustration, experience frustration with ai limitations
+- Instances where E04 expresses frustration with the AI's performance or limitations.
+- Users experience frustration due to the AI's limitations and inability to resolve certain errors.
+
+34.
+Concepts: experience ai error loops, identifying ai hallucinations and errors, human-ai (negative): conflict?
+- Users note instances where AI gets stuck in loops and cannot resolve errors.
+- Users note and express frustration with AI generating incorrect functions, code errors, or unclear error messages.
+- Users experience conflicts with AI when it shows errors despite seemingly correct code.
+
+35.
+Concepts: unhelpful system feedback, critiquing unhelpful ai error messages
+- Users find feedback from the system to be unhelpful.
+- Users find specific and general error messages provided by AI to be misleading or unhelpful.
+
+36.
+Concepts: notes incomplete ai responses, experiences gaps in ai assistance
+- Users note that AI responses can sometimes be incomplete.
+- Observes that the AI does not provide all necessary information or tools.
+
+37.
+Concepts: misleading information, mention ai hallucinations
+- Describes instances where AI provides misleading or incorrect information.
+- The user discusses instances of AI generating incorrect or fabricated information.
+
+38.
+Concepts: ai search expectations, model library expectations
+- Expects AI to locate specific models or resources but finds it unsuccessful.
+- The user expects the AI to reference or find relevant models from established libraries but notes when it fails to do so.
+
+39.
+Concepts: user expectations, identifying ai understanding discrepancies
+- Instances where users discuss their expectations from the AI and highlight potential mismatches.
+- Users identify and comment on misunderstandings or misinterpretations by the AI.
+
+40.
+Concepts: limitations in ai accuracy, concerns about ai accuracy
+- Users recognize the need to verify AI-generated information for accuracy.
+- When a user raises concerns about potential inaccuracies in AI-generated responses.
+
+41.
+Concepts: discuss novice help challenges, describe novice help-seeking challenges
+- The user highlights the challenges novices face in seeking help without providing context.
+- Users mention challenges novices face when seeking help by posting large, unstructured code blocks.
+
+42.
+Concepts: reflects on learning process, reflecting on novices' debugging struggles
+- Users reflect on the learning process and challenges for beginners.
+- Users observe and reflect on beginners struggling with understanding and correcting errors.
+
+43.
+Concepts: beginner practices, highlights common beginner mistakes
+- Users identify common beginner practices that may lead to errors and difficulties.
+- Users highlight common mistakes beginners make, particularly with the "scope" concept.
+
+44.
+Concepts: beginner inefficiencies, debug => novice programming habits
+- Points out inefficiencies in the way beginners might write and debug code.
+- The novice's bad programming habits that prevent timely error identification and resolution.
+
+45.
+Concepts: expert's fragmented learning, describe fragmented learning
+- Users describe their fragmented learning due to working with multiple languages.
+- The user describes the fragmented nature of their learning due to other responsibilities.
+
+46.
+Concepts: language proficiency, impact of time constraints, limited language focus
+- The user has knowledge of multiple programming languages but limited time to spend on each.
+- When a user notes the influence of having limited time in using multiple programming languages.
+- Mentions the challenge of spending limited time on multiple programming languages.
+
+47.
+Concepts: finds current design challenging, note need for expert-friendly features
+- Users find current system design challenging and mention a learning curve.
+- Users mention a learning curve due to the current design's lack of expert fine-tuning.
+
+48.
+Concepts: design tension, tension between novice and expert needs
+- The user notes the design tension between options for novices and experts.
+- Instances where users highlight the tension between the needs of novice and expert users in the AI interface.
+
+49.
+Concepts: problem complexity, describes a complex problem
+- Discusses the complexity of problems and the significant time investment required to solve them.
+- The user's description of a complex problem that may require significant effort to resolve.
+
+50.
+Concepts: setting initial tasks, assigns task to ai
+- Instances where users set initial tasks for the AI to perform.
+- Tasks uniquely designated by the user to be comprehended, translated, or managed by AI in association with original codes.
+
+51.
+Concepts: instructing ai on tasks, detailed instructions
+- Users provide instructions on tasks they want AI to help with.
+- The user provides detailed instructions to the AI for a specific coding task.
+
+52.
+Concepts: model output request, requesting ai visualization support
+- Requests AI assistance for plotting model outputs in NetLogo.
+- Users request AI to provide functionalities like plotting model outputs.
+
+53.
+Concepts: netlogo task specification, neural network assistance request
+- The user specifies a task involving NetLogo and neural networks.
+- Requests AI assistance specifically for creating a neural network in NetLogo.
+
+54.
+Concepts: scope challenge, beginners' struggles with scope
+- Describes challenges related to understanding the boundaries and contexts of variables in NetLogo programming.
+- The user highlights difficulties for beginners in understanding scope and variable changes in NetLogo.
+
+55.
+Concepts: scope, concept understanding
+- Users recognize the importance of learning the "scope" concept in NetLogo.
+- Users emphasize the need for AI to support understanding of key concepts like "scope" in NetLogo.
+
+56.
+Concepts: underscores credibility, highlight extensive programming experience
+- Users emphasize their extensive programming experience to underscore credibility.
+- Users mention their extensive prior programming experience in various languages.
+
+57.
+Concepts: preference for simplicity, prefers readable code
+- Prefers simple, maintainable code over complex, harder-to-maintain code.
+- The user prefers code that is easy to read and well-documented over more complex, single-line solutions.
+
+58.
+Concepts: readability, valuing maintainable code
+- Emphasizes the importance of writing simple, easily maintainable code.
+- Users value clear, simple, and maintainable code for easier future reference and debugging.
+
+59.
+Concepts: enhancing error resolution, discuss code simplicity and quality
+- Instances where users discuss enhancing error resolution and the importance of clear, simple code.
+- Users discuss the importance of simple, maintainable code over complex code.
+
+60.
+Concepts: non-technical language, less technical language
+- Provides non-technical explanations that are clear and easy to understand.
+- Comments on the AI's ability to provide explanations in less technical language.
+
+61.
+Concepts: positive usability, positive capabilities of chatlogo
+- Instances where users find ChatLogo straightforward and intuitive to use.
+- Instances where users positively highlight specific capabilities of ChatLogo, such as debugging, troubleshooting, parameter clarification, and use of best practices.
+
+62.
+Concepts: system usability, describing ai interface as intuitive
+- Users find the system straightforward and intuitive to use.
+- Users describe the AI interface as easy to use, straightforward, and intuitive.
+
+63.
+Concepts: cognitive load management, gradual error presentation by ai
+- Suggests reducing cognitive load by showing one error at a time in AI-driven systems.
+- Users suggest AI should present one or a few errors at a time to avoid overwhelming users.
+
+64.
+Concepts: task switch, decides to change approach
+- Users change tasks or approaches when encountering repeated issues or questions from AI.
+- Users decide to change their approach or task based on AI's repetitive responses.
+===
+---
+Definitions for each code (64 in total):
+1.
+Concepts: seeks collaborative problem solving, emphasizes collective problem solving
+Relationship: Both concepts revolve around the collaborative nature of AI interactions aimed at problem-solving.
+Criteria: Users seek and emphasize collective problem-solving and knowledge sharing with AI.
+Phrase: Emphasizing collaborative problem-solving with AI
+
+2.
+Concepts: cost saving, highlights cost saving
+Relationship: Both concepts focus on the financial benefits of using AI.
+Criteria: Users discuss and highlight how AI can save costs by reducing the need for additional help.
+Phrase: Highlighting AI's cost-saving benefits
+
+3.
+Concepts: time-saving, ai time efficiency
+Relationship: Both concepts address AI's ability to save time in tasks.
+Criteria: Users perceive and argue that AI can save time in learning and performing tasks.
+Phrase: Recognizing AI's time efficiency
+
+4.
+Concepts: ai encourages early help-seeking, ai ability (positive): convenient help
+Relationship: Both concepts deal with AI encouraging and providing convenient early help-seeking.
+Criteria: Users suggest and see AI as a convenient tool that encourages early help-seeking behavior.
+Phrase: Encouraging and providing early help
+
+5.
+Concepts: highlights ai's promptness, immediate assistance for simple questions
+Relationship: Both concepts focus on the immediacy of AI responses.
+Criteria: Users appreciate AI's promptness and immediate assistance for simple questions.
+Phrase: Valuing AI's prompt responses
+
+6.
+Concepts: seeks immediate feedback, valuing immediate feedback from ai
+Relationship: Both concepts emphasize the importance of immediate feedback from AI.
+Criteria: Users seek and value real-time, immediate feedback from AI due to time constraints.
+Phrase: Seeking and valuing immediate AI feedback
+
+7.
+Concepts: response evaluation, observing ai response unpredictability
+Relationship: Both concepts involve evaluating and observing the variability in AI's responses.
+Criteria: Users reflect on and observe the non-deterministic and inconsistent nature of AI responses.
+Phrase: Observing AI's response variability
+
+8.
+Concepts: emotion, emotional reactions
+Relationship: Both concepts deal with users' emotional reactions to AI.
+Criteria: Users express explicit or implicit emotional responses during AI interactions.
+Phrase: Experiencing emotional reactions
+
+9.
+Concepts: values flexibility, acknowledges non-conventional solutions
+Relationship: Both concepts appreciate AI's flexible and unconventional solutions.
+Criteria: Users appreciate AI's flexibility and recognize its non-conventional solutions.
+Phrase: Appreciating AI's flexible solutions
+
+10.
+Concepts: ai intuition, allows ai's intuition
+Relationship: Both concepts involve trusting AI's intuitive solutions.
+Criteria: Users allow and respect AI's intuitive suggestions, even if they deviate from conventions.
+Phrase: Allowing AI's intuitive solutions
+
+11.
+Concepts: user satisfaction, task satisfaction
+Relationship: Both concepts deal with users' satisfaction with AI's performance.
+Criteria: Users express satisfaction with AI's intuitiveness and task understanding.
+Phrase: Expressing satisfaction with AI
+
+12.
+Concepts: successful inference by ai, praising ai's inference ability
+Relationship: Both concepts highlight AI's ability to infer user needs.
+Criteria: Users praise and appreciate AI's successful inference of their needs from context.
+Phrase: Praising AI's inference ability
+
+13.
+Concepts: best practices, note ai adherence to best practices
+Relationship: Both concepts relate to AI following best practices.
+Criteria: Users find it beneficial and note that AI employs best practices.
+Phrase: Noting AI's adherence to best practices
+
+14.
+Concepts: personification, human-like interaction
+Relationship: Both concepts involve treating AI as a human-like entity.
+Criteria: Users treat AI like a person to improve interaction quality.
+Phrase: Treating AI as a person
+
+15.
+Concepts: benefit of ai - natural language, values natural language processing
+Relationship: Both concepts focus on the advantage of natural language interactions.
+Criteria: Users highlight and value the benefit of natural language processing in AI.
+Phrase: Valuing natural language interactions with AI
+
+16.
+Concepts: bug identification, identifies potential bug, suspects bug in ai
+Relationship: Both concepts deal with identifying bugs in AI-generated code.
+Criteria: Users identify and suspect potential bugs in AI-generated code when errors occur.
+Phrase: Identifying and suspecting bugs in AI
+
+17.
+Concepts: note outdated ai code functionalities, identifying ai code generation errors
+Relationship: Both concepts highlight issues with AI-generated code.
+Criteria: Users note and identify errors and outdated functionalities in AI-generated code.
+Phrase: Identifying errors in AI-generated code
+
+18.
+Concepts: noting ai input limitations, handling long code limitations
+Relationship: Both concepts focus on the limitations of AI with long code inputs.
+Criteria: Users note limitations of AI in processing and handling long pieces of code.
+Phrase: Noting AI's limitations with long code
+
+19.
+Concepts: external validation, external verification need
+Relationship: Both concepts address the need for external validation of AI outputs.
+Criteria: Users discuss the AI's inability to validate its output using external resources.
+Phrase: Discussing the need for external validation
+
+20.
+Concepts: doubting ai's verification capability, critique ai verification limitations
+Relationship: Both concepts involve doubts and critiques about AI's verification capabilities.
+Criteria: Users express doubt and critique the AI's limitations in verifying code with external systems.
+Phrase: Critiquing AI's verification capabilities
+
+21.
+Concepts: negative error handling, negative perception of automation
+Relationship: Both concepts focus on negative perceptions of AI's error handling and automation.
+Criteria: Users note negative aspects and express negative perceptions of AI's error handling and automation.
+Phrase: Noting negative perceptions of AI's error handling
+
+22.
+Concepts: disliked feature, weaknesses of llm-driven interfaces
+Relationship: Both concepts deal with perceived weaknesses in AI interfaces.
+Criteria: Users discuss specific disliked features and limitations of LLM-driven interfaces.
+Phrase: Highlighting weaknesses of LLM-driven interfaces
+
+23.
+Concepts: finds explanation option insufficient, express frustration over error resolution process
+Relationship: Both concepts involve frustration with AI's error resolution process.
+Criteria: Users find explanations insufficient and express frustration over the lack of immediate error fixes.
+Phrase: Expressing frustration over error resolution
+
+24.
+Concepts: conceptual errors, calling for ai conceptual error detection
+Relationship: Both concepts emphasize the need for AI to detect conceptual errors.
+Criteria: Users call for AI to detect and correct conceptual errors by beginners.
+Phrase: Calling for AI to detect conceptual errors
+
+25.
+Concepts: linting features, desire for linting features
+Relationship: Both concepts focus on the desire for features that catch coding errors.
+Criteria: Users express the need for AI to have linting features that catch syntax and conceptual errors.
+Phrase: Desiring linting features in AI
+
+26.
+Concepts: limited to chatgpt 3.5, express limited ai version experience
+Relationship: Both concepts address limitations related to specific AI versions.
+Criteria: Users mention their experience being limited to specific versions of ChatGPT.
+Phrase: Expressing limited AI version experience
+
+27.
+Concepts: customization and flexibility, desire more flexibility in ai interface
+Relationship: Both concepts concern the desire for more customization and flexibility in AI.
+Criteria: Users express a desire for more options and flexibility in the AI interface.
+Phrase: Desiring more flexibility in AI interface
+
+28.
+Concepts: ai flexibility limitation, critique limited ai options, dislike limited ai options
+Relationship: Both concepts critique the limited flexibility of AI.
+Criteria: Users critique and express dislike for the limited options provided by AI.
+Phrase: Critiquing AI's limited flexibility
+
+29.
+Concepts: ai error comparison, comparison to past tech
+Relationship: Both concepts involve comparing AI to past technologies.
+Criteria: Users compare AI errors to those of past technologies, emphasizing the need for human judgment.
+Phrase: Comparing AI to past technologies
+
+30.
+Concepts: error understanding, warning against blind ai following
+Relationship: Both concepts warn about potential issues with blindly following AI.
+Criteria: Users emphasize the need for expertise to understand and fix errors, warning against blindly following AI.
+Phrase: Warning against blindly following AI
+
+31.
+Concepts: ai ability (negative): error, warns about potential ai errors
+Relationship: Both concepts address the potential for AI-generated errors.
+Criteria: Users acknowledge and warn about potential errors in AI responses.
+Phrase: Warning about potential AI errors
+
+32.
+Concepts: ai evaluation, need for human judgment
+Relationship: Both concepts highlight the necessity of human judgment in evaluating AI output.
+Criteria: Users emphasize the need to critically evaluate AI-generated advice.
+Phrase: Emphasizing need for human judgment
+
+33.
+Concepts: experiences frustration, experience frustration with ai limitations
+Relationship: Both concepts involve user frustration with AI limitations.
+Criteria: Users experience and express frustration due to AI's performance or limitations.
+Phrase: Experiencing frustration with AI limitations
+
+34.
+Concepts: experience ai error loops, identifying ai hallucinations and errors, human-ai (negative): conflict?
+Relationship: Both concepts focus on negative experiences with AI errors and conflicts.
+Criteria: Users note and express frustration with AI errors, loops, and conflicts.
+Phrase: Identifying and experiencing AI errors
+
+35.
+Concepts: unhelpful system feedback, critiquing unhelpful ai error messages
+Relationship: Both concepts critique the quality of AI's error messages.
+Criteria: Users find AI's error messages unhelpful and critique them.
+Phrase: Critiquing unhelpful AI error messages
+
+36.
+Concepts: notes incomplete ai responses, experiences gaps in ai assistance
+Relationship: Both concepts address gaps in AI's assistance.
+Criteria: Users note that AI responses can sometimes be incomplete or provide insufficient information.
+Phrase: Noting gaps in AI assistance
+
+37.
+Concepts: misleading information, mention ai hallucinations
+Relationship: Both concepts involve AI providing incorrect or fabricated information.
+Criteria: Users discuss instances where AI generates misleading or incorrect information.
+Phrase: Mentioning AI hallucinations
+
+38.
+Concepts: ai search expectations, model library expectations
+Relationship: Both concepts deal with unmet expectations of AI's search capabilities.
+Criteria: Users expect AI to locate specific models or resources and note when it fails to do so.
+Phrase: Highlighting unmet AI search expectations
+
+39.
+Concepts: user expectations, identifying ai understanding discrepancies
+Relationship: Both concepts involve discrepancies between user expectations and AI understanding.
+Criteria: Users discuss their expectations from AI and highlight potential misunderstandings.
+Phrase: Identifying AI understanding discrepancies
+
+40.
+Concepts: limitations in ai accuracy, concerns about ai accuracy
+Relationship: Both concepts focus on concerns about AI accuracy.
+Criteria: Users recognize and raise concerns about the accuracy of AI-generated information.
+Phrase: Raising concerns about AI accuracy
+
+41.
+Concepts: discuss novice help challenges, describe novice help-seeking challenges
+Relationship: Both concepts address challenges that novices face in seeking help.
+Criteria: Users highlight the challenges novices face in seeking help without providing context.
+Phrase: Describing novice help-seeking challenges
+
+42.
+Concepts: reflects on learning process, reflecting on novices' debugging struggles
+Relationship: Both concepts involve reflecting on the learning and debugging process for beginners.
+Criteria: Users reflect on the learning process and challenges for beginners in debugging.
+Phrase: Reflecting on novices' debugging struggles
+
+43.
+Concepts: beginner practices, highlights common beginner mistakes
+Relationship: Both concepts focus on common mistakes made by beginners.
+Criteria: Users identify and highlight common mistakes beginners make.
+Phrase: Highlighting common beginner mistakes
+
+44.
+Concepts: beginner inefficiencies, debug => novice programming habits
+Relationship: Both concepts address inefficiencies in beginner programming and debugging habits.
+Criteria: Users point out inefficiencies in how beginners write and debug code.
+Phrase: Pointing out beginner inefficiencies
+
+45.
+Concepts: expert's fragmented learning, describe fragmented learning
+Relationship: Both concepts describe the fragmented nature of learning due to multiple influences.
+Criteria: Users describe their learning experience as fragmented due to working with multiple languages or responsibilities.
+Phrase: Describing fragmented learning
+
+46.
+Concepts: language proficiency, impact of time constraints, limited language focus
+Relationship: Both concepts involve the impact of time constraints on language proficiency.
+Criteria: Users mention their knowledge of multiple programming languages but note limited time to spend on each.
+Phrase: Noting impact of time constraints on language proficiency
+
+47.
+Concepts: finds current design challenging, note need for expert-friendly features
+Relationship: Both concepts deal with challenges in the current system design.
+Criteria: Users find the current design challenging and mention a learning curve due to a lack of expert-friendly features.
+Phrase: Noting challenges in current design
+
+48.
+Concepts: design tension, tension between novice and expert needs
+Relationship: Both concepts highlight the tension between novice and expert needs in the AI interface.
+Criteria: Users note the tension between the needs of novice and expert users in the AI interface.
+Phrase: Highlighting design tension between novice and expert needs
+
+49.
+Concepts: problem complexity, describes a complex problem
+Relationship: Both concepts involve the complexity and time investment required to solve problems.
+Criteria: Users discuss the complexity of problems and the significant effort required to solve them.
+Phrase: Describing problem complexity
+
+50.
+Concepts: setting initial tasks, assigns task to ai
+Relationship: Both concepts involve users setting tasks for AI to perform.
+Criteria: Users set initial tasks for AI to perform, including comprehension and management of original codes.
+Phrase: Assigning tasks to AI
+
+51.
+Concepts: instructing ai on tasks, detailed instructions
+Relationship: Both concepts deal with providing instructions to AI.
+Criteria: Users provide detailed instructions for specific coding tasks to AI.
+Phrase: Providing detailed instructions to AI
+
+52.
+Concepts: model output request, requesting ai visualization support
+Relationship: Both concepts involve requesting AI assistance for model outputs.
+Criteria: Users request AI assistance for plotting model outputs in NetLogo.
+Phrase: Requesting AI visualization support
+
+53.
+Concepts: netlogo task specification, neural network assistance request
+Relationship: Both concepts involve specifying tasks involving NetLogo and neural networks.
+Criteria: Users request AI assistance specifically for creating neural networks in NetLogo.
+Phrase: Requesting AI assistance for NetLogo neural networks
+
+54.
+Concepts: scope challenge, beginners' struggles with scope
+Relationship: Both concepts deal with beginners' challenges in understanding scope in programming.
+Criteria: Users describe the challenges beginners face in understanding scope and variable contexts in NetLogo.
+Phrase: Describing beginners' scope challenges
+
+55.
+Concepts: scope, concept understanding
+Relationship: Both concepts emphasize the importance of understanding the scope concept.
+Criteria: Users recognize the importance of learning the scope concept and emphasize AI support for it.
+Phrase: Emphasizing understanding of scope concept
+
+56.
+Concepts: underscores credibility, highlight extensive programming experience
+Relationship: Both concepts involve users emphasizing their programming experience.
+Criteria: Users underscore their extensive programming experience to assert credibility.
+Phrase: Highlighting programming experience for credibility
+
+57.
+Concepts: preference for simplicity, prefers readable code
+Relationship: Both concepts deal with the preference for simple and readable code.
+Criteria: Users prefer simple, maintainable code over complex solutions.
+Phrase: Preferring simple and readable code
+
+58.
+Concepts: readability, valuing maintainable code
+Relationship: Both concepts emphasize the value of clear and maintainable code.
+Criteria: Users value writing simple, easily maintainable code for future reference and debugging.
+Phrase: Valuing clear and maintainable code
+
+59.
+Concepts: enhancing error resolution, discuss code simplicity and quality
+Relationship: Both concepts involve discussing the importance of simple and quality code for error resolution.
+Criteria: Users discuss enhancing error resolution and emphasizing the importance of clear, simple code.
+Phrase: Discussing importance of code simplicity and quality
+
+60.
+Concepts: non-technical language, less technical language
+Relationship: Both concepts focus on providing explanations in non-technical language.
+Criteria: Users comment on AI's ability to provide clear and easy-to-understand explanations in less technical language.
+Phrase: Providing non-technical explanations
+
+61.
+Concepts: positive usability, positive capabilities of chatlogo
+Relationship: Both concepts involve positive perceptions of ChatLogo's usability and capabilities.
+Criteria: Users find ChatLogo straightforward and intuitive to use, positively highlighting its specific capabilities.
+Phrase: Highlighting positive usability of ChatLogo
+
+62.
+Concepts: system usability, describing ai interface as intuitive
+Relationship: Both concepts describe the AI interface as easy to use and intuitive.
+Criteria: Users describe the AI interface as straightforward and intuitive to use.
+Phrase: Describing AI interface as intuitive
+
+63.
+Concepts: cognitive load management, gradual error presentation by ai
+Relationship: Both concepts involve managing cognitive load by presenting errors gradually.
+Criteria: Users suggest reducing cognitive load by showing one or a few errors at a time in AI-driven systems.
+Phrase: Suggesting gradual error presentation by AI
+
+64.
+Concepts: task switch, decides to change approach
+Relationship: Both concepts involve changing tasks or approaches due to AI responses.
+Criteria: Users decide to change their approach or task based on repetitive AI responses.
+Phrase: Deciding to change approach based on AI responses
+---

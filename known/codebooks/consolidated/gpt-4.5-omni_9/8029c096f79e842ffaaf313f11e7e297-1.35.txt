@@ -1,0 +1,166 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (16 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+16.
+Criteria: {Who did what, and how for code 16}
+Label: {A descriptive label of code 16}
+---
+~~~
+1.
+Label: values customizable options
+Quotes:
+- E04: I thought it was really cool that, you know, that it knew exactly what I wanted to do and then kind of allowed me to define like the certain parameters for what I wanted to do. (interviewer's observation) Having the interface to clarify parameters helps.
+
+2.
+Label: manually fixes ai code errors
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 manually tries to fix the errors in the AI-generated code and did not choose "explain it".
+
+3.
+Label: describes it as intuitive
+Quotes:
+- E04: It seems like it's, you know, pretty straightforward to use and like intuitive, which is nice. And it's like, it's easy to interact with. So I feel like if I had like enough time to play around with it, it could be like really helpful. (interviewer's observation) Straightforward to use and intuitive.
+
+4.
+Label: praises out of the box functionality
+Quotes:
+- E01: I want to do this in visual basic... So I made a spreadsheet and I asked ChatGPT, how do you do this? And it wrote the code and the code worked out of the box. (interviewer's observation) ChatGPT helped with a VBA task out of the box before.
+
+5.
+Label: debug: the general error message provided by the system is not useful
+Quotes:
+- E01: I think a lot of people, because they're very subtle, and then the error message is no help whatsoever to the user. You're, you're adding two variables over here and it's complaining about something over there. (interviewer's observation) NetLogo's error messages could be unhelpful.
+
+6.
+Label: user acceptance
+Quotes:
+- E01: That's okay. Go is a convention. It's not really a requirement of the language that you use the word go. You can say banana to banana and have a button on the interface. It's a banana button. (interviewer's observation) E01 honors ChatGPT's own intuition even though it might be different from the convention.
+
+7.
+Label: ai effectiveness
+Quotes:
+- E01: I've observed when I tried to suggest ChatGPT to other people, they're, um, they are amazed at the output that I can get. And that's because I know how to ask six questions in a row to zero in on what I'm after. (interviewer's observation) To maximize the capability of ChatGPT, one needs to know how to iteratively ask questions.
+- E01: If you know how to ask iterative questions, I think it could do pretty well. (interviewer's observation) E01 thinks ChatGPT would do well if one knows how to ask iterative questions.
+
+8.
+Label: clear process
+Quotes:
+- E04: I just like being able to kind of, like, iteratively build it. The thing that I always do when I create a model is I do, like, the initial command. I'll set up and go here. I'll go ahead and after I kind of set up the buttons, I'll put the functions behind them back here in the interface. (interviewer's observation) E04 creates the code skeleton before asking ChatGPT. He has a clear idea & established process of building ABMs.
+
+9.
+Label: seeks ai help with troubleshooting
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 was prompted to copy and paste error messages to ChatGPT.
+
+10.
+Label: efficiency
+Quotes:
+- E01: I'm an advocate of peer programming. It's about 10 times more efficient than single programming... If a person's programming, if you're programming it by yourself and you come to something you don't understand, you could spend a long time at that stoplight. (interviewer's observation) E01's positive opinions on peer programming with a hint that AI could play the role.
+
+11.
+Label: keeps net logo dictionary handy
+Quotes:
+- E04: Because I'll like forget the syntax sometimes and I usually use the netlogo dictionary and just have it like open to the side. (interviewer's observation) E04 still forgets about the syntax and ChatGPT can help.
+
+12.
+Label: maintenance
+Quotes:
+- E01: You know, so in point of fact, I considered a much higher virtue for that kind of code to go, write this in the most standard dumb ass idiot accessible way that you can. So that when I come back to it later, I could figure out why it, why it's not working anymore. (interviewer's observation) Discussion on code complexity & quality. Plain / not-tricky code's advantage in maintenance.
+
+13.
+Label: code complexity
+Quotes:
+- E01: You know, so in point of fact, I considered a much higher virtue for that kind of code to go, write this in the most standard dumb ass idiot accessible way that you can. So that when I come back to it later, I could figure out why it, why it's not working anymore. (interviewer's observation) Discussion on code complexity & quality. Plain / not-tricky code's advantage in maintenance.
+
+14.
+Label: doubts ai's capability
+Quotes:
+- E01: "can you verify that no more names are reserved words in NetLogo?" I don't know if it can do that. (interviewer's observation) When E01 sees a bug after the third iteration, he asks ChatGPT to verify the code and produce no more bug. Unsure if it could do that.
+
+15.
+Label: ai ability (negative): errors: ai could still have errors
+Quotes:
+- E01: So maybe the details are wrong and, you know, Michael Tamalo or somebody jumped on me because I posted some answer and it used some function that wasn't available. AI had hallucinated some function. (interviewer's observation) AI might hallucinates.
+
+16.
+Label: model integration
+Quotes:
+- E04: I really liked how, like the code that it generates, if you could just kind of place that into the model automatically.  (interviewer's observation) The capability to put into the model automatically.
+- E04: (no verbal response) (interviewer's observation) Again, he reads the code and selectively copies code to the model.
+===
+---
+Definitions for each code (16 in total):
+
+1.
+Criteria: Interviewees appreciate the option to define parameters or specifics within the interface or code being generated.
+Label: Values Customizable Options
+
+2.
+Criteria: Interviewees manually fix errors in the AI-generated code instead of seeking the AI's explanations for those errors.
+Label: Manually Fixes AI Code Errors
+
+3.
+Criteria: Interviewees perceive the AI interface as straightforward, easy to interact with, and intuitive.
+Label: Describes It as Intuitive
+
+4.
+Criteria: Interviewees praise the AI-driven interface for providing solutions that work immediately without additional adjustments.
+Label: Praises Out-of-the-Box Functionality
+
+5.
+Criteria: Interviewees find provided library error messages not helpful or relevant to solving issues.
+Label: Finds Error Messages Unhelpful
+
+6.
+Criteria: Interviewees express willingness to accept unique suggestions or methods offered by the AI, even if they deviate from standard conventions.
+Label: User Acceptance
+
+7.
+Criteria: Interviewees believe that iterative question-asking significantly enhances the effectiveness of the AI.
+Label: Belief in Iterative Questioning Efficiency
+
+8.
+Criteria: Interviewees have established a clear and structured process for developing models, such as creating an initial command structure before enlisting the AI's help.
+Label: Demonstrates Structured Development Process
+
+9.
+Criteria: Interviewees seek AI assistance specifically for troubleshooting and debugging by providing the AI with error messages.
+Label: Seeks AI Help with Troubleshooting
+
+10.
+Criteria: Interviewees suggest that peer programming, and potentially programming aided by AI, is significantly more efficient than solo programming.
+Label: Belief in AI-Aided Efficiency
+
+11.
+Criteria: Interviewees rely on supplementary resources, like the NetLogo dictionary, to check syntax or solve issues.
+Label: Keeps Resources Handy
+
+12.
+Criteria: Interviewees discuss the importance of simple, easily understandable code for long-term maintenance and troubleshooting.
+Label: Vouches for Maintainable Code
+
+13.
+Criteria: Interviewees speak about how simpler, more straightforward code aids in understanding and maintenance.
+Label: Prefers Simple Code
+
+14.
+Criteria: Interviewees express doubts about the AI's capabilities in performing specific tasks accurately or without errors.
+Label: Doubts AI Capabilities
+
+15.
+Criteria: Interviewees point out that the AI can still generate erroneous or hallucinated code that may cause issues.
+Label: Acknowledges AI Error Potential
+
+16.
+Criteria: Interviewees appreciate the capability to integrate generated code directly and seamlessly into their models.
+Label: Favors Model Integration
+---

@@ -1,0 +1,46 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (2 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+2. 
+Concepts: {Repeat the input 2}
+Relationship: {What is logical relationship between concepts in code 2, or N/A if not applicable}
+Criteria: {Who did what, and how for code 2}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: human debugging effort, debugging and fixing ai-generated code
+- The effort required by humans to debug and fix errors in AI-generated code.
+- Users debug and manually fix errors in AI-generated code, often without using AI's explanations.
+
+2.
+Concepts: error management suggestions, addressing ai-generated errors
+- Suggesting improvements in how the AI manages and displays errors.
+- Users report errors to AI by copying and pasting error messages and critique misunderstandings in AI-generated code.
+===
+---
+Definitions for each code (2 in total):
+1.
+Concepts: human debugging effort, debugging and fixing ai-generated code
+Relationship: The effort required by humans is directly related to the process of debugging and fixing AI-generated code.
+Criteria: Users invest time and effort to manually debug and fix errors in AI-generated code, often without relying on AI's explanations.
+Phrase: Debugging AI-generated code manually
+
+2. 
+Concepts: error management suggestions, addressing ai-generated errors
+Relationship: Suggestions for improvement are aimed at better managing and addressing AI-generated errors.
+Criteria: Users suggest improvements in how AI manages and displays errors by reporting issues and critiquing misunderstandings in AI-generated code.
+Phrase: Suggesting improvements for AI error management
+---

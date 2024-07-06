@@ -1,0 +1,735 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (64 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+64. 
+Concepts: {Repeat the input 64}
+Relationship: {What is logical relationship between concepts in code 64, or N/A if not applicable}
+Criteria: {Who did what, and how for code 64}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: standard practice, reflects on proper help-seeking practices
+- Reflecting on standard practices of seeking help online.
+- The individual reflects on and discusses proper practices for seeking help online, emphasizing self-effort and clear communication.
+
+2.
+Concepts: emphasizing the importance of documentation, seeking online support for debugging
+- Interviewee stresses the importance of proper documentation when seeking online help.
+- The interviewee describes practices for seeking online support, emphasizing the importance of clearly explaining the problem and showing efforts made.
+
+3.
+Concepts: online help, positive online help experience
+- The interviewee reflects on experiences with seeking help from online communities or user groups.
+- User shares a positive experience of seeking help online.
+
+4.
+Concepts: notes knowledge gaps, documentation issues
+- The individual notes gaps in documented knowledge and the reliance on oral traditions.
+- Reflecting on documentation issues and the reliance on oral tradition for critical knowledge.
+
+5.
+Concepts: undocumented knowledge reflection, reflects on knowledge gaps and oral tradition
+- User reflects on the importance of undocumented knowledge in software development.
+- The individual reflects on knowledge gaps and the importance of oral tradition in software development.
+
+6.
+Concepts: reflects on cultural help-seeking, reflects on cultural influences in ai adoption
+- The individual reflects on how cultural attitudes towards individualism impact help-seeking behaviors.
+- User reflects on cultural attitudes towards seeking help.
+
+7.
+Concepts: early questioning culture, encouraging question-asking behavior
+- User highlights the importance of asking questions early and frequently to reduce future costs and improve AI assistance.
+- Suggests that AI could encourage a culture of asking questions more frequently and earlier in the development process.
+
+8.
+Concepts: cultural shift suggestion, collaborative learning culture
+- User reflects on the cultural shift needed to encourage asking for help and collaboration.
+- The need for a culture that encourages seeking help and collaboration.
+
+9.
+Concepts: fragmented learning support, suggests system support for fragmented learning
+- Highlights the need for reminders due to fragmented learning sessions.
+- The individual discusses the need for system support to manage fragmented learning sessions and track progress.
+
+10.
+Concepts: time management, notes time constraints in learning
+- Interviewee discusses the challenge of managing time across multiple programming languages.
+- The individual notes the limited time available for learning or using multiple programming languages and new extensions.
+
+11.
+Concepts: problem complexity, complex problem description
+- User discusses the complexity of problems and the time required to solve them.
+- User describes a complex problem that requires significant effort to solve, even with AI assistance.
+
+12.
+Concepts: netlogo dictionary, keeps netlogo dictionary handy
+- The individual uses AI to help remember NetLogo syntax, supplementing traditional resources like dictionaries.
+- The user keeps the NetLogo dictionary accessible to reference syntax.
+
+13.
+Concepts: common errors, facing scope-related learning challenges
+- Users identify common errors and challenges, such as scope issues in NetLogo.
+- User identifies scope as a challenging concept for beginners in NetLogo.
+
+14.
+Concepts: underscores credibility, sharing extensive programming experience, hints at depth of knowledge
+- The user underscores their extensive programming experience to establish credibility.
+- The individual has extensive prior programming experience.
+- Indicating depth of knowledge and prior experience in programming.
+
+15.
+Concepts: teaching preference, prefers teaching others
+- Users prefer teaching and helping others learn NetLogo.
+- The individual expresses a preference for teaching or helping others learn.
+
+16.
+Concepts: personal competence acknowledgment, expressing confidence in netlogo skills
+- User acknowledges their own competence and preference for helping others learn.
+- The individual is confident in their NetLogo competence and prefers helping others learn.
+
+17.
+Concepts: maintainable code, discussing code simplicity and readability, importance of code clarity
+- Users discuss the importance of writing maintainable and accessible code.
+- The individual discusses the importance of simple and maintainable code.
+- Emphasizes the importance of clear and straightforward coding practices for easier maintenance.
+
+18.
+Concepts: model creation, values quality over speed
+- The user focuses on thoughtful model creation rather than quick, rough solutions.
+- The user values quality and best practices over speed in model creation.
+
+19.
+Concepts: highlights ai's role in debugging, valuing ai's debugging capabilities
+- The individual highlights AI's positive role and improved capabilities in debugging and troubleshooting.
+- The individual values AI's ability to resolve errors and incorporate unit tests for debugging.
+
+20.
+Concepts: debugging capability, highlighting ai support in debugging
+- AI's capability to debug code, including unit testing and error checking.
+- Highlights AI's role in identifying errors that the user might miss.
+
+21.
+Concepts: debugging efforts, debugging and troubleshooting
+- Engages in the process of identifying and correcting errors in code, often through critical evaluation.
+- The process by which the interviewee identifies and fixes errors in the code, often with the help of the LLM-driven interface.
+
+22.
+Concepts: debugging skills, suggests need for foundational learning
+- Interviewee reflects on the importance of debugging skills, especially for beginners.
+- The user reflects on the need for foundational learning and debugging skills for novices.
+
+23.
+Concepts: lack of debugging skills, experiences challenges with debugging
+- Novices lacking debugging skills and getting frustrated due to inexperience.
+- The individual finds debugging difficult and expresses frustration due to unhelpful error messages.
+
+24.
+Concepts: inefficiencies in learning, novice debugging challenges
+- User notes inefficiencies in beginners' approach to coding and error detection.
+- User describes how novice programming habits can prevent timely error identification.
+
+25.
+Concepts: emphasizing the importance of debugging practice, emphasizes need for human expertise in debugging
+- Suggesting that users need to practice debugging their own code before relying on AI.
+- The individual emphasizes the need for human expertise to effectively use AI for debugging and error resolution.
+
+26.
+Concepts: chatlogo ability (positive): debug, chatlogo capabilities (positive)
+- Interviewee appreciates AI's ability to clarify error codes, which is particularly helpful for beginners.
+- Positive aspects of ChatLogo's capabilities, such as debugging, troubleshooting, parameter clarification, and clear explanations.
+
+27.
+Concepts: ai troubleshooting praise, ai troubleshooting capability, seeking ai help for troubleshooting
+- User praises the AI's troubleshooting capabilities, even if not always perfect.
+- Evaluates the AI's ability to troubleshoot and resolve errors, noting both successes and failures.
+- Finds AI helpful for troubleshooting errors.
+
+28.
+Concepts: clarity, clarification and troubleshooting
+- AI's ability to provide clear, less technical explanations and clarify error codes.
+- The need for the AI to provide clear explanations and effective troubleshooting for errors.
+
+29.
+Concepts: cognitive load management, incremental error presentation, suggesting one-error-at-a-time management
+- User suggests showing one error at a time to reduce cognitive load.
+- User recommends presenting errors one at a time to avoid overwhelming novice users.
+- Suggesting AI to provide one error at a time to avoid overwhelming users.
+
+30.
+Concepts: iterative development process, iterative model building, iterative code improvement
+- Describes an iterative approach to developing code and models.
+- Describes the process of building models iteratively, using AI to enhance or refine the work.
+- Highlights the iterative process of using AI to continuously improve and optimize code.
+
+31.
+Concepts: ai collaboration process, highlighting iterative debugging with ai
+- User discusses the collaborative process with AI, including iterative debugging and optimization.
+- The interviewee describes the back-and-forth effort required to debug code with AI assistance.
+
+32.
+Concepts: iterative error fixing, iterative learning process
+- Describes a process of iterative error fixing by interacting with AI.
+- User emphasizes the iterative learning process when working with AI, despite potential errors.
+
+33.
+Concepts: user instructions, detailed instruction provision
+- Providing explicit user instructions to AI.
+- Provides more detailed instructions to the AI to improve the quality of responses or solutions.
+
+34.
+Concepts: foundational skill for ai use, emphasizes clear instruction writing for ai
+- The interviewee suggests that foundational skills, such as writing clear instructions, are important for effectively using AI.
+- Emphasizes the importance of writing clear instructions for AI.
+
+35.
+Concepts: highlights risks for novices using ai, highlights expertise requirement for ai use, risks of ai-induced deviations
+- User highlights the risk of novices blindly following AI without understanding errors.
+- Need for a certain level of expertise to understand and fix errors, with risks for less experienced users blindly following AI.
+- The interviewee notes the risks of deviating from intended directions due to AI errors, especially for less experienced users.
+
+36.
+Concepts: warns against blind reliance on ai, human-ai: no need to blindly follow
+- Warns against blind reliance on AI for critical tasks.
+- Emphasizing the need for expertise to avoid blindly following AI.
+
+37.
+Concepts: emphasizes human judgment with ai, advises using personal judgment with ai
+- The individual emphasizes the importance of human judgment in conjunction with AI.
+- Stresses the need for user judgment in evaluating AI responses.
+
+38.
+Concepts: warns about potential ai errors, human-ai (negative): need for double-checking
+- The individual notes and warns about potential errors in AI suggestions, emphasizing the need for human judgment.
+- Users must verify AI suggestions due to potential inaccuracies.
+
+39.
+Concepts: observes beginners' struggles, reflects on novice learning challenges
+- The user observes that beginners often struggle with conceptual errors.
+- The individual reflects on the learning process and the specific challenges that novices encounter.
+
+40.
+Concepts: novice questioning challenge, challenges for novices in seeking help
+- User highlights the challenge novices face in asking the right questions.
+- The interviewee notes the challenges novices face in seeking help without providing sufficient background information.
+
+41.
+Concepts: describing beginner coding practices, highlights common beginner mistakes
+- Users highlight common beginner practices and mistakes in coding.
+- Users highlight common beginner mistakes and suggest AI support for learning concepts like scope.
+
+42.
+Concepts: expert usability, finds current design challenging
+- The user mentions a learning curve, indicating the current design may not be optimized for experts.
+- Users find the current AI design challenging and mention a learning curve.
+
+43.
+Concepts: takes time to use and adapt, mentioning ai interface learning curve
+- The individual finds the AI straightforward and intuitive to use but requires time to fully adapt.
+- The interviewee notes the learning curve required to effectively use the AI interface.
+
+44.
+Concepts: system design issues, weaknesses of llm-driven interfaces
+- The interviewee mentions design issues that affect the usability of the AI interface.
+- Negative aspects and limitations of using LLM-driven interfaces as perceived by the interviewee.
+
+45.
+Concepts: feature request, needs for llm-based interfaces
+- The interviewee suggests features or improvements that could enhance the AI interface or its functionality.
+- Specific requirements or features that the interviewee feels are necessary for improving LLM-based interfaces.
+
+46.
+Concepts: error messaging improvement, critiquing unhelpful error messages
+- Calls for better error messaging in NetLogo.
+- The user finds NetLogo's error messages unhelpful and confusing.
+
+47.
+Concepts: unclear error messaging, error message critique, misleading error messages
+- Describes frustration with unclear error messages.
+- Discusses the unhelpfulness of error messages and AI's error identification.
+- Finds AI error messages misleading when the code appears correct.
+
+48.
+Concepts: reasons through ai response, identifying errors in ai responses
+- The individual actively reasons through the AI's responses to understand or debug them.
+- Reasoning through the AI's responses to identify errors.
+
+49.
+Concepts: comments on ai's interpretation, identifies misunderstanding
+- Comments on AI's interpretation of requests.
+- Identifying and reflecting on the AI's misunderstanding of a request.
+
+50.
+Concepts: verbiage issues with ai, ai understanding discrepancy
+- Identifies issues with AI understanding specific terminology or jargon.
+- User notes discrepancies in AI's understanding of specific models.
+
+51.
+Concepts: calling for ai conceptual error detection, discussing ai support for conceptual error detection
+- Identifies conceptual errors and the need for AI to address them.
+- The interviewee's perception of AI's role in identifying and debugging code errors.
+
+52.
+Concepts: suspects bug in ai, doubting ai's error resolution capability
+- The user suspects a bug in the AI when encountering unclear error messages.
+- The user doubts the AI's capability to verify and correct all bugs in the code.
+
+53.
+Concepts: error handling, ai limitations in error resolution
+- Issues related to AI's ability to handle and communicate errors effectively.
+- Notes instances where AI gets stuck and cannot resolve specific errors.
+
+54.
+Concepts: ai ability (negative): errors, recounts ai generating non-existent functions
+- The user observes that AI can generate incorrect or non-existent functions.
+- The user recounts an experience where AI generated non-existent functions.
+
+55.
+Concepts: mentions ai hallucination, expressing concerns about ai hallucinations
+- Instances where the interviewee discusses the potential for AI to generate incorrect or non-existent information.
+- User notes concerns and frustrations about AI generating inaccurate or non-existent functions.
+
+56.
+Concepts: reflection on ai variability, notes ai response inconsistency
+- The interviewee reflects on the variability and non-deterministic nature of AI responses.
+- The individual notes the inconsistency and non-deterministic nature of AI-generated responses.
+
+57.
+Concepts: lack of external verification, discussing ai verification limitations
+- Notes the absence of external verification capabilities in current AI tools.
+- Discusses the limitations of current AI implementations, particularly the lack of external verification for generated code.
+
+58.
+Concepts: customization limitations, dissatisfaction with limited ai options
+- User notes AI's limited flexibility and customization based on experience level.
+- The individual finds the options provided by AI interfaces too limited, especially for more experienced users.
+
+59.
+Concepts: ai limitations, experiencing frustration with ai limitations
+- User notes limitations and potential issues with AI's capabilities.
+- The individual notes and experiences frustration due to AI's limitations and error handling issues.
+
+60.
+Concepts: notes ai's capacity limitations, notes chatgpt's input limitations
+- The individual notes AI's limitations in processing long code segments or large datasets.
+- The interviewee notes limitations in ChatGPT's ability to handle long code inputs or complex tasks.
+
+61.
+Concepts: older versions, encountering version compatibility issues
+- Dealing with older versions of NetLogo in AI databases.
+- Issues related to writing code in older versions of NetLogo.
+
+62.
+Concepts: outdated ai code, encountering outdated functionalities in ai
+- Notes the use of outdated code by AI.
+- Encountering outdated functionalities in AI responses.
+
+63.
+Concepts: chatgpt 3.5 usage, chatgpt version usage
+- Indicates the use of ChatGPT version 3.5.
+- Indicates the use of an older version of ChatGPT.
+
+64.
+Concepts: limited chatgpt experience, limited experience with ai versions
+- Indicates the interviewee's limited use of ChatGPT versions.
+- Lacks experience with other versions of the AI tools.
+===
+---
+Definitions for each code (64 in total):
+1.
+Concepts: standard practice, reflects on proper help-seeking practices
+Relationship: Reflecting on standard practices of seeking help online.
+Criteria: The individual reflects on and discusses proper practices for seeking help online, emphasizing self-effort and clear communication.
+Phrase: Reflects on proper help-seeking practices
+
+2.
+Concepts: emphasizing the importance of documentation, seeking online support for debugging
+Relationship: Emphasizing the importance of documentation when seeking online support.
+Criteria: The interviewee stresses the importance of proper documentation and clearly explaining the problem when seeking online help.
+Phrase: Emphasizes documentation in online support
+
+3.
+Concepts: online help, positive online help experience
+Relationship: Reflecting on positive experiences with online help.
+Criteria: The interviewee shares a positive experience of seeking help from online communities or user groups.
+Phrase: Reflects on positive online help experience
+
+4.
+Concepts: notes knowledge gaps, documentation issues
+Relationship: Noting gaps in documented knowledge and related issues.
+Criteria: The individual notes gaps in documented knowledge and the reliance on oral traditions for critical information.
+Phrase: Notes documentation issues and knowledge gaps
+
+5.
+Concepts: undocumented knowledge reflection, reflects on knowledge gaps and oral tradition
+Relationship: Reflecting on the importance of undocumented knowledge and oral traditions.
+Criteria: The individual reflects on the significance of undocumented knowledge and the reliance on oral tradition in software development.
+Phrase: Reflects on undocumented knowledge and oral traditions
+
+6.
+Concepts: reflects on cultural help-seeking, reflects on cultural influences in ai adoption
+Relationship: Reflecting on cultural influences in help-seeking and AI adoption.
+Criteria: The individual reflects on how cultural attitudes towards individualism impact help-seeking behaviors and AI adoption.
+Phrase: Reflects on cultural influences in help-seeking
+
+7.
+Concepts: early questioning culture, encouraging question-asking behavior
+Relationship: Encouraging early and frequent question-asking behavior.
+Criteria: The user highlights the importance of asking questions early and frequently to reduce future costs and improve AI assistance.
+Phrase: Encourages early question-asking behavior
+
+8.
+Concepts: cultural shift suggestion, collaborative learning culture
+Relationship: Suggesting a cultural shift towards collaborative learning.
+Criteria: The user reflects on the need for a cultural shift to encourage seeking help and collaboration.
+Phrase: Suggests cultural shift for collaborative learning
+
+9.
+Concepts: fragmented learning support, suggests system support for fragmented learning
+Relationship: Highlighting the need for support in fragmented learning sessions.
+Criteria: The individual discusses the need for system support to manage fragmented learning sessions and track progress.
+Phrase: Suggests system support for fragmented learning
+
+10.
+Concepts: time management, notes time constraints in learning
+Relationship: Discussing challenges related to time management in learning.
+Criteria: The individual notes the limited time available for learning or using multiple programming languages and new extensions.
+Phrase: Notes time constraints in learning
+
+11.
+Concepts: problem complexity, complex problem description
+Relationship: Describing complex problems and the effort required to solve them.
+Criteria: The user describes a complex problem that requires significant effort to solve, even with AI assistance.
+Phrase: Describes complex problem-solving effort
+
+12.
+Concepts: netlogo dictionary, keeps netlogo dictionary handy
+Relationship: Using AI to supplement traditional resources like dictionaries.
+Criteria: The individual uses AI to help remember NetLogo syntax, supplementing traditional resources like dictionaries.
+Phrase: Uses AI to supplement NetLogo dictionary
+
+13.
+Concepts: common errors, facing scope-related learning challenges
+Relationship: Identifying common errors and challenges in learning.
+Criteria: The user identifies scope as a challenging concept for beginners in NetLogo.
+Phrase: Identifies scope-related learning challenges
+
+14.
+Concepts: underscores credibility, sharing extensive programming experience, hints at depth of knowledge
+Relationship: Establishing credibility through extensive programming experience.
+Criteria: The user underscores their extensive programming experience to establish credibility and hint at their depth of knowledge.
+Phrase: Establishes credibility through programming experience
+
+15.
+Concepts: teaching preference, prefers teaching others
+Relationship: Expressing a preference for teaching and helping others learn.
+Criteria: The individual expresses a preference for teaching or helping others learn NetLogo.
+Phrase: Prefers teaching others
+
+16.
+Concepts: personal competence acknowledgment, expressing confidence in netlogo skills
+Relationship: Acknowledging competence and preference for helping others.
+Criteria: The individual is confident in their NetLogo competence and prefers helping others learn.
+Phrase: Acknowledges competence and preference for helping others
+
+17.
+Concepts: maintainable code, discussing code simplicity and readability, importance of code clarity
+Relationship: Emphasizing the importance of maintainable and clear code.
+Criteria: The individual discusses the importance of simple and maintainable code, emphasizing clear and straightforward coding practices for easier maintenance.
+Phrase: Emphasizes maintainable and clear code
+
+18.
+Concepts: model creation, values quality over speed
+Relationship: Valuing quality in model creation over speed.
+Criteria: The user focuses on thoughtful model creation, valuing quality and best practices over speed.
+Phrase: Values quality in model creation
+
+19.
+Concepts: highlights ai's role in debugging, valuing ai's debugging capabilities
+Relationship: Highlighting and valuing AI's role in debugging.
+Criteria: The individual highlights AI's positive role and improved capabilities in debugging and troubleshooting.
+Phrase: Values AI's role in debugging
+
+20.
+Concepts: debugging capability, highlighting ai support in debugging
+Relationship: Highlighting AI's capability in debugging.
+Criteria: The individual highlights AI's role in identifying errors that the user might miss.
+Phrase: Highlights AI's debugging support
+
+21.
+Concepts: debugging efforts, debugging and troubleshooting
+Relationship: Engaging in the process of debugging and troubleshooting.
+Criteria: The individual engages in the process of identifying and fixing errors in the code, often with the help of the LLM-driven interface.
+Phrase: Engages in debugging and troubleshooting
+
+22.
+Concepts: debugging skills, suggests need for foundational learning
+Relationship: Reflecting on the importance of debugging skills and foundational learning.
+Criteria: The individual reflects on the need for foundational learning and debugging skills, especially for beginners.
+Phrase: Reflects on the need for foundational debugging skills
+
+23.
+Concepts: lack of debugging skills, experiences challenges with debugging
+Relationship: Experiencing challenges due to a lack of debugging skills.
+Criteria: The individual finds debugging difficult and expresses frustration due to unhelpful error messages.
+Phrase: Experiences challenges with debugging
+
+24.
+Concepts: inefficiencies in learning, novice debugging challenges
+Relationship: Noting inefficiencies and challenges faced by novices.
+Criteria: The individual describes how novice programming habits can prevent timely error identification.
+Phrase: Notes novice debugging challenges
+
+25.
+Concepts: emphasizing the importance of debugging practice, emphasizes need for human expertise in debugging
+Relationship: Emphasizing the importance of practice and human expertise in debugging.
+Criteria: The individual emphasizes the need for human expertise to effectively use AI for debugging and error resolution.
+Phrase: Emphasizes need for human expertise in debugging
+
+26.
+Concepts: chatlogo ability (positive): debug, chatlogo capabilities (positive)
+Relationship: Appreciating ChatLogo's positive capabilities, especially in debugging.
+Criteria: The interviewee appreciates AI's ability to clarify error codes, which is particularly helpful for beginners.
+Phrase: Appreciates ChatLogo's debugging capabilities
+
+27.
+Concepts: ai troubleshooting praise, ai troubleshooting capability, seeking ai help for troubleshooting
+Relationship: Praising AI's troubleshooting capabilities.
+Criteria: The individual praises the AI's troubleshooting capabilities, noting both successes and failures.
+Phrase: Praises AI's troubleshooting capabilities
+
+28.
+Concepts: clarity, clarification and troubleshooting
+Relationship: Emphasizing the need for clear explanations and effective troubleshooting.
+Criteria: The interviewee emphasizes the need for the AI to provide clear explanations and effective troubleshooting for errors.
+Phrase: Emphasizes need for clear AI explanations
+
+29.
+Concepts: cognitive load management, incremental error presentation, suggesting one-error-at-a-time management
+Relationship: Suggesting incremental error presentation to manage cognitive load.
+Criteria: The individual suggests showing one error at a time to reduce cognitive load and avoid overwhelming novice users.
+Phrase: Suggests incremental error presentation
+
+30.
+Concepts: iterative development process, iterative model building, iterative code improvement
+Relationship: Describing an iterative approach to development and improvement.
+Criteria: The individual describes the process of building models iteratively, using AI to enhance or refine the work.
+Phrase: Describes iterative development process
+
+31.
+Concepts: ai collaboration process, highlighting iterative debugging with ai
+Relationship: Highlighting the collaborative and iterative process with AI.
+Criteria: The individual describes the back-and-forth effort required to debug code with AI assistance.
+Phrase: Highlights iterative debugging with AI
+
+32.
+Concepts: iterative error fixing, iterative learning process
+Relationship: Emphasizing the iterative process of error fixing and learning.
+Criteria: The individual emphasizes the iterative learning process when working with AI, despite potential errors.
+Phrase: Emphasizes iterative error fixing
+
+33.
+Concepts: user instructions, detailed instruction provision
+Relationship: Providing detailed instructions to AI.
+Criteria: The individual provides more detailed instructions to the AI to improve the quality of responses or solutions.
+Phrase: Provides detailed instructions to AI
+
+34.
+Concepts: foundational skill for ai use, emphasizes clear instruction writing for ai
+Relationship: Emphasizing the importance of clear instruction writing for effective AI use.
+Criteria: The individual suggests that foundational skills, such as writing clear instructions, are important for effectively using AI.
+Phrase: Emphasizes clear instruction writing for AI
+
+35.
+Concepts: highlights risks for novices using ai, highlights expertise requirement for ai use, risks of ai-induced deviations
+Relationship: Highlighting risks and expertise requirements for AI use.
+Criteria: The individual highlights the risk of novices blindly following AI without understanding errors, noting the need for expertise to avoid deviations.
+Phrase: Highlights risks and expertise requirements for AI use
+
+36.
+Concepts: warns against blind reliance on ai, human-ai: no need to blindly follow
+Relationship: Warning against blind reliance on AI.
+Criteria: The individual warns against blind reliance on AI for critical tasks, emphasizing the need for expertise.
+Phrase: Warns against blind reliance on AI
+
+37.
+Concepts: emphasizes human judgment with ai, advises using personal judgment with ai
+Relationship: Advising the use of human judgment in conjunction with AI.
+Criteria: The individual emphasizes the importance of human judgment in evaluating AI responses.
+Phrase: Advises using human judgment with AI
+
+38.
+Concepts: warns about potential ai errors, human-ai (negative): need for double-checking
+Relationship: Warning about potential AI errors and the need for double-checking.
+Criteria: The individual notes and warns about potential errors in AI suggestions, emphasizing the need for human judgment.
+Phrase: Warns about potential AI errors
+
+39.
+Concepts: observes beginners' struggles, reflects on novice learning challenges
+Relationship: Reflecting on the specific challenges faced by beginners.
+Criteria: The individual observes that beginners often struggle with conceptual errors and reflects on their learning challenges.
+Phrase: Reflects on novice learning challenges
+
+40.
+Concepts: novice questioning challenge, challenges for novices in seeking help
+Relationship: Highlighting the challenges novices face in seeking help.
+Criteria: The individual notes the challenges novices face in asking the right questions and providing sufficient background information.
+Phrase: Highlights novice questioning challenges
+
+41.
+Concepts: describing beginner coding practices, highlights common beginner mistakes
+Relationship: Highlighting common mistakes and practices of beginners.
+Criteria: The individual highlights common beginner practices and mistakes in coding, suggesting AI support for learning concepts like scope.
+Phrase: Highlights common beginner coding mistakes
+
+42.
+Concepts: expert usability, finds current design challenging
+Relationship: Finding the current design challenging for experts.
+Criteria: The individual mentions a learning curve, indicating the current AI design may not be optimized for experts.
+Phrase: Finds current AI design challenging for experts
+
+43.
+Concepts: takes time to use and adapt, mentioning ai interface learning curve
+Relationship: Mentioning the learning curve required to use the AI interface.
+Criteria: The individual notes the learning curve required to effectively use the AI interface, despite finding it straightforward.
+Phrase: Notes AI interface learning curve
+
+44.
+Concepts: system design issues, weaknesses of llm-driven interfaces
+Relationship: Mentioning design issues and weaknesses of LLM-driven interfaces.
+Criteria: The individual mentions design issues that affect the usability of the AI interface.
+Phrase: Mentions weaknesses of LLM-driven interfaces
+
+45.
+Concepts: feature request, needs for llm-based interfaces
+Relationship: Suggesting features or improvements for LLM-based interfaces.
+Criteria: The individual suggests features or improvements that could enhance the AI interface or its functionality.
+Phrase: Suggests features for LLM-based interfaces
+
+46.
+Concepts: error messaging improvement, critiquing unhelpful error messages
+Relationship: Critiquing unhelpful error messages and calling for improvements.
+Criteria: The individual calls for better error messaging in NetLogo, finding the current messages unhelpful.
+Phrase: Critiques unhelpful error messages
+
+47.
+Concepts: unclear error messaging, error message critique, misleading error messages
+Relationship: Discussing the unhelpfulness and misleading nature of error messages.
+Criteria: The individual describes frustration with unclear and misleading error messages from AI.
+Phrase: Critiques unclear and misleading error messages
+
+48.
+Concepts: reasons through ai response, identifying errors in ai responses
+Relationship: Actively reasoning through AI responses to identify errors.
+Criteria: The individual actively reasons through the AI's responses to understand or debug them.
+Phrase: Reasons through AI responses to identify errors
+
+49.
+Concepts: comments on ai's interpretation, identifies misunderstanding
+Relationship: Identifying and reflecting on AI's misunderstanding.
+Criteria: The individual comments on AI's interpretation of requests, identifying misunderstandings.
+Phrase: Identifies AI misunderstandings
+
+50.
+Concepts: verbiage issues with ai, ai understanding discrepancy
+Relationship: Noting issues with AI's understanding of specific terminology.
+Criteria: The individual identifies issues with AI understanding specific terminology or jargon, noting discrepancies.
+Phrase: Notes AI understanding discrepancies
+
+51.
+Concepts: calling for ai conceptual error detection, discussing ai support for conceptual error detection
+Relationship: Discussing the need for AI to address conceptual errors.
+Criteria: The individual identifies conceptual errors and discusses the need for AI to address them.
+Phrase: Discusses need for AI conceptual error detection
+
+52.
+Concepts: suspects bug in ai, doubting ai's error resolution capability
+Relationship: Doubting AI's capability to resolve errors due to suspected bugs.
+Criteria: The individual suspects a bug in the AI and doubts its capability to verify and correct all bugs in the code.
+Phrase: Doubts AI's error resolution capability
+
+53.
+Concepts: error handling, ai limitations in error resolution
+Relationship: Noting limitations in AI's error handling capabilities.
+Criteria: The individual notes issues related to AI's ability to handle and communicate errors effectively.
+Phrase: Notes AI limitations in error handling
+
+54.
+Concepts: ai ability (negative): errors, recounts ai generating non-existent functions
+Relationship: Recounting AI's generation of incorrect or non-existent functions.
+Criteria: The individual observes that AI can generate incorrect or non-existent functions.
+Phrase: Recounts AI generating non-existent functions
+
+55.
+Concepts: mentions ai hallucination, expressing concerns about ai hallucinations
+Relationship: Expressing concerns about AI generating incorrect information.
+Criteria: The individual notes concerns and frustrations about AI generating inaccurate or non-existent functions.
+Phrase: Expresses concerns about AI hallucinations
+
+56.
+Concepts: reflection on ai variability, notes ai response inconsistency
+Relationship: Reflecting on the variability and inconsistency of AI responses.
+Criteria: The individual reflects on the variability and non-deterministic nature of AI-generated responses.
+Phrase: Notes AI response inconsistency
+
+57.
+Concepts: lack of external verification, discussing ai verification limitations
+Relationship: Discussing limitations related to the lack of external verification in AI.
+Criteria: The individual notes the absence of external verification capabilities in current AI tools.
+Phrase: Discusses AI verification limitations
+
+58.
+Concepts: customization limitations, dissatisfaction with limited ai options
+Relationship: Expressing dissatisfaction with AI's limited customization options.
+Criteria: The individual finds the options provided by AI interfaces too limited, especially for more experienced users.
+Phrase: Expresses dissatisfaction with limited AI options
+
+59.
+Concepts: ai limitations, experiencing frustration with ai limitations
+Relationship: Noting limitations and experiencing frustration with AI.
+Criteria: The individual notes and experiences frustration due to AI's limitations and error handling issues.
+Phrase: Experiences frustration with AI limitations
+
+60.
+Concepts: notes ai's capacity limitations, notes chatgpt's input limitations
+Relationship: Noting limitations in AI's capacity to handle large inputs.
+Criteria: The individual notes AI's limitations in processing long code segments or large datasets.
+Phrase: Notes AI's capacity limitations
+
+61.
+Concepts: older versions, encountering version compatibility issues
+Relationship: Encountering issues related to older software versions.
+Criteria: The individual deals with older versions of NetLogo in AI databases, leading to compatibility issues.
+Phrase: Encounters version compatibility issues
+
+62.
+Concepts: outdated ai code, encountering outdated functionalities in ai
+Relationship: Encountering outdated functionalities in AI responses.
+Criteria: The individual notes the use of outdated code by AI, leading to issues.
+Phrase: Encounters outdated functionalities in AI
+
+63.
+Concepts: chatgpt 3.5 usage, chatgpt version usage
+Relationship: Indicating the use of a specific AI version.
+Criteria: The individual indicates the use of ChatGPT version 3.5.
+Phrase: Indicates use of ChatGPT 3.5
+
+64.
+Concepts: limited chatgpt experience, limited experience with ai versions
+Relationship: Indicating limited experience with AI versions.
+Criteria: The individual indicates limited use of ChatGPT versions and lacks experience with other versions of the AI tools.
+Phrase: Indicates limited experience with AI versions
+---

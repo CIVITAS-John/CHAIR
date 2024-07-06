@@ -1,0 +1,84 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (7 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+7.
+Criteria: {Who did what, and how for code 7}
+Label: {A descriptive label of code 7}
+---
+~~~
+1.
+Label: notes less technical language
+Quotes:
+- E04: It seems to explain things pretty well, it does not seems to be overly technical. (interviewer's observation) Provides clear, less technical explanations.
+
+2.
+Label: chatgpt ability (negative): errors in generating codes
+Quotes:
+- E04: It doesn't... Include everything that you need.  (interviewer's observation) Misses code structures at times.
+
+3.
+Label: uses ai for debugging
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 was prompted to copy and paste error messages to ChatGPT.
+
+4.
+Label: chatgpt ability (positive): provides immediate feedback
+Quotes:
+- E04: I'll go on Stack Exchange or Stack Overflow, I'm part of the NetLogo listserv, but obviously there's a delay there. So in the instance that I need immediate feedback, it is really helpful. (interviewer's observation) Nice to have immediate feedback.
+
+5.
+Label: code structure
+Quotes:
+- E04: "how to define breeds in netlogo" (interviewer's observation) E04 tries to find certain syntax structures from the AI-generated code and ask for it when it is not there.
+- E04: It doesn't... Include everything that you need.  (interviewer's observation) Misses code structures at times.
+
+6.
+Label: learning curve demands high investment of time
+Quotes:
+- E01: There's a lot of extensions I would love to know about GIS extensions, but I have very limited time. What could I do in two hours? And I think everybody has a very finite length of time. (interviewer's observation) AI could potentially save time for learning new extensions (compared with core concepts) of NetLogo.
+
+7.
+Label: asks for checkerboard pattern
+Quotes:
+- E01: "please write a netlogo program that produces a checker board with black and white squares?" (interviewer's observation) E01 asks ChatLogo to create a checkerboard pattern.
+===
+---
+Definitions for each code (7 in total):
+
+1.
+Criteria: Instances where AI provides clear explanations in less technical language, making it accessible for users who may not have deep technical knowledge.
+Label: Simplified Explanations
+
+2.
+Criteria: Instances where AI-generated code has errors or is missing essential structures, hindering its functionality.
+Label: Incomplete Code Generation
+
+3.
+Criteria: Instances where users utilize AI to debug errors by copying and pasting error messages into the AI tool.
+Label: AI Debugging Assistance
+
+4.
+Criteria: Instances where users find the immediate feedback from AI helpful compared to other sources that may have delays.
+Label: Immediate Feedback Utility
+
+5.
+Criteria: Instances where users focus on the presence or absence of specific syntax structures in AI-generated code.
+Label: Syntax Structure Inquiry
+
+6.
+Criteria: Instances where users discuss the high time investment required to learn new concepts or extensions in NetLogo.
+Label: Time Investment in Learning
+
+7.
+Criteria: Instances where users request specific patterns or outputs from AI, such as generating a checkerboard pattern.
+Label: Specific Output Requests
+---

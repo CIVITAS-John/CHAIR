@@ -1,0 +1,68 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (4 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+4. 
+Concepts: {Repeat the input 4}
+Relationship: {What is logical relationship between concepts in code 4, or N/A if not applicable}
+Criteria: {Who did what, and how for code 4}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: ai-generated code interaction, identifying errors in ai-generated code
+- The user engages with and corrects AI-generated code, sometimes critiquing its inaccurate or incomplete output.
+- Users note the presence of errors and outdated instructions in AI-generated code.
+
+2.
+Concepts: manually debugging ai-generated code, conduct a manual review of ai-generated code
+- Users independently identify and correct errors in AI-generated code.
+- The user engages in a thorough manual review of AI-generated code to identify mistakes and ensure quality.
+
+3.
+Concepts: workflow improvement, utilizing ai for code optimization
+- AI improving workflow by helping in code optimization.
+- Users employ AI to continuously optimize and improve code efficiency.
+
+4.
+Concepts: error reporting via ai, utilizing ai for debugging and troubleshooting
+- Uses AI to report and address error messages.
+- Users leverage AI to debug and troubleshoot by submitting errors for resolution.
+===
+---
+Definitions for each code (4 in total):
+
+1.
+Concepts: ai-generated code interaction, identifying errors in ai-generated code
+Relationship: The concepts are related as both involve engaging with AI-generated code and identifying its errors.
+Criteria: The user interacts with AI-generated code, identifies errors, and critiques any inaccuracies or outdated instructions.
+Phrase: Correcting AI-generated code
+
+2.
+Concepts: manually debugging ai-generated code, conduct a manual review of ai-generated code
+Relationship: The concepts are related as both involve a manual approach to reviewing and debugging AI-generated code.
+Criteria: Users independently identify and correct errors in AI-generated code through a thorough manual review to ensure quality.
+Phrase: Manually reviewing AI-generated code
+
+3.
+Concepts: workflow improvement, utilizing ai for code optimization
+Relationship: The concepts are related as both involve using AI to enhance the workflow through code optimization.
+Criteria: Users employ AI to improve their workflow by continuously optimizing and improving code efficiency.
+Phrase: Optimizing code with AI
+
+4.
+Concepts: error reporting via ai, utilizing ai for debugging and troubleshooting
+Relationship: The concepts are related as both involve using AI to address and resolve errors.
+Criteria: Users leverage AI to report and address error messages, utilizing it for debugging and troubleshooting tasks.
+Phrase: Debugging with AI assistance
