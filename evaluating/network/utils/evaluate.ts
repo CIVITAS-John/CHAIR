@@ -18,9 +18,9 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
     var Graph = BuildSemanticGraph(Dataset, Parameters);
     var Weights: Map<string, number> = new Map<string, number>();
     var TotalWeight: number = 0;
-    var TotalCodebooks = Codebooks.length - 1;
+    var TotalCodebooks = Dataset.Weights.reduce((A, B) => A + B, 0);
     for (var Node of Graph.Nodes) {
-        var Weight = Node.Weights.reduce((A, B, I) => I == 0 ? A : A + B, 0);
+        var Weight = Node.Weights.reduce((A, B, I) => I == 0 ? A : A + B * Dataset.Weights[I], 0);
         Weight = Weight / TotalCodebooks;
         Observations[0].push(Weight);
         Weights.set(Node.ID, Weight);

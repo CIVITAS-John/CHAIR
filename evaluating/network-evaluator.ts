@@ -30,6 +30,12 @@ export class NetworkEvaluator extends CodebookEvaluator {
     /** Evaluate: Evaluate a number of codebooks. */ 
     public async Evaluate(Codebooks: Codebook[], Names: string[], ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
         var Hash = md5(JSON.stringify(Codebooks));
+        // Weights
+        var Weights = Names.map(Name => {
+            var Fields = Name.split("~");
+            var Value = parseFloat(Fields[Fields.length - 1]);
+            return isNaN(Value) ? 1 : Value;
+        });
         // Build the network information
         var Package = await ReadOrBuildCache(ExportPath + "/network", Hash, async () => {
             // We treat the first input as the reference codebook
@@ -66,7 +72,8 @@ export class NetworkEvaluator extends CodebookEvaluator {
                 Codes: Codes,
                 Distances: Result.Distances,
                 Source: this.Dataset,
-                Title: this.Title
+                Title: this.Title,
+                Weights: Weights
             };
             return Package;
         });

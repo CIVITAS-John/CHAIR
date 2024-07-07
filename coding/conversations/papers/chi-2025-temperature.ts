@@ -12,10 +12,11 @@ var Temperatures = [0, 0.25, 0.5, 0.75, 1]; // 0.5 is already done as the base t
 for (var AnalyzerName of AnalyzerNames) {
     for (var Temperature of Temperatures) {
         var Analyzer = new (await import(`./../${AnalyzerName}.js`)).default;
-        Analyzer.Suffix += `-${Temperature}`;
+        Analyzer.Suffix += `-${Temperature}~0.2`; // 0.2 is the weight
         Analyzer.BaseTemperature = Temperature;
         await UseLLMs(async () => {
             await ProcessDataset(Analyzer, "Coded Dataset 1", false);
+            await ProcessDataset(Analyzer, "Coded Dataset 2", false);
         }, ...Models);
     }
 }
