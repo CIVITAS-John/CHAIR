@@ -11,6 +11,8 @@ import { MergeCodebook } from './consolidating/codebooks.js';
 export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     /** Name: The name of the analyzer. */
     public Name: string = "Unnamed";
+    /** Suffix: The suffix of the analyzer. */
+    public Suffix: string = "";
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature: number = 0;
     /** MaxIterations: The maximum number of iterations for the analyzer. */
@@ -54,10 +56,10 @@ export async function ProcessDataset<T extends DataItem>(Analyzer: Analyzer<Data
         var Result = await AnalyzeChunk(Analyzer, Chunk, { Threads: {} }, FakeRequest);
         // Write the result into a JSON file
         EnsureFolder(GetMessagesPath(Group, `${Analyzer.Name}`));
-        File.writeFileSync(GetMessagesPath(Group, `${Analyzer.Name}/${Name.replace(".json", "")}-${LLMName}.json`), JSON.stringify(Result, null, 4));
+        File.writeFileSync(GetMessagesPath(Group, `${Analyzer.Name}/${Name.replace(".json", "")}-${LLMName}${Analyzer.Suffix}.json`), JSON.stringify(Result, null, 4));
         // Write the result into an Excel file
         var Book = ExportChunksForCoding(Object.values(Chunk), Result);
-        await Book.xlsx.writeFile(GetMessagesPath(Group, `${Analyzer.Name}/${Name.replace(".json", "")}-${LLMName}.xlsx`));
+        await Book.xlsx.writeFile(GetMessagesPath(Group, `${Analyzer.Name}/${Name.replace(".json", "")}-${LLMName}${Analyzer.Suffix}.xlsx`));
     }
 }
 
