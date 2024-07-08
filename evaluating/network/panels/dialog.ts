@@ -66,7 +66,7 @@ export class Dialog extends Panel {
         var Orthodox = Items[0].Chunk == Name;
         if (Orthodox) $(`<li class="split">Items inside the chunk:</li>`).prependTo(List);
         var TargetElement: Cash | undefined;
-        for (var Item of Items) {
+        Items.forEach(Item => {
             // Show divisors when needed
             if (Item.Chunk == Name != Orthodox) {
                 $("<hr>").appendTo(List);
@@ -100,7 +100,10 @@ export class Dialog extends Panel {
                     var CodeItem = $(`<li class="owners"><i></i> from </li>`);
                     CodeItem.children("i").text(Code.Data.Label)
                         .css("cursor", "pointer")
-                        .on("click", () => this.ShowCode(0, Code.Data));
+                        .on("click", () => {
+                            this.Visualizer.PushState(`chunk-${Name}`, () => this.ShowChunk(Name, Chunk, Owners, Item.ID));
+                            this.ShowCode(0, Code.Data);
+                        });
                     // Show the owners
                     var RealOwners = 0;
                     for (var Owner of Code.Data.Owners!) {
@@ -120,7 +123,7 @@ export class Dialog extends Panel {
                 CodeItems.sort((A, B) => parseInt(B.data("owners")) - parseInt(A.data("owners")));
                 CodeItems.forEach(Item => Item.appendTo(CodeList));
             }
-        }
+        });
         // Show the dialog
         this.ShowPanel(Panel);
         // Scroll to the target element
