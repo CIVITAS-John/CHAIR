@@ -2,7 +2,7 @@ import { Code, CodebookComparison, CodebookEvaluation } from "../../../utils/sch
 import { GetConsolidatedSize } from "./dataset.js";
 import { BuildSemanticGraph } from "./graph.js";
 import { CalculateJSD, Parameters } from './utils.js';
-import { Graph } from './schema.js';
+import { Graph, Component } from './schema.js';
 
 /** Evaluate: Evaluate all codebooks based on the network structure. */
 export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameters): Record<string, CodebookEvaluation> {
@@ -60,17 +60,14 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
 }
 
 /** Evaluate: Evaluate all codebooks per cluster, based on the network structure. */
-export function EvaluatePerCluster(Dataset: CodebookComparison<any>, Graph: Graph<Code>, Parameters: Parameters): { Name: string, Coverages: number[] }[] {
-    var Results: { Name: string, Coverages: number[] }[] = [];
+export function EvaluatePerCluster(Dataset: CodebookComparison<any>, Graph: Graph<Code>, Parameters: Parameters): { Component: Component<Code>, Coverages: number[] }[] {
+    var Results: { Component: Component<Code>, Coverages: number[] }[] = [];
     // Prepare for the results
     var Codebooks = Dataset.Codebooks;
-    var Names = Dataset.Names;
-    for (var I = 0; I < Codebooks.length; I++)
-        Results.push({ Name: Names[I], Coverages: [] });
     // Calculate weights per cluster
     for (var Cluster of Graph.Components!) {
         var TotalWeight = 0;
-        var Coverages = Results.map(() => 0);
+        var Coverages = Dataset.Names.map(() => 0);
         // Check if each node is covered by the codebooks
         for (var Node of Cluster.Nodes) {
             var Weight = Node.TotalWeight / Dataset.TotalWeight!;
@@ -81,12 +78,10 @@ export function EvaluatePerCluster(Dataset: CodebookComparison<any>, Graph: Grap
                 Coverages[I] += Weight * Observed;
             }
         }
+        Coverages = Coverages.map(Coverage => Coverage / TotalWeight);
         // Put it back to the results
         console.log(Coverages);
-        for (var I = 0; I < Codebooks.length; I++) {
-            Results[I].Coverages.push(Coverages[I] / TotalWeight);
-        }
+        Results.push({ Component: Cluster, Coverages: Coverages.slice(1) });
     }
-    // Ignore the baseline when returning
-    return Results.slice(1);
+    return Results;
 }

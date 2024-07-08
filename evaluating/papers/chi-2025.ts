@@ -70,7 +70,7 @@ async function RepeatedlyEvaluateInFolder(Times: number, Temperatures: number[],
 // Task: Evaluate different models with the same approaches.
 var Approaches = ["low-level-5"]
 for (var Approach of Approaches) {
-    await RepeatedlyEvaluateInFolder(10, [0.5], ["medium"], "Coded Dataset 1", Approach, "llama3-70b", new RefiningReferenceBuilder(true, true));
+    // await RepeatedlyEvaluateInFolder(10, [0.5], ["medium"], "Coded Dataset 1", Approach, "llama3-70b", new RefiningReferenceBuilder(true, true));
     await RepeatedlyEvaluateInFolder(10, [0.5], ["medium"], "Coded Dataset 2", Approach, "llama3-70b", new RefiningReferenceBuilder(true, true));
 }
 

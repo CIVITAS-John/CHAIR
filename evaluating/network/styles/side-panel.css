@@ -85,58 +85,56 @@
 .side-panel li span {
     margin-left: 0.25rem;
 }
-.side-panel table,
-.side-panel table td,
-.side-panel table th {
+/* Data table style. */
+table.data-table,
+table.data-table td,
+table.data-table th {
     border: 1px solid #ccc;
     box-sizing: border-box;
     user-select: none;
 }
-.side-panel p.tips {
-    font-size: 0.8rem;
-}
-.side-panel table {
+table.data-table {
     width: 100%;
     margin: 0.25rem 0;
     border-spacing: 0;
     background: rgba(255, 255, 255, 0.1);
 }
-.side-panel tr.chosen {
+table.data-table tr.chosen {
     color: rgb(184, 187, 38);
     background: rgba(255, 255, 255, 0.1);
 }
-.side-panel table td,
-.side-panel table th {
+table.data-table td,
+table.data-table th {
     padding: 0.25rem;
 }
-.side-panel table td h4 {
+table.data-table td h4 {
     margin: 0;
 }
-.side-panel table th {
+table.data-table th {
     color: rgb(184, 187, 38);
     font-size: 0.8rem;
 }
-.side-panel table td.actionable,
-.side-panel table td.metric-cell {
+table.data-table td.actionable,
+table.data-table td.metric-cell {
     cursor: pointer;
 }
-.side-panel table td.metric-cell {
+table.data-table td.metric-cell {
     text-align: center;
 }
-.side-panel table td.actionable:hover,
-.side-panel table td.actionable.chosen {
+table.data-table td.actionable:hover,
+table.data-table td.actionable.chosen {
     background: rgba(255, 255, 255, 0.1);
 }
-.side-panel table td.metric-cell:hover,
-.side-panel table td.metric-cell.chosen,
-.side-panel table tr.chosen .metric-cell {
+table.data-table td.metric-cell:hover,
+table.data-table td.metric-cell.chosen,
+table.data-table tr.chosen .metric-cell {
     font-weight: bold;
 }
-.side-panel .number-cell {
+table.data-table .number-cell {
     text-align: center;
 }
-.side-panel .number-cell p,
-.side-panel .metric-cell p {
+table.data-table .number-cell p,
+table.data-table .metric-cell p {
     font-size: 0.8rem;
 }
 /* Codebooks style. */

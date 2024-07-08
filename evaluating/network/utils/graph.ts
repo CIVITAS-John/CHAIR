@@ -153,6 +153,9 @@ export function FindCommunities<T>(Nodes: Node<T>[], Links: Link<T>[],
         Component.ID = Index;
         Component.Nodes.forEach(Node => Node.Component = Component);
     });
+    // Sort the components
+    var ComponentWeights = Components.map(Component => Component.Nodes.reduce((A, B) => A + B.TotalWeight, 0));
+    Components.sort((A, B) => ComponentWeights[B.ID] - ComponentWeights[A.ID]);
     return Components;
 }
 

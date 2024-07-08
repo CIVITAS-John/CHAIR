@@ -41,7 +41,7 @@ export class SidePanel extends Panel {
             .on("click", () => this.Visualizer.Tutorial.ShowTutorial(true)));
     }
     /** ShowPanel: Show a side panel. */
-    public ShowPanel(Name: string) {
+    public ShowPanel<T extends Panel>(Name: string): T {
         var Panel = this.Subpanels[Name];
         this.Header.text(Panel.Title);
         for (var Key in this.Subpanels) {
@@ -51,6 +51,7 @@ export class SidePanel extends Panel {
         $(`#menu-${this.CurrentPanel}`).toggleClass("chosen", false);
         $(`#menu-${Name}`).toggleClass("chosen", true);
         this.CurrentPanel = Name;
+        return Panel as T;
     }
     /** CurrentPanel: The current panel being shown. */
     public CurrentPanel: string = "Datasets";

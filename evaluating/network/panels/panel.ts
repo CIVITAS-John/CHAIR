@@ -56,7 +56,7 @@ export abstract class Panel {
     }
     /** BuildTable: Build a table for the panel. */
     protected BuildTable<T>(Data: T[], Builder: (Row: Cash, Data: T, Index: number) => void, Columns: string[] = []) {
-        var Table = $(`<table></table>`).appendTo(this.Container);
+        var Table = $(`<table class="data-table"></table>`).appendTo(this.Container);
         if (Columns.length > 0)
             Table.append($(`<tr></tr>`).append(...Columns.map(C => $(`<th></th>`).text(C))));
         Data.forEach((Item, Index) => Builder($(`<tr></tr>`).appendTo(Table), Item, Index));

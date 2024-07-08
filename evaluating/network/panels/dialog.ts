@@ -7,6 +7,7 @@ import { Panel } from './panel.js';
 import { FindOriginalCodes, GetChunks } from '../utils/dataset.js';
 import { FilterNodeByExample, FilterNodeByOwners } from '../utils/graph.js';
 import { EvaluatePerCluster } from '../utils/evaluate.js';
+import { CodeSection } from '../sections/code.js';
 
 /** Dialog: The dialog for the visualizer. */
 export class Dialog extends Panel {
@@ -120,7 +121,7 @@ export class Dialog extends Panel {
     /** ShowChunkOf: Show a dialog for a chunk based on the content ID. */
     public ShowChunkOf(ID: string) {
         var Chunks = GetChunks(this.Dataset.Source.Data);
-        var Chunk = Chunks.find(Chunk => Chunk.AllItems?.find(Item => Item.ID == ID && Item.Chunk == Chunk.ID));
+        var Chunk = Chunks.find(Chunk => Chunk.AllItems?.find(Item => Item.ID == ID && (!Item.Chunk || Item.Chunk == Chunk.ID)));
         if (Chunk) this.ShowChunk(Chunk.ID, Chunk);
     }
     /** CompareCoverageByClusters: Compare the coverage by clusters. */
@@ -138,11 +139,12 @@ export class Dialog extends Panel {
         var Maximum = d3.max(Results.flatMap(Result => Result.Coverages))!;
         var Colors = d3.scaleSequential()
                     .interpolator(d3.interpolateViridis)
-                    .domain([Maximum, Minimum]);
+                    .domain([Minimum, Maximum]);
         // Build the table
         this.BuildTable(
-            Results, (Row, {Name, Coverages}, Index) => {
-                Row.append($(`<td>${Name}</td>`));
+            Results, (Row, {Component, Coverages}, Index) => {
+                Row.append($(`<td class="actionable"><h4>${Component.Representative!.Data.Label}</h4><p class="tips">${Component.Nodes.length} codes</p></td>`)
+                    .on("click", () => this.SidePanel.ShowPanel<CodeSection>("Codes").ShowComponent(Component)));
                 for (var Coverage of Coverages) {
                     var Color = Colors(Coverage);
                     var Cell = $(`<td class="metric-cell"></td>`)
@@ -151,7 +153,7 @@ export class Dialog extends Panel {
                         .css("color", d3.lab(Color).l > 70 ? "black" : "white");
                     Row.append(Cell);
                 }
-            }, ["Codebook", ...Graph.Components!.map(Component => Component.Representative!.Data.Label)]
+            }, ["Cluster", ...this.Dataset.Names.slice(1)]
         ).appendTo(Panel);
         // Show the dialog
         this.ShowPanel(Panel);
