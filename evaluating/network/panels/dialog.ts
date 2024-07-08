@@ -25,6 +25,7 @@ export class Dialog extends Panel {
             .prependTo(Panel.children("h3"));
         // Show the panel
         var Content = this.Container.children("div.content");
+        Content.get(0)!.scrollTop = 0;
         Content.children().remove();
         Content.append(Panel);
         this.Show();
