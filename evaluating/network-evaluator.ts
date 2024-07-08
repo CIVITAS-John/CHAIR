@@ -31,10 +31,12 @@ export class NetworkEvaluator extends CodebookEvaluator {
     public async Evaluate(Codebooks: Codebook[], Names: string[], ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
         var Hash = md5(JSON.stringify(Codebooks));
         // Weights
-        var Weights = Names.map(Name => {
+        var Weights = Names.map((Name, Index) => {
             var Fields = Name.split("~");
             var Value = parseFloat(Fields[Fields.length - 1]);
-            return isNaN(Value) ? 1 : Value;
+            if (isNaN(Value)) return 1;
+            Names[Index] = Fields.slice(0, Fields.length - 1).join("~");
+            return Value;
         });
         // Build the network information
         var Package = await ReadOrBuildCache(ExportPath + "/network", Hash, async () => {

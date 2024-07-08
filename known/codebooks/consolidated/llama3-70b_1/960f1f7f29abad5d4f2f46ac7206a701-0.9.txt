@@ -1,0 +1,161 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (16 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+16.
+Criteria: {Who did what, and how for code 16}
+Label: {A descriptive label of code 16}
+---
+~~~
+1.
+Label: human ai collaboration challenges
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 laughs when he sees ChatGPT making a classical error.
+
+2.
+Label: anticipating potential benefits with more time
+Quotes:
+- E04: It seems like it's, you know, pretty straightforward to use and like intuitive, which is nice. And it's like, it's easy to interact with. So I feel like if I had like enough time to play around with it, it could be like really helpful. (interviewer's observation) Straightforward to use and intuitive.
+
+3.
+Label: balancing efficiency and the need for deeper understanding
+Quotes:
+- E04: It'd be that I just take this and see what this does. This should just be a single node so it'll kind of overwrite what I already did. (interviewer's observation) E04 uses the AI-generated code completely when realizing time constraints.
+
+4.
+Label: follows a structured setup process
+Quotes:
+- E04: I just like being able to kind of, like, iteratively build it. The thing that I always do when I create a model is I do, like, the initial command. I'll set up and go here. I'll go ahead and after I kind of set up the buttons, I'll put the functions behind them back here in the interface. (interviewer's observation) E04 creates the code skeleton before asking ChatGPT. He has a clear idea & established process of building ABMs.
+
+5.
+Label: seeks specific syntax help from ai
+Quotes:
+- E04: "how to define breeds in netlogo" (interviewer's observation) E04 tries to find certain syntax structures from the AI-generated code and ask for it when it is not there.
+
+6.
+Label: considers error messages before making decisions during the coding process
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 reads error messages before making a choice.
+
+7.
+Label: reacts with humor to ai's errors
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 laughs when he sees ChatGPT making a classical error.
+
+8.
+Label: demand for expertise & experience
+Quotes:
+- E01: Part of this, the user needs a little practice in debugging their own code. There should be some exercises before you ask GPT to do this.  (interviewer's observation) Users need practice in debugging their own code and need to have exercises before asking AI.
+
+9.
+Label: sees ai as helpful for model translation
+Quotes:
+- E04: I've found that AI is really helpful for like, translating other models from other languages into NetLogo, for example. (interviewer's observation) Helpful for translating from other languages into NetLogo
+
+10.
+Label: valuing real time ai assistance
+Quotes:
+- E04: I'll go on Stack Exchange or Stack Overflow, I'm part of the NetLogo listserv, but obviously there's a delay there. So in the instance that I need immediate feedback, it is really helpful. (interviewer's observation) Nice to have immediate feedback.
+
+11.
+Label: appreciates chat gpt's code organization and documentation features
+Quotes:
+- E01: I don't want chat GPT to write 27 operations in one line and show how brilliant it is. I wanted to separate out the code and, and it did a good job of not only did it write the code, but it commented the code. And then in addition to commenting the code externally, it did documentation. (interviewer's observation) ChatGPT tends to provide comments and documentation. Generated code is easy to read.
+
+12.
+Label: indicating the need for more robust troubleshooting and recovery mechanisms
+Quotes:
+- E04: And then like the only other thing I didn't like was, you know, kind of how it was getting stuck on itself and it wasn't able to fix that one error. (interviewer's observation) Could get stuck in a loop and cannot fix that.
+
+13.
+Label: human-ai: augmentation => ai should augment human's ability rather than replace
+Quotes:
+- E01: I think the key is to not replace human judgment and ability, but to find a fast way to increase human capability and judgment. (interviewer's observation) Augmentation of human capabilities & building on human judgement. Subjectivity of humanity?
+
+14.
+Label: wanting immediate "fix" option
+Quotes:
+- E04: So, I guess that's kind of annoying because I didn't really want it to explain here, but that was the only option that I had. (interviewer's observation) E04 wants the "fix" option right after the errors are identified.
+
+15.
+Label: asks questions and seeks human intervention
+Quotes:
+- E04: "how can I plot the output of this model?" (interviewer's observation) E04 was prompted to follow-up with ChatGPT.
+
+16.
+Label: emphasizing importance of user expertise
+Quotes:
+- E04: To me, it seems like you need to have a certain degree of expertise to understand where the errors are and how to fix them. Because otherwise it's like you're going down this path where you're blindly following the ChatGPT and you have no idea what's going on. For less experienced people, I wouldn't like that because it could put you in a worse situation. (interviewer's observation) Requires expertise to understand errors and debug them. Risks to blindly follow ChatGPT, esp. for less experienced people.
+===
+Here are the definitions for each code with clear and generalizable criteria:
+
+---
+1. 
+Criteria: Participant laughs or reacts humorously to AI's errors during the interaction.
+Label: Reacts with humor to AI's errors
+
+2. 
+Criteria: Participant expresses anticipation of potential benefits from using the LLM-driven interface with more time and practice.
+Label: Anticipating potential benefits with more time
+
+3. 
+Criteria: Participant balances efficiency with the need for deeper understanding by using AI-generated code while considering time constraints.
+Label: Balancing efficiency and the need for deeper understanding
+
+4. 
+Criteria: Participant follows a structured setup process when building models, such as creating a code skeleton before seeking AI assistance.
+Label: Follows a structured setup process
+
+5. 
+Criteria: Participant seeks specific syntax help from the AI, such as asking for certain code structures or definitions.
+Label: Seeks specific syntax help from AI
+
+6. 
+Criteria: Participant considers error messages before making decisions during the coding process.
+Label: Considers error messages before making decisions
+
+7. (Removed as it's a duplicate of code 1)
+
+8. 
+Criteria: Participant demands expertise and experience in debugging their own code before seeking AI assistance.
+Label: Demand for expertise and experience
+
+9. 
+Criteria: Participant sees the AI as helpful for model translation from other languages into NetLogo.
+Label: Sees AI as helpful for model translation
+
+10. 
+Criteria: Participant values real-time AI assistance, preferring immediate feedback over delayed support.
+Label: Valuing real-time AI assistance
+
+11. 
+Criteria: Participant appreciates the AI's code organization and documentation features, such as commenting and providing external documentation.
+Label: Appreciates AI's code organization and documentation
+
+12. 
+Criteria: Participant indicates the need for more robust troubleshooting and recovery mechanisms in the LLM-driven interface.
+Label: Need for more robust troubleshooting and recovery
+
+13. 
+Criteria: Participant believes that AI should augment human ability rather than replace it, emphasizing the importance of human judgment.
+Label: Human-AI: augmentation
+
+14. 
+Criteria: Participant wants an immediate "fix" option after errors are identified, rather than explanations or other options.
+Label: Wanting immediate "fix" option
+
+15. 
+Criteria: Participant asks questions and seeks human intervention when interacting with the LLM-driven interface.
+Label: Asks questions and seeks human intervention
+
+16. 
+Criteria: Participant emphasizes the importance of user expertise in understanding errors and debugging them when using the LLM-driven interface.
+Label: Emphasizing importance of user expertise

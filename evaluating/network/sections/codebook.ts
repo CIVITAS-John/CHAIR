@@ -88,7 +88,7 @@ export class CodebookSection extends Panel {
                     Row.append(Cell);
                 });
             }, ["Codebook", ...Metrics]
-        )
+        );
     }
 }
 

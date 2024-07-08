@@ -1,7 +1,8 @@
-import { CodebookComparison, CodebookEvaluation } from "../../../utils/schema.js";
-import { FindConsolidatedCode, GetConsolidatedSize } from "./dataset.js";
+import { Code, CodebookComparison, CodebookEvaluation } from "../../../utils/schema.js";
+import { GetConsolidatedSize } from "./dataset.js";
 import { BuildSemanticGraph } from "./graph.js";
 import { CalculateJSD, Parameters } from './utils.js';
+import { Graph } from './schema.js';
 
 /** Evaluate: Evaluate all codebooks based on the network structure. */
 export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameters): Record<string, CodebookEvaluation> {
@@ -16,14 +17,12 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
     }
     // Calculate weights per node
     var Graph = BuildSemanticGraph(Dataset, Parameters);
-    var Weights: Map<string, number> = new Map<string, number>();
+    var NodeWeights: Map<string, number> = new Map<string, number>();
     var TotalWeight: number = 0;
-    var TotalCodebooks = Dataset.Weights.reduce((A, B) => A + B, 0);
     for (var Node of Graph.Nodes) {
-        var Weight = Node.Weights.reduce((A, B, I) => I == 0 ? A : A + B * Dataset.Weights[I], 0);
-        Weight = Weight / TotalCodebooks;
+        var Weight = Node.TotalWeight / Dataset.TotalWeight!;
         Observations[0].push(Weight);
-        Weights.set(Node.ID, Weight);
+        NodeWeights.set(Node.ID, Weight);
         TotalWeight += Weight;
     }
     // The expectations are made based on (consolidate codes in each codebook) / (codes in the baseline)
@@ -34,7 +33,7 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
     // Check if each node is covered by the codebooks
     var TotalNovelty = 0;
     for (var Node of Graph.Nodes) {
-        var Weight = Weights.get(Node.ID)!;
+        var Weight = NodeWeights.get(Node.ID)!;
         // Novelty
         var Novel = Node.Owners.size == 1 + (Node.Owners.has(0) ? 1 : 0);
         if (Novel) TotalNovelty += Weight;
@@ -58,4 +57,36 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
         Result["Consolidated"] = Consolidated[I];
     }
     return Results;
+}
+
+/** Evaluate: Evaluate all codebooks per cluster, based on the network structure. */
+export function EvaluatePerCluster(Dataset: CodebookComparison<any>, Graph: Graph<Code>, Parameters: Parameters): { Name: string, Coverages: number[] }[] {
+    var Results: { Name: string, Coverages: number[] }[] = [];
+    // Prepare for the results
+    var Codebooks = Dataset.Codebooks;
+    var Names = Dataset.Names;
+    for (var I = 0; I < Codebooks.length; I++)
+        Results.push({ Name: Names[I], Coverages: [] });
+    // Calculate weights per cluster
+    for (var Cluster of Graph.Components!) {
+        var TotalWeight = 0;
+        var Coverages = Results.map(() => 0);
+        // Check if each node is covered by the codebooks
+        for (var Node of Cluster.Nodes) {
+            var Weight = Node.TotalWeight / Dataset.TotalWeight!;
+            TotalWeight += Weight;
+            // Calculate on each codebook
+            for (var I = 0; I < Codebooks.length; I++) {
+                var Observed = Node.Weights[I];
+                Coverages[I] += Weight * Observed;
+            }
+        }
+        // Put it back to the results
+        console.log(Coverages);
+        for (var I = 0; I < Codebooks.length; I++) {
+            Results[I].Coverages.push(Coverages[I] / TotalWeight);
+        }
+    }
+    // Ignore the baseline when returning
+    return Results.slice(1);
 }

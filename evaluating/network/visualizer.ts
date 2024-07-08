@@ -90,6 +90,9 @@ export class Visualizer {
                 for (var Chunk of Object.values(Dataset))
                     for (var Item of Chunk.AllItems ?? [])
                         Item.Time = new Date(Date.parse(Item.Time as any));
+            // Calculate the weights
+            this.Dataset.Weights = this.Dataset.Weights ?? this.Dataset.Names.map(() => 1);
+            this.Dataset.TotalWeight = this.Dataset.Weights.reduce((A, B) => A + B, 0);
             // Build the default graph
             this.SetStatus("Code", BuildSemanticGraph(this.Dataset, this.Parameters));
             this.SidePanel.Show();

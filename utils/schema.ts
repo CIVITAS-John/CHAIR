@@ -68,7 +68,9 @@ export interface CodebookComparison<T extends DataChunk<DataItem>> {
     /** Codes: The codes in the combined codebook. */
     Codes: Code[];
     /** Weights: The weights of the codes in the combined codebook. */
-    Weights: number[];
+    Weights?: number[];
+    /** TotalWeight: The total weight of the codebooks. */
+    TotalWeight?: number;
     /** Distances: The distance matrix between codes in the first codebook. */
     Distances: number[][];
 }

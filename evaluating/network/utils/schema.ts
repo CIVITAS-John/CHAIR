@@ -58,6 +58,8 @@ export interface Node<T> extends d3.SimulationNodeDatum {
     Neighbors: number;
     /** Weights: Weights (for each codebook) of this node. */
     Weights: number[];
+    /** TotalWeight: The total weight of this code. */
+    TotalWeight: number;
     /** Links: Links connected to this node. */
     Links: Link<T>[];
     /** Component: The component that the node belongs to. */

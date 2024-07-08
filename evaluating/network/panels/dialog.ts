@@ -1,3 +1,4 @@
+import d3 from 'd3';
 import type { Cash } from 'cash-dom';
 import { Visualizer } from '../visualizer.js';
 import { Code, DataChunk, DataItem } from '../../../utils/schema.js';
@@ -5,6 +6,7 @@ import { FormatDate, GetCodebookColor } from '../utils/utils.js';
 import { Panel } from './panel.js';
 import { FindOriginalCodes, GetChunks } from '../utils/dataset.js';
 import { FilterNodeByExample, FilterNodeByOwners } from '../utils/graph.js';
+import { EvaluatePerCluster } from '../utils/evaluate.js';
 
 /** Dialog: The dialog for the visualizer. */
 export class Dialog extends Panel {
@@ -120,5 +122,38 @@ export class Dialog extends Panel {
         var Chunks = GetChunks(this.Dataset.Source.Data);
         var Chunk = Chunks.find(Chunk => Chunk.AllItems?.find(Item => Item.ID == ID && Item.Chunk == Chunk.ID));
         if (Chunk) this.ShowChunk(Chunk.ID, Chunk);
+    }
+    /** CompareCoverageByClusters: Compare the coverage by clusters. */
+    public CompareCoverageByClusters() {
+        this.Visualizer.PushState(`compare-coverage-by-clusters`, () => this.CompareCoverageByClusters());
+        // Build the panel
+        var Panel = $(`<div class="panel"></div>`);
+        // Add the title
+        Panel.append($(`<h3>Codebook Coverage by Clusters</h3>`));
+        Panel.append($(`<hr/>`));
+        // Evaluate the coverage
+        var Graph = this.GetGraph<Code>();
+        var Results = EvaluatePerCluster(this.Dataset, Graph, this.Parameters);
+        var Minimum = d3.min(Results.flatMap(Result => Result.Coverages))!;
+        var Maximum = d3.max(Results.flatMap(Result => Result.Coverages))!;
+        var Colors = d3.scaleSequential()
+                    .interpolator(d3.interpolateViridis)
+                    .domain([Maximum, Minimum]);
+        // Build the table
+        this.BuildTable(
+            Results, (Row, {Name, Coverages}, Index) => {
+                Row.append($(`<td>${Name}</td>`));
+                for (var Coverage of Coverages) {
+                    var Color = Colors(Coverage);
+                    var Cell = $(`<td class="metric-cell"></td>`)
+                        .text(d3.format(".1%")(Coverage))
+                        .css("background", Color)
+                        .css("color", d3.lab(Color).l > 70 ? "black" : "white");
+                    Row.append(Cell);
+                }
+            }, ["Codebook", ...Graph.Components!.map(Component => Component.Representative!.Data.Label)]
+        ).appendTo(Panel);
+        // Show the dialog
+        this.ShowPanel(Panel);
     }
 }

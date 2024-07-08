@@ -1,0 +1,379 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: identifying ai limitations, recognizing ai-generated code limitations
+- Users encounter and identify limitations of LLM-driven interfaces.
+- Users recognize limitations in AI-generated code and encounter limitations in AI's code analysis capabilities.
+
+2.
+Concepts: handling large code bases, experiences limitations with long code pieces
+- Encounters limitations in handling large code bases with AI.
+- Users experience limitations with long code pieces in LLM-driven interfaces.
+
+3.
+Concepts: gives up on ai assistance, giving up on the ai's response and reverting to their own approach
+- Gives up on AI assistance when faced with difficulties.
+- Gives up on AI's response and reverts to their own approach.
+
+4.
+Concepts: abandons ai interaction, abandoning the search
+- Users abandon AI assistance when expectations are not met.
+- The participant abandons the search for relevant models or gives up on AI's suggestions.
+
+5.
+Concepts: critiques error messaging, criticizing error messages
+- Participants call for better error messaging in NetLogo.
+- Users criticize the helpfulness of error messages in LLM-driven interfaces.
+
+6.
+Concepts: warns about ai errors, ai's error-prone nature
+- Users warn about potential AI errors.
+- The user notes that the AI can still make errors, even with its ability to provide feedback.
+
+7.
+Concepts: suspecting ai errors, pointing to a potential bug in the system
+- The participant suspects a bug or error in the AI-driven interface.
+- The participant points out a potential bug in the system, such as showing error messages even when the code is correct.
+
+8.
+Concepts: user interface limitations, limited choices and flexibility
+- Identifying user interface limitations, wanting more options, and feeling frustrated with the current design.
+- Limiting choices, feeling that options are too restricted, and wanting more flexibility in the system.
+
+9.
+Concepts: ambiguous error feedback obstacles, expressing frustration and confusion over error messages
+- Faces obstacles due to ambiguous error feedback, struggling to understand and resolve issues.
+- Participants express confusion over persistent errors, expressing frustration with persistent error messages.
+
+10.
+Concepts: failure, feels stuck due to inadequate feedback
+- The participant experiences failure with AI, such as getting stuck in a loop.
+- Users feel stuck due to inadequate feedback from AI.
+
+11.
+Concepts: frustration with ai repetition, experiencing frustration with ai
+- Shows frustration with AI repetition
+- Users express frustration and annoyance when interacting with AI, particularly when experiencing conflicting suggestions or error messages.
+
+12.
+Concepts: adapting to ai's limitations, adapting to outdated functionality
+- The participant adapts to AI's outdated functionalities or limitations.
+- Adapts to outdated functionality in AI responses, such as older NetLogo versions.
+
+13.
+Concepts: working with legacy netlogo, deals with legacy code issues
+- Deals with older NetLogo versions and their limitations.
+- The participant deals with legacy code issues in NetLogo.
+
+14.
+Concepts: encountering old functionality, encountering issues with ai's use of older net logo functionality
+- Encountering old functionality in AI responses, specifically with NetLogo 5 and anonymous functions.
+- The interviewee encounters issues with the AI's use of older NetLogo functionality.
+
+15.
+Concepts: suggests linting features, need for linting features in netlogo
+- The participant suggests the need for linting features in NetLogo to identify conceptual errors.
+- Emphasizes the need for linting features in NetLogo
+
+16.
+Concepts: emphasizes importance of syntax support, advocates for conceptual error detection
+- The participant emphasizes the importance of syntax support in NetLogo.
+- The participant advocates for conceptual error detection capabilities in NetLogo.
+
+17.
+Concepts: struggling with context shifts, the challenges faced by beginners in net logo
+- Recognizing the struggle of beginners with context shifts in NetLogo.
+- Identifies challenges faced by beginners in NetLogo, such as AI hallucinations and unhelpful error messages.
+
+18.
+Concepts: clear and specific ai request, articulates specific task
+- Expresses a specific request to the AI for a NetLogo-related task
+- Articulating a specific task or problem to be solved, such as creating a simple feed-forward neural network in NetLogo.
+
+19.
+Concepts: needs ai support for learning netlogo concepts, potential for ai to improve learning process and support
+- The participant needs AI support in learning the "scope" concept in NetLogo.
+- Sees potential for AI to improve learning process and support for NetLogo
+
+20.
+Concepts: asking for clarification, seeking clarification on ai functionality
+- Asks for clarification on a specific concept or syntax in NetLogo
+- Seeks clarification on AI functionality, particularly in NetLogo.
+
+21.
+Concepts: considering "in netlogo" usage, including "in netlogo" in ai requests
+- The interviewee considers the use of "in NetLogo" in AI commands.
+- Considers including "in NetLogo" in AI requests
+
+22.
+Concepts: ai-driven model development, uses ai for translation, uses ai for specific tasks
+- Leverages AI for NetLogo model development.
+- Participants use AI for translating models from other languages into NetLogo.
+- Uses AI for specific tasks or applications, such as NetLogo.
+
+23.
+Concepts: ai model recognition, expecting ai-driven model retrieval
+- Expecting AI to recognize and retrieve specific models, such as Perceptron, from a library.
+- Participants expect AI to find specific models or libraries, retrieving specific models or information from a library or database.
+
+24.
+Concepts: reading through code to debug, problem-solving skills, exhibiting expert debugging
+- Reading through code to debug
+- The quote demonstrates problem-solving skills by reading through the code and trying to debug with himself when the generated code does not work.
+- Exhibiting expert debugging behavior by reading error messages.
+
+25.
+Concepts: suggesting ai debugging, debugging collaboration, debugging ai-generated code
+- The participant suggests using AI for debugging code.
+- Engaging in a back-and-forth effort to debug code with AI assistance.
+- The participant debugs AI-generated code, identifying and fixing errors.
+
+26.
+Concepts: sharing debugging experience, ai debugging experience
+- Shares debugging experience
+- Recalling previous experiences with AI-driven interfaces and debugging.
+
+27.
+Concepts: emphasizing user expertise, emphasizes human debugging importance
+- The participant emphasizes the importance of user practice in debugging and user expertise in understanding and debugging errors.
+- The participant emphasizes the importance of human effort in debugging and error resolution.
+
+28.
+Concepts: highlighting learning needs, advocating for user preparation
+- Participants highlight the need for users to practice debugging their own code.
+- Calls for preparatory exercises for users to debug their own code.
+
+29.
+Concepts: considering error messages, cautiously reviews error messages
+- Considering error messages before making decisions during the coding process.
+- The participant cautiously reviews error messages before making changes to their code.
+
+30.
+Concepts: preparing for next steps, interviewee demonstrating their problem-solving approach
+- The participant prepares for the next steps by reading error messages.
+- The participant demonstrates their problem-solving approach, such as reading error messages before making a choice.
+
+31.
+Concepts: seeking error-free code, asking chatgpt to verify the code and produce no more bug
+- The interviewee seeks error-free code and asks the LLM-driven interface to verify the code and produce no more bugs.
+- Asks ChatGPT to verify code and eliminate bugs.
+
+32.
+Concepts: requesting code verification, seeks ai verification
+- Requests verification of code correctness and bug absence.
+- Participants ask AI to verify code and detect errors, seeking AI verification for resolving coding errors.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: identifying ai limitations, recognizing ai-generated code limitations
+Relationship: The concepts are related in that they both refer to the limitations of AI-driven interfaces in NetLogo.
+Criteria: Users identify and recognize limitations in LLM-driven interfaces and AI-generated code.
+Phrase: Identifying AI limitations.
+
+2.
+Concepts: handling large code bases, experiences limitations with long code pieces
+Relationship: The concepts are related in that they both refer to the difficulties users face when working with large code bases in LLM-driven interfaces.
+Criteria: Users experience limitations when handling large code bases and long code pieces in LLM-driven interfaces.
+Phrase: Handling large code bases.
+
+3.
+Concepts: gives up on ai assistance, giving up on the ai's response and reverting to their own approach
+Relationship: The concepts are related in that they both refer to the user's decision to abandon AI assistance when faced with difficulties.
+Criteria: Users give up on AI assistance and revert to their own approach when faced with difficulties.
+Phrase: Giving up on AI assistance.
+
+4.
+Concepts: abandons ai interaction, abandoning the search
+Relationship: The concepts are related in that they both refer to the user's decision to abandon AI interaction when expectations are not met.
+Criteria: Users abandon AI interaction when expectations are not met.
+Phrase: Abandoning AI interaction.
+
+5.
+Concepts: critiques error messaging, criticizing error messages
+Relationship: The concepts are related in that they both refer to the user's negative evaluation of error messages in LLM-driven interfaces.
+Criteria: Users critique and criticize error messages in LLM-driven interfaces.
+Phrase: Critiquing error messaging.
+
+6.
+Concepts: warns about ai errors, ai's error-prone nature
+Relationship: The concepts are related in that they both refer to the user's awareness of AI's potential to make errors.
+Criteria: Users warn about AI errors and acknowledge AI's error-prone nature.
+Phrase: Warning about AI errors.
+
+7.
+Concepts: suspecting ai errors, pointing to a potential bug in the system
+Relationship: The concepts are related in that they both refer to the user's suspicion of AI errors and potential bugs in the system.
+Criteria: Users suspect AI errors and point to potential bugs in the system.
+Phrase: Suspecting AI errors.
+
+8.
+Concepts: user interface limitations, limited choices and flexibility
+Relationship: The concepts are related in that they both refer to the limitations of the user interface in LLM-driven interfaces.
+Criteria: Users identify limitations in the user interface, wanting more options and flexibility.
+Phrase: Identifying user interface limitations.
+
+9.
+Concepts: ambiguous error feedback obstacles, expressing frustration and confusion over error messages
+Relationship: The concepts are related in that they both refer to the user's experience of obstacles and frustration due to ambiguous error feedback.
+Criteria: Users face obstacles due to ambiguous error feedback, expressing frustration and confusion.
+Phrase: Facing obstacles due to ambiguous error feedback.
+
+10.
+Concepts: failure, feels stuck due to inadequate feedback
+Relationship: The concepts are related in that they both refer to the user's experience of failure and feeling stuck due to inadequate feedback.
+Criteria: Users experience failure and feel stuck due to inadequate feedback from AI.
+Phrase: Feeling stuck due to inadequate feedback.
+
+11.
+Concepts: frustration with ai repetition, experiencing frustration with ai
+Relationship: The concepts are related in that they both refer to the user's experience of frustration with AI repetition and interaction.
+Criteria: Users experience frustration with AI repetition and interaction.
+Phrase: Experiencing frustration with AI.
+
+12.
+Concepts: adapting to ai's limitations, adapting to outdated functionality
+Relationship: The concepts are related in that they both refer to the user's adaptation to AI's limitations and outdated functionality.
+Criteria: Users adapt to AI's limitations and outdated functionality.
+Phrase: Adapting to AI's limitations.
+
+13.
+Concepts: working with legacy netlogo, deals with legacy code issues
+Relationship: The concepts are related in that they both refer to the user's experience of working with legacy NetLogo versions and dealing with legacy code issues.
+Criteria: Users work with legacy NetLogo versions and deal with legacy code issues.
+Phrase: Working with legacy NetLogo.
+
+14.
+Concepts: encountering old functionality, encountering issues with ai's use of older net logo functionality
+Relationship: The concepts are related in that they both refer to the user's experience of encountering old functionality and issues with AI's use of older NetLogo functionality.
+Criteria: Users encounter old functionality and issues with AI's use of older NetLogo functionality.
+Phrase: Encountering old functionality.
+
+15.
+Concepts: suggests linting features, need for linting features in netlogo
+Relationship: The concepts are related in that they both refer to the user's suggestion for and need for linting features in NetLogo.
+Criteria: Users suggest and emphasize the need for linting features in NetLogo.
+Phrase: Suggesting linting features.
+
+16.
+Concepts: emphasizes importance of syntax support, advocates for conceptual error detection
+Relationship: The concepts are related in that they both refer to the user's emphasis on the importance of syntax support and conceptual error detection in NetLogo.
+Criteria: Users emphasize the importance of syntax support and advocate for conceptual error detection in NetLogo.
+Phrase: Emphasizing importance of syntax support.
+
+17.
+Concepts: struggling with context shifts, the challenges faced by beginners in net logo
+Relationship: The concepts are related in that they both refer to the user's recognition of the struggles faced by beginners in NetLogo, including context shifts.
+Criteria: Users recognize the struggles faced by beginners in NetLogo, including context shifts.
+Phrase: Recognizing struggles faced by beginners.
+
+18.
+Concepts: clear and specific ai request, articulates specific task
+Relationship: The concepts are related in that they both refer to the user's clear and specific request to the AI for a NetLogo-related task.
+Criteria: Users express clear and specific requests to the AI for NetLogo-related tasks.
+Phrase: Expressing clear and specific requests.
+
+19.
+Concepts: needs ai support for learning netlogo concepts, potential for ai to improve learning process and support
+Relationship: The concepts are related in that they both refer to the user's need for AI support in learning NetLogo concepts and the potential for AI to improve the learning process.
+Criteria: Users need AI support in learning NetLogo concepts and see potential for AI to improve the learning process.
+Phrase: Needing AI support for learning.
+
+20.
+Concepts: asking for clarification, seeking clarification on ai functionality
+Relationship: The concepts are related in that they both refer to the user's request for clarification on AI functionality in NetLogo.
+Criteria: Users ask for clarification on AI functionality in NetLogo.
+Phrase: Asking for clarification.
+
+21.
+Concepts: considering "in netlogo" usage, including "in netlogo" in ai requests
+Relationship: The concepts are related in that they both refer to the user's consideration of including "in NetLogo" in AI requests.
+Criteria: Users consider including "in NetLogo" in AI requests.
+Phrase: Considering "in NetLogo" usage.
+
+22.
+Concepts: ai-driven model development, uses ai for translation, uses ai for specific tasks
+Relationship: The concepts are related in that they both refer to the user's use of AI for model development, translation, and specific tasks in NetLogo.
+Criteria: Users leverage AI for model development, translation, and specific tasks in NetLogo.
+Phrase: Leveraging AI for model development.
+
+23.
+Concepts: ai model recognition, expecting ai-driven model retrieval
+Relationship: The concepts are related in that they both refer to the user's expectation of AI-driven model recognition and retrieval in NetLogo.
+Criteria: Users expect AI to recognize and retrieve specific models in NetLogo.
+Phrase: Expecting AI-driven model recognition.
+
+24.
+Concepts: reading through code to debug, problem-solving skills, exhibiting expert debugging
+Relationship: The concepts are related in that they both refer to the user's problem-solving skills and expert debugging behavior in NetLogo.
+Criteria: Users exhibit problem-solving skills and expert debugging behavior in NetLogo.
+Phrase: Exhibiting expert debugging.
+
+25.
+Concepts: suggesting ai debugging, debugging collaboration, debugging ai-generated code
+Relationship: The concepts are related in that they both refer to the user's suggestion of AI debugging and collaboration in NetLogo.
+Criteria: Users suggest AI debugging and collaborate with AI in NetLogo.
+Phrase: Suggesting AI debugging.
+
+26.
+Concepts: sharing debugging experience, ai debugging experience
+Relationship: The concepts are related in that they both refer to the user's sharing of debugging experience with AI in NetLogo.
+Criteria: Users share debugging experiences with AI in NetLogo.
+Phrase: Sharing debugging experience.
+
+27.
+Concepts: emphasizing user expertise, emphasizes human debugging importance
+Relationship: The concepts are related in that they both refer to the user's emphasis on the importance of human expertise in debugging in NetLogo.
+Criteria: Users emphasize the importance of human expertise in debugging in NetLogo.
+Phrase: Emphasizing user expertise.
+
+28.
+Concepts: highlighting learning needs, advocating for user preparation
+Relationship: The concepts are related in that they both refer to the user's highlighting of learning needs and advocacy for user preparation in NetLogo.
+Criteria: Users highlight learning needs and advocate for user preparation in NetLogo.
+Phrase: Highlighting learning needs.
+
+29.
+Concepts: considering error messages, cautiously reviews error messages
+Relationship: The concepts are related in that they both refer to the user's cautious review of error messages in NetLogo.
+Criteria: Users cautiously review error messages in NetLogo.
+Phrase: Cautiously reviewing error messages.
+
+30.
+Concepts: preparing for next steps, interviewee demonstrating their problem-solving approach
+Relationship: The concepts are related in that they both refer to the user's preparation for next steps and demonstration of problem-solving approach in NetLogo.
+Criteria: Users prepare for next steps and demonstrate their problem-solving approach in NetLogo.
+Phrase: Preparing for next steps.
+
+31.
+Concepts: seeking error-free code, asking chatgpt to verify the code and produce no more bug
+Relationship: The concepts are related in that they both refer to the user's seeking of error-free code and request for AI verification in NetLogo.
+Criteria: Users seek error-free code and request AI verification in NetLogo.
+Phrase: Seeking error-free code.
+
+32.
+Concepts: requesting code verification, seeks ai verification
+Relationship: The concepts are related in that they both refer to the user's request for code verification and AI verification in NetLogo.
+Criteria: Users request code verification and seek AI verification in NetLogo.
+Phrase: Requesting code verification.

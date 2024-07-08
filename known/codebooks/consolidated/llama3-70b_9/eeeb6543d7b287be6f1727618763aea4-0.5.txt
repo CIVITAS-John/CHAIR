@@ -1,0 +1,366 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+32.
+Criteria: {Who did what, and how for code 32}
+Label: {A descriptive label of code 32}
+---
+~~~
+1.
+Label: inquiring about user experience
+Quotes:
+- Designer: What problems did you encounter during use?
+
+2.
+Label: future design plans/considerations
+Quotes:
+- Designer: Physics mainly focuses on electricity and mechanics; other directions don't have much room for free experiments before high school. In the future, we might do some demonstration experiments based on everyone's needs, but it won't be as open as electricity
+
+3.
+Label: give usage instructions
+Quotes:
+- Designer: This version of the circuit diagram is for testing only... You can drag the Editor because the auto-layout algorithm is not very stable and may produce some odd results
+- Designer: After connecting the student power supply, you need to turn on the switch
+
+4.
+Label: explaining limitations
+Quotes:
+- User: Dizzy, the computer system for teachers at our school is quite old.
+
+5.
+Label: community engagement
+Quotes:
+- Designer: New Features
+Electronic components will be damaged after a short process, rather than immediately.
+Clearing the desktop will now display a confirmation interface.
+Supports undoing the creation and deletion of wires and components.
+Appliances now display the effective value of alternating current.
+(PC) You can now exit the application using the Esc key.
+
+New Components
+Added a sensitive ammeter.
+Added a student power supply (ideal AC/DC power supply).
+
+Adjustments to Component Properties
+Batteries now have adjustable internal resistance and are no longer ideal power sources.
+Incandescent bulbs now have volt-ampere characteristic parameters and are no longer ideal resistors.
+The resistance law experimenter now uses real formulas for calculations, with adjustable parameters.
+Hidden terminal blocks 3 and 4.
+
+Bug Fixes
+Fixed an issue with unit conversion in Editor properties.
+Terminal arrows no longer show jumping animations.
+There may have been calculation errors with certain circuit connections.
+- User: If there could be an export function, or the ability to save or import experiments, it would be convenient. We could set up the parameters in the office and directly import them in class.
+- User: Most schools will disable the network on classroom computers to prevent students from going online or to avoid various software auto-downloads from slowing down the computers.
+- Designer: Last time I tried it in middle school, there's a trick where you click the link button in the top right, and when the browser pops up, it's no longer full screen... = =
+- User: Generally not. Ever since an adult image popped up during a major city-level open class, the school has disabled the network on classroom computers [Emoji].
+
+6.
+Label: explain delay
+Quotes:
+- Designer: Don't worry, don't worry, it will come, just optimizing the circuit diagram one last time.
+
+7.
+Label: supporting user experience
+Quotes:
+- Designer: After connecting the student power supply, you need to turn on the switch
+
+8.
+Label: suggest new feature
+Quotes:
+- User: If there could be an export function, or the ability to save or import experiments, it would be convenient. We could set up the parameters in the office and directly import them in class.
+- User: It is recommended to add an exit button function to the PC version. Many regions now use all-in-one touch screen machines without physical keyboards.
+- User: Can you also include mechanics experiments?
+- User: Is there a user manual?
+
+9.
+Label: demonstrating awareness of diverse user environments
+Quotes:
+- Designer: It does not support the XP system.
+
+10.
+Label: clarifying the circuit diagram style
+Quotes:
+- Designer: [Image] This one, right?
+
+11.
+Label: resolve user concern
+Quotes:
+- Designer: 7 is okay.
+
+12.
+Label: provide temporary solution
+Quotes:
+- Designer: Although you can manually adjust the layout
+
+13.
+Label: praising the software as practical and user friendly
+Quotes:
+- User: This software is great! It's quite practical, unlike some software that tries to be comprehensive but ends up being inconvenient to use.
+
+14.
+Label: providing updates about the development progress
+Quotes:
+- Designer: [Image] Updates in preparation
+
+15.
+Label: facilitating access
+Quotes:
+- Designer: You can download Windows in the group files.
+
+16.
+Label: updating users on development progress
+Quotes:
+- Designer: We are working on this part
+
+17.
+Label: encourage future discussion or questions
+Quotes:
+- Designer: No need to be polite, if you encounter any problems during use, you can directly mention them in the group.
+
+18.
+Label: teaching
+Quotes:
+- Designer: This version of the circuit diagram is for testing only... You can drag the Editor because the auto-layout algorithm is not very stable and may produce some odd results
+
+19.
+Label: clarifying the purpose of the circuit diagram
+Quotes:
+- Designer: This version of the circuit diagram is for testing only... You can drag the Editor because the auto-layout algorithm is not very stable and may produce some odd results
+
+20.
+Label: user 4233 asks about download process
+Quotes:
+- User: How to download?
+
+21.
+Label: listing updates
+Quotes:
+- Designer: There will be: multimeter; powered solenoid; semiconductor capacitor; support for conversion to ideal ammeter (more convenient for problem-solving and middle school teaching)
+
+22.
+Label: consulting community
+Quotes:
+- Designer: Consulting the teachers in the group: which type of intersection is used in the circuit diagrams in the current textbooks?
+[Image]
+- Designer: When we are ready to start, we will consult everyone in the group
+- User: But it's better to use the right side for non-crossing
+- User: Yes, the common one is still the old style
+- Designer: Uh... left side or right side
+
+23.
+Label: highlighting the simplicity of adding various components
+Quotes:
+- Designer: This belongs to the kind of feature that, once done, will ensure long-term stability... Adding various components is actually simpler
+
+24.
+Label: suggesting why it cannot be solved due to system used
+Quotes:
+- Designer: It does not support the XP system.
+
+25.
+Label: encouraging further dialogue
+Quotes:
+- Designer: Hmm hmm.
+
+26.
+Label: explain focus areas
+Quotes:
+- Designer: Physics mainly focuses on electricity and mechanics; other directions don't have much room for free experiments before high school. In the future, we might do some demonstration experiments based on everyone's needs, but it won't be as open as electricity
+
+27.
+Label: informing about the upcoming software update and its status in the apple market
+Quotes:
+- Designer: Version 1.0.1 of Physics Lab. It is expected to take another one or two days in the Apple market (waiting for review).
+
+28.
+Label: respond
+Quotes:
+- Designer: It seems that local export needs to be supported.
+- Designer: You can download Windows in the group files.
+- Designer: It does not support the XP system.
+- Designer: [Image] Updates in preparation
+- Designer: Group sharing.
+
+29.
+Label: improving simulation realism
+Quotes:
+- Designer: New Features
+Electronic components will be damaged after a short process, rather than immediately.
+Clearing the desktop will now display a confirmation interface.
+Supports undoing the creation and deletion of wires and components.
+Appliances now display the effective value of alternating current.
+(PC) You can now exit the application using the Esc key.
+
+New Components
+Added a sensitive ammeter.
+Added a student power supply (ideal AC/DC power supply).
+
+Adjustments to Component Properties
+Batteries now have adjustable internal resistance and are no longer ideal power sources.
+Incandescent bulbs now have volt-ampere characteristic parameters and are no longer ideal resistors.
+The resistance law experimenter now uses real formulas for calculations, with adjustable parameters.
+Hidden terminal blocks 3 and 4.
+
+Bug Fixes
+Fixed an issue with unit conversion in Editor properties.
+Terminal arrows no longer show jumping animations.
+There may have been calculation errors with certain circuit connections.
+- Designer: From the next update, dry batteries will no longer be ideal components (you can remove the internal resistance to simulate).
+
+30.
+Label: expressing positive sentiment about the new features
+Quotes:
+- User: Oh, this is nice
+
+31.
+Label: response to feedback
+Quotes:
+- Designer: Hmm... I'll add it in the next update. PC updates are usually the fastest, so there will probably be another round this weekend.
+- Designer: Hmm... We will probably prioritize completing the electrical section first, then magnetism, and then other parts.
+
+32.
+Label: expressing progress
+Quotes:
+- User: It's already starting to take shape [Emoji]
+===
+Here are the definitions for each code:
+
+---
+1.
+Criteria: The designer asks about the user's experience or problems encountered during use.
+Label: inquiring about user experience
+
+2.
+Criteria: The designer discusses or considers future plans or directions for the Physics Lab online community.
+Label: future design plans/considerations
+
+3.
+Criteria: The designer provides instructions or guidance on how to use the software or its features.
+Label: give usage instructions
+
+4.
+Criteria: A user explains or mentions limitations or constraints they face in their environment.
+Label: explaining limitations
+
+5.
+Criteria: The designer shares updates, new features, or changes to the software, and engages with users about their feedback or suggestions.
+Label: community engagement
+
+6.
+Criteria: The designer explains or apologizes for a delay in the development or release of a feature or update.
+Label: explain delay
+
+7.
+Criteria: The designer offers assistance or support to ensure a smooth user experience.
+Label: supporting user experience
+
+8.
+Criteria: A user suggests or requests a new feature or functionality for the software.
+Label: suggest new feature
+
+9.
+Criteria: The designer acknowledges or shows awareness of diverse user environments, such as different operating systems or hardware configurations.
+Label: demonstrating awareness of diverse user environments
+
+10.
+Criteria: The designer clarifies or explains the style or format of the circuit diagram.
+Label: clarifying the circuit diagram style
+
+11.
+Criteria: The designer resolves or addresses a user's concern or issue.
+Label: resolve user concern
+
+12.
+Criteria: The designer provides a temporary solution or workaround for a problem or limitation.
+Label: provide temporary solution
+
+13.
+Criteria: A user expresses praise or appreciation for the software's practicality and user-friendliness.
+Label: praising the software as practical and user friendly
+
+14.
+Criteria: The designer shares updates or progress on the development of new features or components.
+Label: providing updates about the development progress
+
+15.
+Criteria: The designer facilitates access to resources, such as downloads or group files.
+Label: facilitating access
+
+16.
+Criteria: The designer updates users on the progress of development or upcoming features.
+Label: updating users on development progress
+
+17.
+Criteria: The designer encourages users to ask questions or provide feedback in the future.
+Label: encourage future discussion or questions
+
+18.
+Criteria: The designer provides teaching or instructional guidance on using the software or its features.
+Label: teaching
+
+19.
+Criteria: The designer clarifies the purpose or intention behind a feature or component.
+Label: clarifying the purpose of the circuit diagram
+
+20.
+Criteria: A user asks about the download process or how to access a resource.
+Label: user 4233 asks about download process
+
+21.
+Criteria: The designer lists or outlines upcoming updates, features, or components.
+Label: listing updates
+
+22.
+Criteria: The designer consults with the community or seeks feedback on a specific issue or feature.
+Label: consulting community
+
+23.
+Criteria: The designer highlights the simplicity or ease of adding various components or features.
+Label: highlighting the simplicity of adding various components
+
+24.
+Criteria: The designer explains why a particular issue or problem cannot be solved due to system constraints.
+Label: suggesting why it cannot be solved due to system used
+
+25.
+Criteria: The designer encourages further dialogue or discussion on a topic.
+Label: encouraging further dialogue
+
+26.
+Criteria: The designer explains or outlines the focus areas or priorities of the Physics Lab online community.
+Label: explain focus areas
+
+27.
+Criteria: The designer informs users about the status of an upcoming software update or its availability in a specific market.
+Label: informing about the upcoming software update and its status in the apple market
+
+28.
+Criteria: The designer responds to a user's question, concern, or feedback.
+Label: respond
+
+29.
+Criteria: The designer discusses or implements improvements to the simulation's realism.
+Label: improving simulation realism
+
+30.
+Criteria: A user expresses positive sentiment or enthusiasm about new features or updates.
+Label: expressing positive sentiment about the new features
+
+31.
+Criteria: The designer responds to user feedback or suggestions, often with a plan or timeline for implementation.
+Label: response to feedback
+
+32.
+Criteria: A user expresses progress or optimism about the development of the Physics Lab online community.
+Label: expressing progress

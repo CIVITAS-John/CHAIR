@@ -10,7 +10,7 @@ export function BuildSemanticGraph(Dataset: CodebookComparison<any>, Parameter: 
         Dataset.Codes.map((Code, Index) => ({ 
             Type: "Code", ID: Index.toString(), Data: Code, Links: [],
             Owners: new Set(Code.Owners), NearOwners: new Set(Code.Owners), 
-            Weights: new Array(Dataset.Codebooks.length).fill(0), Neighbors: 0, 
+            Weights: new Array(Dataset.Codebooks.length).fill(0), TotalWeight: 0, Neighbors: 0, 
             Size: Math.sqrt(Code.Examples?.length ?? 1),
             x: 0, y: 0 })); // x: Code.Position![0], y: Code.Position![1]
     var Links: Map<string, Link<Code>> = new Map();
@@ -69,6 +69,7 @@ export function BuildSemanticGraph(Dataset: CodebookComparison<any>, Parameter: 
             Source.Weights[Owner] = Math.min(Math.max(Source.Weights[Owner] / Math.max(Source.Neighbors, 1), 0), 1);
         for (var Owner of Source.Owners)
             Source.Weights[Owner] = 1;
+        Source.TotalWeight = Source.Weights.reduce((A, B, I) => I == 0 ? A : A + B * Dataset.Weights![I], 0)
     }
     // Store it
     var Graph: Graph<Code> = { 
