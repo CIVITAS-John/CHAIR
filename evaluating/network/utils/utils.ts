@@ -62,6 +62,7 @@ export function GetCodebookColor(Number: number, Codebooks: number): string {
 
 /** FormatDate: Format a date. */
 export function FormatDate(Date: Date) {
+    if (!Date) return "(Unknown)";
     return Date.toLocaleString(undefined, 
         { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false } as any);
 }

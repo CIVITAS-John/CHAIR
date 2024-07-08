@@ -82,6 +82,9 @@
 .panel ol.quote li.custom::marker {
     content: attr(seq) ". ";
 }
+.panel ol.quote li.highlighted {
+    background: rgb(235, 219, 178);
+}
 .panel ol.quote p:first-child {
     color: #000;
     font-style: italic;

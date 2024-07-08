@@ -8,6 +8,7 @@ import { FindOriginalCodes, GetChunks } from '../utils/dataset.js';
 import { FilterNodeByExample, FilterNodeByOwners } from '../utils/graph.js';
 import { EvaluatePerCluster } from '../utils/evaluate.js';
 import { CodeSection } from '../sections/code.js';
+import { OwnerFilter } from '../utils/filters.js';
 
 /** Dialog: The dialog for the visualizer. */
 export class Dialog extends Panel {
@@ -51,8 +52,8 @@ export class Dialog extends Panel {
         this.ShowPanel(Panel);
     }
     /** ShowChunk: Show a dialog for a chunk. */
-    public ShowChunk(Name: string, Chunk: DataChunk<DataItem>, Owners: number[] = []) {
-        this.Visualizer.PushState(`chunk-${Name}`, () => this.ShowChunk(Name, Chunk, Owners));
+    public ShowChunk(Name: string, Chunk: DataChunk<DataItem>, Owners: number[] = [], ScrollTo?: string) {
+        this.Visualizer.PushState(`chunk-${Name}`, () => this.ShowChunk(Name, Chunk, Owners, ScrollTo));
         // Build the panel
         var Panel = $(`<div class="panel"></div>`);
         // Add the title
@@ -64,6 +65,7 @@ export class Dialog extends Panel {
         var Items = Chunk.AllItems ?? [];
         var Orthodox = Items[0].Chunk == Name;
         if (Orthodox) $(`<li class="split">Items inside the chunk:</li>`).prependTo(List);
+        var TargetElement: Cash | undefined;
         for (var Item of Items) {
             // Show divisors when needed
             if (Item.Chunk == Name != Orthodox) {
@@ -80,6 +82,10 @@ export class Dialog extends Panel {
             Header.children("strong").text(Item.Nickname);
             Header.children("i").text(FormatDate(Item.Time));
             $(`<p></p>`).text(Item.Content).appendTo(Current);
+            if (Item.ID == ScrollTo) {
+                TargetElement = Current;
+                Current.addClass("highlighted");
+            }
             // Show related codes
             var Examples = Codes.filter((Node) => FilterNodeByExample(Node, [Item.ID]));
             Examples = Examples.filter((Node) => Owners.length == 0 || FilterNodeByOwners(Node, Owners, this.Parameters.UseNearOwners));
@@ -90,7 +96,7 @@ export class Dialog extends Panel {
                 var CodeList = $(`<ol class="codes"></ol>`).appendTo(Current);
                 var CodeItems: Cash[] = [];
                 // Show the codes
-                for (var Code of Examples) {
+                Examples.forEach(Code => {
                     var CodeItem = $(`<li class="owners"><i></i> from </li>`);
                     CodeItem.children("i").text(Code.Data.Label)
                         .css("cursor", "pointer")
@@ -109,7 +115,7 @@ export class Dialog extends Panel {
                     CodeItem.data("owners", RealOwners);
                     // Only show the code if it has owners
                     if (RealOwners > 0) CodeItems.push(CodeItem);
-                }
+                });
                 // Sort the codes by the number of owners
                 CodeItems.sort((A, B) => parseInt(B.data("owners")) - parseInt(A.data("owners")));
                 CodeItems.forEach(Item => Item.appendTo(CodeList));
@@ -117,12 +123,17 @@ export class Dialog extends Panel {
         }
         // Show the dialog
         this.ShowPanel(Panel);
+        // Scroll to the target element
+        if (TargetElement) {
+            var Offset = TargetElement.offset()!.top;
+            this.Container.children("div.content").get(0)?.scrollTo(0, Offset - 60);
+        }
     }
     /** ShowChunkOf: Show a dialog for a chunk based on the content ID. */
     public ShowChunkOf(ID: string) {
         var Chunks = GetChunks(this.Dataset.Source.Data);
         var Chunk = Chunks.find(Chunk => Chunk.AllItems?.find(Item => Item.ID == ID && (!Item.Chunk || Item.Chunk == Chunk.ID)));
-        if (Chunk) this.ShowChunk(Chunk.ID, Chunk);
+        if (Chunk) this.ShowChunk(Chunk.ID, Chunk, undefined, ID);
     }
     /** CompareCoverageByClusters: Compare the coverage by clusters. */
     public CompareCoverageByClusters() {
@@ -145,14 +156,18 @@ export class Dialog extends Panel {
             Results, (Row, {Component, Coverages}, Index) => {
                 Row.append($(`<td class="actionable"><h4>${Component.Representative!.Data.Label}</h4><p class="tips">${Component.Nodes.length} codes</p></td>`)
                     .on("click", () => this.SidePanel.ShowPanel<CodeSection>("Codes").ShowComponent(Component)));
-                for (var Coverage of Coverages) {
+                Coverages.forEach((Coverage, I) => {
                     var Color = Colors(Coverage);
-                    var Cell = $(`<td class="metric-cell"></td>`)
+                    var Cell = $(`<td class="metric-cell actionable"></td>`)
                         .text(d3.format(".1%")(Coverage))
                         .css("background", Color)
-                        .css("color", d3.lab(Color).l > 70 ? "black" : "white");
+                        .css("color", d3.lab(Color).l > 70 ? "black" : "white")
+                        .on("click", () => {
+                            this.Visualizer.SetFilter(false, new OwnerFilter(), I + 1, false);
+                            this.SidePanel.ShowPanel<CodeSection>("Codes").ShowComponent(Component);
+                        });
                     Row.append(Cell);
-                }
+                });
             }, ["Cluster", ...this.Dataset.Names.slice(1)]
         ).appendTo(Panel);
         // Show the dialog
