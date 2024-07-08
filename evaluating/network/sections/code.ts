@@ -32,7 +32,9 @@ export class CodeSection extends Panel {
         this.SetRefresh(() => {
             this.Container.empty();
             // Some notes
-            this.Container.append($(`<p class="tips"></p>`).text("Note that clusters are not deterministic, only to help understand the data. Names are chosen from the most connected codes."));
+            $(`<p class="tips"></p>`).appendTo(this.Container)
+                .html(`Clusters are not deterministic, only to help understand the data. Names are chosen by connectedness. <a href="javascript:void(0)">Click here</a> to visualize codebooks' coverage by clusters.`)
+                .find("a").on("click", () => this.Visualizer.Dialog.CompareCoverageByClusters());
             // Show the components
             var Components = this.GetGraph<Code>().Components!;
             this.Container.append($(`<h3>${Components.length} Clusters, ${this.Dataset.Codes.length} Codes</h3>`));

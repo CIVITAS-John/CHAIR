@@ -79,8 +79,7 @@ export function BuildSemanticGraph(Dataset: CodebookComparison<any>, Parameter: 
         MinimumDistance: MinDistance };
     // Identify the components
     Graph.Components = FindCommunities(Graph.Nodes, Graph.Links, (Node, Links) => {
-        return Math.sqrt(Node.Data.Examples?.length ?? 0) + 
-            (Node.NearOwners?.size ?? 0);
+        return Math.sqrt(Node.Data.Examples?.length ?? 0) + Node.TotalWeight * 10;
     });
     // Look at every link - and if the source and target are in different components, reduce the weight
     // Thus, we will have a more close spatial arrangement of the components
