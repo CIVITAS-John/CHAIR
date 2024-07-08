@@ -1,0 +1,382 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: recognizing ai limitations, importance of understanding ai limitations
+- Participants evaluate AI output and recognize its limitations.
+- Recognizes the importance of understanding AI's limitations and potential biases.
+
+2.
+Concepts: accepting ai limitations, familiarity with ai limitations, acknowledges ai's limitations
+- Interviewees accept AI's limitations.
+- The interviewee demonstrates familiarity with AI limitations.
+- The interviewee acknowledges the limitations of the LLM-driven interface and recognizes its potential benefits as an outside observer.
+
+3.
+Concepts: ai capacity discussion, identifying ai limitations, limitations of ai-generated solutions
+- The interviewee discusses the capacity or limitations of the AI system.
+- Interviewees identify AI's limitations in resolving certain errors and complex errors.
+- The interviewee discusses the limitations of AI-generated solutions.
+
+4.
+Concepts: identify code gaps, queries ai for missing code structures
+- Identifies missing code elements in AI responses.
+- Queries AI for missing code structures
+
+5.
+Concepts: incomplete ai code generation, incomplete ai responses
+- Incomplete AI code generation.
+- Notes incomplete AI responses that require additional code structures.
+
+6.
+Concepts: note chatgpt limitations, acknowledges chatgpt's limitations
+- Current ChatGPT implementation has limitations.
+- Acknowledges ChatGPT's limitations in handling large code bases and understanding complex programming efficiencies.
+
+7.
+Concepts: critique ai limitations, identifies ai's comprehensiveness limitations, identify ai limitations in code handling
+- Critiques current AI limitations and identifies limitations in AI-generated code.
+- Recognizes missing code structures and identifies limitations in AI's comprehensiveness.
+- Identifies AI limitations in reading long code pieces and handling complex inputs.
+
+8.
+Concepts: ai as a memory aid, human memory limitations
+- The interviewee uses AI as a memory aid to remember syntax.
+- The interviewee recognizes the limitations of human memory and sees AI as a helpful supplement.
+
+9.
+Concepts: relying on ai for syntax support, especially for syntax-related issues
+- Relies on AI for syntax support.
+- Highlights the need for AI assistance with syntax-related issues
+
+10.
+Concepts: keeping netlogo dictionary handy, relies on netlogo dictionary for syntax
+- The participant keeps the NetLogo dictionary handy for reference.
+- Relies on external resources, such as the NetLogo dictionary, to remember syntax.
+
+11.
+Concepts: net logo's limitations, notes the absence of smart editing features in netlogo, critiquing netlogo's lack of smart editors
+- Laments the lack of smart code editors in NetLogo.
+- The interviewee notes the absence of smart editing features in NetLogo, which are available in other languages.
+- The participant critiques NetLogo's lack of smart editors.
+
+12.
+Concepts: ai's limitations in netlogo, noticing ai's limitations in version changes
+- Acknowledges AI's potential limitations in NetLogo
+- Participants note the limitations of AI in handling version changes, encountering outdated NetLogo functionalities.
+
+13.
+Concepts: linting for conceptual errors, calls for conceptual error detection
+- Discusses the need for linting features in NetLogo to identify conceptual mistakes.
+- Interviewee calls for conceptual error detection capabilities in NetLogo.
+
+14.
+Concepts: legacy code issues, adapts to older netlogo versions, writes code in older net logo versions
+- The participant deals with legacy code issues in NetLogo.
+- The interviewee deals with and adapts to older NetLogo versions.
+- Writing code in older versions of NetLogo.
+
+15.
+Concepts: learning in fragments, fragmented learning sessions, system support for fragmented learning
+- Learning in fragments and needing system support to remember progress.
+- Describes fragmented learning sessions where learners take breaks and need reminders of their progress.
+- Suggests system support for learning in fragmented time blocks
+
+16.
+Concepts: balancing expertise across languages, polyglot programmer with time constraints
+- Balances expertise across multiple programming languages with time constraints
+- Having knowledge of multiple programming languages, but limited time to dedicate to each.
+
+17.
+Concepts: fragmented learning experience, juggling multiple languages and time constraints
+- The participant describes their own fragmented learning process, juggling multiple languages and tasks with limited time.
+- The participant juggles multiple languages and time constraints.
+
+18.
+Concepts: acknowledging time constraints for language learning, acknowledging the challenge of not having much time to spend on any single programming language
+- The interviewee acknowledges the time constraints of learning multiple languages and not having enough time to spend on each one.
+- Interviewee acknowledges the challenge of not having sufficient time to spend on any single programming language as an expert.
+
+19.
+Concepts: learning curve, acknowledges ai tool learning curve
+- The participant mentions a learning curve in using NetLogo.
+- Participant acknowledges the learning curve for using the AI tool.
+
+20.
+Concepts: time constraints for learning extensions, learning curve demands high investment of time
+- Identifies time constraints as a limitation for learning extensions in NetLogo.
+- Expresses concern about the time required to learn new extensions in NetLogo.
+
+21.
+Concepts: time constraints, constraints and limitations
+- The participant mentions time constraints as a limitation to their ability to learn and use AI.
+- Faces constraints or limitations in using AI-generated code, including time constraints and compatibility issues.
+
+22.
+Concepts: finds current design challenging, identifying a steep learning curve due to design limitations
+- The interviewee finds the current design challenging, often due to a learning curve.
+- The participant identifies a steep learning curve due to design limitations.
+
+23.
+Concepts: suggesting design limitations for expert users, highlights design tension between novice and expert needs
+- The participant expresses frustration with the current design, implying that it may not be optimized for expert users like themselves.
+- The interviewee highlights the difficulties in designing for both novice and expert users, citing limited options that can accommodate their differing needs.
+
+24.
+Concepts: have limited experience with chatgpt, limited experience with llm-driven interfaces
+- Has limited experience with different versions of ChatGPT.
+- Reports limited experience with LLM-driven interfaces.
+
+25.
+Concepts: understanding code concepts, struggles with understanding scope and context
+- The interviewee mentions understanding concepts like "scope" and dealing with unhelpful error messages.
+- The interviewee or beginners experience difficulties in understanding and navigating the "scope" concept, including its relationship to context and variable space.
+
+26.
+Concepts: novice's challenge of asking the right question, notes challenges in seeking help as a novice
+- Participant highlights the challenge of asking the right question, especially for novices.
+- The interviewee identifies challenges that novices face, including difficulties in seeking help or finding resources that cater to their needs.
+
+27.
+Concepts: recognizing beginners' struggles, challenges for programming novices
+- Identifying beginners' struggles with context shifts and the need for AI support.
+- Identifying challenges for programming novices and the need for AI support.
+
+28.
+Concepts: highlights risks for novices, recognizing potential risks for novice users
+- Participant highlights the risks of using AI for novices.
+- Identifying potential risks and limitations of relying on LLM-driven interfaces, especially for novice users.
+
+29.
+Concepts: novice limitations in ai instruction, novice challenges in human-ai collaboration
+- Novices may lack the capability to write instructions for AI.
+- Novices may get stuck during human-AI collaboration due to lack of practice.
+
+30.
+Concepts: valuing customizable options, values parameter customization options
+- The participant values customizable options in the AI interface.
+- Valuing parameter customization options in AI interfaces.
+
+31.
+Concepts: importance of interface in defining parameters, valuing interface support for task definition
+- Values interface in defining parameters for AI assistance.
+- Values interface support for task definition and parameter clarification.
+
+32.
+Concepts: desiring automatic code integration, desiring seamless workflow integration
+- Interviewees desire automatic AI code integration.
+- Interviewees desire seamless workflow integration.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: recognizing ai limitations, importance of understanding ai limitations
+Relationship: The concepts are related as the recognition of AI limitations implies the importance of understanding those limitations.
+Criteria: Participants evaluate AI output and recognize its limitations, understanding the importance of doing so.
+Phrase: Evaluates AI limitations.
+
+2.
+Concepts: accepting ai limitations, familiarity with ai limitations, acknowledges ai's limitations
+Relationship: The concepts are related as accepting AI limitations implies familiarity with those limitations and acknowledging them.
+Criteria: Interviewees accept AI's limitations, demonstrating familiarity with them and acknowledging their existence.
+Phrase: Accepts AI limitations.
+
+3.
+Concepts: ai capacity discussion, identifying ai limitations, limitations of ai-generated solutions
+Relationship: The concepts are related as discussing AI capacity involves identifying its limitations, including those of AI-generated solutions.
+Criteria: The interviewee discusses the capacity or limitations of the AI system, identifying its limitations and those of AI-generated solutions.
+Phrase: Discusses AI capacity.
+
+4.
+Concepts: identify code gaps, queries ai for missing code structures
+Relationship: The concepts are related as identifying code gaps involves querying AI for missing code structures.
+Criteria: Identifies missing code elements in AI responses, querying AI for missing code structures.
+Phrase: Identifies code gaps.
+
+5.
+Concepts: incomplete ai code generation, incomplete ai responses
+Relationship: The concepts are related as incomplete AI code generation results in incomplete AI responses.
+Criteria: Notes incomplete AI responses that require additional code structures, experiencing incomplete AI code generation.
+Phrase: Notes incomplete AI code.
+
+6.
+Concepts: note chatgpt limitations, acknowledges chatgpt's limitations
+Relationship: The concepts are related as noting ChatGPT limitations implies acknowledging those limitations.
+Criteria: Acknowledges ChatGPT's limitations in handling large code bases and understanding complex programming efficiencies.
+Phrase: Acknowledges ChatGPT limitations.
+
+7.
+Concepts: critique ai limitations, identifies ai's comprehensiveness limitations, identify ai limitations in code handling
+Relationship: The concepts are related as critiquing AI limitations involves identifying its comprehensiveness limitations and limitations in code handling.
+Criteria: Critiques current AI limitations, identifying limitations in AI-generated code and AI's comprehensiveness limitations.
+Phrase: Critiques AI limitations.
+
+8.
+Concepts: ai as a memory aid, human memory limitations
+Relationship: The concepts are related as using AI as a memory aid acknowledges human memory limitations.
+Criteria: The interviewee uses AI as a memory aid to remember syntax, recognizing human memory limitations.
+Phrase: Uses AI as a memory aid.
+
+9.
+Concepts: relying on ai for syntax support, especially for syntax-related issues
+Relationship: The concepts are related as relying on AI for syntax support involves using it for syntax-related issues.
+Criteria: Relies on AI for syntax support, especially for syntax-related issues.
+Phrase: Relies on AI for syntax.
+
+10.
+Concepts: keeping netlogo dictionary handy, relies on netlogo dictionary for syntax
+Relationship: The concepts are related as keeping the NetLogo dictionary handy involves relying on it for syntax.
+Criteria: The participant keeps the NetLogo dictionary handy for reference, relying on external resources to remember syntax.
+Phrase: Relies on NetLogo dictionary.
+
+11.
+Concepts: net logo's limitations, notes the absence of smart editing features in netlogo, critiquing netlogo's lack of smart editors
+Relationship: The concepts are related as noting NetLogo's limitations involves critiquing its lack of smart editing features.
+Criteria: Laments the lack of smart code editors in NetLogo, noting the absence of smart editing features and critiquing NetLogo's lack of smart editors.
+Phrase: Critiques NetLogo limitations.
+
+12.
+Concepts: ai's limitations in netlogo, noticing ai's limitations in version changes
+Relationship: The concepts are related as AI's limitations in NetLogo involve noticing its limitations in version changes.
+Criteria: Acknowledges AI's potential limitations in NetLogo, noting the limitations of AI in handling version changes.
+Phrase: Acknowledges AI limitations in NetLogo.
+
+13.
+Concepts: linting for conceptual errors, calls for conceptual error detection
+Relationship: The concepts are related as linting for conceptual errors involves calling for conceptual error detection.
+Criteria: Discusses the need for linting features in NetLogo to identify conceptual mistakes, calling for conceptual error detection capabilities.
+Phrase: Calls for conceptual error detection.
+
+14.
+Concepts: legacy code issues, adapts to older netlogo versions, writes code in older net logo versions
+Relationship: The concepts are related as dealing with legacy code issues involves adapting to older NetLogo versions and writing code in those versions.
+Criteria: The participant deals with legacy code issues in NetLogo, adapting to older NetLogo versions and writing code in older versions.
+Phrase: Deals with legacy code.
+
+15.
+Concepts: learning in fragments, fragmented learning sessions, system support for fragmented learning
+Relationship: The concepts are related as learning in fragments involves fragmented learning sessions and requires system support.
+Criteria: Describes fragmented learning sessions where learners take breaks and need reminders of their progress, suggesting system support for learning in fragmented time blocks.
+Phrase: Describes fragmented learning.
+
+16.
+Concepts: balancing expertise across languages, polyglot programmer with time constraints
+Relationship: The concepts are related as balancing expertise across languages involves being a polyglot programmer with time constraints.
+Criteria: Balances expertise across multiple programming languages with time constraints, having knowledge of multiple programming languages but limited time.
+Phrase: Balances expertise across languages.
+
+17.
+Concepts: fragmented learning experience, juggling multiple languages and time constraints
+Relationship: The concepts are related as a fragmented learning experience involves juggling multiple languages and time constraints.
+Criteria: The participant describes their own fragmented learning process, juggling multiple languages and tasks with limited time.
+Phrase: Describes fragmented learning experience.
+
+18.
+Concepts: acknowledging time constraints for language learning, acknowledging the challenge of not having much time to spend on any single programming language
+Relationship: The concepts are related as acknowledging time constraints for language learning involves acknowledging the challenge of limited time.
+Criteria: The interviewee acknowledges the time constraints of learning multiple languages and not having enough time to spend on each one.
+Phrase: Acknowledges time constraints.
+
+19.
+Concepts: learning curve, acknowledges ai tool learning curve
+Relationship: The concepts are related as a learning curve involves acknowledging the AI tool learning curve.
+Criteria: The participant mentions a learning curve in using NetLogo, acknowledging the learning curve for using the AI tool.
+Phrase: Acknowledges learning curve.
+
+20.
+Concepts: time constraints for learning extensions, learning curve demands high investment of time
+Relationship: The concepts are related as time constraints for learning extensions involve a learning curve that demands high investment of time.
+Criteria: Identifies time constraints as a limitation for learning extensions in NetLogo, expressing concern about the time required to learn new extensions.
+Phrase: Identifies time constraints for learning extensions.
+
+21.
+Concepts: time constraints, constraints and limitations
+Relationship: The concepts are related as time constraints are a type of constraint or limitation.
+Criteria: The participant mentions time constraints as a limitation to their ability to learn and use AI, facing constraints or limitations in using AI-generated code.
+Phrase: Faces time constraints.
+
+22.
+Concepts: finds current design challenging, identifying a steep learning curve due to design limitations
+Relationship: The concepts are related as finding the current design challenging involves identifying a steep learning curve due to design limitations.
+Criteria: The interviewee finds the current design challenging, often due to a learning curve, identifying a steep learning curve due to design limitations.
+Phrase: Finds current design challenging.
+
+23.
+Concepts: suggesting design limitations for expert users, highlights design tension between novice and expert needs
+Relationship: The concepts are related as suggesting design limitations for expert users involves highlighting design tension between novice and expert needs.
+Criteria: The participant expresses frustration with the current design, implying that it may not be optimized for expert users like themselves, highlighting the difficulties in designing for both novice and expert users.
+Phrase: Highlights design limitations.
+
+24.
+Concepts: have limited experience with chatgpt, limited experience with llm-driven interfaces
+Relationship: The concepts are related as having limited experience with ChatGPT involves having limited experience with LLM-driven interfaces.
+Criteria: Has limited experience with different versions of ChatGPT, reporting limited experience with LLM-driven interfaces.
+Phrase: Has limited experience.
+
+25.
+Concepts: understanding code concepts, struggles with understanding scope and context
+Relationship: The concepts are related as understanding code concepts involves struggling with understanding scope and context.
+Criteria: The interviewee mentions understanding concepts like "scope" and dealing with unhelpful error messages, experiencing difficulties in understanding and navigating the "scope" concept.
+Phrase: Struggles with understanding code concepts.
+
+26.
+Concepts: novice's challenge of asking the right question, notes challenges in seeking help as a novice
+Relationship: The concepts are related as the novice's challenge of asking the right question involves noting challenges in seeking help.
+Criteria: Participant highlights the challenge of asking the right question, especially for novices, identifying challenges that novices face in seeking help or finding resources.
+Phrase: Notes novice challenges.
+
+27.
+Concepts: recognizing beginners' struggles, challenges for programming novices
+Relationship: The concepts are related as recognizing beginners' struggles involves identifying challenges for programming novices.
+Criteria: Identifying beginners' struggles with context shifts and the need for AI support, identifying challenges for programming novices and the need for AI support.
+Phrase: Recognizes beginners' struggles.
+
+28.
+Concepts: highlights risks for novices, recognizing potential risks for novice users
+Relationship: The concepts are related as highlighting risks for novices involves recognizing potential risks for novice users.
+Criteria: Participant highlights the risks of using AI for novices, identifying potential risks and limitations of relying on LLM-driven interfaces, especially for novice users.
+Phrase: Highlights risks for novices.
+
+29.
+Concepts: novice limitations in ai instruction, novice challenges in human-ai collaboration
+Relationship: The concepts are related as novice limitations in AI instruction involve novice challenges in human-AI collaboration.
+Criteria: Novices may lack the capability to write instructions for AI, getting stuck during human-AI collaboration due to lack of practice.
+Phrase: Identifies novice limitations.
+
+30.
+Concepts: valuing customizable options, values parameter customization options
+Relationship: The concepts are related as valuing customizable options involves valuing parameter customization options.
+Criteria: The participant values customizable options in the AI interface, valuing parameter customization options in AI interfaces.
+Phrase: Values customizable options.
+
+31.
+Concepts: importance of interface in defining parameters, valuing interface support for task definition
+Relationship: The concepts are related as the importance of interface in defining parameters involves valuing interface support for task definition.
+Criteria: Values interface in defining parameters for AI assistance, valuing interface support for task definition and parameter clarification.
+Phrase: Values interface support.
+
+32.
+Concepts: desiring automatic code integration, desiring seamless workflow integration
+Relationship: The concepts are related as desiring automatic code integration involves desiring seamless workflow integration.
+Criteria: Interviewees desire automatic AI code integration, desiring seamless workflow integration.
+Phrase: Desires automatic code integration.

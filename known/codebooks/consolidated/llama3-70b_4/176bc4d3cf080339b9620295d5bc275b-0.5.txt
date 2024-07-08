@@ -1,0 +1,360 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (30 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+30. 
+Concepts: {Repeat the input 30}
+Relationship: {What is logical relationship between concepts in code 30, or N/A if not applicable}
+Criteria: {Who did what, and how for code 30}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: identifies errors in ai code, manually fixes ai-generated code errors, manually fixing ai code errors
+- Identifies and fixes errors in AI-generated code.
+- Manually fixes errors in AI-generated code, taking an active role in the debugging process.
+- Manually fixes errors in AI-generated code.
+
+2.
+Concepts: human debugging effort, human effort for conceptual debugging
+- Engaging in human effort to debug code, including identifying errors and fixing them.
+- Human effort is required to debug conceptual errors.
+
+3.
+Concepts: debugging with ai, iterative debugging process
+- Engaging in a back-and-forth effort to debug code with AI assistance.
+- Engaging in iterative debugging process with AI
+- Recognizing the value of iterative debugging processes, despite initial errors in AI responses.
+
+4.
+Concepts: uses ai for debugging, engages in debugging when ai code does not function as expected
+- Uses AI for debugging and troubleshooting code.
+- Engages in debugging when AI-generated code does not function as expected.
+
+5.
+Concepts: debugging ai-generated code, reading through code to debug
+- Interviewee debugs AI-generated code.
+- Participant reads and debugs code when AI-generated code fails, demonstrating problem-solving skills.
+- The interviewee reads through the code to debug when the generated code does not work as expected.
+
+6.
+Concepts: valuing learning from ai, valuing iterative debugging with ai
+- The interviewee values learning from AI, even through iterative debugging.
+- The code refers to instances where the interviewee values the iterative debugging process with AI, despite potential errors.
+
+7.
+Concepts: iterative debugging benefits, interviewee reflecting on how users may benefit from the iterative debugging process
+- Interviewee describes the benefits of iterative debugging with AI.
+- The participant reflects on how users may benefit from the iterative debugging process during working with AI.
+
+8.
+Concepts: learning from ai-generated code, iterative learning process
+- Learning from iterative debugging process with AI
+- Describing an iterative learning process, refining code or understanding through repeated interactions with AI.
+
+9.
+Concepts: iterative error handling process, iterative error fixing with ai assistance
+- Describing the process of iterative interactions with AI-generated code to identify and correct errors.
+- Interviewee describes iterative error fixing with AI assistance.
+
+10.
+Concepts: appreciation for unit tests, appreciating ai-driven testing and debugging
+- The interviewee appreciates the inclusion of unit tests in AI-driven interfaces.
+- The interviewee appreciates AI-driven unit testing and debugging.
+
+11.
+Concepts: e04 acknowledges ai debugging capabilities, acknowledges the debugging capability of the interface
+- The interviewee acknowledges the AI's debugging capabilities, such as incorporating unit tests.
+- The interviewee acknowledges the debugging capability of the AI interface.
+
+12.
+Concepts: value of iterative debugging, human-ai collaboration in debugging
+- Acknowledging the value of iterative debugging in AI-human collaboration
+- Highlights the benefits of human-AI collaboration in debugging.
+
+13.
+Concepts: benefiting from ai-assisted debugging, recognizing ai's debugging capabilities
+- Benefiting from AI-assisted debugging and unit testing
+- Recognizing AI's capabilities for debugging and testing code, including unit testing.
+
+14.
+Concepts: preparatory exercises, preparatory exercises for ai interaction
+- Advocating for preparatory exercises to help users develop debugging skills before using AI.
+- Suggesting preparatory exercises for AI interaction, such as debugging one's own code.
+
+15.
+Concepts: users need practice in debugging, novices need debugging practice, suggests user debugging practice
+- Interviewee believes users need practice in debugging their own code.
+- The interviewee suggests that novices need practice in debugging their own code before relying on AI.
+- The interviewee suggests that users need practice in debugging their own code before asking AI for help.
+
+16.
+Concepts: importance of self-debugging, exercises before asking ai for help
+- The user needs practice in debugging their own code before asking AI for help.
+- Suggests that users need practice in debugging their own code and should have exercises before asking AI for help.
+
+17.
+Concepts: emphasizes user practice in debugging, recognizing need for user education in ai use
+- Emphasizes the importance of user practice in debugging before relying on AI assistance.
+- Emphasizing the need for user education and practice in debugging their own code before using AI assistance.
+
+18.
+Concepts: novices may lack debugging skills, notes lack of debugging skills
+- Recognizes that novices may lack debugging skills.
+- Notes the lack of debugging skills among novices, highlighting the need for education and training.
+
+19.
+Concepts: need for expertise, emphasizing expertise for debugging
+- Emphasizing the need for expertise in error interpretation and debugging.
+- The importance of expertise is emphasized to understand errors and debug them.
+
+20.
+Concepts: demand for expertise and experience, emphasizing importance of user expertise
+- Emphasizes the importance of user expertise and experience in debugging code.
+- Emphasizes the importance of user expertise in understanding and debugging code.
+
+21.
+Concepts: reflecting on online help-seeking experiences
+- Reflecting on past experiences of seeking help online, including discovering user groups that provide free assistance with problems.
+- Interviewee reflects on seeking help online.
+
+22.
+Concepts: need for efficient learning tools
+- Suggesting the need for efficient learning tools.
+- The interviewee identifies the need for efficient learning tools.
+
+23.
+Concepts: ai troubleshooting
+- The participant seeks AI help with troubleshooting.
+- Praising AI's troubleshooting capabilities, which enable better error handling.
+
+24.
+Concepts: asking ai to verify code
+- Asks AI to verify code and produce no more bugs.
+- Asks AI to verify code and ensure it meets specific requirements.
+
+25.
+Concepts: switching to simpler tasks with ai
+- User switches to a simpler task when interacting with AI.
+- Interviewee switches to a simpler task for better understanding.
+
+26.
+Concepts: emphasizing realistic expectations
+- Emphasizes the importance of having realistic expectations for AI capabilities.
+- Interviewee emphasizes the importance of having realistic expectations when working with AI.
+
+27.
+Concepts: learning curve
+- Acknowledging a learning curve due to non-expert-friendly design.
+- The participant mentions a learning curve for AI-driven interfaces.
+
+28.
+Concepts: writing code in older netlogo versions
+- Writing code in older versions of NetLogo is necessary due to AI's database limitations.
+- Writes code in older NetLogo versions.
+
+29.
+Concepts: human-ai collaboration
+- The interviewee sees the value of human-AI collaboration, with AI helping to catch obvious errors.
+- Acknowledges the importance of human judgment and ability in conjunction with AI.
+- Believes in human-AI collaboration, augmenting human capabilities.
+- Envisions human-AI collaboration and its potential benefits.
+
+30.
+Concepts: proposing a hive feedback system
+- Proposes a collaborative system for problem-solving and productivity.
+- Proposes a system for collaborative problem-solving and productivity.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: identifies errors in ai code, manually fixes ai-generated code errors, manually fixing ai code errors
+Relationship: The concepts are related to the process of identifying and fixing errors in AI-generated code.
+Criteria: The interviewee manually identifies and fixes errors in AI-generated code.
+Phrase: Manually fixes AI-generated code errors.
+
+2.
+Concepts: human debugging effort, human effort for conceptual debugging
+Relationship: The concepts are related to the human effort required for debugging and identifying conceptual errors.
+Criteria: The interviewee engages in human effort to debug code, including identifying errors and fixing them.
+Phrase: Engages in human debugging effort.
+
+3.
+Concepts: debugging with ai, iterative debugging process
+Relationship: The concepts are related to the iterative process of debugging code with AI assistance.
+Criteria: The interviewee engages in a back-and-forth effort to debug code with AI assistance.
+Phrase: Engages in iterative debugging with AI.
+
+4.
+Concepts: uses ai for debugging, engages in debugging when ai code does not function as expected
+Relationship: The concepts are related to using AI for debugging and troubleshooting code.
+Criteria: The interviewee uses AI for debugging and troubleshooting code when it does not function as expected.
+Phrase: Uses AI for debugging.
+
+5.
+Concepts: debugging ai-generated code, reading through code to debug
+Relationship: The concepts are related to the process of debugging AI-generated code by reading through it.
+Criteria: The interviewee reads through the code to debug when the generated code does not work as expected.
+Phrase: Debugs AI-generated code by reading through it.
+
+6.
+Concepts: valuing learning from ai, valuing iterative debugging with ai
+Relationship: The concepts are related to valuing the learning process from AI and the iterative debugging process.
+Criteria: The interviewee values learning from AI, even through iterative debugging.
+Phrase: Values learning from AI.
+
+7.
+Concepts: iterative debugging benefits, interviewee reflecting on how users may benefit from the iterative debugging process
+Relationship: The concepts are related to the benefits of iterative debugging and how users may benefit from it.
+Criteria: The interviewee reflects on how users may benefit from the iterative debugging process.
+Phrase: Reflects on iterative debugging benefits.
+
+8.
+Concepts: learning from ai-generated code, iterative learning process
+Relationship: The concepts are related to learning from AI-generated code through an iterative process.
+Criteria: The interviewee describes an iterative learning process, refining code or understanding through repeated interactions with AI.
+Phrase: Engages in iterative learning from AI.
+
+9.
+Concepts: iterative error handling process, iterative error fixing with ai assistance
+Relationship: The concepts are related to the iterative process of error handling and fixing with AI assistance.
+Criteria: The interviewee describes iterative error fixing with AI assistance.
+Phrase: Engages in iterative error handling.
+
+10.
+Concepts: appreciation for unit tests, appreciating ai-driven testing and debugging
+Relationship: The concepts are related to appreciating the inclusion of unit tests in AI-driven interfaces.
+Criteria: The interviewee appreciates AI-driven unit testing and debugging.
+Phrase: Appreciates AI-driven unit testing.
+
+11.
+Concepts: e04 acknowledges ai debugging capabilities, acknowledges the debugging capability of the interface
+Relationship: The concepts are related to acknowledging the AI's debugging capabilities.
+Criteria: The interviewee acknowledges the debugging capability of the AI interface.
+Phrase: Acknowledges AI debugging capabilities.
+
+12.
+Concepts: value of iterative debugging, human-ai collaboration in debugging
+Relationship: The concepts are related to the value of iterative debugging and human-AI collaboration in debugging.
+Criteria: The interviewee acknowledges the value of iterative debugging in AI-human collaboration.
+Phrase: Acknowledges value of iterative debugging.
+
+13.
+Concepts: benefiting from ai-assisted debugging, recognizing ai's debugging capabilities
+Relationship: The concepts are related to benefiting from AI-assisted debugging and recognizing AI's capabilities.
+Criteria: The interviewee recognizes AI's capabilities for debugging and testing code, including unit testing.
+Phrase: Benefits from AI-assisted debugging.
+
+14.
+Concepts: preparatory exercises, preparatory exercises for ai interaction
+Relationship: The concepts are related to suggesting preparatory exercises for AI interaction.
+Criteria: The interviewee suggests preparatory exercises for AI interaction, such as debugging one's own code.
+Phrase: Suggests preparatory exercises.
+
+15.
+Concepts: users need practice in debugging, novices need debugging practice, suggests user debugging practice
+Relationship: The concepts are related to the need for users to practice debugging their own code.
+Criteria: The interviewee suggests that users need practice in debugging their own code before asking AI for help.
+Phrase: Suggests user debugging practice.
+
+16.
+Concepts: importance of self-debugging, exercises before asking ai for help
+Relationship: The concepts are related to the importance of self-debugging and exercises before asking AI for help.
+Criteria: The interviewee suggests that users need practice in debugging their own code and should have exercises before asking AI for help.
+Phrase: Emphasizes self-debugging importance.
+
+17.
+Concepts: emphasizes user practice in debugging, recognizing need for user education in ai use
+Relationship: The concepts are related to emphasizing the importance of user practice in debugging and recognizing the need for user education.
+Criteria: The interviewee emphasizes the importance of user practice in debugging before relying on AI assistance.
+Phrase: Emphasizes user practice in debugging.
+
+18.
+Concepts: novices may lack debugging skills, notes lack of debugging skills
+Relationship: The concepts are related to recognizing the lack of debugging skills among novices.
+Criteria: The interviewee recognizes that novices may lack debugging skills.
+Phrase: Notes lack of debugging skills.
+
+19.
+Concepts: need for expertise, emphasizing expertise for debugging
+Relationship: The concepts are related to emphasizing the need for expertise in error interpretation and debugging.
+Criteria: The importance of expertise is emphasized to understand errors and debug them.
+Phrase: Emphasizes need for expertise.
+
+20.
+Concepts: demand for expertise and experience, emphasizing importance of user expertise
+Relationship: The concepts are related to emphasizing the importance of user expertise and experience in debugging code.
+Criteria: The interviewee emphasizes the importance of user expertise in understanding and debugging code.
+Phrase: Emphasizes importance of user expertise.
+
+21.
+Concepts: reflecting on online help-seeking experiences
+Relationship: N/A
+Criteria: The interviewee reflects on seeking help online.
+Phrase: Reflects on online help-seeking experiences.
+
+22.
+Concepts: need for efficient learning tools
+Relationship: N/A
+Criteria: The interviewee identifies the need for efficient learning tools.
+Phrase: Identifies need for efficient learning tools.
+
+23.
+Concepts: ai troubleshooting
+Relationship: N/A
+Criteria: The participant praises AI's troubleshooting capabilities, which enable better error handling.
+Phrase: Praises AI troubleshooting.
+
+24.
+Concepts: asking ai to verify code
+Relationship: N/A
+Criteria: The interviewee asks AI to verify code and ensure it meets specific requirements.
+Phrase: Asks AI to verify code.
+
+25.
+Concepts: switching to simpler tasks with ai
+Relationship: N/A
+Criteria: The interviewee switches to a simpler task for better understanding.
+Phrase: Switches to simpler tasks with AI.
+
+26.
+Concepts: emphasizing realistic expectations
+Relationship: N/A
+Criteria: The interviewee emphasizes the importance of having realistic expectations when working with AI.
+Phrase: Emphasizes realistic expectations.
+
+27.
+Concepts: learning curve
+Relationship: N/A
+Criteria: The participant mentions a learning curve for AI-driven interfaces.
+Phrase: Mentions learning curve.
+
+28.
+Concepts: writing code in older netlogo versions
+Relationship: N/A
+Criteria: The interviewee writes code in older NetLogo versions due to AI's database limitations.
+Phrase: Writes code in older NetLogo versions.
+
+29.
+Concepts: human-ai collaboration
+Relationship: The concepts are related to the importance of human-AI collaboration in debugging and coding.
+Criteria: The interviewee sees the value of human-AI collaboration, with AI helping to catch obvious errors.
+Phrase: Envisions human-AI collaboration.
+
+30.
+Concepts: proposing a hive feedback system
+Relationship: N/A
+Criteria: The interviewee proposes a collaborative system for problem-solving and productivity.
+Phrase: Proposes a hive feedback system.

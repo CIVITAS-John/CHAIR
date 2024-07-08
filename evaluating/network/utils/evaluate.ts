@@ -60,10 +60,11 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
 }
 
 /** Evaluate: Evaluate all codebooks per cluster, based on the network structure. */
-export function EvaluatePerCluster(Dataset: CodebookComparison<any>, Graph: Graph<Code>, Parameters: Parameters): { Component: Component<Code>, Coverages: number[] }[] {
-    var Results: { Component: Component<Code>, Coverages: number[] }[] = [];
+export function EvaluatePerCluster(Dataset: CodebookComparison<any>, Graph: Graph<Code>, Parameters: Parameters): { Component: Component<Code>, Coverages: number[], Differences: number[] }[] {
+    var Results: { Component: Component<Code>, Coverages: number[], Differences: number[] }[] = [];
     // Prepare for the results
     var Codebooks = Dataset.Codebooks;
+    var TotalCoverages = Dataset.Names.map(() => 0);
     // Calculate weights per cluster
     for (var Cluster of Graph.Components!) {
         var TotalWeight = 0;
@@ -76,12 +77,17 @@ export function EvaluatePerCluster(Dataset: CodebookComparison<any>, Graph: Grap
             for (var I = 0; I < Codebooks.length; I++) {
                 var Observed = Node.Weights[I];
                 Coverages[I] += Weight * Observed;
+                TotalCoverages[I] += Weight * Observed;
             }
         }
         Coverages = Coverages.map(Coverage => Coverage / TotalWeight);
         // Put it back to the results
-        console.log(Coverages);
-        Results.push({ Component: Cluster, Coverages: Coverages.slice(1) });
+        Results.push({ Component: Cluster, Coverages: Coverages.slice(1), Differences: [] });
+    }
+    // Calculate the total coverage and relative difference
+    TotalCoverages = TotalCoverages.map(Coverage => Coverage / TotalCoverages[0]);
+    for (var Result of Results) {
+        Result.Differences = Result.Coverages.map((Coverage, I) => Coverage / TotalCoverages[I + 1] - 1);
     }
     return Results;
 }

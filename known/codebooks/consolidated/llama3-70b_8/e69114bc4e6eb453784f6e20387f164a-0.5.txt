@@ -1,0 +1,382 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: asking ai to verify code, ai code verification
+- Asks AI to verify code and detect errors.
+- The participant asks ChatGPT to verify code and eliminate bugs.
+
+2.
+Concepts: sample use case, typical use case
+- The participant provides a sample use case of working with AI, such as asking ChatGPT to debug code.
+- The participant describes a typical use case for AI-driven interfaces, such as writing code and checking for errors.
+
+3.
+Concepts: seeking syntax information, seeks specific syntax structures
+- The participant seeks specific syntax information from AI-generated code.
+- Participant seeks specific syntax structures from AI-generated code.
+
+4.
+Concepts: seeks specific syntax help, seeking ai assistance for specific features
+- The participant seeks specific syntax help from the AI, such as asking for certain syntax structures.
+- Participant seeks AI assistance for specific features.
+
+5.
+Concepts: uses ai to recall syntax, utilizing ai for syntax recall, utilizing ai for syntax reminders
+- Using AI to recall syntax
+- Using AI to recall syntax and coding structures.
+- Using AI as a syntax reminder tool.
+
+6.
+Concepts: forgetting syntax, forgetting syntax and seeking ai help
+- The participant forgets syntax and appreciates AI's assistance.
+- The participant forgets syntax and uses the AI for assistance.
+
+7.
+Concepts: adjusts model setup, identifying setup adjustments
+- The participant adjusts their model setup based on the generated code.
+- The participant recognizes a need to adjust or correct their setup based on the AI-generated code.
+
+8.
+Concepts: identifying conceptual mistakes, calls for conceptual error detection
+- Focusing on identifying conceptual mistakes in code
+- The code calls for conceptual error detection, going beyond syntax errors to identify structural mistakes.
+
+9.
+Concepts: ai assistance with syntax and errors, ai's usefulness in addressing syntax issues
+- Figures out syntax and errors with AI assistance.
+- Acknowledges the usefulness of AI in addressing syntax issues and providing assistance.
+
+10.
+Concepts: advantages of plain code, values simplicity in coding
+- The participant appreciates the benefits of simple, accessible code.
+- The participant values simplicity and clarity in coding practices.
+
+11.
+Concepts: code quality, easy to maintain code
+- Preferring simple and maintainable code
+- Prioritizes code maintainability and simplicity
+
+12.
+Concepts: valuing code simplicity, emphasizes the importance of code readability and simplicity for future maintenance
+- Valuing code simplicity and readability for maintenance purposes
+- The code emphasizes the importance of code readability and simplicity for future maintenance.
+
+13.
+Concepts: discussing code complexity and quality, discusses code complexity and quality
+- The participant discusses the importance of code complexity and quality for maintainability.
+- The participant discusses code complexity and quality, emphasizing the importance of plain and accessible code.
+
+14.
+Concepts: importance of code quality, emphasizes best practices
+- Emphasizes the importance of code quality.
+- Highlights the importance of best practices in coding.
+
+15.
+Concepts: independent coding, independent problem-solving
+- Shows independence in the coding process by debugging alone.
+- Independently reads through the code and attempts to debug, demonstrating self-sufficiency.
+
+16.
+Concepts: independent code correction, independently corrects ai code, independently correcting ai code errors
+- Correcting code independently without AI assistance
+- Corrects AI-generated code independently without assistance.
+- The interviewee corrects errors in AI-generated code without requesting explanations from the AI.
+
+17.
+Concepts: exercises self-reliance, prioritizing self-reliance
+- Demonstrates self-reliance in fixing errors.
+- Prioritizing self-reliance and manual error fixing.
+
+18.
+Concepts: pre-learning requirement for ai use, novices needing practice in debugging, suggesting practice in debugging before ai
+- The interviewee emphasizes the need for users to practice debugging their own code before seeking AI assistance.
+- The interviewee notes that novices need practice in debugging their own code before asking AI for help.
+- Suggests that users need practice in debugging their own code before asking AI.
+
+19.
+Concepts: need for debugging practice, need for user debugging practice, advocates for user debugging practice
+- The participant emphasizes the need for users to practice debugging their own code.
+- The participant highlights the need for users to practice debugging their own code.
+- The participant suggests that users need practice in debugging their own code.
+
+20.
+Concepts: importance of debugging skills, user debugging practice importance
+- Emphasizes the importance of user debugging skills.
+- Emphasizes the importance of user practice in debugging before relying on AI assistance.
+
+21.
+Concepts: debugs through code reading, manual code reading and debugging
+- The participant reads through code to debug.
+- Manually reading through code to debug and understand.
+
+22.
+Concepts: chatgpt code length limitations, encounters limitations in chatgpt's code analysis
+- Interviewee experiences limitations with long code pieces in ChatGPT.
+- Encountering limitations in ChatGPT's code analysis for lengthy scripts
+
+23.
+Concepts: ai limitation in reading long codes, ai limitations in reading long code pieces
+- The participant notes the limitations of ChatGPT in reading long codes.
+- Identifies limitations or constraints of the AI system, such as processing large code pieces.
+
+24.
+Concepts: critiquing ai limitations, notes limitations in ai implementation, identifying limitations in current ai feedback loops
+- Critiques current AI limitations, such as not checking code with external information.
+- The participant notes limitations in the current AI implementation, such as not being able to check generated code with external information.
+- Identifies limitations or gaps in the current AI feedback loops, such as not checking generated code with external information.
+
+25.
+Concepts: limitation of code checking, acknowledging ai limitations
+- Acknowledges current limitation of ChatGPT in not checking generated code with external information
+- Notes the current ChatGPT implementation's limitations, such as not checking code with external information.
+
+26.
+Concepts: identifies ai's inability to resolve errors, identifying ai's limitations in error resolution
+- Recognizes AI's limitations in resolving certain errors
+- Identifying limitations of AI in resolving certain errors
+
+27.
+Concepts: identifying ui limitations, identifying ai input limitations
+- Identifies limitations in AI-driven interface design.
+- Identifies AI input limitations.
+
+28.
+Concepts: limitations of ai for learning, ai limitations for novice users
+- Notes that AI is not always efficient for learning, especially for novices.
+- Expresses concerns about AI limiting problem-solving directions for novice users.
+
+29.
+Concepts: understanding ai limitations, developing an understanding of the ai's limitations
+- Recognizing the non-deterministic nature of AI responses.
+- Recognizes the limitations and unpredictability of AI responses.
+
+30.
+Concepts: awareness of ai limitations, importance of understanding ai limitations
+- Demonstrating awareness of AI limitations and potential errors
+- Emphasizes the importance of understanding AI's limitations and capabilities.
+
+31.
+Concepts: managing ai expectations, realistic ai expectations, demonstrating expectation management
+- Emphasizes realistic expectations for AI capabilities.
+- Emphasizing the need for realistic expectations when working with AI.
+- Managing expectations about AI performance and understanding its limitations.
+
+32.
+Concepts: novices' unrealistic expectations of chatgpt, underestimating the complexity of ai interactions
+- The interviewee notes that novices may have unrealistic expectations of ChatGPT, expecting immediate and perfect results.
+- The interviewee notes that novices may have unrealistic expectations of ChatGPT, expecting to ask one question and get the right answer immediately.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: asking ai to verify code, ai code verification
+Relationship: The concepts are related as the participant seeks AI assistance to verify code and detect errors.
+Criteria: Participants ask AI to verify code and eliminate bugs.
+Phrase: Seeks AI code verification.
+
+2.
+Concepts: sample use case, typical use case
+Relationship: The concepts are related as the participant provides an example of working with AI, which is a typical scenario.
+Criteria: Participants describe a typical use case for AI-driven interfaces, such as writing code and checking for errors.
+Phrase: Describes a typical use case.
+
+3.
+Concepts: seeking syntax information, seeks specific syntax structures
+Relationship: The concepts are related as the participant seeks specific information about syntax from AI-generated code.
+Criteria: Participants seek specific syntax information from AI-generated code.
+Phrase: Seeks syntax information.
+
+4.
+Concepts: seeks specific syntax help, seeking ai assistance for specific features
+Relationship: The concepts are related as the participant seeks AI assistance for specific syntax features.
+Criteria: Participants seek AI assistance for specific features.
+Phrase: Seeks specific syntax help.
+
+5.
+Concepts: uses ai to recall syntax, utilizing ai for syntax recall, utilizing ai for syntax reminders
+Relationship: The concepts are related as the participant uses AI to recall syntax and coding structures.
+Criteria: Participants use AI to recall syntax and coding structures.
+Phrase: Uses AI for syntax recall.
+
+6.
+Concepts: forgetting syntax, forgetting syntax and seeking ai help
+Relationship: The concepts are related as the participant forgets syntax and seeks AI assistance.
+Criteria: Participants forget syntax and use AI for assistance.
+Phrase: Forgets syntax and seeks AI help.
+
+7.
+Concepts: adjusts model setup, identifying setup adjustments
+Relationship: The concepts are related as the participant adjusts their model setup based on AI-generated code.
+Criteria: Participants adjust their model setup based on AI-generated code.
+Phrase: Adjusts model setup.
+
+8.
+Concepts: identifying conceptual mistakes, calls for conceptual error detection
+Relationship: The concepts are related as the participant focuses on identifying conceptual mistakes in code.
+Criteria: Participants call for conceptual error detection.
+Phrase: Identifies conceptual mistakes.
+
+9.
+Concepts: ai assistance with syntax and errors, ai's usefulness in addressing syntax issues
+Relationship: The concepts are related as the participant figures out syntax and errors with AI assistance.
+Criteria: Participants acknowledge AI's usefulness in addressing syntax issues.
+Phrase: Receives AI assistance.
+
+10.
+Concepts: advantages of plain code, values simplicity in coding
+Relationship: The concepts are related as the participant appreciates the benefits of simple, accessible code.
+Criteria: Participants value simplicity and clarity in coding practices.
+Phrase: Values plain code.
+
+11.
+Concepts: code quality, easy to maintain code
+Relationship: The concepts are related as the participant prioritizes code maintainability and simplicity.
+Criteria: Participants prioritize code maintainability and simplicity.
+Phrase: Prioritizes code quality.
+
+12.
+Concepts: valuing code simplicity, emphasizes the importance of code readability and simplicity for future maintenance
+Relationship: The concepts are related as the participant values code simplicity and readability for maintenance purposes.
+Criteria: Participants emphasize the importance of code readability and simplicity for future maintenance.
+Phrase: Emphasizes code simplicity.
+
+13.
+Concepts: discussing code complexity and quality, discusses code complexity and quality
+Relationship: The concepts are related as the participant discusses the importance of code complexity and quality for maintainability.
+Criteria: Participants discuss code complexity and quality, emphasizing the importance of plain and accessible code.
+Phrase: Discusses code complexity.
+
+14.
+Concepts: importance of code quality, emphasizes best practices
+Relationship: The concepts are related as the participant emphasizes the importance of code quality and best practices.
+Criteria: Participants emphasize the importance of code quality and best practices.
+Phrase: Emphasizes code quality.
+
+15.
+Concepts: independent coding, independent problem-solving
+Relationship: The concepts are related as the participant shows independence in the coding process by debugging alone.
+Criteria: Participants demonstrate independence in coding and problem-solving.
+Phrase: Codes independently.
+
+16.
+Concepts: independent code correction, independently corrects ai code, independently correcting ai code errors
+Relationship: The concepts are related as the participant corrects code independently without AI assistance.
+Criteria: Participants correct AI-generated code independently without assistance.
+Phrase: Corrects code independently.
+
+17.
+Concepts: exercises self-reliance, prioritizing self-reliance
+Relationship: The concepts are related as the participant demonstrates self-reliance in fixing errors.
+Criteria: Participants prioritize self-reliance and manual error fixing.
+Phrase: Exercises self-reliance.
+
+18.
+Concepts: pre-learning requirement for ai use, novices needing practice in debugging, suggesting practice in debugging before ai
+Relationship: The concepts are related as the participant emphasizes the need for users to practice debugging their own code before seeking AI assistance.
+Criteria: Participants suggest that users need practice in debugging their own code before asking AI.
+Phrase: Advocates for pre-learning.
+
+19.
+Concepts: need for debugging practice, need for user debugging practice, advocates for user debugging practice
+Relationship: The concepts are related as the participant emphasizes the need for users to practice debugging their own code.
+Criteria: Participants advocate for user debugging practice.
+Phrase: Advocates for debugging practice.
+
+20.
+Concepts: importance of debugging skills, user debugging practice importance
+Relationship: The concepts are related as the participant emphasizes the importance of user debugging skills.
+Criteria: Participants emphasize the importance of user debugging skills.
+Phrase: Emphasizes debugging importance.
+
+21.
+Concepts: debugs through code reading, manual code reading and debugging
+Relationship: The concepts are related as the participant reads through code to debug.
+Criteria: Participants manually read through code to debug and understand.
+Phrase: Debugs through code reading.
+
+22.
+Concepts: chatgpt code length limitations, encounters limitations in chatgpt's code analysis
+Relationship: The concepts are related as the participant experiences limitations with long code pieces in ChatGPT.
+Criteria: Participants encounter limitations in ChatGPT's code analysis for lengthy scripts.
+Phrase: Encounters code length limitations.
+
+23.
+Concepts: ai limitation in reading long codes, ai limitations in reading long code pieces
+Relationship: The concepts are related as the participant notes the limitations of ChatGPT in reading long codes.
+Criteria: Participants identify limitations of AI in reading long code pieces.
+Phrase: Notes AI limitations.
+
+24.
+Concepts: critiquing ai limitations, notes limitations in ai implementation, identifying limitations in current ai feedback loops
+Relationship: The concepts are related as the participant critiques current AI limitations.
+Criteria: Participants identify limitations or gaps in the current AI feedback loops.
+Phrase: Critiques AI limitations.
+
+25.
+Concepts: limitation of code checking, acknowledging ai limitations
+Relationship: The concepts are related as the participant acknowledges current limitations of ChatGPT in not checking generated code with external information.
+Criteria: Participants acknowledge AI limitations in code checking.
+Phrase: Acknowledges AI limitations.
+
+26.
+Concepts: identifies ai's inability to resolve errors, identifying ai's limitations in error resolution
+Relationship: The concepts are related as the participant recognizes AI's limitations in resolving certain errors.
+Criteria: Participants identify AI's limitations in error resolution.
+Phrase: Identifies AI limitations.
+
+27.
+Concepts: identifying ui limitations, identifying ai input limitations
+Relationship: The concepts are related as the participant identifies limitations in AI-driven interface design.
+Criteria: Participants identify limitations in AI-driven interface design.
+Phrase: Identifies UI limitations.
+
+28.
+Concepts: limitations of ai for learning, ai limitations for novice users
+Relationship: The concepts are related as the participant notes that AI is not always efficient for learning, especially for novices.
+Criteria: Participants express concerns about AI limiting problem-solving directions for novice users.
+Phrase: Notes AI limitations for learning.
+
+29.
+Concepts: understanding ai limitations, developing an understanding of the ai's limitations
+Relationship: The concepts are related as the participant recognizes the non-deterministic nature of AI responses.
+Criteria: Participants recognize the limitations and unpredictability of AI responses.
+Phrase: Develops an understanding of AI limitations.
+
+30.
+Concepts: awareness of ai limitations, importance of understanding ai limitations
+Relationship: The concepts are related as the participant demonstrates awareness of AI limitations and potential errors.
+Criteria: Participants emphasize the importance of understanding AI's limitations and capabilities.
+Phrase: Demonstrates awareness of AI limitations.
+
+31.
+Concepts: managing ai expectations, realistic ai expectations, demonstrating expectation management
+Relationship: The concepts are related as the participant emphasizes realistic expectations for AI capabilities.
+Criteria: Participants emphasize the need for realistic expectations when working with AI.
+Phrase: Manages AI expectations.
+
+32.
+Concepts: novices' unrealistic expectations of chatgpt, underestimating the complexity of ai interactions
+Relationship: The concepts are related as the participant notes that novices may have unrealistic expectations of ChatGPT, expecting immediate and perfect results.
+Criteria: Participants note that novices may have unrealistic expectations of ChatGPT.
+Phrase: Notes unrealistic expectations.

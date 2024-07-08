@@ -1,0 +1,46 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (2 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+2. 
+Concepts: {Repeat the input 2}
+Relationship: {What is logical relationship between concepts in code 2, or N/A if not applicable}
+Criteria: {Who did what, and how for code 2}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: struggle with interface design, struggles with multiple errors
+- Interviewees struggle with the current design of the interface.
+- Interviewees struggle with multiple errors and encounter incorrect or unclear error messages.
+
+2.
+Concepts: proposing alternative ai applications, proposing ai assistance for problem-solving
+- Interviewees propose alternative AI applications and suggest alternative AI assistance.
+- Interviewees propose AI assistance and advocate for AI-assisted problem-solving.
+===
+---
+Definitions for each code:
+
+1.
+Concepts: struggle with interface design, struggles with multiple errors
+Relationship: The struggles with interface design lead to multiple errors, which further exacerbate the difficulties.
+Criteria: Interviewees experience difficulties with the current interface design, resulting in multiple errors and unclear error messages.
+Phrase: Encounter difficulties with interface design.
+
+2.
+Concepts: proposing alternative ai applications, proposing ai assistance for problem-solving
+Relationship: The proposal of alternative AI applications is a means to achieve AI assistance for problem-solving.
+Criteria: Interviewees suggest alternative AI applications to facilitate AI-assisted problem-solving.
+Phrase: Propose AI-assisted solutions.

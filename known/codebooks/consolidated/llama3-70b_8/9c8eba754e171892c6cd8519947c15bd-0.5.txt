@@ -1,0 +1,387 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: chatlogo ability (negative), chatlogo ability (negative): automation
+- Expressing frustration or disappointment with an LLM-driven interface's limitations or failures.
+- Expressing limitations or frustrations with an LLM-driven interface's automation capabilities.
+
+2.
+Concepts: emotional response, negative emotions
+- Expressing frustration or annoyance with AI's performance
+- Expressions of frustration, disappointment, or dissatisfaction towards AI interactions.
+
+3.
+Concepts: navigating older netlogo versions, limited understanding of netlogo versions
+- E04 notes that the LLM-driven interface sometimes provides functionality from older versions of NetLogo, which can be problematic.
+- E04 encounters issues with the LLM-driven interface due to its limited understanding of older NetLogo versions.
+
+4.
+Concepts: long code limitations, code processing limitations, limited code comprehension, limitations in code analysis
+- AI's difficulty in processing and understanding large codebases.
+- Discussing limitations of AI in processing large code pieces
+- The inability of AI to fully comprehend and analyze long pieces of code.
+- Constraints in AI's ability to analyze large or complex code structures.
+
+5.
+Concepts: deviates from correct directions, ai can limit options & points to different (sometimes wrong) directions
+- Participants express concerns that users may blindly follow LLM-driven interfaces without understanding the underlying errors or limitations, leading to potential problems or misunderstandings.
+- Participants express concerns that LLM-driven interfaces may limit options, provide incorrect directions, or lead users down the wrong path.
+
+6.
+Concepts: ai error, ai failure
+- Participant experiences AI errors or inability to fix errors.
+- Participant experiences AI failure or inability to fix errors.
+
+7.
+Concepts: human-ai: relying on ai due to time constraints, reliant on ai output when facing time constraints
+- Participant relies on AI due to time constraints.
+- Users rely on AI output when facing time constraints.
+
+8.
+Concepts: constraint, human (negative): time constraints
+- Participant is limited by constraints such as time or options.
+- Participant is limited by time and has to prioritize tasks.
+
+9.
+Concepts: learning, learning: compare with
+- E04 benefits from the iterative debugging process and realizes the need to reset his setup.
+- E04 realizes the need to reset his setup after seeing the generated code.
+
+10.
+Concepts: ai ability (positive): debugging, human-ai: debug (positive)
+- Participant values AI's ability to clarify error codes and debug.
+- The participant expresses a positive sentiment towards AI's debugging capabilities, including unit testing and error clarification.
+
+11.
+Concepts: need for expertise in debugging, requires expertise to understand errors and debug
+- The requirement for a certain level of expertise to effectively debug and use the AI-generated code.
+- E04 highlights the need for expertise to understand errors and debug AI-generated code effectively.
+
+12.
+Concepts: human expertise, human-effort: debugging
+- Emphasizing the need for human practice and expertise in debugging
+- Participant requires expertise to understand and debug errors.
+
+13.
+Concepts: helpful for translation, helpful for translating from other languages into netlogo, helpful for translating and equation development
+- E04 finds the LLM-driven interface helpful for translating models from other languages into NetLogo.
+- E04 finds the AI helpful for translating models from other languages into NetLogo.
+- E04 finds the LLM-driven interface helpful for translating models from other languages into NetLogo and for developing equations for agent-based models.
+
+14.
+Concepts: equation development, helpful for creating equations
+- Using AI to create or refine mathematical equations for agent-based models.
+- E04 uses the AI to develop equations for specific aspects of agent-based models.
+- E04 uses the LLM-driven interface to develop equations for specific aspects of agent-based models.
+
+15.
+Concepts: chatgpt usage: reference, leveraging ai-generated code as a reference
+- E04 uses generated code only as a reference when writing his own code.
+- E04 uses the AI-generated code as a reference, selectively copying and modifying it to fit their needs, rather than relying on it entirely.
+
+16.
+Concepts: benefit of ai - saves time, human-ai (positive): time-saving, ai ability (positive): time saving, ai ability (positive): time-saving
+- E01 believes that AI can save people's time by doing tasks more efficiently.
+- E01 believes that AI can save time and provide timely feedback.
+- Participant believes AI can save people's time.
+
+17.
+Concepts: immediate feedback, appreciation for immediate feedback
+- E04 appreciates the AI's immediate feedback during model development.
+- The benefit of receiving quick responses and solutions from the AI.
+- E04 appreciates the immediate feedback provided by the LLM-driven interface.
+
+18.
+Concepts: benefit of ai: instant feedback, chatgpt ability (positive): provides immediate feedback
+- Participant values AI's instant feedback and responsiveness.
+- The participant appreciates the immediate feedback provided by AI.
+
+19.
+Concepts: inferring, chatgpt ability (positive): infer
+- E01 is impressed by ChatGPT's ability to infer his needs from the input context.
+- Noting an LLM-driven interface's ability to infer user needs or intentions from context.
+
+20.
+Concepts: ability to ask questions, learn to ask right questions repeatedly
+- The participant thinks that ChatGPT would do well if one knows how to ask iterative questions.
+- E01 believes that to maximize the capability of ChatGPT, one needs to know how to iteratively ask questions.
+
+21.
+Concepts: chatgpt ability (positive): various feedback, chatgpt ability (negative): not deterministic
+- E04 evaluates the AI responses and notes that they are not deterministic.
+- The participant evaluates AI responses and notes that they are not deterministic.
+
+22.
+Concepts: sample use case, typical use cases
+- Users provide sample use cases for AI-driven interfaces.
+- Describing typical use cases for AI-driven interfaces
+
+23.
+Concepts: learning pathway creation, ai ability (?): ai's potentiality for support learning
+- The hypothetical ability of AI to create generic learning management paths for users.
+- The participant hypothetically suggests that AI could be used to design a generic learning management path.
+
+24.
+Concepts: learning pathways, learning path designer
+- Considering the potential for AI to design learning management paths and support teaching.
+- The potential for AI to design and facilitate personalized learning experiences.
+- AI is perceived as a potential tool for designing personalized learning paths.
+
+25.
+Concepts: options and flexibility, customization and flexibility
+- Participant wants more options or flexibility in AI interactions.
+- The need for more options and flexibility in the AI's responses and functionalities.
+
+26.
+Concepts: enhancing human capabilities, augmentation of human capabilities
+- AI is perceived as a tool to enhance human capabilities rather than replace human judgment.
+- Discussing how AI can enhance human judgment and capabilities.
+- The belief that AI should enhance rather than replace human abilities.
+- The ability of AI to enhance human capabilities and judgment, rather than replace them.
+
+27.
+Concepts: human judgment, need for human judgment
+- Warning about the need for human judgment in evaluating AI responses
+- The importance of human evaluation and judgment when using AI-generated content.
+- The need for users to use their own judgment when evaluating AI responses.
+
+28.
+Concepts: ability, human's value: judgement
+- E01 emphasizes the importance of augmenting human capabilities and judgment.
+- E01 emphasizes the importance of human judgment and ability.
+
+29.
+Concepts: other tech, ways for debugging: seek online support
+- The participant reflects on proper practices to seek online help, emphasizing the importance of doing one's own work and clearly describing what they need or tried.
+- The participant reflects on ways to seek online support, highlighting the importance of doing one's own work and clearly describing what they need or tried.
+
+30.
+Concepts: knowledge preservation, knowledge preservation and retrieval
+- The ability of AI to store and retrieve fragmented knowledge.
+- The need for AI to preserve, process, and retrieve fragmented knowledge generated by humans.
+
+31.
+Concepts: human-ai: support, positive perceptions of ai
+- The participant expresses a positive sentiment towards AI's ability to support learning, highlighting the potential to save time.
+- The positive perceptions of AI as a tool that can augment human capabilities, save time, and improve the learning process.
+
+32.
+Concepts: code optimization
+- E01's views on how LLMs can help with code optimization.
+- The ability of AI to optimize code and suggest improvements.
+- Appreciating AI's ability to optimize and debug code
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: chatlogo ability (negative), chatlogo ability (negative): automation
+Relationship: The concepts are related as they both describe limitations of the LLM-driven interface.
+Criteria: Expressing frustration or disappointment with an LLM-driven interface's limitations or failures, particularly with automation capabilities.
+Phrase: Expressing frustration with AI's limitations.
+
+2.
+Concepts: emotional response, negative emotions
+Relationship: The concepts are related as they both describe emotional reactions to AI interactions.
+Criteria: Expressing frustration, annoyance, or disappointment towards AI's performance.
+Phrase: Expressing negative emotions towards AI.
+
+3.
+Concepts: navigating older netlogo versions, limited understanding of netlogo versions
+Relationship: The concepts are related as they both describe issues with the LLM-driven interface's understanding of NetLogo versions.
+Criteria: Encountering problems with the LLM-driven interface due to its limited understanding of older NetLogo versions.
+Phrase: Encountering issues with AI's understanding of NetLogo versions.
+
+4.
+Concepts: long code limitations, code processing limitations, limited code comprehension, limitations in code analysis
+Relationship: The concepts are related as they all describe limitations of AI in processing and understanding code.
+Criteria: Discussing limitations of AI in processing large code pieces, including difficulties with comprehension and analysis.
+Phrase: Discussing AI's code processing limitations.
+
+5.
+Concepts: deviates from correct directions, ai can limit options & points to different (sometimes wrong) directions
+Relationship: The concepts are related as they both describe concerns about AI's potential to mislead users.
+Criteria: Expressing concerns that LLM-driven interfaces may limit options, provide incorrect directions, or lead users down the wrong path.
+Phrase: Expressing concerns about AI's potential to mislead.
+
+6.
+Concepts: ai error, ai failure
+Relationship: The concepts are related as they both describe instances of AI malfunction.
+Criteria: Experiencing AI errors or inability to fix errors.
+Phrase: Experiencing AI errors or failures.
+
+7.
+Concepts: human-ai: relying on ai due to time constraints, reliant on ai output when facing time constraints
+Relationship: The concepts are related as they both describe relying on AI due to time constraints.
+Criteria: Relying on AI due to time constraints or limitations.
+Phrase: Relying on AI due to time constraints.
+
+8.
+Concepts: constraint, human (negative): time constraints
+Relationship: The concepts are related as they both describe limitations faced by humans.
+Criteria: Being limited by constraints such as time or options.
+Phrase: Being limited by time constraints.
+
+9.
+Concepts: learning, learning: compare with
+Relationship: The concepts are related as they both describe the learning process.
+Criteria: Benefiting from the iterative debugging process and realizing the need to reset one's setup.
+Phrase: Learning from iterative debugging.
+
+10.
+Concepts: ai ability (positive): debugging, human-ai: debug (positive)
+Relationship: The concepts are related as they both describe the positive aspects of AI in debugging.
+Criteria: Valuing AI's ability to clarify error codes and debug.
+Phrase: Valuing AI's debugging capabilities.
+
+11.
+Concepts: need for expertise in debugging, requires expertise to understand errors and debug
+Relationship: The concepts are related as they both describe the need for expertise in debugging.
+Criteria: Requiring a certain level of expertise to effectively debug and use AI-generated code.
+Phrase: Requiring expertise for debugging.
+
+12.
+Concepts: human expertise, human-effort: debugging
+Relationship: The concepts are related as they both describe the importance of human expertise in debugging.
+Criteria: Emphasizing the need for human practice and expertise in debugging.
+Phrase: Emphasizing human expertise in debugging.
+
+13.
+Concepts: helpful for translation, helpful for translating from other languages into netlogo, helpful for translating and equation development
+Relationship: The concepts are related as they all describe the helpfulness of AI in translation and equation development.
+Criteria: Finding the LLM-driven interface helpful for translating models from other languages into NetLogo and developing equations.
+Phrase: Finding AI helpful for translation and equation development.
+
+14.
+Concepts: equation development, helpful for creating equations
+Relationship: The concepts are related as they both describe the helpfulness of AI in equation development.
+Criteria: Using AI to create or refine mathematical equations for agent-based models.
+Phrase: Using AI for equation development.
+
+15.
+Concepts: chatgpt usage: reference, leveraging ai-generated code as a reference
+Relationship: The concepts are related as they both describe using AI-generated code as a reference.
+Criteria: Using generated code only as a reference when writing one's own code.
+Phrase: Using AI-generated code as a reference.
+
+16.
+Concepts: benefit of ai - saves time, human-ai (positive): time-saving, ai ability (positive): time saving, ai ability (positive): time-saving
+Relationship: The concepts are related as they all describe the time-saving benefits of AI.
+Criteria: Believing AI can save people's time by doing tasks more efficiently.
+Phrase: Believing AI saves time.
+
+17.
+Concepts: immediate feedback, appreciation for immediate feedback
+Relationship: The concepts are related as they both describe the appreciation for immediate feedback.
+Criteria: Appreciating the AI's immediate feedback during model development.
+Phrase: Appreciating immediate feedback.
+
+18.
+Concepts: benefit of ai: instant feedback, chatgpt ability (positive): provides immediate feedback
+Relationship: The concepts are related as they both describe the benefits of AI's immediate feedback.
+Criteria: Valuing AI's instant feedback and responsiveness.
+Phrase: Valuing instant feedback.
+
+19.
+Concepts: inferring, chatgpt ability (positive): infer
+Relationship: The concepts are related as they both describe AI's ability to infer user needs.
+Criteria: Noting an LLM-driven interface's ability to infer user needs or intentions from context.
+Phrase: Noting AI's ability to infer.
+
+20.
+Concepts: ability to ask questions, learn to ask right questions repeatedly
+Relationship: The concepts are related as they both describe the importance of asking questions.
+Criteria: Believing that to maximize AI's capability, one needs to know how to iteratively ask questions.
+Phrase: Believing in the importance of asking questions.
+
+21.
+Concepts: chatgpt ability (positive): various feedback, chatgpt ability (negative): not deterministic
+Relationship: The concepts are related as they both describe AI's feedback capabilities.
+Criteria: Evaluating AI responses and noting that they are not deterministic.
+Phrase: Evaluating AI's feedback.
+
+22.
+Concepts: sample use case, typical use cases
+Relationship: The concepts are related as they both describe examples of AI use cases.
+Criteria: Describing typical use cases for AI-driven interfaces.
+Phrase: Describing AI use cases.
+
+23.
+Concepts: learning pathway creation, ai ability (?): ai's potentiality for support learning
+Relationship: The concepts are related as they both describe AI's potential in learning pathway creation.
+Criteria: Hypothetically suggesting that AI could be used to design a generic learning management path.
+Phrase: Hypothetically suggesting AI's potential in learning pathway creation.
+
+24.
+Concepts: learning pathways, learning path designer
+Relationship: The concepts are related as they both describe AI's potential in designing learning paths.
+Criteria: Considering the potential for AI to design learning management paths and support teaching.
+Phrase: Considering AI's potential in learning path design.
+
+25.
+Concepts: options and flexibility, customization and flexibility
+Relationship: The concepts are related as they both describe the need for more options and flexibility in AI interactions.
+Criteria: Wanting more options or flexibility in AI interactions.
+Phrase: Wanting more options and flexibility.
+
+26.
+Concepts: enhancing human capabilities, augmentation of human capabilities
+Relationship: The concepts are related as they both describe AI's potential in enhancing human capabilities.
+Criteria: Believing that AI should enhance human capabilities rather than replace human judgment.
+Phrase: Believing in AI's potential to enhance human capabilities.
+
+27.
+Concepts: human judgment, need for human judgment
+Relationship: The concepts are related as they both describe the importance of human judgment.
+Criteria: Warning about the need for human judgment in evaluating AI responses.
+Phrase: Emphasizing the importance of human judgment.
+
+28.
+Concepts: ability, human's value: judgement
+Relationship: The concepts are related as they both describe the importance of human judgment and ability.
+Criteria: Emphasizing the importance of augmenting human capabilities and judgment.
+Phrase: Emphasizing human judgment and ability.
+
+29.
+Concepts: other tech, ways for debugging: seek online support
+Relationship: The concepts are related as they both describe seeking online support.
+Criteria: Reflecting on ways to seek online support, highlighting the importance of doing one's own work and clearly describing what they need or tried.
+Phrase: Reflecting on seeking online support.
+
+30.
+Concepts: knowledge preservation, knowledge preservation and retrieval
+Relationship: The concepts are related as they both describe AI's potential in preserving and retrieving knowledge.
+Criteria: Discussing the need for AI to preserve, process, and retrieve fragmented knowledge generated by humans.
+Phrase: Discussing AI's potential in knowledge preservation.
+
+31.
+Concepts: human-ai: support, positive perceptions of ai
+Relationship: The concepts are related as they both describe positive perceptions of AI's ability to support learning.
+Criteria: Expressing a positive sentiment towards AI's ability to support learning, highlighting the potential to save time.
+Phrase: Expressing positive perceptions of AI's ability to support learning.
+
+32.
+Concepts: code optimization
+Relationship: N/A
+Criteria: Appreciating AI's ability to optimize code and suggest improvements.
+Phrase: Appreciating AI's code optimization capabilities.

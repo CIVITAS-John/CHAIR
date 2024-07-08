@@ -1,0 +1,377 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: value code validation, emphasizing code quality
+- Participants value the importance of debugging, unit testing, and code validation.
+- Participants emphasize the importance of high-quality code and learning processes.
+
+2.
+Concepts: writing code with ai guidance, learns from ai-generated code
+- Participants write code manually with AI guidance and use AI-generated code as a reference.
+- Participants learn from comparing AI-generated code with their own understanding and learn from AI-generated code.
+
+3.
+Concepts: seeking help from ai, seeking syntax help
+- Seeks help from the AI-driven interface, asking iterative questions to clarify and improve code.
+- Participants request specific syntax or coding help from LLM-driven interfaces and rely on AI assistance for syntax support.
+
+4.
+Concepts: facilitating help-seeking, emphasizing the importance of accessible help resources
+- Participants emphasize the importance of asking for help early and often and recognize AI's value in facilitating user support.
+- Participants highlight the importance of accessible help resources and collaboration.
+
+5.
+Concepts: valuing clear code, prioritizing code readability
+- Participants value documentation and clear code over complex solutions.
+- Participants prioritize code readability and prefer readable code.
+
+6.
+Concepts: describes ai-assisted debugging, shares debugging experience with chatgpt
+- Participants describe AI-assisted debugging, highlight improved debugging capability, and engage in human-AI collaboration for debugging.
+- Participants share their debugging experience with ChatGPT and ask it to debug with code and error messages.
+
+7.
+Concepts: identifying novice challenges, highlighting novice limitations
+- Participants note novice debugging limitations and identify challenges.
+- Participants highlight risks for novices using AI and identify limitations in AI instruction.
+
+8.
+Concepts: acknowledging learning curve, acknowledging design limitations
+- Participants struggle with unfamiliar interface design and mention the learning curve.
+- Participants find current design challenging due to a learning curve.
+
+9.
+Concepts: notes netlogo's limitations, critiquing chatlogo's limitations
+- Participants note the absence of smart editing features in NetLogo.
+- Participants express frustration with ChatLogo's limitations in fixing errors.
+
+10.
+Concepts: expressing concerns about ai errors, expressing doubts about ai capabilities
+- Participants mention the potential for AI to make errors and express negative sentiment.
+- Participants express doubts about AI's capability to perform certain tasks.
+
+11.
+Concepts: noting ai limitations, critiquing ai limitations
+- Participants note limitations of AI, such as handling large datasets.
+- Participants critique the limited options or functionality of AI systems.
+
+12.
+Concepts: views ai as a time-saving tool, advocating for time-saving ai assistance
+- Interviewees see and value AI as a time-saving tool.
+- Interviewees advocate for using AI to save time and increase productivity.
+
+13.
+Concepts: valuing immediate ai feedback, need for immediate feedback
+- Interviewees value immediate feedback from AI and recognize its efficiency.
+- Seeking human assistance due to time constraints, appreciating immediate feedback from AI tools.
+
+14.
+Concepts: appreciating intuitive interface design, appreciating inclusive design
+- Interviewees find the interface easy to use and intuitive and appreciate user-friendly interface design.
+- Interviewees appreciate the feature of LLM-driven interfaces that accommodates users with different levels of expertise and appreciate the cross-language capabilities of LLM-driven interfaces.
+
+15.
+Concepts: expressing satisfaction with ai outcomes, appreciating ai-generated documentation
+- Interviewees express satisfaction with AI-generated code or outcomes and recall successful AI-assisted coding experiences.
+- Interviewees appreciate code organization and documentation features of LLM-driven interfaces and value AI's documentation skills.
+
+16.
+Concepts: valuing ai-driven problem-solving, valuing ai-assisted model translation
+- Interviewees value context-specific help and AI-driven interfaces' problem-solving capabilities.
+- Interviewees perceive LLM-driven interfaces as helpful for model translation and value its capabilities.
+
+17.
+Concepts: appreciating accessible ai language, praising ai's contextual understanding
+- Interviewees appreciate clear and accessible language used by AI and recognize its capabilities.
+- Interviewees praise AI's inference abilities and recognize its contextual understanding and ability to infer user intent.
+
+18.
+Concepts: preferring ai assistance, values ai-generated solutions, acknowledge and value ai assistance despite mistakes
+- The participant prefers AI help over no help, despite potential mistakes.
+- Participants value AI-generated solutions despite potential errors.
+- Interviewees acknowledge AI mistakes and value AI assistance despite potential mistakes.
+
+19.
+Concepts: appreciates ai's troubleshooting, acknowledges improved troubleshooting
+- Participants appreciate AI's troubleshooting and problem-solving capabilities.
+- Interviewees acknowledge improved troubleshooting capabilities.
+
+20.
+Concepts: valuing ai debugging ability, recognizes value of iterative debugging
+- Participants value and appreciate AI-driven debugging ability.
+- Participants recognize the value of iterative debugging despite AI mistakes.
+
+21.
+Concepts: recognizing ai errors, recognizing ai's self-correction abilities
+- Participants recognize AI errors and misinterpretation and learn from AI mistakes.
+- Recognizing AI's self-correction abilities
+
+22.
+Concepts: desiring more control over ai interaction, desiring flexible ai interaction
+- Desiring more control over AI interaction
+- Participants desire more flexibility in AI interactions and seek easier AI interaction.
+
+23.
+Concepts: unpredictable ai behavior, recognizing ai uncertainty
+- Evaluating unpredictable AI behavior
+- Participants recognize AI uncertainty and observe AI response variability.
+
+24.
+Concepts: advises personal judgment, evaluating ai suggestions
+- Participants advise using personal judgment when working with AI.
+- Participants evaluate AI suggestions and acknowledge the importance of human judgment.
+
+25.
+Concepts: ai understanding testing, analyzing ai understanding
+- Tests AI understanding
+- Participants understand AI's interpretation and reason through AI responses.
+
+26.
+Concepts: critique traditional documentation, envisioning ai-enhanced documentation
+- Participants critique existing technical documentation and imagine AI-driven improvements.
+- Participants discuss potential applications of AI in improving documentation and recognize the potential for AI in customized documentation.
+
+27.
+Concepts: describes iterative error fixing, interacts iteratively with ai
+- Participants describe their iterative process of error fixing with the AI-driven system and describe the typical process of interacting with AI.
+- Participants demonstrate an iterative approach to AI interaction, identify the potential for iterative improvement through collaboration with the AI-driven interface, and experience the iterative nature of working with AI.
+
+28.
+Concepts: reflect on ai interaction, describing conversational ai interaction
+- Participants reflect on interacting with AI and describe personalized AI interaction styles.
+- Participants describe conversational approaches and suggest human-like AI communication.
+
+29.
+Concepts: interacting with ai tools, collaborating with ai
+- Participants personify AI and engage in human-like AI interaction.
+- Participants recognize the importance of human-AI interaction and guide AI's responses.
+
+30.
+Concepts: comparing ai tools, discussing human-ai differences
+- Participants compare different AI tools and results.
+- Participants compare the differences between human and AI capabilities or understanding.
+
+31.
+Concepts: requesting ai assistance, seeking ai assistance
+- Participants request AI assistance and targeted support.
+- Participants rely on AI for specific modeling aspects and seek support for visualization tasks.
+
+32.
+Concepts: requesting ai features, suggesting ai improvements
+- Participants request new features or functionalities from AI and ask AI to implement or fix specific ideas or code.
+- Participants suggest improvements to AI-driven interfaces and propose specific code modifications.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: value code validation, emphasizing code quality
+Relationship: The concepts are related in that participants value code validation as a means to ensure high-quality code.
+Criteria: Participants prioritize code quality and emphasize the importance of debugging and unit testing.
+Phrase: Valuing code validation for high-quality code.
+
+2.
+Concepts: writing code with ai guidance, learns from ai-generated code
+Relationship: The concepts are related in that participants learn from AI-generated code while writing their own code with AI guidance.
+Criteria: Participants use AI-generated code as a reference and learn from comparing it with their own understanding.
+Phrase: Writing code with AI guidance and learning from AI-generated code.
+
+3.
+Concepts: seeking help from ai, seeking syntax help
+Relationship: The concepts are related in that participants seek help from AI-driven interfaces for specific syntax or coding issues.
+Criteria: Participants ask iterative questions to clarify and improve code and rely on AI assistance for syntax support.
+Phrase: Seeking help from AI for syntax support.
+
+4.
+Concepts: facilitating help-seeking, emphasizing the importance of accessible help resources
+Relationship: The concepts are related in that participants recognize the importance of accessible help resources and AI's role in facilitating user support.
+Criteria: Participants emphasize the importance of asking for help early and often and recognize AI's value in facilitating user support.
+Phrase: Facilitating help-seeking with accessible resources.
+
+5.
+Concepts: valuing clear code, prioritizing code readability
+Relationship: The concepts are related in that participants value clear code and prioritize code readability.
+Criteria: Participants prefer readable code and value documentation over complex solutions.
+Phrase: Valuing clear code for readability.
+
+6.
+Concepts: describes ai-assisted debugging, shares debugging experience with chatgpt
+Relationship: The concepts are related in that participants describe AI-assisted debugging and share their debugging experience with ChatGPT.
+Criteria: Participants highlight improved debugging capability and engage in human-AI collaboration for debugging.
+Phrase: Describing AI-assisted debugging experiences.
+
+7.
+Concepts: identifying novice challenges, highlighting novice limitations
+Relationship: The concepts are related in that participants identify challenges and limitations faced by novices using AI.
+Criteria: Participants note novice debugging limitations and identify risks for novices using AI.
+Phrase: Identifying novice challenges and limitations.
+
+8.
+Concepts: acknowledging learning curve, acknowledging design limitations
+Relationship: The concepts are related in that participants acknowledge the learning curve and design limitations of AI-driven interfaces.
+Criteria: Participants struggle with unfamiliar interface design and find current design challenging due to a learning curve.
+Phrase: Acknowledging the learning curve and design limitations.
+
+9.
+Concepts: notes netlogo's limitations, critiquing chatlogo's limitations
+Relationship: The concepts are related in that participants note limitations of NetLogo and critique limitations of ChatLogo.
+Criteria: Participants express frustration with ChatLogo's limitations in fixing errors and note the absence of smart editing features in NetLogo.
+Phrase: Noting limitations of NetLogo and ChatLogo.
+
+10.
+Concepts: expressing concerns about ai errors, expressing doubts about ai capabilities
+Relationship: The concepts are related in that participants express concerns about AI errors and doubts about AI capabilities.
+Criteria: Participants mention the potential for AI to make errors and express negative sentiment.
+Phrase: Expressing concerns about AI errors and doubts.
+
+11.
+Concepts: noting ai limitations, critiquing ai limitations
+Relationship: The concepts are related in that participants note limitations of AI and critique AI limitations.
+Criteria: Participants note limitations of AI, such as handling large datasets, and critique limited options or functionality.
+Phrase: Noting and critiquing AI limitations.
+
+12.
+Concepts: views ai as a time-saving tool, advocating for time-saving ai assistance
+Relationship: The concepts are related in that participants view AI as a time-saving tool and advocate for using AI to save time.
+Criteria: Participants see and value AI as a time-saving tool and advocate for using AI to increase productivity.
+Phrase: Viewing AI as a time-saving tool.
+
+13.
+Concepts: valuing immediate ai feedback, need for immediate feedback
+Relationship: The concepts are related in that participants value immediate feedback from AI and recognize its efficiency.
+Criteria: Participants value immediate feedback from AI and seek human assistance due to time constraints.
+Phrase: Valuing immediate AI feedback.
+
+14.
+Concepts: appreciating intuitive interface design, appreciating inclusive design
+Relationship: The concepts are related in that participants appreciate intuitive interface design and inclusive design.
+Criteria: Participants find the interface easy to use and intuitive and appreciate user-friendly interface design.
+Phrase: Appreciating intuitive and inclusive design.
+
+15.
+Concepts: expressing satisfaction with ai outcomes, appreciating ai-generated documentation
+Relationship: The concepts are related in that participants express satisfaction with AI outcomes and appreciate AI-generated documentation.
+Criteria: Participants express satisfaction with AI-generated code or outcomes and value AI's documentation skills.
+Phrase: Expressing satisfaction with AI outcomes.
+
+16.
+Concepts: valuing ai-driven problem-solving, valuing ai-assisted model translation
+Relationship: The concepts are related in that participants value AI-driven problem-solving and AI-assisted model translation.
+Criteria: Participants value context-specific help and AI-driven interfaces' problem-solving capabilities.
+Phrase: Valuing AI-driven problem-solving and model translation.
+
+17.
+Concepts: appreciating accessible ai language, praising ai's contextual understanding
+Relationship: The concepts are related in that participants appreciate accessible AI language and praise AI's contextual understanding.
+Criteria: Participants appreciate clear and accessible language used by AI and recognize its capabilities.
+Phrase: Appreciating accessible AI language and contextual understanding.
+
+18.
+Concepts: preferring ai assistance, values ai-generated solutions, acknowledge and value ai assistance despite mistakes
+Relationship: The concepts are related in that participants prefer AI assistance despite potential mistakes.
+Criteria: Participants value AI-generated solutions despite potential errors and acknowledge AI mistakes.
+Phrase: Preferring AI assistance despite mistakes.
+
+19.
+Concepts: appreciates ai's troubleshooting, acknowledges improved troubleshooting
+Relationship: The concepts are related in that participants appreciate AI's troubleshooting and acknowledge improved troubleshooting capabilities.
+Criteria: Participants appreciate AI's troubleshooting and problem-solving capabilities.
+Phrase: Appreciating AI's troubleshooting capabilities.
+
+20.
+Concepts: valuing ai debugging ability, recognizes value of iterative debugging
+Relationship: The concepts are related in that participants value AI-driven debugging ability and recognize the value of iterative debugging.
+Criteria: Participants value and appreciate AI-driven debugging ability and recognize the value of iterative debugging.
+Phrase: Valuing AI debugging ability.
+
+21.
+Concepts: recognizing ai errors, recognizing ai's self-correction abilities
+Relationship: The concepts are related in that participants recognize AI errors and AI's self-correction abilities.
+Criteria: Participants recognize AI errors and misinterpretation and learn from AI mistakes.
+Phrase: Recognizing AI errors and self-correction abilities.
+
+22.
+Concepts: desiring more control over ai interaction, desiring flexible ai interaction
+Relationship: The concepts are related in that participants desire more control over AI interaction and flexible AI interaction.
+Criteria: Participants desire more flexibility in AI interactions and seek easier AI interaction.
+Phrase: Desiring more control and flexible AI interaction.
+
+23.
+Concepts: unpredictable ai behavior, recognizing ai uncertainty
+Relationship: The concepts are related in that participants recognize unpredictable AI behavior and AI uncertainty.
+Criteria: Participants evaluate unpredictable AI behavior and recognize AI uncertainty.
+Phrase: Recognizing unpredictable AI behavior and uncertainty.
+
+24.
+Concepts: advises personal judgment, evaluating ai suggestions
+Relationship: The concepts are related in that participants advise using personal judgment when working with AI and evaluate AI suggestions.
+Criteria: Participants advise using personal judgment and evaluate AI suggestions.
+Phrase: Advising personal judgment and evaluating AI suggestions.
+
+25.
+Concepts: ai understanding testing, analyzing ai understanding
+Relationship: The concepts are related in that participants test AI understanding and analyze AI responses.
+Criteria: Participants test AI understanding and reason through AI responses.
+Phrase: Testing and analyzing AI understanding.
+
+26.
+Concepts: critique traditional documentation, envisioning ai-enhanced documentation
+Relationship: The concepts are related in that participants critique traditional documentation and envision AI-enhanced documentation.
+Criteria: Participants critique existing technical documentation and imagine AI-driven improvements.
+Phrase: Critiquing traditional documentation and envisioning AI-enhanced documentation.
+
+27.
+Concepts: describes iterative error fixing, interacts iteratively with ai
+Relationship: The concepts are related in that participants describe iterative error fixing and interact iteratively with AI.
+Criteria: Participants describe their iterative process of error fixing with the AI-driven system.
+Phrase: Describing iterative error fixing with AI.
+
+28.
+Concepts: reflect on ai interaction, describing conversational ai interaction
+Relationship: The concepts are related in that participants reflect on AI interaction and describe conversational AI interaction.
+Criteria: Participants reflect on interacting with AI and describe personalized AI interaction styles.
+Phrase: Reflecting on conversational AI interaction.
+
+29.
+Concepts: interacting with ai tools, collaborating with ai
+Relationship: The concepts are related in that participants interact with AI tools and collaborate with AI.
+Criteria: Participants personify AI and engage in human-like AI interaction.
+Phrase: Interacting and collaborating with AI tools.
+
+30.
+Concepts: comparing ai tools, discussing human-ai differences
+Relationship: The concepts are related in that participants compare AI tools and discuss human-AI differences.
+Criteria: Participants compare different AI tools and results and discuss differences between human and AI capabilities.
+Phrase: Comparing AI tools and discussing human-AI differences.
+
+31.
+Concepts: requesting ai assistance, seeking ai assistance
+Relationship: The concepts are related in that participants request AI assistance and seek targeted support.
+Criteria: Participants request AI assistance and rely on AI for specific modeling aspects.
+Phrase: Requesting AI assistance and seeking targeted support.
+
+32.
+Concepts: requesting ai features, suggesting ai improvements
+Relationship: The concepts are related in that participants request new features or functionalities from AI and suggest improvements.
+Criteria: Participants request new features or functionalities from AI and suggest improvements to AI-driven interfaces.
+Phrase: Requesting AI features and suggesting improvements.

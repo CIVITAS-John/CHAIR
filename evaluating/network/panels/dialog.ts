@@ -150,18 +150,18 @@ export class Dialog extends Panel {
         // Evaluate the coverage
         var Graph = this.GetGraph<Code>();
         var Results = EvaluatePerCluster(this.Dataset, Graph, this.Parameters);
-        var Minimum = d3.min(Results.flatMap(Result => Result.Coverages))!;
-        var Maximum = d3.max(Results.flatMap(Result => Result.Coverages))!;
+        var Maximum = d3.max(Results.flatMap(Result => Result.Differences))!;
         var Colors = d3.scaleSequential()
-                    .interpolator(d3.interpolateViridis)
-                    .domain([Minimum, Maximum]);
+                    .interpolator(d3.interpolateRdYlGn)
+                    .domain([-1, 1]);
         // Build the table
         this.BuildTable(
-            Results, (Row, {Component, Coverages}, Index) => {
+            Results, (Row, {Component, Coverages, Differences}, Index) => {
                 Row.append($(`<td class="actionable"><h4>${Component.Representative!.Data.Label}</h4><p class="tips">${Component.Nodes.length} codes</p></td>`)
                     .on("click", () => this.SidePanel.ShowPanel<CodeSection>("Codes").ShowComponent(Component)));
                 Coverages.forEach((Coverage, I) => {
-                    var Color = Colors(Coverage);
+                    var Difference = Differences[I];
+                    var Color = Colors(Math.min(1, Difference));
                     var Cell = $(`<td class="metric-cell actionable"></td>`)
                         .text(d3.format(".1%")(Coverage))
                         .css("background", Color)
@@ -169,7 +169,8 @@ export class Dialog extends Panel {
                         .on("click", () => {
                             this.Visualizer.SetFilter(false, new OwnerFilter(), I + 1, false);
                             this.SidePanel.ShowPanel<CodeSection>("Codes").ShowComponent(Component);
-                        });
+                        })
+                        .append($(`<p></p>`).text(d3.format("+.1%")(Difference)));
                     Row.append(Cell);
                 });
             }, ["Cluster", ...this.Dataset.Names.slice(1)]

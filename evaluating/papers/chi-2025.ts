@@ -63,20 +63,32 @@ async function RepeatedlyEvaluateInFolder(Times: number, Temperatures: number[],
 // Task: Compare the 4 approaches with GPT-4o described in the pilot study.
 // Also, an output analysis of the results with 10 runs
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], ["zero", "low", "medium", "high", "highest"], "Coded Dataset 1", "pilot-study", "llama3-70b", new RefiningReferenceBuilder(true, true));
+// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], ["zero", "low", "medium", "high", "highest"], "Coded Dataset 1", "pilot-study", "llama3-70b", new RefiningReferenceBuilder(true, true));
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], ["zero", "low", "medium", "high", "highest"], "Coded Dataset 1", "pilot-study", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true));
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], ["zero", "low", "medium", "high", "highest"], "Coded Dataset 2", "pilot-study", "llama3-70b", new RefiningReferenceBuilder(true, true));
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], ["zero", "low", "medium", "high", "highest"], "Coded Dataset 2", "pilot-study", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true));
 
+// Task: Does it matter if we only merge very similar names?
+// We don't report this, but yes, it biases towards having more codes (low-level-*).
+/* await UseLLMs(async () => {
+    await EvaluateInFolder("Coded Dataset 1", "pilot-study", new ReferenceBuilder());
+    await EvaluateInFolder("Coded Dataset 2", "pilot-study", new ReferenceBuilder());
+}, "gpt-4.5-omni"); */
+
 // Task: Evaluate different models with the same approaches.
-var Approaches = ["low-level-5"]
+var Approaches = ["low-level-5", "high-level-2"]
 for (var Approach of Approaches) {
     // await RepeatedlyEvaluateInFolder(10, [0.5], ["medium"], "Coded Dataset 1", Approach, "llama3-70b", new RefiningReferenceBuilder(true, true));
-    await RepeatedlyEvaluateInFolder(10, [0.5], ["medium"], "Coded Dataset 2", Approach, "llama3-70b", new RefiningReferenceBuilder(true, true));
+    // await RepeatedlyEvaluateInFolder(10, [0.5], ["medium"], "Coded Dataset 2", Approach, "llama3-70b", new RefiningReferenceBuilder(true, true));
+    // GPT-4o is expensive and we don't see the advantage in computational metrics.
+    // On the other hand, on the surface, it generates better labels during merging. So we use it for qualitative evaluation.
+    await RepeatedlyEvaluateInFolder(1, [0.5], ["medium"], "Coded Dataset 1", Approach, "gpt-4.5-omni", new RefiningReferenceBuilder(true, true));
+    await RepeatedlyEvaluateInFolder(1, [0.5], ["medium"], "Coded Dataset 2", Approach, "gpt-4.5-omni", new RefiningReferenceBuilder(true, true));
 }
 
 // Task: Evaluate different temperature with the low-level-5 approach.
-await UseLLMs(async () => {
+/*await UseLLMs(async () => {
     await EvaluateInFolder("Coded Dataset 1", "low-level-5-llama", new RefiningReferenceBuilder(true, true));
-}, "llama3-70b");
+}, "llama3-70b");*/
 
 process.exit(0);
