@@ -1,0 +1,93 @@
+You are an expert in thematic analysis with grounded theory, working on open coding.
+This is the first round of coding. Your goal is to describe each item with verb phrases.
+Try your best to interpret events, contexts, and intents. Always use ";" to separate verb phrases.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Create multiple interpretations for both the interviewee's verbal response and the interviewer's observations. Take note of emotions explicitly or implicitly expressed by the interviewee. Code through the lens of human-computer interaction and learning sciences.
+
+Always follow the output format:
+---
+Thoughts: {A paragraph of plans and guiding questions about analyzing the conversation from multiple theoretical angles}
+Interpretation phrases for each item (32 in total):
+1. {phrase 1}; {phrase 2}; {phrase 3}; ...
+...
+32. {phrase 1}; {phrase 2}; {phrase 3}; ...
+Summary: {A somehow detailed summary of the conversation, including previous ones}
+Notes: {Notes and hypotheses about the conversation until now}
+~~~
+1. E04: I've found that AI is really helpful for like, translating other models from other languages into NetLogo, for example. (interviewer's observation) Helpful for translating from other languages into NetLogo
+2. E04: I use it a lot for developing like, equations for specific like, aspects of agent-based models that I create. (interviewer's observation) Helpful for creating equations
+3. E04: I guess, in their databases, they still have like, NetLogo 5 in there and stuff. So like, for example, you know, the anonymous functions, they still use like, the old, sometimes I'll get like, the old functionality for the anonymous functions. (interviewer's observation) Writing code in older versions of NetLogo
+4. E04: I don't know if I've ever tried 4. I guess it would be 3.5. (interviewer's observation) Only used ChatGPT 3.5 before
+5. E04: The typical idea that I had was like a very, very simple neural network. (interviewer's observation) Task: a very simple neural network
+6. E04: I just like being able to kind of, like, iteratively build it. The thing that I always do when I create a model is I do, like, the initial command. I'll set up and go here. I'll go ahead and after I kind of set up the buttons, I'll put the functions behind them back here in the interface. (interviewer's observation) E04 creates the code skeleton before asking ChatGPT. He has a clear idea & established process of building ABMs.
+7. E04: "I want to create a simple feed-forward neural network in NetLogo with one hidden layer."
+8. E04: "How about without the R extension" (interviewer's observation) E04 evaluates the AI response and decides that he does not need to use the R extension.
+9. E04: Sometimes it'll give me instructions and sometimes it'll just give me the code and then sometimes it'll tell me to use R extensions or something like that. It is random in that regard, it's not deterministic in terms of what result you're going to get. (interviewer's observation) E04 regularly evaluates the AI responses and thinks that it is not deterministic.
+10. E04: (Throughout this phase. He uses generated code only for reference when writing his own.) (interviewer's observation) E04 writes code manually with the steps given by ChatGPT, rather than copy & paste code.
+11. E04: Because I'll like forget the syntax sometimes and I usually use the netlogo dictionary and just have it like open to the side. (interviewer's observation) E04 still forgets about the syntax and ChatGPT can help.
+12. E04: "how to define breeds in netlogo" (interviewer's observation) E04 tries to find certain syntax structures from the AI-generated code and ask for it when it is not there.
+13. E04: So one thing I'm realizing now, part of my setup needs to be reset all. (interviewer's observation) E04 sees from the generated code and realizes that he needs to reset.
+14. E04: It'd be that I just take this and see what this does. This should just be a single node so it'll kind of overwrite what I already did. (interviewer's observation) E04 uses the AI-generated code completely when realizing time constraints.
+15. E04: So this is interesting because, you know, obviously it's wrong. So I have to kind of interpret what's going on here. (interviewer's observation) E04 fixes common NetLogo mistakes by himself.
+16. E04: (no verbal response) (interviewer's observation) E04 reads through the code and tries to debug with himself when the generated code does not do what it does.
+17. E04: "how can I plot the output of this model?" (interviewer's observation) E04 was prompted to follow-up with ChatGPT. 
+18. E04: (no verbal response) (interviewer's observation) Again, he reads the code and selectively copies code to the model.
+19. E04: (no verbal response) (interviewer's observation) E04 was prompted to copy and paste error messages to ChatGPT.
+20. E04: Interesting because it's trying to plot the name, which I know is wrong, but I'm just trying to remember how to... (interviewer's observation) E04 reasons through the responses of ChatGPT.
+21. E04: I'll go on Stack Exchange or Stack Overflow, I'm part of the NetLogo listserv, but obviously there's a delay there. So in the instance that I need immediate feedback, it is really helpful. (interviewer's observation) Nice to have immediate feedback.
+22. E04: It doesn't... Include everything that you need.  (interviewer's observation) Misses code structures at times.
+23. E04: To me, it seems like you need to have a certain degree of expertise to understand where the errors are and how to fix them. Because otherwise it's like you're going down this path where you're blindly following the ChatGPT and you have no idea what's going on. For less experienced people, I wouldn't like that because it could put you in a worse situation. (interviewer's observation) Requires expertise to understand errors and debug them. Risks to blindly follow ChatGPT, esp. for less experienced people.
+24. E04: So maybe I didn't prove it today, but I feel like I'm pretty competent with NetLogo. (interviewer's observation) Prefers helping others learn NetLogo.
+25. E04: So if I can talk to it in NetLogo, does that mean I could give it in the logo command and then it would like turn that into code on the backend or? (interviewer's observation) Initial confusion over what the system could do.
+26. E04: "I want to create a simple perception" (interviewer's observation) Thinks a bit about whether to use "in NetLogo" or not.
+27. E04: I know that Perceptron model exists in the NetLogo model library. So it's interesting to me that it didn't pull that up, but it could be that I used like the wrong verbiage, but it doesn't understand what I'm trying to do. (interviewer's observation) E04 expects ChatLogo to find "Perceptron" model from the library but it does not. He evaluates the search results of the AI.
+28. E04: "I want to create a neural network" - I want to see if it actually pulls up the model. (interviewer's observation) E04 experiments with the AI to see what phrases could give a correct search result.
+29. E04: So that's interesting anyways, I'm going back to Perceptron. (interviewer's observation) E04 gives up immediately after the AI asks the same question again.
+30. E04: Oh and you can run it. That's cool. (interviewer's observation) E04 reads the AI output and decides to copy & paste it although he could also run it.
+31. E04: (no verbal response) (interviewer's observation) E04 manually tries to fix the errors in the AI-generated code and did not choose "explain it".
+32. E04: "Can train-perceptron be turned into a reporter" (interviewer's observation) E04 uses "can you fix with my own idea".
+===
+---
+Thoughts: 
+This conversation appears to focus on the user's experience with LLM-driven interfaces in the context of NetLogo learning and practice. The user, E04, has experience with NetLogo and has used ChatGPT to support their work. I plan to analyze this conversation from multiple theoretical angles, including human-computer interaction and learning sciences. I will explore how E04 perceives the strengths and weaknesses of LLM-driven interfaces and how they use it to support their work. I will also examine E04's needs for LLM-based interfaces and how they evaluate the AI responses.
+
+Interpretation phrases for each item:
+
+1. Utilizing AI for model translation; overcoming language barriers in NetLogo.
+2. Developing equations with AI assistance; creating agent-based models.
+3. Writing code in older NetLogo versions; encountering compatibility issues.
+4. Familiarity with ChatGPT 3.5; limited experience with other versions.
+5. Designing a simple neural network; exploring AI capabilities.
+6. Following an established process for building agent-based models; iterative development.
+7. Formulating a clear task for AI assistance; seeking guidance on neural network creation.
+8. Evaluating AI response; deciding on the relevance of R extensions.
+9. Regularly assessing AI outputs; non-deterministic results.
+10. Manually writing code with AI guidance; referencing generated code.
+11. Forgetting NetLogo syntax; using AI as a reference.
+12. Seeking specific syntax structures from AI-generated code.
+13. Realizing the need for reset commands; refining model setup.
+14. Using AI-generated code under time constraints; overwriting existing code.
+15. Interpreting and debugging AI-generated code; fixing NetLogo mistakes.
+16. Silently debugging generated code; self-reliance in error resolution.
+17. Requesting additional guidance from AI; plotting model outputs.
+18. Selectively copying code from AI outputs; integrating into the model.
+19. Copying error messages for AI assistance; seeking help with debugging.
+20. Reasoning through AI responses; understanding the thought process.
+21. Valuing immediate feedback from AI; comparing to Stack Exchange and NetLogo listserv.
+22. Noticing AI limitations; missing code structures at times.
+23. Recognizing the need for expertise in understanding AI errors; risks for less experienced users.
+24. Prioritizing helping others learn NetLogo; humility in expertise.
+25. Initially confused about AI capabilities; exploring NetLogo command integration.
+26. Considering the optimal phrasing for AI requests; seeking clarity.
+27. Expecting AI to retrieve relevant NetLogo models; evaluating search results.
+28. Experimenting with AI phrases; seeking effective search results.
+29. Giving up on AI assistance; switching to familiar models.
+30. Reading AI output; deciding to copy and paste code.
+31. Manually fixing AI-generated code errors; not seeking explanations.
+32. Requesting AI assistance with code modification; collaborative problem-solving.
+
+Summary:
+E04 has experience with NetLogo and has used ChatGPT to support their work. They appreciate the immediate feedback and assistance in developing agent-based models, but also recognize the limitations and potential risks of relying on AI. E04 evaluates the AI responses and has developed strategies for working with the generated code, including referencing, debugging, and selectively copying code.
+
+Notes:
+It appears that E04 has a strong background in NetLogo and is familiar with its syntax and capabilities. They are experimenting with ChatGPT to see how it can support their work, but also recognize the need for expertise in understanding AI-generated code. The conversation highlights the importance of immediate feedback, the potential risks of relying on AI for less experienced users, and the need for effective search results in LLM-driven interfaces.

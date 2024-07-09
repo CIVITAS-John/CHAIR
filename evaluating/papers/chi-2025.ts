@@ -64,7 +64,6 @@ async function RepeatedlyEvaluateInFolder(Times: number, Temperatures: number[],
 // Task: Compare the 4 approaches with GPT-4o described in the pilot study.
 // Also, an output analysis of the results with 10 runs
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 1", "llama3-70b", new RefiningReferenceBuilder(true, true), "pilot-study");
-// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 1", "llama3-70b", new RefiningReferenceBuilder(true, true), "pilot-study");
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 1", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), "pilot-study");
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 2", "llama3-70b", new RefiningReferenceBuilder(true, true), "pilot-study");
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 2", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), "pilot-study");
@@ -83,13 +82,12 @@ for (var Approach of Approaches) {
     // await RepeatedlyEvaluateInFolder(10, [0.5], "Coded Dataset 2", "llama3-70b", new RefiningReferenceBuilder(true, true), Approach);
     // GPT-4o is expensive and we don't see the advantage in computational metrics.
     // On the other hand, on the surface, it generates better labels during merging. So we use it for qualitative evaluation.
-    await RepeatedlyEvaluateInFolder(1, [0.5], "Coded Dataset 1", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), Approach);
-    await RepeatedlyEvaluateInFolder(1, [0.5], "Coded Dataset 2", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), Approach);
+    // await RepeatedlyEvaluateInFolder(1, [0.5], "Coded Dataset 1", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), Approach);
+    // await RepeatedlyEvaluateInFolder(1, [0.5], "Coded Dataset 2", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), Approach);
 }
 
 // Task: Evaluate different temperature with the low-level-5 approach.
-/*await UseLLMs(async () => {
-    await EvaluateInFolder("Coded Dataset 1", "low-level-5-llama", new RefiningReferenceBuilder(true, true));
-}, "llama3-70b");*/
+await RepeatedlyEvaluateInFolder(10, [0.5], "Coded Dataset 1", "llama3-70b", new RefiningReferenceBuilder(true, true), "ll5-llama", "ll5-except-llama");
+await RepeatedlyEvaluateInFolder(10, [0.5], "Coded Dataset 2", "llama3-70b", new RefiningReferenceBuilder(true, true), "ll5-llama", "ll5-except-llama");
 
 process.exit(0);
