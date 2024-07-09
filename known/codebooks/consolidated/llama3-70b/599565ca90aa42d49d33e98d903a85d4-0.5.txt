@@ -1,0 +1,46 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+3.
+Criteria: {Who did what, and how for code 3}
+Label: {A descriptive label of code 3}
+---
+~~~
+1.
+Label: acknowledges partial success
+Quotes:
+- E04: It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent. (interviewer's observation) Better troubleshooting capability.
+
+2.
+Label: proposing ai powered linting
+Quotes:
+- E01: So I see this from beginners all the time is they, they just get totally lost. I call it lint program from Unix, you know, it's like it's a little green checkbox looks at you and go, okay, wait, it's just, you've spelled everything correctly, but you have a conceptual error here. If it, if it caught structural problems like that, that would, that would help. (interviewer's observation) NetLogo needs to have linting features that exist in other languages (we are working on that right now). Here, E01 wants the linting to support identifying conceptual mistakes, different from syntax mistakes which most linters work on.
+
+3.
+Label: advocates for clear and straightforward code writing
+Quotes:
+- E01: You know, so in point of fact, I considered a much higher virtue for that kind of code to go, write this in the most standard dumb ass idiot accessible way that you can. So that when I come back to it later, I could figure out why it, why it's not working anymore. (interviewer's observation) Discussion on code complexity & quality. Plain / not-tricky code's advantage in maintenance.
+===
+---
+Definitions for each code (3 in total):
+
+1.
+Criteria: The participant acknowledges that the LLM-driven interface has achieved some success or improvement, but with limitations or caveats.
+Label: Acknowledges Partial Success
+
+2.
+Criteria: The participant suggests or proposes the integration of AI-powered features, such as linting, to improve the functionality of NetLogo or support users in identifying errors or mistakes.
+Label: Proposes AI-Powered Features
+
+3.
+Criteria: The participant emphasizes the importance of writing clear, simple, and accessible code, highlighting the benefits of maintainability and ease of understanding.
+Label: Advocates for Clear Code Writing

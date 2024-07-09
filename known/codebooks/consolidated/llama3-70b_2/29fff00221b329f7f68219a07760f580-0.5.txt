@@ -1,0 +1,307 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+32.
+Criteria: {Who did what, and how for code 32}
+Label: {A descriptive label of code 32}
+---
+~~~
+1.
+Label: demonstrates dictation of parameters during the coding process
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 dictated each of the parameter fields.
+
+2.
+Label: appreciating the capability to automatically integrate the ai generated code
+Quotes:
+- E04: I really liked how, like the code that it generates, if you could just kind of place that into the model automatically.  (interviewer's observation) The capability to put into the model automatically.
+
+3.
+Label: values error clarification
+Quotes:
+- E04: I think that it's nice that it's, it clarifies error codes. I think that's probably where people who are new get stuck the most is trying to figure out the syntax and all the different errors. (interviewer's observation) The capability to clarify the errors.
+
+4.
+Label: identifying need for context specific documentation
+Quotes:
+- E01: And you want doctors to use it, nurses to use it and medical transcriptionists to use it. They use a different word for whatever the verb for whatever it is you're saying you want them to do. And so, in some sense, their documentation has to be customized to their context to their user group. ... It's a language system. If you have a learning system that's actually capable of harvesting information, yeah, and a lot of them are not yet, but I think we'll get there. (interviewer's observation) AI could be used to translate jargons between different sub-groups working in the same systems and ease the cost of writing customized documentation.
+
+5.
+Label: learning from ai generated code
+Quotes:
+- E04: So one thing I'm realizing now, part of my setup needs to be reset all. (interviewer's observation) E04 sees from the generated code and realizes that he needs to reset.
+
+6.
+Label: highlights the distinction between system developers and effective teachers
+Quotes:
+- E01: Can it design a generic learning management path? Because a lot of people can develop systems, but they're not good teachers. (interviewer's observation) Hypothetically: maybe AI could be used for building learning pathways.
+
+7.
+Label: finds current design challenging
+Quotes:
+- E04: Part of the issue that I'm having now is just kind of like the learning curve, just trying to figure out how everything works. (interviewer's observation) E04 mentions a learning curve, likely because our current design is not fine-tuned for experts.
+
+8.
+Label: interviewee reading the code and commenting
+Quotes:
+- E01: So set up, move the turtle to go. Increase the size of the turtle by two units. Oh, dear. It's, it's making the turtle bigger. Oh, that's kind of, that's kind of messed it up a little bit then. (interviewer's observation) E01 reads the code and comments, summarizing the code, and thinks about how the AI was understanding the request.
+
+9.
+Label: demonstrating confidence in ai's potential
+Quotes:
+- E01: And then very often, it could.  (interviewer's observation) ChatGPT could often resolve errors by itself.
+
+10.
+Label: accepting ai's limitations
+Quotes:
+- E01: It's about, let's see, what did I count is 3800 lines of code. Well, first I couldn't feed it all the ChatGPT can only take it 1800 lines at a time. And then I said, you know, can you tell me what this does? And it basically said, no. ... I can live with that again. (interviewer's observation) ChatGPT's limitation on reading long code pieces.
+
+11.
+Label: e04 opts for manual ai code integration
+Quotes:
+- E04: Oh and you can run it. That's cool. (interviewer's observation) E04 reads the AI output and decides to copy & paste it although he could also run it.
+
+12.
+Label: compares with initial code
+Quotes:
+- E01: "Also a good idea because we did not ask it to do that." (interviewer's observation) E01 reads and evaluates the ChatGPT code. Asks Interviewer to scroll slowly so he could read in detail.
+
+13.
+Label: e04 recognizes ai's adherence to coding standards
+Quotes:
+- E04: It's basically following best practices. It is not trying to ruthlessly create a model. (interviewer's observation) Not "ruthlessly create a model".
+
+14.
+Label: indicating the need for more robust troubleshooting and recovery mechanisms
+Quotes:
+- E04: And then like the only other thing I didn't like was, you know, kind of how it was getting stuck on itself and it wasn't able to fix that one error. (interviewer's observation) Could get stuck in a loop and cannot fix that.
+
+15.
+Label: acknowledges personal competence
+Quotes:
+- E04: So maybe I didn't prove it today, but I feel like I'm pretty competent with NetLogo. (interviewer's observation) Prefers helping others learn NetLogo.
+
+16.
+Label: novice's challenge of asking the right question
+Quotes:
+- E01: And, and they don't, this is an unfamiliar task to them apparently. So they want to ask one question and get the right answer the first time. And I, I don't have that expectation. I'll ask the right question and it'll get me 80% of the way there. (interviewer's observation) Novices might have a too high expectation for ChatGPT (but it cannot achieve that).
+
+17.
+Label: indicating the value of interactive guidance and customization
+Quotes:
+- E04: I thought it was really cool that, you know, that it knew exactly what I wanted to do and then kind of allowed me to define like the certain parameters for what I wanted to do. (interviewer's observation) Having the interface to clarify parameters helps.
+
+18.
+Label: considers excluding r extension
+Quotes:
+- E04: "How about without the R extension" (interviewer's observation) E04 evaluates the AI response and decides that he does not need to use the R extension.
+
+19.
+Label: human's value: judgement
+Quotes:
+- E01: I think the key is to not replace human judgment and ability, but to find a fast way to increase human capability and judgment. (interviewer's observation) Augmentation of human capabilities & building on human judgement. Subjectivity of humanity?
+
+20.
+Label: imagines ai as a pair programmer
+Quotes:
+- E01: What if you were just sitting in a peer programming and sitting next to a, uh, a bright person who was helping you, what would you want them to do? So you might start writing a line of code and they would stop and go, why are you, why are you typing? (interviewer's observation) E01 discusses how AI could potentially serve as a pair programmer that questions the learners' motives.
+
+21.
+Label: compares ai to human interns
+Quotes:
+- E01: It's about, let's see, what did I count is 3800 lines of code. Well, first I couldn't feed it all the ChatGPT can only take it 1800 lines at a time. And then I said, you know, can you tell me what this does? And it basically said, no. ... I can live with that again. (interviewer's observation) ChatGPT's limitation on reading long code pieces.
+- E01: It's like, I could hire an intern to like do this, or I could have chat GPT do it much faster for free. And, and, and even if chat GPT doesn't do it today, I bet six months from now, it would do it. (interviewer's observation) ChatGPT is free and advances fast.
+
+22.
+Label: takes time to use and adapt
+Quotes:
+- E04: It seems like it's, you know, pretty straightforward to use and like intuitive, which is nice. And it's like, it's easy to interact with. So I feel like if I had like enough time to play around with it, it could be like really helpful. (interviewer's observation) Straightforward to use and intuitive.
+
+23.
+Label: encounters limitations in chat gpt's code analysis for lengthy scripts
+Quotes:
+- E01: It's about, let's see, what did I count is 3800 lines of code. Well, first I couldn't feed it all the ChatGPT can only take it 1800 lines at a time. And then I said, you know, can you tell me what this does? And it basically said, no. ... I can live with that again. (interviewer's observation) ChatGPT's limitation on reading long code pieces.
+
+24.
+Label: human-ai: augmentation => ai should augment human's ability rather than replace
+Quotes:
+- E01: I think the key is to not replace human judgment and ability, but to find a fast way to increase human capability and judgment. (interviewer's observation) Augmentation of human capabilities & building on human judgement. Subjectivity of humanity?
+
+25.
+Label: recognizing ai's natural language capabilities
+Quotes:
+- E01: I speak to (ChatGPT) like a person. I could just walk in the room and go write me code that does X, but I don't, I start with good morning. And it comes back, but it comes back with good morning. How can I assist you today? It's pretty good at figuring out natural language. So in some sense that you might just be better off, just pretend it's not a computer. (interviewer's observation) E01 reflects on how he interacts with ChatGPT like a person.
+
+26.
+Label: describing fragmented learning patterns
+Quotes:
+- E01: Depending on what you do and how busy you are and the higher ranking people are, the more busy they are, the longer it is between sessions. So you make some notes on little yellow, sticky cinnamon. And then you go back to your administrator job for two months, and then some other project comes up. And then six months later, you come back. Okay, now, where was I? (interviewer's observation) E01's reflection on how professionals learn - they learn in fragments, in fragmented time blocks and need support from the system to remind them where they were.
+
+27.
+Label: suggests incremental coding
+Quotes:
+- E01: I mean, it's like, write a line of code. Are there any errors? But, beginners will start and they write three pages of code and then they hit the green check mark.  (interviewer's observation) Beginners could write chunks of code and then find many errors that they cannot fix.
+
+28.
+Label: expressing interest in exploring more advanced ai capabilities
+Quotes:
+- E04: I don't know if I've ever tried 4. I guess it would be 3.5. (interviewer's observation) Only used ChatGPT 3.5 before
+
+29.
+Label: choosing to manually implement ai suggestions
+Quotes:
+- E04: Oh and you can run it. That's cool. (interviewer's observation) E04 reads the AI output and decides to copy & paste it although he could also run it.
+
+30.
+Label: effort constraints
+Quotes:
+- E01: So one of the, one of the things which I have observed, as I'm bouncing from like, because I do a lot of different languages and potentially, so I don't have that much time to spend in anyone. (interviewer's observation) As an expert, E01 knows many languages but does not have much time for each one.
+
+31.
+Label: clarifies requirements
+Quotes:
+- E01: "I would like to write code to have a turtle run slowly around the perimeter of a square, but the square should go larger each time it goes around." (interviewer's observation) Seeing AI's counter question, E01 makes his request more detailed.
+
+32.
+Label: aims to augment human capabilities
+Quotes:
+- E01: I think the key is to not replace human judgment and ability, but to find a fast way to increase human capability and judgment. (interviewer's observation) Augmentation of human capabilities & building on human judgement. Subjectivity of humanity?
+===
+Here are the definitions for each code:
+
+1.
+Criteria: The interviewee dictates parameters during the coding process, and the interviewer observes this behavior.
+Label: Dictating parameters during coding
+
+2.
+Criteria: The interviewee appreciates the capability of automatically integrating AI-generated code into the model.
+Label: Appreciating automatic code integration
+
+3.
+Criteria: The interviewee values the capability of the AI to clarify error codes, especially for beginners.
+Label: Valuing error clarification
+
+4.
+Criteria: The interviewee identifies a need for context-specific documentation that can be customized for different user groups.
+Label: Need for context-specific documentation
+
+5.
+Criteria: The interviewee learns from the AI-generated code and realizes something new about their setup.
+Label: Learning from AI-generated code
+
+6.
+Criteria: The interviewee highlights the distinction between system developers and effective teachers, suggesting that AI could be used to build learning pathways.
+Label: Distinguishing developers from teachers
+
+7.
+Criteria: The interviewee finds the current design challenging, likely due to a learning curve.
+Label: Finding the design challenging
+
+8.
+Criteria: The interviewee reads the code and comments on it, summarizing the code and thinking about how the AI understood the request.
+Label: Reading and commenting on code
+
+9.
+Criteria: The interviewee demonstrates confidence in the AI's potential to resolve errors by itself.
+Label: Confident in AI's potential
+
+10.
+Criteria: The interviewee accepts the limitations of the AI, such as its inability to read long code pieces.
+Label: Accepting AI limitations
+
+11.
+Criteria: The interviewee chooses to manually integrate AI-generated code into their model.
+Label: Manual AI code integration
+
+12.
+Criteria: The interviewee compares the AI-generated code with their initial code.
+Label: Comparing AI-generated code with initial code
+
+13.
+Criteria: The interviewee recognizes that the AI-generated code follows best practices and coding standards.
+Label: Recognizing adherence to coding standards
+
+14.
+Criteria: The interviewee indicates a need for more robust troubleshooting and recovery mechanisms.
+Label: Need for robust troubleshooting
+
+15.
+Criteria: The interviewee acknowledges their personal competence in using NetLogo.
+Label: Acknowledging personal competence
+
+16.
+Criteria: The interviewee highlights the challenge of asking the right question, especially for novices.
+Label: Novice's challenge of asking the right question
+
+17.
+Criteria: The interviewee values interactive guidance and customization in the AI interface.
+Label: Valuing interactive guidance and customization
+
+18.
+Criteria: The interviewee considers excluding the R extension from the AI-generated code.
+Label: Considering excluding R extension
+
+19.
+Criteria: The interviewee emphasizes the importance of human judgment and the need for AI to augment human capabilities.
+Label: Valuing human judgment
+
+20.
+Criteria: The interviewee imagines the AI as a pair programmer that questions the learner's motives.
+Label: Imagining AI as a pair programmer
+
+21.
+Criteria: The interviewee compares the AI to human interns, highlighting its speed and cost-effectiveness.
+Label: Comparing AI to human interns
+
+22.
+Criteria: The interviewee takes time to use and adapt to the AI interface.
+Label: Taking time to adapt to AI
+
+23.
+Criteria: The interviewee encounters limitations in the AI's code analysis for lengthy scripts.
+Label: Limitations in code analysis for lengthy scripts
+
+24.
+Criteria: The interviewee emphasizes the importance of human-AI augmentation, rather than replacement.
+Label: Emphasizing human-AI augmentation
+
+25.
+Criteria: The interviewee recognizes the AI's natural language capabilities and interacts with it like a person.
+Label: Recognizing AI's natural language capabilities
+
+26.
+Criteria: The interviewee describes fragmented learning patterns, where learners learn in short, fragmented time blocks.
+Label: Describing fragmented learning patterns
+
+27.
+Criteria: The interviewee suggests incremental coding, where learners write small chunks of code and check for errors.
+Label: Suggesting incremental coding
+
+28.
+Criteria: The interviewee expresses interest in exploring more advanced AI capabilities.
+Label: Exploring advanced AI capabilities
+
+29.
+Criteria: The interviewee chooses to manually implement AI suggestions, rather than running them automatically.
+Label: Manually implementing AI suggestions
+
+30.
+Criteria: The interviewee is constrained by effort and time, limiting their ability to spend time on each language.
+Label: Effort constraints
+
+31.
+Criteria: The interviewee clarifies their requirements and makes their request more detailed.
+Label: Clarifying requirements
+
+32.
+Criteria: The interviewee aims to augment human capabilities, rather than replace them, with AI.
+Label: Aiming to augment human capabilities

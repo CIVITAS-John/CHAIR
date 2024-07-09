@@ -87,7 +87,7 @@ for (var Approach of Approaches) {
 }
 
 // Task: Evaluate different temperature with the low-level-5 approach.
-await RepeatedlyEvaluateInFolder(10, [0.5], "Coded Dataset 1", "llama3-70b", new RefiningReferenceBuilder(true, true), "ll5-llama", "ll5-except-llama");
+// await RepeatedlyEvaluateInFolder(10, [0.5], "Coded Dataset 1", "llama3-70b", new RefiningReferenceBuilder(true, true), "ll5-llama", "ll5-except-llama");
 await RepeatedlyEvaluateInFolder(10, [0.5], "Coded Dataset 2", "llama3-70b", new RefiningReferenceBuilder(true, true), "ll5-llama", "ll5-except-llama");
 
 process.exit(0);

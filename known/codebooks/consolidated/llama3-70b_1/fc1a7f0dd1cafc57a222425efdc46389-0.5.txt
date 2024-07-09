@@ -1,0 +1,119 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (11 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+11.
+Criteria: {Who did what, and how for code 11}
+Label: {A descriptive label of code 11}
+---
+~~~
+1.
+Label: interviewee reflecting on their personal interaction with chat gpt as if it were a person
+Quotes:
+- E01: I speak to (ChatGPT) like a person. I could just walk in the room and go write me code that does X, but I don't, I start with good morning. And it comes back, but it comes back with good morning. How can I assist you today? It's pretty good at figuring out natural language. So in some sense that you might just be better off, just pretend it's not a computer. (interviewer's observation) E01 reflects on how he interacts with ChatGPT like a person.
+
+2.
+Label: acknowledging improved troubleshooting capabilities
+Quotes:
+- E04: It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent. (interviewer's observation) Better troubleshooting capability.
+
+3.
+Label: chatlogo ability (negative)
+Quotes:
+- E04: So that's interesting anyways, I'm going back to Perceptron. (interviewer's observation) E04 gives up immediately after the AI asks the same question again.
+
+4.
+Label: demonstrating user interaction with ai tool
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 dictated each of the parameter fields.
+
+5.
+Label: human-effort: intepretation
+Quotes:
+- E04: I know that Perceptron model exists in the NetLogo model library. So it's interesting to me that it didn't pull that up, but it could be that I used like the wrong verbiage, but it doesn't understand what I'm trying to do. (interviewer's observation) E04 expects ChatLogo to find "Perceptron" model from the library but it does not. He evaluates the search results of the AI.
+- E04: Interesting because it's trying to plot the name, which I know is wrong, but I'm just trying to remember how to... (interviewer's observation) E04 reasons through the responses of ChatGPT.
+
+6.
+Label: unpredictable ai behavior
+Quotes:
+- E04: Sometimes it'll give me instructions and sometimes it'll just give me the code and then sometimes it'll tell me to use R extensions or something like that. It is random in that regard, it's not deterministic in terms of what result you're going to get. (interviewer's observation) E04 regularly evaluates the AI responses and thinks that it is not deterministic.
+
+7.
+Label: interviewee reading error messages before making a choice
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 reads error messages before making a choice.
+
+8.
+Label: describes using chat gpt for code optimization
+Quotes:
+- E01: So if I'm writing long NetLogo code now, I'd probably have ChatGPT just open on the side. And I write a block of code and then I handed ChatGPT. Say, could I have done this better? And it would go, yeah, you could rearrange this like that. (interviewer's observation) ChatGPT could help E01 optimize his code.
+
+9.
+Label: acknowledges partial success
+Quotes:
+- E04: It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent. (interviewer's observation) Better troubleshooting capability.
+
+10.
+Label: proposing ai powered linting
+Quotes:
+- E01: So I see this from beginners all the time is they, they just get totally lost. I call it lint program from Unix, you know, it's like it's a little green checkbox looks at you and go, okay, wait, it's just, you've spelled everything correctly, but you have a conceptual error here. If it, if it caught structural problems like that, that would, that would help. (interviewer's observation) NetLogo needs to have linting features that exist in other languages (we are working on that right now). Here, E01 wants the linting to support identifying conceptual mistakes, different from syntax mistakes which most linters work on.
+
+11.
+Label: advocates for clear and straightforward code writing
+Quotes:
+- E01: You know, so in point of fact, I considered a much higher virtue for that kind of code to go, write this in the most standard dumb ass idiot accessible way that you can. So that when I come back to it later, I could figure out why it, why it's not working anymore. (interviewer's observation) Discussion on code complexity & quality. Plain / not-tricky code's advantage in maintenance.
+===
+Here are the definitions for each code:
+
+---
+1. 
+Criteria: The interviewee reflects on their personal interaction with ChatGPT as if it were a person, using phrases or sentences that imply a human-like conversation.
+Label: Anthropomorphizing ChatGPT
+
+2. 
+Criteria: The interviewee acknowledges or highlights the improved capabilities of ChatGPT in troubleshooting or error handling.
+Label: Improved Troubleshooting
+
+3. 
+Criteria: The interviewee expresses frustration or disappointment with ChatLogo's abilities, leading to a negative assessment of its performance.
+Label: Negative Assessment of ChatLogo
+
+4. 
+Criteria: The interviewee demonstrates or describes their interaction with the AI tool, including providing input, receiving output, or navigating the interface.
+Label: User-AI Interaction
+
+5. 
+Criteria: The interviewee evaluates or interprets the output of ChatGPT, considering the effort required to understand or correct the results.
+Label: Human-Effort Interpretation
+
+6. 
+Criteria: The interviewee comments on the unpredictable or inconsistent behavior of ChatGPT, including variability in responses or outcomes.
+Label: Unpredictable AI Behavior
+
+7. 
+Criteria: The interviewee reads or reviews error messages before making a decision or taking an action.
+Label: Error Message Review
+
+8. 
+Criteria: The interviewee describes using ChatGPT for code optimization, refactoring, or improvement.
+Label: Code Optimization with ChatGPT
+
+9. 
+Criteria: The interviewee acknowledges partial success or limited achievement with ChatGPT, highlighting both strengths and weaknesses.
+Label: Partial Success with ChatGPT
+
+10. 
+Criteria: The interviewee proposes or suggests features or functionalities for AI-powered tools, such as linting or error detection.
+Label: AI Feature Proposal
+
+11. 
+Criteria: The interviewee advocates for clear, straightforward, and maintainable code writing practices, emphasizing the importance of simplicity and readability.
+Label: Advocating for Clear Code
