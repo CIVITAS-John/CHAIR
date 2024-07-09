@@ -25,16 +25,14 @@ export async function EvaluateCodebooksWithReference(Source: string | string[], 
 
 /** BuildReferenceAndEvaluateCodebooks: Build a reference and evaluate a number of codebooks. */
 export async function BuildReferenceAndEvaluateCodebooks(Source: string | string[], ReferencePath: string, Builder: ReferenceBuilder, Evaluator: CodebookEvaluator, 
-    ExportPath?: string, ComparingCodebooks?: string[], InGroups?: boolean): Promise<Record<string, CodebookEvaluation>> {
+    ExportPath?: string, CreateGroup?: boolean): Promise<Record<string, CodebookEvaluation>> {
     // Find all the codebooks under the path
-    var [ Codebooks, Names ] = await LoadCodebooks(Source);
-    var Backup = JSON.stringify(Codebooks);
-    var Hash = md5(Backup);
+    var [ Codebooks, Names ] = await LoadCodebooks(Source, CreateGroup);
     // Build the reference codebook
+    var RealCodebooks = Codebooks.filter((_, I) => Names[I].startsWith("group: ") == false);
+    var Backup = JSON.stringify(RealCodebooks);
+    var Hash = md5(Backup);
     var Reference = await ReadOrBuildCache(ReferencePath, Hash, () => BuildReferenceAndExport(Builder, JSON.parse(Backup), ReferencePath));
-    // Read the comparing codebooks
-    if (ComparingCodebooks)
-        [ Codebooks, Names ] = await LoadCodebooks(ComparingCodebooks);
     // Evaluate the codebooks
     var Results = await Evaluator.Evaluate([Reference, ...Codebooks], [ReferencePath, ...Names], ExportPath);
     console.log(chalk.green(JSON.stringify(Results, null, 4)));

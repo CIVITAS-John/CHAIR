@@ -14,7 +14,7 @@ UseLLM("llama3-70b");
 /** EvaluateConsolidatedResults: Evaluate some consolidated results. */
 // Please run the evaluate-analyzers-with-same-models.ts script before running this script.
 async function EvaluateConsolidatedResults(SourcePath: string, TaskName: string, 
-    ReferenceName: string, Builder: ReferenceBuilder, ReferenceCodebooks: string[], ComparingCodebooks?: string[]) {
+    ReferenceName: string, Builder: ReferenceBuilder, ReferenceCodebooks: string[]) {
     // Get the dataset
     var Dataset = await LoadDataset(SourcePath);
     var Evaluator = new NetworkEvaluator({ Dataset: Dataset });
@@ -27,8 +27,7 @@ async function EvaluateConsolidatedResults(SourcePath: string, TaskName: string,
     // Build the reference and evaluate the codebooks
     var Results = await BuildReferenceAndEvaluateCodebooks(
         ReferenceCodebooks.map(Path => ReferencePath + "/" + Path), 
-        ReferencePath + "/" + ReferenceName + Builder.Suffix, Builder, Evaluator, TargetPath, 
-        ComparingCodebooks?.map(Path => ReferencePath + "/" + Path));
+        ReferencePath + "/" + ReferenceName + Builder.Suffix, Builder, Evaluator, TargetPath);
     File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
 }
 
@@ -63,7 +62,7 @@ await EvaluateConsolidatedResults("Coded Dataset 1",
 await EvaluateConsolidatedResults("Coded Dataset 1", 
     "high-level vs low-level consolidated", "all-analyzers",
     new RefiningReferenceBuilder(),
-    ["high-level-2-consolidated-refined.json", "low-level-3-consolidated-refined.json"], ["high-level-2-consolidated-refined.json", "low-level-3-consolidated-refined.json"]);
+    ["high-level-2-consolidated-refined.json", "low-level-3-consolidated-refined.json"]);
 File.copyFileSync(
     GetMessagesPath("Coded Dataset 1", "evaluation/references/all-analyzers-refined.json"),
     GetMessagesPath("Comparisons", "evaluation/references/group-1-refined.json"));

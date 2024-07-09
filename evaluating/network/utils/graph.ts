@@ -67,8 +67,12 @@ export function BuildSemanticGraph(Dataset: CodebookComparison<any>, Parameter: 
         var Source = Nodes[I];
         for (var Owner = 0; Owner < Dataset.Codebooks.length; Owner++)
             Source.Weights[Owner] = Math.min(Math.max(Source.Weights[Owner] / Math.max(Source.Neighbors, 1), 0), 1);
-        for (var Owner of Source.Owners)
+        var RealOwners = 0;
+        for (var Owner of Source.Owners) {
+            if (Dataset.Weights![Owner] > 0) RealOwners++;
             Source.Weights[Owner] = 1;
+        }
+        Source.Novel = RealOwners == 1;
         Source.TotalWeight = Source.Weights.reduce((A, B, I) => I == 0 ? A : A + B * Dataset.Weights![I], 0)
     }
     // Store it

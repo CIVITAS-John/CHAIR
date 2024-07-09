@@ -32,6 +32,7 @@ export class NetworkEvaluator extends CodebookEvaluator {
         var Hash = md5(JSON.stringify(Codebooks));
         // Weights
         var Weights = Names.map((Name, Index) => {
+            if (Index == 0 || Name.startsWith("group:")) return 0;
             var Fields = Name.split("~");
             var Value = parseFloat(Fields[Fields.length - 1]);
             if (isNaN(Value)) return 1;

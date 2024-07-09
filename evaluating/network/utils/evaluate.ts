@@ -34,15 +34,14 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
     var TotalNovelty = 0;
     for (var Node of Graph.Nodes) {
         var Weight = NodeWeights.get(Node.ID)!;
-        // Novelty
-        var Novel = Node.Owners.size == 1 + (Node.Owners.has(0) ? 1 : 0);
-        if (Novel) TotalNovelty += Weight;
+        // Check novelty
+        if (Node.Novel) TotalNovelty += Weight;
         // Calculate on each codebook
         for (var I = 1; I < Codebooks.length; I++) {
             var Result = Results[Names[I]];
             var Observed = Node.Weights[I];
             Result["Coverage"] += Weight * Observed;
-            Result["Novelty"] += Weight * Observed * (Novel ? 1 : 0);
+            Result["Novelty"] += Weight * Observed * (Node.Novel ? 1 : 0);
             Observations[I].push(Observed);
         }
     }

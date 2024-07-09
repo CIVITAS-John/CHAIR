@@ -54,6 +54,8 @@ export interface Node<T> extends d3.SimulationNodeDatum {
     Owners: Set<number>;
     /** NearOwners: Owners that own at least a close neighbor nodes to this node. */
     NearOwners: Set<number>;
+    /** Novel: Whether the node is "novel" among weighted codebooks. */
+    Novel?: boolean;
     /** Neighbors: Close neighbors of this node. */
     Neighbors: number;
     /** Weights: Weights (for each codebook) of this node. */

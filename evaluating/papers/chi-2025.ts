@@ -17,26 +17,27 @@ import { CodebookEvaluation } from '../../utils/schema.js';
 InitializeEmbeddings("gecko-768-similarity");
 
 /** EvaluateInFolder: Evaluate the performance of different codebooks in the same folder with human results. */
-async function EvaluateInFolder(SourcePath: string, Folder: string, Builder: ReferenceBuilder, Suffix: string = "") {
+async function EvaluateInFolder(SourcePath: string, Builder: ReferenceBuilder, Suffix: string, ...Folders: string[]) {
     // Get the dataset
     var Dataset = await LoadDataset(SourcePath);
-    var Evaluator = new NetworkEvaluator({ Dataset: Dataset, Title: Folder + Suffix });
+    var Evaluator = new NetworkEvaluator({ Dataset: Dataset, Title: Folders.join("-") + Suffix });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
-    var EvaluationName = Folder + Suffix;
+    var EvaluationName = Folders.join("-") + Suffix;
     var ReferencePath = SourcePath + "/chi-2025/references";
     EnsureFolder(ReferencePath);
     var TargetPath = SourcePath + "/chi-2025/results/" + EvaluationName;
     EnsureFolder(TargetPath);
     // Build the reference and evaluate the codebooks
     var Results = await BuildReferenceAndEvaluateCodebooks(
-        [SourcePath + "/" + Folder, SourcePath + "/human"], ReferencePath + "/" + EvaluationName, Builder, Evaluator, TargetPath);
+        Folders.concat(["human"]).map(Folder => SourcePath + "/" + Folder),
+        ReferencePath + "/" + EvaluationName, Builder, Evaluator, TargetPath, true);
     File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
     return Results;
 }
 
 /** RepeatedlyEvaluateInFolder: Repeatedly evaluate the performance of different codebooks in the same folder. */
-async function RepeatedlyEvaluateInFolder(Times: number, Temperatures: number[], TemperatureNames: string[], SourcePath: string, Folder: string, LLM: string, Builder: RefiningReferenceBuilder) {
+async function RepeatedlyEvaluateInFolder(Times: number, Temperatures: number[], SourcePath: string, LLM: string, Builder: RefiningReferenceBuilder, ...Folders: string[]) {
     // Prepare for the CSV
     var CSVResults = ["llm,temp,run,codebook,count,consolidated,coverage,density,novelty,divergence"];
     // Evaluate the codebooks multiple times
@@ -44,7 +45,7 @@ async function RepeatedlyEvaluateInFolder(Times: number, Temperatures: number[],
         Builder.BaseTemperature = Temperature;
         var Results: Record<string, CodebookEvaluation>[] = [];
         for (var I = 0; I < Times; I++) {
-            await UseLLMs(async () => { Results.push(await EvaluateInFolder(SourcePath, Folder, Builder, `-${Temperature}-${LLMName}`)); }, `${LLM}_${I}`);
+            await UseLLMs(async () => { Results.push(await EvaluateInFolder(SourcePath, Builder, `-${Temperature}-${LLMName}`, ...Folders)); }, `${LLM}_${I}`);
         }
         // Write the results to a CSV
         for (var I = 0; I < Times; I++) {
@@ -57,16 +58,16 @@ async function RepeatedlyEvaluateInFolder(Times: number, Temperatures: number[],
     }
     // Write the CSV to a file
     SourcePath = GetMessagesPath(SourcePath);
-    File.writeFileSync(SourcePath + "/chi-2025/results/" + Folder + `-${LLM}.csv`, CSVResults.join("\n"));
+    File.writeFileSync(SourcePath + "/chi-2025/results/" + Folders.join("-") + `-${LLM}.csv`, CSVResults.join("\n"));
 }
 
 // Task: Compare the 4 approaches with GPT-4o described in the pilot study.
 // Also, an output analysis of the results with 10 runs
-// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], ["zero", "low", "medium", "high", "highest"], "Coded Dataset 1", "pilot-study", "llama3-70b", new RefiningReferenceBuilder(true, true));
-// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], ["zero", "low", "medium", "high", "highest"], "Coded Dataset 1", "pilot-study", "llama3-70b", new RefiningReferenceBuilder(true, true));
-// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], ["zero", "low", "medium", "high", "highest"], "Coded Dataset 1", "pilot-study", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true));
-// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], ["zero", "low", "medium", "high", "highest"], "Coded Dataset 2", "pilot-study", "llama3-70b", new RefiningReferenceBuilder(true, true));
-// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], ["zero", "low", "medium", "high", "highest"], "Coded Dataset 2", "pilot-study", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true));
+// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 1", "llama3-70b", new RefiningReferenceBuilder(true, true), "pilot-study");
+// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 1", "llama3-70b", new RefiningReferenceBuilder(true, true), "pilot-study");
+// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 1", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), "pilot-study");
+// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 2", "llama3-70b", new RefiningReferenceBuilder(true, true), "pilot-study");
+// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 2", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), "pilot-study");
 
 // Task: Does it matter if we only merge very similar names?
 // We don't report this, but yes, it biases towards having more codes (low-level-*).
@@ -78,12 +79,12 @@ async function RepeatedlyEvaluateInFolder(Times: number, Temperatures: number[],
 // Task: Evaluate different models with the same approaches.
 var Approaches = ["low-level-5", "high-level-2"]
 for (var Approach of Approaches) {
-    // await RepeatedlyEvaluateInFolder(10, [0.5], ["medium"], "Coded Dataset 1", Approach, "llama3-70b", new RefiningReferenceBuilder(true, true));
-    // await RepeatedlyEvaluateInFolder(10, [0.5], ["medium"], "Coded Dataset 2", Approach, "llama3-70b", new RefiningReferenceBuilder(true, true));
+    // await RepeatedlyEvaluateInFolder(10, [0.5], "Coded Dataset 1", "llama3-70b", new RefiningReferenceBuilder(true, true), Approach);
+    // await RepeatedlyEvaluateInFolder(10, [0.5], "Coded Dataset 2", "llama3-70b", new RefiningReferenceBuilder(true, true), Approach);
     // GPT-4o is expensive and we don't see the advantage in computational metrics.
     // On the other hand, on the surface, it generates better labels during merging. So we use it for qualitative evaluation.
-    await RepeatedlyEvaluateInFolder(1, [0.5], ["medium"], "Coded Dataset 1", Approach, "gpt-4.5-omni", new RefiningReferenceBuilder(true, true));
-    await RepeatedlyEvaluateInFolder(1, [0.5], ["medium"], "Coded Dataset 2", Approach, "gpt-4.5-omni", new RefiningReferenceBuilder(true, true));
+    await RepeatedlyEvaluateInFolder(1, [0.5], "Coded Dataset 1", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), Approach);
+    await RepeatedlyEvaluateInFolder(1, [0.5], "Coded Dataset 2", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), Approach);
 }
 
 // Task: Evaluate different temperature with the low-level-5 approach.

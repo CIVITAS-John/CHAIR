@@ -1,0 +1,118 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (11 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+11.
+Criteria: {Who did what, and how for code 11}
+Label: {A descriptive label of code 11}
+---
+~~~
+1.
+Label: engaging in self directed debugging
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 reads through the code and tries to debug with himself when the generated code does not do what it does.
+
+2.
+Label: considers ai as a time saving tool for learning new concepts in net logo
+Quotes:
+- E01: There's a lot of extensions I would love to know about GIS extensions, but I have very limited time. What could I do in two hours? And I think everybody has a very finite length of time. (interviewer's observation) AI could potentially save time for learning new extensions (compared with core concepts) of NetLogo.
+
+3.
+Label: reflects on the individualistic work culture in the us
+Quotes:
+- E01: But you know, again, you have this culture, especially in the US of do your own work. People get a little too obsessive about doing their own work.  (interviewer's observation) E01's reflection on U.S. individualistic working culture.
+
+4.
+Label: plans to develop a simple neural network
+Quotes:
+- E04: The typical idea that I had was like a very, very simple neural network. (interviewer's observation) Task: a very simple neural network
+
+5.
+Label: possibly indicating a preference for action over understanding
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 chooses to fix the problem rather than showing the explanation.
+
+6.
+Label: acknowledges the potential limitations in chat gpt's understanding of complex programming efficiencies
+Quotes:
+- E01: I don't know how much it understands about all of the efficiencies of NetLogo... But it (could) catch obvious errors that are not obvious to me. Even if it's relatively dumb, it's an outside observer, which is great. (interviewer's observation) ChatGPT could serve as an outside observer that points out errors human did not realize.
+
+7.
+Label: ai being free and advancing rapidly
+Quotes:
+- E01: It's like, I could hire an intern to like do this, or I could have chat GPT do it much faster for free. And, and, and even if chat GPT doesn't do it today, I bet six months from now, it would do it. (interviewer's observation) ChatGPT is free and advances fast.
+
+8.
+Label: identifying the need for a reset in the setup based on the ai's generated code
+Quotes:
+- E04: So one thing I'm realizing now, part of my setup needs to be reset all. (interviewer's observation) E04 sees from the generated code and realizes that he needs to reset.
+
+9.
+Label: values proactive problem solving
+Quotes:
+- E01: Part of getting AI to be your assistant on the side is, is having a culture where you're used to asking for help. And asking that early and often, and you know, from development costs, the later you discover you have a problem, the more it costs to fix it. (interviewer's observation) AI could help people to ask more questions, more early and often, to save cost for the future.
+
+10.
+Label: valuing automatic code integration feature
+Quotes:
+- E04: I really liked how, like the code that it generates, if you could just kind of place that into the model automatically.  (interviewer's observation) The capability to put into the model automatically.
+
+11.
+Label: argues for ai efficiency
+Quotes:
+- E01: But if a tool can do your, can do most of your work in five minutes, why would you spend two weeks? ... I would never hire someone who spent two weeks solving a problem that they could do in five minutes. (interviewer's observation) AI might be able to save people's time.
+===
+---
+Definitions for each code (11 in total):
+1.
+Criteria: The individual engages in debugging their code independently without external assistance.
+Label: Self-Directed Debugging
+
+2.
+Criteria: The individual perceives AI as a tool that can save time while learning new concepts or extensions in NetLogo.
+Label: AI as a Time-Saving Tool for Learning
+
+3.
+Criteria: The individual reflects on the cultural emphasis on individual work, particularly in the U.S.
+Label: Reflection on Individualistic Work Culture
+
+4.
+Criteria: The individual plans to develop a basic neural network model.
+Label: Planning Simple Neural Network Development
+
+5.
+Criteria: The individual shows a preference for taking immediate action to solve problems rather than seeking to understand the underlying explanations.
+Label: Preference for Action Over Understanding
+
+6.
+Criteria: The individual acknowledges that AI, like ChatGPT, may have limitations in understanding complex programming efficiencies but can still be useful in identifying obvious errors.
+Label: Recognition of AI Limitations and Benefits
+
+7.
+Criteria: The individual notes that AI tools like ChatGPT are free and advancing rapidly, offering a cost-effective alternative to hiring human assistance.
+Label: AI Cost-Effectiveness and Rapid Advancement
+
+8.
+Criteria: The individual identifies the need to reset part of their setup based on the AI-generated code.
+Label: Identifying Setup Adjustments from AI Code
+
+9.
+Criteria: The individual values proactive problem-solving and believes AI can encourage asking for help early and often to reduce future costs.
+Label: Valuing Proactive Problem Solving with AI
+
+10.
+Criteria: The individual appreciates the feature that allows AI-generated code to be integrated automatically into their model.
+Label: Valuing Automatic Code Integration
+
+11.
+Criteria: The individual argues that AI can significantly increase efficiency by completing tasks much faster than humans.
+Label: Argument for AI Efficiency
+---

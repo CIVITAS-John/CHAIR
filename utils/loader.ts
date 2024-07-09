@@ -172,7 +172,7 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
 }
 
 /** LoadCodebooks: Load codebooks from a source. */
-export async function LoadCodebooks(Source: string | string[]): Promise<[Codebook[], string[]]> {
+export async function LoadCodebooks(Source: string | string[], CreateGroup: boolean = false): Promise<[Codebook[], string[]]> {
     if (Array.isArray(Source)) {
         var Codebooks: Codebook[] = [];
         var Names: string[] = [];
@@ -180,15 +180,25 @@ export async function LoadCodebooks(Source: string | string[]): Promise<[Codeboo
             var [ CurrentCodebooks, CurrentNames ] = await LoadCodebooks(Current);
             Codebooks.push(...CurrentCodebooks);
             Names.push(...CurrentNames);
+            // Merge into a group
+            if (CreateGroup) {
+                Codebooks.push(MergeCodebooks(JSON.parse(JSON.stringify(CurrentCodebooks))));
+                Names.push(`group: ${Path.basename(Current)}`);
+            }
         }
         return [Codebooks, Names];
-    } else return await LoadCodebooksFrom(Source);
+    } else {
+        return await LoadCodebooksFrom(Source);
+    }
 }
 
 /** LoadCodebooksFrom: Load codebooks from a source. */
 async function LoadCodebooksFrom(Source: string): Promise<[Codebook[], string[]]> {
+    if (!File.existsSync(Source)) return [[], []];
     // Load potential paths
-    var Sources: string[] = GetFilesRecursively(Source);
+    var Sources: string[];
+    if (File.lstatSync(Source).isFile()) Sources = [Source];
+    else Sources = GetFilesRecursively(Source);
     // Remove the in-process codebooks
     Sources = Sources.filter(Source => !Source.match(/\-(\d)+.xlsx$/g)).sort();
     // Load the codebooks
