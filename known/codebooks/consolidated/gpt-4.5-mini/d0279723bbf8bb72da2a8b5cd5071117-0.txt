@@ -1,0 +1,57 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: suggest improvements to ai systems, propose collaborative ai systems
+- Users suggest improvements and request AI to implement their ideas.
+- Interviewees envision user feedback contributing to a collaborative system that improves AI.
+
+2.
+Concepts: learning, reflect on ai interactions
+- Reflects on the learning opportunities presented through interactions with AI.
+- Users reflect on their interactions with AI and the variability of its responses during those interactions.
+
+3.
+Concepts: analyzes error messages, engage in error reasoning
+- User reads and analyzes error messages before making decisions on code corrections.
+- Users engage in reasoning to identify discrepancies and analyze error messages presented by the AI.
+===
+---
+Definitions for each code (3 in total):
+1. 
+Concepts: suggest improvements to ai systems, propose collaborative ai systems
+Relationship: The concepts are logically related as both involve user engagement with AI systems, where users not only suggest enhancements but also envision a collaborative relationship that fosters ongoing improvement.
+Criteria: Users suggest improvements and propose collaborative AI systems by providing feedback that aims to enhance the functionality and effectiveness of AI.
+Phrase: Enhance and collaborate with AI systems.
+
+2. 
+Concepts: learning, reflect on ai interactions
+Relationship: The concepts are interconnected as reflecting on AI interactions serves as a learning opportunity, allowing users to gain insights from their experiences with the AI's responses.
+Criteria: Users engage in learning by reflecting on their interactions with AI, considering the variability of responses to enhance their understanding.
+Phrase: Reflect and learn from AI interactions.
+
+3. 
+Concepts: analyzes error messages, engage in error reasoning
+Relationship: The concepts are related as both involve a critical examination of error messages, where users analyze the information to engage in reasoning for effective problem-solving.
+Criteria: Users analyze error messages and engage in reasoning to identify discrepancies and make informed decisions regarding code corrections.
+Phrase: Analyze and reason through error messages.
+---

@@ -1,0 +1,388 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: avoiding blind ai following, expressing caution about blind ai trust, warning against blind ai reliance
+- The participant emphasizes the importance of not blindly following AI guidance.
+- Participants express caution about blindly following AI.
+- Participants warn against blindly following AI suggestions.
+
+2.
+Concepts: analyzing ai mistakes, reasoning through ai mistakes
+- The participant interprets and analyzes AI's mistakes.
+- The participant reasons through AI's mistakes and errors.
+
+3.
+Concepts: notices incomplete ai responses, identifying incomplete ai outputs
+- The participant notices incomplete AI responses.
+- The interviewee identifies missing elements or incomplete outputs from the AI.
+
+4.
+Concepts: describing ai misunderstandings, identifying ai misunderstandings
+- The participant describes AI misunderstandings and understanding discrepancies.
+- The participant encounters AI misunderstandings and identifies misinterpretations.
+
+5.
+Concepts: frustrated with error messages, frustrated with unclear error messages, experiences difficulties with unclear error messages, confused by unclear error messages, expressing frustration with error messages
+- The participant is frustrated with unhelpful error messages.
+- The participant experiences frustration with unclear error messages.
+- The participant experiences difficulties with unclear error messages.
+- The participant is confused by unclear error messages.
+- The participant expresses frustration with unclear and false error messages.
+
+6.
+Concepts: human-ai conflict, struggling with ai interfaces
+- The participant experiences conflict with AI-driven interfaces.
+- The participant struggles with the interface and AI-driven interfaces.
+
+7.
+Concepts: reports limited ai options, critiques ai-provided options
+- The participant reports limited options to select from in the AI-driven system.
+- The participant critiques the limited options provided by the AI.
+
+8.
+Concepts: dislikes limited ai options, expresses frustration with limited options
+- Users dislike or critique limited AI options or response limitations.
+- Users express frustration with limited options or interaction options in AI-driven interfaces.
+
+9.
+Concepts: expressing frustration with ai, expressing frustration with ai limitations
+- The participant expresses frustration with AI, its performance, and problem-solving limits.
+- The participant expresses frustration with AI limitations and reaches a frustration point.
+- The participant experiences frustration with AI limitations and encounters limitations.
+
+10.
+Concepts: evaluating ai error messages, expressing frustration with ai output, expressing frustration with ai errors
+- The participant finds AI error messages unhelpful and describes them as such.
+- The participant expresses frustration with AI output, error messages, and code errors.
+- The participant finds AI error indication buggy and feels frustrated.
+- The participant feels annoyed by AI's error loop and frustrated by unresolved issues.
+
+11.
+Concepts: adjusts model setup, adjusts model setup based on ai output
+- Adjusts model setup based on generated code.
+- Adjusts setup based on AI output.
+
+12.
+Concepts: abandonment after ai repetition, abandons ai assistance due to unsatisfactory results
+- The participant abandons a task after the AI repeats itself, becoming frustrated with the lack of progress.
+- The participant abandons AI assistance when expectations are not met.
+
+13.
+Concepts: deals with older versions, faces compatibility issues, encounters older netlogo functionalities
+- Users deal with older versions or outdated functionalities of AI systems or NetLogo.
+- Users face or manage compatibility issues between AI systems and older NetLogo versions.
+- Users encounter older NetLogo functionalities or issues with older NetLogo functionality.
+
+14.
+Concepts: primarily uses chatgpt 3.5, is familiar with chatgpt 3.5
+- The participant primarily uses ChatGPT 3.5.
+- Users are familiar with a specific AI version, such as ChatGPT 3.5.
+
+15.
+Concepts: lacks experience with other ai versions, has limited experience with ai versions
+- The participant lacks experience with other versions of AI tools.
+- Users have limited experience with different AI versions or newer versions.
+
+16.
+Concepts: reflects on fragmented learning, reflects on fragmented learning sessions
+- The interviewee reflects on the fragmented nature of professional learning.
+- The interviewee describes learning in time blocks with fragmented sessions.
+
+17.
+Concepts: highlights time constraints for learning, acknowledges time constraints for learning
+- The interviewee highlights time constraints for learning new extensions.
+- The interviewee acknowledges limited time for learning new extensions or concepts.
+
+18.
+Concepts: reflecting on programming experience, reflecting on prior programming experience
+- The participant shares their prior programming experience and background.
+- The code identifies instances where participants reflect on their extensive programming experience in various languages, including NetLogo.
+
+19.
+Concepts: highlights undocumented knowledge, highlights importance of tacit knowledge
+- The interviewee recognizes the importance of undocumented knowledge and expertise in software development.
+- The interviewee highlights the importance of tacit knowledge in software development.
+
+20.
+Concepts: ai as a knowledge preservation tool, discusses ai-based knowledge preservation
+- The interviewee sees AI as a knowledge preservation and retrieval tool.
+- The interviewee discusses AI-based knowledge preservation and retrieval, projecting AI's role.
+
+21.
+Concepts: reflects on fragmented knowledge, reflecting on knowledge in pieces
+- Interviewees reflect on the fragmented nature of knowledge generation and sustenance.
+- The interviewee reflects on the nature of knowledge and how it is generated and sustained.
+
+22.
+Concepts: appreciate in-workspace documentation, appreciate in-workspace documentation search
+- Interviewees appreciate in-workspace documentation and search capabilities.
+- Interviewees appreciate the capability to search for documentation within the workspace.
+
+23.
+Concepts: envisions context-specific documentation, identifies need for customized documentation
+- The participant envisions context-specific documentation that can be customized for different user groups.
+- Participants emphasize the need for customized documentation for different user groups, identifying the need for documentation tailored to specific contexts or user groups.
+
+24.
+Concepts: envisioning ai-assisted documentation customization, envisions ai-driven documentation customization
+- Interviewee envisions AI-assisted documentation customization.
+- Participants suggest AI potential in translating technical jargon and customizing documentation, envisioning AI's potential for customized documentation.
+
+25.
+Concepts: values interface support, values parameter clarification
+- Participants value interface support for task definition and parameter clarification, valuing parameter definition clarity and the importance of clear interfaces.
+- Participants value the interface's ability to clarify parameters, finding the interface helpful for clarifying parameters and defining what the user wants to do.
+
+26.
+Concepts: desires flexible ai interactions, desires flexible ai interactions for experts
+- The participant desires more flexible AI interactions.
+- The participant desires more flexibility in AI interactions, especially for experts.
+
+27.
+Concepts: desires ai interaction control, desire for greater control
+- The participant desires more control over AI interactions.
+- The participant desires more control over the AI's responses, seeking greater flexibility and customization options.
+
+28.
+Concepts: valuing code simplicity and maintainability, emphasizing code quality and maintainability, prioritizing code readability and simplicity
+- Emphasizes the importance of code simplicity and maintainability.
+- Discusses the importance of code simplicity and maintainability.
+- Emphasizes the importance of code readability and simplicity.
+
+29.
+Concepts: quality, preferring simple, maintainable code
+- Values code quality, simplicity, and maintainability, recognizing the importance of these factors in software development.
+- Values simplicity in code for easier maintenance and understanding.
+
+30.
+Concepts: preferring readable code, valuing clear documentation
+- The interviewee prefers readable code with comments and documentation.
+- The interviewee values clear documentation and comments in code.
+
+31.
+Concepts: appreciates clear code, values coding clarity
+- Interviewee appreciates clear and simple code.
+- The interviewee values clarity and simplicity in coding.
+
+32.
+Concepts: notes ai's adherence to best practices, observes ai's adherence to best practices, recognizes ai's adherence to best practices
+- Notes AI's adherence to best practices.
+- Observes AI adherence to best practices.
+- Recognizes AI's adherence to best practices.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: avoiding blind ai following, expressing caution about blind ai trust, warning against blind ai reliance
+Relationship: The concepts are related to the importance of not blindly following AI guidance and the need for caution and critical thinking.
+Criteria: Participants emphasize the importance of not blindly following AI guidance and express caution about relying solely on AI.
+Phrase: Expresses caution about blind AI trust.
+
+2.
+Concepts: analyzing ai mistakes, reasoning through ai mistakes
+Relationship: The concepts are related to the process of critically evaluating AI's mistakes and errors.
+Criteria: Participants interpret and analyze AI's mistakes to understand the underlying reasons.
+Phrase: Analyzes AI mistakes.
+
+3.
+Concepts: notices incomplete ai responses, identifying incomplete ai outputs
+Relationship: The concepts are related to the identification of incomplete or missing information in AI responses.
+Criteria: Participants notice and identify incomplete AI responses and outputs.
+Phrase: Identifies incomplete AI responses.
+
+4.
+Concepts: describing ai misunderstandings, identifying ai misunderstandings
+Relationship: The concepts are related to the recognition and description of AI misunderstandings and misinterpretations.
+Criteria: Participants describe and identify AI misunderstandings and misinterpretations.
+Phrase: Describes AI misunderstandings.
+
+5.
+Concepts: frustrated with error messages, frustrated with unclear error messages, experiences difficulties with unclear error messages, confused by unclear error messages, expressing frustration with error messages
+Relationship: The concepts are related to the negative experiences and emotions associated with unclear or unhelpful error messages.
+Criteria: Participants experience frustration and difficulties with unclear error messages.
+Phrase: Expresses frustration with unclear error messages.
+
+6.
+Concepts: human-ai conflict, struggling with ai interfaces
+Relationship: The concepts are related to the challenges and conflicts that arise when interacting with AI-driven interfaces.
+Criteria: Participants experience conflict and struggle with AI-driven interfaces.
+Phrase: Experiences human-AI conflict.
+
+7.
+Concepts: reports limited ai options, critiques ai-provided options
+Relationship: The concepts are related to the limitations and critiques of AI-provided options and responses.
+Criteria: Participants report limited options and critique AI-provided options.
+Phrase: Critiques AI-provided options.
+
+8.
+Concepts: dislikes limited ai options, expresses frustration with limited options
+Relationship: The concepts are related to the negative emotions and experiences associated with limited AI options.
+Criteria: Participants dislike and express frustration with limited AI options.
+Phrase: Expresses frustration with limited options.
+
+9.
+Concepts: expressing frustration with ai, expressing frustration with ai limitations
+Relationship: The concepts are related to the negative emotions and experiences associated with AI limitations and performance.
+Criteria: Participants express frustration with AI limitations and performance.
+Phrase: Expresses frustration with AI limitations.
+
+10.
+Concepts: evaluating ai error messages, expressing frustration with ai output, expressing frustration with ai errors
+Relationship: The concepts are related to the evaluation and criticism of AI error messages and outputs.
+Criteria: Participants evaluate and express frustration with AI error messages and outputs.
+Phrase: Evaluates AI error messages.
+
+11.
+Concepts: adjusts model setup, adjusts model setup based on ai output
+Relationship: The concepts are related to the process of adjusting and refining model setup based on AI output.
+Criteria: Participants adjust model setup based on AI output.
+Phrase: Adjusts model setup based on AI output.
+
+12.
+Concepts: abandonment after ai repetition, abandons ai assistance due to unsatisfactory results
+Relationship: The concepts are related to the decision to abandon AI assistance due to unsatisfactory results or repetition.
+Criteria: Participants abandon AI assistance due to unsatisfactory results or repetition.
+Phrase: Abandons AI assistance.
+
+13.
+Concepts: deals with older versions, faces compatibility issues, encounters older netlogo functionalities
+Relationship: The concepts are related to the challenges and issues associated with using older versions of AI systems or NetLogo.
+Criteria: Participants deal with older versions and face compatibility issues.
+Phrase: Deals with older versions.
+
+14.
+Concepts: primarily uses chatgpt 3.5, is familiar with chatgpt 3.5
+Relationship: The concepts are related to the familiarity and primary use of a specific AI version (ChatGPT 3.5).
+Criteria: Participants primarily use and are familiar with ChatGPT 3.5.
+Phrase: Uses ChatGPT 3.5 primarily.
+
+15.
+Concepts: lacks experience with other ai versions, has limited experience with ai versions
+Relationship: The concepts are related to the lack of experience with other AI versions or limited experience with different AI versions.
+Criteria: Participants lack experience with other AI versions or have limited experience.
+Phrase: Lacks experience with other AI versions.
+
+16.
+Concepts: reflects on fragmented learning, reflects on fragmented learning sessions
+Relationship: The concepts are related to the reflection on the fragmented nature of professional learning.
+Criteria: Participants reflect on the fragmented nature of professional learning.
+Phrase: Reflects on fragmented learning.
+
+17.
+Concepts: highlights time constraints for learning, acknowledges time constraints for learning
+Relationship: The concepts are related to the recognition of time constraints for learning new extensions or concepts.
+Criteria: Participants highlight and acknowledge time constraints for learning.
+Phrase: Acknowledges time constraints for learning.
+
+18.
+Concepts: reflecting on programming experience, reflecting on prior programming experience
+Relationship: The concepts are related to the reflection on prior programming experience and background.
+Criteria: Participants reflect on their prior programming experience and background.
+Phrase: Reflects on programming experience.
+
+19.
+Concepts: highlights undocumented knowledge, highlights importance of tacit knowledge
+Relationship: The concepts are related to the recognition of the importance of undocumented knowledge and expertise in software development.
+Criteria: Participants highlight the importance of undocumented knowledge and expertise.
+Phrase: Highlights importance of tacit knowledge.
+
+20.
+Concepts: ai as a knowledge preservation tool, discusses ai-based knowledge preservation
+Relationship: The concepts are related to the idea of AI as a knowledge preservation and retrieval tool.
+Criteria: Participants see AI as a knowledge preservation and retrieval tool.
+Phrase: Sees AI as a knowledge preservation tool.
+
+21.
+Concepts: reflects on fragmented knowledge, reflecting on knowledge in pieces
+Relationship: The concepts are related to the reflection on the fragmented nature of knowledge generation and sustenance.
+Criteria: Participants reflect on the fragmented nature of knowledge generation and sustenance.
+Phrase: Reflects on fragmented knowledge.
+
+22.
+Concepts: appreciate in-workspace documentation, appreciate in-workspace documentation search
+Relationship: The concepts are related to the appreciation for in-workspace documentation and search capabilities.
+Criteria: Participants appreciate in-workspace documentation and search capabilities.
+Phrase: Appreciates in-workspace documentation.
+
+23.
+Concepts: envisions context-specific documentation, identifies need for customized documentation
+Relationship: The concepts are related to the need for customized documentation tailored to specific contexts or user groups.
+Criteria: Participants envision and identify the need for customized documentation.
+Phrase: Envisions context-specific documentation.
+
+24.
+Concepts: envisioning ai-assisted documentation customization, envisions ai-driven documentation customization
+Relationship: The concepts are related to the idea of AI-assisted documentation customization.
+Criteria: Participants envision AI-assisted documentation customization.
+Phrase: Envisions AI-assisted documentation customization.
+
+25.
+Concepts: values interface support, values parameter clarification
+Relationship: The concepts are related to the importance of interface support and parameter clarification.
+Criteria: Participants value interface support and parameter clarification.
+Phrase: Values interface support.
+
+26.
+Concepts: desires flexible ai interactions, desires flexible ai interactions for experts
+Relationship: The concepts are related to the desire for more flexible AI interactions, especially for experts.
+Criteria: Participants desire more flexible AI interactions, especially for experts.
+Phrase: Desires flexible AI interactions.
+
+27.
+Concepts: desires ai interaction control, desire for greater control
+Relationship: The concepts are related to the desire for more control over AI interactions.
+Criteria: Participants desire more control over AI interactions.
+Phrase: Desires AI interaction control.
+
+28.
+Concepts: valuing code simplicity and maintainability, emphasizing code quality and maintainability, prioritizing code readability and simplicity
+Relationship: The concepts are related to the importance of code simplicity, maintainability, and readability.
+Criteria: Participants value and prioritize code simplicity, maintainability, and readability.
+Phrase: Values code simplicity and maintainability.
+
+29.
+Concepts: quality, preferring simple, maintainable code
+Relationship: The concepts are related to the preference for simple, maintainable code.
+Criteria: Participants prefer simple, maintainable code.
+Phrase: Prefers simple, maintainable code.
+
+30.
+Concepts: preferring readable code, valuing clear documentation
+Relationship: The concepts are related to the preference for readable code and clear documentation.
+Criteria: Participants prefer readable code and value clear documentation.
+Phrase: Prefers readable code.
+
+31.
+Concepts: appreciates clear code, values coding clarity
+Relationship: The concepts are related to the appreciation for clear and simple code.
+Criteria: Participants appreciate and value clear and simple code.
+Phrase: Appreciates clear code.
+
+32.
+Concepts: notes ai's adherence to best practices, observes ai's adherence to best practices, recognizes ai's adherence to best practices
+Relationship: The concepts are related to the recognition of AI's adherence to best practices.
+Criteria: Participants note, observe, and recognize AI's adherence to best practices.
+Phrase: Recognizes AI's adherence to best practices.
+
+Let me know if you need any further assistance!

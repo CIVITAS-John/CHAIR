@@ -1,0 +1,236 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (24 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+24.
+Criteria: {Who did what, and how for code 24}
+Label: {A descriptive label of code 24}
+---
+~~~
+1.
+Label: prefers straightforward tasks
+Quotes:
+- E04: The typical idea that I had was like a very, very simple neural network. (interviewer's observation) Task: a very simple neural network
+
+2.
+Label: pointing to a potential bug in the system
+Quotes:
+- E04: maybe you saw something that I didn't, but from my perspective, it seemed as though the code was set up appropriately, but it was marking the syntax as wrong. So maybe I was missing something, but I didn't see anything missing. So that was kind of frustrating. (interviewer's observation) Shows error messages even when it seems to be correct (that's a bug identified)
+
+3.
+Label: ai might be able to save people's time
+Quotes:
+- E01: But if a tool can do your, can do most of your work in five minutes, why would you spend two weeks? ... I would never hire someone who spent two weeks solving a problem that they could do in five minutes. (interviewer's observation) AI might be able to save people's time.
+
+4.
+Label: uses ai for developing equations in agent based models
+Quotes:
+- E04: I use it a lot for developing like, equations for specific like, aspects of agent-based models that I create. (interviewer's observation) Helpful for creating equations
+
+5.
+Label: demonstrating preference for human to human knowledge transfer
+Quotes:
+- E04: So maybe I didn't prove it today, but I feel like I'm pretty competent with NetLogo. (interviewer's observation) Prefers helping others learn NetLogo.
+
+6.
+Label: chat gpt helping with vba task
+Quotes:
+- E01: I want to do this in visual basic... So I made a spreadsheet and I asked ChatGPT, how do you do this? And it wrote the code and the code worked out of the box. (interviewer's observation) ChatGPT helped with a VBA task out of the box before.
+
+7.
+Label: relies on ai for syntax support
+Quotes:
+- E04: "how to define breeds in netlogo" (interviewer's observation) E04 tries to find certain syntax structures from the AI-generated code and ask for it when it is not there.
+
+8.
+Label: filling in parameter fields
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 dictated each of the parameter fields.
+
+9.
+Label: copying error messages
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 was prompted to copy and paste error messages to ChatGPT.
+
+10.
+Label: ai's limitations and potential errors
+Quotes:
+- E01: Some of this advice may be wrong. Use your good judgment. This is like Apple maps in 2010 or whatever, that tells you to turn right into the river and you have to go. (interviewer's observation) Users need to use their own judgment to evaluate ChatGPT's responses.
+
+11.
+Label: identifying gap in problem conceptualization abilities
+Quotes:
+- E01: In terms of learning experiences, like ramping up to using an assistant wrapping up to using ChatGPT might have some sort of evaluates. How well can you write instructions for another person? Some people just don't know how to conceptualize a problem. (interviewer's observation) E01 discusses how "writing instructions" is a capability that is missing on many people, and that is key to work with AI.
+
+12.
+Label: recognizing its learning potential
+Quotes:
+- E01: This is what conversations with ChatGPT typically look like. I had to go through about eight separate times to get all the errors out of it.  But, but look at how it structured the code. Look at the things that did look what you could learn from this. This is valuable. (interviewer's observation) Users may benefit from the iterative debugging process during working with AI, even though AI might give wrong answers.
+
+13.
+Label: critiques limited options
+Quotes:
+- E04: Like in this type of, like, like I was saying with this window, for example, where it's giving you the options and basically there was that one time where the only option was for it to explain itself.  Which makes sense, but it'd be nice if I could just kind of like forego that and just keep doing, you know, But you know, for someone that's probably not as useful for someone who's like still learning, but like, I guess for someone who's more experienced, it's nice to be able to just like skip over things that you already know. (interviewer's observation) Options too limited; tension between a novice-oriented/expert-oriented design.
+
+14.
+Label: experimenting with phrases to get correct search results
+Quotes:
+- E04: "I want to create a neural network" - I want to see if it actually pulls up the model. (interviewer's observation) E04 experiments with the AI to see what phrases could give a correct search result.
+
+15.
+Label: recognizing ai strengths
+Quotes:
+- E04: It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent. (interviewer's observation) Better troubleshooting capability.
+
+16.
+Label: discussing how ai could be used to preserve
+Quotes:
+- E01: So one of the things that certainly about ChatGPT is, or whatever the AI tool is that you build, is that it will probably always be advancing, and always stay pretty close to the state of the art about all these things. So if it has, especially if it has a hive business, so that if any user discovers something, they can feed it back into the system. And then everybody knows it now. (interviewer's observation) AI could be used to preserve, process, and retrieve fragmented knowledge generated by human as a collaboration process.
+
+17.
+Label: e04 expresses frustration with limited troubleshooting options
+Quotes:
+- E04: So, I guess that's kind of annoying because I didn't really want it to explain here, but that was the only option that I had. (interviewer's observation) E04 wants the "fix" option right after the errors are identified.
+
+18.
+Label: requests verification
+Quotes:
+- E01: "can you verify that no more names are reserved words in NetLogo?" I don't know if it can do that. (interviewer's observation) When E01 sees a bug after the third iteration, he asks ChatGPT to verify the code and produce no more bug. Unsure if it could do that.
+
+19.
+Label: envisioning ai as a collaborative tool for knowledge preservation and processing
+Quotes:
+- E01: So one of the things that certainly about ChatGPT is, or whatever the AI tool is that you build, is that it will probably always be advancing, and always stay pretty close to the state of the art about all these things. So if it has, especially if it has a hive business, so that if any user discovers something, they can feed it back into the system. And then everybody knows it now. (interviewer's observation) AI could be used to preserve, process, and retrieve fragmented knowledge generated by human as a collaboration process.
+
+20.
+Label: valuing effective human ai collaboration
+Quotes:
+- E01: I've observed when I tried to suggest ChatGPT to other people, they're, um, they are amazed at the output that I can get. And that's because I know how to ask six questions in a row to zero in on what I'm after. (interviewer's observation) To maximize the capability of ChatGPT, one needs to know how to iteratively ask questions.
+- E01: If you know how to ask iterative questions, I think it could do pretty well. (interviewer's observation) E01 thinks ChatGPT would do well if one knows how to ask iterative questions.
+
+21.
+Label: appreciating ai capabilities
+Quotes:
+- E04: Oh and you can run it. That's cool. (interviewer's observation) E04 reads the AI output and decides to copy & paste it although he could also run it.
+
+22.
+Label: highlighting the limitations of time and attention
+Quotes:
+- E01: So one of the, one of the things which I have observed, as I'm bouncing from like, because I do a lot of different languages and potentially, so I don't have that much time to spend in anyone. (interviewer's observation) As an expert, E01 knows many languages but does not have much time for each one.
+
+23.
+Label: there's a lot of extensions i would love to know about gis extensions, but i have very limited time. what could i do in two hours? and i think everybody has a very finite length of time
+Quotes:
+- E01: There's a lot of extensions I would love to know about GIS extensions, but I have very limited time. What could I do in two hours? And I think everybody has a very finite length of time. (interviewer's observation) AI could potentially save time for learning new extensions (compared with core concepts) of NetLogo.
+
+24.
+Label: acknowledges partial success
+Quotes:
+- E04: It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent. (interviewer's observation) Better troubleshooting capability.
+===
+Here are the definitions for each code:
+
+---
+1. 
+Criteria: Participant expresses a preference for simple tasks.
+Label: Prefers simplicity.
+
+2. 
+Criteria: Participant identifies a potential error or bug in the system.
+Label: Identifies system errors.
+
+3. 
+Criteria: Participant suggests that AI could save people time and effort.
+Label: AI as time-saver.
+
+4. 
+Criteria: Participant uses AI for developing equations in agent-based models.
+Label: AI for equation development.
+
+5. 
+Criteria: Participant expresses a preference for human-to-human knowledge transfer.
+Label: Prefers human guidance.
+
+6. 
+Criteria: Participant describes a successful experience using ChatGPT for a VBA task.
+Label: AI-assisted task completion.
+
+7. 
+Criteria: Participant relies on AI for syntax support and guidance.
+Label: AI-based syntax support.
+
+8. 
+Criteria: Participant fills in parameter fields with AI-generated code.
+Label: AI-assisted coding.
+
+9. 
+Criteria: Participant copies error messages to seek AI assistance.
+Label: AI-based error resolution.
+
+10. 
+Criteria: Participant cautions against relying solely on AI-generated responses.
+Label: AI limitations and errors.
+
+11. 
+Criteria: Participant identifies a gap in problem conceptualization abilities.
+Label: Gap in problem conceptualization.
+
+12. 
+Criteria: Participant recognizes the learning potential of working with AI.
+Label: AI-based learning opportunities.
+
+13. 
+Criteria: Participant critiques the limited options provided by the AI system.
+Label: Limited AI options.
+
+14. 
+Criteria: Participant experiments with phrases to get correct search results.
+Label: Experimenting with AI inputs.
+
+15. 
+Criteria: Participant recognizes the strengths of AI in troubleshooting.
+Label: AI troubleshooting capabilities.
+
+16. 
+Criteria: Participant discusses the potential of AI for preserving and processing knowledge.
+Label: AI-based knowledge preservation.
+
+17. 
+Criteria: Participant expresses frustration with limited troubleshooting options.
+Label: Frustration with AI limitations.
+
+18. 
+Criteria: Participant requests verification of AI-generated code.
+Label: Seeking code verification.
+
+19. 
+Criteria: Participant envisions AI as a collaborative tool for knowledge preservation and processing.
+Label: AI-based collaboration.
+
+20. 
+Criteria: Participant values effective human-AI collaboration.
+Label: Effective human-AI collaboration.
+
+21. 
+Criteria: Participant appreciates the capabilities of AI.
+Label: Appreciating AI capabilities.
+
+22. 
+Criteria: Participant highlights the limitations of time and attention.
+Label: Time and attention constraints.
+
+23. 
+Criteria: Participant expresses a desire to learn about new extensions but is limited by time.
+Label: Time-limited learning.
+
+24. 
+Criteria: Participant acknowledges partial success with AI-assisted troubleshooting.
+Label: Partial AI success.

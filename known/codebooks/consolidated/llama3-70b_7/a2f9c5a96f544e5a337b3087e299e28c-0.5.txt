@@ -1,0 +1,382 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: importance of user expertise, emphasizing the need for expertise, requiring expertise to understand errors
+- Highlights the importance of user expertise in understanding and debugging code.
+- Highlights the importance of expertise in understanding and fixing errors in AI-generated code.
+- The participant recognizes the need for expertise to understand errors and debug them, highlighting the importance of domain knowledge.
+
+2.
+Concepts: the need for human judgment, recognizing need for human oversight
+- Recognizing the need for human judgment when using AI-generated code.
+- Recognizes the need for human oversight, as ChatGPT may miss code structures.
+
+3.
+Concepts: silently debugging generated code, silently troubleshooting ai errors
+- Silently debugs generated code, trying to understand and fix errors.
+- Participant troubleshoots AI-generated errors without seeking explanations.
+
+4.
+Concepts: debug independently, problem-solving skills, manually reading code to debug
+- Participants independently read through and attempt to debug generated code.
+- The participant demonstrates problem-solving skills, such as reading through code and trying to debug.
+- Reads through code manually to debug and identify errors.
+
+5.
+Concepts: debugging with chatgpt, seeking help with debugging
+- Asks ChatGPT to debug code with error messages, describing previous experiences.
+- Seeks help with debugging, experiencing challenges in debugging AI-generated code.
+
+6.
+Concepts: experiences debugging frustration, frustration with perceived bugs
+- Experiences frustration with debugging
+- Expressing frustration with perceived bugs or errors in AI-generated code.
+
+7.
+Concepts: valuing iterative debugging, reflection on learning and debugging, benefiting from iterative debugging
+- Participants recognize value in iterative debugging processes despite initial errors
+- The participant reflects on the learning process and the value of iterative debugging.
+- The participant benefits from the iterative debugging process.
+
+8.
+Concepts: ai debugging optimism, willingness to use ai for debugging
+- Expresses optimism about AI's debugging potential.
+- Demonstrates willingness to use AI for debugging.
+
+9.
+Concepts: recalling ai debugging experiences, sharing debugging experience
+- Recalling previous AI debugging experiences.
+- The participant shares their debugging experience with LLM-driven interfaces.
+
+10.
+Concepts: debugging with ai, practicing iterative debugging
+- Participants use AI for debugging and error resolution, exhibiting expert debugging behavior
+- Engages in iterative debugging processes with AI, despite potential errors, practicing iterative error fixing.
+
+11.
+Concepts: identifying conceptual errors, distinguishing between syntax and conceptual errors
+- AI should support identifying conceptual errors, not just syntax mistakes.
+- The participant distinguishes between syntax and conceptual errors, highlighting the need for LLM-driven interfaces to support identifying conceptual mistakes.
+
+12.
+Concepts: calls for conceptual error detection, need for advanced error detection, human-effort: conceptual error detection
+- The interviewee calls for conceptual error detection in AI-driven systems.
+- The participant expresses a need for advanced error detection capabilities, such as identifying conceptual mistakes.
+- The participant highlights the importance of conceptual error detection.
+
+13.
+Concepts: linting features, suggests linting features for conceptual errors
+- Desires linting features to identify conceptual mistakes in code.
+- Participants identify the need for NetLogo linting features to detect conceptual errors.
+
+14.
+Concepts: not just syntax errors, suggesting need for improved error reporting
+- Expressing the need for NetLogo to identify conceptual errors beyond syntax errors.
+- Suggesting the need for improved error reporting in NetLogo.
+
+15.
+Concepts: considers error messages, demonstrates careful error analysis
+- The participant reads and considers error messages before making decisions.
+- The participant demonstrates a careful error analysis approach before making decisions.
+
+16.
+Concepts: desire for efficient debugging, wanting immediate error resolution
+- Desires immediate error-fixing options and efficient debugging processes.
+- Participants want and seek immediate error resolution.
+
+17.
+Concepts: prioritizing error fixing, prioritizing error analysis
+- The interviewee prioritizes fixing errors over explanations.
+- The participant prioritizes error analysis and debugging when working with LLM-driven interfaces.
+
+18.
+Concepts: error explanation, values error clarification
+- Describes the error that the user does not understand
+- Clarifies error codes and syntax for users, especially beginners.
+
+19.
+Concepts: encountering incorrect error messages, finding error messages misleading
+- Encounters incorrect error messages from AI
+- Participants experience challenges with unclear error messages and get stuck.
+
+20.
+Concepts: bug identification, identify potential ai bugs
+- Points out potential bugs in the system, such as incorrect error messages.
+- Participants identify potential bugs in AI-driven interfaces, suspecting errors.
+
+21.
+Concepts: identifying limitations in error fixing, identifying user interface limitations
+- Identifying inability to fix certain errors.
+- Identifies limitations in the user interface, wanting a "fix" option after errors are identified.
+
+22.
+Concepts: error message importance, debug: unhelpful error messages
+- Focuses on error messages in debugging.
+- Criticizing the error messages provided by the system
+
+23.
+Concepts: better error messaging, improving error feedback
+- Calls for better error messaging.
+- Suggesting improvements in error feedback for better troubleshooting.
+
+24.
+Concepts: discussing human time constraints, discussing time constraints for language learning
+- Participants discuss the limitations of human time and attention.
+- Participants discuss time constraints for learning each language.
+
+25.
+Concepts: identifies time constraints, time constraints for learning extensions
+- Identifies time constraints as a barrier to learning NetLogo and sees AI as a potential solution.
+- The participant highlights time constraints for learning new extensions in NetLogo.
+
+26.
+Concepts: limited time for language expertise, acknowledging time constraints for language learning
+- The participant acknowledges the challenge of not having much time to spend on any single programming language as an expert.
+- The interviewee acknowledges the time constraints of learning multiple languages.
+
+27.
+Concepts: limited learning time, time and attention constraints
+- Acknowledges limited time for learning and mastering new skills.
+- Acknowledging the constraints of time and attention in learning and using AI.
+
+28.
+Concepts: reflecting on prior programming experience, share prior programming experience
+- Reflecting on extensive programming experience in various languages.
+- The participant shares prior experiences in computer programming, highlighting their background and expertise.
+
+29.
+Concepts: eclectic programming background, familiarity with diverse software development environments
+- Highlighting eclectic programming background, emphasizing diverse experience and knowledge.
+- Has prior experience with diverse software development environments.
+
+30.
+Concepts: managing multiple languages, juggling multiple languages and time constraints, managing multiple programming languages
+- Knowing many languages but not having much time to spend on each one, recognizing the importance of efficiency.
+- Juggles multiple languages and time constraints as an expert.
+- Balances expertise across multiple programming languages with time constraints.
+
+31.
+Concepts: identify novice coding habits, recognize beginner coding challenges, describing beginner coding practices
+- Participants observe novice coding habits and errors.
+- Participants recognize that beginners often write chunks of code, leading to multiple errors.
+- Participants describe common coding habits or mistakes made by beginners.
+
+32.
+Concepts: noting lack of debugging skills, novice debugging limitations
+- Notes the lack of debugging skills among beginners.
+- The interviewee notes that novices may lack debugging skills, which could hinder their ability to collaborate with AI.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: importance of user expertise, emphasizing the need for expertise, requiring expertise to understand errors
+Relationship: The concepts are interrelated, highlighting the significance of user expertise in understanding and debugging code.
+Criteria: Users with expertise understand and debug code, emphasizing the need for domain knowledge.
+Phrase: Recognizing the importance of user expertise.
+
+2.
+Concepts: the need for human judgment, recognizing need for human oversight
+Relationship: The concepts are complementary, stressing the necessity of human judgment and oversight in AI-generated code.
+Criteria: Users recognize the need for human judgment and oversight when using AI-generated code.
+Phrase: Recognizing the need for human judgment.
+
+3.
+Concepts: silently debugging generated code, silently troubleshooting ai errors
+Relationship: The concepts are closely related, describing the process of debugging generated code without seeking explanations.
+Criteria: Users silently debug generated code, trying to understand and fix errors.
+Phrase: Silently debugging generated code.
+
+4.
+Concepts: debug independently, problem-solving skills, manually reading code to debug
+Relationship: The concepts are interconnected, highlighting the importance of independent debugging and problem-solving skills.
+Criteria: Users independently read through and attempt to debug generated code, demonstrating problem-solving skills.
+Phrase: Debugging independently.
+
+5.
+Concepts: debugging with chatgpt, seeking help with debugging
+Relationship: The concepts are complementary, describing the process of seeking help with debugging using ChatGPT.
+Criteria: Users seek help with debugging, asking ChatGPT to debug code with error messages.
+Phrase: Seeking help with debugging.
+
+6.
+Concepts: experiences debugging frustration, frustration with perceived bugs
+Relationship: The concepts are closely related, describing the experience of frustration during debugging.
+Criteria: Users experience frustration with debugging, expressing frustration with perceived bugs or errors.
+Phrase: Experiencing debugging frustration.
+
+7.
+Concepts: valuing iterative debugging, reflection on learning and debugging, benefiting from iterative debugging
+Relationship: The concepts are interrelated, highlighting the value of iterative debugging in the learning process.
+Criteria: Users recognize the value in iterative debugging processes, reflecting on the learning process and benefiting from it.
+Phrase: Valuing iterative debugging.
+
+8.
+Concepts: ai debugging optimism, willingness to use ai for debugging
+Relationship: The concepts are complementary, describing the optimism and willingness to use AI for debugging.
+Criteria: Users express optimism about AI's debugging potential, demonstrating willingness to use AI for debugging.
+Phrase: Expressing AI debugging optimism.
+
+9.
+Concepts: recalling ai debugging experiences, sharing debugging experience
+Relationship: The concepts are closely related, describing the process of recalling and sharing AI debugging experiences.
+Criteria: Users recall and share their debugging experiences with LLM-driven interfaces.
+Phrase: Recalling AI debugging experiences.
+
+10.
+Concepts: debugging with ai, practicing iterative debugging
+Relationship: The concepts are complementary, describing the process of debugging with AI and practicing iterative debugging.
+Criteria: Users practice iterative debugging with AI, exhibiting expert debugging behavior.
+Phrase: Debugging with AI.
+
+11.
+Concepts: identifying conceptual errors, distinguishing between syntax and conceptual errors
+Relationship: The concepts are interrelated, highlighting the importance of distinguishing between syntax and conceptual errors.
+Criteria: Users distinguish between syntax and conceptual errors, recognizing the need for LLM-driven interfaces to support identifying conceptual mistakes.
+Phrase: Distinguishing between syntax and conceptual errors.
+
+12.
+Concepts: calls for conceptual error detection, need for advanced error detection, human-effort: conceptual error detection
+Relationship: The concepts are closely related, describing the need for conceptual error detection and advanced error detection capabilities.
+Criteria: Users call for conceptual error detection in AI-driven systems, expressing a need for advanced error detection capabilities.
+Phrase: Calling for conceptual error detection.
+
+13.
+Concepts: linting features, suggests linting features for conceptual errors
+Relationship: The concepts are complementary, describing the need for linting features to identify conceptual mistakes.
+Criteria: Users desire linting features to identify conceptual mistakes in code, suggesting the need for NetLogo linting features.
+Phrase: Suggesting linting features.
+
+14.
+Concepts: not just syntax errors, suggesting need for improved error reporting
+Relationship: The concepts are closely related, highlighting the need for improved error reporting beyond syntax errors.
+Criteria: Users suggest the need for improved error reporting in NetLogo, going beyond syntax errors.
+Phrase: Suggesting improved error reporting.
+
+15.
+Concepts: considers error messages, demonstrates careful error analysis
+Relationship: The concepts are interrelated, describing the process of considering error messages and demonstrating careful error analysis.
+Criteria: Users read and consider error messages before making decisions, demonstrating a careful error analysis approach.
+Phrase: Considering error messages.
+
+16.
+Concepts: desire for efficient debugging, wanting immediate error resolution
+Relationship: The concepts are complementary, describing the desire for efficient debugging and immediate error resolution.
+Criteria: Users desire immediate error-fixing options and efficient debugging processes.
+Phrase: Desiring efficient debugging.
+
+17.
+Concepts: prioritizing error fixing, prioritizing error analysis
+Relationship: The concepts are closely related, highlighting the importance of prioritizing error fixing and analysis.
+Criteria: Users prioritize fixing errors over explanations, prioritizing error analysis and debugging.
+Phrase: Prioritizing error fixing.
+
+18.
+Concepts: error explanation, values error clarification
+Relationship: The concepts are interrelated, describing the importance of error explanation and clarification.
+Criteria: Users clarify error codes and syntax for users, especially beginners, describing the error that the user does not understand.
+Phrase: Valuing error explanation.
+
+19.
+Concepts: encountering incorrect error messages, finding error messages misleading
+Relationship: The concepts are closely related, describing the experience of encountering incorrect error messages.
+Criteria: Users encounter incorrect error messages from AI, experiencing challenges with unclear error messages.
+Phrase: Encountering incorrect error messages.
+
+20.
+Concepts: bug identification, identify potential ai bugs
+Relationship: The concepts are complementary, describing the process of identifying potential bugs in AI-driven interfaces.
+Criteria: Users identify potential bugs in AI-driven interfaces, suspecting errors.
+Phrase: Identifying potential AI bugs.
+
+21.
+Concepts: identifying limitations in error fixing, identifying user interface limitations
+Relationship: The concepts are closely related, highlighting the limitations of error fixing and user interface limitations.
+Criteria: Users identify limitations in error fixing, wanting a "fix" option after errors are identified, and recognize user interface limitations.
+Phrase: Identifying error fixing limitations.
+
+22.
+Concepts: error message importance, debug: unhelpful error messages
+Relationship: The concepts are interrelated, describing the importance of error messages in debugging.
+Criteria: Users focus on error messages in debugging, criticizing the error messages provided by the system.
+Phrase: Focusing on error messages.
+
+23.
+Concepts: better error messaging, improving error feedback
+Relationship: The concepts are complementary, describing the need for better error messaging and improving error feedback.
+Criteria: Users call for better error messaging, suggesting improvements in error feedback for better troubleshooting.
+Phrase: Calling for better error messaging.
+
+24.
+Concepts: discussing human time constraints, discussing time constraints for language learning
+Relationship: The concepts are closely related, describing the discussion of human time constraints and language learning.
+Criteria: Users discuss the limitations of human time and attention, discussing time constraints for learning each language.
+Phrase: Discussing human time constraints.
+
+25.
+Concepts: identifies time constraints, time constraints for learning extensions
+Relationship: The concepts are interrelated, highlighting the time constraints as a barrier to learning NetLogo and AI as a potential solution.
+Criteria: Users identify time constraints as a barrier to learning NetLogo, seeing AI as a potential solution, and highlight time constraints for learning new extensions.
+Phrase: Identifying time constraints.
+
+26.
+Concepts: limited time for language expertise, acknowledging time constraints for language learning
+Relationship: The concepts are closely related, describing the acknowledgment of time constraints for language learning.
+Criteria: Users acknowledge the challenge of not having much time to spend on any single programming language as an expert, acknowledging time constraints.
+Phrase: Acknowledging time constraints.
+
+27.
+Concepts: limited learning time, time and attention constraints
+Relationship: The concepts are interrelated, highlighting the constraints of time and attention in learning and using AI.
+Criteria: Users acknowledge limited time for learning and mastering new skills, recognizing the constraints of time and attention.
+Phrase: Acknowledging limited learning time.
+
+28.
+Concepts: reflecting on prior programming experience, share prior programming experience
+Relationship: The concepts are closely related, describing the process of reflecting on and sharing prior programming experience.
+Criteria: Users reflect on extensive programming experience in various languages, sharing prior experiences in computer programming.
+Phrase: Reflecting on prior programming experience.
+
+29.
+Concepts: eclectic programming background, familiarity with diverse software development environments
+Relationship: The concepts are interrelated, highlighting the eclectic programming background and familiarity with diverse software development environments.
+Criteria: Users highlight eclectic programming background, emphasizing diverse experience and knowledge, and have prior experience with diverse software development environments.
+Phrase: Highlighting eclectic programming background.
+
+30.
+Concepts: managing multiple languages, juggling multiple languages and time constraints, managing multiple programming languages
+Relationship: The concepts are closely related, describing the process of managing multiple languages and time constraints.
+Criteria: Users know many languages but not having much time to spend on each one, recognizing the importance of efficiency, juggle multiple languages and time constraints, and balance expertise across multiple programming languages.
+Phrase: Managing multiple languages.
+
+31.
+Concepts: identify novice coding habits, recognize beginner coding challenges, describing beginner coding practices
+Relationship: The concepts are interrelated, describing the process of identifying novice coding habits and recognizing beginner coding challenges.
+Criteria: Users observe novice coding habits and errors, recognize that beginners often write chunks of code, leading to multiple errors, and describe common coding habits or mistakes made by beginners.
+Phrase: Identifying novice coding habits.
+
+32.
+Concepts: noting lack of debugging skills, novice debugging limitations
+Relationship: The concepts are closely related, highlighting the lack of debugging skills among beginners.
+Criteria: Users note the lack of debugging skills among beginners, recognizing that novices may lack debugging skills, which could hinder their ability to collaborate with AI.
+Phrase: Noting lack of debugging skills.

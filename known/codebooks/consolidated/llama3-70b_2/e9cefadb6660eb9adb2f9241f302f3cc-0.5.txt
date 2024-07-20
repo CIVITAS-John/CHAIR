@@ -1,0 +1,381 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: rethinking learning approaches, critiquing traditional documentation
+- Participants critique traditional learning methods and rethink learning approaches.
+- Participants critique traditional documentation methods.
+
+2.
+Concepts: envisioning context-specific documentation, highlighting need for context-specific documentation
+- Envisions context-specific documentation.
+- Participants highlight the need for context-specific documentation.
+
+3.
+Concepts: experiencing debugging frustration, highlighting error-fixing difficulties
+- Participants experience frustration while debugging.
+- Users highlight the difficulty of fixing multiple errors in code.
+
+4.
+Concepts: identify error handling needs, suggest improved error feedback
+- Identifies the need for more robust troubleshooting and recovery mechanisms and better error reporting.
+- The participant suggests a need for clearer error communication and improvements in error feedback for better troubleshooting.
+
+5.
+Concepts: human-ai collaboration: ai supports debugging, collaborate with ai for troubleshooting and debugging
+- The user sees the AI as a helpful observer that can point out errors they didn't realize.
+- Participants highlight the benefits of human-AI collaboration in troubleshooting and debugging.
+
+6.
+Concepts: engaging in iterative debugging, reflecting on iterative debugging
+- Participants learn from AI interactions to engage in iterative debugging.
+- Participants reflect on how novices might get stuck to reflect on iterative debugging.
+
+7.
+Concepts: prepares for next steps, prioritizes error analysis
+- The interviewee prepares for next steps, reading error messages before making a choice.
+- The interviewee notes and prioritizes analyzing error messages before making a choice.
+
+8.
+Concepts: exhibits expert debugging behavior, exhibits confidence in debugging skills
+- The interviewee displays expert-level debugging skills.
+- The interviewee exhibits confidence in their personal debugging skills.
+
+9.
+Concepts: identifies conceptual errors, seeks error detection
+- The interviewee identifies conceptual errors in code.
+- The interviewee seeks error detection in NetLogo code and demonstrates critical thinking in fixing NetLogo mistakes.
+
+10.
+Concepts: seeks better error explanations, seeks better problem conceptualization
+- The interviewee seeks better error explanations.
+- The interviewee seeks better problem conceptualization.
+
+11.
+Concepts: interacts with ai strategically, has experience with ai debugging
+- The interviewee demonstrates strategic interaction with AI to debug code effectively.
+- The interviewee describes their previous practice of asking ChatGPT to debug code.
+
+12.
+Concepts: appreciates ai-assisted debugging, expresses confidence in ai's potential
+- The interviewee appreciates the debugging capability of the AI interface.
+- The interviewee expresses confidence in AI's potential to improve debugging capabilities.
+
+13.
+Concepts: commenting on code output, summarizes code functionality
+- Interviewees read and comment on code by commenting on code output.
+- The interviewee summarizes or interprets the functionality of the generated code.
+
+14.
+Concepts: requests detailed code review, evaluates code thoroughly
+- The interviewee asks for a comprehensive review of the code.
+- The interviewee carefully reads and evaluates the code, asking questions to clarify.
+
+15.
+Concepts: valuing code clarity, appreciating executable code
+- Interviewees value code that is clear and readable by valuing clear documentation and prioritizing code readability.
+- Interviewees value executable code and its potential benefits by appreciating well-organized, commented, and documented code.
+
+16.
+Concepts: conducting careful code review, emphasizing code quality and readability
+- Interviewees read through generated code carefully before use by highlighting the importance of detailed reading.
+- Interviewees discuss code quality, complexity, and maintainability by emphasizing the importance of code quality and readability.
+
+17.
+Concepts: emphasizes code validation and debugging, emphasizes practice and design outlines
+- The interviewee highlights the importance of code validation and debugging.
+- The interviewee emphasizes the importance of practice and design outlines in programming.
+
+18.
+Concepts: ai code adoption, selectively adopting ai-generated code, exercising discernment in ai-generated code adoption, deciding to copy ai-generated code
+- The interviewee decides to copy and run AI-generated code, despite some reservations or doubts.
+- Interviewees choose to execute AI-generated code by selectively adopting it.
+- Interviewees exercise human judgment in deciding what to do with AI-generated code by exercising discernment.
+- Interviewees decide to copy AI-generated code by exploring alternative actions.
+
+19.
+Concepts: discussing ai-driven interface roles, planning ai-assisted code optimization
+- Interviewees discuss AI-driven interface roles in coding by recognizing opportunities for code improvement.
+- Interviewees describe AI's assistance in optimizing and debugging code by planning for AI-assisted code optimization.
+
+20.
+Concepts: describes successful code generation, noting successful out-of-the-box code generation
+- Describes successful code generation by AI, highlighting its ability to provide working solutions.
+- Interviewees note that ChatGPT-generated code worked out of the box by highlighting successful out-of-the-box code generation.
+
+21.
+Concepts: longing for linters to catch structural issues, advocates for linting features
+- The interviewee longs for linters to catch structural issues in NetLogo.
+- Advocates for linting features in NetLogo to detect conceptual errors and identifies the need for linting features in NetLogo, desiring improved error detection and correction.
+
+22.
+Concepts: lint feature potential, seeks ai-powered linting
+- Sees lint features as a potential solution for conceptual errors.
+- The interviewee proposes AI-powered linting for conceptual error detection.
+
+23.
+Concepts: noting incomplete ai-generated code, identifying ai-generated code limitations, noting gaps in ai assistance
+- Interviewees note that AI-generated code may be incomplete by highlighting the lack of external verification.
+- Interviewees identify limitations or errors in AI-assisted coding tools by recognizing AI-generated code limitations.
+- Interviewees experience gaps in AI assistance by noting AI output sometimes lacks necessary code structures and identifying missing code elements.
+
+24.
+Concepts: prefers manual coding, prefers manual debugging
+- Participants prefer writing code manually.
+- Participants prefer manual debugging over using the "explain it" feature and prefer hands-on debugging and error-fixing.
+
+25.
+Concepts: debugs code manually, debugs independently
+- The interviewee debugs code manually and corrects it independently.
+- Participants demonstrate independence in error resolution and debug code independently without relying on AI or others.
+
+26.
+Concepts: debugs code silently, engages in silent adjustment
+- Participants debug AI code silently without verbalizing the process and review and amend code without explanation.
+- The participant engages in silent adjustment, manually fixing errors in the AI-generated code.
+
+27.
+Concepts: customizes ai-generated code, collaborating with ai to fix code
+- Participants customize AI-generated code for new purposes.
+- Participants use AI to fix code with their own ideas, proactively suggesting modifications to the AI's code and asking for help.
+
+28.
+Concepts: desires coding features, expressing desire for coding assistance tools
+- Participants desire coding features and automation.
+- Expressing desire for coding assistance tools
+
+29.
+Concepts: encounters outdated code, notices outdated code suggestions
+- Encounters outdated code from AI, highlighting the need for updates and maintenance.
+- User notices outdated code suggestions from AI, referencing older NetLogo versions, and notes that the AI's training data may be outdated, leading to issues with older versions of NetLogo.
+
+30.
+Concepts: deals with older netlogo versions, discusses outdated functionalities, writes code in older netlogo versions
+- Dealing with older NetLogo versions and managing compatibility issues with AI and older versions of NetLogo.
+- The participant discusses outdated functionalities or versions of NetLogo and faces compatibility issues with older versions of NetLogo.
+- Participants encounter and write code in older NetLogo versions, using AI-driven interfaces to generate code compatible with these versions, and write code in older versions of NetLogo due to AI's database limitations.
+
+31.
+Concepts: values teaching role, enjoys mentoring others in netlogo
+- Valuing the role of teaching and helping others learn NetLogo and preferring helping others learn NetLogo.
+- The interviewee enjoys mentoring others in NetLogo.
+
+32.
+Concepts: the need for a dictionary, seeks ai assistance for netlogo syntax, forgetting netlogo syntax
+- Expressing the need for a dictionary or reference guide for NetLogo syntax.
+- Relies on NetLogo dictionary and AI assistance for syntax support, seeks AI assistance for defining specific concepts or syntax in NetLogo, and uses NetLogo dictionary alongside AI, referencing external resources to aid in coding.
+- The participant forgets NetLogo syntax and uses the dictionary or AI for help.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: rethinking learning approaches, critiquing traditional documentation
+Relationship: Participants critique traditional learning methods and rethink learning approaches as a result of their dissatisfaction with traditional documentation.
+Criteria: Participants critique traditional learning methods and rethink learning approaches.
+Phrase: Rethink learning approaches.
+
+2.
+Concepts: envisioning context-specific documentation, highlighting need for context-specific documentation
+Relationship: Participants envision context-specific documentation because they highlight the need for it.
+Criteria: Participants envision and highlight the need for context-specific documentation.
+Phrase: Envision context-specific documentation.
+
+3.
+Concepts: experiencing debugging frustration, highlighting error-fixing difficulties
+Relationship: Participants experience debugging frustration because they highlight the difficulties of fixing errors.
+Criteria: Participants experience debugging frustration and highlight error-fixing difficulties.
+Phrase: Experience debugging frustration.
+
+4.
+Concepts: identify error handling needs, suggest improved error feedback
+Relationship: Participants identify error handling needs and suggest improved error feedback as a solution.
+Criteria: Participants identify error handling needs and suggest improved error feedback.
+Phrase: Identify error handling needs.
+
+5.
+Concepts: human-ai collaboration: ai supports debugging, collaborate with ai for troubleshooting and debugging
+Relationship: Participants collaborate with AI for troubleshooting and debugging because AI supports debugging.
+Criteria: Participants collaborate with AI for troubleshooting and debugging.
+Phrase: Collaborate with AI for debugging.
+
+6.
+Concepts: engaging in iterative debugging, reflecting on iterative debugging
+Relationship: Participants reflect on iterative debugging as a result of engaging in it.
+Criteria: Participants engage in and reflect on iterative debugging.
+Phrase: Engage in iterative debugging.
+
+7.
+Concepts: prepares for next steps, prioritizes error analysis
+Relationship: Participants prepare for next steps by prioritizing error analysis.
+Criteria: Participants prepare for next steps by prioritizing error analysis.
+Phrase: Prepare for next steps.
+
+8.
+Concepts: exhibits expert debugging behavior, exhibits confidence in debugging skills
+Relationship: Participants exhibit expert debugging behavior because they exhibit confidence in their debugging skills.
+Criteria: Participants exhibit expert debugging behavior and confidence in debugging skills.
+Phrase: Exhibit expert debugging behavior.
+
+9.
+Concepts: identifies conceptual errors, seeks error detection
+Relationship: Participants identify conceptual errors and seek error detection as a solution.
+Criteria: Participants identify conceptual errors and seek error detection.
+Phrase: Identify conceptual errors.
+
+10.
+Concepts: seeks better error explanations, seeks better problem conceptualization
+Relationship: Participants seek better error explanations and better problem conceptualization as related goals.
+Criteria: Participants seek better error explanations and problem conceptualization.
+Phrase: Seek better error explanations.
+
+11.
+Concepts: interacts with ai strategically, has experience with ai debugging
+Relationship: Participants interact with AI strategically because they have experience with AI debugging.
+Criteria: Participants interact with AI strategically and have experience with AI debugging.
+Phrase: Interact with AI strategically.
+
+12.
+Concepts: appreciates ai-assisted debugging, expresses confidence in ai's potential
+Relationship: Participants appreciate AI-assisted debugging because they express confidence in AI's potential.
+Criteria: Participants appreciate AI-assisted debugging and express confidence in AI's potential.
+Phrase: Appreciate AI-assisted debugging.
+
+13.
+Concepts: commenting on code output, summarizes code functionality
+Relationship: Participants comment on code output and summarize code functionality as related actions.
+Criteria: Participants comment on code output and summarize code functionality.
+Phrase: Comment on code output.
+
+14.
+Concepts: requests detailed code review, evaluates code thoroughly
+Relationship: Participants request detailed code review and evaluate code thoroughly as related actions.
+Criteria: Participants request detailed code review and evaluate code thoroughly.
+Phrase: Request detailed code review.
+
+15.
+Concepts: valuing code clarity, appreciating executable code
+Relationship: Participants value code clarity and appreciate executable code as related values.
+Criteria: Participants value code clarity and appreciate executable code.
+Phrase: Value code clarity.
+
+16.
+Concepts: conducting careful code review, emphasizing code quality and readability
+Relationship: Participants conduct careful code review and emphasize code quality and readability as related actions.
+Criteria: Participants conduct careful code review and emphasize code quality and readability.
+Phrase: Conduct careful code review.
+
+17.
+Concepts: emphasizes code validation and debugging, emphasizes practice and design outlines
+Relationship: Participants emphasize code validation and debugging and practice and design outlines as related goals.
+Criteria: Participants emphasize code validation and debugging and practice and design outlines.
+Phrase: Emphasize code validation.
+
+18.
+Concepts: ai code adoption, selectively adopting ai-generated code, exercising discernment in ai-generated code adoption, deciding to copy ai-generated code
+Relationship: Participants adopt AI-generated code selectively, exercising discernment, and deciding to copy it.
+Criteria: Participants adopt AI-generated code selectively, exercising discernment, and deciding to copy it.
+Phrase: Adopt AI-generated code.
+
+19.
+Concepts: discussing ai-driven interface roles, planning ai-assisted code optimization
+Relationship: Participants discuss AI-driven interface roles and plan AI-assisted code optimization as related actions.
+Criteria: Participants discuss AI-driven interface roles and plan AI-assisted code optimization.
+Phrase: Discuss AI-driven interface roles.
+
+20.
+Concepts: describes successful code generation, noting successful out-of-the-box code generation
+Relationship: Participants describe successful code generation and note successful out-of-the-box code generation as related actions.
+Criteria: Participants describe successful code generation and note successful out-of-the-box code generation.
+Phrase: Describe successful code generation.
+
+21.
+Concepts: longing for linters to catch structural issues, advocates for linting features
+Relationship: Participants long for linters to catch structural issues and advocate for linting features as a solution.
+Criteria: Participants long for linters to catch structural issues and advocate for linting features.
+Phrase: Long for linters to catch structural issues.
+
+22.
+Concepts: lint feature potential, seeks ai-powered linting
+Relationship: Participants see lint feature potential and seek AI-powered linting as a solution.
+Criteria: Participants see lint feature potential and seek AI-powered linting.
+Phrase: Seek AI-powered linting.
+
+23.
+Concepts: noting incomplete ai-generated code, identifying ai-generated code limitations, noting gaps in ai assistance
+Relationship: Participants note incomplete AI-generated code, identify AI-generated code limitations, and note gaps in AI assistance as related actions.
+Criteria: Participants note incomplete AI-generated code, identify AI-generated code limitations, and note gaps in AI assistance.
+Phrase: Note incomplete AI-generated code.
+
+24.
+Concepts: prefers manual coding, prefers manual debugging
+Relationship: Participants prefer manual coding and debugging as related preferences.
+Criteria: Participants prefer manual coding and debugging.
+Phrase: Prefer manual coding.
+
+25.
+Concepts: debugs code manually, debugs independently
+Relationship: Participants debug code manually and independently as related actions.
+Criteria: Participants debug code manually and independently.
+Phrase: Debug code manually.
+
+26.
+Concepts: debugs code silently, engages in silent adjustment
+Relationship: Participants debug code silently and engage in silent adjustment as related actions.
+Criteria: Participants debug code silently and engage in silent adjustment.
+Phrase: Debug code silently.
+
+27.
+Concepts: customizes ai-generated code, collaborating with ai to fix code
+Relationship: Participants customize AI-generated code and collaborate with AI to fix code as related actions.
+Criteria: Participants customize AI-generated code and collaborate with AI to fix code.
+Phrase: Customize AI-generated code.
+
+28.
+Concepts: desires coding features, expressing desire for coding assistance tools
+Relationship: Participants desire coding features and express desire for coding assistance tools as related desires.
+Criteria: Participants desire coding features and express desire for coding assistance tools.
+Phrase: Desire coding features.
+
+29.
+Concepts: encounters outdated code, notices outdated code suggestions
+Relationship: Participants encounter outdated code and notice outdated code suggestions as related experiences.
+Criteria: Participants encounter outdated code and notice outdated code suggestions.
+Phrase: Encounter outdated code.
+
+30.
+Concepts: deals with older netlogo versions, discusses outdated functionalities, writes code in older netlogo versions
+Relationship: Participants deal with older NetLogo versions, discuss outdated functionalities, and write code in older NetLogo versions as related actions.
+Criteria: Participants deal with older NetLogo versions, discuss outdated functionalities, and write code in older NetLogo versions.
+Phrase: Deal with older NetLogo versions.
+
+31.
+Concepts: values teaching role, enjoys mentoring others in netlogo
+Relationship: Participants value the teaching role and enjoy mentoring others in NetLogo as related values.
+Criteria: Participants value the teaching role and enjoy mentoring others in NetLogo.
+Phrase: Value teaching role.
+
+32.
+Concepts: the need for a dictionary, seeks ai assistance for netlogo syntax, forgetting netlogo syntax
+Relationship: Participants express the need for a dictionary, seek AI assistance for NetLogo syntax, and forget NetLogo syntax as related experiences.
+Criteria: Participants express the need for a dictionary, seek AI assistance for NetLogo syntax, and forget NetLogo syntax.
+Phrase: Express need for a dictionary.

@@ -1,0 +1,345 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+32.
+Criteria: {Who did what, and how for code 32}
+Label: {A descriptive label of code 32}
+---
+~~~
+1.
+Label: mentions group sharing feature
+Quotes:
+- Designer: Group sharing.
+
+2.
+Label: promise future consultation
+Quotes:
+- Designer: Before starting mechanics, we will gather opinions again~ Otherwise, I'm afraid I won't remember everything.
+
+3.
+Label: acknowledging community expertise
+Quotes:
+- Designer: Consulting the teachers in the group: which type of intersection is used in the circuit diagrams in the current textbooks?
+[Image]
+- User: But it's better to use the right side for non-crossing
+- User: Yes, the common one is still the old style
+- Designer: Uh... left side or right side
+- Designer: We are working on this part
+
+4.
+Label: expressing interest in diverse learning environments
+Quotes:
+- User: [Emoji] Hello everyone, may I ask where I can download the PC / interactive whiteboard version of Physics Lab?
+
+5.
+Label: indicating that pc updates are usually the fastest
+Quotes:
+- Designer: Hmm... I'll add it in the next update. PC updates are usually the fastest, so there will probably be another round this weekend.
+
+6.
+Label: user 4232 highlights practicality
+Quotes:
+- User: If there could be an export function, or the ability to save or import experiments, it would be convenient. We could set up the parameters in the office and directly import them in class.
+- User: This software is great! It's quite practical, unlike some software that tries to be comprehensive but ends up being inconvenient to use.
+
+7.
+Label: explaining the purpose of the current circuit diagram version and the limitations of the auto layout algorithm
+Quotes:
+- Designer: This version of the circuit diagram is for testing only... You can drag the Editor because the auto-layout algorithm is not very stable and may produce some odd results
+
+8.
+Label: inquires about upcoming update timing with emoji
+Quotes:
+- User: Will there be an update this week? [Emoji]
+
+9.
+Label: user 4232 shares teaching experience
+Quotes:
+- User: I taught high school for seven years, and now I've been teaching middle school for eight years.
+
+10.
+Label: update on review status
+Quotes:
+- Designer: The Apple Store is still reviewing, let's upload the PC version first
+- Designer: iOS is waiting for review~
+
+11.
+Label: developer respnse
+Quotes:
+- Designer: Physics mainly focuses on electricity and mechanics; other directions don't have much room for free experiments before high school. In the future, we might do some demonstration experiments based on everyone's needs, but it won't be as open as electricity
+- Designer: There will be: multimeter; powered solenoid; semiconductor capacitor; support for conversion to ideal ammeter (more convenient for problem-solving and middle school teaching)
+- Designer: We try to design it so that it can be used without additional instructions, or we will provide some prompts when you open it for the first time based on feedback
+- Designer: There will be an update. Submitting to the app store / releasing the Android version next Monday, and releasing the Windows version over the weekend.
+- Designer: Hmm... I'll add it in the next update. PC updates are usually the fastest, so there will probably be another round this weekend.
+
+12.
+Label: acknowledge craftsmanship
+Quotes:
+- User: Yes, the spirit of craftsmanship that strives for perfection 🤔
+
+13.
+Label: providing detailed information about the new features, update preview, and component property adjustments in the upcoming version
+Quotes:
+- Designer: v1.0.2 - 17/11/29
+# New Features
+Multi-language support: Japanese, German, French.
+Preliminary support for converting circuit components to circuit diagrams.
+
+Support for augmented reality mode on the latest iOS devices.
+More realistic 3D appearance for various meters.
+
+# Update Preview
+
+The next version will provide multimeter and meter zeroing.
+
+The next version will provide AC waveform display functionality.
+
+The next version will provide capacitors and energized solenoids.
+
+# Component Property Adjustments
+Dry cells can now be ideal power sources.
+
+All meters can now switch between ideal/realistic modes.
+
+# Special Tips
+The Esc shortcut key will now minimize the window.
+The Ctrl+E shortcut key can switch between exam and normal modes.
+
+14.
+Label: explain intention of the app design
+Quotes:
+- Designer: Physics mainly focuses on electricity and mechanics; other directions don't have much room for free experiments before high school. In the future, we might do some demonstration experiments based on everyone's needs, but it won't be as open as electricity
+
+15.
+Label: pays homage to experts
+Quotes:
+- User: First, let's pay homage to the experts, then I'll make a small request. Could you create a dynamic demonstration of mechanical waves and mechanical vibrations, such as the propagation of transverse and longitudinal waves, wave superposition, diffraction, and interference? Also, for optical experiments, it would be great to have optical benches, single slits, double slits, and polarizers to demonstrate optical experiments.
+
+16.
+Label: communicate ongoing work
+Quotes:
+- Designer: We are working on this part
+
+17.
+Label: advising on development strategy
+Quotes:
+- User: Don't aim for completeness, it should be categorized and refined one by one
+
+18.
+Label: seeking information about downloading the platform
+Quotes:
+- User: [Emoji] Hello everyone, may I ask where I can download the PC / interactive whiteboard version of Physics Lab?
+
+19.
+Label: expressing desire for convenience
+Quotes:
+- User: If there could be an export function, or the ability to save or import experiments, it would be convenient. We could set up the parameters in the office and directly import them in class.
+
+20.
+Label: designer 1 acknowledges feedback
+Quotes:
+- Designer: XP compatibility might need to be looked into later... probably need to install a virtual machine.
+- Designer: Okay. Please give more suggestions!
+- Designer: Okay.
+
+21.
+Label: inform about touch screens
+Quotes:
+- Designer: Touch screens have their own on-screen keyboards.
+
+22.
+Label: user 4232 highlights outdated school systems
+Quotes:
+- User: Dizzy, the computer system for teachers at our school is quite old.
+
+23.
+Label: current efforts
+Quotes:
+- Designer: Actually, we are researching the bidirectional conversion between physical diagrams and circuit diagrams
+
+24.
+Label: emphasize quality of auto generated layout
+Quotes:
+- Designer: It's still better to make the auto-generated one as good as possible
+
+25.
+Label: new feature
+Quotes:
+- Designer: This version of the circuit diagram is for testing only... You can drag the Editor because the auto-layout algorithm is not very stable and may produce some odd results
+
+26.
+Label: ask about user's professional background
+Quotes:
+- Designer: I'll upload one now... Are you a teacher?
+
+27.
+Label: designer 1 mentions feedback based prompts
+Quotes:
+- Designer: We try to design it so that it can be used without additional instructions, or we will provide some prompts when you open it for the first time based on feedback
+
+28.
+Label: announcing the release of version 1.01 with updates
+Quotes:
+- Designer: Hello everyone~ Version 1.01 has been released in the group files, the updates are as follows:
+
+29.
+Label: clarifying the purpose of the circuit diagram
+Quotes:
+- Designer: This version of the circuit diagram is for testing only... You can drag the Editor because the auto-layout algorithm is not very stable and may produce some odd results
+
+30.
+Label: explaining institutional goals
+Quotes:
+- User: Mainly, the school is building an information-based school
+
+31.
+Label: acknowledges feature
+Quotes:
+- User: Oh, this is nice
+
+32.
+Label: these elements suggest a participatory design approach
+Quotes:
+- User: Dizzy, the computer system for teachers at our school is quite old.
+===
+Here are the definitions for each code with clear and generalizable criteria:
+
+---
+Definitions for each code:
+
+1.
+Criteria: Mention of a specific feature in the online community.
+Label: Referring to group sharing feature.
+
+2.
+Criteria: Expression of intention to gather opinions or feedback in the future.
+Label: Promising future consultation.
+
+3.
+Criteria: Recognition of expertise or knowledge from community members.
+Label: Acknowledging community expertise.
+
+4.
+Criteria: Expression of interest in using the platform in diverse learning environments.
+Label: Interest in diverse learning environments.
+
+5.
+Criteria: Statement about the typical speed of updates for a specific platform.
+Label: Indicating typical update speed.
+
+6.
+Criteria: User feedback or suggestion emphasizing practicality or convenience.
+Label: Highlighting practicality.
+
+7.
+Criteria: Explanation of the current version or limitations of a specific feature.
+Label: Explaining current feature limitations.
+
+8.
+Criteria: Inquiry about the timing of an upcoming update with a lighthearted tone.
+Label: Inquiring about update timing.
+
+9.
+Criteria: Sharing of personal experience or background related to teaching.
+Label: Sharing teaching experience.
+
+10.
+Criteria: Update on the status of a review or upload process.
+Label: Update on review status.
+
+11.
+Criteria: Response from the developer or designer addressing user feedback or questions.
+Label: Developer response.
+
+12.
+Criteria: Acknowledgment or appreciation of craftsmanship or attention to detail.
+Label: Acknowledging craftsmanship.
+
+13.
+Criteria: Detailed information about new features, updates, or adjustments in an upcoming version.
+Label: Providing update preview.
+
+14.
+Criteria: Explanation of the design intention or goals behind the platform.
+Label: Explaining design intention.
+
+15.
+Criteria: Expression of respect or admiration for experts or professionals.
+Label: Paying homage to experts.
+
+16.
+Criteria: Communication about ongoing work or development progress.
+Label: Communicating ongoing work.
+
+17.
+Criteria: Advice or suggestion for the development strategy or approach.
+Label: Advising on development strategy.
+
+18.
+Criteria: Inquiry about downloading or accessing the platform.
+Label: Seeking information about downloading.
+
+19.
+Criteria: Expression of desire for convenience or ease of use.
+Label: Expressing desire for convenience.
+
+20.
+Criteria: Acknowledgment of user feedback or suggestions from the designer.
+Label: Acknowledging feedback.
+
+21.
+Criteria: Information about the functionality or limitations of touch screens.
+Label: Informing about touch screens.
+
+22.
+Criteria: Comment about outdated or old systems in schools.
+Label: Highlighting outdated school systems.
+
+23.
+Criteria: Statement about current research or development efforts.
+Label: Current research efforts.
+
+24.
+Criteria: Emphasis on the quality or importance of a specific feature.
+Label: Emphasizing quality.
+
+25.
+Criteria: Introduction or announcement of a new feature or functionality.
+Label: Introducing new feature.
+
+26.
+Criteria: Inquiry about a user's professional background or occupation.
+Label: Asking about user's background.
+
+27.
+Criteria: Mention of feedback-based prompts or guidance in the platform.
+Label: Mentioning feedback-based prompts.
+
+28.
+Criteria: Announcement of a new version release with updates.
+Label: Announcing new version release.
+
+29.
+Criteria: Clarification of the purpose or intention behind a specific feature.
+Label: Clarifying feature purpose.
+
+30.
+Criteria: Explanation of institutional goals or objectives.
+Label: Explaining institutional goals.
+
+31.
+Criteria: Positive reaction or acknowledgment of a feature.
+Label: Acknowledging feature.
+
+32.
+Criteria: Elements suggesting a participatory design approach or collaborative development.
+Label: Suggesting participatory design approach.

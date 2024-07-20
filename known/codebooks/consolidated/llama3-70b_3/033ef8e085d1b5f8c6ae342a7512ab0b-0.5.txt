@@ -1,0 +1,393 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: shares debugging experience, shares previous experience, shares past practice with chatgpt
+- Shares personal experience of debugging with ChatGPT
+- The participant shares their previous experience with ChatGPT, including asking it to debug code.
+- The participant shares their past practice with ChatGPT, including asking it to debug code.
+
+2.
+Concepts: manual ai code debugging, self-debugging when ai fails, relies on own debugging skills
+- Interviewee debugs AI code manually.
+- The interviewee engages in self-debugging when AI fails.
+- Interviewee relies on their own debugging skills to fix errors in AI-generated code.
+
+3.
+Concepts: ai-assisted debugging, seeking ai help for debugging, engaging ai in collaborative debugging
+- The interviewee uses AI for debugging purposes.
+- The interviewee seeks help from the AI for debugging purposes.
+- The interviewee uses the AI to collaboratively debug code and fix errors.
+
+4.
+Concepts: describes typical ai conversation, describing typical ai interaction
+- Describes the typical conversation with ChatGPT, including iterative debugging.
+- The interviewee describes the typical interaction with the AI, including iterative debugging.
+
+5.
+Concepts: describing iterative error fixing, describes error correction process
+- The interviewee describes their iterative error-fixing process with the AI.
+- Interviewee explains the process of identifying and correcting errors in AI-generated code through iterative interactions.
+
+6.
+Concepts: engaging with ai for error resolution, interacting with ai for error resolution
+- Interviewee interacts with AI to resolve errors.
+- Interviewee interacts with the AI to resolve errors, seeking assistance in debugging and troubleshooting.
+
+7.
+Concepts: iterative development process, iterative debugging process, describes iterative process
+- Engages in iterative development process with AI.
+- Engages in iterative debugging processes with AI, refining problem-solving approaches.
+- Describes an iterative process of working with AI to refine code or models.
+
+8.
+Concepts: value of iterative debugging with ai, acknowledges iterative debugging benefits
+- The interviewee reflects on how users may benefit from the iterative debugging process when working with AI.
+- The participant acknowledges that users may benefit from the iterative debugging process when working with AI.
+
+9.
+Concepts: describes iterative debugging, highlights iterative debugging, iterative debugging benefits
+- Describes iterative debugging with AI.
+- Highlights the value of iterative debugging in working with AI.
+- Describes benefits of iterative debugging with AI.
+
+10.
+Concepts: acknowledges ai's errors, recognizes the value of iterative debugging processes, even though ai might give wrong answers
+- The participant acknowledges AI's errors but still sees value in the iterative debugging process.
+- Values the iterative debugging process despite initial errors in AI responses.
+- The participant acknowledges that AI may give wrong answers, but still finds value in the iterative debugging process.
+
+11.
+Concepts: values iterative learning, valuing learning from ai's structure
+- Values iterative learning and debugging with AI.
+- Values learning from AI's structure and iterative debugging process.
+
+12.
+Concepts: learning from ai mistakes, emphasizing learning opportunities from ai errors
+- The participant learns from the AI's mistakes and iterative debugging process.
+- Learning opportunities arise from AI errors and iterative debugging.
+
+13.
+Concepts: highlights ai debugging, notes ai's unit test incorporation
+- The participant highlights AI's debugging capabilities, including unit testing.
+- Participant notes the incorporation of unit tests or debugging capabilities in an LLM-driven interface, which helps them identify and fix errors in their code.
+
+14.
+Concepts: appreciation for unit tests, appreciation for automated testing
+- The user appreciates the inclusion of unit tests in the AI-generated code.
+- Appreciates AI-driven unit testing and debugging, highlighting the benefits of automated testing.
+
+15.
+Concepts: values ai's unit testing, benefits for beginners
+- The participant values the AI tool's unit testing capabilities, highlighting their helpfulness for beginners.
+- The participant highlights the benefits of the AI tool for beginners, emphasizing its potential in supporting debugging and unit testing.
+
+16.
+Concepts: recognizing ai benefits, sees ai debugging as helpful for all users
+- Interviewee recognizes the benefits of the AI for users of all levels, highlighting its ability to assist in debugging and coding.
+- The participant expresses a positive view of AI's debugging capabilities, highlighting their helpfulness for users.
+
+17.
+Concepts: ai debugging help, values ai's debugging ability, ai debugging capabilities, praises debugging capability
+- The participant appreciates the debugging help or troubleshooting capabilities provided by AI.
+- The participant values the AI tool's debugging ability, highlighting its helpfulness for beginners.
+- The user acknowledges the AI tool's debugging capabilities.
+- Appreciates the debugging capabilities of AI-driven interfaces.
+
+18.
+Concepts: ai debugging success, ai debugging ability, ai success in debugging
+- The interviewee notes AI's success in debugging.
+- The interviewee describes the AI's ability to debug and clarify error codes.
+- The participant reports the success of AI in debugging, highlighting its potential in resolving errors.
+
+19.
+Concepts: improved debugging, finds some ai debugging effective
+- Highlights improved debugging capabilities with AI.
+- Finds some AI debugging capabilities effective.
+
+20.
+Concepts: appreciating best practices, notes ai's adherence to best practices, e04 observes ai follows best practices
+- Appreciating AI adherence to best practices in coding.
+- The interviewee notes that AI follows best practices when generating code.
+- Observes that AI follows best practices in coding.
+
+21.
+Concepts: adhering to best practices, acknowledges ai's adherence to best practices, observes ai's adherence to best practices
+- Noting adherence to best practices in AI development.
+- Acknowledging AI's adherence to best practices and standards.
+- Observes AI adhering to best practices
+
+22.
+Concepts: values thoughtful model creation, appreciates thoughtful model creation
+- Interviewee appreciates thoughtful or best-practice approaches to model creation.
+- Interviewee appreciates thoughtful model creation and best practices.
+
+23.
+Concepts: values careful model creation, non-ruthless model creation, valuing responsible model creation
+- Values careful model creation and best practices.
+- The user values non-ruthless model creation that follows best practices.
+- Emphasizes responsible model creation and best practices
+
+24.
+Concepts: discusses code quality, the importance of code quality, code quality and maintainability
+- Discusses the importance of code quality, complexity, and maintainability.
+- Emphasizes the importance of code quality and maintainability.
+- Discusses code quality and maintainability.
+
+25.
+Concepts: importance of code readability, emphasizes the importance of code readability and simplicity for future maintenance
+- The participant discusses the importance of code readability and simplicity.
+- Participant emphasizes the importance of code readability and simplicity for future maintenance.
+
+26.
+Concepts: values clarity in coding, values simplicity and clarity
+- Interviewee values clarity and simplicity in coding.
+- Interviewee values simplicity and clarity in code or outputs.
+
+27.
+Concepts: valuing clear documentation, prefers clear code structure
+- Interviewee values clear documentation and code quality.
+- Interviewee prefers separated code lines and clear documentation.
+
+28.
+Concepts: preferring accessible code, and the advantages of plain, plain and understandable code
+- Preferring plain, accessible code for maintenance and debugging.
+- Participant values plain and accessible code for maintenance purposes.
+- Values plain, understandable code for maintenance purposes.
+
+29.
+Concepts: prioritizing code readability, values readability over complexity
+- Prioritizes code readability and simplicity
+- Prioritizes code readability over complexity
+
+30.
+Concepts: values code simplicity, code quality and simplicity
+- Prioritizes simplicity in code writing
+- Importance of simple, maintainable code is emphasized.
+- The participant values code quality and simplicity.
+
+31.
+Concepts: easy to maintain code, prefers simple, maintainable code, advocates for simplicity in code writing
+- Values easy-to-maintain code and simplicity in coding.
+- Prefers simple, maintainable code that is easy to understand.
+- Advocates for simplicity in code writing to facilitate maintenance and understanding.
+
+32.
+Concepts: integrating ai code, integrating ai-generated code into model, integrates ai code
+- Integrates AI-generated code into their model or project.
+- Integrates AI-generated code into their model or workflow.
+- The participant integrates AI-generated code into their work, using it as a starting point or building upon it.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: shares debugging experience, shares previous experience, shares past practice with chatgpt
+Relationship: The concepts are related as they all describe the participant's previous experience with ChatGPT in debugging.
+Criteria: The participant shares their personal experience of debugging with ChatGPT.
+Phrase: Shares debugging experience with ChatGPT.
+
+2.
+Concepts: manual ai code debugging, self-debugging when ai fails, relies on own debugging skills
+Relationship: The concepts are related as they all describe the participant's approach to debugging when AI fails.
+Criteria: The participant engages in self-debugging when AI fails.
+Phrase: Relies on own debugging skills.
+
+3.
+Concepts: ai-assisted debugging, seeking ai help for debugging, engaging ai in collaborative debugging
+Relationship: The concepts are related as they all describe the participant's use of AI for debugging purposes.
+Criteria: The participant uses AI for debugging purposes.
+Phrase: Engages AI in collaborative debugging.
+
+4.
+Concepts: describes typical ai conversation, describing typical ai interaction
+Relationship: The concepts are related as they both describe the participant's typical interaction with AI.
+Criteria: The participant describes their typical conversation with ChatGPT.
+Phrase: Describes typical AI conversation.
+
+5.
+Concepts: describing iterative error fixing, describes error correction process
+Relationship: The concepts are related as they both describe the participant's process of error correction.
+Criteria: The participant describes their iterative error-fixing process with the AI.
+Phrase: Describes error correction process.
+
+6.
+Concepts: engaging with ai for error resolution, interacting with ai for error resolution
+Relationship: The concepts are related as they both describe the participant's interaction with AI for error resolution.
+Criteria: The participant interacts with AI to resolve errors.
+Phrase: Engages with AI for error resolution.
+
+7.
+Concepts: iterative development process, iterative debugging process, describes iterative process
+Relationship: The concepts are related as they all describe the participant's iterative process of working with AI.
+Criteria: The participant engages in iterative development process with AI.
+Phrase: Engages in iterative development process.
+
+8.
+Concepts: value of iterative debugging with ai, acknowledges iterative debugging benefits
+Relationship: The concepts are related as they both describe the participant's recognition of the benefits of iterative debugging.
+Criteria: The participant acknowledges the benefits of iterative debugging with AI.
+Phrase: Acknowledges iterative debugging benefits.
+
+9.
+Concepts: describes iterative debugging, highlights iterative debugging, iterative debugging benefits
+Relationship: The concepts are related as they all describe the participant's experience with iterative debugging.
+Criteria: The participant describes iterative debugging with AI.
+Phrase: Describes iterative debugging.
+
+10.
+Concepts: acknowledges ai's errors, recognizes the value of iterative debugging processes, even though ai might give wrong answers
+Relationship: The concepts are related as they both describe the participant's recognition of AI's limitations and the value of iterative debugging.
+Criteria: The participant acknowledges AI's errors but still sees value in the iterative debugging process.
+Phrase: Acknowledges AI's errors and iterative debugging value.
+
+11.
+Concepts: values iterative learning, valuing learning from ai's structure
+Relationship: The concepts are related as they both describe the participant's appreciation for learning from AI.
+Criteria: The participant values iterative learning and debugging with AI.
+Phrase: Values iterative learning.
+
+12.
+Concepts: learning from ai mistakes, emphasizing learning opportunities from ai errors
+Relationship: The concepts are related as they both describe the participant's learning from AI's mistakes.
+Criteria: The participant learns from the AI's mistakes and iterative debugging process.
+Phrase: Learns from AI's mistakes.
+
+13.
+Concepts: highlights ai debugging, notes ai's unit test incorporation
+Relationship: The concepts are related as they both describe the participant's recognition of AI's debugging capabilities.
+Criteria: The participant highlights AI's debugging capabilities, including unit testing.
+Phrase: Highlights AI's debugging capabilities.
+
+14.
+Concepts: appreciation for unit tests, appreciation for automated testing
+Relationship: The concepts are related as they both describe the participant's appreciation for automated testing.
+Criteria: The user appreciates the inclusion of unit tests in the AI-generated code.
+Phrase: Appreciates automated testing.
+
+15.
+Concepts: values ai's unit testing, benefits for beginners
+Relationship: The concepts are related as they both describe the participant's recognition of the benefits of AI's unit testing.
+Criteria: The participant values the AI tool's unit testing capabilities, highlighting their helpfulness for beginners.
+Phrase: Values AI's unit testing.
+
+16.
+Concepts: recognizing ai benefits, sees ai debugging as helpful for all users
+Relationship: The concepts are related as they both describe the participant's recognition of AI's benefits.
+Criteria: The participant recognizes the benefits of the AI for users of all levels.
+Phrase: Recognizes AI benefits.
+
+17.
+Concepts: ai debugging help, values ai's debugging ability, ai debugging capabilities, praises debugging capability
+Relationship: The concepts are related as they all describe the participant's appreciation for AI's debugging capabilities.
+Criteria: The participant appreciates the debugging help or troubleshooting capabilities provided by AI.
+Phrase: Appreciates AI's debugging help.
+
+18.
+Concepts: ai debugging success, ai debugging ability, ai success in debugging
+Relationship: The concepts are related as they all describe the participant's experience with AI's debugging success.
+Criteria: The interviewee notes AI's success in debugging.
+Phrase: Notes AI's debugging success.
+
+19.
+Concepts: improved debugging, finds some ai debugging effective
+Relationship: The concepts are related as they both describe the participant's experience with improved debugging.
+Criteria: Highlights improved debugging capabilities with AI.
+Phrase: Highlights improved debugging.
+
+20.
+Concepts: appreciating best practices, notes ai's adherence to best practices, e04 observes ai follows best practices
+Relationship: The concepts are related as they all describe the participant's recognition of AI's adherence to best practices.
+Criteria: Appreciating AI adherence to best practices in coding.
+Phrase: Appreciates AI's adherence to best practices.
+
+21.
+Concepts: adhering to best practices, acknowledges ai's adherence to best practices, observes ai's adherence to best practices
+Relationship: The concepts are related as they all describe the participant's recognition of AI's adherence to best practices.
+Criteria: Noting adherence to best practices in AI development.
+Phrase: Notes AI's adherence to best practices.
+
+22.
+Concepts: values thoughtful model creation, appreciates thoughtful model creation
+Relationship: The concepts are related as they both describe the participant's appreciation for thoughtful model creation.
+Criteria: Interviewee appreciates thoughtful or best-practice approaches to model creation.
+Phrase: Appreciates thoughtful model creation.
+
+23.
+Concepts: values careful model creation, non-ruthless model creation, valuing responsible model creation
+Relationship: The concepts are related as they all describe the participant's appreciation for responsible model creation.
+Criteria: Values careful model creation and best practices.
+Phrase: Values responsible model creation.
+
+24.
+Concepts: discusses code quality, the importance of code quality, code quality and maintainability
+Relationship: The concepts are related as they all describe the participant's discussion of code quality.
+Criteria: Discusses the importance of code quality, complexity, and maintainability.
+Phrase: Discusses code quality.
+
+25.
+Concepts: importance of code readability, emphasizes the importance of code readability and simplicity for future maintenance
+Relationship: The concepts are related as they both describe the participant's emphasis on code readability.
+Criteria: The participant discusses the importance of code readability and simplicity.
+Phrase: Emphasizes code readability.
+
+26.
+Concepts: values clarity in coding, values simplicity and clarity
+Relationship: The concepts are related as they both describe the participant's appreciation for clarity in coding.
+Criteria: Interviewee values clarity and simplicity in coding.
+Phrase: Values clarity in coding.
+
+27.
+Concepts: valuing clear documentation, prefers clear code structure
+Relationship: The concepts are related as they both describe the participant's appreciation for clear documentation.
+Criteria: Interviewee values clear documentation and code quality.
+Phrase: Values clear documentation.
+
+28.
+Concepts: preferring accessible code, and the advantages of plain, plain and understandable code
+Relationship: The concepts are related as they both describe the participant's preference for accessible code.
+Criteria: Preferring plain, accessible code for maintenance and debugging.
+Phrase: Prefers accessible code.
+
+29.
+Concepts: prioritizing code readability, values readability over complexity
+Relationship: The concepts are related as they both describe the participant's prioritization of code readability.
+Criteria: Prioritizes code readability and simplicity.
+Phrase: Prioritizes code readability.
+
+30.
+Concepts: values code simplicity, code quality and simplicity
+Relationship: The concepts are related as they both describe the participant's appreciation for code simplicity.
+Criteria: Prioritizes simplicity in code writing.
+Phrase: Values code simplicity.
+
+31.
+Concepts: easy to maintain code, prefers simple, maintainable code, advocates for simplicity in code writing
+Relationship: The concepts are related as they all describe the participant's preference for easy-to-maintain code.
+Criteria: Values easy-to-maintain code and simplicity in coding.
+Phrase: Advocates for simplicity in code writing.
+
+32.
+Concepts: integrating ai code, integrating ai-generated code into model, integrates ai code
+Relationship: The concepts are related as they all describe the participant's integration of AI-generated code.
+Criteria: The participant integrates AI-generated code into their model or project.
+Phrase: Integrates AI-generated code.

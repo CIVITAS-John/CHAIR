@@ -1,0 +1,239 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (24 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+24.
+Criteria: {Who did what, and how for code 24}
+Label: {A descriptive label of code 24}
+---
+~~~
+1.
+Label: acknowledges ai's mistake but sees value
+Quotes:
+- E01: The problem I posted was about 100 pages of NetLogo and then 100 pages, 100 lines of NetLogo. And it was a real problem that I had looked at. I would love to help this person, but this is going to take me minimum of two hours to figure out what are they trying to do? (interviewer's observation) Although AI made mistake, E01 still believes in the value in having an AI-generated solution (compared with no solution or no help).
+
+2.
+Label: dictates parameters
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 dictated each of the parameter fields.
+
+3.
+Label: evaluates choices
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 reads error messages before making a choice.
+
+4.
+Label: needing guidance
+Quotes:
+- E04: Part of the issue that I'm having now is just kind of like the learning curve, just trying to figure out how everything works. (interviewer's observation) E04 mentions a learning curve, likely because our current design is not fine-tuned for experts.
+
+5.
+Label: human-ai (positive)
+Quotes:
+- E01: So if I'm writing long NetLogo code now, I'd probably have ChatGPT just open on the side. And I write a block of code and then I handed ChatGPT. Say, could I have done this better? And it would go, yeah, you could rearrange this like that. (interviewer's observation) ChatGPT could help E01 optimize his code.
+- E01: I want to do this in visual basic... So I made a spreadsheet and I asked ChatGPT, how do you do this? And it wrote the code and the code worked out of the box. (interviewer's observation) ChatGPT helped with a VBA task out of the box before.
+- E01: Well, I cut the entire user's question. It figured out what I wanted. I didn't even tell it what I wanted. It just told me. (interviewer's observation) ChatGPT could infer E01's need from the input context.
+
+6.
+Label: task request
+Quotes:
+- E01: "please write a netlogo program that produces a checker board with black and white squares?" (interviewer's observation) E01 asks ChatLogo to create a checkerboard pattern.
+
+7.
+Label: identifying novice expectations of ai
+Quotes:
+- E01: And, and they don't, this is an unfamiliar task to them apparently. So they want to ask one question and get the right answer the first time. And I, I don't have that expectation. I'll ask the right question and it'll get me 80% of the way there. (interviewer's observation) Novices might have a too high expectation for ChatGPT (but it cannot achieve that).
+
+8.
+Label: seeking ai assistance for debugging
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 was prompted to copy and paste error messages to ChatGPT.
+
+9.
+Label: interviewee reading error messages before making a choice
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 reads error messages before making a choice.
+
+10.
+Label: initiates the task of instructing chat gpt to create a specific program
+Quotes:
+- E01: So let's say "I would like to write code to have a turtle run slowly around the perimeter of a square." (interviewer's observation) E01's first task.
+
+11.
+Label: highlights cognitive load
+Quotes:
+- E01: So I would find it more helpful if it asked the questions one at a time. Before you tell me nine more errors. Just because users are always overfilling their buffer. So smaller requests work better. (interviewer's observation) E01 suggests (for novice) only showing one error at a time in the AI-driven system.
+
+12.
+Label: indicates familiarity with diverse software development environments
+Quotes:
+- E01: I started programming in 1964 at IBM. ... And since then I have programmed in production code in at least 20 different software languages. (interviewer's observation) E01's prior experiences in computer programming in general.
+
+13.
+Label: highlights need for reminders
+Quotes:
+- E01: Depending on what you do and how busy you are and the higher ranking people are, the more busy they are, the longer it is between sessions. So you make some notes on little yellow, sticky cinnamon. And then you go back to your administrator job for two months, and then some other project comes up. And then six months later, you come back. Okay, now, where was I? (interviewer's observation) E01's reflection on how professionals learn - they learn in fragments, in fragmented time blocks and need support from the system to remind them where they were.
+
+14.
+Label: expressing confidence in their own net logo expertise
+Quotes:
+- E04: So maybe I didn't prove it today, but I feel like I'm pretty competent with NetLogo. (interviewer's observation) Prefers helping others learn NetLogo.
+
+15.
+Label: importance of seeking help and collaboration
+Quotes:
+- E01: What you have in America is this, this cult of individualism to a point of obsession. And people don't naturally stop and go, how can I get help with this? (interviewer's observation) Continued: reflection on the individualism.
+
+16.
+Label: e04 quickly abandons ai interaction due to unsatisfactory results
+Quotes:
+- E04: So that's interesting anyways, I'm going back to Perceptron. (interviewer's observation) E04 gives up immediately after the AI asks the same question again.
+
+17.
+Label: envisioning ai support for writing help posts
+Quotes:
+- E01: Let's suppose that I'm trying to debug this error and I have trouble and I can't figure it out. So my next step would be to go to the user group. So if I had a button here that said please explain my situation so that I can paste it to the user group. User is attempting to write this. This is the code I wrote. This is the error it generates that the user doesn't understand. Can any human figure out what's wrong? I just press a button and it says, okay, paste it to the user group and we're done. And it's hard for users. (interviewer's observation) E01 suggests that AI could potentially help users write "help" posts that summarizes the situation: the need, the code, the error that the user does not understand.
+
+18.
+Label: e04 appreciates interface for parameter clarification
+Quotes:
+- E04: I thought it was really cool that, you know, that it knew exactly what I wanted to do and then kind of allowed me to define like the certain parameters for what I wanted to do. (interviewer's observation) Having the interface to clarify parameters helps.
+
+19.
+Label: appreciating ai's error catching abilities
+Quotes:
+- E01: I don't know how much it understands about all of the efficiencies of NetLogo... But it (could) catch obvious errors that are not obvious to me. Even if it's relatively dumb, it's an outside observer, which is great. (interviewer's observation) ChatGPT could serve as an outside observer that points out errors human did not realize.
+
+20.
+Label: questioning ai's error detection accuracy
+Quotes:
+- E04: maybe you saw something that I didn't, but from my perspective, it seemed as though the code was set up appropriately, but it was marking the syntax as wrong. So maybe I was missing something, but I didn't see anything missing. So that was kind of frustrating. (interviewer's observation) Shows error messages even when it seems to be correct (that's a bug identified)
+
+21.
+Label: iterative debugging process
+Quotes:
+- E01: I have I found with with playing with with ChatGPT. And I was something at Python, I think I tried to give it the code. And I tried to run it generated error. And then I would go back to the next prompt and ChatGPT. And I go, that code is good. But it generates the following error. And I list the error online on this line, and I'd quote the line. And I say, Can you fix that?  (interviewer's observation) When E01 sees a bug in the generated code, he refers to his previous practice with asking ChatGPT to debug with the code, the error message, and the line number. Interviewer did what E01 said.
+- E01: This is what conversations with ChatGPT typically look like. I had to go through about eight separate times to get all the errors out of it.  But, but look at how it structured the code. Look at the things that did look what you could learn from this. This is valuable. (interviewer's observation) Users may benefit from the iterative debugging process during working with AI, even though AI might give wrong answers.
+- E01: And then very often, it could.  (interviewer's observation) ChatGPT could often resolve errors by itself.
+
+22.
+Label: appreciating error clarification
+Quotes:
+- E04: I think that it's nice that it's, it clarifies error codes. I think that's probably where people who are new get stuck the most is trying to figure out the syntax and all the different errors. (interviewer's observation) The capability to clarify the errors.
+
+23.
+Label: exploring chat gpt's understanding of requests
+Quotes:
+- E01: So set up, move the turtle to go. Increase the size of the turtle by two units. Oh, dear. It's, it's making the turtle bigger. Oh, that's kind of, that's kind of messed it up a little bit then. (interviewer's observation) E01 reads the code and comments, summarizing the code, and thinks about how the AI was understanding the request.
+- E01: "I would like to write code to have a turtle run slowly around the perimeter of a square, but the square should go larger each time it goes around." (interviewer's observation) Seeing AI's counter question, E01 makes his request more detailed.
+
+24.
+Label: recognizing the ai's debugging and testing capabilities
+Quotes:
+- E04: It includes debugging, it is actually trying to incorporate like a unit test, which is really cool and really helpful, especially for beginners, because they can kind of, you know, check their inputs. Beginners, everyone really. They can debug their code appropriately. (interviewer's observation) Debugging capability.
+===
+Here are the definitions for each code:
+
+1.
+Criteria: The participant acknowledges that the AI made a mistake but still sees value in the AI-generated solution.
+Label: Acknowledges AI's mistake but sees value
+
+2.
+Criteria: The participant dictates parameters or inputs to the AI system.
+Label: Dictates parameters
+
+3.
+Criteria: The participant evaluates choices or options presented by the AI system before making a decision.
+Label: Evaluates choices
+
+4.
+Criteria: The participant expresses a need for guidance or support when using the AI system.
+Label: Needing guidance
+
+5.
+Criteria: The participant expresses a positive experience or outcome when working collaboratively with the AI system.
+Label: Human-AI collaboration (positive)
+
+6.
+Criteria: The participant requests the AI system to perform a specific task or generate code.
+Label: Task request
+
+7.
+Criteria: The participant identifies or reflects on the expectations of novice users when interacting with the AI system.
+Label: Identifying novice expectations of AI
+
+8.
+Criteria: The participant seeks assistance from the AI system for debugging or error resolution.
+Label: Seeking AI assistance for debugging
+
+9.
+Criteria: The participant reads and considers error messages before making a choice or decision.
+Label: Reading error messages
+
+10.
+Criteria: The participant initiates a task or request to the AI system to create a specific program or code.
+Label: Initiating task
+
+11.
+Criteria: The participant highlights or expresses concerns about cognitive load or information overload when interacting with the AI system.
+Label: Cognitive load concerns
+
+12.
+Criteria: The participant indicates familiarity or experience with diverse software development environments.
+Label: Familiarity with diverse software environments
+
+13.
+Criteria: The participant expresses a need for reminders or support to recall previous learning or progress.
+Label: Need for reminders
+
+14.
+Criteria: The participant expresses confidence in their own expertise or skills in NetLogo or programming.
+Label: Confidence in NetLogo expertise
+
+15.
+Criteria: The participant emphasizes the importance of seeking help, collaboration, or support when working with the AI system.
+Label: Importance of seeking help
+
+16.
+Criteria: The participant quickly abandons or gives up on interacting with the AI system due to unsatisfactory results.
+Label: Abandoning AI interaction
+
+17.
+Criteria: The participant envisions or suggests ways in which the AI system could support writing help posts or seeking assistance from others.
+Label: Envisioning AI support for help posts
+
+18.
+Criteria: The participant appreciates or values the interface or feature that clarifies parameters or inputs.
+Label: Appreciating parameter clarification
+
+19.
+Criteria: The participant expresses appreciation for the AI system's ability to catch errors or provide error detection.
+Label: Appreciating error detection
+
+20.
+Criteria: The participant questions or expresses doubt about the accuracy or reliability of the AI system's error detection.
+Label: Questioning error detection accuracy
+
+21.
+Criteria: The participant describes or demonstrates an iterative debugging process when working with the AI system.
+Label: Iterative debugging process
+
+22.
+Criteria: The participant values or appreciates the AI system's ability to clarify error codes or messages.
+Label: Appreciating error clarification
+
+23.
+Criteria: The participant explores or tests the AI system's understanding of requests or instructions.
+Label: Exploring AI understanding
+
+24.
+Criteria: The participant recognizes or appreciates the AI system's capabilities for debugging, testing, or providing feedback on code.
+Label: Recognizing AI debugging capabilities

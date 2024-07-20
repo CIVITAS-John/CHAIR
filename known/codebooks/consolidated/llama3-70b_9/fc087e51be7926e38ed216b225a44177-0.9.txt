@@ -1,0 +1,147 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (16 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+16.
+Criteria: {Who did what, and how for code 16}
+Label: {A descriptive label of code 16}
+---
+~~~
+1.
+Label: advocates for peer programming
+Quotes:
+- E01: I'm an advocate of peer programming. It's about 10 times more efficient than single programming... If a person's programming, if you're programming it by yourself and you come to something you don't understand, you could spend a long time at that stoplight. (interviewer's observation) E01's positive opinions on peer programming with a hint that AI could play the role.
+
+2.
+Label: refining task description for chat gpt
+Quotes:
+- E01: "I would like to write code to have a turtle run slowly around the perimeter of a square, but the square should go larger each time it goes around in NetLogo." (interviewer's observation) Interviewer proposes to try ChatGPT with the same prompt.
+
+3.
+Label: allows ai's intuition
+Quotes:
+- E01: That's okay. Go is a convention. It's not really a requirement of the language that you use the word go. You can say banana to banana and have a button on the interface. It's a banana button. (interviewer's observation) E01 honors ChatGPT's own intuition even though it might be different from the convention.
+
+4.
+Label: reflects on effective error communication
+Quotes:
+- E01: So I would find it more helpful if it asked the questions one at a time. Before you tell me nine more errors. Just because users are always overfilling their buffer. So smaller requests work better. (interviewer's observation) E01 suggests (for novice) only showing one error at a time in the AI-driven system.
+
+5.
+Label: engaging with ai interface
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 dictated each of the parameter fields.
+
+6.
+Label: queries ai for plotting output
+Quotes:
+- E04: "how can I plot the output of this model?" (interviewer's observation) E04 was prompted to follow-up with ChatGPT.
+
+7.
+Label: decides against the r extension
+Quotes:
+- E04: "How about without the R extension" (interviewer's observation) E04 evaluates the AI response and decides that he does not need to use the R extension.
+
+8.
+Label: appreciating ai's error catching abilities
+Quotes:
+- E01: I don't know how much it understands about all of the efficiencies of NetLogo... But it (could) catch obvious errors that are not obvious to me. Even if it's relatively dumb, it's an outside observer, which is great. (interviewer's observation) ChatGPT could serve as an outside observer that points out errors human did not realize.
+
+9.
+Label: prefers manual coding with ai guidance
+Quotes:
+- E04: (Throughout this phase. He uses generated code only for reference when writing his own.) (interviewer's observation) E04 writes code manually with the steps given by ChatGPT, rather than copy & paste code.
+
+10.
+Label: notes incomplete ai responses
+Quotes:
+- E04: It doesn't... Include everything that you need.  (interviewer's observation) Misses code structures at times.
+
+11.
+Label: seeking specific syntax structures from ai generated code
+Quotes:
+- E04: "how to define breeds in netlogo" (interviewer's observation) E04 tries to find certain syntax structures from the AI-generated code and ask for it when it is not there.
+
+12.
+Label: reevaluating work processes
+Quotes:
+- E01: But if a tool can do your, can do most of your work in five minutes, why would you spend two weeks? ... I would never hire someone who spent two weeks solving a problem that they could do in five minutes. (interviewer's observation) AI might be able to save people's time.
+
+13.
+Label: expressing confusion over persistent errors
+Quotes:
+- E04: It seems like a bug because I feel like all my parentheses are closed and all of my arguments and syntax are correct. (interviewer's observation) A less-clear error message makes E04 stuck.
+
+14.
+Label: providing practical usage insight
+Quotes:
+- E01: I have I found with with playing with with ChatGPT. And I was something at Python, I think I tried to give it the code. And I tried to run it generated error. And then I would go back to the next prompt and ChatGPT. And I go, that code is good. But it generates the following error. And I list the error online on this line, and I'd quote the line. And I say, Can you fix that?  (interviewer's observation) When E01 sees a bug in the generated code, he refers to his previous practice with asking ChatGPT to debug with the code, the error message, and the line number. Interviewer did what E01 said.
+
+15.
+Label: highlights ai's explanatory strength
+Quotes:
+- E04: I think that it's nice that it's, it clarifies error codes. I think that's probably where people who are new get stuck the most is trying to figure out the syntax and all the different errors. (interviewer's observation) The capability to clarify the errors.
+
+16.
+Label: asking chat gpt for comprehensive code check
+Quotes:
+- E01: "can you verify that no more names are reserved words in NetLogo?" I don't know if it can do that. (interviewer's observation) When E01 sees a bug after the third iteration, he asks ChatGPT to verify the code and produce no more bug. Unsure if it could do that.
+===
+Here are the definitions for each code with clear and generalizable criteria:
+
+---
+1. Criteria: Interviewees express positive views on peer programming and its potential to be supported by AI.
+Label: Advocates for peer programming
+
+2. Criteria: Interviewees refine task descriptions to test the capabilities of AI-driven interfaces like ChatGPT.
+Label: Refining task descriptions for AI
+
+3. Criteria: Interviewees acknowledge and respect AI's unique intuition, even if it differs from conventional approaches.
+Label: Allows AI's intuition
+
+4. Criteria: Interviewees reflect on how AI-driven systems can improve error communication, such as by showing one error at a time.
+Label: Effective error communication
+
+5. Criteria: Interviewees engage actively with AI interfaces, providing input and exploring their capabilities.
+Label: Engaging with AI interface
+
+6. Criteria: Interviewees ask AI for help with plotting output or visualizing results.
+Label: Queries AI for plotting output
+
+7. Criteria: Interviewees decide whether to use additional features or extensions in AI-driven interfaces.
+Label: Evaluating AI-powered features
+
+8. Criteria: Interviewees appreciate AI's ability to catch obvious errors that may not be immediately apparent to humans.
+Label: Appreciating AI's error catching
+
+9. Criteria: Interviewees prefer to use AI-generated code as a reference while writing their own code manually.
+Label: Manual coding with AI guidance
+
+10. Criteria: Interviewees note instances where AI-generated code is incomplete or lacks essential structures.
+Label: Incomplete AI responses
+
+11. Criteria: Interviewees seek specific syntax structures or code examples from AI-generated code.
+Label: Seeking specific syntax structures
+
+12. Criteria: Interviewees consider how AI-driven interfaces might change their work processes or save time.
+Label: Reevaluating work processes
+
+13. Criteria: Interviewees express frustration or confusion when encountering persistent errors or unclear error messages.
+Label: Expressing confusion over errors
+
+14. Criteria: Interviewees share practical insights on how they use AI-driven interfaces in their work.
+Label: Providing practical usage insight
+
+15. Criteria: Interviewees highlight the strengths of AI in explaining and clarifying error codes.
+Label: Highlighting AI's explanatory strength
+
+16. Criteria: Interviewees ask AI-driven interfaces to perform comprehensive code checks or verify code accuracy.
+Label: Asking AI for comprehensive code check

@@ -1,0 +1,380 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: notes incorrect error messages, encounters incorrect error messages
+- Notes incorrect error messages provided by the AI system.
+- Encounters incorrect error messages in AI interfaces.
+
+2.
+Concepts: identifies unclear error message, recognizes unclear error messages
+- Identifies unclear error messages from AI.
+- Describes confusion caused by vague error messages.
+
+3.
+Concepts: critiques netlogo's error messages, describes unhelpful error messages
+- Critiques NetLogo's error messages as unhelpful for beginners.
+- Describes unhelpful or unclear feedback or error messages in NetLogo.
+
+4.
+Concepts: expresses frustration with ai, expresses frustration with ai's false error detection, expresses frustration with ai limitations
+- Experiences frustration with AI interaction.
+- Expressing frustration with AI's false error detection.
+- Expressing frustration with the AI's limitations or inability to solve a problem.
+
+5.
+Concepts: finds explanation option insufficient, expresses dissatisfaction with limited ai options
+- Expresses dissatisfaction with the limited options provided by the AI interface.
+- The participant expresses dissatisfaction with the limited options provided by the AI.
+
+6.
+Concepts: frustrated by ai's error loop, experiences frustration with stuck ai, finds ai limitations frustrating
+- The interviewee expresses frustration with AI's error loop.
+- The participant describes a situation where the AI gets stuck and cannot fix an error.
+- Finding AI limitations frustrating, such as getting stuck in a loop.
+
+7.
+Concepts: acknowledges ai's errors, acknowledging ai's limitations
+- The participant acknowledges AI's errors but still sees value in AI-generated solutions.
+- Participants recognize AI's limitations and mistakes but still value its output and acknowledge its current capabilities.
+
+8.
+Concepts: critiques chatgpt limitations, noting chatgpt implementation limitations
+- Participants critique the limitations of ChatGPT's code generation and input processing.
+- Participants note the limitations of the current ChatGPT implementation.
+
+9.
+Concepts: notes chatgpt line limit, acknowledges chatgpt limitations
+- Participants note the limitation of ChatGPT in reading long code pieces.
+- Participants acknowledge ChatGPT's limitations with long code pieces.
+
+10.
+Concepts: noting ai's debugging limitations, limitations of ai debugging capability
+- Participants note AI's inability to fix certain errors in complex debugging.
+- Acknowledges the limit of debugging capability in AI.
+
+11.
+Concepts: reflects on ai's error handling limitations, identifying ai's error resolution limitations
+- Reflects on AI's limitations in error handling.
+- Participants identify AI's limitations in resolving certain errors.
+
+12.
+Concepts: identifying ai input limitations, highlighting ai response limitations
+- The participant identifies limitations in AI's input capabilities.
+- Participants highlight AI's response limitations.
+
+13.
+Concepts: noting ai design limitations, critiquing ai limitations and suggesting improvements
+- Participants note design limitations and current AI limitations.
+- Participants criticize limited AI options and suggest enhancements.
+
+14.
+Concepts: highlights risks for novices, expresses concerns about blindly following ai
+- Highlights the risks of blindly following AI responses, especially for novices.
+- Expresses concerns about the risks of blindly following AI-driven interfaces, especially for less experienced users.
+
+15.
+Concepts: warns against blind following, warns against blind trust in ai advice
+- The participant warns against blindly following AI-generated solutions without understanding.
+- The participant warns users against blindly following the LLM-driven interface's advice.
+
+16.
+Concepts: warns about ai errors, encouraging user judgment
+- The participant warns about the potential for errors in AI advice and the need for human judgment.
+- The participant encourages users to exercise judgment when using AI-driven interfaces, recognizing that AI advice may be incorrect.
+
+17.
+Concepts: expects ai to find models, expects ai model recognition
+- Participants expect AI to find models in the NetLogo model library.
+- Participants expect AI to recognize and retrieve specific NetLogo models.
+
+18.
+Concepts: acknowledges novice expectations, identifying novice expectations of ai
+- Participants note that novices may have high expectations for AI performance.
+- Identifies unrealistic expectations of AI capabilities held by novice users.
+
+19.
+Concepts: seeking clarity, seeks ai functionality clarification
+- Seeks clarity on AI features and capabilities.
+- Participants seek clarification on AI functions and capabilities.
+
+20.
+Concepts: questions ai capabilities, expresses uncertainty about ai capabilities
+- Participants question AI's capabilities and functionality.
+- Participants express uncertainty or doubt about AI capabilities or limitations.
+
+21.
+Concepts: expresses initial confusion about ai capabilities, expresses initial confusion about system capabilities
+- Participants express initial confusion about AI capabilities.
+- Participants express initial confusion about system capabilities.
+
+22.
+Concepts: noting ai's lack of determinism, perceiving ai response unpredictability, finding ai responses non-deterministic
+- Participants note the lack of determinism in AI responses.
+- Participants perceive AI responses as unpredictable and non-deterministic.
+- Participants find AI responses to be random and non-deterministic.
+
+23.
+Concepts: notes ai misunderstanding, identifies ai misunderstandings
+- Participant notes instances where the AI misunderstands their requests.
+- The participant identifies a misunderstanding in AI's response.
+
+24.
+Concepts: flexible problem-solving, adapts to challenges by switching tasks
+- Demonstrates flexibility in problem-solving by switching to a simpler task.
+- Participant switches to a simpler task when faced with challenges, adapting their approach.
+
+25.
+Concepts: task abandonment, abandons ai after repeated questions
+- The participant abandons the task after the AI repetition.
+- Participants abandon AI assistance after repeated questions.
+
+26.
+Concepts: recognizing value for novices, noting benefits for novices
+- Participants recognize and emphasize the value of AI for novice users, especially in clarifying error codes.
+- Participants note and highlight the benefits of AI-driven interfaces for novices, especially in clarifying error codes.
+
+27.
+Concepts: highlights novice struggles with ai, reflects on novice challenges in human-ai collaboration
+- Participants highlight the challenges faced by novices when using AI.
+- Participants reflect on the challenges and struggles faced by novices in human-AI collaboration.
+
+28.
+Concepts: recognizes tension between novice and expert needs, identifies design tension between novice and expert users
+- Participants note the tension between novice and expert needs in AI design and the limited options available.
+- Participants identify the tension between designing for novice and expert users in AI-driven interfaces.
+
+29.
+Concepts: indicates limited ai experience, indicates limited experience with chatgpt versions
+- Participants indicate limited experience with different AI versions.
+- Participants indicate limited experience with different versions of ChatGPT.
+
+30.
+Concepts: encounters outdated functions and issues, encounters outdated code and compatibility issues
+- Participants encounter outdated functions and issues with AI's use of older NetLogo functionality.
+- Participants encounter outdated code and compatibility issues with older NetLogo versions.
+
+31.
+Concepts: praises ai troubleshooting, appreciates ai troubleshooting, finds ai troubleshooting better
+- Interviewees praise AI's troubleshooting capabilities.
+- Interviewees appreciate AI's troubleshooting capabilities.
+- Interviewees find AI's troubleshooting capabilities better.
+
+32.
+Concepts: engages in iterative debugging, engaging ai in collaborative debugging
+- The participant engages in iterative debugging processes with AI.
+- The participant uses the AI to collaborate on debugging and suggests ways to fix errors.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: notes incorrect error messages, encounters incorrect error messages
+Relationship: The concepts are related as they both describe the experience of receiving incorrect error messages from the AI system.
+Criteria: Participants report encountering incorrect error messages provided by the AI system.
+Phrase: Notes incorrect error messages.
+
+2.
+Concepts: identifies unclear error message, recognizes unclear error messages
+Relationship: The concepts are related as they both describe the experience of encountering unclear error messages from the AI.
+Criteria: Participants identify unclear error messages from AI that cause confusion.
+Phrase: Identifies unclear error messages.
+
+3.
+Concepts: critiques netlogo's error messages, describes unhelpful error messages
+Relationship: The concepts are related as they both describe the experience of receiving unhelpful error messages from NetLogo.
+Criteria: Participants critique NetLogo's error messages as unhelpful for beginners.
+Phrase: Critiques unhelpful error messages.
+
+4.
+Concepts: expresses frustration with ai, expresses frustration with ai's false error detection, expresses frustration with ai limitations
+Relationship: The concepts are related as they all describe the experience of feeling frustrated with the AI's performance.
+Criteria: Participants express frustration with AI interaction, false error detection, and limitations.
+Phrase: Expresses frustration with AI.
+
+5.
+Concepts: finds explanation option insufficient, expresses dissatisfaction with limited ai options
+Relationship: The concepts are related as they both describe the experience of feeling dissatisfied with the limited options provided by the AI.
+Criteria: Participants express dissatisfaction with the limited options provided by the AI interface.
+Phrase: Expresses dissatisfaction with limited options.
+
+6.
+Concepts: frustrated by ai's error loop, experiences frustration with stuck ai, finds ai limitations frustrating
+Relationship: The concepts are related as they all describe the experience of feeling frustrated with the AI's limitations and errors.
+Criteria: Participants express frustration with AI's error loop, getting stuck, and limitations.
+Phrase: Experiences frustration with AI errors.
+
+7.
+Concepts: acknowledges ai's errors, acknowledging ai's limitations
+Relationship: The concepts are related as they both describe the experience of recognizing the AI's limitations and errors.
+Criteria: Participants acknowledge AI's errors but still see value in AI-generated solutions.
+Phrase: Acknowledges AI limitations.
+
+8.
+Concepts: critiques chatgpt limitations, noting chatgpt implementation limitations
+Relationship: The concepts are related as they both describe the experience of critiquing the limitations of ChatGPT.
+Criteria: Participants critique the limitations of ChatGPT's code generation and input processing.
+Phrase: Critiques ChatGPT limitations.
+
+9.
+Concepts: notes chatgpt line limit, acknowledges chatgpt limitations
+Relationship: The concepts are related as they both describe the experience of recognizing the limitations of ChatGPT.
+Criteria: Participants note the limitation of ChatGPT in reading long code pieces.
+Phrase: Notes ChatGPT limitations.
+
+10.
+Concepts: noting ai's debugging limitations, limitations of ai debugging capability
+Relationship: The concepts are related as they both describe the experience of recognizing the limitations of AI's debugging capabilities.
+Criteria: Participants note AI's inability to fix certain errors in complex debugging.
+Phrase: Notes AI debugging limitations.
+
+11.
+Concepts: reflects on ai's error handling limitations, identifying ai's error resolution limitations
+Relationship: The concepts are related as they both describe the experience of reflecting on the limitations of AI's error handling.
+Criteria: Participants reflect on AI's limitations in error handling.
+Phrase: Reflects on AI error handling limitations.
+
+12.
+Concepts: identifying ai input limitations, highlighting ai response limitations
+Relationship: The concepts are related as they both describe the experience of identifying the limitations of AI's input capabilities.
+Criteria: Participants identify limitations in AI's input capabilities.
+Phrase: Identifies AI input limitations.
+
+13.
+Concepts: noting ai design limitations, critiquing ai limitations and suggesting improvements
+Relationship: The concepts are related as they both describe the experience of recognizing the limitations of AI design.
+Criteria: Participants note design limitations and current AI limitations.
+Phrase: Notes AI design limitations.
+
+14.
+Concepts: highlights risks for novices, expresses concerns about blindly following ai
+Relationship: The concepts are related as they both describe the experience of expressing concerns about the risks of using AI.
+Criteria: Participants highlight the risks of blindly following AI responses, especially for novices.
+Phrase: Highlights risks of blindly following AI.
+
+15.
+Concepts: warns against blind following, warns against blind trust in ai advice
+Relationship: The concepts are related as they both describe the experience of warning against blindly following AI advice.
+Criteria: Participants warn against blindly following AI-generated solutions without understanding.
+Phrase: Warns against blind following.
+
+16.
+Concepts: warns about ai errors, encouraging user judgment
+Relationship: The concepts are related as they both describe the experience of warning about the potential for errors in AI advice.
+Criteria: Participants warn about the potential for errors in AI advice and the need for human judgment.
+Phrase: Warns about AI errors.
+
+17.
+Concepts: expects ai to find models, expects ai model recognition
+Relationship: The concepts are related as they both describe the experience of expecting AI to perform certain tasks.
+Criteria: Participants expect AI to find models in the NetLogo model library.
+Phrase: Expects AI to find models.
+
+18.
+Concepts: acknowledges novice expectations, identifying novice expectations of ai
+Relationship: The concepts are related as they both describe the experience of recognizing the expectations of novice users.
+Criteria: Participants note that novices may have high expectations for AI performance.
+Phrase: Acknowledges novice expectations.
+
+19.
+Concepts: seeking clarity, seeks ai functionality clarification
+Relationship: The concepts are related as they both describe the experience of seeking clarification about AI capabilities.
+Criteria: Participants seek clarity on AI features and capabilities.
+Phrase: Seeks AI functionality clarification.
+
+20.
+Concepts: questions ai capabilities, expresses uncertainty about ai capabilities
+Relationship: The concepts are related as they both describe the experience of questioning AI capabilities.
+Criteria: Participants question AI's capabilities and functionality.
+Phrase: Questions AI capabilities.
+
+21.
+Concepts: expresses initial confusion about ai capabilities, expresses initial confusion about system capabilities
+Relationship: The concepts are related as they both describe the experience of expressing initial confusion about AI capabilities.
+Criteria: Participants express initial confusion about AI capabilities.
+Phrase: Expresses initial confusion about AI.
+
+22.
+Concepts: noting ai's lack of determinism, perceiving ai response unpredictability, finding ai responses non-deterministic
+Relationship: The concepts are related as they all describe the experience of recognizing the non-deterministic nature of AI responses.
+Criteria: Participants note the lack of determinism in AI responses.
+Phrase: Notes AI's lack of determinism.
+
+23.
+Concepts: notes ai misunderstanding, identifies ai misunderstandings
+Relationship: The concepts are related as they both describe the experience of recognizing AI misunderstandings.
+Criteria: Participants note instances where the AI misunderstands their requests.
+Phrase: Notes AI misunderstandings.
+
+24.
+Concepts: flexible problem-solving, adapts to challenges by switching tasks
+Relationship: The concepts are related as they both describe the experience of adapting to challenges in problem-solving.
+Criteria: Participants demonstrate flexibility in problem-solving by switching to a simpler task.
+Phrase: Adapts to challenges.
+
+25.
+Concepts: task abandonment, abandons ai after repeated questions
+Relationship: The concepts are related as they both describe the experience of abandoning the task due to AI limitations.
+Criteria: Participants abandon the task after the AI repetition.
+Phrase: Abandons task.
+
+26.
+Concepts: recognizing value for novices, noting benefits for novices
+Relationship: The concepts are related as they both describe the experience of recognizing the value of AI for novice users.
+Criteria: Participants recognize and emphasize the value of AI for novice users, especially in clarifying error codes.
+Phrase: Recognizes value for novices.
+
+27.
+Concepts: highlights novice struggles with ai, reflects on novice challenges in human-ai collaboration
+Relationship: The concepts are related as they both describe the experience of highlighting the challenges faced by novices in using AI.
+Criteria: Participants highlight the challenges faced by novices when using AI.
+Phrase: Highlights novice struggles.
+
+28.
+Concepts: recognizes tension between novice and expert needs, identifies design tension between novice and expert users
+Relationship: The concepts are related as they both describe the experience of recognizing the tension between novice and expert needs in AI design.
+Criteria: Participants note the tension between novice and expert needs in AI design and the limited options available.
+Phrase: Recognizes design tension.
+
+29.
+Concepts: indicates limited ai experience, indicates limited experience with chatgpt versions
+Relationship: The concepts are related as they both describe the experience of indicating limited experience with AI.
+Criteria: Participants indicate limited experience with different AI versions.
+Phrase: Indicates limited AI experience.
+
+30.
+Concepts: encounters outdated functions and issues, encounters outdated code and compatibility issues
+Relationship: The concepts are related as they both describe the experience of encountering outdated functions and issues with AI's use of older NetLogo functionality.
+Criteria: Participants encounter outdated functions and issues with AI's use of older NetLogo functionality.
+Phrase: Encounters outdated functions.
+
+31.
+Concepts: praises ai troubleshooting, appreciates ai troubleshooting, finds ai troubleshooting better
+Relationship: The concepts are related as they all describe the experience of praising AI's troubleshooting capabilities.
+Criteria: Interviewees praise AI's troubleshooting capabilities.
+Phrase: Praises AI troubleshooting.
+
+32.
+Concepts: engages in iterative debugging, engaging ai in collaborative debugging
+Relationship: The concepts are related as they both describe the experience of engaging in iterative debugging processes with AI.
+Criteria: Participants engage in iterative debugging processes with AI.
+Phrase: Engages in iterative debugging.

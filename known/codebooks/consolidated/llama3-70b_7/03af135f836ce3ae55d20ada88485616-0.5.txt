@@ -1,0 +1,397 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: current chatgpt limitations, current limitations of chatgpt implementation
+- Notes the current limitations of the ChatGPT implementation, including the inability to check generated code with external information.
+- Identifying current limitations of ChatGPT implementation
+
+2.
+Concepts: ai input limitations, processing constraints
+- Identifying limitations of AI input processing capacity.
+- Noting the limitations of AI input, recognizing that it can only process a certain amount of code at a time.
+- Faces limitations in AI's processing capabilities
+
+3.
+Concepts: reads through code manually, reading through code to debug
+- Reads through code manually to debug.
+- Users read through code to debug and identify errors.
+
+4.
+Concepts: engages in debugging, expert debugging behavior
+- The participant engages in debugging when AI-generated code does not function as expected.
+- The participant exhibits expert debugging behavior, carefully reading error messages and evaluating AI-generated code.
+
+5.
+Concepts: debugging with chatgpt, describing previous practice of asking chatgpt to debug code
+- Asks ChatGPT to debug code with error messages.
+- Describing previous experiences with asking ChatGPT to debug code
+
+6.
+Concepts: seeking help with debugging, experiences debugging challenges
+- The interviewee seeks help with debugging, potentially using AI-generated code.
+- The interviewee experiences challenges in debugging AI-generated code, including incorrect error messages.
+
+7.
+Concepts: seeking clarification, asking for clarification and debugging
+- Seeking clarification or explanation of errors or concepts.
+- The participant asks follow-up questions to clarify or seek additional information from the AI interface.
+- The participant asks for clarification and debugging, seeking to understand and resolve errors.
+
+8.
+Concepts: desired fix functionality, wanting the "fix" option right after error identification
+- Wants a "fix" option for errors identified by the AI.
+- Wants the option to directly fix errors identified by the AI.
+
+9.
+Concepts: immediate error fixing, wanting immediate fix options
+- The participant desires an immediate "fix" option after error identification.
+- Wanting immediate fix options after error identification.
+
+10.
+Concepts: error identification, manually fixing ai-generated code, correcting ai-generated code errors, manual error fixing, manually fixing ai-generated code errors
+- Identifies errors in AI-generated code and takes corrective action.
+- Manually fixes AI-generated code.
+- Identification of errors in AI-generated code and manually fixing them.
+- Manually fixes AI code errors and takes an active role in the debugging process.
+- Manually attempting to fix AI-generated code without seeking further explanation.
+- Interviewee chooses not to use the "explain it" option, instead trying to fix errors manually.
+- Manually fixes errors in AI-generated code.
+
+11.
+Concepts: error debugging with ai, copying and pasting error messages for ai assistance, ai-assisted error resolution
+- Interviewee copies and pastes error messages to get assistance from the AI.
+- The interviewee copies and pastes error messages to the AI for assistance.
+- Interviewee seeks AI help with error resolution, such as copying and pasting error messages.
+
+12.
+Concepts: copying error messages to ai, providing error messages for ai assistance
+- Copies error messages to the AI system to seek assistance.
+- Provides error messages to AI-driven interfaces for further assistance.
+
+13.
+Concepts: seeking error-free code, seeking ai verification for error resolution
+- The participant seeks error-free code from LLM-driven interfaces.
+- The participant seeks AI verification to resolve coding errors and ensure the accuracy of generated code.
+
+14.
+Concepts: importance of expertise, need for expertise in error handling, emphasizes need for expertise
+- Participant highlights the importance of expertise in understanding and working with AI-generated code.
+- Interviewee highlights the importance of having expertise to understand and fix errors in AI-generated code.
+- The interviewee emphasizes the need for expertise to understand and debug AI-generated code.
+
+15.
+Concepts: expertise in ai-generated code, need for expertise in ai-generated code
+- Emphasizes the need for expertise to understand and fix errors in AI-generated code.
+- Emphasizing the need for expertise in understanding and debugging AI-generated code, recognizing potential risks for novice users.
+- Recognizing the need for expertise to understand AI-generated code, identifying potential risks for novice users.
+
+16.
+Concepts: emphasizes user practice, importance of debugging practice, importance of user debugging practice, suggesting practice in debugging before asking ai, emphasizing the need for users to practice debugging their own code
+- Emphasizing the importance of user practice in debugging before relying on AI assistance.
+- Interviewee believes users need practice in debugging their own code before seeking AI help.
+- Emphasizing the need for users to practice debugging their own code before seeking AI help.
+- Suggesting that users need practice in debugging their own code before asking AI.
+- Emphasizes the importance of users practicing debugging their own code before seeking AI assistance.
+
+17.
+Concepts: debugging practice importance, valuing debugging and unit testing
+- Valuing the importance of debugging practice.
+- Valuing debugging and unit testing capabilities.
+
+18.
+Concepts: debugging practice, user debugging skills
+- Advocating for user debugging practice.
+- Believes that users need practice in debugging their own code before relying on AI.
+- Recognizes the need for users to practice debugging their own code before relying on AI.
+- Emphasizing the importance of user debugging skills.
+
+19.
+Concepts: practicing iterative debugging, engaging in iterative debugging, iterative debugging process, iterative error fixing
+- Practices iterative debugging with AI assistance
+- Engaging in iterative debugging processes with AI, despite potential errors.
+- The participant engages in an iterative debugging process with the AI.
+- The participant engages in iterative error fixing, using AI to debug and refine their code.
+
+20.
+Concepts: learning from ai mistakes, learning from ai errors
+- Learning from ChatGPT's mistakes and iterating through the debugging process.
+- Emphasizes learning opportunities from AI errors and the importance of iterative debugging.
+
+21.
+Concepts: even though ai might give wrong answers, benefits of iterative debugging with ai
+- Finds value in iterative debugging with AI despite errors
+- Iterative debugging with AI can be beneficial, even if AI provides wrong answers.
+
+22.
+Concepts: iterative debugging, values iterative debugging
+- Recognizes value in iterative debugging processes despite initial errors.
+- The code values the iterative debugging process, even with AI errors.
+
+23.
+Concepts: describes iterative debugging benefits, acknowledging the value of iterative debugging, reflecting on benefits of iterative debugging
+- The participant describes the benefits of iterative debugging with AI assistance.
+- The participant acknowledges the benefits of the iterative debugging process when working with AI, despite potential errors.
+- The interviewee reflects on how users may benefit from the iterative debugging process during working with AI.
+
+24.
+Concepts: debugging with ai, recognizing ai's debugging and testing capabilities
+- Using AI for debugging and error resolution.
+- Interviewee refers to previous practice with asking ChatGPT to debug code.
+- Recognizing AI capabilities for debugging and testing code
+
+25.
+Concepts: ai debugging capabilities, praising debugging and unit testing capabilities
+- Interviewee acknowledges the AI's debugging capabilities, including unit testing.
+- The interviewee praises AI-generated code that includes debugging and unit testing capabilities.
+
+26.
+Concepts: acknowledges debugging capability, recognizing interface's debugging capabilities
+- The participant acknowledges the debugging capability of the interface.
+- Recognizes interface's debugging capabilities
+
+27.
+Concepts: appreciating ai-driven debugging, appreciating debugging capabilities
+- The participant appreciates the AI's ability to perform unit testing and debugging.
+- The participant appreciates the debugging capabilities of the AI interface.
+
+28.
+Concepts: recognizing debugging capabilities, benefiting from debugging and unit testing
+- The participant recognizes the debugging and unit testing capabilities of LLM-driven interfaces.
+- The participant benefits from debugging and unit testing capabilities in LLM-driven interfaces.
+
+29.
+Concepts: ai-assisted syntax explanation, appreciates ai's error clarification, appreciating ai-driven error clarification
+- Appreciates AI's role in explaining syntax and error codes.
+- Acknowledges the value of AI in clarifying error codes or providing explanations.
+- Identification of AI's ability to clarify error codes and syntax.
+
+30.
+Concepts: recognizes ai's error resolution, recognizes ai's debugging ability, valuing ai's debugging ability
+- Recognizes AI's ability to resolve errors and debug code.
+- Appreciates AI's ability to clarify error codes and debug.
+- Expresses appreciation for AI's ability to debug code and identify errors.
+
+31.
+Concepts: human-ai collaboration in debugging, human-ai collaboration in troubleshooting
+- Appreciating human-AI collaboration in debugging.
+- Appreciating human-AI collaboration in troubleshooting.
+
+32.
+Concepts: valuing ai troubleshooting, appreciating ai-driven troubleshooting
+- Recognizes the interface's troubleshooting capabilities and their potential to assist in error resolution.
+- Recognition of AI's troubleshooting capabilities.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: current chatgpt limitations, current limitations of chatgpt implementation
+Relationship: The concepts are related as they both describe the limitations of the current ChatGPT implementation.
+Criteria: Identifies limitations of ChatGPT implementation, including inability to check generated code with external information.
+Phrase: Identifying current limitations of ChatGPT implementation.
+
+2.
+Concepts: ai input limitations, processing constraints
+Relationship: The concepts are related as they both describe the limitations of AI input processing capacity.
+Criteria: Identifies limitations of AI input processing capacity, recognizing processing constraints.
+Phrase: Identifying AI input limitations.
+
+3.
+Concepts: reads through code manually, reading through code to debug
+Relationship: The concepts are related as they both describe the process of manually reading through code to debug.
+Criteria: Reads through code manually to debug and identify errors.
+Phrase: Manually reading code to debug.
+
+4.
+Concepts: engages in debugging, expert debugging behavior
+Relationship: The concepts are related as they both describe the participant's debugging behavior.
+Criteria: Engages in debugging when AI-generated code does not function as expected, exhibiting expert debugging behavior.
+Phrase: Engaging in expert debugging.
+
+5.
+Concepts: debugging with chatgpt, describing previous practice of asking chatgpt to debug code
+Relationship: The concepts are related as they both describe the participant's experience with asking ChatGPT to debug code.
+Criteria: Asks ChatGPT to debug code with error messages, describing previous experiences.
+Phrase: Debugging with ChatGPT.
+
+6.
+Concepts: seeking help with debugging, experiences debugging challenges
+Relationship: The concepts are related as they both describe the participant's need for help with debugging.
+Criteria: Seeks help with debugging, experiencing challenges in debugging AI-generated code.
+Phrase: Seeking help with debugging.
+
+7.
+Concepts: seeking clarification, asking for clarification and debugging
+Relationship: The concepts are related as they both describe the participant's need for clarification.
+Criteria: Seeks clarification or explanation of errors or concepts, asking follow-up questions.
+Phrase: Seeking clarification and debugging.
+
+8.
+Concepts: desired fix functionality, wanting the "fix" option right after error identification
+Relationship: The concepts are related as they both describe the participant's desire for a "fix" option.
+Criteria: Wants a "fix" option for errors identified by the AI, desiring immediate error fixing.
+Phrase: Wanting immediate fix functionality.
+
+9.
+Concepts: immediate error fixing, wanting immediate fix options
+Relationship: The concepts are related as they both describe the participant's desire for immediate error fixing.
+Criteria: Wants immediate fix options after error identification, desiring rapid error resolution.
+Phrase: Wanting immediate error fixing.
+
+10.
+Concepts: error identification, manually fixing ai-generated code, correcting ai-generated code errors, manual error fixing, manually fixing ai-generated code errors
+Relationship: The concepts are related as they all describe the process of identifying and manually fixing errors in AI-generated code.
+Criteria: Identifies errors in AI-generated code and takes corrective action, manually fixing errors.
+Phrase: Manually fixing AI-generated code errors.
+
+11.
+Concepts: error debugging with ai, copying and pasting error messages for ai assistance, ai-assisted error resolution
+Relationship: The concepts are related as they all describe the process of seeking AI assistance for error resolution.
+Criteria: Copies and pastes error messages to get assistance from the AI, seeking AI help with error resolution.
+Phrase: Seeking AI assistance for error resolution.
+
+12.
+Concepts: copying error messages to ai, providing error messages for ai assistance
+Relationship: The concepts are related as they both describe the process of providing error messages to the AI.
+Criteria: Copies error messages to the AI system to seek assistance, providing error messages for AI help.
+Phrase: Providing error messages for AI assistance.
+
+13.
+Concepts: seeking error-free code, seeking ai verification for error resolution
+Relationship: The concepts are related as they both describe the participant's desire for error-free code.
+Criteria: Seeks error-free code from LLM-driven interfaces, seeking AI verification for error resolution.
+Phrase: Seeking error-free code from AI.
+
+14.
+Concepts: importance of expertise, need for expertise in error handling, emphasizes need for expertise
+Relationship: The concepts are related as they all describe the importance of expertise in understanding and working with AI-generated code.
+Criteria: Highlights the importance of expertise in understanding and fixing errors in AI-generated code.
+Phrase: Emphasizing the need for expertise.
+
+15.
+Concepts: expertise in ai-generated code, need for expertise in ai-generated code
+Relationship: The concepts are related as they both describe the importance of expertise in understanding AI-generated code.
+Criteria: Emphasizes the need for expertise to understand and fix errors in AI-generated code, recognizing potential risks for novice users.
+Phrase: Emphasizing the need for expertise in AI-generated code.
+
+16.
+Concepts: emphasizes user practice, importance of debugging practice, importance of user debugging practice, suggesting practice in debugging before asking ai, emphasizing the need for users to practice debugging their own code
+Relationship: The concepts are related as they all describe the importance of user practice in debugging.
+Criteria: Emphasizes the importance of user practice in debugging before relying on AI assistance, suggesting users need practice in debugging their own code.
+Phrase: Emphasizing the need for user debugging practice.
+
+17.
+Concepts: debugging practice importance, valuing debugging and unit testing
+Relationship: The concepts are related as they both describe the importance of debugging practice.
+Criteria: Values the importance of debugging practice, valuing debugging and unit testing capabilities.
+Phrase: Valuing debugging practice.
+
+18.
+Concepts: debugging practice, user debugging skills
+Relationship: The concepts are related as they both describe the importance of user debugging skills.
+Criteria: Advocates for user debugging practice, recognizing the need for users to practice debugging their own code.
+Phrase: Advocating for user debugging skills.
+
+19.
+Concepts: practicing iterative debugging, engaging in iterative debugging, iterative debugging process, iterative error fixing
+Relationship: The concepts are related as they all describe the process of iterative debugging with AI assistance.
+Criteria: Engages in iterative debugging processes with AI, despite potential errors, practicing iterative error fixing.
+Phrase: Practicing iterative debugging.
+
+20.
+Concepts: learning from ai mistakes, learning from ai errors
+Relationship: The concepts are related as they both describe the process of learning from AI errors.
+Criteria: Learns from ChatGPT's mistakes and iterates through the debugging process, emphasizing learning opportunities from AI errors.
+Phrase: Learning from AI mistakes.
+
+21.
+Concepts: even though ai might give wrong answers, benefits of iterative debugging with ai
+Relationship: The concepts are related as they both describe the benefits of iterative debugging with AI despite errors.
+Criteria: Finds value in iterative debugging with AI despite errors, recognizing benefits of iterative debugging.
+Phrase: Finding value in iterative debugging.
+
+22.
+Concepts: iterative debugging, values iterative debugging
+Relationship: The concepts are related as they both describe the value of iterative debugging.
+Criteria: Recognizes value in iterative debugging processes despite initial errors, valuing the iterative debugging process.
+Phrase: Valuing iterative debugging.
+
+23.
+Concepts: describes iterative debugging benefits, acknowledging the value of iterative debugging, reflecting on benefits of iterative debugging
+Relationship: The concepts are related as they all describe the benefits of iterative debugging.
+Criteria: Describes the benefits of iterative debugging with AI assistance, acknowledging the value of iterative debugging.
+Phrase: Describing iterative debugging benefits.
+
+24.
+Concepts: debugging with ai, recognizing ai's debugging and testing capabilities
+Relationship: The concepts are related as they both describe the participant's experience with AI debugging capabilities.
+Criteria: Uses AI for debugging and error resolution, recognizing AI capabilities for debugging and testing code.
+Phrase: Debugging with AI.
+
+25.
+Concepts: ai debugging capabilities, praising debugging and unit testing capabilities
+Relationship: The concepts are related as they both describe the participant's appreciation for AI debugging capabilities.
+Criteria: Acknowledges the AI's debugging capabilities, including unit testing, praising AI-generated code that includes debugging and unit testing capabilities.
+Phrase: Praising AI debugging capabilities.
+
+26.
+Concepts: acknowledges debugging capability, recognizing interface's debugging capabilities
+Relationship: The concepts are related as they both describe the participant's recognition of AI debugging capabilities.
+Criteria: Acknowledges the debugging capability of the interface, recognizing interface's debugging capabilities.
+Phrase: Acknowledging AI debugging capabilities.
+
+27.
+Concepts: appreciating ai-driven debugging, appreciating debugging capabilities
+Relationship: The concepts are related as they both describe the participant's appreciation for AI-driven debugging.
+Criteria: Appreciates the AI's ability to perform unit testing and debugging, appreciating AI-driven debugging capabilities.
+Phrase: Appreciating AI-driven debugging.
+
+28.
+Concepts: recognizing debugging capabilities, benefiting from debugging and unit testing
+Relationship: The concepts are related as they both describe the participant's recognition of AI debugging capabilities.
+Criteria: Recognizes the debugging and unit testing capabilities of LLM-driven interfaces, benefiting from debugging and unit testing capabilities.
+Phrase: Recognizing AI debugging capabilities.
+
+29.
+Concepts: ai-assisted syntax explanation, appreciates ai's error clarification, appreciating ai-driven error clarification
+Relationship: The concepts are related as they all describe the participant's appreciation for AI-driven error clarification.
+Criteria: Appreciates AI's role in explaining syntax and error codes, acknowledging the value of AI in clarifying error codes or providing explanations.
+Phrase: Appreciating AI-driven error clarification.
+
+30.
+Concepts: recognizes ai's error resolution, recognizes ai's debugging ability, valuing ai's debugging ability
+Relationship: The concepts are related as they all describe the participant's recognition of AI's error resolution capabilities.
+Criteria: Recognizes AI's ability to resolve errors and debug code, appreciating AI's ability to clarify error codes and debug.
+Phrase: Recognizing AI's error resolution capabilities.
+
+31.
+Concepts: human-ai collaboration in debugging, human-ai collaboration in troubleshooting
+Relationship: The concepts are related as they both describe the participant's appreciation for human-AI collaboration in debugging and troubleshooting.
+Criteria: Appreciates human-AI collaboration in debugging and troubleshooting, recognizing the value of collaborative error resolution.
+Phrase: Appreciating human-AI collaboration.
+
+32.
+Concepts: valuing ai troubleshooting, appreciating ai-driven troubleshooting
+Relationship: The concepts are related as they both describe the participant's appreciation for AI-driven troubleshooting.
+Criteria: Recognizes the interface's troubleshooting capabilities and their potential to assist in error resolution, valuing AI-driven troubleshooting.
+Phrase: Valuing AI-driven troubleshooting.

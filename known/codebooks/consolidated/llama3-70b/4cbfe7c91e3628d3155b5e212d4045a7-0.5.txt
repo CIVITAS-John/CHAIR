@@ -1,0 +1,382 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: argues for ai's efficiency, sees ai as a time-saving solution
+- Who argues for AI's efficiency, and how they suggest its time-saving benefits.
+- Who sees AI as a time-saving solution, and how they highlight its ability.
+
+2.
+Concepts: values real-time ai assistance for immediate feedback, values immediate feedback with rapid response times
+- Participants highly value real-time AI assistance for immediate feedback and error clarification.
+- Participants value immediate feedback from AI-driven interfaces and appreciate the rapid response times that enable it.
+
+3.
+Concepts: uses ai-generated code fully, uses ai code under time constraints
+- Participants use AI-generated code fully, often due to time constraints.
+- Participants use AI-generated code under time-sensitive conditions.
+
+4.
+Concepts: uses ai code as a reference, uses ai-generated code selectively, writes code manually with ai guidance
+- Participants use AI-generated code as a reference, writing code manually.
+- Participants write code manually with AI-provided steps.
+
+5.
+Concepts: integrates ai code selectively, copies ai-generated code selectively
+- Integrates AI code into the model, selectively copying code.
+- Selectively copies code from AI response into the model.
+
+6.
+Concepts: copies and pastes ai-generated code for reuse, copies ai-generated code after reading ai output
+- The participant decides to use AI-generated code, copying and pasting it into their work.
+- The participant reads generated code and selectively copies code to the model.
+
+7.
+Concepts: overwriting with ai code, overrides previous work with ai-generated code
+- Overwrites existing work with AI-generated code due to time constraints.
+- Overrides previous work with AI-generated code.
+
+8.
+Concepts: proposes own fixes to ai, proposes code modifications
+- Proposes own fixes to AI-generated code or suggests alternative solutions.
+- Proposes specific code modifications by proactively suggesting modifications to AI-generated code.
+
+9.
+Concepts: manually integrates ai code, integrates ai-generated code
+- Participants manually integrate AI-generated code.
+- Participants integrate AI-generated code into their work.
+
+10.
+Concepts: desires automatic ai code integration, values automatic code integration
+- Participants desire automatic integration of AI-generated code.
+- Participants appreciate automatic integration of AI-generated code into their models.
+
+11.
+Concepts: reports successful ai-generated code, describes positive ai-generated code experience
+- Participants report successful AI-generated code.
+- Participants describe positive experiences with AI-generated code.
+
+12.
+Concepts: praises ai-generated code readability and commenting, praises ai-generated code quality and commenting
+- Participants praise or appreciate AI-generated code that is easy to read, with comments and documentation.
+- Participants praise ChatGPT's code commenting and documentation skills, expressing a positive sentiment towards its ability to write readable code.
+
+13.
+Concepts: appreciates executable ai-generated code, appreciates generated code readability and ease of understanding
+- Participants appreciate AI-generated code that can be executed.
+- Participants appreciate the readability of generated code and ease of understanding AI-generated code.
+
+14.
+Concepts: values ai's suggestions, appreciates ai suggestions
+- Interviewees value AI's suggestions for code optimization.
+- Participants appreciate AI suggestions for code improvement.
+
+15.
+Concepts: considers ai for optimization, uses chatgpt for optimization
+- Participants consider using AI for code optimization.
+- Participants use or plan to use ChatGPT for code optimization.
+
+16.
+Concepts: prefers simple, maintainable code, values code simplicity and maintainability, advocates for simplicity in code writing
+- The participant prefers simple, maintainable code that is easy to understand and modify.
+- The participant values code maintainability and simplicity.
+- The participant values simplicity and clarity in code writing and maintenance.
+
+17.
+Concepts: prioritizes code readability, emphasizes code readability and simplicity
+- The participant prioritizes code readability and simplicity over complexity.
+- The participant emphasizes the importance of code readability and simplicity for future maintenance.
+
+18.
+Concepts: emphasizes code quality, discusses code quality and complexity
+- The participant emphasizes the importance of code quality.
+- The participant discusses code quality and complexity.
+
+19.
+Concepts: seeks syntax help from ai, searches for specific syntax using ai
+- Asks the AI for specific syntax help or clarification.
+- Uses AI to search for specific syntax or asks for clarification when it's not provided.
+
+20.
+Concepts: ai-assisted syntax guidance, relies on ai for syntax support
+- Asking AI for specific syntax structures or code examples.
+- Relies on the AI for syntax support and asks for specific code structures.
+
+21.
+Concepts: recalls syntax using ai, utilizes ai for syntax reminders
+- Uses AI to recall syntax and overcome forgetting.
+- Utilizes AI for syntax reminders and relies on it for assistance.
+
+22.
+Concepts: comparative learning, compares ai-generated code with initial code
+- Participant compares their own code with the AI-generated code.
+- The participant compares outputs between human and AI-generated code.
+
+23.
+Concepts: summarize ai-generated code, read ai-generated code, analyze ai-generated code, read and comment on code
+- Participants summarize AI-generated code, thinking about how AI understood the request.
+- Participants read code and comments to understand AI-generated code, reading through code to debug and understand it.
+- Participants analyze AI-generated code to understand its logic and functionality, thinking about how the AI understood the request.
+- Participants read and comment on AI-generated code, summarizing its functionality and thinking about how the AI understood the request.
+
+24.
+Concepts: asks ai to verify code, requests ai verification, seeks ai verification for error resolution
+- The participant asks AI to verify code and eliminate bugs.
+- The participant requests verification or validation of AI-generated code or solutions.
+- The participant seeks error-free code, asking AI to verify and correct errors.
+
+25.
+Concepts: implies thoroughness, conduct thorough code review
+- The participant implies a need for thoroughness in evaluating AI-generated code.
+- Participants demonstrate a thorough code review, evaluating AI-generated code in detail and requesting a detailed review.
+
+26.
+Concepts: debug code manually, read code manually
+- Participants read and debug code, trying to identify and fix errors, demonstrating problem-solving skills.
+- Participants manually read through code to debug and understand it, independently reading through the code and attempting to debug it.
+
+27.
+Concepts: notices missing code structures, queries ai for missing code structures, identifies gaps in ai outputs
+- The participant identifies missing code elements and structures.
+- The participant asks the AI for missing structures in the code.
+- The participant identifies gaps in AI outputs, such as missing code structures.
+
+28.
+Concepts: describes resulting errors, notes beginners' coding practices
+- The participant describes the errors that occur when writing code, especially for beginners.
+- The participant notes that beginners may write large code chunks, leading to errors and difficulties.
+
+29.
+Concepts: has diverse language expertise, multiple languages and time constraints
+- The participant has knowledge of multiple languages but limited time for each.
+- The participant juggles multiple languages and time constraints.
+
+30.
+Concepts: shares programming expertise, shares diverse programming experience, shares programming experience
+- The participant shares their extensive experience in programming and computer science.
+- The participant shares their extensive experience with various programming languages, highlighting their expertise.
+- The participant shares their prior experience and expertise in computer programming.
+
+31.
+Concepts: experiences fragmented learning, reflects on fragmented learning patterns
+- The participant learns in fragmented time blocks and needs system support to recall previous progress.
+- The participant reflects on how professionals learn in fragmented time blocks and need system support.
+
+32.
+Concepts: faces effort constraints, faces time constraints in learning
+- The participant is constrained by time and has limited time to spend on learning new languages.
+- The participant faces time constraints for learning new extensions.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: argues for ai's efficiency, sees ai as a time-saving solution
+Relationship: The concepts are related as they both highlight the benefits of using AI in terms of time and efficiency.
+Criteria: Participants argue for AI's efficiency and time-saving benefits.
+Phrase: Argues for AI's efficiency.
+
+2.
+Concepts: values real-time ai assistance for immediate feedback, values immediate feedback with rapid response times
+Relationship: The concepts are related as they both emphasize the importance of immediate feedback and rapid response times in AI assistance.
+Criteria: Participants value real-time AI assistance for immediate feedback and rapid response times.
+Phrase: Values real-time AI assistance.
+
+3.
+Concepts: uses ai-generated code fully, uses ai code under time constraints
+Relationship: The concepts are related as they both describe the use of AI-generated code, with one highlighting full usage and the other highlighting usage under time constraints.
+Criteria: Participants use AI-generated code fully or under time constraints.
+Phrase: Uses AI-generated code.
+
+4.
+Concepts: uses ai code as a reference, uses ai-generated code selectively, writes code manually with ai guidance
+Relationship: The concepts are related as they all describe the use of AI-generated code as a reference or guidance for manual coding.
+Criteria: Participants use AI-generated code as a reference or guidance for manual coding.
+Phrase: Uses AI-generated code as a reference.
+
+5.
+Concepts: integrates ai code selectively, copies ai-generated code selectively
+Relationship: The concepts are related as they both describe the selective integration or copying of AI-generated code.
+Criteria: Participants integrate or copy AI-generated code selectively.
+Phrase: Integrates AI-generated code selectively.
+
+6.
+Concepts: copies and pastes ai-generated code for reuse, copies ai-generated code after reading ai output
+Relationship: The concepts are related as they both describe the copying and pasting of AI-generated code for reuse.
+Criteria: Participants copy and paste AI-generated code for reuse after reading the AI output.
+Phrase: Copies AI-generated code for reuse.
+
+7.
+Concepts: overwriting with ai code, overrides previous work with ai-generated code
+Relationship: The concepts are related as they both describe the overriding of previous work with AI-generated code.
+Criteria: Participants overwrite or override previous work with AI-generated code.
+Phrase: Overrides previous work with AI-generated code.
+
+8.
+Concepts: proposes own fixes to ai, proposes code modifications
+Relationship: The concepts are related as they both describe the proposal of fixes or modifications to AI-generated code.
+Criteria: Participants propose own fixes or modifications to AI-generated code.
+Phrase: Proposes fixes to AI-generated code.
+
+9.
+Concepts: manually integrates ai code, integrates ai-generated code
+Relationship: The concepts are related as they both describe the manual integration of AI-generated code.
+Criteria: Participants manually integrate AI-generated code.
+Phrase: Manually integrates AI-generated code.
+
+10.
+Concepts: desires automatic ai code integration, values automatic code integration
+Relationship: The concepts are related as they both describe the desire or value for automatic integration of AI-generated code.
+Criteria: Participants desire or value automatic integration of AI-generated code.
+Phrase: Desires automatic code integration.
+
+11.
+Concepts: reports successful ai-generated code, describes positive ai-generated code experience
+Relationship: The concepts are related as they both describe positive experiences with AI-generated code.
+Criteria: Participants report successful AI-generated code or describe positive experiences.
+Phrase: Reports successful AI-generated code.
+
+12.
+Concepts: praises ai-generated code readability and commenting, praises ai-generated code quality and commenting
+Relationship: The concepts are related as they both describe the praise for AI-generated code quality and readability.
+Criteria: Participants praise AI-generated code readability, commenting, and quality.
+Phrase: Praises AI-generated code quality.
+
+13.
+Concepts: appreciates executable ai-generated code, appreciates generated code readability and ease of understanding
+Relationship: The concepts are related as they both describe the appreciation for AI-generated code readability and executability.
+Criteria: Participants appreciate executable AI-generated code and its readability.
+Phrase: Appreciates executable AI-generated code.
+
+14.
+Concepts: values ai's suggestions, appreciates ai suggestions
+Relationship: The concepts are related as they both describe the value or appreciation for AI's suggestions.
+Criteria: Participants value or appreciate AI's suggestions.
+Phrase: Values AI's suggestions.
+
+15.
+Concepts: considers ai for optimization, uses chatgpt for optimization
+Relationship: The concepts are related as they both describe the consideration or use of AI for code optimization.
+Criteria: Participants consider or use AI for code optimization.
+Phrase: Considers AI for optimization.
+
+16.
+Concepts: prefers simple, maintainable code, values code simplicity and maintainability, advocates for simplicity in code writing
+Relationship: The concepts are related as they all describe the preference or value for simple and maintainable code.
+Criteria: Participants prefer or value simple, maintainable code.
+Phrase: Prefers simple code.
+
+17.
+Concepts: prioritizes code readability, emphasizes code readability and simplicity
+Relationship: The concepts are related as they both describe the prioritization or emphasis on code readability and simplicity.
+Criteria: Participants prioritize or emphasize code readability and simplicity.
+Phrase: Prioritizes code readability.
+
+18.
+Concepts: emphasizes code quality, discusses code quality and complexity
+Relationship: The concepts are related as they both describe the emphasis or discussion on code quality and complexity.
+Criteria: Participants emphasize or discuss code quality and complexity.
+Phrase: Emphasizes code quality.
+
+19.
+Concepts: seeks syntax help from ai, searches for specific syntax using ai
+Relationship: The concepts are related as they both describe the seeking of syntax help or searching for specific syntax using AI.
+Criteria: Participants seek syntax help or search for specific syntax using AI.
+Phrase: Seeks syntax help from AI.
+
+20.
+Concepts: ai-assisted syntax guidance, relies on ai for syntax support
+Relationship: The concepts are related as they both describe the reliance on AI for syntax guidance or support.
+Criteria: Participants rely on AI for syntax guidance or support.
+Phrase: Relies on AI for syntax support.
+
+21.
+Concepts: recalls syntax using ai, utilizes ai for syntax reminders
+Relationship: The concepts are related as they both describe the use of AI for syntax reminders or recall.
+Criteria: Participants use AI for syntax reminders or recall.
+Phrase: Utilizes AI for syntax reminders.
+
+22.
+Concepts: comparative learning, compares ai-generated code with initial code
+Relationship: The concepts are related as they both describe the comparison of AI-generated code with initial code.
+Criteria: Participants compare AI-generated code with initial code.
+Phrase: Compares AI-generated code.
+
+23.
+Concepts: summarize ai-generated code, read ai-generated code, analyze ai-generated code, read and comment on code
+Relationship: The concepts are related as they all describe the reading, analysis, or summarization of AI-generated code.
+Criteria: Participants read, analyze, or summarize AI-generated code.
+Phrase: Analyzes AI-generated code.
+
+24.
+Concepts: asks ai to verify code, requests ai verification, seeks ai verification for error resolution
+Relationship: The concepts are related as they all describe the request or seeking of AI verification for error resolution.
+Criteria: Participants ask AI to verify code or seek AI verification for error resolution.
+Phrase: Seeks AI verification.
+
+25.
+Concepts: implies thoroughness, conduct thorough code review
+Relationship: The concepts are related as they both describe the implication or conduct of thorough code review.
+Criteria: Participants imply or conduct thorough code review.
+Phrase: Conducts thorough code review.
+
+26.
+Concepts: debug code manually, read code manually
+Relationship: The concepts are related as they both describe the manual debugging or reading of code.
+Criteria: Participants debug or read code manually.
+Phrase: Debugs code manually.
+
+27.
+Concepts: notices missing code structures, queries ai for missing code structures, identifies gaps in ai outputs
+Relationship: The concepts are related as they all describe the noticing or identification of missing code structures or gaps in AI outputs.
+Criteria: Participants notice or identify missing code structures or gaps in AI outputs.
+Phrase: Notices missing code structures.
+
+28.
+Concepts: describes resulting errors, notes beginners' coding practices
+Relationship: The concepts are related as they both describe the description or notation of resulting errors or coding practices.
+Criteria: Participants describe resulting errors or note beginners' coding practices.
+Phrase: Describes resulting errors.
+
+29.
+Concepts: has diverse language expertise, multiple languages and time constraints
+Relationship: The concepts are related as they both describe the possession of diverse language expertise or the management of multiple languages under time constraints.
+Criteria: Participants have diverse language expertise or manage multiple languages under time constraints.
+Phrase: Has diverse language expertise.
+
+30.
+Concepts: shares programming expertise, shares diverse programming experience, shares programming experience
+Relationship: The concepts are related as they all describe the sharing of programming expertise or experience.
+Criteria: Participants share programming expertise or experience.
+Phrase: Shares programming expertise.
+
+31.
+Concepts: experiences fragmented learning, reflects on fragmented learning patterns
+Relationship: The concepts are related as they both describe the experience or reflection on fragmented learning patterns.
+Criteria: Participants experience or reflect on fragmented learning patterns.
+Phrase: Experiences fragmented learning.
+
+32.
+Concepts: faces effort constraints, faces time constraints in learning
+Relationship: The concepts are related as they both describe the facing of effort or time constraints in learning.
+Criteria: Participants face effort or time constraints in learning.
+Phrase: Faces time constraints.

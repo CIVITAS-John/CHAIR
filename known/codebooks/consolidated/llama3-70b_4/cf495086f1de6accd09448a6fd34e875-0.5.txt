@@ -1,0 +1,375 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+32.
+Criteria: {Who did what, and how for code 32}
+Label: {A descriptive label of code 32}
+---
+~~~
+1.
+Label: multi platform support appears to be a key interest for users
+Quotes:
+- User: [Emoji] Hello everyone, may I ask where I can download the PC / interactive whiteboard version of Physics Lab?
+
+2.
+Label: justifying feature development
+Quotes:
+- Designer: This belongs to the kind of feature that, once done, will ensure long-term stability... Adding various components is actually simpler
+
+3.
+Label: provides technical detail
+Quotes:
+- Designer: From the next update, dry batteries will no longer be ideal components (you can remove the internal resistance to simulate).
+
+4.
+Label: question about the request
+Quotes:
+- Designer: Does the class have internet?
+
+5.
+Label: maintaining privacy for specific requests
+Quotes:
+- Designer: Oh, please message me privately and tell me what you roughly need
+
+6.
+Label: inquires about user issues faced
+Quotes:
+- Designer: What problems did you encounter during use?
+
+7.
+Label: values user input in content development
+Quotes:
+- Designer: Before starting mechanics, we will gather opinions again~ Otherwise, I'm afraid I won't remember everything.
+
+8.
+Label: answer to a question
+Quotes:
+- Designer: Don't worry, don't worry, it will come, just optimizing the circuit diagram one last time.
+
+9.
+Label: referring to group sharing
+Quotes:
+- Designer: Group sharing.
+
+10.
+Label: with frequent updates and a focus on continual improvement
+Quotes:
+- User: This software is great! It's quite practical, unlike some software that tries to be comprehensive but ends up being inconvenient to use.
+
+11.
+Label: provide alternative suggestion
+Quotes:
+- User: But it's better to use the right side for non-crossing
+
+12.
+Label: designer 1 updates on release status
+Quotes:
+- Designer: The Apple Store is still reviewing, let's upload the PC version first
+
+13.
+Label: facilitating user input through visuals
+Quotes:
+- Designer: [Image] This one, right?
+
+14.
+Label: describes adjustments
+Quotes:
+- Designer: New Features
+Electronic components will be damaged after a short process, rather than immediately.
+Clearing the desktop will now display a confirmation interface.
+Supports undoing the creation and deletion of wires and components.
+Appliances now display the effective value of alternating current.
+(PC) You can now exit the application using the Esc key.
+
+New Components
+Added a sensitive ammeter.
+Added a student power supply (ideal AC/DC power supply).
+
+Adjustments to Component Properties
+Batteries now have adjustable internal resistance and are no longer ideal power sources.
+Incandescent bulbs now have volt-ampere characteristic parameters and are no longer ideal resistors.
+The resistance law experimenter now uses real formulas for calculations, with adjustable parameters.
+Hidden terminal blocks 3 and 4.
+
+Bug Fixes
+Fixed an issue with unit conversion in Editor properties.
+Terminal arrows no longer show jumping animations.
+There may have been calculation errors with certain circuit connections.
+
+15.
+Label: sharing a workaround for accessing the browser on a full screen application
+Quotes:
+- Designer: Last time I tried it in middle school, there's a trick where you click the link button in the top right, and when the browser pops up, it's no longer full screen... = =
+
+16.
+Label: promise future consultation
+Quotes:
+- Designer: Before starting mechanics, we will gather opinions again~ Otherwise, I'm afraid I won't remember everything.
+
+17.
+Label: engaging in collaborative decision making
+Quotes:
+- User: Left side
+
+18.
+Label: ensure accurate user feedback
+Quotes:
+- Designer: [Image] This one, right?
+
+19.
+Label: commits to incorporating feedback
+Quotes:
+- Designer: Hmm... I'll add it in the next update. PC updates are usually the fastest, so there will probably be another round this weekend.
+
+20.
+Label: providing insight into common practices
+Quotes:
+- User: Yes, the common one is still the old style
+
+21.
+Label: clarify usage scenarios
+Quotes:
+- Designer: The student power supply supports both DC and AC and is an ideal component.
+
+22.
+Label: promoting iterative refinement
+Quotes:
+- User: Don't aim for completeness, it should be categorized and refined one by one
+
+23.
+Label: adapting to user needs
+Quotes:
+- Designer: From the next update, dry batteries will no longer be ideal components (you can remove the internal resistance to simulate).
+- Designer: The student power supply supports both DC and AC and is an ideal component.
+
+24.
+Label: instructs on using student power supply and switch
+Quotes:
+- Designer: After connecting the student power supply, you need to turn on the switch
+
+25.
+Label: consider local export functionality
+Quotes:
+- Designer: It seems that local export needs to be supported.
+
+26.
+Label: community engagement
+Quotes:
+- Designer: New Features
+Electronic components will be damaged after a short process, rather than immediately.
+Clearing the desktop will now display a confirmation interface.
+Supports undoing the creation and deletion of wires and components.
+Appliances now display the effective value of alternating current.
+(PC) You can now exit the application using the Esc key.
+
+New Components
+Added a sensitive ammeter.
+Added a student power supply (ideal AC/DC power supply).
+
+Adjustments to Component Properties
+Batteries now have adjustable internal resistance and are no longer ideal power sources.
+Incandescent bulbs now have volt-ampere characteristic parameters and are no longer ideal resistors.
+The resistance law experimenter now uses real formulas for calculations, with adjustable parameters.
+Hidden terminal blocks 3 and 4.
+
+Bug Fixes
+Fixed an issue with unit conversion in Editor properties.
+Terminal arrows no longer show jumping animations.
+There may have been calculation errors with certain circuit connections.
+- Designer: v1.0.2 - 17/11/29
+# New Features
+Multi-language support: Japanese, German, French.
+Preliminary support for converting circuit components to circuit diagrams.
+
+Support for augmented reality mode on the latest iOS devices.
+More realistic 3D appearance for various meters.
+
+# Update Preview
+
+The next version will provide multimeter and meter zeroing.
+
+The next version will provide AC waveform display functionality.
+
+The next version will provide capacitors and energized solenoids.
+
+# Component Property Adjustments
+Dry cells can now be ideal power sources.
+
+All meters can now switch between ideal/realistic modes.
+
+# Special Tips
+The Esc shortcut key will now minimize the window.
+The Ctrl+E shortcut key can switch between exam and normal modes.
+- Designer: For electricity, we plan to create a function for simulated experiment assessment; it will add many experimental details, such as zero adjustment (of course, only useful in specific modes, otherwise it would be cumbersome to use regularly)
+- User: If there could be an export function, or the ability to save or import experiments, it would be convenient. We could set up the parameters in the office and directly import them in class.
+- User: Most schools will disable the network on classroom computers to prevent students from going online or to avoid various software auto-downloads from slowing down the computers.
+
+27.
+Label: demonstrate effective use of community resources
+Quotes:
+- User: I saw the group files, thank you.
+
+28.
+Label: contributing to design refinement
+Quotes:
+- User: But it's better to use the right side for non-crossing
+
+29.
+Label: encouraging open feedback
+Quotes:
+- Designer: No need to be polite, if you encounter any problems during use, you can directly mention them in the group.
+
+30.
+Label: designer 1 shows consideration for user
+Quotes:
+- Designer: Sorry for the late-night disturbance :)
+
+31.
+Label: recounts workaround experience
+Quotes:
+- Designer: Last time I tried it in middle school, there's a trick where you click the link button in the top right, and when the browser pops up, it's no longer full screen... = =
+
+32.
+Label: reflects on years of teaching experience
+Quotes:
+- User: I taught high school for seven years, and now I've been teaching middle school for eight years.
+===
+Here are the definitions for each code:
+
+---
+1.
+Criteria: Users express interest in accessing the platform on multiple devices
+Label: Multi-platform support interest
+
+2.
+Criteria: Designers justify the development of a feature by explaining its long-term benefits
+Label: Justifying feature development
+
+3.
+Criteria: Designers provide technical details about the platform's components or features
+Label: Providing technical details
+
+4.
+Criteria: Designers ask users for clarification on their requests or questions
+Label: Clarifying user requests
+
+5.
+Criteria: Designers ask users to share information privately to maintain their privacy
+Label: Maintaining user privacy
+
+6.
+Criteria: Designers ask users about the issues they encountered while using the platform
+Label: Inquiring about user issues
+
+7.
+Criteria: Designers value user input in the development of content or features
+Label: Valuing user input
+
+8.
+Criteria: Designers respond to users' questions or concerns
+Label: Responding to user inquiries
+
+9.
+Criteria: Users or designers refer to sharing resources or features within a group
+Label: Group sharing
+
+10.
+Criteria: Users express satisfaction with the platform's frequent updates and focus on improvement
+Label: Appreciation for continuous improvement
+
+11.
+Criteria: Users suggest alternative solutions or approaches
+Label: Providing alternative suggestions
+
+12.
+Criteria: Designers provide updates on the release status of new features or versions
+Label: Release status updates
+
+13.
+Criteria: Designers use visuals to facilitate user input or feedback
+Label: Facilitating user input through visuals
+
+14.
+Criteria: Designers describe changes, updates, or adjustments made to the platform
+Label: Describing updates and adjustments
+
+15.
+Criteria: Designers share workarounds or tips for using the platform
+Label: Sharing workarounds
+
+16.
+Criteria: Designers promise to consult with users in the future
+Label: Promising future consultation
+
+17.
+Criteria: Users or designers engage in collaborative decision-making
+Label: Collaborative decision-making
+
+18.
+Criteria: Designers ensure accurate user feedback by clarifying or confirming information
+Label: Ensuring accurate user feedback
+
+19.
+Criteria: Designers commit to incorporating user feedback into future updates
+Label: Committing to user feedback
+
+20.
+Criteria: Users share insights into common practices or experiences
+Label: Sharing common practices
+
+21.
+Criteria: Designers clarify how to use specific features or components
+Label: Clarifying usage scenarios
+
+22.
+Criteria: Users advocate for iterative refinement of the platform
+Label: Advocating for iterative refinement
+
+23.
+Criteria: Designers adapt to user needs by making changes to the platform
+Label: Adapting to user needs
+
+24.
+Criteria: Designers provide instructions on how to use specific features or components
+Label: Providing usage instructions
+
+25.
+Criteria: Designers consider implementing local export functionality
+Label: Considering local export functionality
+
+26.
+Criteria: Designers engage with the community by sharing updates, features, or news
+Label: Community engagement
+
+27.
+Criteria: Users demonstrate effective use of community resources
+Label: Effective use of community resources
+
+28.
+Criteria: Users contribute to the refinement of the platform's design
+Label: Contributing to design refinement
+
+29.
+Criteria: Designers encourage users to provide open and honest feedback
+Label: Encouraging open feedback
+
+30.
+Criteria: Designers show consideration for users' needs or feelings
+Label: Showing user consideration
+
+31.
+Criteria: Designers share their personal experiences or workarounds
+Label: Sharing personal experiences
+
+32.
+Criteria: Users share their teaching experience or background
+Label: Sharing teaching experience

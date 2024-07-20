@@ -1,0 +1,380 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: recognizing need for human oversight, human-ai (negative): human still needs to double-check ai's suggestion
+- Recognizing the limitations of the AI-driven interface, such as missing code structures or incomplete information.
+- Recognizing the limitations of AI, acknowledging that human judgment is still necessary to evaluate AI suggestions.
+
+2.
+Concepts: expressing uncertainty, expressing concerns about ai limitations
+- Participants express uncertainty about AI capabilities and limitations.
+- Participants express concerns about blindly following AI and recognize the need for expertise.
+- Participants emphasize the need for expertise when working with AI.
+
+3.
+Concepts: ai error detection bug, identifying potential bugs, suspecting ai errors
+- Identifies a bug in AI error detection.
+- Identifies potential bugs in AI-generated code, even when the code appears correct.
+- Suspecting bugs or errors in the AI's performance or output.
+
+4.
+Concepts: identifies system errors, reports errors and bugs
+- Participant identifies a potential error or bug in the system.
+- Reports errors and bugs in LLM-driven interfaces, including debugging practices.
+
+5.
+Concepts: calls for better error messaging, critiquing unclear error messages
+- The participant calls for better error messaging in the AI system.
+- Participants critique and express frustration with unclear error messages.
+
+6.
+Concepts: tool limitations, identifying netlogo's limitations
+- Identifies limitations of current tools, such as lack of smart code editors.
+- Participants identify limitations in NetLogo, including the lack of smart code editors and advanced editing features.
+
+7.
+Concepts: struggles with multiple errors, chatgpt ability (negative): errors in generating codes
+- Participants struggle with multiple errors or difficulties when working with AI-generated code.
+- Participant experiences errors in AI-generated code.
+
+8.
+Concepts: perceiving limitations in ai-generated code, identify ai-generated code errors and limitations
+- Perceives limitations in AI-generated code, such as incomplete or incorrect responses.
+- Participants identify errors or limitations in AI-generated code and recognize AI's limitations in fixing certain errors.
+
+9.
+Concepts: ai input limitations, current ai implementation limitations
+- Identifying AI input limitations
+- Identifies limitations of current AI implementation
+
+10.
+Concepts: highlights ai tool limitations, critique of current ai limitations (duplicate of 4 and 6)
+- The participant highlights limitations of current AI tools in cross-referencing generated code with external information.
+- The interviewee critiques current AI limitations, such as the inability to check generated code with external information.
+
+11.
+Concepts: acknowledges chatgpt limitations, acknowledging ai limitations
+- The participant acknowledges the current limitation of ChatGPT in not checking generated code with external information.
+- Participants acknowledge limitations in AI's understanding of complex programming and responses, acknowledging the need for workarounds due to ChatGPT's limitations.
+
+12.
+Concepts: limited ai options, limited option feedback
+- Participant critiques the limited options provided by the AI system.
+- Reporting on limited options to select from in AI-generated code
+
+13.
+Concepts: chatlogo ability (negative), chatlogo ability (negative): no fix option
+- The interviewee expresses frustration with the AI's ability to assist with certain tasks, such as creating a Perceptron.
+- Participant expresses frustration with the lack of a "fix" option in the AI system.
+
+14.
+Concepts: abandoning the search, giving up after repeated errors
+- The interviewee abandons the search or task due to frustration or lack of progress.
+- The interviewee gives up after repeated errors.
+
+15.
+Concepts: abandon ai assistance, abandons tasks due to ai repetition, abandoning unproductive ai interaction
+- Participants abandon AI assistance due to unsatisfactory results.
+- The participant gives up on a task after the AI asks the same question again.
+- The participant abandons an unproductive AI interaction.
+
+16.
+Concepts: struggling with outdated functionality, encounters outdated functionalities
+- Struggles with outdated functionality in AI
+- Encountering outdated functionalities or deprecated code in LLM-driven interfaces.
+
+17.
+Concepts: experiences initial confusion, exhibiting initial confusion about ai capabilities
+- Experiences initial confusion over the system's capabilities.
+- Participants exhibit initial confusion about AI capabilities and how to interact with it.
+
+18.
+Concepts: ai failure, recognizing need for human intervention in complex cases
+- Recognizes that AI can fail or get stuck in a loop and cannot fix errors.
+- Expressing frustration when AI gets stuck in a loop and cannot fix errors
+
+19.
+Concepts: frustration point, frustration with interface limitations
+- Reaches a frustration point when AI-generated code gets stuck in a loop.
+- Expresses frustration with the interface getting stuck in a loop and inability to fix errors.
+
+20.
+Concepts: human-ai conflict, human-ai collaboration challenges
+- The interviewee experiences conflict or frustration with the AI, such as receiving incorrect error messages.
+- The participant faces challenges in human-AI collaboration, such as the AI making classical errors.
+
+21.
+Concepts: ai limitations in debugging, limitations of ai in complex errors
+- Participant shows limitations of AI in complex debugging.
+- The participant notes the limitations of the LLM-driven interface in resolving complex errors and the continued importance of human expertise.
+
+22.
+Concepts: customizes ai-generated code, uses ai to fix code with own ideas, flexible approach to ai-assisted coding
+- The participant customizes AI-generated code.
+- The participant uses AI to fix code with their own ideas.
+- The participant demonstrates flexibility in their approach to using AI-generated code.
+
+23.
+Concepts: writes code manually with ai guidance, preferring active learning
+- The participant writes code manually with AI guidance.
+- The participant prefers to engage actively with the learning process, writing code manually with AI-generated code as reference.
+
+24.
+Concepts: utilizes ai-assisted coding, selectively uses ai-generated code
+- Uses AI-generated code in the coding process.
+- Selectively uses AI-generated code in the model, writing code manually with AI guidance.
+
+25.
+Concepts: understands ai-generated code, debugging generated code
+- The participant understands AI-generated code.
+- The participant reads through the code to debug and understand the generated code.
+
+26.
+Concepts: avoiding code copying, not relying on copy-paste
+- Participant avoids direct code copying from AI.
+- The interviewee chooses not to rely on copy-pasting code generated by the AI, instead using it as a reference.
+
+27.
+Concepts: executes ai-generated code, deciding to use ai-generated code
+- Decides to execute AI-generated code.
+- Decides to copy and run AI-generated code despite reservations.
+
+28.
+Concepts: discerning code adoption, discerning ai code adoption
+- Demonstrating discernment in code adoption
+- The participant reads through the code and selectively copies code to the model, demonstrating discerning AI code adoption.
+
+29.
+Concepts: integrate ai-generated code, integrating ai-generated code into model
+- Participants integrate AI-generated code.
+- Integrating AI-generated code into a model or larger project, selectively using AI output to enhance the development process.
+
+30.
+Concepts: desiring automatic code integration, appreciating seamless code integration
+- Participants desire automatic AI code integration for a seamless workflow.
+- The participant appreciates the capability to automatically integrate AI-generated code.
+
+31.
+Concepts: automation of code integration, valuing automatic code integration
+- The participant suggests automating the process of incorporating generated code into the model.
+- Valuing the ability to automatically integrate AI-generated code into models.
+
+32.
+Concepts: code worked out of the box, praises out of the box functionality
+- Reports successful AI-generated code
+- Praising the out-of-the-box functionality of AI, recognizing its ability to provide working solutions with minimal effort.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: recognizing need for human oversight, human-ai (negative): human still needs to double-check ai's suggestion
+Relationship: The concepts highlight the limitations of AI-driven interfaces and the need for human judgment to evaluate AI suggestions.
+Criteria: Participants recognize the need for human oversight in AI-driven interfaces.
+Phrase: Recognizing AI limitations.
+
+2.
+Concepts: expressing uncertainty, expressing concerns about ai limitations
+Relationship: The concepts convey participants' doubts and concerns about AI capabilities and limitations.
+Criteria: Participants express uncertainty and concerns about AI limitations.
+Phrase: Expressing AI uncertainty.
+
+3.
+Concepts: ai error detection bug, identifying potential bugs, suspecting ai errors
+Relationship: The concepts highlight participants' ability to detect and suspect errors in AI-generated code.
+Criteria: Participants identify potential bugs in AI-generated code.
+Phrase: Detecting AI errors.
+
+4.
+Concepts: identifies system errors, reports errors and bugs
+Relationship: The concepts emphasize participants' ability to identify and report errors in LLM-driven interfaces.
+Criteria: Participants report errors and bugs in LLM-driven interfaces.
+Phrase: Reporting system errors.
+
+5.
+Concepts: calls for better error messaging, critiquing unclear error messages
+Relationship: The concepts convey participants' frustration with unclear error messages and their desire for improvement.
+Criteria: Participants call for better error messaging in LLM-driven interfaces.
+Phrase: Critiquing error messaging.
+
+6.
+Concepts: tool limitations, identifying netlogo's limitations
+Relationship: The concepts highlight participants' recognition of limitations in current tools and NetLogo.
+Criteria: Participants identify limitations in NetLogo and current tools.
+Phrase: Identifying tool limitations.
+
+7.
+Concepts: struggles with multiple errors, chatgpt ability (negative): errors in generating codes
+Relationship: The concepts convey participants' struggles with multiple errors in AI-generated code.
+Criteria: Participants struggle with multiple errors in AI-generated code.
+Phrase: Struggling with AI errors.
+
+8.
+Concepts: perceiving limitations in ai-generated code, identify ai-generated code errors and limitations
+Relationship: The concepts emphasize participants' perception of limitations in AI-generated code.
+Criteria: Participants perceive limitations in AI-generated code.
+Phrase: Perceiving AI limitations.
+
+9.
+Concepts: ai input limitations, current ai implementation limitations
+Relationship: The concepts highlight participants' recognition of limitations in AI input and current implementation.
+Criteria: Participants identify limitations in AI input and current implementation.
+Phrase: Identifying AI limitations.
+
+10.
+Concepts: highlights ai tool limitations, critique of current ai limitations
+Relationship: The concepts convey participants' critique of current AI limitations.
+Criteria: Participants highlight limitations in current AI tools.
+Phrase: Critiquing AI limitations.
+
+11.
+Concepts: acknowledges chatgpt limitations, acknowledging ai limitations
+Relationship: The concepts emphasize participants' acknowledgment of AI limitations.
+Criteria: Participants acknowledge limitations in AI understanding.
+Phrase: Acknowledging AI limitations.
+
+12.
+Concepts: limited ai options, limited option feedback
+Relationship: The concepts convey participants' frustration with limited options in AI-generated code.
+Criteria: Participants experience limited options in AI-generated code.
+Phrase: Experiencing limited AI options.
+
+13.
+Concepts: chatlogo ability (negative), chatlogo ability (negative): no fix option
+Relationship: The concepts highlight participants' frustration with AI's inability to assist with certain tasks.
+Criteria: Participants experience frustration with AI's limitations.
+Phrase: Frustrated with AI limitations.
+
+14.
+Concepts: abandoning the search, giving up after repeated errors
+Relationship: The concepts convey participants' decision to abandon tasks due to frustration or lack of progress.
+Criteria: Participants abandon tasks due to repeated errors.
+Phrase: Abandoning tasks.
+
+15.
+Concepts: abandon ai assistance, abandons tasks due to ai repetition, abandoning unproductive ai interaction
+Relationship: The concepts emphasize participants' decision to abandon AI assistance due to unsatisfactory results.
+Criteria: Participants abandon AI assistance due to unsatisfactory results.
+Phrase: Abandoning AI assistance.
+
+16.
+Concepts: struggling with outdated functionality, encounters outdated functionalities
+Relationship: The concepts convey participants' struggles with outdated functionality in AI.
+Criteria: Participants encounter outdated functionalities in LLM-driven interfaces.
+Phrase: Struggling with outdated functionality.
+
+17.
+Concepts: experiences initial confusion, exhibiting initial confusion about ai capabilities
+Relationship: The concepts highlight participants' initial confusion over AI capabilities.
+Criteria: Participants experience initial confusion about AI capabilities.
+Phrase: Experiencing initial confusion.
+
+18.
+Concepts: ai failure, recognizing need for human intervention in complex cases
+Relationship: The concepts emphasize participants' recognition of AI failure and the need for human intervention.
+Criteria: Participants recognize the need for human intervention in complex cases.
+Phrase: Recognizing AI failure.
+
+19.
+Concepts: frustration point, frustration with interface limitations
+Relationship: The concepts convey participants' frustration with interface limitations.
+Criteria: Participants reach a frustration point with interface limitations.
+Phrase: Reaching a frustration point.
+
+20.
+Concepts: human-ai conflict, human-ai collaboration challenges
+Relationship: The concepts highlight participants' experiences of conflict or frustration with AI.
+Criteria: Participants experience human-AI collaboration challenges.
+Phrase: Experiencing human-AI conflict.
+
+21.
+Concepts: ai limitations in debugging, limitations of ai in complex errors
+Relationship: The concepts emphasize participants' recognition of AI limitations in complex debugging.
+Criteria: Participants recognize AI limitations in complex debugging.
+Phrase: Recognizing AI limitations.
+
+22.
+Concepts: customizes ai-generated code, uses ai to fix code with own ideas, flexible approach to ai-assisted coding
+Relationship: The concepts convey participants' flexible approach to using AI-generated code.
+Criteria: Participants customize AI-generated code with their own ideas.
+Phrase: Customizing AI-generated code.
+
+23.
+Concepts: writes code manually with ai guidance, preferring active learning
+Relationship: The concepts highlight participants' preference for active learning with AI guidance.
+Criteria: Participants write code manually with AI guidance.
+Phrase: Writing code manually.
+
+24.
+Concepts: utilizes ai-assisted coding, selectively uses ai-generated code
+Relationship: The concepts emphasize participants' selective use of AI-generated code.
+Criteria: Participants utilize AI-assisted coding selectively.
+Phrase: Utilizing AI-assisted coding.
+
+25.
+Concepts: understands ai-generated code, debugging generated code
+Relationship: The concepts convey participants' understanding of AI-generated code.
+Criteria: Participants understand AI-generated code.
+Phrase: Understanding AI-generated code.
+
+26.
+Concepts: avoiding code copying, not relying on copy-paste
+Relationship: The concepts highlight participants' avoidance of direct code copying.
+Criteria: Participants avoid direct code copying from AI.
+Phrase: Avoiding code copying.
+
+27.
+Concepts: executes ai-generated code, deciding to use ai-generated code
+Relationship: The concepts convey participants' decision to execute AI-generated code.
+Criteria: Participants decide to execute AI-generated code.
+Phrase: Executing AI-generated code.
+
+28.
+Concepts: discerning code adoption, discerning ai code adoption
+Relationship: The concepts emphasize participants' discerning approach to code adoption.
+Criteria: Participants demonstrate discerning AI code adoption.
+Phrase: Demonstrating discerning code adoption.
+
+29.
+Concepts: integrate ai-generated code, integrating ai-generated code into model
+Relationship: The concepts convey participants' integration of AI-generated code into models.
+Criteria: Participants integrate AI-generated code into models.
+Phrase: Integrating AI-generated code.
+
+30.
+Concepts: desiring automatic code integration, appreciating seamless code integration
+Relationship: The concepts highlight participants' desire for automatic code integration.
+Criteria: Participants desire automatic code integration.
+Phrase: Desiring automatic code integration.
+
+31.
+Concepts: automation of code integration, valuing automatic code integration
+Relationship: The concepts emphasize participants' valuation of automatic code integration.
+Criteria: Participants value automatic code integration.
+Phrase: Valuing automatic code integration.
+
+32.
+Concepts: code worked out of the box, praises out of the box functionality
+Relationship: The concepts convey participants' praise for AI's out-of-the-box functionality.
+Criteria: Participants praise out-of-the-box functionality.
+Phrase: Praising out-of-the-box functionality.

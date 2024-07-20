@@ -1,0 +1,307 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+32.
+Criteria: {Who did what, and how for code 32}
+Label: {A descriptive label of code 32}
+---
+~~~
+1.
+Label: describes positive experience
+Quotes:
+- E01: I want to do this in visual basic... So I made a spreadsheet and I asked ChatGPT, how do you do this? And it wrote the code and the code worked out of the box. (interviewer's observation) ChatGPT helped with a VBA task out of the box before.
+
+2.
+Label: prefers fix option
+Quotes:
+- E04: So, I guess that's kind of annoying because I didn't really want it to explain here, but that was the only option that I had. (interviewer's observation) E04 wants the "fix" option right after the errors are identified.
+
+3.
+Label: reading error messages before making a choice
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 reads error messages before making a choice.
+
+4.
+Label: makes informed choices
+Quotes:
+- E04: "How about without the R extension" (interviewer's observation) E04 evaluates the AI response and decides that he does not need to use the R extension.
+
+5.
+Label: exercises before asking ai for help
+Quotes:
+- E01: Part of this, the user needs a little practice in debugging their own code. There should be some exercises before you ask GPT to do this.  (interviewer's observation) Users need practice in debugging their own code and need to have exercises before asking AI.
+
+6.
+Label: interviewee reflecting on the need to iteratively ask questions to maximize chat gpt's capability
+Quotes:
+- E01: I've observed when I tried to suggest ChatGPT to other people, they're, um, they are amazed at the output that I can get. And that's because I know how to ask six questions in a row to zero in on what I'm after. (interviewer's observation) To maximize the capability of ChatGPT, one needs to know how to iteratively ask questions.
+
+7.
+Label: appreciating the value of incremental progress
+Quotes:
+- E01: I've observed when I tried to suggest ChatGPT to other people, they're, um, they are amazed at the output that I can get. And that's because I know how to ask six questions in a row to zero in on what I'm after. (interviewer's observation) To maximize the capability of ChatGPT, one needs to know how to iteratively ask questions.
+
+8.
+Label: requesting visualization assistance
+Quotes:
+- E04: "how can I plot the output of this model?" (interviewer's observation) E04 was prompted to follow-up with ChatGPT.
+
+9.
+Label: envisioning ai as a coding assistant
+Quotes:
+- E01: So if I'm writing long NetLogo code now, I'd probably have ChatGPT just open on the side. And I write a block of code and then I handed ChatGPT. Say, could I have done this better? And it would go, yeah, you could rearrange this like that. (interviewer's observation) ChatGPT could help E01 optimize his code.
+
+10.
+Label: novice' challenge of using ai
+Quotes:
+- E01: I'm not sure that any beginner wouldn't necessarily know that unless they'd ever practiced. And so some of the users of NetLogo have never programmed anything. So, (they might lack) the whole concept of debugging or maybe starting with a design outline. They start typing and then they get frustrated because they don't know how to debug code. (interviewer's observation) E01 reflects on how novices might get stuck during the human-AI collaboration process.
+
+11.
+Label: interprets ai errors
+Quotes:
+- E04: So this is interesting because, you know, obviously it's wrong. So I have to kind of interpret what's going on here. (interviewer's observation) E04 fixes common NetLogo mistakes by himself.
+
+12.
+Label: chatlogo ability (positive): straightforward
+Quotes:
+- E04: It seems like it's, you know, pretty straightforward to use and like intuitive, which is nice. And it's like, it's easy to interact with. So I feel like if I had like enough time to play around with it, it could be like really helpful. (interviewer's observation) Straightforward to use and intuitive.
+
+13.
+Label: envisions a straightforward model
+Quotes:
+- E04: The typical idea that I had was like a very, very simple neural network. (interviewer's observation) Task: a very simple neural network
+
+14.
+Label: notes others' amazement
+Quotes:
+- E01: I've observed when I tried to suggest ChatGPT to other people, they're, um, they are amazed at the output that I can get. And that's because I know how to ask six questions in a row to zero in on what I'm after. (interviewer's observation) To maximize the capability of ChatGPT, one needs to know how to iteratively ask questions.
+
+15.
+Label: reads and comments on code
+Quotes:
+- E01: So set up, move the turtle to go. Increase the size of the turtle by two units. Oh, dear. It's, it's making the turtle bigger. Oh, that's kind of, that's kind of messed it up a little bit then. (interviewer's observation) E01 reads the code and comments, summarizing the code, and thinks about how the AI was understanding the request.
+
+16.
+Label: imagines collaborative learning
+Quotes:
+- E01: So one of the things that certainly about ChatGPT is, or whatever the AI tool is that you build, is that it will probably always be advancing, and always stay pretty close to the state of the art about all these things. So if it has, especially if it has a hive business, so that if any user discovers something, they can feed it back into the system. And then everybody knows it now. (interviewer's observation) AI could be used to preserve, process, and retrieve fragmented knowledge generated by human as a collaboration process.
+
+17.
+Label: notes ai's adherence to best practices
+Quotes:
+- E04: It's basically following best practices. It is not trying to ruthlessly create a model. (interviewer's observation) Not "ruthlessly create a model".
+
+18.
+Label: describes beginners' confusion
+Quotes:
+- E01: So I see this from beginners all the time is they, they just get totally lost. I call it lint program from Unix, you know, it's like it's a little green checkbox looks at you and go, okay, wait, it's just, you've spelled everything correctly, but you have a conceptual error here. If it, if it caught structural problems like that, that would, that would help. (interviewer's observation) NetLogo needs to have linting features that exist in other languages (we are working on that right now). Here, E01 wants the linting to support identifying conceptual mistakes, different from syntax mistakes which most linters work on.
+
+19.
+Label: sample use case
+Quotes:
+- E01: I have I found with with playing with with ChatGPT. And I was something at Python, I think I tried to give it the code. And I tried to run it generated error. And then I would go back to the next prompt and ChatGPT. And I go, that code is good. But it generates the following error. And I list the error online on this line, and I'd quote the line. And I say, Can you fix that?  (interviewer's observation) When E01 sees a bug in the generated code, he refers to his previous practice with asking ChatGPT to debug with the code, the error message, and the line number. Interviewer did what E01 said.
+- E01: I want to do this in visual basic... So I made a spreadsheet and I asked ChatGPT, how do you do this? And it wrote the code and the code worked out of the box. (interviewer's observation) ChatGPT helped with a VBA task out of the box before.
+
+20.
+Label: interviewee discussing the importance of writing clear instructions for ai
+Quotes:
+- E01: In terms of learning experiences, like ramping up to using an assistant wrapping up to using ChatGPT might have some sort of evaluates. How well can you write instructions for another person? Some people just don't know how to conceptualize a problem. (interviewer's observation) E01 discusses how "writing instructions" is a capability that is missing on many people, and that is key to work with AI.
+
+21.
+Label: discusses jargon translation
+Quotes:
+- E01: And you want doctors to use it, nurses to use it and medical transcriptionists to use it. They use a different word for whatever the verb for whatever it is you're saying you want them to do. And so, in some sense, their documentation has to be customized to their context to their user group. ... It's a language system. If you have a learning system that's actually capable of harvesting information, yeah, and a lot of them are not yet, but I think we'll get there. (interviewer's observation) AI could be used to translate jargons between different sub-groups working in the same systems and ease the cost of writing customized documentation.
+
+22.
+Label: translates models from other languages
+Quotes:
+- E04: I've found that AI is really helpful for like, translating other models from other languages into NetLogo, for example. (interviewer's observation) Helpful for translating from other languages into NetLogo
+
+23.
+Label: especially for syntax related issues
+Quotes:
+- E04: I guess, in their databases, they still have like, NetLogo 5 in there and stuff. So like, for example, you know, the anonymous functions, they still use like, the old, sometimes I'll get like, the old functionality for the anonymous functions. (interviewer's observation) Writing code in older versions of NetLogo
+
+24.
+Label: adapts ai suggestions into setup
+Quotes:
+- E04: So one thing I'm realizing now, part of my setup needs to be reset all. (interviewer's observation) E04 sees from the generated code and realizes that he needs to reset.
+
+25.
+Label: frustration with error messages marking correct syntax as wrong
+Quotes:
+- E04: maybe you saw something that I didn't, but from my perspective, it seemed as though the code was set up appropriately, but it was marking the syntax as wrong. So maybe I was missing something, but I didn't see anything missing. So that was kind of frustrating. (interviewer's observation) Shows error messages even when it seems to be correct (that's a bug identified)
+
+26.
+Label: prefers iterative building
+Quotes:
+- E04: I just like being able to kind of, like, iteratively build it. The thing that I always do when I create a model is I do, like, the initial command. I'll set up and go here. I'll go ahead and after I kind of set up the buttons, I'll put the functions behind them back here in the interface. (interviewer's observation) E04 creates the code skeleton before asking ChatGPT. He has a clear idea & established process of building ABMs.
+
+27.
+Label: hypothetically using ai for building learning pathways
+Quotes:
+- E01: Can it design a generic learning management path? Because a lot of people can develop systems, but they're not good teachers. (interviewer's observation) Hypothetically: maybe AI could be used for building learning pathways.
+
+28.
+Label: mentions learning curve
+Quotes:
+- E04: Part of the issue that I'm having now is just kind of like the learning curve, just trying to figure out how everything works. (interviewer's observation) E04 mentions a learning curve, likely because our current design is not fine-tuned for experts.
+
+29.
+Label: suggests practice in debugging
+Quotes:
+- E01: Part of this, the user needs a little practice in debugging their own code. There should be some exercises before you ask GPT to do this.  (interviewer's observation) Users need practice in debugging their own code and need to have exercises before asking AI.
+
+30.
+Label: appreciating in workspace documentation access
+Quotes:
+- E04: And it could take a lot of time to like search the documentation and go online and try and figure out all those answers and just to have it like right there. So you can kind of stay within the task is really nice. (interviewer's observation) The capability to search for documentation and read it inside the workspace: esp. beneficial for novices.
+
+31.
+Label: emphasizes importance of syntax support
+Quotes:
+- E04: I think that it's nice that it's, it clarifies error codes. I think that's probably where people who are new get stuck the most is trying to figure out the syntax and all the different errors. (interviewer's observation) The capability to clarify the errors.
+
+32.
+Label: reflects on novices' struggles
+Quotes:
+- E01: I'm not sure that any beginner wouldn't necessarily know that unless they'd ever practiced. And so some of the users of NetLogo have never programmed anything. So, (they might lack) the whole concept of debugging or maybe starting with a design outline. They start typing and then they get frustrated because they don't know how to debug code. (interviewer's observation) E01 reflects on how novices might get stuck during the human-AI collaboration process.
+===
+Here are the definitions for each code:
+
+1. 
+Criteria: Describes a positive experience with LLM-driven interfaces, emphasizing successful outcomes.
+Label: Positive experience with LLM-driven interfaces
+
+2. 
+Criteria: Expresses a preference for a "fix" option in LLM-driven interfaces, indicating a desire for immediate solutions.
+Label: Prefers fix option
+
+3. 
+Criteria: Describes the act of reading error messages before making a choice, demonstrating a cautious approach to coding.
+Label: Reads error messages before making a choice
+
+4. 
+Criteria: Exhibits informed decision-making by evaluating AI responses and making deliberate choices.
+Label: Makes informed choices
+
+5. 
+Criteria: Advocates for exercises or practice in debugging code before seeking AI assistance, highlighting the importance of self-sufficiency.
+Label: Exercises before asking AI for help
+
+6. 
+Criteria: Reflects on the need to iteratively ask questions to maximize the capability of LLM-driven interfaces, demonstrating an understanding of the AI's limitations.
+Label: Iterative questioning to maximize AI capability
+
+7. 
+Criteria: Appreciates the value of incremental progress in using LLM-driven interfaces, recognizing the importance of step-by-step learning.
+Label: Appreciates incremental progress
+
+8. 
+Criteria: Requests visualization assistance from LLM-driven interfaces, indicating a desire for graphical support.
+Label: Requests visualization assistance
+
+9. 
+Criteria: Envisions LLM-driven interfaces as coding assistants, highlighting their potential to aid in code optimization.
+Label: Envisions AI as coding assistant
+
+10. 
+Criteria: Identifies the challenges faced by novices when using LLM-driven interfaces, emphasizing the need for guidance and support.
+Label: Novice's challenge with LLM-driven interfaces
+
+11. 
+Criteria: Interprets AI errors, demonstrating an ability to understand and address mistakes.
+Label: Interprets AI errors
+
+12. 
+Criteria: Describes the ease of use and intuitiveness of LLM-driven interfaces, highlighting their user-friendly nature.
+Label: LLM-driven interfaces are straightforward
+
+13. 
+Criteria: Envisions a simple model or approach to using LLM-driven interfaces, indicating a preference for simplicity.
+Label: Envisions simple model
+
+14. 
+Criteria: Notes others' amazement at the output of LLM-driven interfaces, highlighting their potential to impress.
+Label: Notes others' amazement
+
+15. 
+Criteria: Reads and comments on code, demonstrating an ability to understand and analyze code.
+Label: Reads and comments on code
+
+16. 
+Criteria: Imagines collaborative learning scenarios involving LLM-driven interfaces, highlighting their potential to facilitate knowledge sharing.
+Label: Imagines collaborative learning
+
+17. 
+Criteria: Notes the adherence of LLM-driven interfaces to best practices, emphasizing their ability to follow established guidelines.
+Label: Notes AI's adherence to best practices
+
+18. 
+Criteria: Describes the confusion faced by beginners when using LLM-driven interfaces, highlighting the need for guidance and support.
+Label: Describes beginners' confusion
+
+19. 
+Criteria: Provides a sample use case for LLM-driven interfaces, illustrating their potential applications.
+Label: Sample use case
+
+20. 
+Criteria: Discusses the importance of writing clear instructions for LLM-driven interfaces, highlighting the need for effective communication.
+Label: Importance of clear instructions
+
+21. 
+Criteria: Discusses the potential of LLM-driven interfaces to translate jargon between different user groups, highlighting their ability to facilitate communication.
+Label: Jargon translation
+
+22. 
+Criteria: Translates models from other languages using LLM-driven interfaces, demonstrating their ability to facilitate cross-language interactions.
+Label: Translates models from other languages
+
+23. 
+Criteria: Identifies the value of LLM-driven interfaces in addressing syntax-related issues, highlighting their potential to aid in code development.
+Label: Especially helpful for syntax-related issues
+
+24. 
+Criteria: Adapts AI suggestions into setup, demonstrating an ability to integrate AI-generated code into their workflow.
+Label: Adapts AI suggestions into setup
+
+25. 
+Criteria: Expresses frustration with error messages marking correct syntax as wrong, highlighting the need for accurate feedback.
+Label: Frustration with incorrect error messages
+
+26. 
+Criteria: Prefers an iterative building approach when using LLM-driven interfaces, indicating a desire for step-by-step development.
+Label: Prefers iterative building
+
+27. 
+Criteria: Hypothetically uses LLM-driven interfaces to build learning pathways, highlighting their potential to aid in education.
+Label: Hypothetical use for building learning pathways
+
+28. 
+Criteria: Mentions the learning curve associated with using LLM-driven interfaces, highlighting the need for guidance and support.
+Label: Learning curve
+
+29. 
+Criteria: Suggests practice in debugging as a necessary step before seeking AI assistance, emphasizing the importance of self-sufficiency.
+Label: Suggests practice in debugging
+
+30. 
+Criteria: Appreciates the value of having documentation access within the workspace, highlighting the importance of convenient resources.
+Label: Appreciates in-workspace documentation access
+
+31. 
+Criteria: Emphasizes the importance of syntax support in LLM-driven interfaces, highlighting the need for accurate code completion.
+Label: Emphasizes importance of syntax support
+
+32. 
+Criteria: Reflects on the struggles faced by novices when using LLM-driven interfaces, highlighting the need for guidance and support.
+Label: Reflects on novices' struggles

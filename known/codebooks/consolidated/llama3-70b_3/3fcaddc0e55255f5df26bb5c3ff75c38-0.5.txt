@@ -1,0 +1,383 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: debugging ai responses, providing specific details for ai debugging
+- Participants debug and ask for clarification of AI responses.
+- Participants provide specific details when asking AI to debug code.
+
+2.
+Concepts: finds ai's troubleshooting better, benefiting from better troubleshooting
+- The user finds the AI's troubleshooting capabilities better than traditional methods.
+- The interviewee benefits from the AI's troubleshooting capabilities.
+
+3.
+Concepts: learn from ai, values iterative learning, learns from ai's mistakes
+- Participants value learning from AI, including through iterative debugging.
+- The participant values iterative learning and debugging with AI.
+- The participant learns from the AI's mistakes and iterative debugging process.
+
+4.
+Concepts: acknowledges iterative debugging benefits, acknowledges ai's errors and iterative debugging value
+- The participant acknowledges the benefits of iterative debugging with AI.
+- The participant acknowledges AI's errors but still sees value in the iterative debugging process.
+
+5.
+Concepts: appreciates ai's debugging help, demonstrates willingness to use ai for debugging
+- The participant appreciates the debugging help or troubleshooting capabilities provided by AI.
+- The participant demonstrates a willingness to use AI for debugging and troubleshooting.
+
+6.
+Concepts: using ai for syntax recall, forgetting syntax and seeking ai help
+- Participants use AI to recall syntax, especially when forgotten.
+- The user forgets syntax and uses AI for assistance.
+
+7.
+Concepts: relying on ai for code structures, relying on ai for syntax support
+- The user relies on AI for code structures and syntax.
+- Participants rely on AI for syntax support and seek AI assistance for specific code structures.
+
+8.
+Concepts: queries ai for syntax, asks ai for specific syntax help
+- The user queries the AI for missing syntax or code structures.
+- The user asks the AI for specific syntax help.
+
+9.
+Concepts: seeks ai-generated code, searching for specific syntax via ai, demonstrating targeted use of ai
+- The user seeks specific syntax structures from AI-generated code.
+- Participants search for specific syntax in AI-generated code, seeking specific syntax information, and use AI to search for specific syntax or code structures.
+- Participant tries to find certain syntax structures from AI-generated code and asks for it when it's not there.
+
+10.
+Concepts: utilizing ai for syntax reminders, using ai for syntax issue resolution
+- Participants utilize AI for syntax reminders and find AI helpful for syntax reminders.
+- Participants acknowledge AI's usefulness in addressing syntax issues and note AI's helpfulness in resolving syntax issues.
+
+11.
+Concepts: wanting conceptual error detection, identifying conceptual errors
+- Participants want AI to support identifying conceptual mistakes.
+- The interviewee identifies conceptual errors and wants the AI to catch structural problems.
+
+12.
+Concepts: critiquing teaching skills, recognizing developers' limitations
+- Interviewee critiques the teaching skills of developers, suggesting that AI could be used to build learning pathways.
+- The interviewee notes that developers may lack teaching skills and implies that AI could potentially fill this gap.
+
+13.
+Concepts: identifying missing structures, identifies missing code elements
+- Identifies missing structures or code elements in AI-generated output.
+- The participant identifies missing code elements in the AI-generated code.
+
+14.
+Concepts: identifying gaps in ai outputs, noting incomplete ai output
+- The participant identifies limitations or incomplete outputs from AI.
+- The participant notes that AI output sometimes lacks necessary code structures or components.
+
+15.
+Concepts: reflects on novice struggles, reflects on novice challenges
+- The interviewee reflects on the struggles of novices in human-AI collaboration and the importance of practice in debugging.
+- The interviewee reflects on the challenges that novices face when using AI-driven interfaces, including the need for debugging and design skills.
+
+16.
+Concepts: observing novice coding habits, observing beginners' coding habits
+- Participants observing novice coding habits, noting struggles with large code chunks.
+- Participants observing beginners' coding habits, noting tendencies to write large code chunks.
+
+17.
+Concepts: emphasizing the importance of user practice, believing in the need for user debugging practice, emphasizing the need for user debugging practice, emphasizing the importance of user debugging skills
+- Participants emphasize the importance of users practicing and debugging their own code.
+- Participants believe users need practice in debugging their own code.
+- Participants express the need for users to practice debugging their own code.
+- Participants emphasize the importance of users developing their own debugging skills.
+
+18.
+Concepts: read error messages carefully, notes focus on error messages
+- Participants read error messages carefully before making a choice.
+- The participant focuses on error messages, reading them before making a choice.
+
+19.
+Concepts: calls for better error messaging, suggests improvements in error feedback
+- The user calls for improvement in error messaging or feedback.
+- The user suggests user-friendly error presentation and feedback.
+
+20.
+Concepts: copies error messages, copies and pastes error messages
+- The user provides error messages to the AI for further assistance.
+- Copies and pastes error messages to seek help or clarification.
+
+21.
+Concepts: summarizing ai-generated code, reading and commenting on code
+- Participants summarize and interpret the code generated by the AI.
+- Participants read and comment on AI-generated code, summarizing and understanding the AI's interpretation.
+
+22.
+Concepts: engaging with ai output, analyzing ai-generated code
+- Participants engage with AI output, reading and evaluating code.
+- Participants analyze AI-generated code, evaluating its quality and trying to understand how the AI interpreted the request.
+
+23.
+Concepts: evaluates ai-generated code, reviews and refines ai-generated code, evaluates ai-generated code using chatgpt
+- The participant evaluates and comments on the quality of AI-generated code.
+- The participant reviews and evaluates AI-generated code, refining it and requesting a detailed review.
+- The participant evaluates AI-generated code and shares their experience with code analysis using ChatGPT.
+
+24.
+Concepts: attempting to fix ai errors, identifying and correcting ai errors, interpreting and fixing ai errors
+- Participants attempt to fix errors in AI-generated code.
+- Participants find errors in AI-generated code and correct AI mistakes.
+- Participants interpret and fix errors in AI-generated code.
+
+25.
+Concepts: using ai for error troubleshooting, engaging in problem-solving and debugging
+- Participants use AI for error troubleshooting and debugging.
+- Participants engage in problem-solving and debugging AI-generated code.
+
+26.
+Concepts: seeking ai verification, requesting ai verification
+- Participants seek AI verification to resolve coding errors.
+- Participants request AI verification and validation of code.
+
+27.
+Concepts: highlights ai efficiency, argues for ai-supported efficiency
+- The participant highlights the efficiency of using AI for programming tasks.
+- The participant argues for efficiency in coding practices with AI support.
+
+28.
+Concepts: envisions chatgpt for code optimization, plans to use chatgpt for code optimization
+- The participant uses ChatGPT for code optimization and envisions its potential.
+- Plans to use ChatGPT for code optimization during programming sessions.
+
+29.
+Concepts: envisions ai as a coding assistant, suggests ai-assisted code optimization
+- The participant envisions AI as a coding assistant or optimizer.
+- The participant imagines AI helping to optimize code and improve the learning process.
+
+30.
+Concepts: modifying models with ai, seeks customized ai adaptation
+- Asks AI to modify a model based on personal ideas.
+- The participant requests customization of AI models to adapt to specific needs or ideas.
+
+31.
+Concepts: suggests ai improvements, suggests ai-inspired code improvements
+- The participant suggests improvements to the AI code generation process, highlighting areas for improvement.
+- The participant describes how AI-generated code inspires code improvements and suggests future improvements.
+
+32.
+Concepts: asks ai to modify code, proposes code modifications, proactively suggesting a modification to the ai's code and asking for help
+- The participant asks the AI to modify code to suit their needs, seeking specific changes.
+- The participant proposes own fixes to AI-generated code, suggesting specific modifications.
+- Proactively suggests modifications to the AI's code and asks for help.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: debugging ai responses, providing specific details for ai debugging
+Relationship: Participants engage in iterative debugging with AI by providing specific details to clarify AI responses.
+Criteria: Participants debug AI responses by providing specific details.
+Phrase: Debugging AI responses with specific details.
+
+2.
+Concepts: finds ai's troubleshooting better, benefiting from better troubleshooting
+Relationship: The user finds AI's troubleshooting capabilities superior to traditional methods, resulting in benefits.
+Criteria: Users find AI's troubleshooting capabilities better and benefit from them.
+Phrase: Finding AI's troubleshooting better.
+
+3.
+Concepts: learn from ai, values iterative learning, learns from ai's mistakes
+Relationship: Participants learn from AI through iterative debugging, valuing the process and learning from AI's mistakes.
+Criteria: Participants learn from AI through iterative debugging and value the process.
+Phrase: Learning from AI through iterative debugging.
+
+4.
+Concepts: acknowledges iterative debugging benefits, acknowledges ai's errors and iterative debugging value
+Relationship: The participant acknowledges the benefits of iterative debugging with AI, despite AI's errors.
+Criteria: Participants acknowledge the benefits of iterative debugging with AI.
+Phrase: Acknowledging iterative debugging benefits.
+
+5.
+Concepts: appreciates ai's debugging help, demonstrates willingness to use ai for debugging
+Relationship: The participant appreciates AI's debugging help and is willing to use AI for debugging.
+Criteria: Participants appreciate AI's debugging help and demonstrate willingness to use AI.
+Phrase: Appreciating AI's debugging help.
+
+6.
+Concepts: using ai for syntax recall, forgetting syntax and seeking ai help
+Relationship: Participants use AI to recall syntax, especially when forgotten.
+Criteria: Participants use AI to recall syntax when forgotten.
+Phrase: Using AI for syntax recall.
+
+7.
+Concepts: relying on ai for code structures, relying on ai for syntax support
+Relationship: The user relies on AI for code structures and syntax support.
+Criteria: Participants rely on AI for code structures and syntax support.
+Phrase: Relying on AI for code structures.
+
+8.
+Concepts: queries ai for syntax, asks ai for specific syntax help
+Relationship: The user queries AI for missing syntax or code structures.
+Criteria: Participants query AI for syntax help.
+Phrase: Querying AI for syntax.
+
+9.
+Concepts: seeks ai-generated code, searching for specific syntax via ai, demonstrating targeted use of ai
+Relationship: The user seeks specific syntax structures from AI-generated code, demonstrating targeted use of AI.
+Criteria: Participants seek specific syntax from AI-generated code.
+Phrase: Seeking specific syntax from AI-generated code.
+
+10.
+Concepts: utilizing ai for syntax reminders, using ai for syntax issue resolution
+Relationship: Participants utilize AI for syntax reminders and find AI helpful for syntax reminders.
+Criteria: Participants utilize AI for syntax reminders.
+Phrase: Utilizing AI for syntax reminders.
+
+11.
+Concepts: wanting conceptual error detection, identifying conceptual errors
+Relationship: Participants want AI to support identifying conceptual mistakes.
+Criteria: Participants want AI to identify conceptual errors.
+Phrase: Wanting conceptual error detection.
+
+12.
+Concepts: critiquing teaching skills, recognizing developers' limitations
+Relationship: The interviewee critiques the teaching skills of developers, suggesting AI could fill the gap.
+Criteria: Participants critique developers' teaching skills.
+Phrase: Critiquing teaching skills.
+
+13.
+Concepts: identifying missing structures, identifies missing code elements
+Relationship: Identifies missing structures or code elements in AI-generated output.
+Criteria: Participants identify missing code elements.
+Phrase: Identifying missing code elements.
+
+14.
+Concepts: identifying gaps in ai outputs, noting incomplete ai output
+Relationship: The participant identifies limitations or incomplete outputs from AI.
+Criteria: Participants identify gaps in AI outputs.
+Phrase: Identifying gaps in AI outputs.
+
+15.
+Concepts: reflects on novice struggles, reflects on novice challenges
+Relationship: The interviewee reflects on the struggles of novices in human-AI collaboration.
+Criteria: Participants reflect on novice struggles.
+Phrase: Reflecting on novice struggles.
+
+16.
+Concepts: observing novice coding habits, observing beginners' coding habits
+Relationship: Participants observe novice coding habits, noting struggles with large code chunks.
+Criteria: Participants observe novice coding habits.
+Phrase: Observing novice coding habits.
+
+17.
+Concepts: emphasizing the importance of user practice, believing in the need for user debugging practice, emphasizing the need for user debugging practice, emphasizing the importance of user debugging skills
+Relationship: Participants emphasize the importance of users practicing and debugging their own code.
+Criteria: Participants emphasize the importance of user practice.
+Phrase: Emphasizing user practice importance.
+
+18.
+Concepts: read error messages carefully, notes focus on error messages
+Relationship: Participants read error messages carefully before making a choice.
+Criteria: Participants read error messages carefully.
+Phrase: Reading error messages carefully.
+
+19.
+Concepts: calls for better error messaging, suggests improvements in error feedback
+Relationship: The user calls for improvement in error messaging or feedback.
+Criteria: Participants call for better error messaging.
+Phrase: Calling for better error messaging.
+
+20.
+Concepts: copies error messages, copies and pastes error messages
+Relationship: The user provides error messages to the AI for further assistance.
+Criteria: Participants copy error messages for AI assistance.
+Phrase: Copying error messages for AI assistance.
+
+21.
+Concepts: summarizing ai-generated code, reading and commenting on code
+Relationship: Participants summarize and interpret the code generated by the AI.
+Criteria: Participants summarize AI-generated code.
+Phrase: Summarizing AI-generated code.
+
+22.
+Concepts: engaging with ai output, analyzing ai-generated code
+Relationship: Participants engage with AI output, reading and evaluating code.
+Criteria: Participants engage with AI output.
+Phrase: Engaging with AI output.
+
+23.
+Concepts: evaluates ai-generated code, reviews and refines ai-generated code, evaluates ai-generated code using chatgpt
+Relationship: The participant evaluates and comments on the quality of AI-generated code.
+Criteria: Participants evaluate AI-generated code.
+Phrase: Evaluating AI-generated code.
+
+24.
+Concepts: attempting to fix ai errors, identifying and correcting ai errors, interpreting and fixing ai errors
+Relationship: Participants attempt to fix errors in AI-generated code.
+Criteria: Participants attempt to fix AI errors.
+Phrase: Attempting to fix AI errors.
+
+25.
+Concepts: using ai for error troubleshooting, engaging in problem-solving and debugging
+Relationship: Participants use AI for error troubleshooting and debugging.
+Criteria: Participants use AI for error troubleshooting.
+Phrase: Using AI for error troubleshooting.
+
+26.
+Concepts: seeking ai verification, requesting ai verification
+Relationship: Participants seek AI verification to resolve coding errors.
+Criteria: Participants seek AI verification.
+Phrase: Seeking AI verification.
+
+27.
+Concepts: highlights ai efficiency, argues for ai-supported efficiency
+Relationship: The participant highlights the efficiency of using AI for programming tasks.
+Criteria: Participants highlight AI efficiency.
+Phrase: Highlighting AI efficiency.
+
+28.
+Concepts: envisions chatgpt for code optimization, plans to use chatgpt for code optimization
+Relationship: The participant uses ChatGPT for code optimization and envisions its potential.
+Criteria: Participants envision ChatGPT for code optimization.
+Phrase: Envisioning ChatGPT for code optimization.
+
+29.
+Concepts: envisions ai as a coding assistant, suggests ai-assisted code optimization
+Relationship: The participant envisions AI as a coding assistant or optimizer.
+Criteria: Participants envision AI as a coding assistant.
+Phrase: Envisioning AI as a coding assistant.
+
+30.
+Concepts: modifying models with ai, seeks customized ai adaptation
+Relationship: Asks AI to modify a model based on personal ideas.
+Criteria: Participants seek customized AI adaptation.
+Phrase: Seeking customized AI adaptation.
+
+31.
+Concepts: suggests ai improvements, suggests ai-inspired code improvements
+Relationship: The participant suggests improvements to the AI code generation process, highlighting areas for improvement.
+Criteria: Participants suggest AI improvements.
+Phrase: Suggesting AI improvements.
+
+32.
+Concepts: asks ai to modify code, proposes code modifications, proactively suggesting a modification to the ai's code and asking for help
+Relationship: The participant asks the AI to modify code to suit their needs, seeking specific changes.
+Criteria: Participants ask AI to modify code.
+Phrase: Asking AI to modify code.

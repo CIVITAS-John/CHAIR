@@ -1,0 +1,257 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (26 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+26.
+Criteria: {Who did what, and how for code 26}
+Label: {A descriptive label of code 26}
+---
+~~~
+1.
+Label: notes adherence to best practices
+Quotes:
+- E04: It's basically following best practices. It is not trying to ruthlessly create a model. (interviewer's observation) Not "ruthlessly create a model".
+
+2.
+Label: recognizing ai's potential as a teaching tool
+Quotes:
+- E04: It's basically following best practices. It is not trying to ruthlessly create a model. (interviewer's observation) Not "ruthlessly create a model".
+
+3.
+Label: ai inferring user needs from the input context
+Quotes:
+- E01: Well, I cut the entire user's question. It figured out what I wanted. I didn't even tell it what I wanted. It just told me. (interviewer's observation) ChatGPT could infer E01's need from the input context.
+
+4.
+Label: e04 observes ai follows best practices
+Quotes:
+- E04: It's basically following best practices. It is not trying to ruthlessly create a model. (interviewer's observation) Not "ruthlessly create a model".
+
+5.
+Label: valuing parameter customization options
+Quotes:
+- E04: I thought it was really cool that, you know, that it knew exactly what I wanted to do and then kind of allowed me to define like the certain parameters for what I wanted to do. (interviewer's observation) Having the interface to clarify parameters helps.
+
+6.
+Label: ability to ask questions
+Quotes:
+- E01: If you know how to ask iterative questions, I think it could do pretty well. (interviewer's observation) E01 thinks ChatGPT would do well if one knows how to ask iterative questions.
+
+7.
+Label: questions ai's ability to design learning paths
+Quotes:
+- E01: Can it design a generic learning management path? Because a lot of people can develop systems, but they're not good teachers. (interviewer's observation) Hypothetically: maybe AI could be used for building learning pathways.
+
+8.
+Label: finds ai output useful
+Quotes:
+- E04: Oh and you can run it. That's cool. (interviewer's observation) E04 reads the AI output and decides to copy & paste it although he could also run it.
+
+9.
+Label: support novice
+Quotes:
+- E04: It includes debugging, it is actually trying to incorporate like a unit test, which is really cool and really helpful, especially for beginners, because they can kind of, you know, check their inputs. Beginners, everyone really. They can debug their code appropriately. (interviewer's observation) Debugging capability.
+- E04: It seems to explain things pretty well, it does not seems to be overly technical. (interviewer's observation) Provides clear, less technical explanations.
+
+10.
+Label: describes iterative improvement process with ai
+Quotes:
+- E01: So if I'm writing long NetLogo code now, I'd probably have ChatGPT just open on the side. And I write a block of code and then I handed ChatGPT. Say, could I have done this better? And it would go, yeah, you could rearrange this like that. (interviewer's observation) ChatGPT could help E01 optimize his code.
+
+11.
+Label: suggests ai could improve error detection
+Quotes:
+- E01: So I see this from beginners all the time is they, they just get totally lost. I call it lint program from Unix, you know, it's like it's a little green checkbox looks at you and go, okay, wait, it's just, you've spelled everything correctly, but you have a conceptual error here. If it, if it caught structural problems like that, that would, that would help. (interviewer's observation) NetLogo needs to have linting features that exist in other languages (we are working on that right now). Here, E01 wants the linting to support identifying conceptual mistakes, different from syntax mistakes which most linters work on.
+
+12.
+Label: aims to augment human capabilities
+Quotes:
+- E01: I think the key is to not replace human judgment and ability, but to find a fast way to increase human capability and judgment. (interviewer's observation) Augmentation of human capabilities & building on human judgement. Subjectivity of humanity?
+
+13.
+Label: fixes ai generated code issues
+Quotes:
+- E04: So this is interesting because, you know, obviously it's wrong. So I have to kind of interpret what's going on here. (interviewer's observation) E04 fixes common NetLogo mistakes by himself.
+
+14.
+Label: asking for clarification
+Quotes:
+- E04: "how to define breeds in netlogo" (interviewer's observation) E04 tries to find certain syntax structures from the AI-generated code and ask for it when it is not there.
+
+15.
+Label: simplifying task for ai
+Quotes:
+- E04: "Draw a smiley face" / "Drawing on the canvas" (interviewer's observation) E04 switches to a simpler task.
+
+16.
+Label: likes automatic code integration
+Quotes:
+- E04: I really liked how, like the code that it generates, if you could just kind of place that into the model automatically.  (interviewer's observation) The capability to put into the model automatically.
+
+17.
+Label: knowing how to ask the right question is important
+Quotes:
+- E01: If you know how to ask iterative questions, I think it could do pretty well. (interviewer's observation) E01 thinks ChatGPT would do well if one knows how to ask iterative questions.
+
+18.
+Label: outlining proper practices for online problem solving help
+Quotes:
+- E01: if you approach the user group politely, graciously, and instead of dropping your entire code on it, you go, I narrowed it down to this. I read this documentation. I tried these eight things with this answer and I'm perplexed. If somebody goes, they paste their problem and it's clearly their homework and they want someone else to do it for them. No, I'm not going to help with that. (interviewer's observation) E01's reflection on proper practices to seek online help: do your own work and clearly describe what you need/tried.
+
+19.
+Label: comparing manual vs. ai assisted problem solving
+Quotes:
+- E01: But if a tool can do your, can do most of your work in five minutes, why would you spend two weeks? ... I would never hire someone who spent two weeks solving a problem that they could do in five minutes. (interviewer's observation) AI might be able to save people's time.
+
+20.
+Label: human-ai (negative): human still need to double-check ai's suggestion
+Quotes:
+- E01: Some of this advice may be wrong. Use your good judgment. This is like Apple maps in 2010 or whatever, that tells you to turn right into the river and you have to go. (interviewer's observation) Users need to use their own judgment to evaluate ChatGPT's responses.
+
+21.
+Label: human-effort(negative): needs tech support
+Quotes:
+- E04: Because I'll like forget the syntax sometimes and I usually use the netlogo dictionary and just have it like open to the side. (interviewer's observation) E04 still forgets about the syntax and ChatGPT can help.
+
+22.
+Label: demonstrating openness to ai's approach
+Quotes:
+- E01: That's okay. Go is a convention. It's not really a requirement of the language that you use the word go. You can say banana to banana and have a button on the interface. It's a banana button. (interviewer's observation) E01 honors ChatGPT's own intuition even though it might be different from the convention.
+
+23.
+Label: highlights cultural barriers to seeking help
+Quotes:
+- E01: But you know, again, you have this culture, especially in the US of do your own work. People get a little too obsessive about doing their own work.  (interviewer's observation) E01's reflection on U.S. individualistic working culture.
+- E01: What you have in America is this, this cult of individualism to a point of obsession. And people don't naturally stop and go, how can I get help with this? (interviewer's observation) Continued: reflection on the individualism.
+
+24.
+Label: honors ai's coding intuition
+Quotes:
+- E01: That's okay. Go is a convention. It's not really a requirement of the language that you use the word go. You can say banana to banana and have a button on the interface. It's a banana button. (interviewer's observation) E01 honors ChatGPT's own intuition even though it might be different from the convention.
+
+25.
+Label: reflects on collaborative coding practices
+Quotes:
+- E01: What if you were just sitting in a peer programming and sitting next to a, uh, a bright person who was helping you, what would you want them to do? So you might start writing a line of code and they would stop and go, why are you, why are you typing? (interviewer's observation) E01 discusses how AI could potentially serve as a pair programmer that questions the learners' motives.
+
+26.
+Label: showing thoughtful decision making in ai interaction
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 reads error messages before making a choice.
+===
+Here are the definitions for each code with clear and generalizable criteria:
+
+---
+Definitions for each code:
+
+1.
+Criteria: The participant mentions following established guidelines or principles in their work with LLM-driven interfaces.
+Label: Adherence to best practices
+
+2.
+Criteria: The participant recognizes the potential of LLM-driven interfaces as a teaching tool or resource.
+Label: Recognizing AI's potential as a teaching tool
+
+3.
+Criteria: The participant notes that the LLM-driven interface can infer their needs or intentions from the input context.
+Label: AI inferring user needs from context
+
+4.
+Criteria: The participant observes that the LLM-driven interface follows established guidelines or principles in its approach.
+Label: AI follows best practices
+
+5.
+Criteria: The participant values the option to customize parameters or settings in the LLM-driven interface.
+Label: Valuing parameter customization options
+
+6.
+Criteria: The participant mentions the ability to ask questions or seek clarification from the LLM-driven interface.
+Label: Ability to ask questions
+
+7.
+Criteria: The participant questions or discusses the potential of LLM-driven interfaces to design learning paths or curricula.
+Label: Questions AI's ability to design learning paths
+
+8.
+Criteria: The participant finds the output or results from the LLM-driven interface to be useful or valuable.
+Label: Finds AI output useful
+
+9.
+Criteria: The participant suggests that the LLM-driven interface could be helpful for novice users or those who need additional support.
+Label: Support for novices
+
+10.
+Criteria: The participant describes a process of iterative improvement or refinement using the LLM-driven interface.
+Label: Describes iterative improvement process with AI
+
+11.
+Criteria: The participant suggests that the LLM-driven interface could improve error detection or debugging capabilities.
+Label: Suggests AI could improve error detection
+
+12.
+Criteria: The participant aims to augment human capabilities or judgment with the help of LLM-driven interfaces.
+Label: Aims to augment human capabilities
+
+13.
+Criteria: The participant fixes or corrects issues with code generated by the LLM-driven interface.
+Label: Fixes AI-generated code issues
+
+14.
+Criteria: The participant asks for clarification or seeks additional information from the LLM-driven interface.
+Label: Asking for clarification
+
+15.
+Criteria: The participant simplifies a task or problem to make it more manageable for the LLM-driven interface.
+Label: Simplifying tasks for AI
+
+16.
+Criteria: The participant likes or appreciates the ability to automatically integrate code generated by the LLM-driven interface.
+Label: Likes automatic code integration
+
+17.
+Criteria: The participant emphasizes the importance of asking the right questions or framing problems correctly for the LLM-driven interface.
+Label: Knowing how to ask the right question is important
+
+18.
+Criteria: The participant outlines proper practices for seeking online help or support, including being respectful and doing one's own work.
+Label: Outlining proper practices for online help
+
+19.
+Criteria: The participant compares manual problem-solving approaches with those using LLM-driven interfaces, highlighting potential time-saving benefits.
+Label: Comparing manual vs. AI-assisted problem-solving
+
+20.
+Criteria: The participant notes that human judgment is still necessary to evaluate and correct suggestions from LLM-driven interfaces.
+Label: Human-AI collaboration: need for human judgment
+
+21.
+Criteria: The participant mentions the need for technical support or resources to supplement their work with LLM-driven interfaces.
+Label: Human effort: needs tech support
+
+22.
+Criteria: The participant demonstrates openness to alternative approaches or unconventional solutions suggested by the LLM-driven interface.
+Label: Demonstrating openness to AI's approach
+
+23.
+Criteria: The participant highlights cultural or social barriers to seeking help or using LLM-driven interfaces, such as individualism or pride.
+Label: Highlights cultural barriers to seeking help
+
+24.
+Criteria: The participant honors or respects the coding intuition or suggestions provided by the LLM-driven interface.
+Label: Honors AI's coding intuition
+
+25.
+Criteria: The participant reflects on collaborative coding practices or the potential for LLM-driven interfaces to serve as peer programmers.
+Label: Reflects on collaborative coding practices
+
+26.
+Criteria: The participant exhibits thoughtful decision-making when interacting with the LLM-driven interface, such as reading error messages carefully.
+Label: Showing thoughtful decision making in AI interaction

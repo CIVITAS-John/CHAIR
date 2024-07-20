@@ -1,0 +1,306 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+32.
+Criteria: {Who did what, and how for code 32}
+Label: {A descriptive label of code 32}
+---
+~~~
+1.
+Label: mentions starting in 1964
+Quotes:
+- E01: I started programming in 1964 at IBM. ... And since then I have programmed in production code in at least 20 different software languages. (interviewer's observation) E01's prior experiences in computer programming in general.
+
+2.
+Label: need for human judgment in evaluating ai responses
+Quotes:
+- E01: Some of this advice may be wrong. Use your good judgment. This is like Apple maps in 2010 or whatever, that tells you to turn right into the river and you have to go. (interviewer's observation) Users need to use their own judgment to evaluate ChatGPT's responses.
+
+3.
+Label: suggests the potential of ai in translating technical jargon and customizing documentation for different user groups
+Quotes:
+- E01: And you want doctors to use it, nurses to use it and medical transcriptionists to use it. They use a different word for whatever the verb for whatever it is you're saying you want them to do. And so, in some sense, their documentation has to be customized to their context to their user group. ... It's a language system. If you have a learning system that's actually capable of harvesting information, yeah, and a lot of them are not yet, but I think we'll get there. (interviewer's observation) AI could be used to translate jargons between different sub-groups working in the same systems and ease the cost of writing customized documentation.
+
+4.
+Label: notes lack of determinism
+Quotes:
+- E04: Sometimes it'll give me instructions and sometimes it'll just give me the code and then sometimes it'll tell me to use R extensions or something like that. It is random in that regard, it's not deterministic in terms of what result you're going to get. (interviewer's observation) E04 regularly evaluates the AI responses and thinks that it is not deterministic.
+
+5.
+Label: balancing efficiency and the need for deeper understanding
+Quotes:
+- E04: It'd be that I just take this and see what this does. This should just be a single node so it'll kind of overwrite what I already did. (interviewer's observation) E04 uses the AI-generated code completely when realizing time constraints.
+
+6.
+Label: acknowledges limited time
+Quotes:
+- E01: There's a lot of extensions I would love to know about GIS extensions, but I have very limited time. What could I do in two hours? And I think everybody has a very finite length of time. (interviewer's observation) AI could potentially save time for learning new extensions (compared with core concepts) of NetLogo.
+
+7.
+Label: valuing ai's interpretive skills
+Quotes:
+- E01: Well, I cut the entire user's question. It figured out what I wanted. I didn't even tell it what I wanted. It just told me. (interviewer's observation) ChatGPT could infer E01's need from the input context.
+
+8.
+Label: sees value in ai generated solutions
+Quotes:
+- E01: The problem I posted was about 100 pages of NetLogo and then 100 pages, 100 lines of NetLogo. And it was a real problem that I had looked at. I would love to help this person, but this is going to take me minimum of two hours to figure out what are they trying to do? (interviewer's observation) Although AI made mistake, E01 still believes in the value in having an AI-generated solution (compared with no solution or no help).
+
+9.
+Label: critiques ai's inability to fix certain errors
+Quotes:
+- E04: And then like the only other thing I didn't like was, you know, kind of how it was getting stuck on itself and it wasn't able to fix that one error. (interviewer's observation) Could get stuck in a loop and cannot fix that.
+
+10.
+Label: questions ai's potential in educational design
+Quotes:
+- E01: Can it design a generic learning management path? Because a lot of people can develop systems, but they're not good teachers. (interviewer's observation) Hypothetically: maybe AI could be used for building learning pathways.
+
+11.
+Label: depends on ai in urgent scenarios
+Quotes:
+- E04: It'd be that I just take this and see what this does. This should just be a single node so it'll kind of overwrite what I already did. (interviewer's observation) E04 uses the AI-generated code completely when realizing time constraints.
+
+12.
+Label: suggests user debugging practice
+Quotes:
+- E01: Part of this, the user needs a little practice in debugging their own code. There should be some exercises before you ask GPT to do this.  (interviewer's observation) Users need practice in debugging their own code and need to have exercises before asking AI.
+
+13.
+Label: emphasizes questioning motives
+Quotes:
+- E01: What if you were just sitting in a peer programming and sitting next to a, uh, a bright person who was helping you, what would you want them to do? So you might start writing a line of code and they would stop and go, why are you, why are you typing? (interviewer's observation) E01 discusses how AI could potentially serve as a pair programmer that questions the learners' motives.
+
+14.
+Label: considering optimal query formulation
+Quotes:
+- E04: "I want to create a simple perception" (interviewer's observation) Thinks a bit about whether to use "in NetLogo" or not.
+
+15.
+Label: requests to repeat the task for further evaluation of chat gpt's responses
+Quotes:
+- E01: "I would like to write code to have a turtle run slowly around the perimeter of a square, but the square should go larger each time it goes around in NetLogo." (interviewer's observation) Interviewer proposes to try ChatGPT with the same prompt.
+
+16.
+Label: enumerating chat gpt's findings
+Quotes:
+- E01: And I posted that into chat GPT and it analyzed it in 10 seconds and said, well, it does this, this, and this, and here, these eight things are wrong. (interviewer's observation) ChatGPT could be used to provide timely feedback.
+
+17.
+Label: notes ai getting stuck
+Quotes:
+- E04: And then like the only other thing I didn't like was, you know, kind of how it was getting stuck on itself and it wasn't able to fix that one error. (interviewer's observation) Could get stuck in a loop and cannot fix that.
+
+18.
+Label: experiences gaps in ai assistance
+Quotes:
+- E04: It doesn't... Include everything that you need.  (interviewer's observation) Misses code structures at times.
+
+19.
+Label: seeks collaborative tools
+Quotes:
+- E01: But you know, again, you have this culture, especially in the US of do your own work. People get a little too obsessive about doing their own work.  (interviewer's observation) E01's reflection on U.S. individualistic working culture.
+
+20.
+Label: demonstrates dictation of parameters during the coding process
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 dictated each of the parameter fields.
+
+21.
+Label: chatgpt
+Quotes:
+- E01: It's like, I could hire an intern to like do this, or I could have chat GPT do it much faster for free. And, and, and even if chat GPT doesn't do it today, I bet six months from now, it would do it. (interviewer's observation) ChatGPT is free and advances fast.
+
+22.
+Label: reflects on individualistic culture
+Quotes:
+- E01: But you know, again, you have this culture, especially in the US of do your own work. People get a little too obsessive about doing their own work.  (interviewer's observation) E01's reflection on U.S. individualistic working culture.
+
+23.
+Label: recognizes ai's gaps in code generation
+Quotes:
+- E04: It doesn't... Include everything that you need.  (interviewer's observation) Misses code structures at times.
+
+24.
+Label: critiques novices' expectations
+Quotes:
+- E01: And, and they don't, this is an unfamiliar task to them apparently. So they want to ask one question and get the right answer the first time. And I, I don't have that expectation. I'll ask the right question and it'll get me 80% of the way there. (interviewer's observation) Novices might have a too high expectation for ChatGPT (but it cannot achieve that).
+
+25.
+Label: seeks ai verification for resolving coding errors
+Quotes:
+- E01: "can you verify that no more names are reserved words in NetLogo?" I don't know if it can do that. (interviewer's observation) When E01 sees a bug after the third iteration, he asks ChatGPT to verify the code and produce no more bug. Unsure if it could do that.
+
+26.
+Label: cautiously reviewing error messages
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 reads error messages before making a choice.
+
+27.
+Label: seeks time saving solutions
+Quotes:
+- E01: There's a lot of extensions I would love to know about GIS extensions, but I have very limited time. What could I do in two hours? And I think everybody has a very finite length of time. (interviewer's observation) AI could potentially save time for learning new extensions (compared with core concepts) of NetLogo.
+
+28.
+Label: uses ai for quick answers
+Quotes:
+- E04: I'll go on Stack Exchange or Stack Overflow, I'm part of the NetLogo listserv, but obviously there's a delay there. So in the instance that I need immediate feedback, it is really helpful. (interviewer's observation) Nice to have immediate feedback.
+
+29.
+Label: describes iterative debugging benefits
+Quotes:
+- E01: This is what conversations with ChatGPT typically look like. I had to go through about eight separate times to get all the errors out of it.  But, but look at how it structured the code. Look at the things that did look what you could learn from this. This is valuable. (interviewer's observation) Users may benefit from the iterative debugging process during working with AI, even though AI might give wrong answers.
+
+30.
+Label: finds ai user friendly
+Quotes:
+- E04: It seems to explain things pretty well, it does not seems to be overly technical. (interviewer's observation) Provides clear, less technical explanations.
+
+31.
+Label: demonstrating a clear, established process of building agent based models
+Quotes:
+- E04: I just like being able to kind of, like, iteratively build it. The thing that I always do when I create a model is I do, like, the initial command. I'll set up and go here. I'll go ahead and after I kind of set up the buttons, I'll put the functions behind them back here in the interface. (interviewer's observation) E04 creates the code skeleton before asking ChatGPT. He has a clear idea & established process of building ABMs.
+
+32.
+Label: benefit of ai - saves time
+Quotes:
+- E01: But if a tool can do your, can do most of your work in five minutes, why would you spend two weeks? ... I would never hire someone who spent two weeks solving a problem that they could do in five minutes. (interviewer's observation) AI might be able to save people's time.
+===
+Here are the definitions for each code:
+
+1.
+Criteria: Mention of a specific year or time period in the context of programming experience.
+Label: Early programming experience.
+
+2.
+Criteria: Importance of human judgment in evaluating AI responses.
+Label: Need for human judgment.
+
+3.
+Criteria: Potential of AI in translating technical jargon and customizing documentation for different user groups.
+Label: AI-based documentation customization.
+
+4.
+Criteria: Lack of determinism in AI responses.
+Label: Non-deterministic AI responses.
+
+5.
+Criteria: Balancing efficiency and the need for deeper understanding in using AI-generated code.
+Label: Efficiency vs. understanding tradeoff.
+
+6.
+Criteria: Limited time for learning new extensions or concepts.
+Label: Time constraints.
+
+7.
+Criteria: Valuing AI's ability to interpret user needs from context.
+Label: AI's interpretive skills.
+
+8.
+Criteria: Seeing value in AI-generated solutions despite potential mistakes.
+Label: Valuing AI-generated solutions.
+
+9.
+Criteria: Critiquing AI's inability to fix certain errors.
+Label: AI's error-fixing limitations.
+
+10.
+Criteria: Questioning AI's potential in educational design.
+Label: AI in educational design.
+
+11.
+Criteria: Depending on AI in urgent scenarios due to time constraints.
+Label: AI reliance in urgent scenarios.
+
+12.
+Criteria: Emphasizing the importance of user debugging practice.
+Label: User debugging practice.
+
+13.
+Criteria: Discussing AI's potential role in questioning user motives.
+Label: AI as a pair programmer.
+
+14.
+Criteria: Considering optimal query formulation for AI assistance.
+Label: Query formulation.
+
+15.
+Criteria: Requesting to repeat a task to further evaluate AI responses.
+Label: Evaluating AI responses.
+
+16.
+Criteria: Enumerating AI's findings or feedback.
+Label: AI feedback.
+
+17.
+Criteria: Noting AI getting stuck or unable to fix errors.
+Label: AI getting stuck.
+
+18.
+Criteria: Experiencing gaps in AI assistance.
+Label: Gaps in AI assistance.
+
+19.
+Criteria: Seeking collaborative tools or platforms.
+Label: Collaborative tools.
+
+20.
+Criteria: Demonstrating dictation of parameters during the coding process.
+Label: Parameter dictation.
+
+21.
+Criteria: Mentioning ChatGPT's benefits, such as speed and cost-effectiveness.
+Label: ChatGPT benefits.
+
+22.
+Criteria: Reflecting on individualistic culture in the US.
+Label: Individualistic culture.
+
+23.
+Criteria: Recognizing AI's gaps in code generation.
+Label: AI code generation gaps.
+
+24.
+Criteria: Critiquing novices' expectations from AI.
+Label: Novice expectations.
+
+25.
+Criteria: Seeking AI verification for resolving coding errors.
+Label: AI verification.
+
+26.
+Criteria: Cautiously reviewing error messages.
+Label: Error message review.
+
+27.
+Criteria: Seeking time-saving solutions.
+Label: Time-saving solutions.
+
+28.
+Criteria: Using AI for quick answers or feedback.
+Label: AI for quick answers.
+
+29.
+Criteria: Describing the benefits of iterative debugging with AI.
+Label: Iterative debugging benefits.
+
+30.
+Criteria: Finding AI user-friendly or easy to understand.
+Label: AI user-friendliness.
+
+31.
+Criteria: Demonstrating a clear, established process of building agent-based models.
+Label: Established modeling process.
+
+32.
+Criteria: Emphasizing the benefit of AI in saving time.
+Label: AI time-saving benefits.

@@ -1,0 +1,307 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+32.
+Criteria: {Who did what, and how for code 32}
+Label: {A descriptive label of code 32}
+---
+~~~
+1.
+Label: peer programming benefits
+Quotes:
+- E01: I'm an advocate of peer programming. It's about 10 times more efficient than single programming... If a person's programming, if you're programming it by yourself and you come to something you don't understand, you could spend a long time at that stoplight. (interviewer's observation) E01's positive opinions on peer programming with a hint that AI could play the role.
+
+2.
+Label: encounters old functionality in ai responses
+Quotes:
+- E04: I guess, in their databases, they still have like, NetLogo 5 in there and stuff. So like, for example, you know, the anonymous functions, they still use like, the old, sometimes I'll get like, the old functionality for the anonymous functions. (interviewer's observation) Writing code in older versions of NetLogo
+
+3.
+Label: human-ai: no need to blindly follow
+Quotes:
+- E04: To me, it seems like you need to have a certain degree of expertise to understand where the errors are and how to fix them. Because otherwise it's like you're going down this path where you're blindly following the ChatGPT and you have no idea what's going on. For less experienced people, I wouldn't like that because it could put you in a worse situation. (interviewer's observation) Requires expertise to understand errors and debug them. Risks to blindly follow ChatGPT, esp. for less experienced people.
+
+4.
+Label: interviewee noting the current chat gpt implementation cannot check the generated code with external information (partially solved by the interpreter plugin
+Quotes:
+- E01: And some of them we still haven't been doing like hive mind, like how we are going to have the machine learning back from the user feedback or just from the compiler, right? You generate some code, but it doesn't work. So we have to tell you that this time, you didn't work. (interviewer's observation) The current ChatGPT implementation cannot check the generated code with external information (compiler, etc.) (partially solved by the Interpreter plugin, but only Python at this time)
+
+5.
+Label: problem solving approach
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 chooses to fix the problem rather than showing the explanation.
+
+6.
+Label: the current chat gpt implementation cannot check the generated code with external information
+Quotes:
+- E01: And some of them we still haven't been doing like hive mind, like how we are going to have the machine learning back from the user feedback or just from the compiler, right? You generate some code, but it doesn't work. So we have to tell you that this time, you didn't work. (interviewer's observation) The current ChatGPT implementation cannot check the generated code with external information (compiler, etc.) (partially solved by the Interpreter plugin, but only Python at this time)
+
+7.
+Label: identifying need for context specific documentation
+Quotes:
+- E01: And you want doctors to use it, nurses to use it and medical transcriptionists to use it. They use a different word for whatever the verb for whatever it is you're saying you want them to do. And so, in some sense, their documentation has to be customized to their context to their user group. ... It's a language system. If you have a learning system that's actually capable of harvesting information, yeah, and a lot of them are not yet, but I think we'll get there. (interviewer's observation) AI could be used to translate jargons between different sub-groups working in the same systems and ease the cost of writing customized documentation.
+
+8.
+Label: error messages
+Quotes:
+- E01: I couldn't (help the novice) because when a beginner just posts a big block of code, it says there's something wrong with this. (interviewer's observation) Challenges for novices to seek help: they simply post chunks of code without background information.
+
+9.
+Label: routine way of using netlogo
+Quotes:
+- E04: I just like being able to kind of, like, iteratively build it. The thing that I always do when I create a model is I do, like, the initial command. I'll set up and go here. I'll go ahead and after I kind of set up the buttons, I'll put the functions behind them back here in the interface. (interviewer's observation) E04 creates the code skeleton before asking ChatGPT. He has a clear idea & established process of building ABMs.
+
+10.
+Label: demonstrating preference for hands on learning
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 chooses to fix the problem rather than showing the explanation.
+
+11.
+Label: misinterpretation
+Quotes:
+- E01: So one of the things that certainly about ChatGPT is, or whatever the AI tool is that you build, is that it will probably always be advancing, and always stay pretty close to the state of the art about all these things. So if it has, especially if it has a hive business, so that if any user discovers something, they can feed it back into the system. And then everybody knows it now. (interviewer's observation) AI could be used to preserve, process, and retrieve fragmented knowledge generated by human as a collaboration process.
+
+12.
+Label: cost savings through early detection
+Quotes:
+- E01: Part of getting AI to be your assistant on the side is, is having a culture where you're used to asking for help. And asking that early and often, and you know, from development costs, the later you discover you have a problem, the more it costs to fix it. (interviewer's observation) AI could help people to ask more questions, more early and often, to save cost for the future.
+
+13.
+Label: chatgpt ability (positive): optimization
+Quotes:
+- E01: So if I'm writing long NetLogo code now, I'd probably have ChatGPT just open on the side. And I write a block of code and then I handed ChatGPT. Say, could I have done this better? And it would go, yeah, you could rearrange this like that. (interviewer's observation) ChatGPT could help E01 optimize his code.
+
+14.
+Label: e04 decides to manually integrate ai output
+Quotes:
+- E04: Oh and you can run it. That's cool. (interviewer's observation) E04 reads the AI output and decides to copy & paste it although he could also run it.
+
+15.
+Label: advises users to exercise caution in interpreting ai generated advice
+Quotes:
+- E01: Some of this advice may be wrong. Use your good judgment. This is like Apple maps in 2010 or whatever, that tells you to turn right into the river and you have to go. (interviewer's observation) Users need to use their own judgment to evaluate ChatGPT's responses.
+
+16.
+Label: chatgpt usage: reference
+Quotes:
+- E04: (Throughout this phase. He uses generated code only for reference when writing his own.) (interviewer's observation) E04 writes code manually with the steps given by ChatGPT, rather than copy & paste code.
+
+17.
+Label: knowledge gaps in documentation
+Quotes:
+- E01: So my observation is that a critical, critical 10%, maybe more, maybe a lot more of knowledge that you need to do your job in software is only contained in oral tradition. It's, it is not documented anywhere.  (interviewer's observation) E01's reflection on knowledge in pieces - how they are generated and sustained.
+
+18.
+Label: undocumented knowledge
+Quotes:
+- E01: So my observation is that a critical, critical 10%, maybe more, maybe a lot more of knowledge that you need to do your job in software is only contained in oral tradition. It's, it is not documented anywhere.  (interviewer's observation) E01's reflection on knowledge in pieces - how they are generated and sustained.
+
+19.
+Label: learning from ai
+Quotes:
+- E01: This is what conversations with ChatGPT typically look like. I had to go through about eight separate times to get all the errors out of it.  But, but look at how it structured the code. Look at the things that did look what you could learn from this. This is valuable. (interviewer's observation) Users may benefit from the iterative debugging process during working with AI, even though AI might give wrong answers.
+
+20.
+Label: teachers' limitations in developing systems
+Quotes:
+- E01: Can it design a generic learning management path? Because a lot of people can develop systems, but they're not good teachers. (interviewer's observation) Hypothetically: maybe AI could be used for building learning pathways.
+
+21.
+Label: dealing with time constraints for each language
+Quotes:
+- E01: So one of the, one of the things which I have observed, as I'm bouncing from like, because I do a lot of different languages and potentially, so I don't have that much time to spend in anyone. (interviewer's observation) As an expert, E01 knows many languages but does not have much time for each one.
+
+22.
+Label: ai assisted coding
+Quotes:
+- E01: So if I'm writing long NetLogo code now, I'd probably have ChatGPT just open on the side. And I write a block of code and then I handed ChatGPT. Say, could I have done this better? And it would go, yeah, you could rearrange this like that. (interviewer's observation) ChatGPT could help E01 optimize his code.
+- E01: I want to do this in visual basic... So I made a spreadsheet and I asked ChatGPT, how do you do this? And it wrote the code and the code worked out of the box. (interviewer's observation) ChatGPT helped with a VBA task out of the box before.
+
+23.
+Label: recognizing ai's ability to understand implicit needs
+Quotes:
+- E01: Well, I cut the entire user's question. It figured out what I wanted. I didn't even tell it what I wanted. It just told me. (interviewer's observation) ChatGPT could infer E01's need from the input context.
+
+24.
+Label: especially valuable for novice users
+Quotes:
+- E04: And it could take a lot of time to like search the documentation and go online and try and figure out all those answers and just to have it like right there. So you can kind of stay within the task is really nice. (interviewer's observation) The capability to search for documentation and read it inside the workspace: esp. beneficial for novices.
+
+25.
+Label: creating a checkerboard pattern
+Quotes:
+- E01: "please write a netlogo program that produces a checker board with black and white squares?" (interviewer's observation) E01 asks ChatLogo to create a checkerboard pattern.
+
+26.
+Label: prefers non linear learning
+Quotes:
+- E01: I cannot learn like that. I'm sorry. I am not a top left first page to last page. So if AI can help find a good place to start and manage that learning process, then I think that's astounding. (interviewer's observation) Critique on the existing situation of technical documentation and imagine that AI could improve the learning process.
+
+27.
+Label: critiques current ai limitations
+Quotes:
+- E01: And some of them we still haven't been doing like hive mind, like how we are going to have the machine learning back from the user feedback or just from the compiler, right? You generate some code, but it doesn't work. So we have to tell you that this time, you didn't work. (interviewer's observation) The current ChatGPT implementation cannot check the generated code with external information (compiler, etc.) (partially solved by the Interpreter plugin, but only Python at this time)
+
+28.
+Label: wanting immediate fix options
+Quotes:
+- E04: So, I guess that's kind of annoying because I didn't really want it to explain here, but that was the only option that I had. (interviewer's observation) E04 wants the "fix" option right after the errors are identified.
+
+29.
+Label: finds interface straightforward
+Quotes:
+- E04: It seems like it's, you know, pretty straightforward to use and like intuitive, which is nice. And it's like, it's easy to interact with. So I feel like if I had like enough time to play around with it, it could be like really helpful. (interviewer's observation) Straightforward to use and intuitive.
+
+30.
+Label: seeking follow up guidance
+Quotes:
+- E04: "how can I plot the output of this model?" (interviewer's observation) E04 was prompted to follow-up with ChatGPT.
+
+31.
+Label: chatlogo ability (negative): error
+Quotes:
+- E04: And then like the only other thing I didn't like was, you know, kind of how it was getting stuck on itself and it wasn't able to fix that one error. (interviewer's observation) Could get stuck in a loop and cannot fix that.
+
+32.
+Label: noticing ai's limitations in handling version changes
+Quotes:
+- E04: I guess, in their databases, they still have like, NetLogo 5 in there and stuff. So like, for example, you know, the anonymous functions, they still use like, the old, sometimes I'll get like, the old functionality for the anonymous functions. (interviewer's observation) Writing code in older versions of NetLogo
+===
+Here are the definitions for each code:
+
+1.
+Criteria: The interviewee expresses a positive opinion about peer programming, suggesting that AI could play a similar role.
+Label: Peer Programming Benefits
+
+2.
+Criteria: The interviewee encounters old functionality in AI responses, specifically in older versions of NetLogo.
+Label: Encounters Old Functionality in AI Responses
+
+3.
+Criteria: The interviewee emphasizes the need for expertise to understand errors and debug them when using AI-generated code, warning against blindly following AI responses.
+Label: Human-AI Collaboration Requires Expertise
+
+4.
+Criteria: The interviewee notes that the current ChatGPT implementation cannot check generated code with external information, highlighting a limitation of the technology.
+Label: Current AI Limitation: No External Feedback
+
+5.
+Criteria: The interviewee chooses to fix a problem rather than showing the explanation, demonstrating a problem-solving approach.
+Label: Problem-Solving Approach
+
+6.
+Criteria: The interviewee reiterates that the current ChatGPT implementation cannot check generated code with external information, highlighting a limitation of the technology.
+Label: Current AI Limitation: No External Feedback ( duplicate of 4)
+
+7.
+Criteria: The interviewee identifies the need for context-specific documentation, suggesting that AI could be used to translate jargon between different sub-groups.
+Label: Need for Context-Specific Documentation
+
+8.
+Criteria: The interviewee highlights the challenges of novices seeking help, who simply post chunks of code without background information.
+Label: Error Messages and Novice Struggles
+
+9.
+Criteria: The interviewee describes their routine way of using NetLogo, creating a code skeleton before asking ChatGPT.
+Label: Established Process of Building ABMs
+
+10.
+Criteria: The interviewee demonstrates a preference for hands-on learning, choosing to fix a problem rather than showing the explanation.
+Label: Preference for Hands-on Learning (duplicate of 5)
+
+11.
+Criteria: The interviewee suggests that AI could be used to preserve, process, and retrieve fragmented knowledge generated by humans in a collaborative process.
+Label: Misinterpretation and Knowledge Preservation
+
+12.
+Criteria: The interviewee highlights the cost savings of early detection, emphasizing the importance of asking for help early and often.
+Label: Cost Savings through Early Detection
+
+13.
+Criteria: The interviewee praises ChatGPT's ability to optimize code, suggesting that it could be used to improve code quality.
+Label: ChatGPT Ability: Optimization
+
+14.
+Criteria: The interviewee decides to manually integrate AI output, reading and copying code rather than running it directly.
+Label: Manual Integration of AI Output
+
+15.
+Criteria: The interviewee advises users to exercise caution when interpreting AI-generated advice, emphasizing the need for human judgment.
+Label: Caution in Interpreting AI Advice
+
+16.
+Criteria: The interviewee uses ChatGPT as a reference when writing code, rather than copying and pasting.
+Label: ChatGPT Usage: Reference
+
+17.
+Criteria: The interviewee highlights knowledge gaps in documentation, emphasizing the importance of oral tradition in software development.
+Label: Knowledge Gaps in Documentation
+
+18.
+Criteria: The interviewee reiterates the importance of oral tradition in software development, highlighting undocumented knowledge.
+Label: Undocumented Knowledge (duplicate of 17)
+
+19.
+Criteria: The interviewee suggests that users can learn from AI, even if the AI provides incorrect answers, through the iterative debugging process.
+Label: Learning from AI
+
+20.
+Criteria: The interviewee notes the limitations of teachers in developing systems, hypothetically suggesting that AI could be used for building learning pathways.
+Label: Teachers' Limitations in Developing Systems
+
+21.
+Criteria: The interviewee highlights the challenges of dealing with time constraints for each language, as an expert who knows many languages.
+Label: Dealing with Time Constraints for Each Language
+
+22.
+Criteria: The interviewee describes AI-assisted coding, using ChatGPT to optimize code and improve development efficiency.
+Label: AI-Assisted Coding
+
+23.
+Criteria: The interviewee recognizes AI's ability to understand implicit needs, inferring the user's intent from context.
+Label: AI Ability: Understanding Implicit Needs
+
+24.
+Criteria: The interviewee emphasizes the value of AI-assisted coding for novice users, who can benefit from having documentation and answers readily available.
+Label: Especially Valuable for Novice Users
+
+25.
+Criteria: The interviewee asks ChatLogo to create a checkerboard pattern, demonstrating a specific use case for AI-generated code.
+Label: Creating a Checkerboard Pattern
+
+26.
+Criteria: The interviewee prefers non-linear learning, critiquing traditional technical documentation and imagining AI could improve the learning process.
+Label: Prefers Non-Linear Learning
+
+27.
+Criteria: The interviewee critiques current AI limitations, highlighting the need for external feedback and compiler integration.
+Label: Critiques Current AI Limitations (duplicate of 4 and 6)
+
+28.
+Criteria: The interviewee wants immediate fix options, seeking a more streamlined debugging process.
+Label: Wanting Immediate Fix Options
+
+29.
+Criteria: The interviewee finds the interface straightforward and intuitive, easy to interact with.
+Label: Finds Interface Straightforward
+
+30.
+Criteria: The interviewee seeks follow-up guidance, asking for additional help with plotting model output.
+Label: Seeking Follow-up Guidance
+
+31.
+Criteria: The interviewee notes ChatLogo's limitation in handling errors, getting stuck in a loop and unable to fix the issue.
+Label: ChatLogo Limitation: Error Handling
+
+32.
+Criteria: The interviewee notices AI's limitations in handling version changes, specifically with older versions of NetLogo.
+Label: Noticing AI Limitations in Handling Version Changes (duplicate of 2)

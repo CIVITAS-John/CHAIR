@@ -1,0 +1,189 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: How did Physics Lab's online community emerge?
+Always follow the output format:
+---
+Definitions for each code (16 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+16.
+Criteria: {Who did what, and how for code 16}
+Label: {A descriptive label of code 16}
+---
+~~~
+1.
+Label: recognized need for local export
+Quotes:
+- Designer: It seems that local export needs to be supported.
+
+2.
+Label: validate user suggestions
+Quotes:
+- Designer: 7 is okay.
+
+3.
+Label: tacit disagreement
+Quotes:
+- Designer: Physics mainly focuses on electricity and mechanics; other directions don't have much room for free experiments before high school. In the future, we might do some demonstration experiments based on everyone's needs, but it won't be as open as electricity
+
+4.
+Label: explaining new features
+Quotes:
+- Designer: Don't worry, don't worry, it will come, just optimizing the circuit diagram one last time.
+- Designer: It's still better to make the auto-generated one as good as possible
+- Designer: Although you can manually adjust the layout
+
+5.
+Label: list new features and components
+Quotes:
+- Designer: New Features
+Electronic components will be damaged after a short process, rather than immediately.
+Clearing the desktop will now display a confirmation interface.
+Supports undoing the creation and deletion of wires and components.
+Appliances now display the effective value of alternating current.
+(PC) You can now exit the application using the Esc key.
+
+New Components
+Added a sensitive ammeter.
+Added a student power supply (ideal AC/DC power supply).
+
+Adjustments to Component Properties
+Batteries now have adjustable internal resistance and are no longer ideal power sources.
+Incandescent bulbs now have volt-ampere characteristic parameters and are no longer ideal resistors.
+The resistance law experimenter now uses real formulas for calculations, with adjustable parameters.
+Hidden terminal blocks 3 and 4.
+
+Bug Fixes
+Fixed an issue with unit conversion in Editor properties.
+Terminal arrows no longer show jumping animations.
+There may have been calculation errors with certain circuit connections.
+- Designer: There will be: multimeter; powered solenoid; semiconductor capacitor; support for conversion to ideal ammeter (more convenient for problem-solving and middle school teaching)
+
+6.
+Label: acknowledged information
+Quotes:
+- User: Updated
+- User: ok
+
+7.
+Label: compliment on the 3d effect
+Quotes:
+- User: The 3D effect of your software is very good
+
+8.
+Label: enhance user experience through support
+Quotes:
+- Designer: We try to design it so that it can be used without additional instructions, or we will provide some prompts when you open it for the first time based on feedback
+
+9.
+Label: reiterated need
+Quotes:
+- User: Need the user manual for this software
+
+10.
+Label: clarify limitations of touch screen keyboards
+Quotes:
+- Designer: Touch screens have their own on-screen keyboards.
+
+11.
+Label: designer 1 acknowledges information
+Quotes:
+- Designer: Hmm hmm.
+
+12.
+Label: reference school development
+Quotes:
+- User: Mainly, the school is building an information-based school
+
+13.
+Label: specify educational needs
+Quotes:
+- User: First, let's pay homage to the experts, then I'll make a small request. Could you create a dynamic demonstration of mechanical waves and mechanical vibrations, such as the propagation of transverse and longitudinal waves, wave superposition, diffraction, and interference? Also, for optical experiments, it would be great to have optical benches, single slits, double slits, and polarizers to demonstrate optical experiments.
+
+14.
+Label: confirmed design element
+Quotes:
+- User: Left side
+
+15.
+Label: shared potential future direction
+Quotes:
+- Designer: I myself have some interest in chemistry
+
+16.
+Label: share info about future development plan
+Quotes:
+- Designer: Physics mainly focuses on electricity and mechanics; other directions don't have much room for free experiments before high school. In the future, we might do some demonstration experiments based on everyone's needs, but it won't be as open as electricity
+- Designer: For electricity, we plan to create a function for simulated experiment assessment; it will add many experimental details, such as zero adjustment (of course, only useful in specific modes, otherwise it would be cumbersome to use regularly)
+- Designer: I myself have some interest in chemistry
+===
+Here are the definitions for each code:
+
+---
+1. 
+Criteria: User expresses or identifies a need or gap in the current system or feature set.
+Label: Recognized Need
+
+2. 
+Criteria: Designer responds affirmatively or acknowledges user suggestions.
+Label: Validation of User Suggestions
+
+3. 
+Criteria: Implicit or subtle disagreement or differing opinions between designer and user.
+Label: Tacit Disagreement
+
+4. 
+Criteria: Designer provides explanations or justifications for new features or design elements.
+Label: Explaining Design Decisions
+
+5. 
+Criteria: Listing or enumeration of new features, components, or updates.
+Label: Feature Updates and Additions
+
+6. 
+Criteria: User acknowledges or responds to designer's messages or updates.
+Label: Acknowledged Information
+
+7. 
+Criteria: User expresses praise or admiration for a specific design element or feature.
+Label: Positive Feedback
+
+8. 
+Criteria: Designer expresses intent to improve user experience through support or design.
+Label: User-Centered Design
+
+9. 
+Criteria: User reiterates or re-emphasizes a previously mentioned need or request.
+Label: Reiterated Need
+
+10. 
+Criteria: Designer clarifies or explains limitations or constraints of a specific feature or design element.
+Label: Clarifying Limitations
+
+11. 
+Criteria: Designer acknowledges or responds to user's message or feedback with a brief affirmation.
+Label: Acknowledging User Feedback
+
+12. 
+Criteria: User mentions or references school development or educational context.
+Label: Educational Context
+
+13. 
+Criteria: User specifies or expresses specific educational needs or requirements.
+Label: Educational Requirements
+
+14. 
+Criteria: User confirms or references a design element or feature.
+Label: Confirmed Design Element
+
+15. 
+Criteria: Designer shares potential future direction or interest in a specific area.
+Label: Future Direction
+
+16. 
+Criteria: Designer shares information about future development plans or goals.
+Label: Development Roadmap

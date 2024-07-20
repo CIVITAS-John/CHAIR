@@ -1,0 +1,376 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: suggests ai debugging, assistance to optimize and debug
+- The expert suggests using AI to debug code and fix errors.
+- AI is seen as a potential tool for optimizing and debugging code.
+
+2.
+Concepts: using ai for debugging, envisioning ai-driven debugging improvements
+- Participants demonstrate a willingness to use AI for debugging and error resolution.
+- Participants envision or suggest improvements in AI-driven debugging capabilities.
+
+3.
+Concepts: optimism about ai's debugging potential, human-ai (positive): support debug by helping find missing aspects
+- The user expresses optimism about AI's potential for debugging and troubleshooting.
+- Describes the potential of human-AI collaboration in debugging, where AI can catch obvious errors.
+
+4.
+Concepts: acknowledges ai debugging capabilities, benefiting from debugging and unit testing
+- Acknowledges the debugging capabilities of AI-driven interfaces, highlighting their usefulness for beginners.
+- The code refers to the capability of LLM-driven interfaces to provide debugging and unit testing features that can help users, especially beginners, to check their inputs and debug their code.
+
+5.
+Concepts: not using "explain it" feature, choosing not to use "explain it"
+- Not using the "explain it" feature, instead trying to fix errors manually
+- The interviewee chooses not to use the "explain it" option and instead manually fixes errors.
+
+6.
+Concepts: debugs independently, manually debugs code
+- The user debugs and corrects code independently.
+- The participant manually reads through the code to debug and identify errors.
+
+7.
+Concepts: attempting self-debugging, e04 reads and debugs code when ai-generated code fails
+- Interviewee attempts to debug the code themselves when the generated code does not work as expected.
+- When AI-generated code fails, users read and debug the code themselves.
+
+8.
+Concepts: copying error messages to ai, providing error messages to chatgpt
+- Participants copy and paste error messages to seek AI assistance.
+- Describes the action of providing error messages to ChatGPT for further assistance.
+
+9.
+Concepts: error message and debugging, typical conversation with chatgpt
+- Expert describes their experience with error messages and debugging with ChatGPT.
+- Interviewee describes their typical conversation with ChatGPT, including iterative debugging.
+
+10.
+Concepts: needing clearer feedback, engaging with ai for error resolution
+- The interviewee needs clearer feedback from ChatGPT, citing unclear error messages.
+- The interviewee engages with AI for error resolution and seeks help from ChatGPT.
+
+11.
+Concepts: lack of external verification, acknowledging current limitations of chatgpt
+- The interviewee notes the lack of external verification in ChatGPT's code generation.
+- The code acknowledges the current limitation of ChatGPT in not being able to check generated code with external information, such as compilers.
+
+12.
+Concepts: figuring out syntax and errors, identifying error-message disconnect
+- The interviewee figures out syntax and error messages.
+- The interviewee identifies a disconnect between errors and code.
+
+13.
+Concepts: code request, querying ai for missing code structures
+- The interviewee makes a code request to the AI.
+- The interviewee queries the AI for missing code structures.
+
+14.
+Concepts: realization from generated code, understanding thought process behind code
+- The interviewee has a realization or insight from the generated code.
+- The interviewee tries to understand the thought process behind the AI-generated code.
+
+15.
+Concepts: appreciating best practices adherence, appreciation for ai's best practices
+- Participants appreciate AI's adherence to best practices.
+- The interviewee expresses appreciation for the AI's adherence to best practices and its potential as a teaching tool.
+
+16.
+Concepts: ai adherence to best practices, focusing on best practices
+- AI following best practices in code generation
+- The code notes that AI-driven interfaces focus on best practices rather than "ruthlessly creating a model".
+
+17.
+Concepts: prioritizing best practices, recognizing model quality importance
+- Prioritizing best practices over rapid model creation
+- Recognizing the importance of model quality and best practices.
+
+18.
+Concepts: ai as a teaching tool, valuing responsible ai behavior
+- Recognizing AI's potential as a teaching tool, following best practices, and not ruthlessly creating models.
+- Values responsible AI behavior, following best practices and not ruthlessly creating models.
+
+19.
+Concepts: need for user judgment, compares ai suggestions to early navigation apps' inaccuracies
+- Expert draws parallels to early navigation systems, emphasizing the need for user judgment.
+- Compares AI suggestions to early navigation apps' inaccuracies, emphasizing the need for human judgment.
+
+20.
+Concepts: encouraging user judgment, advises using personal judgment
+- Emphasizes the importance of user judgment.
+- Advising users to exercise personal judgment when working with AI.
+
+21.
+Concepts: emphasizing human judgment, emphasizing critical evaluation
+- Participants emphasize the importance of critical thinking and human judgment when using AI.
+- Participants emphasize the need for critical evaluation and using one's own judgment.
+
+22.
+Concepts: exercises caution in decision-making, caution in interpreting ai advice
+- The interviewee exercises caution in decision-making when using AI.
+- The interviewee advises users to exercise caution when interpreting AI-generated advice.
+
+23.
+Concepts: recognizing need for human oversight, highlights the importance of human judgment
+- Recognizes the need for human oversight or review of AI-generated code.
+- Human judgment is essential for evaluating AI-generated code and solutions.
+
+24.
+Concepts: human-effort decision-making, human effort in interpretation
+- Making human-effort decisions to evaluate and use AI-generated code.
+- Interpreting AI's responses and evaluating their relevance or accuracy.
+
+25.
+Concepts: demonstrating discernment, exercising discernment in incorporating ai suggestions
+- The user demonstrates discernment in code adoption.
+- Discernment is exercised in incorporating AI suggestions into code.
+
+26.
+Concepts: uses ai code as a reference, refer to the generated code or get a reference?
+- The user uses AI-generated code as a reference when writing their own code.
+- Referencing or using the generated code as a reference to inform their own coding decisions.
+
+27.
+Concepts: not relying on copy-paste, manual coding preference
+- Interviewee uses generated code as a reference instead of copying and pasting.
+- The interviewee prefers to write code manually, using AI-generated code only as a reference.
+
+28.
+Concepts: demonstrating coding independence, demonstrating self-reliance and problem-solving skills
+- Demonstrates independence in coding by not relying on AI-generated code.
+- Demonstrates self-reliance and problem-solving skills when working with AI-generated code.
+
+29.
+Concepts: writes code manually with ai guidance, preferring to engage actively with the learning process
+- The participant writes code manually with AI-provided steps, rather than copying and pasting code.
+- The participant prefers to engage actively with the learning process, writing code manually.
+
+30.
+Concepts: trusts ai-generated code, deciding to use ai-generated code
+- The participant decides to execute the code generated by the AI, indicating trust in the AI's output.
+- The interviewee decides to copy and run AI-generated code despite some reservations.
+
+31.
+Concepts: manual ai code integration, manual integration of ai output
+- Manually integrating AI-generated code into their work, often by copying and pasting.
+- The interviewee decides to manually integrate AI output, reading and copying the code rather than running it directly.
+
+32.
+Concepts: deciding to copy and paste code, copy and paste ai-generated code
+- Deciding to copy and paste code
+- Experts decide to copy and paste AI-generated code.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: suggests ai debugging, assistance to optimize and debug
+Relationship: The concepts are related to the idea of using AI for debugging and optimization.
+Criteria: Experts suggest using AI to debug and optimize code.
+Phrase: Suggests AI debugging assistance.
+
+2.
+Concepts: using ai for debugging, envisioning ai-driven debugging improvements
+Relationship: The concepts are related to the idea of using AI for debugging and envisioning improvements.
+Criteria: Participants use AI for debugging and envision improvements.
+Phrase: Envisions AI-driven debugging.
+
+3.
+Concepts: optimism about ai's debugging potential, human-ai (positive): support debug by helping find missing aspects
+Relationship: The concepts are related to the idea of being optimistic about AI's potential and human-AI collaboration.
+Criteria: Users express optimism about AI's potential for debugging and envision human-AI collaboration.
+Phrase: Expresses optimism about AI's debugging potential.
+
+4.
+Concepts: acknowledges ai debugging capabilities, benefiting from debugging and unit testing
+Relationship: The concepts are related to the idea of acknowledging AI's capabilities and benefiting from them.
+Criteria: Users acknowledge AI's debugging capabilities and benefit from unit testing.
+Phrase: Acknowledges AI debugging capabilities.
+
+5.
+Concepts: not using "explain it" feature, choosing not to use "explain it"
+Relationship: The concepts are related to the idea of not using the "explain it" feature.
+Criteria: Users choose not to use the "explain it" feature.
+Phrase: Chooses not to use "explain it".
+
+6.
+Concepts: debugs independently, manually debugs code
+Relationship: The concepts are related to the idea of debugging independently.
+Criteria: Users debug code independently.
+Phrase: Debugs independently.
+
+7.
+Concepts: attempting self-debugging, e04 reads and debugs code when ai-generated code fails
+Relationship: The concepts are related to the idea of attempting self-debugging.
+Criteria: Users attempt to debug code themselves when AI-generated code fails.
+Phrase: Attempts self-debugging.
+
+8.
+Concepts: copying error messages to ai, providing error messages to chatgpt
+Relationship: The concepts are related to the idea of seeking AI assistance.
+Criteria: Users copy error messages to seek AI assistance.
+Phrase: Seeks AI assistance.
+
+9.
+Concepts: error message and debugging, typical conversation with chatgpt
+Relationship: The concepts are related to the idea of debugging with ChatGPT.
+Criteria: Users engage in typical conversations with ChatGPT for debugging.
+Phrase: Engages in debugging conversation.
+
+10.
+Concepts: needing clearer feedback, engaging with ai for error resolution
+Relationship: The concepts are related to the idea of needing clearer feedback and engaging with AI.
+Criteria: Users need clearer feedback and engage with AI for error resolution.
+Phrase: Engages with AI for error resolution.
+
+11.
+Concepts: lack of external verification, acknowledging current limitations of chatgpt
+Relationship: The concepts are related to the idea of acknowledging limitations.
+Criteria: Users acknowledge the lack of external verification and limitations of ChatGPT.
+Phrase: Acknowledges limitations.
+
+12.
+Concepts: figuring out syntax and errors, identifying error-message disconnect
+Relationship: The concepts are related to the idea of figuring out syntax and errors.
+Criteria: Users figure out syntax and errors and identify disconnects.
+Phrase: Figures out syntax and errors.
+
+13.
+Concepts: code request, querying ai for missing code structures
+Relationship: The concepts are related to the idea of querying AI for code structures.
+Criteria: Users query AI for missing code structures.
+Phrase: Queries AI for code structures.
+
+14.
+Concepts: realization from generated code, understanding thought process behind code
+Relationship: The concepts are related to the idea of gaining insights from generated code.
+Criteria: Users gain insights from generated code and understand the thought process.
+Phrase: Gains insights from generated code.
+
+15.
+Concepts: appreciating best practices adherence, appreciation for ai's best practices
+Relationship: The concepts are related to the idea of appreciating best practices.
+Criteria: Users appreciate AI's adherence to best practices.
+Phrase: Appreciates AI's best practices.
+
+16.
+Concepts: ai adherence to best practices, focusing on best practices
+Relationship: The concepts are related to the idea of AI adhering to best practices.
+Criteria: AI-driven interfaces focus on best practices.
+Phrase: Focuses on best practices.
+
+17.
+Concepts: prioritizing best practices, recognizing model quality importance
+Relationship: The concepts are related to the idea of prioritizing best practices.
+Criteria: Users prioritize best practices and recognize model quality importance.
+Phrase: Prioritizes best practices.
+
+18.
+Concepts: ai as a teaching tool, valuing responsible ai behavior
+Relationship: The concepts are related to the idea of valuing responsible AI behavior.
+Criteria: Users value AI as a teaching tool and responsible behavior.
+Phrase: Values responsible AI behavior.
+
+19.
+Concepts: need for user judgment, compares ai suggestions to early navigation apps' inaccuracies
+Relationship: The concepts are related to the idea of needing user judgment.
+Criteria: Users recognize the need for judgment and compare AI to early navigation apps.
+Phrase: Recognizes need for judgment.
+
+20.
+Concepts: encouraging user judgment, advises using personal judgment
+Relationship: The concepts are related to the idea of encouraging user judgment.
+Criteria: Users encourage judgment and advise using personal judgment.
+Phrase: Encourages user judgment.
+
+21.
+Concepts: emphasizing human judgment, emphasizing critical evaluation
+Relationship: The concepts are related to the idea of emphasizing human judgment.
+Criteria: Users emphasize critical thinking and human judgment.
+Phrase: Emphasizes human judgment.
+
+22.
+Concepts: exercises caution in decision-making, caution in interpreting ai advice
+Relationship: The concepts are related to the idea of exercising caution.
+Criteria: Users exercise caution in decision-making and interpreting AI advice.
+Phrase: Exercises caution.
+
+23.
+Concepts: recognizing need for human oversight, highlights the importance of human judgment
+Relationship: The concepts are related to the idea of recognizing the need for human oversight.
+Criteria: Users recognize the need for human oversight and judgment.
+Phrase: Recognizes need for human oversight.
+
+24.
+Concepts: human-effort decision-making, human effort in interpretation
+Relationship: The concepts are related to the idea of human effort in decision-making and interpretation.
+Criteria: Users make human-effort decisions and interpret AI-generated code.
+Phrase: Makes human-effort decisions.
+
+25.
+Concepts: demonstrating discernment, exercising discernment in incorporating ai suggestions
+Relationship: The concepts are related to the idea of demonstrating discernment.
+Criteria: Users demonstrate discernment in incorporating AI suggestions.
+Phrase: Demonstrates discernment.
+
+26.
+Concepts: uses ai code as a reference, refer to the generated code or get a reference?
+Relationship: The concepts are related to the idea of using AI code as a reference.
+Criteria: Users use AI-generated code as a reference.
+Phrase: Uses AI code as a reference.
+
+27.
+Concepts: not relying on copy-paste, manual coding preference
+Relationship: The concepts are related to the idea of not relying on copy-paste.
+Criteria: Users prefer manual coding and do not rely on copy-paste.
+Phrase: Prefers manual coding.
+
+28.
+Concepts: demonstrating coding independence, demonstrating self-reliance and problem-solving skills
+Relationship: The concepts are related to the idea of demonstrating independence.
+Criteria: Users demonstrate independence and self-reliance in coding.
+Phrase: Demonstrates coding independence.
+
+29.
+Concepts: writes code manually with ai guidance, preferring to engage actively with the learning process
+Relationship: The concepts are related to the idea of writing code manually with AI guidance.
+Criteria: Users write code manually with AI-provided steps.
+Phrase: Writes code manually with AI guidance.
+
+30.
+Concepts: trusts ai-generated code, deciding to use ai-generated code
+Relationship: The concepts are related to the idea of trusting AI-generated code.
+Criteria: Users trust AI-generated code and decide to use it.
+Phrase: Trusts AI-generated code.
+
+31.
+Concepts: manual ai code integration, manual integration of ai output
+Relationship: The concepts are related to the idea of manual integration.
+Criteria: Users manually integrate AI-generated code.
+Phrase: Integrates AI code manually.
+
+32.
+Concepts: deciding to copy and paste code, copy and paste ai-generated code
+Relationship: The concepts are related to the idea of deciding to copy and paste code.
+Criteria: Users decide to copy and paste AI-generated code.
+Phrase: Decides to copy and paste code.

@@ -1,0 +1,383 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: help-seeking culture, fostering a culture of seeking help
+- The user highlights the importance of a help-seeking culture in learning and problem-solving.
+- The code fosters a culture of seeking help and asking questions.
+
+2.
+Concepts: encouraging help seeking, promoting a culture of asking for help
+- Encouraging help-seeking behavior is important.
+- Participants promote a culture of asking for help and seeking early assistance.
+
+3.
+Concepts: importance of self-work, doing one's own work
+- Emphasizing the importance of doing one's own work and not relying on others.
+- Doing one's own work and taking responsibility for coding is emphasized, rather than relying on others.
+
+4.
+Concepts: wants immediate fixes, wanting immediate fix options, prefers immediate fixes
+- The participant wants immediate error fixing options from the AI.
+- The interviewee wants immediate fix options.
+- The participant prefers immediate fixes and solutions to errors and issues.
+
+5.
+Concepts: conceptualizing problems, importance of problem conceptualization
+- Expressing the idea that some people struggle to conceptualize problems, which is a necessary skill for working with AI.
+- The participant highlights the need for explicit problem conceptualization when working with AI.
+
+6.
+Concepts: proactive problem-solving, action-oriented problem-solving
+- Demonstrates proactive problem-solving
+- Demonstrating preference for action-oriented problem-solving
+
+7.
+Concepts: problem-solving prioritization, prioritizes fixing over understanding
+- Prioritizing problem-solving over explanation.
+- Participants prioritize fixing problems over explaining them.
+
+8.
+Concepts: problem-solving focus, focuses on practical solutions
+- The user chooses to focus on problem-solving rather than seeking explanations.
+- The participant focuses on finding practical solutions to problems rather than explaining them.
+
+9.
+Concepts: prioritizing action, fixes problems independently
+- The participant chooses to fix a problem rather than seeking an explanation.
+- The participant chooses to fix problems rather than seeking explanations.
+
+10.
+Concepts: abandon ai assistance, expressing frustration with repetitive ai interactions
+- Interviewees abandon AI assistance when faced with difficulties or frustration.
+- Interviewees express frustration and abandon tasks when faced with repetitive AI interactions.
+
+11.
+Concepts: not relying on ai, not relying solely on ai assistance
+- Not relying solely on AI for problem-solving and instead taking an active role.
+- Participants do not solely rely on AI assistance, preferring to debug and troubleshoot independently.
+
+12.
+Concepts: acknowledges ai's mistake but sees value, valuing ai-generated solutions despite mistakes
+- The interviewee acknowledges the AI's mistake but still sees value in using the AI-generated solution.
+- Participants value AI-generated solutions despite mistakes, highlighting the benefits of having an AI-generated solution.
+
+13.
+Concepts: preferring ai solutions, preferring self-directed problem-solving
+- Users prefer AI solutions over prolonged problem-solving.
+- Participants prefer self-directed problem-solving over AI assistance.
+
+14.
+Concepts: avoiding complexity, avoiding frustration with complex tasks, task simplification strategy
+- Interviewee avoids complexity by switching to simpler tasks.
+- Avoids frustration with complex tasks and seeks simpler alternatives.
+- Switches to a simpler task when faced with difficulties.
+
+15.
+Concepts: avoiding buffer overload, prefer incremental feedback
+- Suggesting that AI should provide feedback or errors one at a time to avoid overwhelming users.
+- Users prefer to receive incremental feedback, one error at a time, to avoid information overload.
+
+16.
+Concepts: advocates for smaller request sizes, recognizing users' limited buffer capacity
+- Users advocate for smaller request sizes to avoid overwhelming users.
+- The participant highlights the limited buffer capacity of users, suggesting that AI-driven systems should provide smaller, more manageable requests.
+
+17.
+Concepts: time-constrained ai reliance, adapts to time constraints
+- Relying on AI output when facing time constraints
+- Users utilize AI-generated code fully, considering time constraints.
+
+18.
+Concepts: efficiency-oriented approach, emphasizes the efficiency of ai in solving programming tasks
+- The participant prioritizes efficiency in their work and uses the AI-generated code to save time.
+- Participant highlights the efficiency of AI-driven interfaces in solving programming tasks, often saving time and effort.
+
+19.
+Concepts: potential area for education, desire to learn about gis extensions
+- Identifies a potential area for education and training, such as learning GIS extensions in NetLogo.
+- The user expresses a desire to learn about GIS extensions in NetLogo.
+
+20.
+Concepts: desiring ai-assisted learning of netlogo, seeking ai assistance for netlogo code development
+- Interviewees desire AI-assisted learning of NetLogo.
+- Interviewees seek AI assistance for NetLogo code development.
+
+21.
+Concepts: considering "in netlogo" context, considering context in ai requests
+- Participant considers using "in NetLogo" when asking for AI assistance.
+- Considers including context-specific information (e.g., "in NetLogo") in AI requests.
+
+22.
+Concepts: demonstrating targeted use of ai, leveraging ai for netlogo development
+- The participant uses AI to find specific syntax structures or code snippets in NetLogo.
+- The participant leverages AI for NetLogo development and sees its potential benefits.
+
+23.
+Concepts: altruistic approach to ai usage, preferring to help others learn netlogo
+- Prioritizes helping others learn NetLogo over personal competence.
+- Users prefer to help others learn NetLogo rather than relying on AI.
+
+24.
+Concepts: netlogo expertise, demonstrating netlogo competence
+- The user demonstrates a deep understanding of NetLogo and its capabilities.
+- Users acknowledge and demonstrate NetLogo competence.
+
+25.
+Concepts: netlogo uniqueness, comparing netlogo to other programming languages
+- Highlighting the uniqueness of NetLogo among other programming languages.
+- Interviewees compare NetLogo to other programming languages.
+
+26.
+Concepts: working with ai limitations, noticing ai's limitations in handling version changes
+- The quote shows the user writing code in older versions of NetLogo due to AI's database limitations.
+- The interviewee notices AI's limitations in handling version changes, specifically in NetLogo.
+
+27.
+Concepts: difficulty with chatlogo, chatlogo ability: error
+- Participant experiences difficulty with ChatLogo.
+- The interviewee notes ChatLogo's limitations in handling errors.
+
+28.
+Concepts: error message limitations, inadequate error reporting, critique netlogo's error messaging
+- The interviewee identifies disconnects between errors and code in NetLogo.
+- The participant expresses frustration with inadequate error reporting in NetLogo.
+- Interviewees critique NetLogo's unhelpful error messages.
+
+29.
+Concepts: interpreting and fixing ai mistakes, debugging and fixing common netlogo mistakes, error identification and fixing challenges
+- Users interpret and fix AI mistakes, such as common NetLogo errors.
+- Interviewees debug and fix common NetLogo mistakes.
+- Identifying challenges in error identification and fixing in NetLogo or similar environments.
+
+30.
+Concepts: need for helpful feedback, recognizing the need for guidance, recognizing the need for ai support
+- The participant recognizes the need for more helpful feedback from NetLogo.
+- Expressing the need for guidance or support in NetLogo learning and practice.
+- The participant recognizes the need for AI support in learning NetLogo, particularly for beginners.
+
+31.
+Concepts: identifying common beginner mistakes, identifying challenges for netlogo beginners and common beginner struggles
+- Highlighting common beginner mistakes in NetLogo
+- Interviewees identify challenges for NetLogo beginners and common beginner struggles.
+
+32.
+Concepts: need for efficient learning tools, suggesting need for efficient learning tools
+- The participant identifies a need for efficient learning tools due to time constraints.
+- The need for efficient learning tools is suggested, especially for experts who may not have much time to spend on each language.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: help-seeking culture, fostering a culture of seeking help
+Relationship: The concepts are closely related, as a help-seeking culture encourages individuals to ask for help when needed.
+Criteria: Users foster a culture of seeking help and asking questions in learning and problem-solving.
+Phrase: Fostering a help-seeking culture.
+
+2.
+Concepts: encouraging help seeking, promoting a culture of asking for help
+Relationship: The concepts are synonymous, emphasizing the importance of seeking help.
+Criteria: Participants promote a culture of asking for help and seeking early assistance.
+Phrase: Promoting help-seeking behavior.
+
+3.
+Concepts: importance of self-work, doing one's own work
+Relationship: The concepts highlight the significance of taking responsibility for one's own work.
+Criteria: Emphasizing the importance of doing one's own work and not relying on others.
+Phrase: Emphasizing self-work.
+
+4.
+Concepts: wants immediate fixes, wanting immediate fix options, prefers immediate fixes
+Relationship: The concepts convey the desire for quick solutions to problems.
+Criteria: The participant wants immediate error fixing options from the AI.
+Phrase: Seeking immediate fixes.
+
+5.
+Concepts: conceptualizing problems, importance of problem conceptualization
+Relationship: The concepts stress the need to understand problems before seeking solutions.
+Criteria: Expressing the idea that some people struggle to conceptualize problems, which is a necessary skill for working with AI.
+Phrase: Conceptualizing problems.
+
+6.
+Concepts: proactive problem-solving, action-oriented problem-solving
+Relationship: The concepts describe a proactive approach to problem-solving.
+Criteria: Demonstrates proactive problem-solving.
+Phrase: Engaging in proactive problem-solving.
+
+7.
+Concepts: problem-solving prioritization, prioritizes fixing over understanding
+Relationship: The concepts highlight the priority given to solving problems over understanding them.
+Criteria: Prioritizing problem-solving over explanation.
+Phrase: Prioritizing problem-solving.
+
+8.
+Concepts: problem-solving focus, focuses on practical solutions
+Relationship: The concepts convey a focus on finding practical solutions to problems.
+Criteria: The user focuses on finding practical solutions to problems rather than explaining them.
+Phrase: Focusing on practical solutions.
+
+9.
+Concepts: prioritizing action, fixes problems independently
+Relationship: The concepts describe a preference for taking action to fix problems.
+Criteria: The participant chooses to fix a problem rather than seeking an explanation.
+Phrase: Prioritizing action.
+
+10.
+Concepts: abandon ai assistance, expressing frustration with repetitive ai interactions
+Relationship: The concepts convey frustration with AI interactions leading to abandonment.
+Criteria: Interviewees abandon AI assistance when faced with difficulties or frustration.
+Phrase: Abandoning AI assistance.
+
+11.
+Concepts: not relying on ai, not relying solely on ai assistance
+Relationship: The concepts describe a preference for not relying solely on AI.
+Criteria: Not relying solely on AI for problem-solving and instead taking an active role.
+Phrase: Not relying on AI.
+
+12.
+Concepts: acknowledges ai's mistake but sees value, valuing ai-generated solutions despite mistakes
+Relationship: The concepts convey a nuanced view of AI-generated solutions.
+Criteria: The interviewee acknowledges the AI's mistake but still sees value in using the AI-generated solution.
+Phrase: Valuing AI-generated solutions.
+
+13.
+Concepts: preferring ai solutions, preferring self-directed problem-solving
+Relationship: The concepts describe a preference for AI solutions or self-directed problem-solving.
+Criteria: Users prefer AI solutions over prolonged problem-solving.
+Phrase: Preferring AI solutions.
+
+14.
+Concepts: avoiding complexity, avoiding frustration with complex tasks, task simplification strategy
+Relationship: The concepts convey a desire to avoid complexity and frustration.
+Criteria: Interviewee avoids complexity by switching to simpler tasks.
+Phrase: Avoiding complexity.
+
+15.
+Concepts: avoiding buffer overload, prefer incremental feedback
+Relationship: The concepts describe a preference for avoiding information overload.
+Criteria: Suggesting that AI should provide feedback or errors one at a time to avoid overwhelming users.
+Phrase: Avoiding buffer overload.
+
+16.
+Concepts: advocates for smaller request sizes, recognizing users' limited buffer capacity
+Relationship: The concepts convey a recognition of users' limitations.
+Criteria: Users advocate for smaller request sizes to avoid overwhelming users.
+Phrase: Advocating for smaller request sizes.
+
+17.
+Concepts: time-constrained ai reliance, adapts to time constraints
+Relationship: The concepts describe a reliance on AI due to time constraints.
+Criteria: Relying on AI output when facing time constraints.
+Phrase: Relying on AI.
+
+18.
+Concepts: efficiency-oriented approach, emphasizes the efficiency of ai in solving programming tasks
+Relationship: The concepts convey a focus on efficiency in work.
+Criteria: The participant prioritizes efficiency in their work and uses the AI-generated code to save time.
+Phrase: Emphasizing efficiency.
+
+19.
+Concepts: potential area for education, desire to learn about gis extensions
+Relationship: The concepts describe a desire for education and learning.
+Criteria: Identifies a potential area for education and training, such as learning GIS extensions in NetLogo.
+Phrase: Identifying areas for education.
+
+20.
+Concepts: desiring ai-assisted learning of netlogo, seeking ai assistance for netlogo code development
+Relationship: The concepts convey a desire for AI-assisted learning.
+Criteria: Interviewees desire AI-assisted learning of NetLogo.
+Phrase: Desiring AI-assisted learning.
+
+21.
+Concepts: considering "in netlogo" context, considering context in ai requests
+Relationship: The concepts describe a consideration of context in AI requests.
+Criteria: Participant considers using "in NetLogo" when asking for AI assistance.
+Phrase: Considering context.
+
+22.
+Concepts: demonstrating targeted use of ai, leveraging ai for netlogo development
+Relationship: The concepts convey a targeted use of AI.
+Criteria: The participant uses AI to find specific syntax structures or code snippets in NetLogo.
+Phrase: Demonstrating targeted use.
+
+23.
+Concepts: altruistic approach to ai usage, preferring to help others learn netlogo
+Relationship: The concepts describe an altruistic approach to AI usage.
+Criteria: Prioritizes helping others learn NetLogo over personal competence.
+Phrase: Prioritizing altruism.
+
+24.
+Concepts: netlogo expertise, demonstrating netlogo competence
+Relationship: The concepts convey a demonstration of NetLogo expertise.
+Criteria: The user demonstrates a deep understanding of NetLogo and its capabilities.
+Phrase: Demonstrating NetLogo expertise.
+
+25.
+Concepts: netlogo uniqueness, comparing netlogo to other programming languages
+Relationship: The concepts describe the uniqueness of NetLogo.
+Criteria: Highlighting the uniqueness of NetLogo among other programming languages.
+Phrase: Highlighting NetLogo's uniqueness.
+
+26.
+Concepts: working with ai limitations, noticing ai's limitations in handling version changes
+Relationship: The concepts convey a recognition of AI limitations.
+Criteria: The quote shows the user writing code in older versions of NetLogo due to AI's database limitations.
+Phrase: Recognizing AI limitations.
+
+27.
+Concepts: difficulty with chatlogo, chatlogo ability: error
+Relationship: The concepts describe difficulties with ChatLogo.
+Criteria: Participant experiences difficulty with ChatLogo.
+Phrase: Experiencing difficulty.
+
+28.
+Concepts: error message limitations, inadequate error reporting, critique netlogo's error messaging
+Relationship: The concepts convey a critique of NetLogo's error messaging.
+Criteria: The interviewee identifies disconnects between errors and code in NetLogo.
+Phrase: Critiquing error messaging.
+
+29.
+Concepts: interpreting and fixing ai mistakes, debugging and fixing common netlogo mistakes, error identification and fixing challenges
+Relationship: The concepts describe the challenges of error identification and fixing.
+Criteria: Users interpret and fix AI mistakes, such as common NetLogo errors.
+Phrase: Interpreting and fixing mistakes.
+
+30.
+Concepts: need for helpful feedback, recognizing the need for guidance, recognizing the need for ai support
+Relationship: The concepts convey a need for helpful feedback and guidance.
+Criteria: The participant recognizes the need for more helpful feedback from NetLogo.
+Phrase: Recognizing the need for feedback.
+
+31.
+Concepts: identifying common beginner mistakes, identifying challenges for netlogo beginners and common beginner struggles
+Relationship: The concepts describe the challenges faced by NetLogo beginners.
+Criteria: Highlighting common beginner mistakes in NetLogo.
+Phrase: Identifying common mistakes.
+
+32.
+Concepts: need for efficient learning tools, suggesting need for efficient learning tools
+Relationship: The concepts convey a need for efficient learning tools.
+Criteria: The participant identifies a need for efficient learning tools due to time constraints.
+Phrase: Suggesting efficient learning tools.
+
+Let me know if you need anything else!

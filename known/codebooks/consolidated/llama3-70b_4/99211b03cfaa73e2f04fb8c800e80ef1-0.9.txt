@@ -1,0 +1,165 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (16 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+16.
+Criteria: {Who did what, and how for code 16}
+Label: {A descriptive label of code 16}
+---
+~~~
+1.
+Label: suggests improvements
+Quotes:
+- E01: And some of them we still haven't been doing like hive mind, like how we are going to have the machine learning back from the user feedback or just from the compiler, right? You generate some code, but it doesn't work. So we have to tell you that this time, you didn't work. (interviewer's observation) The current ChatGPT implementation cannot check the generated code with external information (compiler, etc.) (partially solved by the Interpreter plugin, but only Python at this time)
+
+2.
+Label: expressing empathy towards novices
+Quotes:
+- E01: And, and they don't, this is an unfamiliar task to them apparently. So they want to ask one question and get the right answer the first time. And I, I don't have that expectation. I'll ask the right question and it'll get me 80% of the way there. (interviewer's observation) Novices might have a too high expectation for ChatGPT (but it cannot achieve that).
+
+3.
+Label: e04 acknowledges a learning curve due to non expert friendly design
+Quotes:
+- E04: Part of the issue that I'm having now is just kind of like the learning curve, just trying to figure out how everything works. (interviewer's observation) E04 mentions a learning curve, likely because our current design is not fine-tuned for experts.
+
+4.
+Label: emphasizes importance of syntax support
+Quotes:
+- E04: I think that it's nice that it's, it clarifies error codes. I think that's probably where people who are new get stuck the most is trying to figure out the syntax and all the different errors. (interviewer's observation) The capability to clarify the errors.
+
+5.
+Label: recognizing ai's ability to understand context
+Quotes:
+- E01: I speak to (ChatGPT) like a person. I could just walk in the room and go write me code that does X, but I don't, I start with good morning. And it comes back, but it comes back with good morning. How can I assist you today? It's pretty good at figuring out natural language. So in some sense that you might just be better off, just pretend it's not a computer. (interviewer's observation) E01 reflects on how he interacts with ChatGPT like a person.
+
+6.
+Label: comments
+Quotes:
+- E01: I don't want chat GPT to write 27 operations in one line and show how brilliant it is. I wanted to separate out the code and, and it did a good job of not only did it write the code, but it commented the code. And then in addition to commenting the code externally, it did documentation. (interviewer's observation) ChatGPT tends to provide comments and documentation. Generated code is easy to read.
+
+7.
+Label: reading through code to debug
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 reads through the code and tries to debug with himself when the generated code does not do what it does.
+
+8.
+Label: potential for ai to augment human collaboration
+Quotes:
+- E01: I'm an advocate of peer programming. It's about 10 times more efficient than single programming... If a person's programming, if you're programming it by yourself and you come to something you don't understand, you could spend a long time at that stoplight. (interviewer's observation) E01's positive opinions on peer programming with a hint that AI could play the role.
+
+9.
+Label: ai decides which direction the problem goes into  which could be an issue for novice users (as it limits
+Quotes:
+- E04: To me, it seems like you need to have a certain degree of expertise to understand where the errors are and how to fix them. Because otherwise it's like you're going down this path where you're blindly following the ChatGPT and you have no idea what's going on. For less experienced people, I wouldn't like that because it could put you in a worse situation. (interviewer's observation) Requires expertise to understand errors and debug them. Risks to blindly follow ChatGPT, esp. for less experienced people.
+
+10.
+Label: avoiding blind trust in ai
+Quotes:
+- E04: To me, it seems like you need to have a certain degree of expertise to understand where the errors are and how to fix them. Because otherwise it's like you're going down this path where you're blindly following the ChatGPT and you have no idea what's going on. For less experienced people, I wouldn't like that because it could put you in a worse situation. (interviewer's observation) Requires expertise to understand errors and debug them. Risks to blindly follow ChatGPT, esp. for less experienced people.
+- E01: Some of this advice may be wrong. Use your good judgment. This is like Apple maps in 2010 or whatever, that tells you to turn right into the river and you have to go. (interviewer's observation) Users need to use their own judgment to evaluate ChatGPT's responses.
+
+11.
+Label: can it design a generic learning management path? because a lot of people can develop systems, but they're not good teachers
+Quotes:
+- E01: Can it design a generic learning management path? Because a lot of people can develop systems, but they're not good teachers. (interviewer's observation) Hypothetically: maybe AI could be used for building learning pathways.
+
+12.
+Label: self reliant debugging
+Quotes:
+- E04: So this is interesting because, you know, obviously it's wrong. So I have to kind of interpret what's going on here. (interviewer's observation) E04 fixes common NetLogo mistakes by himself.
+- E04: (no verbal response) (interviewer's observation) E04 manually tries to fix the errors in the AI-generated code and did not choose "explain it".
+
+13.
+Label: describes unstructured code posts
+Quotes:
+- E01: I couldn't (help the novice) because when a beginner just posts a big block of code, it says there's something wrong with this. (interviewer's observation) Challenges for novices to seek help: they simply post chunks of code without background information.
+
+14.
+Label: hypothetically using ai for building learning pathways
+Quotes:
+- E01: Can it design a generic learning management path? Because a lot of people can develop systems, but they're not good teachers. (interviewer's observation) Hypothetically: maybe AI could be used for building learning pathways.
+
+15.
+Label: the ai's limitations in resolving complex errors underscore the continued importance of human expertise in programming tasks
+Quotes:
+- E04: "I want to create a simple feed-forward neural network in NetLogo with one hidden layer."
+
+16.
+Label: seeking specific syntax structures
+Quotes:
+- E04: "how to define breeds in netlogo" (interviewer's observation) E04 tries to find certain syntax structures from the AI-generated code and ask for it when it is not there.
+===
+Here are the definitions for each code with clear and generalizable criteria:
+
+---
+1.
+Criteria: The interviewee suggests improvements or modifications to the LLM-driven interface, highlighting potential areas for development or enhancement.
+Label: Suggests Improvements
+
+2.
+Criteria: The interviewee expresses empathy or understanding towards novice users who may have high expectations or difficulties using the LLM-driven interface.
+Label: Empathy towards Novices
+
+3.
+Criteria: The interviewee acknowledges a learning curve or difficulties in using the LLM-driven interface due to its design not being expert-friendly.
+Label: Learning Curve Due to Design
+
+4.
+Criteria: The interviewee emphasizes the importance of syntax support or error clarification in the LLM-driven interface.
+Label: Emphasizes Syntax Support
+
+5.
+Criteria: The interviewee recognizes the LLM's ability to understand context, natural language, or nuances in human communication.
+Label: Recognizes AI's Contextual Understanding
+
+6.
+Criteria: The interviewee comments on the LLM-driven interface's ability to provide clear code, comments, or documentation.
+Label: Comments on Code Clarity
+
+7.
+Criteria: The interviewee reads through code to debug or troubleshoot issues with the LLM-generated code.
+Label: Debugging through Code Reading
+
+8.
+Criteria: The interviewee sees potential for the LLM-driven interface to augment human collaboration or pair programming.
+Label: Potential for AI-Augmented Collaboration
+
+9.
+Criteria: The interviewee notes that the LLM-driven interface may decide the direction of problem-solving, which could be an issue for novice users.
+Label: AI-Directed Problem-Solving
+
+10.
+Criteria: The interviewee advises against blindly trusting the LLM-driven interface and emphasizes the need for human judgment and expertise.
+Label: Avoiding Blind Trust in AI
+
+11.
+Criteria: The interviewee hypothesizes about the LLM-driven interface's potential to design generic learning management paths or teaching systems.
+Label: Hypothetical Learning Pathways
+
+12.
+Criteria: The interviewee takes a self-reliant approach to debugging, trying to fix issues with the LLM-generated code independently.
+Label: Self-Reliant Debugging
+
+13.
+Criteria: The interviewee describes challenges in helping novice users who post unstructured code or lack background information.
+Label: Unstructured Code Posts
+
+14.
+Criteria: The interviewee hypothetically explores the LLM-driven interface's potential to build learning pathways or teaching systems.
+Label: Hypothetical Learning Pathways
+
+15.
+Criteria: The interviewee highlights the limitations of the LLM-driven interface in resolving complex errors, emphasizing the continued importance of human expertise.
+Label: Importance of Human Expertise
+
+16.
+Criteria: The interviewee seeks specific syntax structures or code snippets from the LLM-driven interface.
+Label: Seeking Specific Syntax

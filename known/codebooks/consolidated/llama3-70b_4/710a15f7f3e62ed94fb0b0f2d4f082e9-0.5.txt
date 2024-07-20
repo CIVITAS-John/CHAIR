@@ -1,0 +1,381 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: note coding habits, recognizing challenges of bulk coding
+- Participants note the tendency of beginners to write large code chunks and inefficiencies, observing novice coding habits, errors, and lack of debugging skills.
+- Recognizes the challenges of writing and debugging code, especially for beginners.
+
+2.
+Concepts: identifying gaps in ai assistance, identifying ai-generated solution limitations
+- Participants see gaps in AI-driven interfaces and identify gaps in AI outputs.
+- Identifies limitations or inaccuracies in AI-generated solutions.
+
+3.
+Concepts: critiquing ai limitations, identifying ai feedback limitations, critiquing ai's limitations
+- Participants critique the limitations of current AI implementation and reflect on realistic AI use.
+- Participants identify limitations in current AI feedback loops in NetLogo and reflect on the limitations of current AI systems.
+- Participants identify limitations in AI's comprehensiveness, code generation, and cross-referencing.
+
+4.
+Concepts: noting ai limitations, identifying ai limitations
+- Participants note AI limitations and its inability to fix errors.
+- Participants identify the limitations or errors of the AI, including situations where it gets stuck or cannot fix errors.
+
+5.
+Concepts: highlighting design tension, design limitations and trade-offs
+- Participants highlight the tension between designing for novice and expert users.
+- Noting limited options and tension between novice and expert design needs.
+
+6.
+Concepts: noting chatgpt limitations, noting ai capacity limitations
+- Participants note ChatGPT's limitations in handling long code pieces or complex tasks.
+- Participants note AI's capacity limitations, such as processing limitations, and adjust their expectations based on ChatGPT's capabilities.
+
+7.
+Concepts: encountering outdated code, dealing with older netlogo versions
+- Participants encounter outdated code, legacy code issues, or outdated functions in NetLogo databases.
+- Participants deal with older NetLogo versions, using the AI to support compatibility or writing code in older versions.
+
+8.
+Concepts: is familiar with chatgpt 3.5, preferring specific ai versions
+- Participants are familiar with ChatGPT 3.5 but not newer versions or are potentially unaware of newer features.
+- Participants are familiar with specific AI versions, such as ChatGPT 3.5, and prefer them over other versions.
+
+9.
+Concepts: abandoning ai assistance, abandoning ai-driven approaches, moving on from ai confusion
+- Participants abandon AI assistance after repeated questions or unmet expectations.
+- Participants abandon AI-driven approaches when encountering difficulties or frustrations.
+- Participants decide to move on from tasks or interactions with AI tools due to confusion.
+
+10.
+Concepts: noting lack of documentation, expressing frustration with documentation
+- The participant notes the lack of documentation in software development.
+- Participants express frustration with current documentation and imply a need for better documentation.
+
+11.
+Concepts: requests ai-generated code, seeks ai-assisted code review
+- Participants request AI-generated code for specific tasks or problems, seeking a detailed review of AI-generated code.
+- Participants seek AI assistance for code optimization, suggesting AI identify structural problems in code.
+
+12.
+Concepts: initiates coding process, building models iteratively with ai assistance
+- Participants create a code skeleton before involving AI.
+- Participants build models iteratively with AI assistance, creating code skeletons and building on existing knowledge.
+
+13.
+Concepts: adopts ai-generated code, adapts to ai-generated code, customizes ai-generated code
+- Participants decide to use AI-generated code in their work.
+- Participants adapt to AI-generated code, incorporate it into their workflow, and override previous work with AI-generated code.
+- Participants customize AI-generated code and make specific code adjustments.
+
+14.
+Concepts: utilizes ai for coding, utilizes ai for creative tasks and code structures
+- Participants describe AI's ability to help with coding tasks and engage in iterative coding processes.
+- Participants use AI for creative tasks and rely on AI for code structures.
+
+15.
+Concepts: optimizes code with ai, refines code with ai
+- Participants use AI-driven interfaces for code optimization and prioritize efficiency.
+- Participants propose and seek code modifications from AI and refine and integrate code with AI assistance.
+
+16.
+Concepts: follow ai-provided steps, code independently
+- Participants follow AI-provided steps to write code manually.
+- Participants show independence in the coding process, using AI as a reference, and demonstrate coding independence by writing code manually with AI guidance.
+
+17.
+Concepts: reflecting on own code structure, reflecting on coding conventions
+- Participant reflects on their own code structure while interacting with the AI tool.
+- Participants reflect on coding conventions and the importance of understanding how to interact with AI.
+
+18.
+Concepts: appreciates readable generated code, appreciating ai-generated code quality
+- Participants appreciate ChatGPT's commenting and documenting, making generated code easy to read.
+- Participants praise the readability of AI-generated code and appreciate its clarity.
+
+19.
+Concepts: values automatic integration, prefers seamless ai code integration
+- Participants value automatic code integration into their NetLogo models and the integration of AI-generated code into the NetLogo model and documentation.
+- Participants prefer seamless AI code integration, seeking seamless integration of AI-generated code into their NetLogo models.
+
+20.
+Concepts: querying ai for syntax, seeking syntax guidance, seeking specific syntax structures
+- Participants query AI for missing code structures or syntax.
+- Participants seek syntax guidance from AI and ask for clarification or missing structures.
+- Participants seek specific syntax structures from AI-generated code.
+
+21.
+Concepts: want immediate fixes, wants "fix" option after error identification
+- Participants prefer immediate fixes, preferring immediate code fix options.
+- Wants the "fix" option immediately after error identification, streamlining the debugging process.
+
+22.
+Concepts: desiring code assistance features, requests coding assistance
+- Participants desire code assistance features for improved coding efficiency.
+- Participants describe a simple coding task that they want to accomplish with the help of an LLM-driven interface.
+
+23.
+Concepts: preferring readable code, advocating for clear code, valuing maintainable code
+- Participants prefer well-structured and commented code.
+- Participants value clarity and simplicity in coding.
+- Participants value code quality and prefer non-complex solutions.
+
+24.
+Concepts: emphasizing precision, discuss code quality and readability
+- Participants emphasize the importance of precision in AI-generated code.
+- Participants discuss the importance of code quality and readability.
+
+25.
+Concepts: suggests ai could question coding decisions, mention compiler feedback
+- The participant suggests that AI could question coding decisions and provide feedback.
+- The participant mentions the need for compiler feedback and external validation of AI-generated code, implying the need for thorough validation and verification of AI-generated code.
+
+26.
+Concepts: appreciate ai problem-solving, appreciate ai troubleshooting
+- Participants appreciate and praise AI's problem-solving and troubleshooting capabilities, acknowledging and appreciating AI's debugging help.
+- Participants find the AI tool's troubleshooting capabilities better than their own, appreciating the interface's troubleshooting capabilities.
+
+27.
+Concepts: manually debugs code, manually debugging ai code
+- Participants read through code manually to debug and identify errors.
+- Participants manually debug and evaluate AI-generated code.
+
+28.
+Concepts: rely on own expertise, fixing common netlogo mistakes independently
+- Interviewees rely on their own expertise to fix NetLogo mistakes, exhibiting strong domain expertise and debugging abilities.
+- Fixing common mistakes in NetLogo code on their own, fixing common NetLogo issues independently.
+
+29.
+Concepts: debug independently, exhibit expert debugging behavior
+- Participants debug code independently, correct errors independently, and demonstrate independent problem-solving skills.
+- Participants demonstrate their problem-solving approach and exhibit expert debugging behavior, exhibiting confidence in their personal debugging skills.
+
+30.
+Concepts: self-debug when ai fails, correct ai-generated code errors
+- The interviewee engages in self-debugging when AI fails, trying to debug the code themselves when the generated code does not work as expected.
+- Interviewee attempts to correct plotting issues in AI-generated code, reading and debugging code generated by AI, analyzing its functionality and identifying potential errors.
+
+31.
+Concepts: reflecting on ai's explanatory power, describing resulting errors
+- Participants reflect on AI's ability to clarify error codes and syntax.
+- Participants describe the errors that occur when writing code and how an LLM-driven interface can help identify and fix them.
+
+32.
+Concepts: identifying unclear errors, critiquing unclear error messages
+- Participants identify unclear error messages that make it difficult to understand the problem.
+- Participants describe unhelpful feedback and highlight the need for clear error messages.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: note coding habits, recognizing challenges of bulk coding
+Relationship: The concepts are related as they both describe the challenges of coding, with the first concept focusing on the habits of beginners and the second concept highlighting the difficulties of writing and debugging code.
+Criteria: Participants observe and reflect on the coding habits of beginners, recognizing the challenges of writing and debugging code.
+Phrase: Recognizing coding challenges
+
+2.
+Concepts: identifying gaps in ai assistance, identifying ai-generated solution limitations
+Relationship: The concepts are related as they both describe the limitations of AI-driven interfaces, with the first concept focusing on gaps in AI assistance and the second concept highlighting the limitations of AI-generated solutions.
+Criteria: Participants identify gaps in AI-driven interfaces and recognize the limitations of AI-generated solutions.
+Phrase: Identifying AI limitations
+
+3.
+Concepts: critiquing ai limitations, identifying ai feedback limitations, critiquing ai's limitations
+Relationship: The concepts are related as they all describe the limitations of AI-driven interfaces, with the first concept critiquing AI implementation, the second concept identifying limitations in AI feedback, and the third concept highlighting AI's comprehensiveness limitations.
+Criteria: Participants critique the limitations of AI-driven interfaces, identifying gaps in AI feedback and comprehensiveness.
+Phrase: Critiquing AI limitations
+
+4.
+Concepts: noting ai limitations, identifying ai limitations
+Relationship: The concepts are related as they both describe the limitations of AI-driven interfaces, with the first concept noting AI limitations and the second concept identifying specific limitations.
+Criteria: Participants note and identify the limitations of AI-driven interfaces.
+Phrase: Noting AI limitations
+
+5.
+Concepts: highlighting design tension, design limitations and trade-offs
+Relationship: The concepts are related as they both describe the challenges of designing AI-driven interfaces, with the first concept highlighting the tension between designing for novice and expert users and the second concept noting limited options and trade-offs.
+Criteria: Participants highlight the design tension and limitations of AI-driven interfaces, recognizing the trade-offs between novice and expert design needs.
+Phrase: Highlighting design limitations
+
+6.
+Concepts: noting chatgpt limitations, noting ai capacity limitations
+Relationship: The concepts are related as they both describe the limitations of AI-driven interfaces, with the first concept noting ChatGPT's limitations and the second concept highlighting AI's capacity limitations.
+Criteria: Participants note the limitations of ChatGPT and AI-driven interfaces, recognizing their capacity limitations.
+Phrase: Noting AI capacity limitations
+
+7.
+Concepts: encountering outdated code, dealing with older netlogo versions
+Relationship: The concepts are related as they both describe the challenges of working with outdated code and older NetLogo versions, with the first concept encountering outdated code and the second concept dealing with older versions.
+Criteria: Participants encounter and deal with outdated code and older NetLogo versions, using AI to support compatibility.
+Phrase: Dealing with outdated code
+
+8.
+Concepts: is familiar with chatgpt 3.5, preferring specific ai versions
+Relationship: The concepts are related as they both describe the participants' familiarity with specific AI versions, with the first concept focusing on ChatGPT 3.5 and the second concept highlighting preferences for specific AI versions.
+Criteria: Participants are familiar with specific AI versions, such as ChatGPT 3.5, and prefer them over other versions.
+Phrase: Preferring specific AI versions
+
+9.
+Concepts: abandoning ai assistance, abandoning ai-driven approaches, moving on from ai confusion
+Relationship: The concepts are related as they all describe the participants' decision to abandon AI assistance, with the first concept abandoning AI assistance, the second concept abandoning AI-driven approaches, and the third concept moving on from AI confusion.
+Criteria: Participants abandon AI assistance, AI-driven approaches, or move on from AI confusion due to difficulties or frustrations.
+Phrase: Abandoning AI assistance
+
+10.
+Concepts: noting lack of documentation, expressing frustration with documentation
+Relationship: The concepts are related as they both describe the participants' experience with documentation, with the first concept noting the lack of documentation and the second concept expressing frustration with current documentation.
+Criteria: Participants note the lack of documentation and express frustration with current documentation, implying a need for better documentation.
+Phrase: Noting documentation limitations
+
+11.
+Concepts: requests ai-generated code, seeks ai-assisted code review
+Relationship: The concepts are related as they both describe the participants' requests for AI-generated code, with the first concept requesting code for specific tasks and the second concept seeking AI-assisted code review.
+Criteria: Participants request AI-generated code and seek AI-assisted code review for specific tasks or problems.
+Phrase: Requesting AI-generated code
+
+12.
+Concepts: initiates coding process, building models iteratively with ai assistance
+Relationship: The concepts are related as they both describe the participants' coding process, with the first concept initiating the coding process and the second concept building models iteratively with AI assistance.
+Criteria: Participants initiate the coding process and build models iteratively with AI assistance, creating code skeletons and building on existing knowledge.
+Phrase: Building models with AI assistance
+
+13.
+Concepts: adopts ai-generated code, adapts to ai-generated code, customizes ai-generated code
+Relationship: The concepts are related as they all describe the participants' adoption of AI-generated code, with the first concept adopting AI-generated code, the second concept adapting to AI-generated code, and the third concept customizing AI-generated code.
+Criteria: Participants adopt, adapt to, and customize AI-generated code in their work.
+Phrase: Adopting AI-generated code
+
+14.
+Concepts: utilizes ai for coding, utilizes ai for creative tasks and code structures
+Relationship: The concepts are related as they both describe the participants' use of AI-driven interfaces, with the first concept utilizing AI for coding and the second concept utilizing AI for creative tasks and code structures.
+Criteria: Participants utilize AI-driven interfaces for coding tasks and creative tasks, relying on AI for code structures.
+Phrase: Utilizing AI for coding
+
+15.
+Concepts: optimizes code with ai, refines code with ai
+Relationship: The concepts are related as they both describe the participants' use of AI-driven interfaces for code optimization, with the first concept optimizing code with AI and the second concept refining code with AI.
+Criteria: Participants use AI-driven interfaces for code optimization and refinement, prioritizing efficiency.
+Phrase: Optimizing code with AI
+
+16.
+Concepts: follow ai-provided steps, code independently
+Relationship: The concepts are related as they both describe the participants' coding process, with the first concept following AI-provided steps and the second concept coding independently.
+Criteria: Participants follow AI-provided steps and code independently, using AI as a reference.
+Phrase: Following AI-provided steps
+
+17.
+Concepts: reflecting on own code structure, reflecting on coding conventions
+Relationship: The concepts are related as they both describe the participants' reflection on their coding process, with the first concept reflecting on their own code structure and the second concept reflecting on coding conventions.
+Criteria: Participants reflect on their own code structure and coding conventions, understanding how to interact with AI.
+Phrase: Reflecting on coding conventions
+
+18.
+Concepts: appreciates readable generated code, appreciating ai-generated code quality
+Relationship: The concepts are related as they both describe the participants' appreciation for AI-generated code, with the first concept appreciating readable generated code and the second concept appreciating AI-generated code quality.
+Criteria: Participants appreciate the readability and quality of AI-generated code.
+Phrase: Appreciating AI-generated code
+
+19.
+Concepts: values automatic integration, prefers seamless ai code integration
+Relationship: The concepts are related as they both describe the participants' preferences for AI code integration, with the first concept valuing automatic integration and the second concept preferring seamless integration.
+Criteria: Participants value and prefer seamless AI code integration into their NetLogo models.
+Phrase: Valuing seamless integration
+
+20.
+Concepts: querying ai for syntax, seeking syntax guidance, seeking specific syntax structures
+Relationship: The concepts are related as they all describe the participants' querying of AI for syntax guidance, with the first concept querying AI for syntax, the second concept seeking syntax guidance, and the third concept seeking specific syntax structures.
+Criteria: Participants query AI for syntax guidance, seeking clarification or missing structures.
+Phrase: Querying AI for syntax
+
+21.
+Concepts: want immediate fixes, wants "fix" option after error identification
+Relationship: The concepts are related as they both describe the participants' desire for immediate fixes, with the first concept wanting immediate fixes and the second concept wanting the "fix" option after error identification.
+Criteria: Participants prefer immediate fixes and want the "fix" option immediately after error identification.
+Phrase: Wanting immediate fixes
+
+22.
+Concepts: desiring code assistance features, requests coding assistance
+Relationship: The concepts are related as they both describe the participants' desire for code assistance features, with the first concept desiring features for improved coding efficiency and the second concept requesting coding assistance.
+Criteria: Participants desire code assistance features and request coding assistance for improved efficiency.
+Phrase: Desiring code assistance
+
+23.
+Concepts: preferring readable code, advocating for clear code, valuing maintainable code
+Relationship: The concepts are related as they all describe the participants' preferences for code quality, with the first concept preferring readable code, the second concept advocating for clear code, and the third concept valuing maintainable code.
+Criteria: Participants prefer, advocate for, and value code quality, preferring non-complex solutions.
+Phrase: Valuing code quality
+
+24.
+Concepts: emphasizing precision, discuss code quality and readability
+Relationship: The concepts are related as they both describe the participants' emphasis on code quality, with the first concept emphasizing precision and the second concept discussing code quality and readability.
+Criteria: Participants emphasize the importance of precision and discuss the importance of code quality and readability.
+Phrase: Emphasizing code quality
+
+25.
+Concepts: suggests ai could question coding decisions, mention compiler feedback
+Relationship: The concepts are related as they both describe the participants' suggestions for AI-driven interfaces, with the first concept suggesting AI question coding decisions and the second concept mentioning the need for compiler feedback.
+Criteria: Participants suggest AI-driven interfaces could question coding decisions and provide compiler feedback.
+Phrase: Suggesting AI feedback
+
+26.
+Concepts: appreciate ai problem-solving, appreciate ai troubleshooting
+Relationship: The concepts are related as they both describe the participants' appreciation for AI-driven interfaces, with the first concept appreciating AI problem-solving and the second concept appreciating AI troubleshooting.
+Criteria: Participants appreciate AI-driven interfaces' problem-solving and troubleshooting capabilities.
+Phrase: Appreciating AI capabilities
+
+27.
+Concepts: manually debugs code, manually debugging ai code
+Relationship: The concepts are related as they both describe the participants' debugging process, with the first concept manually debugging code and the second concept manually debugging AI-generated code.
+Criteria: Participants manually debug code and AI-generated code, identifying errors independently.
+Phrase: Manually debugging code
+
+28.
+Concepts: rely on own expertise, fixing common netlogo mistakes independently
+Relationship: The concepts are related as they both describe the participants' reliance on their own expertise, with the first concept relying on their expertise to fix NetLogo mistakes and the second concept fixing common NetLogo issues independently.
+Criteria: Participants rely on their own expertise to fix NetLogo mistakes and common issues.
+Phrase: Relying on own expertise
+
+29.
+Concepts: debug independently, exhibit expert debugging behavior
+Relationship: The concepts are related as they both describe the participants' debugging process, with the first concept debugging independently and the second concept exhibiting expert debugging behavior.
+Criteria: Participants debug code independently, demonstrating expert debugging skills.
+Phrase: Debugging independently
+
+30.
+Concepts: self-debug when ai fails, correct ai-generated code errors
+Relationship: The concepts are related as they both describe the participants' self-debugging process, with the first concept self-debugging when AI fails and the second concept correcting AI-generated code errors.
+Criteria: Participants self-debug when AI fails, correcting errors in AI-generated code.
+Phrase: Self-debugging when AI fails
+
+31.
+Concepts: reflecting on ai's explanatory power, describing resulting errors
+Relationship: The concepts are related as they both describe the participants' reflection on AI-driven interfaces, with the first concept reflecting on AI's explanatory power and the second concept describing resulting errors.
+Criteria: Participants reflect on AI-driven interfaces' explanatory power and describe resulting errors.
+Phrase: Reflecting on AI's explanatory power
+
+32.
+Concepts: identifying unclear errors, critiquing unclear error messages
+Relationship: The concepts are related as they both describe the participants' identification of unclear errors, with the first concept identifying unclear errors and the second concept critiquing unclear error messages.
+Criteria: Participants identify unclear errors and critique unclear error messages, highlighting the need for clear error messages.
+Phrase: Identifying unclear errors

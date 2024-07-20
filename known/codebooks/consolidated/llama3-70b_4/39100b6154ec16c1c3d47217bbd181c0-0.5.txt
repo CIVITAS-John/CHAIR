@@ -1,0 +1,277 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+32.
+Criteria: {Who did what, and how for code 32}
+Label: {A descriptive label of code 32}
+---
+~~~
+1.
+Label: seeks collaborative problem solving
+Quotes:
+- E04: "Can train-perceptron be turned into a reporter" (interviewer's observation) E04 uses "can you fix with my own idea".
+
+2.
+Label: implies exploratory approach
+Quotes:
+- E01: "please write a netlogo program that produces a checker board with black and white squares?" (interviewer's observation) E01 asks ChatLogo to create a checkerboard pattern.
+
+3.
+Label: discusses code complexity
+Quotes:
+- E01: You know, so in point of fact, I considered a much higher virtue for that kind of code to go, write this in the most standard dumb ass idiot accessible way that you can. So that when I come back to it later, I could figure out why it, why it's not working anymore. (interviewer's observation) Discussion on code complexity & quality. Plain / not-tricky code's advantage in maintenance.
+
+4.
+Label: assesses ai search accuracy
+Quotes:
+- E04: I know that Perceptron model exists in the NetLogo model library. So it's interesting to me that it didn't pull that up, but it could be that I used like the wrong verbiage, but it doesn't understand what I'm trying to do. (interviewer's observation) E04 expects ChatLogo to find "Perceptron" model from the library but it does not. He evaluates the search results of the AI.
+- E04: "I want to create a neural network" - I want to see if it actually pulls up the model. (interviewer's observation) E04 experiments with the AI to see what phrases could give a correct search result.
+
+5.
+Label: relies on own expertise
+Quotes:
+- E04: So this is interesting because, you know, obviously it's wrong. So I have to kind of interpret what's going on here. (interviewer's observation) E04 fixes common NetLogo mistakes by himself.
+
+6.
+Label: recalling previous ai debugging experience
+Quotes:
+- E01: I have I found with with playing with with ChatGPT. And I was something at Python, I think I tried to give it the code. And I tried to run it generated error. And then I would go back to the next prompt and ChatGPT. And I go, that code is good. But it generates the following error. And I list the error online on this line, and I'd quote the line. And I say, Can you fix that?  (interviewer's observation) When E01 sees a bug in the generated code, he refers to his previous practice with asking ChatGPT to debug with the code, the error message, and the line number. Interviewer did what E01 said.
+
+7.
+Label: notes the challenge of assisting novice programmers based on incomplete information
+Quotes:
+- E01: I couldn't (help the novice) because when a beginner just posts a big block of code, it says there's something wrong with this. (interviewer's observation) Challenges for novices to seek help: they simply post chunks of code without background information.
+
+8.
+Label: defining a task for chat gpt
+Quotes:
+- E01: So let's say "I would like to write code to have a turtle run slowly around the perimeter of a square." (interviewer's observation) E01's first task.
+- E04: "I want to create a simple feed-forward neural network in NetLogo with one hidden layer."
+
+9.
+Label: experiences variability in ai outputs
+Quotes:
+- E04: Sometimes it'll give me instructions and sometimes it'll just give me the code and then sometimes it'll tell me to use R extensions or something like that. It is random in that regard, it's not deterministic in terms of what result you're going to get. (interviewer's observation) E04 regularly evaluates the AI responses and thinks that it is not deterministic.
+
+10.
+Label: perceiving randomness in ai responses
+Quotes:
+- E04: Sometimes it'll give me instructions and sometimes it'll just give me the code and then sometimes it'll tell me to use R extensions or something like that. It is random in that regard, it's not deterministic in terms of what result you're going to get. (interviewer's observation) E04 regularly evaluates the AI responses and thinks that it is not deterministic.
+
+11.
+Label: follows a structured modeling process
+Quotes:
+- E04: I just like being able to kind of, like, iteratively build it. The thing that I always do when I create a model is I do, like, the initial command. I'll set up and go here. I'll go ahead and after I kind of set up the buttons, I'll put the functions behind them back here in the interface. (interviewer's observation) E04 creates the code skeleton before asking ChatGPT. He has a clear idea & established process of building ABMs.
+
+12.
+Label: implies engagement
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 laughs when he sees ChatGPT making a classical error.
+
+13.
+Label: critiques current ai limitations
+Quotes:
+- E01: And some of them we still haven't been doing like hive mind, like how we are going to have the machine learning back from the user feedback or just from the compiler, right? You generate some code, but it doesn't work. So we have to tell you that this time, you didn't work. (interviewer's observation) The current ChatGPT implementation cannot check the generated code with external information (compiler, etc.) (partially solved by the Interpreter plugin, but only Python at this time)
+
+14.
+Label: seeks effective communication with ai
+Quotes:
+- E04: "I want to create a neural network" - I want to see if it actually pulls up the model. (interviewer's observation) E04 experiments with the AI to see what phrases could give a correct search result.
+
+15.
+Label: specifies model requirements to ai
+Quotes:
+- E04: "I want to create a simple feed-forward neural network in NetLogo with one hidden layer."
+
+16.
+Label: e04 establishes a clear process for building ab ms, creating code skeleton before engaging ai
+Quotes:
+- E04: I just like being able to kind of, like, iteratively build it. The thing that I always do when I create a model is I do, like, the initial command. I'll set up and go here. I'll go ahead and after I kind of set up the buttons, I'll put the functions behind them back here in the interface. (interviewer's observation) E04 creates the code skeleton before asking ChatGPT. He has a clear idea & established process of building ABMs.
+
+17.
+Label: shares debugging experience
+Quotes:
+- E01: I have I found with with playing with with ChatGPT. And I was something at Python, I think I tried to give it the code. And I tried to run it generated error. And then I would go back to the next prompt and ChatGPT. And I go, that code is good. But it generates the following error. And I list the error online on this line, and I'd quote the line. And I say, Can you fix that?  (interviewer's observation) When E01 sees a bug in the generated code, he refers to his previous practice with asking ChatGPT to debug with the code, the error message, and the line number. Interviewer did what E01 said.
+
+18.
+Label: follows established process for abm creation
+Quotes:
+- E04: I just like being able to kind of, like, iteratively build it. The thing that I always do when I create a model is I do, like, the initial command. I'll set up and go here. I'll go ahead and after I kind of set up the buttons, I'll put the functions behind them back here in the interface. (interviewer's observation) E04 creates the code skeleton before asking ChatGPT. He has a clear idea & established process of building ABMs.
+
+19.
+Label: identifying novice expectations of ai
+Quotes:
+- E01: And, and they don't, this is an unfamiliar task to them apparently. So they want to ask one question and get the right answer the first time. And I, I don't have that expectation. I'll ask the right question and it'll get me 80% of the way there. (interviewer's observation) Novices might have a too high expectation for ChatGPT (but it cannot achieve that).
+
+20.
+Label: recounts an experience of ai generating non existent functions
+Quotes:
+- E01: So maybe the details are wrong and, you know, Michael Tamalo or somebody jumped on me because I posted some answer and it used some function that wasn't available. AI had hallucinated some function. (interviewer's observation) AI might hallucinates.
+
+21.
+Label: reflects on the benefits of community support in programming
+Quotes:
+- E01: I had a problem and I couldn't figure out how to solve this problem. I finally got online and I discovered there was this user group that would help you for free with problems. And it was stunning. (interviewer's observation) E01's reflection on seeking help online.
+
+22.
+Label: reflecting on individualistic work culture
+Quotes:
+- E01: But you know, again, you have this culture, especially in the US of do your own work. People get a little too obsessive about doing their own work.  (interviewer's observation) E01's reflection on U.S. individualistic working culture.
+
+23.
+Label: adjusts model setup
+Quotes:
+- E04: So one thing I'm realizing now, part of my setup needs to be reset all. (interviewer's observation) E04 sees from the generated code and realizes that he needs to reset.
+
+24.
+Label: believing that chat gpt could serve as an outside observer to catch obvious errors
+Quotes:
+- E01: I don't know how much it understands about all of the efficiencies of NetLogo... But it (could) catch obvious errors that are not obvious to me. Even if it's relatively dumb, it's an outside observer, which is great. (interviewer's observation) ChatGPT could serve as an outside observer that points out errors human did not realize.
+
+25.
+Label: questions ai's syntax checking accuracy
+Quotes:
+- E04: maybe you saw something that I didn't, but from my perspective, it seemed as though the code was set up appropriately, but it was marking the syntax as wrong. So maybe I was missing something, but I didn't see anything missing. So that was kind of frustrating. (interviewer's observation) Shows error messages even when it seems to be correct (that's a bug identified)
+
+26.
+Label: interviewee demonstrating their preference for action oriented problem solving
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 chooses to fix the problem rather than showing the explanation.
+
+27.
+Label: clearness
+Quotes:
+- E04: I think that it's nice that it's, it clarifies error codes. I think that's probably where people who are new get stuck the most is trying to figure out the syntax and all the different errors. (interviewer's observation) The capability to clarify the errors.
+- E04: It seems to explain things pretty well, it does not seems to be overly technical. (interviewer's observation) Provides clear, less technical explanations.
+
+28.
+Label: valuing code simplicity
+Quotes:
+- E01: You know, so in point of fact, I considered a much higher virtue for that kind of code to go, write this in the most standard dumb ass idiot accessible way that you can. So that when I come back to it later, I could figure out why it, why it's not working anymore. (interviewer's observation) Discussion on code complexity & quality. Plain / not-tricky code's advantage in maintenance.
+
+29.
+Label: reads and debugs code
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 reads through the code and tries to debug with himself when the generated code does not do what it does.
+
+30.
+Label: suggests educational benefit
+Quotes:
+- E01: This is what conversations with ChatGPT typically look like. I had to go through about eight separate times to get all the errors out of it.  But, but look at how it structured the code. Look at the things that did look what you could learn from this. This is valuable. (interviewer's observation) Users may benefit from the iterative debugging process during working with AI, even though AI might give wrong answers.
+
+31.
+Label: has not tried older versions
+Quotes:
+- E04: I don't know if I've ever tried 4. I guess it would be 3.5. (interviewer's observation) Only used ChatGPT 3.5 before
+
+32.
+Label: observes ai's adherence to best practices
+Quotes:
+- E04: It's basically following best practices. It is not trying to ruthlessly create a model. (interviewer's observation) Not "ruthlessly create a model".
+===
+Here are the definitions for each code:
+
+1. Criteria: Interviewee seeks collaborative problem-solving approach with AI.
+Label: Seeks collaborative problem solving
+
+2. Criteria: Interviewee adopts an exploratory approach when working with AI.
+Label: Implies exploratory approach
+
+3. Criteria: Interviewee discusses the importance of code simplicity and maintainability.
+Label: Discusses code complexity
+
+4. Criteria: Interviewee evaluates the accuracy of AI search results.
+Label: Assesses AI search accuracy
+
+5. Criteria: Interviewee relies on their own expertise to fix NetLogo mistakes.
+Label: Relies on own expertise
+
+6. Criteria: Interviewee recalls previous experience with debugging AI-generated code.
+Label: Recalling previous AI debugging experience
+
+7. Criteria: Interviewee notes the challenges of assisting novice programmers due to incomplete information.
+Label: Notes the challenge of assisting novice programmers
+
+8. Criteria: Interviewee defines a task for ChatGPT to complete.
+Label: Defining a task for ChatGPT
+
+9. Criteria: Interviewee experiences variability in AI outputs.
+Label: Experiences variability in AI outputs
+
+10. Criteria: Interviewee perceives randomness in AI responses.
+Label: Perceiving randomness in AI responses
+
+11. Criteria: Interviewee follows a structured modeling process when creating ABMs.
+Label: Follows a structured modeling process
+
+12. Criteria: Interviewee engages with AI in a playful manner.
+Label: Implies engagement
+
+13. Criteria: Interviewee critiques the limitations of current AI implementation.
+Label: Critiques current AI limitations
+
+14. Criteria: Interviewee seeks effective communication with AI.
+Label: Seeks effective communication with AI
+
+15. Criteria: Interviewee specifies model requirements to AI.
+Label: Specifies model requirements to AI
+
+16. Criteria: Interviewee establishes a clear process for building ABMs.
+Label: Establishes a clear process for building ABMs
+
+17. Criteria: Interviewee shares their experience with debugging AI-generated code.
+Label: Shares debugging experience
+
+18. Criteria: Interviewee follows an established process for ABM creation.
+Label: Follows established process for ABM creation
+
+19. Criteria: Interviewee identifies novice expectations of AI.
+Label: Identifying novice expectations of AI
+
+20. Criteria: Interviewee recounts an experience of AI generating non-existent functions.
+Label: Recounts an experience of AI generating non-existent functions
+
+21. Criteria: Interviewee reflects on the benefits of community support in programming.
+Label: Reflects on the benefits of community support in programming
+
+22. Criteria: Interviewee reflects on individualistic work culture.
+Label: Reflecting on individualistic work culture
+
+23. Criteria: Interviewee adjusts the model setup based on AI output.
+Label: Adjusts model setup
+
+24. Criteria: Interviewee believes AI can serve as an outside observer to catch obvious errors.
+Label: Believing AI can catch obvious errors
+
+25. Criteria: Interviewee questions AI's syntax checking accuracy.
+Label: Questions AI's syntax checking accuracy
+
+26. Criteria: Interviewee demonstrates a preference for action-oriented problem-solving.
+Label: Demonstrating preference for action-oriented problem-solving
+
+27. Criteria: Interviewee values the clarity of AI explanations.
+Label: Valuing clearness
+
+28. Criteria: Interviewee prioritizes code simplicity and maintainability.
+Label: Valuing code simplicity
+
+29. Criteria: Interviewee reads and debugs code generated by AI.
+Label: Reads and debugs code
+
+30. Criteria: Interviewee suggests educational benefits of working with AI.
+Label: Suggests educational benefit
+
+31. Criteria: Interviewee has not tried older versions of AI.
+Label: Has not tried older versions
+
+32. Criteria: Interviewee observes AI's adherence to best practices.
+Label: Observes AI's adherence to best practices

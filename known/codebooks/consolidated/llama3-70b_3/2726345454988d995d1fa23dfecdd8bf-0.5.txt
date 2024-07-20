@@ -1,0 +1,82 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (7 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+7.
+Criteria: {Who did what, and how for code 7}
+Label: {A descriptive label of code 7}
+---
+~~~
+1.
+Label: plotting model outputs
+Quotes:
+- E04: "how can I plot the output of this model?" (interviewer's observation) E04 was prompted to follow-up with ChatGPT.
+
+2.
+Label: values immediate feedback from ai for model development
+Quotes:
+- E04: I'll go on Stack Exchange or Stack Overflow, I'm part of the NetLogo listserv, but obviously there's a delay there. So in the instance that I need immediate feedback, it is really helpful. (interviewer's observation) Nice to have immediate feedback.
+
+3.
+Label: values quality over speed
+Quotes:
+- E04: It's basically following best practices. It is not trying to ruthlessly create a model. (interviewer's observation) Not "ruthlessly create a model".
+
+4.
+Label: appreciating the interface's error handling features
+Quotes:
+- E04: It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent. (interviewer's observation) Better troubleshooting capability.
+
+5.
+Label: adapting to time constraints
+Quotes:
+- E04: It'd be that I just take this and see what this does. This should just be a single node so it'll kind of overwrite what I already did. (interviewer's observation) E04 uses the AI-generated code completely when realizing time constraints.
+
+6.
+Label: discusses potential ai roles
+Quotes:
+- E01: What if you were just sitting in a peer programming and sitting next to a, uh, a bright person who was helping you, what would you want them to do? So you might start writing a line of code and they would stop and go, why are you, why are you typing? (interviewer's observation) E01 discusses how AI could potentially serve as a pair programmer that questions the learners' motives.
+
+7.
+Label: not seeking explanations
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 manually tries to fix the errors in the AI-generated code and did not choose "explain it".
+===
+Here are the definitions for each code with clear and generalizable criteria:
+
+---
+1.
+Criteria: Expresses a desire to visualize model outputs.
+Label: Plotting Model Outputs
+
+2.
+Criteria: Appreciates immediate feedback from AI during model development.
+Label: Valuing Immediate Feedback
+
+3.
+Criteria: Prioritizes quality over speed in model development.
+Label: Prioritizing Quality
+
+4.
+Criteria: Recognizes the benefits of error handling features in the interface.
+Label: Appreciating Error Handling
+
+5.
+Criteria: Adapts to time constraints by relying on AI-generated code.
+Label: Adapting to Time Constraints
+
+6.
+Criteria: Discusses potential roles of AI in supporting model development.
+Label: Envisioning AI Roles
+
+7.
+Criteria: Fails to seek explanations for errors or code functionality.
+Label: Not Seeking Explanations

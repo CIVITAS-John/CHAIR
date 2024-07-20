@@ -1,0 +1,379 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: correct code independently, debugging generated code independently
+- Participants correct code independently and manually fix AI-generated code errors.
+- Participant debugs generated code independently, without relying on AI.
+
+2.
+Concepts: preferring manual coding, preferring to engage actively with the learning process
+- Preferring manual coding over copying AI-generated code.
+- Interviewee prefers to engage actively with the learning process, writing code manually rather than copying from AI.
+
+3.
+Concepts: prefers hands-on debugging, bypassing ai assistance for known issues
+- Prefer manual debugging and error correction over relying on AI assistance.
+- Interviewee bypasses AI assistance for known issues, preferring to fix errors manually.
+
+4.
+Concepts: avoiding "explain it" option, not seeking explanations
+- Participant chooses not to use the "explain it" option and instead tries to fix errors manually.
+- The participant does not request or seek explanations for the AI-generated code, instead opting to manually fix errors or understand the code on their own.
+
+5.
+Concepts: appreciating free help, positive experience with online user groups
+- Expressing surprise and appreciation for free help, such as online user groups.
+- Having a positive experience with online user groups, highlighting their helpfulness.
+
+6.
+Concepts: importance of online communities, valuing online communities for problem-solving
+- The participant mentions the importance of online communities in helping with problems.
+- The interviewee values online communities and resources for learning and troubleshooting.
+
+7.
+Concepts: importance of documentation, emphasizing preparation for seeking online help
+- The interviewee emphasizes the importance of documentation in seeking online help.
+- The interviewee emphasizes preparation and proper practices for seeking help.
+
+8.
+Concepts: proper help-seeking etiquette, advocate for proper etiquette
+- Advises on proper help-seeking etiquette.
+- Participants advocate for proper online help-seeking etiquette.
+
+9.
+Concepts: valuing online help-seeking etiquette, valuing online help communities and timely feedback
+- Recalls personal experiences with online help, values proper help-seeking practices.
+- The participant values online help communities and proper practices for seeking help, including using AI tools for timely feedback.
+
+10.
+Concepts: online help seeking, reflect on seeking help online
+- Seeking help online, including AI-assisted resources.
+- Participants reflect on their experience of seeking help online.
+
+11.
+Concepts: help-seeking behaviors, promoting help-seeking behavior
+- Influencing help-seeking behaviors
+- Encouraging help-seeking behavior, recognizing the importance of asking for help in problem-solving.
+
+12.
+Concepts: ai encouraging early help-seeking, encouraging early and frequent help seeking, importance of asking for help
+- Suggests that AI can encourage early help-seeking behavior.
+- The participant suggests that AI could encourage early and frequent help-seeking behavior to reduce development costs.
+- Emphasizes the importance of asking for help early and often, and how AI can facilitate this.
+
+13.
+Concepts: ai as a convenient helper, recognizing ai-facilitated user support, facilitating help-seeking with ai
+- Seeing AI as a convenient way to seek help, valuing its ability to provide assistance.
+- The participant recognizes the value of AI in facilitating user support and generating help requests.
+- Participants see AI as a means to facilitate help-seeking.
+
+14.
+Concepts: human-ai support, proactive ai assistance
+- Seeks support from AI-driven interfaces to save time and effort.
+- Proactively seeks further assistance from AI-driven interfaces to address specific needs.
+
+15.
+Concepts: noticing adherence to best practices, recognizing adherence to coding standards
+- Participant values following best practices in coding.
+- The interviewee recognizes the AI's adherence to coding standards.
+
+16.
+Concepts: noting ai's focus on best practices, importance of best practices in ai-generated models
+- Noting the AI's focus on best practices rather than rapid model creation.
+- Valuing AI's adherence to best practices in model creation.
+
+17.
+Concepts: observing ai follows best practices, acknowledging adherence to best practices
+- Observing AI-driven interfaces following best practices
+- Actors acknowledge the importance of adhering to best practices when using AI-driven interfaces.
+
+18.
+Concepts: quality over speed, prioritizing best practices, thoughtful model creation
+- Prioritizes quality over speed in model development, following best practices.
+- Emphasizes following best practices over ruthlessly creating a model.
+- Values thoughtful model creation, following best practices.
+
+19.
+Concepts: knowledge gaps in software development, identifying gaps in knowledge transfer
+- Noting knowledge gaps in software development
+- Identifying gaps in knowledge transfer, such as the importance of oral tradition in software development.
+
+20.
+Concepts: acknowledging tacit knowledge, emphasizing oral tradition
+- The interviewee acknowledges the existence and importance of tacit knowledge in software development.
+- The interviewee reflects on the importance of oral tradition in software development, where knowledge is shared through word of mouth.
+
+21.
+Concepts: software development background, familiar with multiple software languages
+- Mentioning familiarity with diverse software development environments
+- The participant has prior experience with multiple software languages.
+
+22.
+Concepts: as an expert, possessing multilingual expertise
+- Speaking from a position of expertise, with experience in multiple languages.
+- The interviewee possesses expertise in multiple languages.
+
+23.
+Concepts: interviewee, highlighting personal expertise
+- Provides expert insights and reflections as an interviewee.
+- The interviewee highlights their personal expertise and ability to ask effective questions.
+
+24.
+Concepts: discusses clear instruction importance, emphasize instruction writing importance
+- The interviewee discusses the significance of writing clear instructions for AI.
+- Participants emphasize the importance of writing instructions for effective AI interaction.
+
+25.
+Concepts: foundational skills for ai use, need for foundational learning
+- Suggesting foundational skills for effective AI use
+- Suggests the need for foundational learning in programming before using AI tools.
+
+26.
+Concepts: recognizing the importance of clear instructions, recognizing the importance of clear instruction writing
+- Participants recognize the importance of clear instructions.
+- Identifies gaps in problem conceptualization abilities, values clear instruction writing.
+
+27.
+Concepts: need for clear problem descriptions, highlighting the need for explicit problem conceptualization
+- Highlighting the need for clear and concise problem descriptions
+- Emphasizing the importance of explicit problem conceptualization when working with AI assistants.
+
+28.
+Concepts: emphasizing the importance of context, recognizing importance of context in code completion
+- The interviewee emphasizes the importance of context in seeking help, such as providing background information.
+- The interviewee recognizes the importance of context in code completion.
+
+29.
+Concepts: preferring to help, prioritizing helping others
+- Prefers to help others learn NetLogo.
+- Prioritizing helping others learn NetLogo over personal goals.
+
+30.
+Concepts: need for efficient learning tools, identifying need for efficient learning tools
+- Suggesting the need for efficient learning tools
+- The interviewee expresses the need for efficient learning tools or ways to optimize their learning process.
+
+31.
+Concepts: positive opinions on peer programming, emphasizing the importance of peer programming
+- The participant expresses positive opinions about peer programming.
+- Interviewee emphasizes the importance of peer programming.
+
+32.
+Concepts: adapts based on code, identifies need for reset
+- Identifies need to reset setup.
+- Recognizes the need for model reset.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: correct code independently, debugging generated code independently
+Relationship: These concepts are related as they both involve independent problem-solving without relying on AI assistance.
+Criteria: Participants correct and debug code independently without relying on AI assistance.
+Phrase: Correcting code independently.
+
+2.
+Concepts: preferring manual coding, preferring to engage actively with the learning process
+Relationship: These concepts are related as they both involve a preference for active engagement in the learning process.
+Criteria: Participants prefer manual coding and engaging actively with the learning process.
+Phrase: Preferring manual coding.
+
+3.
+Concepts: prefers hands-on debugging, bypassing ai assistance for known issues
+Relationship: These concepts are related as they both involve a preference for hands-on problem-solving.
+Criteria: Participants prefer hands-on debugging and bypass AI assistance for known issues.
+Phrase: Preferring hands-on debugging.
+
+4.
+Concepts: avoiding "explain it" option, not seeking explanations
+Relationship: These concepts are related as they both involve avoiding external assistance.
+Criteria: Participants avoid the "explain it" option and do not seek explanations.
+Phrase: Avoiding external explanations.
+
+5.
+Concepts: appreciating free help, positive experience with online user groups
+Relationship: These concepts are related as they both involve a positive experience with online resources.
+Criteria: Participants appreciate free help and have a positive experience with online user groups.
+Phrase: Appreciating online help.
+
+6.
+Concepts: importance of online communities, valuing online communities for problem-solving
+Relationship: These concepts are related as they both involve valuing online resources for problem-solving.
+Criteria: Participants value online communities for problem-solving.
+Phrase: Valuing online communities.
+
+7.
+Concepts: importance of documentation, emphasizing preparation for seeking online help
+Relationship: These concepts are related as they both involve preparation for seeking help.
+Criteria: Participants emphasize the importance of documentation and preparation for seeking online help.
+Phrase: Emphasizing preparation.
+
+8.
+Concepts: proper help-seeking etiquette, advocate for proper etiquette
+Relationship: These concepts are related as they both involve advocating for proper help-seeking practices.
+Criteria: Participants advocate for proper help-seeking etiquette.
+Phrase: Advocating for etiquette.
+
+9.
+Concepts: valuing online help-seeking etiquette, valuing online help communities and timely feedback
+Relationship: These concepts are related as they both involve valuing online resources and practices.
+Criteria: Participants value online help-seeking etiquette, communities, and timely feedback.
+Phrase: Valuing online etiquette.
+
+10.
+Concepts: online help seeking, reflect on seeking help online
+Relationship: These concepts are related as they both involve seeking help online.
+Criteria: Participants seek help online and reflect on their experience.
+Phrase: Seeking online help.
+
+11.
+Concepts: help-seeking behaviors, promoting help-seeking behavior
+Relationship: These concepts are related as they both involve promoting help-seeking practices.
+Criteria: Participants promote help-seeking behavior.
+Phrase: Promoting help-seeking.
+
+12.
+Concepts: ai encouraging early help-seeking, encouraging early and frequent help seeking, importance of asking for help
+Relationship: These concepts are related as they all involve encouraging help-seeking behavior.
+Criteria: Participants suggest that AI can encourage early and frequent help-seeking behavior.
+Phrase: Encouraging early help-seeking.
+
+13.
+Concepts: ai as a convenient helper, recognizing ai-facilitated user support, facilitating help-seeking with ai
+Relationship: These concepts are related as they all involve recognizing the value of AI in facilitating help-seeking.
+Criteria: Participants recognize AI as a convenient helper and facilitator of user support.
+Phrase: Recognizing AI-facilitated support.
+
+14.
+Concepts: human-ai support, proactive ai assistance
+Relationship: These concepts are related as they both involve seeking proactive AI assistance.
+Criteria: Participants seek proactive AI assistance to address specific needs.
+Phrase: Seeking proactive AI assistance.
+
+15.
+Concepts: noticing adherence to best practices, recognizing adherence to coding standards
+Relationship: These concepts are related as they both involve recognizing adherence to coding standards.
+Criteria: Participants recognize AI's adherence to coding standards and best practices.
+Phrase: Recognizing adherence to standards.
+
+16.
+Concepts: noting ai's focus on best practices, importance of best practices in ai-generated models
+Relationship: These concepts are related as they both involve valuing AI's adherence to best practices.
+Criteria: Participants value AI's focus on best practices in model creation.
+Phrase: Valuing AI's focus on best practices.
+
+17.
+Concepts: observing ai follows best practices, acknowledging adherence to best practices
+Relationship: These concepts are related as they both involve observing AI's adherence to best practices.
+Criteria: Participants observe AI-driven interfaces following best practices.
+Phrase: Observing adherence to best practices.
+
+18.
+Concepts: quality over speed, prioritizing best practices, thoughtful model creation
+Relationship: These concepts are related as they all involve prioritizing quality over speed.
+Criteria: Participants prioritize quality over speed in model development, following best practices.
+Phrase: Prioritizing quality over speed.
+
+19.
+Concepts: knowledge gaps in software development, identifying gaps in knowledge transfer
+Relationship: These concepts are related as they both involve identifying gaps in knowledge transfer.
+Criteria: Participants identify knowledge gaps in software development and knowledge transfer.
+Phrase: Identifying knowledge gaps.
+
+20.
+Concepts: acknowledging tacit knowledge, emphasizing oral tradition
+Relationship: These concepts are related as they both involve acknowledging the importance of tacit knowledge.
+Criteria: Participants acknowledge the existence and importance of tacit knowledge in software development.
+Phrase: Acknowledging tacit knowledge.
+
+21.
+Concepts: software development background, familiar with multiple software languages
+Relationship: These concepts are related as they both involve prior experience with software development.
+Criteria: Participants have prior experience with multiple software languages.
+Phrase: Having prior software development experience.
+
+22.
+Concepts: as an expert, possessing multilingual expertise
+Relationship: These concepts are related as they both involve possessing expertise in multiple languages.
+Criteria: Participants possess expertise in multiple languages.
+Phrase: Possessing multilingual expertise.
+
+23.
+Concepts: interviewee, highlighting personal expertise
+Relationship: These concepts are related as they both involve highlighting personal expertise.
+Criteria: Participants highlight their personal expertise and ability to ask effective questions.
+Phrase: Highlighting personal expertise.
+
+24.
+Concepts: discusses clear instruction importance, emphasize instruction writing importance
+Relationship: These concepts are related as they both involve emphasizing the importance of clear instructions.
+Criteria: Participants discuss the importance of writing clear instructions for effective AI interaction.
+Phrase: Emphasizing instruction importance.
+
+25.
+Concepts: foundational skills for ai use, need for foundational learning
+Relationship: These concepts are related as they both involve recognizing the need for foundational skills.
+Criteria: Participants suggest the need for foundational skills for effective AI use.
+Phrase: Recognizing the need for foundational skills.
+
+26.
+Concepts: recognizing the importance of clear instructions, recognizing the importance of clear instruction writing
+Relationship: These concepts are related as they both involve recognizing the importance of clear instructions.
+Criteria: Participants recognize the importance of clear instructions and instruction writing.
+Phrase: Recognizing instruction importance.
+
+27.
+Concepts: need for clear problem descriptions, highlighting the need for explicit problem conceptualization
+Relationship: These concepts are related as they both involve highlighting the need for clear problem descriptions.
+Criteria: Participants highlight the need for clear and concise problem descriptions.
+Phrase: Highlighting the need for clear descriptions.
+
+28.
+Concepts: emphasizing the importance of context, recognizing importance of context in code completion
+Relationship: These concepts are related as they both involve recognizing the importance of context.
+Criteria: Participants emphasize the importance of context in seeking help and code completion.
+Phrase: Emphasizing context importance.
+
+29.
+Concepts: preferring to help, prioritizing helping others
+Relationship: These concepts are related as they both involve prioritizing helping others.
+Criteria: Participants prefer to help others learn NetLogo over personal goals.
+Phrase: Prioritizing helping others.
+
+30.
+Concepts: need for efficient learning tools, identifying need for efficient learning tools
+Relationship: These concepts are related as they both involve identifying the need for efficient learning tools.
+Criteria: Participants identify the need for efficient learning tools or ways to optimize their learning process.
+Phrase: Identifying the need for efficient tools.
+
+31.
+Concepts: positive opinions on peer programming, emphasizing the importance of peer programming
+Relationship: These concepts are related as they both involve emphasizing the importance of peer programming.
+Criteria: Participants express positive opinions about peer programming and emphasize its importance.
+Phrase: Emphasizing peer programming importance.
+
+32.
+Concepts: adapts based on code, identifies need for reset
+Relationship: These concepts are related as they both involve adapting to code and recognizing the need for reset.
+Criteria: Participants adapt based on code and identify the need for model reset.
+Phrase: Adapting to code changes.

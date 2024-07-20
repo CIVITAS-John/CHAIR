@@ -1,0 +1,262 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (27 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+27.
+Criteria: {Who did what, and how for code 27}
+Label: {A descriptive label of code 27}
+---
+~~~
+1.
+Label: copying and pasting error messages
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 was prompted to copy and paste error messages to ChatGPT.
+
+2.
+Label: recognizing debugging and unit testing capabilities
+Quotes:
+- E04: It includes debugging, it is actually trying to incorporate like a unit test, which is really cool and really helpful, especially for beginners, because they can kind of, you know, check their inputs. Beginners, everyone really. They can debug their code appropriately. (interviewer's observation) Debugging capability.
+
+3.
+Label: ai serving as an outside observer that points out errors not realized by humans
+Quotes:
+- E01: I don't know how much it understands about all of the efficiencies of NetLogo... But it (could) catch obvious errors that are not obvious to me. Even if it's relatively dumb, it's an outside observer, which is great. (interviewer's observation) ChatGPT could serve as an outside observer that points out errors human did not realize.
+
+4.
+Label: realizes need for reset in setup
+Quotes:
+- E04: So one thing I'm realizing now, part of my setup needs to be reset all. (interviewer's observation) E04 sees from the generated code and realizes that he needs to reset.
+
+5.
+Label: suggests need for foundational learning
+Quotes:
+- E01: I'm not sure that any beginner wouldn't necessarily know that unless they'd ever practiced. And so some of the users of NetLogo have never programmed anything. So, (they might lack) the whole concept of debugging or maybe starting with a design outline. They start typing and then they get frustrated because they don't know how to debug code. (interviewer's observation) E01 reflects on how novices might get stuck during the human-AI collaboration process.
+
+6.
+Label: e01 seems to have a positive but cautious attitude towards ai in programming
+Quotes:
+- E01: I think the key is to not replace human judgment and ability, but to find a fast way to increase human capability and judgment. (interviewer's observation) Augmentation of human capabilities & building on human judgement. Subjectivity of humanity?
+
+7.
+Label: the importance of seeking help in learning
+Quotes:
+- E01: What you have in America is this, this cult of individualism to a point of obsession. And people don't naturally stop and go, how can I get help with this? (interviewer's observation) Continued: reflection on the individualism.
+
+8.
+Label: interviewee choosing to fix the problem rather than showing the explanation
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 chooses to fix the problem rather than showing the explanation.
+
+9.
+Label: appreciating the capability to automatically integrate the ai generated code
+Quotes:
+- E04: I really liked how, like the code that it generates, if you could just kind of place that into the model automatically.  (interviewer's observation) The capability to put into the model automatically.
+
+10.
+Label: highlighting ai's error clarification ability
+Quotes:
+- E04: I think that it's nice that it's, it clarifies error codes. I think that's probably where people who are new get stuck the most is trying to figure out the syntax and all the different errors. (interviewer's observation) The capability to clarify the errors.
+
+11.
+Label: e04 establishes a clear process for building ab ms, creating code skeleton before engaging ai
+Quotes:
+- E04: I just like being able to kind of, like, iteratively build it. The thing that I always do when I create a model is I do, like, the initial command. I'll set up and go here. I'll go ahead and after I kind of set up the buttons, I'll put the functions behind them back here in the interface. (interviewer's observation) E04 creates the code skeleton before asking ChatGPT. He has a clear idea & established process of building ABMs.
+
+12.
+Label: proposing improvements for novice ai interaction
+Quotes:
+- E01: So I would find it more helpful if it asked the questions one at a time. Before you tell me nine more errors. Just because users are always overfilling their buffer. So smaller requests work better. (interviewer's observation) E01 suggests (for novice) only showing one error at a time in the AI-driven system.
+
+13.
+Label: interviewee reflecting on how to maximize the capability of chat gpt
+Quotes:
+- E01: I've observed when I tried to suggest ChatGPT to other people, they're, um, they are amazed at the output that I can get. And that's because I know how to ask six questions in a row to zero in on what I'm after. (interviewer's observation) To maximize the capability of ChatGPT, one needs to know how to iteratively ask questions.
+
+14.
+Label: recognizing the ai's troubleshooting capabilities
+Quotes:
+- E04: It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent. (interviewer's observation) Better troubleshooting capability.
+
+15.
+Label: e04 identifies a bug in ai error detection
+Quotes:
+- E04: maybe you saw something that I didn't, but from my perspective, it seemed as though the code was set up appropriately, but it was marking the syntax as wrong. So maybe I was missing something, but I didn't see anything missing. So that was kind of frustrating. (interviewer's observation) Shows error messages even when it seems to be correct (that's a bug identified)
+
+16.
+Label: identifying errors in ai generated code
+Quotes:
+- E04: So this is interesting because, you know, obviously it's wrong. So I have to kind of interpret what's going on here. (interviewer's observation) E04 fixes common NetLogo mistakes by himself.
+
+17.
+Label: interviewee highlighting the natural language processing capabilities of chat gpt
+Quotes:
+- E01: I speak to (ChatGPT) like a person. I could just walk in the room and go write me code that does X, but I don't, I start with good morning. And it comes back, but it comes back with good morning. How can I assist you today? It's pretty good at figuring out natural language. So in some sense that you might just be better off, just pretend it's not a computer. (interviewer's observation) E01 reflects on how he interacts with ChatGPT like a person.
+
+18.
+Label: adapting to ai's response
+Quotes:
+- E01: "I would like to write code to have a turtle run slowly around the perimeter of a square, but the square should go larger each time it goes around." (interviewer's observation) Seeing AI's counter question, E01 makes his request more detailed.
+
+19.
+Label: recognizing the importance of language systems in learning
+Quotes:
+- E01: And you want doctors to use it, nurses to use it and medical transcriptionists to use it. They use a different word for whatever the verb for whatever it is you're saying you want them to do. And so, in some sense, their documentation has to be customized to their context to their user group. ... It's a language system. If you have a learning system that's actually capable of harvesting information, yeah, and a lot of them are not yet, but I think we'll get there. (interviewer's observation) AI could be used to translate jargons between different sub-groups working in the same systems and ease the cost of writing customized documentation.
+
+20.
+Label: showcasing task oriented ai interactions
+Quotes:
+- E01: "please write a netlogo program that produces a checker board with black and white squares?" (interviewer's observation) E01 asks ChatLogo to create a checkerboard pattern.
+
+21.
+Label: plotting model outputs
+Quotes:
+- E04: "how can I plot the output of this model?" (interviewer's observation) E04 was prompted to follow-up with ChatGPT.
+
+22.
+Label: values immediate feedback from ai for model development
+Quotes:
+- E04: I'll go on Stack Exchange or Stack Overflow, I'm part of the NetLogo listserv, but obviously there's a delay there. So in the instance that I need immediate feedback, it is really helpful. (interviewer's observation) Nice to have immediate feedback.
+
+23.
+Label: values quality over speed
+Quotes:
+- E04: It's basically following best practices. It is not trying to ruthlessly create a model. (interviewer's observation) Not "ruthlessly create a model".
+
+24.
+Label: appreciating the interface's error handling features
+Quotes:
+- E04: It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent. (interviewer's observation) Better troubleshooting capability.
+
+25.
+Label: adapting to time constraints
+Quotes:
+- E04: It'd be that I just take this and see what this does. This should just be a single node so it'll kind of overwrite what I already did. (interviewer's observation) E04 uses the AI-generated code completely when realizing time constraints.
+
+26.
+Label: discusses potential ai roles
+Quotes:
+- E01: What if you were just sitting in a peer programming and sitting next to a, uh, a bright person who was helping you, what would you want them to do? So you might start writing a line of code and they would stop and go, why are you, why are you typing? (interviewer's observation) E01 discusses how AI could potentially serve as a pair programmer that questions the learners' motives.
+
+27.
+Label: not seeking explanations
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 manually tries to fix the errors in the AI-generated code and did not choose "explain it".
+===
+Here are the definitions for each code:
+
+---
+1.
+Criteria: The interviewee copies and pastes error messages to ChatGPT without verbal response.
+Label: Copying and Pasting Error Messages
+
+2.
+Criteria: The interviewee recognizes and appreciates the debugging and unit testing capabilities of the LLM-driven interface.
+Label: Recognizing Debugging and Unit Testing Capabilities
+
+3.
+Criteria: The interviewee sees the LLM-driven interface as an outside observer that points out errors not realized by humans.
+Label: AI as an Outside Observer
+
+4.
+Criteria: The interviewee realizes the need for resetting the setup based on the generated code.
+Label: Realizing Need for Reset in Setup
+
+5.
+Criteria: The interviewee suggests that some users may lack foundational learning and may need additional support.
+Label: Suggesting Need for Foundational Learning
+
+6.
+Criteria: The interviewee has a positive but cautious attitude towards AI in programming, emphasizing the importance of human judgment.
+Label: Cautious Attitude towards AI
+
+7.
+Criteria: The interviewee highlights the importance of seeking help in learning and appreciates the value of collaboration.
+Label: Importance of Seeking Help
+
+8.
+Criteria: The interviewee chooses to fix the problem rather than seeking explanations.
+Label: Fixing Problems over Seeking Explanations
+
+9.
+Criteria: The interviewee appreciates the capability to automatically integrate the AI-generated code into the model.
+Label: Appreciating Automatic Code Integration
+
+10.
+Criteria: The interviewee highlights the error clarification ability of the LLM-driven interface.
+Label: Highlighting Error Clarification Ability
+
+11.
+Criteria: The interviewee establishes a clear process for building agent-based models, creating a code skeleton before engaging with the LLM-driven interface.
+Label: Establishing a Clear Process for Building ABMs
+
+12.
+Criteria: The interviewee proposes improvements for novice AI interaction, suggesting smaller requests and one-error-at-a-time feedback.
+Label: Proposing Improvements for Novice AI Interaction
+
+13.
+Criteria: The interviewee reflects on how to maximize the capability of ChatGPT, emphasizing the importance of iterative questioning.
+Label: Maximizing ChatGPT Capability
+
+14.
+Criteria: The interviewee recognizes the troubleshooting capabilities of the LLM-driven interface.
+Label: Recognizing Troubleshooting Capabilities
+
+15.
+Criteria: The interviewee identifies a bug in the AI error detection, where the code is marked as wrong despite being correct.
+Label: Identifying AI Error Detection Bugs
+
+16.
+Criteria: The interviewee identifies errors in the AI-generated code and fixes them manually.
+Label: Identifying Errors in AI-Generated Code
+
+17.
+Criteria: The interviewee highlights the natural language processing capabilities of ChatGPT, interacting with it as if it were a person.
+Label: Highlighting Natural Language Processing Capabilities
+
+18.
+Criteria: The interviewee adapts to the AI's response, making their request more detailed based on the AI's counter-question.
+Label: Adapting to AI Response
+
+19.
+Criteria: The interviewee recognizes the importance of language systems in learning, suggesting AI could translate jargon between sub-groups.
+Label: Recognizing Importance of Language Systems
+
+20.
+Criteria: The interviewee showcases task-oriented AI interactions, asking the LLM-driven interface to perform specific tasks.
+Label: Task-Oriented AI Interactions
+
+21.
+Criteria: The interviewee plots model outputs, following up with the LLM-driven interface to visualize the results.
+Label: Plotting Model Outputs
+
+22.
+Criteria: The interviewee values immediate feedback from the LLM-driven interface for model development.
+Label: Valuing Immediate Feedback
+
+23.
+Criteria: The interviewee prioritizes quality over speed in model development, emphasizing the importance of best practices.
+Label: Prioritizing Quality over Speed
+
+24.
+Criteria: The interviewee appreciates the interface's error handling features, highlighting its troubleshooting capabilities.
+Label: Appreciating Error Handling Features
+
+25.
+Criteria: The interviewee adapts to time constraints, using the AI-generated code completely when realizing time limitations.
+Label: Adapting to Time Constraints
+
+26.
+Criteria: The interviewee discusses potential AI roles, suggesting it could serve as a peer programmer that questions the learner's motives.
+Label: Discussing Potential AI Roles
+
+27.
+Criteria: The interviewee does not seek explanations, instead choosing to fix errors manually.
+Label: Not Seeking Explanations

@@ -1,0 +1,391 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: identifying ai mistakes, errors found in ai-generated code
+- The participant identifies mistakes or errors in the AI-generated code.
+- The participant identifies errors or omissions in the AI-generated code.
+
+2.
+Concepts: debugs ai-generated code, evaluating and debugging ai-generated code, fixing ai-generated code issues
+- The participant debugs AI-generated code and identifies errors.
+- The participant evaluates and debugs AI-generated code.
+- Participant fixes issues with AI-generated code, often requiring human interpretation and problem-solving skills.
+- Participant debugs AI-generated code manually.
+
+3.
+Concepts: identifies ai bug, identifying ai system errors, potential ai bug identification, identifying potential bugs
+- Identifies a bug in AI error detection, where the AI marks correct code as wrong.
+- Identifies potential bugs or errors in the AI system.
+- Identifies potential AI bug
+- Identifying potential bugs in AI-generated code.
+
+4.
+Concepts: error identification, identifying common mistakes
+- Identifies errors in AI-generated code
+- Identifies common mistakes made by AI-generated code.
+
+5.
+Concepts: copies error messages to ai, seeks ai help with error messages, copying and pasting error messages
+- Copying error messages to AI for assistance.
+- Copies and pastes error messages to AI for assistance.
+- Copies and pastes error messages to ChatGPT, seeking AI's assistance in debugging.
+
+6.
+Concepts: communicating with ai, providing error messages for assistance
+- Communicates error messages to AI for assistance.
+- Providing error messages to ChatGPT for further assistance.
+
+7.
+Concepts: shares previous practice with chatgpt, previous practice with chatgpt debugging
+- Shares previous practice with ChatGPT in debugging and code generation.
+- Describing previous practice of asking ChatGPT to debug code
+
+8.
+Concepts: ai-assisted syntax recall, ai-assisted syntax reminders
+- Using AI to recall syntax
+- Finds AI helpful for reminding syntax
+
+9.
+Concepts: forgetting syntax, ai-assisted syntax help, forgets syntax, uses ai
+- Occasionally forgets syntax and sees AI as a potential solution.
+- Relies on AI for syntax help and forgets syntax at times.
+- Forgets syntax and uses AI for assistance.
+
+10.
+Concepts: incomplete ai responses, incomplete ai code generation, ai output lacks code structures, noticing incomplete ai responses, missing code structures
+- Interviewees note instances where AI-generated code is incomplete or lacks essential structures.
+- The interviewee notes that the AI-generated code is incomplete, missing code structures at times.
+- The interviewee notes that AI output sometimes lacks necessary code structures.
+- The interviewee notices that the AI responses are sometimes incomplete or missing code structures.
+- The interviewee identifies missing structures in the AI-generated code, noting that it doesn't include everything needed.
+
+11.
+Concepts: recognizing the need for a reset command, identifying need for reset or initialization
+- The interviewee realizes the need for a reset command while working with the AI-generated code.
+- The interviewee identifies the need for a reset or initialization in the setup based on the AI's generated code or output.
+
+12.
+Concepts: realizing setup needs reset, realizing need for reset based on ai-generated code
+- The participant realizes that their setup needs to be reset based on the generated code.
+- Participant realizes the need for a reset based on AI-generated code.
+
+13.
+Concepts: pursuing error-free code, seeking error-free output
+- Seeks error-free code and asks AI to verify it.
+- Seeks error-free output, requesting AI to verify and correct code.
+
+14.
+Concepts: ai verification, requesting ai code verification, requests ai verification
+- Seeking AI verification for resolving coding errors.
+- Asking AI to verify code and eliminate bugs.
+- Requesting AI verification of code and error checking.
+
+15.
+Concepts: asks ai to verify code, verifying code with ai
+- Participant asks AI to verify code.
+- Asks AI to verify code for reserved words, seeking accuracy.
+
+16.
+Concepts: missing code elements, identifying missing code elements
+- Identifying missing code elements, recognizing gaps in AI-generated code.
+- Identifies missing code elements in AI responses.
+
+17.
+Concepts: asks ai for missing code structures, recognizes missing code structures
+- Participant asks AI for missing code structures.
+- The participant recognizes missing code structures or elements in AI-generated code.
+
+18.
+Concepts: uses ai to fill syntax gaps, leverages ai for pinpointing syntax issues
+- The participant uses AI to fill syntax gaps and complete code structures.
+- The participant leverages AI to pinpoint syntax issues and overcome coding challenges.
+
+19.
+Concepts: seeking ai help for syntax, requesting ai syntax assistance
+- Seeks AI assistance for syntax-related issues.
+- Asking AI for specific syntax structures.
+
+20.
+Concepts: seeking specific syntax information, querying ai for specific syntax
+- Seeking specific syntax information from AI.
+- Queries AI for specific syntax, seeking to find certain code structures.
+
+21.
+Concepts: seeking code clarification, seeking clarification
+- Searching for missing code structures and seeking clarification from AI
+- Participant asks for clarification or seeks additional information from AI, often when encountering unclear or incomplete code.
+
+22.
+Concepts: sees ai as an outside observer, ai as an error-catching tool, ai serving as an outside observer that points out errors not realized by humans
+- Participant sees AI as an outside observer that can catch errors.
+- Believes AI can serve as an outside observer to catch obvious errors, providing an objective perspective.
+- Participant views AI as an outside observer that can point out errors not realized by humans.
+
+23.
+Concepts: chatgpt as an outside observer, valuing ai as external observer
+- Views ChatGPT as an outside observer that can catch obvious errors.
+- Valuing ChatGPT's role as an external observer for error detection
+
+24.
+Concepts: valuing ai as an outside observer, valuing ai's external perspective
+- Values AI as an outside observer that can catch obvious errors.
+- Values the external perspective provided by AI in catching obvious errors.
+
+25.
+Concepts: appreciating ai's error catching, recognizing ai's role in catching overlooked errors
+- Interviewees appreciate AI's ability to catch obvious errors that may not be immediately apparent to humans.
+- The interviewee recognizes AI's role in catching overlooked errors.
+
+26.
+Concepts: ai error detection, ai ability: rapid error identification
+- The interviewee finds the AI useful for error detection, with ChatGPT providing timely feedback on errors.
+- Interviewee notes the AI's ability to quickly identify errors.
+
+27.
+Concepts: ai ability: error detection, ai-assisted error detection
+- Interviewee highlights the AI's ability to detect errors in code.
+- The participant suggests AI can identify multiple issues in code.
+
+28.
+Concepts: uses ai for error resolution, ai-assisted error resolution, ai-assisted error checking
+- Uses AI to resolve errors.
+- User engages with AI for error resolution.
+- User checks error messages with AI assistance.
+
+29.
+Concepts: clarification, clarifying error codes, error code clarification
+- Clarifying error codes and parameters
+- Valuing the interface's capability to clarify error codes and improve user understanding
+- The participant values error code clarification.
+
+30.
+Concepts: appreciates error code clarification, values error code clarification, values ai error clarification
+- Values AI's ability to clarify error codes.
+- Highlights AI's ability to clarify error codes.
+- The participant appreciates the capability of the AI to clarify error codes.
+- Acknowledges the value of AI's ability to clarify error codes and provide helpful feedback.
+
+31.
+Concepts: values ai's error clarification, values syntax and error clarification
+- Valuing AI's error clarification capabilities
+- Values AI's ability to clarify syntax and error messages.
+
+32.
+Concepts: recognizes ai's help with syntax, acknowledging usefulness in syntax issues
+- The interviewee recognizes AI's help in clarifying syntax and errors.
+- Acknowledges the usefulness of AI in addressing syntax issues
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: identifying ai mistakes, errors found in ai-generated code
+Relationship: The concepts are related as the participant identifies errors or mistakes in the AI-generated code.
+Criteria: The participant identifies mistakes or errors in the AI-generated code.
+Phrase: Identifies AI mistakes.
+
+2.
+Concepts: debugs ai-generated code, evaluating and debugging ai-generated code, fixing ai-generated code issues
+Relationship: The concepts are related as the participant debugs, evaluates, and fixes issues with AI-generated code.
+Criteria: The participant debugs, evaluates, and fixes issues with AI-generated code.
+Phrase: Debugs AI-generated code.
+
+3.
+Concepts: identifies ai bug, identifying ai system errors, potential ai bug identification, identifying potential bugs
+Relationship: The concepts are related as the participant identifies potential bugs or errors in the AI system.
+Criteria: The participant identifies potential bugs or errors in the AI system.
+Phrase: Identifies AI bugs.
+
+4.
+Concepts: error identification, identifying common mistakes
+Relationship: The concepts are related as the participant identifies errors or common mistakes in AI-generated code.
+Criteria: The participant identifies errors or common mistakes in AI-generated code.
+Phrase: Identifies errors.
+
+5.
+Concepts: copies error messages to ai, seeks ai help with error messages, copying and pasting error messages
+Relationship: The concepts are related as the participant seeks AI assistance by copying and pasting error messages.
+Criteria: The participant seeks AI assistance by copying and pasting error messages.
+Phrase: Seeks AI help.
+
+6.
+Concepts: communicating with ai, providing error messages for assistance
+Relationship: The concepts are related as the participant communicates with AI by providing error messages.
+Criteria: The participant communicates with AI by providing error messages.
+Phrase: Communicates with AI.
+
+7.
+Concepts: shares previous practice with chatgpt, previous practice with chatgpt debugging
+Relationship: The concepts are related as the participant shares previous practice with ChatGPT for debugging.
+Criteria: The participant shares previous practice with ChatGPT for debugging.
+Phrase: Shares previous practice.
+
+8.
+Concepts: ai-assisted syntax recall, ai-assisted syntax reminders
+Relationship: The concepts are related as the participant uses AI for syntax recall and reminders.
+Criteria: The participant uses AI for syntax recall and reminders.
+Phrase: Uses AI for syntax recall.
+
+9.
+Concepts: forgetting syntax, ai-assisted syntax help, forgets syntax, uses ai
+Relationship: The concepts are related as the participant forgets syntax and uses AI for assistance.
+Criteria: The participant forgets syntax and uses AI for assistance.
+Phrase: Forgets syntax.
+
+10.
+Concepts: incomplete ai responses, incomplete ai code generation, ai output lacks code structures, noticing incomplete ai responses, missing code structures
+Relationship: The concepts are related as the participant notes instances of incomplete AI-generated code.
+Criteria: The participant notes instances of incomplete AI-generated code.
+Phrase: Notes incomplete AI responses.
+
+11.
+Concepts: recognizing the need for a reset command, identifying need for reset or initialization
+Relationship: The concepts are related as the participant recognizes the need for a reset command.
+Criteria: The participant recognizes the need for a reset command.
+Phrase: Recognizes need for reset.
+
+12.
+Concepts: realizing setup needs reset, realizing need for reset based on ai-generated code
+Relationship: The concepts are related as the participant realizes the need for a reset based on AI-generated code.
+Criteria: The participant realizes the need for a reset based on AI-generated code.
+Phrase: Realizes need for reset.
+
+13.
+Concepts: pursuing error-free code, seeking error-free output
+Relationship: The concepts are related as the participant seeks error-free code and output.
+Criteria: The participant seeks error-free code and output.
+Phrase: Seeks error-free code.
+
+14.
+Concepts: ai verification, requesting ai code verification, requests ai verification
+Relationship: The concepts are related as the participant requests AI verification for code.
+Criteria: The participant requests AI verification for code.
+Phrase: Requests AI verification.
+
+15.
+Concepts: asks ai to verify code, verifying code with ai
+Relationship: The concepts are related as the participant asks AI to verify code.
+Criteria: The participant asks AI to verify code.
+Phrase: Asks AI to verify.
+
+16.
+Concepts: missing code elements, identifying missing code elements
+Relationship: The concepts are related as the participant identifies missing code elements.
+Criteria: The participant identifies missing code elements.
+Phrase: Identifies missing code elements.
+
+17.
+Concepts: asks ai for missing code structures, recognizes missing code structures
+Relationship: The concepts are related as the participant asks AI for missing code structures.
+Criteria: The participant asks AI for missing code structures.
+Phrase: Asks AI for missing code structures.
+
+18.
+Concepts: uses ai to fill syntax gaps, leverages ai for pinpointing syntax issues
+Relationship: The concepts are related as the participant uses AI to fill syntax gaps and pinpoint syntax issues.
+Criteria: The participant uses AI to fill syntax gaps and pinpoint syntax issues.
+Phrase: Uses AI to fill syntax gaps.
+
+19.
+Concepts: seeking ai help for syntax, requesting ai syntax assistance
+Relationship: The concepts are related as the participant seeks AI help for syntax.
+Criteria: The participant seeks AI help for syntax.
+Phrase: Seeks AI help for syntax.
+
+20.
+Concepts: seeking specific syntax information, querying ai for specific syntax
+Relationship: The concepts are related as the participant seeks specific syntax information from AI.
+Criteria: The participant seeks specific syntax information from AI.
+Phrase: Seeks specific syntax information.
+
+21.
+Concepts: seeking code clarification, seeking clarification
+Relationship: The concepts are related as the participant seeks code clarification from AI.
+Criteria: The participant seeks code clarification from AI.
+Phrase: Seeks code clarification.
+
+22.
+Concepts: sees ai as an outside observer, ai as an error-catching tool, ai serving as an outside observer that points out errors not realized by humans
+Relationship: The concepts are related as the participant views AI as an outside observer that catches errors.
+Criteria: The participant views AI as an outside observer that catches errors.
+Phrase: Views AI as an outside observer.
+
+23.
+Concepts: chatgpt as an outside observer, valuing ai as external observer
+Relationship: The concepts are related as the participant views ChatGPT as an outside observer.
+Criteria: The participant views ChatGPT as an outside observer.
+Phrase: Views ChatGPT as an outside observer.
+
+24.
+Concepts: valuing ai as an outside observer, valuing ai's external perspective
+Relationship: The concepts are related as the participant values AI's external perspective.
+Criteria: The participant values AI's external perspective.
+Phrase: Values AI's external perspective.
+
+25.
+Concepts: appreciating ai's error catching, recognizing ai's role in catching overlooked errors
+Relationship: The concepts are related as the participant appreciates AI's error-catching ability.
+Criteria: The participant appreciates AI's error-catching ability.
+Phrase: Appreciates AI's error catching.
+
+26.
+Concepts: ai error detection, ai ability: rapid error identification
+Relationship: The concepts are related as the participant finds AI useful for error detection.
+Criteria: The participant finds AI useful for error detection.
+Phrase: Finds AI useful for error detection.
+
+27.
+Concepts: ai ability: error detection, ai-assisted error detection
+Relationship: The concepts are related as the participant highlights AI's ability to detect errors.
+Criteria: The participant highlights AI's ability to detect errors.
+Phrase: Highlights AI's error detection.
+
+28.
+Concepts: uses ai for error resolution, ai-assisted error resolution, ai-assisted error checking
+Relationship: The concepts are related as the participant uses AI for error resolution.
+Criteria: The participant uses AI for error resolution.
+Phrase: Uses AI for error resolution.
+
+29.
+Concepts: clarification, clarifying error codes, error code clarification
+Relationship: The concepts are related as the participant clarifies error codes with AI assistance.
+Criteria: The participant clarifies error codes with AI assistance.
+Phrase: Clarifies error codes.
+
+30.
+Concepts: appreciates error code clarification, values error code clarification, values ai error clarification
+Relationship: The concepts are related as the participant appreciates AI's error code clarification.
+Criteria: The participant appreciates AI's error code clarification.
+Phrase: Appreciates AI's error code clarification.
+
+31.
+Concepts: values ai's error clarification, values syntax and error clarification
+Relationship: The concepts are related as the participant values AI's error clarification capabilities.
+Criteria: The participant values AI's error clarification capabilities.
+Phrase: Values AI's error clarification.
+
+32.
+Concepts: recognizes ai's help with syntax, acknowledging usefulness in syntax issues
+Relationship: The concepts are related as the participant recognizes AI's help with syntax.
+Criteria: The participant recognizes AI's help with syntax.
+Phrase: Recognizes AI's help with syntax.

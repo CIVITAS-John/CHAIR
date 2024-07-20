@@ -1,0 +1,383 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: warns against blind reliance on ai, warns against blindly following ai
+- Users should not blindly rely on AI without understanding the errors and how to fix them, especially for less experienced users.
+- The participant warns against blindly following AI-generated code, emphasizing the need for expertise to understand and debug errors.
+
+2.
+Concepts: cautions against blind following, recognizes risks of blind following
+- Users should not blindly follow AI responses without understanding.
+- Blindly following AI responses poses risks for users.
+
+3.
+Concepts: recognizing non-deterministic ai responses, perceives ai responses as non-deterministic
+- The participant recognizes the non-deterministic nature of AI responses.
+- Users perceive AI responses as non-deterministic and unpredictable.
+
+4.
+Concepts: notes variability in ai output, observes ai response variability
+- AI output lacks consistency and is variable.
+- AI responses are unpredictable and variable.
+
+5.
+Concepts: having realistic expectations, highlights the need for realistic understanding
+- Users emphasize the need for realistic expectations when working with AI.
+- There is a need for realistic expectations and understanding when working with AI.
+
+6.
+Concepts: identifies ai's potential mistakes, recognizes ai's potential for mistakes
+- AI may make mistakes, but can catch obvious errors.
+- AI is capable of making mistakes or hallucinating.
+
+7.
+Concepts: doubts ai's capability, expresses uncertainty about ai
+- The participant expresses doubts about the AI's capability to perform a specific task.
+- Users express uncertainty about AI capabilities.
+
+8.
+Concepts: identifies chatgpt limitations, notes ai limitations in handling long code pieces, chatgpt ability (negative): limitation in reading long codes
+- ChatGPT has limitations with long code pieces or code processing.
+- AI has limitations in handling or reading long code pieces.
+- Identifying limitations of AI tools, such as limitations in reading long codes.
+
+9.
+Concepts: identifies ai limitations, identifies ai limitations in error resolution
+- AI has limitations in fixing certain errors.
+- AI has limitations in resolving certain errors.
+
+10.
+Concepts: recognizes current ai limitations, critiques current ai limitations
+- Current AI systems or implementations have limitations.
+- Current AI implementations have limitations in code checking.
+
+11.
+Concepts: recognizes ai limitations, evaluates ai limitations, recognizes ai limitations and errors
+- Users recognize and understand AI limitations.
+- Users recognize, acknowledge, or evaluate AI limitations.
+- AI has limitations and constraints, and users acknowledge this.
+- AI has limitations and is capable of making errors, and users recognize this.
+
+12.
+Concepts: experiencing compatibility issues with older versions of netlogo, encountering outdated functionalities in ai responses and issues with outdated netlogo functionality
+- Interviewees experience compatibility issues with older versions of NetLogo.
+- Interviewees encounter outdated functionalities in AI responses and issues with outdated NetLogo functionality.
+
+13.
+Concepts: criticizing netlogo's lack of smart editing features, discussing limitations of netlogo and current tools
+- Interviewees criticize NetLogo's lack of smart editing features.
+- Interviewees discuss limitations of NetLogo and current tools, specifically the lack of smart code editors.
+
+14.
+Concepts: critiquing netlogo's unhelpful error messages, identifying a need for improvement in netlogo's error messaging
+- Interviewees critique NetLogo's unhelpful error messages.
+- Interviewees identify a need for improvement in NetLogo's error messaging.
+
+15.
+Concepts: abandoning ai assistance due to unmet expectations, abandoning ai interactions due to unsatisfactory results
+- Interviewees abandon AI assistance when faced with difficulties or frustration.
+- Interviewees abandon AI interactions when faced with difficulties or unclear AI responses.
+
+16.
+Concepts: expressing frustration with limited ai options, experiencing frustration with ai-driven interface limitations
+- Interviewees express frustration and feel constrained by limited AI options.
+- Interviewees experience frustration and disappointment with AI-driven interface limitations.
+
+17.
+Concepts: experiencing frustration with stuck ai, expressing frustration with ai performance and feedback
+- Interviewees experience frustration and disappointment with AI getting stuck or failing to fix errors.
+- Interviewees express frustration and disappointment with AI performance and feedback.
+
+18.
+Concepts: initial system confusion, expresses initial confusion
+- The user experiences initial confusion over the system's capabilities.
+- Users experience initial confusion about AI capabilities.
+
+19.
+Concepts: experiences debugging challenges, ai's limitations in complex debugging
+- The participant experiences challenges while debugging with the AI.
+- Participant shows limitations of AI in complex debugging.
+
+20.
+Concepts: critiquing error messages, experiencing incorrect error messages
+- Participants find error messages misleading or unhelpful.
+- Participants encounter incorrect or misleading error messages from the AI.
+
+21.
+Concepts: expressing confusion over errors, encountering unclear error messages, the error that the user does not understand
+- Users express confusion over persistent errors or error messages.
+- Users encounter difficulties due to unclear error messages.
+- Describing the error that the user does not understand
+
+22.
+Concepts: copies error messages for ai assistance, providing error messages to chatgpt
+- Copies error messages to AI for assistance or feedback.
+- Describes the action of providing error messages to ChatGPT for further assistance.
+
+23.
+Concepts: finds humor in ai errors, reacts with humor to ai errors, reacts to ai errors
+- Users find humor in AI errors.
+- Users react to AI errors with amusement or surprise.
+- Users react to AI's common errors with amusement or frustration.
+
+24.
+Concepts: suspecting ai bugs, identifying potential bugs
+- Suspecting a bug in AI
+- Users identify potential bugs or errors in AI systems.
+
+25.
+Concepts: requests ai-generated code, formulating requests to ai
+- Requesting AI to generate code for a specific task or problem.
+- Formulating requests to the AI to achieve specific coding tasks.
+
+26.
+Concepts: defines a task, initial task definition
+- The interviewee defines their first task or problem to be solved.
+- The interviewee defines an initial task or problem they want to solve using AI-generated code.
+
+27.
+Concepts: asks for clarification, seeks additional guidance
+- The participant asks for clarification or seeks additional information from an LLM-driven interface.
+- The participant seeks additional guidance from AI, following up with questions to clarify their understanding.
+
+28.
+Concepts: seeks plotting guidance, requests ai plotting assistance
+- The user asks for guidance on plotting or visualizing output.
+- The participant seeks visualization support from the AI.
+
+29.
+Concepts: seeking specific syntax guidance and ai assistance, seeking guidance and assistance for specific tasks or models
+- Interviewees seek specific syntax guidance and AI assistance for specific tasks.
+- Interviewees seek guidance and assistance for specific tasks or models.
+
+30.
+Concepts: advocates for iterative questioning, emphasizes iterative questioning
+- The interviewee advocates for asking iterative questions to enhance AI performance.
+- Emphasizes the importance of asking iterative questions to get the desired output from the AI system.
+- Emphasizing the importance of iterative questioning when using the LLM-driven interface.
+
+31.
+Concepts: appreciates thoughtful approach, appreciation for thoughtful modeling
+- Users appreciate thoughtful model creation approaches.
+- The interviewee appreciates thoughtful model creation.
+
+32.
+Concepts: describes a simple neural network task, articulates a simple neural network task, proposes a simple neural network task
+- The participant describes the task of creating a simple neural network.
+- The participant articulates a specific task of creating a simple feed-forward neural network in NetLogo.
+- The interviewee proposes a task or problem, such as creating a simple neural network.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: warns against blind reliance on ai, warns against blindly following ai
+Relationship: Causality (blind reliance on AI may lead to errors)
+Criteria: Users should be cautious when relying on AI-generated code and understand its limitations to avoid errors.
+Phrase: Warns against blind reliance
+
+2.
+Concepts: cautions against blind following, recognizes risks of blind following
+Relationship: Consequence (blind following leads to risks)
+Criteria: Users should not blindly follow AI responses without understanding the potential risks and consequences.
+Phrase: Cautions against blind following
+
+3.
+Concepts: recognizing non-deterministic ai responses, perceives ai responses as non-deterministic
+Relationship: Association (AI responses are non-deterministic)
+Criteria: Users recognize that AI responses are unpredictable and may vary.
+Phrase: Recognizes non-deterministic AI responses
+
+4.
+Concepts: notes variability in ai output, observes ai response variability
+Relationship: Association (AI output is variable)
+Criteria: Users observe that AI output lacks consistency and is unpredictable.
+Phrase: Notes variability in AI output
+
+5.
+Concepts: having realistic expectations, highlights the need for realistic understanding
+Relationship: Necessity (realistic expectations are necessary)
+Criteria: Users emphasize the need for realistic expectations when working with AI to avoid disappointment.
+Phrase: Highlights the need for realistic expectations
+
+6.
+Concepts: identifies ai's potential mistakes, recognizes ai's potential for mistakes
+Relationship: Association (AI is capable of making mistakes)
+Criteria: Users recognize that AI may make mistakes or hallucinate.
+Phrase: Recognizes AI's potential mistakes
+
+7.
+Concepts: doubts ai's capability, expresses uncertainty about ai
+Relationship: Uncertainty (users are unsure about AI's capabilities)
+Criteria: Users express doubts about AI's capability to perform specific tasks.
+Phrase: Expresses uncertainty about AI
+
+8.
+Concepts: identifies chatgpt limitations, notes ai limitations in handling long code pieces, chatgpt ability (negative): limitation in reading long codes
+Relationship: Limitation (AI has limitations in handling long code pieces)
+Criteria: Users identify limitations of AI tools, such as limitations in reading long codes.
+Phrase: Identifies AI limitations
+
+9.
+Concepts: identifies ai limitations, identifies ai limitations in error resolution
+Relationship: Limitation (AI has limitations in error resolution)
+Criteria: Users recognize that AI has limitations in fixing certain errors.
+Phrase: Identifies AI limitations in error resolution
+
+10.
+Concepts: recognizes current ai limitations, critiques current ai limitations
+Relationship: Critique (current AI limitations are criticized)
+Criteria: Users recognize and critique current AI implementations' limitations.
+Phrase: Recognizes current AI limitations
+
+11.
+Concepts: recognizes ai limitations, evaluates ai limitations, recognizes ai limitations and errors
+Relationship: Recognition (users recognize AI limitations)
+Criteria: Users recognize and understand AI limitations and constraints.
+Phrase: Recognizes AI limitations
+
+12.
+Concepts: experiencing compatibility issues with older versions of netlogo, encountering outdated functionalities in ai responses and issues with outdated netlogo functionality
+Relationship: Problem (compatibility issues arise)
+Criteria: Users experience compatibility issues with older versions of NetLogo.
+Phrase: Experiences compatibility issues
+
+13.
+Concepts: criticizing netlogo's lack of smart editing features, discussing limitations of netlogo and current tools
+Relationship: Critique (NetLogo's limitations are criticized)
+Criteria: Users criticize NetLogo's lack of smart editing features and discuss limitations of current tools.
+Phrase: Criticizes NetLogo's limitations
+
+14.
+Concepts: critiquing netlogo's unhelpful error messages, identifying a need for improvement in netlogo's error messaging
+Relationship: Critique (NetLogo's error messages are criticized)
+Criteria: Users critique NetLogo's unhelpful error messages and identify a need for improvement.
+Phrase: Critiques NetLogo's error messages
+
+15.
+Concepts: abandoning ai assistance due to unmet expectations, abandoning ai interactions due to unsatisfactory results
+Relationship: Consequence (unmet expectations lead to abandonment)
+Criteria: Users abandon AI assistance when faced with difficulties or frustration.
+Phrase: Abandons AI assistance
+
+16.
+Concepts: expressing frustration with limited ai options, experiencing frustration with ai-driven interface limitations
+Relationship: Frustration (limited AI options lead to frustration)
+Criteria: Users express frustration and feel constrained by limited AI options.
+Phrase: Expresses frustration with AI options
+
+17.
+Concepts: experiencing frustration with stuck ai, expressing frustration with ai performance and feedback
+Relationship: Frustration (AI performance issues lead to frustration)
+Criteria: Users experience frustration and disappointment with AI performance and feedback.
+Phrase: Expresses frustration with AI performance
+
+18.
+Concepts: initial system confusion, expresses initial confusion
+Relationship: Confusion (initial confusion arises)
+Criteria: Users experience initial confusion over the system's capabilities.
+Phrase: Expresses initial confusion
+
+19.
+Concepts: experiences debugging challenges, ai's limitations in complex debugging
+Relationship: Challenge (AI limitations lead to debugging challenges)
+Criteria: Users experience challenges while debugging with the AI.
+Phrase: Experiences debugging challenges
+
+20.
+Concepts: critiquing error messages, experiencing incorrect error messages
+Relationship: Critique (error messages are criticized)
+Criteria: Users find error messages misleading or unhelpful.
+Phrase: Critiques error messages
+
+21.
+Concepts: expressing confusion over errors, encountering unclear error messages, the error that the user does not understand
+Relationship: Confusion (unclear error messages lead to confusion)
+Criteria: Users express confusion over persistent errors or unclear error messages.
+Phrase: Expresses confusion over errors
+
+22.
+Concepts: copies error messages for ai assistance, providing error messages to chatgpt
+Relationship: Assistance (error messages are provided for AI assistance)
+Criteria: Users copy error messages to AI for assistance or feedback.
+Phrase: Copies error messages for AI assistance
+
+23.
+Concepts: finds humor in ai errors, reacts with humor to ai errors, reacts to ai errors
+Relationship: Humor (AI errors are reacted to with humor)
+Criteria: Users find humor in AI errors.
+Phrase: Finds humor in AI errors
+
+24.
+Concepts: suspecting ai bugs, identifying potential bugs
+Relationship: Suspicion (AI bugs are suspected)
+Criteria: Users suspect a bug in AI.
+Phrase: Suspects AI bugs
+
+25.
+Concepts: requests ai-generated code, formulating requests to ai
+Relationship: Request (users request AI-generated code)
+Criteria: Users request AI to generate code for a specific task or problem.
+Phrase: Requests AI-generated code
+
+26.
+Concepts: defines a task, initial task definition
+Relationship: Definition (task is defined)
+Criteria: Users define their first task or problem to be solved.
+Phrase: Defines a task
+
+27.
+Concepts: asks for clarification, seeks additional guidance
+Relationship: Clarification (users seek clarification)
+Criteria: Users ask for clarification or seek additional information from an LLM-driven interface.
+Phrase: Asks for clarification
+
+28.
+Concepts: seeks plotting guidance, requests ai plotting assistance
+Relationship: Assistance (users seek plotting guidance)
+Criteria: Users ask for guidance on plotting or visualizing output.
+Phrase: Seeks plotting guidance
+
+29.
+Concepts: seeking specific syntax guidance and ai assistance, seeking guidance and assistance for specific tasks or models
+Relationship: Assistance (users seek specific guidance)
+Criteria: Users seek specific syntax guidance and AI assistance for specific tasks.
+Phrase: Seeks specific guidance
+
+30.
+Concepts: advocates for iterative questioning, emphasizes iterative questioning
+Relationship: Advocacy (iterative questioning is advocated for)
+Criteria: Users advocate for asking iterative questions to enhance AI performance.
+Phrase: Advocates for iterative questioning
+
+31.
+Concepts: appreciates thoughtful approach, appreciation for thoughtful modeling
+Relationship: Appreciation (thoughtful approach is appreciated)
+Criteria: Users appreciate thoughtful model creation approaches.
+Phrase: Appreciates thoughtful approach
+
+32.
+Concepts: describes a simple neural network task, articulates a simple neural network task, proposes a simple neural network task
+Relationship: Description (task is described)
+Criteria: Users describe the task of creating a simple neural network.
+Phrase: Describes a simple neural network task

@@ -1,0 +1,379 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: acknowledges ai limitations in netlogo, highlights ai's limitation in fixing errors
+- Acknowledges AI's potential limitations in NetLogo and its capabilities.
+- Highlights AI's inability to fix repetitive errors in the context of NetLogo learning and practice.
+
+2.
+Concepts: ai limitations with version changes, faces compatibility issues with older netlogo versions
+- The participant notes the limitations of the AI in handling version changes in NetLogo.
+- The interviewee faces compatibility issues with older NetLogo versions and encounters issues with AI's use of older NetLogo functionality.
+
+3.
+Concepts: adapting to outdated functionality, working around ai limitations with older netlogo versions
+- Participants adapt to outdated functionality or limitations in AI systems or NetLogo.
+- Writes code in older versions of NetLogo due to AI's database limitations.
+
+4.
+Concepts: noticing incomplete ai responses, noting incomplete ai-generated code
+- The participant notices incomplete AI responses.
+- The participant notes incomplete AI-generated code.
+
+5.
+Concepts: outdated dataset to train ai, encountering outdated ai-generated code
+- Participant notes that the AI's training dataset may be outdated, leading to older functionality.
+- The participant encounters outdated code or functionality in AI responses.
+
+6.
+Concepts: common beginner mistakes, noting beginners' common conceptual errors
+- Highlighting common mistakes or pitfalls that beginners may encounter.
+- Identifies common conceptual errors made by beginners and suggests features to support identification and correction.
+
+7.
+Concepts: noting difficulties in helping novices, needs better help-seeking methods
+- Participants note the lack of background information provided by novices when seeking help.
+- Suggests the need for better help-seeking methods, particularly for novices who struggle to articulate their problems.
+
+8.
+Concepts: finding design limitations, suggesting the current design may not be optimized for experts
+- Participants find the design not expert-friendly due to a learning curve and attribute difficulties to design limitations.
+- Suggests that the current design may not be optimized for expert users.
+
+9.
+Concepts: cognitive limitations of users, recognizing cognitive load in error handling
+- The participant recognizes the cognitive limitations of users and suggests a solution.
+- Participant recognizes the cognitive load associated with error handling and suggests a more user-friendly approach.
+
+10.
+Concepts: rejecting lazy requests, critiquing lazy requests
+- The participant rejects help for lazy requests.
+- The participant critiques or reflects on lazy or irresponsible requests for help or support.
+
+11.
+Concepts: expresses human limitations, human-effort (negative): limited memory
+- The participant expresses limitations or constraints related to human time, expertise, or resources.
+- Participant highlights human limitations, such as limited memory.
+
+12.
+Concepts: capacity, mentions chat gpt's input limit
+- Identifying limitations and capacity issues with AI tools, such as character limits for code input.
+- Limitations of AI input capacity
+
+13.
+Concepts: handling large code bases with ai limitations, describes limitations with long code submissions
+- The participant encounters limitations when handling large code bases with the AI.
+- The participant describes limitations with long code submissions and AI processing.
+
+14.
+Concepts: gaps in ai assistance, gaps in ai code generation
+- Experiencing gaps in AI-driven interfaces' assistance.
+- Recognizing AI-driven interfaces' gaps in code generation.
+
+15.
+Concepts: identify ai code limitations, highlighting ai limitations in cross-referencing
+- Identifying the limitations of AI-generated code.
+- Highlights the limitation of current AI tools in cross-referencing generated code with external information.
+
+16.
+Concepts: identifying output limitations, evaluating ai's search capabilities and limitations
+- Identifying missing elements in AI's outputs.
+- Evaluates AI's search results and identifies limitations
+
+17.
+Concepts: partial ai assistance, ai as a collaborative tool with limitations, limitation: human ability is limited
+- The participant recognizes AI's partial assistance and limitations in providing complete solutions.
+- The participant views the AI as a collaborative tool, acknowledging its potential limitations and inaccuracies.
+- The participant acknowledges the limitations of human ability and the potential benefits of AI assistance.
+
+18.
+Concepts: reflection on ai's responses, ai's understanding of the task
+- Reflects on AI's responses and limitations
+- Reflects on AI's understanding of the task and its limitations.
+
+19.
+Concepts: recognizes limitations of current ai, acknowledging current limitations of ai
+- Recognizes limitations of current LLM-driven interfaces, such as limited feedback mechanisms.
+- Recognizes limitations of current AI systems, such as lack of external information checking.
+
+20.
+Concepts: ai feedback loop limitations, critiquing ai limitations and design
+- The participant identifies or reflects on the limitations or challenges of current AI feedback loops.
+- Participants suggest limitations of AI models and potential areas for improvement.
+
+21.
+Concepts: noting chatgpt limitations, reflects on need for iterative input processing
+- Participants note limitations of ChatGPT's input and implementation.
+- The participant reflects on the need for iterative input processing due to ChatGPT's limitations.
+
+22.
+Concepts: ai limitations and errors, highlights user cognitive limits
+- The interviewee notes AI's limitations and potential errors, requiring human judgment and evaluation.
+- The interviewee highlights the limitations of human cognitive abilities when interacting with the AI.
+
+23.
+Concepts: relies on ai for troubleshooting, reports errors to ai for assistance, collaborates with ai for error resolution
+- Participants use AI for error resolution and rely on AI for troubleshooting.
+- Participants report errors to AI and provide error messages to facilitate debugging and resolution.
+- Engages with AI to resolve errors, such as copying and pasting error messages.
+
+24.
+Concepts: proposing ai fixes, suggesting corrections to ai
+- Proposing own fixes to AI, suggesting alternative solutions or approaches to AI-generated code.
+- The interviewee suggests corrections to the AI-generated code, using their own ideas.
+
+25.
+Concepts: identifies ai inaccuracies, ai-generated incorrect information
+- The participant points out instances where the AI system provides misleading or inaccurate information.
+- The participant describes a specific incident where the AI provided incorrect information.
+
+26.
+Concepts: acknowledging ai inaccuracies, concerns about ai inaccuracies
+- Interviewee acknowledges potential inaccuracies in AI, including hallucinations.
+- The participant expresses concerns about the AI generating inaccurate or hallucinated code.
+
+27.
+Concepts: ai hallucination, discuss ai hallucinations
+- The participant mentions a scenario where AI hallucinates a function.
+- Users discuss instances where AI hallucinates or generates incorrect information.
+
+28.
+Concepts: ai error and looping issues, criticizes ai error handling
+- The participant experiences AI errors and looping issues.
+- The participant criticizes AI error handling and loops.
+
+29.
+Concepts: warning of ai errors, warning about ai errors
+- Warns of potential AI errors.
+- The interviewee warns about potential errors in AI responses.
+
+30.
+Concepts: ai error potential, potentially causing errors in ai generated solutions
+- Mentions AI's potential to make errors and hallucinate functions.
+- AI-generated solutions may contain errors.
+
+31.
+Concepts: questions ai syntax checking, error detection accuracy, suspects ai bug in error detection
+- Interviewees question AI's syntax checking capabilities.
+- The interviewee questions the accuracy of AI's error detection and correction capabilities.
+- Interviewees suspect AI bugs in error detection.
+
+32.
+Concepts: acknowledging ai's self-correction, recognizing ai's role in catching overlooked errors
+- The code identifies instances where the interviewee acknowledges AI's self-correction abilities.
+- The interviewee recognizes the AI's role in catching overlooked errors.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: acknowledges ai limitations in netlogo, highlights ai's limitation in fixing errors
+Relationship: The concepts are related as they both highlight the limitations of AI in NetLogo, specifically in fixing errors.
+Criteria: Participants acknowledge AI's limitations in NetLogo and highlight its inability to fix repetitive errors.
+Phrase: Acknowledge AI limitations in error fixing.
+
+2.
+Concepts: ai limitations with version changes, faces compatibility issues with older netlogo versions
+Relationship: The concepts are related as they both describe the limitations of AI in handling version changes and compatibility issues with older NetLogo versions.
+Criteria: Participants note AI's limitations in handling version changes and face compatibility issues with older NetLogo versions.
+Phrase: Face AI limitations in version changes.
+
+3.
+Concepts: adapting to outdated functionality, working around ai limitations with older netlogo versions
+Relationship: The concepts are related as they both describe the participant's adaptation to outdated functionality and working around AI limitations with older NetLogo versions.
+Criteria: Participants adapt to outdated functionality and work around AI limitations with older NetLogo versions.
+Phrase: Adapt to outdated functionality.
+
+4.
+Concepts: noticing incomplete ai responses, noting incomplete ai-generated code
+Relationship: The concepts are related as they both describe the participant's observation of incomplete AI responses and code.
+Criteria: Participants notice incomplete AI responses and note incomplete AI-generated code.
+Phrase: Notice incomplete AI responses.
+
+5.
+Concepts: outdated dataset to train ai, encountering outdated ai-generated code
+Relationship: The concepts are related as they both describe the limitations of AI due to outdated training datasets and encountering outdated code.
+Criteria: Participants note outdated datasets used to train AI and encounter outdated AI-generated code.
+Phrase: Encounter outdated AI-generated code.
+
+6.
+Concepts: common beginner mistakes, noting beginners' common conceptual errors
+Relationship: The concepts are related as they both describe common mistakes and errors made by beginners.
+Criteria: Participants highlight common mistakes and conceptual errors made by beginners.
+Phrase: Highlight beginner mistakes.
+
+7.
+Concepts: noting difficulties in helping novices, needs better help-seeking methods
+Relationship: The concepts are related as they both describe the difficulties in helping novices and the need for better help-seeking methods.
+Criteria: Participants note difficulties in helping novices and suggest better help-seeking methods.
+Phrase: Note difficulties in helping novices.
+
+8.
+Concepts: finding design limitations, suggesting the current design may not be optimized for experts
+Relationship: The concepts are related as they both describe the limitations of the current design and suggest improvements for expert users.
+Criteria: Participants find design limitations and suggest the current design may not be optimized for experts.
+Phrase: Find design limitations.
+
+9.
+Concepts: cognitive limitations of users, recognizing cognitive load in error handling
+Relationship: The concepts are related as they both describe the cognitive limitations of users and the recognition of cognitive load in error handling.
+Criteria: Participants recognize cognitive limitations of users and cognitive load in error handling.
+Phrase: Recognize cognitive limitations.
+
+10.
+Concepts: rejecting lazy requests, critiquing lazy requests
+Relationship: The concepts are related as they both describe the rejection and critique of lazy requests.
+Criteria: Participants reject and critique lazy requests.
+Phrase: Reject lazy requests.
+
+11.
+Concepts: expresses human limitations, human-effort (negative): limited memory
+Relationship: The concepts are related as they both describe human limitations, specifically limited memory.
+Criteria: Participants express human limitations, including limited memory.
+Phrase: Express human limitations.
+
+12.
+Concepts: capacity, mentions chat gpt's input limit
+Relationship: The concepts are related as they both describe limitations in AI capacity, specifically ChatGPT's input limit.
+Criteria: Participants mention limitations in AI capacity, including ChatGPT's input limit.
+Phrase: Mention AI capacity limitations.
+
+13.
+Concepts: handling large code bases with ai limitations, describes limitations with long code submissions
+Relationship: The concepts are related as they both describe the limitations of handling large code bases with AI.
+Criteria: Participants encounter limitations when handling large code bases with AI and describe limitations with long code submissions.
+Phrase: Encounter AI limitations in handling large code bases.
+
+14.
+Concepts: gaps in ai assistance, gaps in ai code generation
+Relationship: The concepts are related as they both describe gaps in AI-driven interfaces' assistance and code generation.
+Criteria: Participants experience gaps in AI-driven interfaces' assistance and code generation.
+Phrase: Experience gaps in AI assistance.
+
+15.
+Concepts: identify ai code limitations, highlighting ai limitations in cross-referencing
+Relationship: The concepts are related as they both describe the limitations of AI-generated code and cross-referencing.
+Criteria: Participants identify AI code limitations and highlight AI limitations in cross-referencing.
+Phrase: Identify AI code limitations.
+
+16.
+Concepts: identifying output limitations, evaluating ai's search capabilities and limitations
+Relationship: The concepts are related as they both describe the identification of output limitations and evaluation of AI's search capabilities and limitations.
+Criteria: Participants identify output limitations and evaluate AI's search capabilities and limitations.
+Phrase: Evaluate AI's search capabilities.
+
+17.
+Concepts: partial ai assistance, ai as a collaborative tool with limitations, limitation: human ability is limited
+Relationship: The concepts are related as they both describe the partial assistance of AI and its limitations, as well as the limitations of human ability.
+Criteria: Participants recognize AI's partial assistance and limitations, and acknowledge human ability limitations.
+Phrase: Recognize AI's partial assistance.
+
+18.
+Concepts: reflection on ai's responses, ai's understanding of the task
+Relationship: The concepts are related as they both describe the reflection on AI's responses and its understanding of the task.
+Criteria: Participants reflect on AI's responses and its understanding of the task.
+Phrase: Reflect on AI's responses.
+
+19.
+Concepts: recognizes limitations of current ai, acknowledging current limitations of ai
+Relationship: The concepts are related as they both describe the recognition of limitations of current AI systems.
+Criteria: Participants recognize limitations of current AI systems.
+Phrase: Recognize AI limitations.
+
+20.
+Concepts: ai feedback loop limitations, critiquing ai limitations and design
+Relationship: The concepts are related as they both describe the limitations of AI feedback loops and critique AI design.
+Criteria: Participants identify AI feedback loop limitations and critique AI design.
+Phrase: Critique AI design.
+
+21.
+Concepts: noting chatgpt limitations, reflects on need for iterative input processing
+Relationship: The concepts are related as they both describe the limitations of ChatGPT and the need for iterative input processing.
+Criteria: Participants note ChatGPT limitations and reflect on the need for iterative input processing.
+Phrase: Note ChatGPT limitations.
+
+22.
+Concepts: ai limitations and errors, highlights user cognitive limits
+Relationship: The concepts are related as they both describe AI limitations and errors, as well as user cognitive limits.
+Criteria: Participants note AI limitations and errors, and highlight user cognitive limits.
+Phrase: Note AI limitations and errors.
+
+23.
+Concepts: relies on ai for troubleshooting, reports errors to ai for assistance, collaborates with ai for error resolution
+Relationship: The concepts are related as they all describe the participant's reliance on AI for troubleshooting and error resolution.
+Criteria: Participants rely on AI for troubleshooting, report errors to AI, and collaborate with AI for error resolution.
+Phrase: Rely on AI for troubleshooting.
+
+24.
+Concepts: proposing ai fixes, suggesting corrections to ai
+Relationship: The concepts are related as they both describe the participant's proposal of fixes and corrections to AI-generated code.
+Criteria: Participants propose fixes and suggest corrections to AI-generated code.
+Phrase: Propose AI fixes.
+
+25.
+Concepts: identifies ai inaccuracies, ai-generated incorrect information
+Relationship: The concepts are related as they both describe the identification of AI inaccuracies and incorrect information.
+Criteria: Participants identify AI inaccuracies and incorrect information.
+Phrase: Identify AI inaccuracies.
+
+26.
+Concepts: acknowledging ai inaccuracies, concerns about ai inaccuracies
+Relationship: The concepts are related as they both describe the acknowledgment and concern about AI inaccuracies.
+Criteria: Participants acknowledge and express concerns about AI inaccuracies.
+Phrase: Acknowledge AI inaccuracies.
+
+27.
+Concepts: ai hallucination, discuss ai hallucinations
+Relationship: The concepts are related as they both describe AI hallucinations and discussion about them.
+Criteria: Participants discuss AI hallucinations.
+Phrase: Discuss AI hallucinations.
+
+28.
+Concepts: ai error and looping issues, criticizes ai error handling
+Relationship: The concepts are related as they both describe AI errors and looping issues, as well as criticism of AI error handling.
+Criteria: Participants experience AI errors and looping issues, and criticize AI error handling.
+Phrase: Criticize AI error handling.
+
+29.
+Concepts: warning of ai errors, warning about ai errors
+Relationship: The concepts are related as they both describe warnings about AI errors.
+Criteria: Participants warn about AI errors.
+Phrase: Warn about AI errors.
+
+30.
+Concepts: ai error potential, potentially causing errors in ai generated solutions
+Relationship: The concepts are related as they both describe the potential for AI errors and errors in AI-generated solutions.
+Criteria: Participants mention AI error potential and potential errors in AI-generated solutions.
+Phrase: Mention AI error potential.
+
+31.
+Concepts: questions ai syntax checking, error detection accuracy, suspects ai bug in error detection
+Relationship: The concepts are related as they all describe the participant's questioning of AI's syntax checking and error detection capabilities.
+Criteria: Participants question AI's syntax checking and error detection accuracy, and suspect AI bugs in error detection.
+Phrase: Question AI's syntax checking.
+
+32.
+Concepts: acknowledging ai's self-correction, recognizing ai's role in catching overlooked errors
+Relationship: The concepts are related as they both describe the acknowledgment of AI's self-correction and its role in catching overlooked errors.
+Criteria: Participants acknowledge AI's self-correction and recognize its role in catching overlooked errors.
+Phrase: Acknowledge AI's self-correction.

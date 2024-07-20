@@ -1,0 +1,380 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: abandoning tasks, abandons ai assistance
+- Abandons a task after AI repetition or failure to understand.
+- The participant abandons AI assistance when expectations are not met or due to frustration or lack of progress.
+
+2.
+Concepts: limited choices, feels limited by options
+- Expressing frustration with limited choices and options.
+- The participant feels limited by options.
+
+3.
+Concepts: expresses frustration with ai, expresses frustration with limited options
+- The participant expresses frustration with AI-driven interfaces.
+- The participant expresses frustration with limited options provided by the AI.
+
+4.
+Concepts: feels frustrated with ai limits, experiences ai limitations
+- Feeling frustrated with AI's limitations or errors.
+- The participant experiences frustration when the AI gets stuck and cannot fix an error.
+
+5.
+Concepts: ai input limitations, experiences limited ai options, highlights ai limitations
+- The user identifies limitations in AI input processing.
+- The participant experiences limitations in AI-driven interface options and suggests improvements.
+- The participant highlights the limitations of AI-driven interfaces.
+
+6.
+Concepts: notes ai code reading limitations, notes ai capacity limitations
+- Notes AI limitations in reading long code pieces.
+- Noting the limitations of the AI's capabilities, such as processing large code pieces.
+
+7.
+Concepts: acknowledges ai code handling limitations, acknowledges ai debugging limitations
+- Acknowledging limitations of AI in handling large code bases.
+- Acknowledges the potential limitations of AI in understanding complex programming concepts.
+
+8.
+Concepts: evaluates chatgpt limitations, recognizes chatgpt limitations
+- The interviewee evaluates ChatGPT's limitations.
+- The participant acknowledges the current limitation of ChatGPT.
+
+9.
+Concepts: notes chatgpt limitations, mentions chatgpt implementation limitations
+- The participant notes the limitations of ChatGPT in generating complete and accurate code.
+- The participant mentions limitations of the current ChatGPT implementation, such as not checking generated code with external information.
+
+10.
+Concepts: expects ai to find specific models, expects ai to find relevant models
+- Expects AI to find specific models or solutions.
+- The interviewee expects AI to find relevant models.
+
+11.
+Concepts: finds ai responses unpredictable, notes lack of determinism in ai responses
+- Finds AI responses unpredictable.
+- Participant notes that AI responses lack determinism, providing varying results or instructions.
+
+12.
+Concepts: perceiving randomness, perceives ai responses as random
+- Perceiving randomness or non-determinism in AI-generated code or responses.
+- Perceiving randomness in AI responses.
+
+13.
+Concepts: laughing at ai errors, reacting to ai errors with amusement, displaying humor in ai interactions
+- Participants react with amusement to AI mistakes or errors.
+- Participants express amusement or surprise at AI responses or errors.
+- Participants react with humor to AI errors.
+
+14.
+Concepts: ai error acknowledgment, acknowledges ai mistakes
+- Acknowledges AI errors and limitations.
+- Acknowledges that AI can make mistakes, such as hallucinating functions.
+
+15.
+Concepts: engaging in ai-assisted error resolution and troubleshooting, recognizing ai's troubleshooting capabilities and troubleshooting with ai
+- The participant engages in AI-assisted error resolution and troubleshooting.
+- The participant recognizes AI's troubleshooting capabilities and troubleshoots with AI.
+
+16.
+Concepts: recognizing ai strengths in error handling, appreciating ai-driven troubleshooting and praising ai's capabilities
+- The participant recognizes the strengths of AI in error handling and troubleshooting.
+- The participant appreciates AI-driven troubleshooting and praises AI's capabilities.
+
+17.
+Concepts: learning from iterative debugging, acknowledging iterative debugging benefits, valuing iterative debugging with ai
+- Participants describe an iterative debugging process with the AI and recognize its value.
+- Acknowledging the benefits of the iterative debugging process with the AI.
+- Participants recognize the value of iterative debugging processes with LLM-driven interfaces despite initial errors.
+
+18.
+Concepts: acknowledging ai's debugging capabilities, valuing ai's debugging ability and recognizing its capabilities
+- The participant acknowledges AI's debugging capabilities.
+- The participant values AI's debugging ability and recognizes its capabilities.
+
+19.
+Concepts: noting ai's autonomous error resolution, noting ai's error resolution capabilities, recognizing ai's self-correction abilities
+- Participants mention AI's ability to resolve errors independently.
+- Participants note the AI's ability to resolve errors on its own.
+- Participants recognize the AI's ability to resolve errors by itself.
+
+20.
+Concepts: valuing ai's role in error detection, seeing ai as an outside observer
+- Participants value AI as an external observer that can catch errors.
+- Participants see AI as an outside observer that can catch errors or provide new insights.
+
+21.
+Concepts: rapid error identification, valuing rapid error identification
+- Participant values rapid error identification, such as ChatGPT's analysis in 10 seconds.
+- Participant values rapid analysis and error identification through AI assistance.
+
+22.
+Concepts: valuing ai's error detection, appreciating ai's error-catching abilities
+- Participants appreciate AI's ability to catch obvious errors, even if it's not a perfect system.
+- Participants recognize the AI's ability to point out errors and provide feedback.
+
+23.
+Concepts: ai's potential in error detection, seeing ai's potential to catch obvious errors
+- The participant mentions AI's potential in error detection.
+- Participants see the potential for AI to catch obvious errors that may not be apparent to humans.
+
+24.
+Concepts: independent debugging, debugging code independently
+- Independently reading through code and attempting to debug.
+- Developers attempt to debug the code independently without relying on the AI assistance.
+
+25.
+Concepts: using ai for debugging, seeking ai assistance for debugging
+- Participants use AI for debugging and error resolution.
+- Participants seek AI assistance for debugging code.
+
+26.
+Concepts: practicing debugging and evaluating for debugging, practicing iterative questioning and debugging
+- The participant practices debugging and evaluates for debugging.
+- The participant practices iterative questioning and debugging, refining their approach to get accurate results.
+
+27.
+Concepts: needing linting features, expressing need for advanced error detection
+- The participant mentions the need for a feature that checks for conceptual errors in code, similar to linting in other programming languages.
+- The participant expresses the need for advanced error detection and linting features.
+
+28.
+Concepts: seeking ai verification, seeking error-free code
+- Seeking AI verification to resolve coding errors, ensuring correctness.
+- Seeking error-free code, with requests for AI to verify code and provide bug-free solutions.
+
+29.
+Concepts: requesting code verification, asking ai to verify code
+- Requests AI verification of code.
+- The code asks ChatGPT to verify code and produce no more bugs.
+
+30.
+Concepts: identifying missing code elements, noticing missing code structures
+- Identifying missing code elements in AI-generated code.
+- Participant notes that AI-generated code sometimes misses necessary code structures.
+
+31.
+Concepts: perceiving limitations in ai-generated code, identifying errors in ai-generated code
+- Identifies limitations in AI-generated code.
+- Participants identify errors or limitations in AI-generated code.
+
+32.
+Concepts: evaluating error messages, reading error messages carefully
+- Participants evaluate error messages before making a choice.
+- Participants read error messages before making a choice or taking action.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: abandoning tasks, abandons ai assistance
+Relationship: Causal (abandoning tasks due to AI repetition or failure to understand)
+Criteria: Participants abandon tasks when AI assistance is repetitive or fails to understand their needs.
+Phrase: Abandons AI assistance due to frustration or lack of progress.
+
+2.
+Concepts: limited choices, feels limited by options
+Relationship: Associative (feeling limited by options)
+Criteria: Participants express frustration with limited choices and options provided by the AI.
+Phrase: Feels limited by AI-provided options.
+
+3.
+Concepts: expresses frustration with ai, expresses frustration with limited options
+Relationship: Causal (expressing frustration with AI due to limited options)
+Criteria: Participants express frustration with AI-driven interfaces due to limited options.
+Phrase: Expresses frustration with AI-driven interfaces.
+
+4.
+Concepts: feels frustrated with ai limits, experiences ai limitations
+Relationship: Causal (feeling frustrated due to AI limitations)
+Criteria: Participants experience frustration when AI-driven interfaces have limitations or errors.
+Phrase: Experiences frustration with AI limitations.
+
+5.
+Concepts: ai input limitations, experiences limited ai options, highlights ai limitations
+Relationship: Associative (identifying AI limitations)
+Criteria: Participants identify limitations in AI input processing and suggest improvements.
+Phrase: Highlights AI limitations and suggests improvements.
+
+6.
+Concepts: notes ai code reading limitations, notes ai capacity limitations
+Relationship: Associative (noting AI limitations)
+Criteria: Participants note AI limitations in reading long code pieces and processing large code bases.
+Phrase: Notes AI limitations in code processing.
+
+7.
+Concepts: acknowledges ai code handling limitations, acknowledges ai debugging limitations
+Relationship: Associative (acknowledging AI limitations)
+Criteria: Participants acknowledge AI limitations in handling large code bases and debugging complex programming concepts.
+Phrase: Acknowledges AI limitations in code handling and debugging.
+
+8.
+Concepts: evaluates chatgpt limitations, recognizes chatgpt limitations
+Relationship: Associative (evaluating ChatGPT limitations)
+Criteria: Participants evaluate and acknowledge ChatGPT's limitations.
+Phrase: Evaluates ChatGPT's limitations.
+
+9.
+Concepts: notes chatgpt limitations, mentions chatgpt implementation limitations
+Relationship: Associative (noting ChatGPT limitations)
+Criteria: Participants note ChatGPT's limitations in generating complete and accurate code.
+Phrase: Notes ChatGPT's implementation limitations.
+
+10.
+Concepts: expects ai to find specific models, expects ai to find relevant models
+Relationship: Causal (expecting AI to find models)
+Criteria: Participants expect AI to find specific or relevant models or solutions.
+Phrase: Expects AI to find relevant models.
+
+11.
+Concepts: finds ai responses unpredictable, notes lack of determinism in ai responses
+Relationship: Associative (noting AI unpredictability)
+Criteria: Participants find AI responses unpredictable and lacking determinism.
+Phrase: Notes AI responses are unpredictable.
+
+12.
+Concepts: perceiving randomness, perceives ai responses as random
+Relationship: Associative (perceiving AI randomness)
+Criteria: Participants perceive randomness or non-determinism in AI-generated code or responses.
+Phrase: Perceives AI responses as random.
+
+13.
+Concepts: laughing at ai errors, reacting to ai errors with amusement, displaying humor in ai interactions
+Relationship: Associative (reacting to AI errors with humor)
+Criteria: Participants react with amusement to AI mistakes or errors.
+Phrase: Reacts to AI errors with humor.
+
+14.
+Concepts: ai error acknowledgment, acknowledges ai mistakes
+Relationship: Associative (acknowledging AI errors)
+Criteria: Participants acknowledge AI errors and limitations.
+Phrase: Acknowledges AI errors.
+
+15.
+Concepts: engaging in ai-assisted error resolution and troubleshooting, recognizing ai's troubleshooting capabilities and troubleshooting with ai
+Relationship: Causal (engaging in AI-assisted error resolution)
+Criteria: Participants engage in AI-assisted error resolution and troubleshooting.
+Phrase: Engages in AI-assisted error resolution.
+
+16.
+Concepts: recognizing ai strengths in error handling, appreciating ai-driven troubleshooting and praising ai's capabilities
+Relationship: Associative (recognizing AI strengths)
+Criteria: Participants recognize AI strengths in error handling and troubleshooting.
+Phrase: Recognizes AI strengths in error handling.
+
+17.
+Concepts: learning from iterative debugging, acknowledging iterative debugging benefits, valuing iterative debugging with ai
+Relationship: Causal (learning from iterative debugging)
+Criteria: Participants learn from iterative debugging processes with AI.
+Phrase: Learns from iterative debugging with AI.
+
+18.
+Concepts: acknowledging ai's debugging capabilities, valuing ai's debugging ability and recognizing its capabilities
+Relationship: Associative (acknowledging AI debugging capabilities)
+Criteria: Participants acknowledge AI's debugging capabilities and value its ability.
+Phrase: Acknowledges AI's debugging capabilities.
+
+19.
+Concepts: noting ai's autonomous error resolution, noting ai's error resolution capabilities, recognizing ai's self-correction abilities
+Relationship: Associative (noting AI error resolution capabilities)
+Criteria: Participants note AI's ability to resolve errors independently.
+Phrase: Notes AI's autonomous error resolution.
+
+20.
+Concepts: valuing ai's role in error detection, seeing ai as an outside observer
+Relationship: Associative (valuing AI's role in error detection)
+Criteria: Participants value AI as an external observer that can catch errors.
+Phrase: Values AI's role in error detection.
+
+21.
+Concepts: rapid error identification, valuing rapid error identification
+Relationship: Causal (valuing rapid error identification)
+Criteria: Participants value rapid error identification through AI assistance.
+Phrase: Values rapid error identification.
+
+22.
+Concepts: valuing ai's error detection, appreciating ai's error-catching abilities
+Relationship: Associative (valuing AI error detection)
+Criteria: Participants appreciate AI's ability to catch obvious errors.
+Phrase: Appreciates AI's error detection.
+
+23.
+Concepts: ai's potential in error detection, seeing ai's potential to catch obvious errors
+Relationship: Associative (seeing AI's potential in error detection)
+Criteria: Participants see AI's potential in error detection.
+Phrase: Sees AI's potential in error detection.
+
+24.
+Concepts: independent debugging, debugging code independently
+Relationship: Causal (debugging code independently)
+Criteria: Participants debug code independently without relying on AI assistance.
+Phrase: Debugs code independently.
+
+25.
+Concepts: using ai for debugging, seeking ai assistance for debugging
+Relationship: Causal (using AI for debugging)
+Criteria: Participants use AI for debugging and error resolution.
+Phrase: Uses AI for debugging.
+
+26.
+Concepts: practicing debugging and evaluating for debugging, practicing iterative questioning and debugging
+Relationship: Causal (practicing debugging)
+Criteria: Participants practice debugging and evaluate AI assistance for debugging.
+Phrase: Practices debugging with AI.
+
+27.
+Concepts: needing linting features, expressing need for advanced error detection
+Relationship: Causal (needing advanced error detection)
+Criteria: Participants express the need for advanced error detection and linting features.
+Phrase: Needs advanced error detection features.
+
+28.
+Concepts: seeking ai verification, seeking error-free code
+Relationship: Causal (seeking AI verification)
+Criteria: Participants seek AI verification to resolve coding errors and ensure correctness.
+Phrase: Seeks AI verification for error-free code.
+
+29.
+Concepts: requesting code verification, asking ai to verify code
+Relationship: Causal (requesting code verification)
+Criteria: Participants request AI verification of code.
+Phrase: Requests code verification from AI.
+
+30.
+Concepts: identifying missing code elements, noticing missing code structures
+Relationship: Associative (identifying missing code elements)
+Criteria: Participants identify missing code elements in AI-generated code.
+Phrase: Identifies missing code elements.
+
+31.
+Concepts: perceiving limitations in ai-generated code, identifying errors in ai-generated code
+Relationship: Associative (perceiving limitations in AI-generated code)
+Criteria: Participants identify limitations and errors in AI-generated code.
+Phrase: Identifies limitations in AI-generated code.
+
+32.
+Concepts: evaluating error messages, reading error messages carefully
+Relationship: Causal (evaluating error messages)
+Criteria: Participants evaluate error messages before making a choice.
+Phrase: Evaluates error messages carefully.

@@ -6,7 +6,7 @@ import { ProcessDataset } from '../../../analyzer.js';
 // It also needs access to our dataset, which we will release before the conference.
 
 var AnalyzerNames = ["low-level-5"];
-var Models = ["llama3-70b", "gpt-4o"];
+var Models = ["gpt-4.5-mini"]; // "llama3-70b", "gpt-4.5-omni"
 var Temperatures = [0, 0.25, 0.5, 0.75, 1]; // 0.5 is already done as the base temperature
 
 for (var AnalyzerName of AnalyzerNames) {

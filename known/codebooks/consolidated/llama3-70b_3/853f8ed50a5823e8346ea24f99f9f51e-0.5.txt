@@ -1,0 +1,79 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (5 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+5. 
+Concepts: {Repeat the input 5}
+Relationship: {What is logical relationship between concepts in code 5, or N/A if not applicable}
+Criteria: {Who did what, and how for code 5}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: noting best practices adherence, highlighting best practices
+- Participants note the importance of following best practices in coding.
+- Users highlight best practices in coding, such as debugging and unit testing, and emphasize the importance of debugging practice and exercises.
+
+2.
+Concepts: demonstrating self-reliance, manually debugging code
+- Users engage in self-directed debugging and problem-solving.
+- Users manually read through code to identify errors or issues and attempt to debug code independently.
+
+3.
+Concepts: netlogo needs linting features, desiring linting features
+- NetLogo is seen as lacking features like linting, which exist in other languages.
+- Users desire linting features for advanced error detection and advocate for the integration of linting features in NetLogo.
+
+4.
+Concepts: exhibit multilingual expertise, diverse language background
+- Experts exhibit and share their proficiency in multiple programming languages.
+- Highlighting diverse language background, sharing experiences and perspectives from multiple programming languages.
+
+5.
+Concepts: collaborate with ai
+- The interviewee engages in human-AI collaboration, recognizing AI's limitations.
+- Users collaborate with AI and interact with the AI system.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: noting best practices adherence, highlighting best practices
+Relationship: The concepts are related as they both emphasize the importance of following best practices in coding.
+Criteria: Participants note and highlight the importance of adhering to best practices in coding.
+Phrase: Emphasizing best practices adherence.
+
+2.
+Concepts: demonstrating self-reliance, manually debugging code
+Relationship: The concepts are related as they both demonstrate the user's ability to take initiative in debugging code.
+Criteria: Users demonstrate self-reliance by manually debugging code to identify errors or issues.
+Phrase: Demonstrating self-directed debugging.
+
+3.
+Concepts: netlogo needs linting features, desiring linting features
+Relationship: The concepts are related as they both express the need for linting features in NetLogo.
+Criteria: Users express the need for linting features in NetLogo for advanced error detection.
+Phrase: Advocating for linting features.
+
+4.
+Concepts: exhibit multilingual expertise, diverse language background
+Relationship: The concepts are related as they both highlight the user's proficiency in multiple programming languages.
+Criteria: Experts exhibit and share their diverse language background and multilingual expertise.
+Phrase: Showcasing multilingual expertise.
+
+5.
+Concepts: collaborate with ai
+Relationship: N/A
+Criteria: Users engage in human-AI collaboration, recognizing AI's limitations and interacting with the AI system.
+Phrase: Engaging in human-AI collaboration.

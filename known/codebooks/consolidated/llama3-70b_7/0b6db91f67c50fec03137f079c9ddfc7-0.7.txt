@@ -1,0 +1,239 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (24 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+24.
+Criteria: {Who did what, and how for code 24}
+Label: {A descriptive label of code 24}
+---
+~~~
+1.
+Label: expressing difficulties with interface navigation
+Quotes:
+- E04: Part of the issue that I'm having now is just kind of like the learning curve, just trying to figure out how everything works. (interviewer's observation) E04 mentions a learning curve, likely because our current design is not fine-tuned for experts.
+
+2.
+Label: e01's reflection on u.s. individualistic working culture
+Quotes:
+- E01: But you know, again, you have this culture, especially in the US of do your own work. People get a little too obsessive about doing their own work.  (interviewer's observation) E01's reflection on U.S. individualistic working culture.
+
+3.
+Label: e04 finds explanations clear and less technical
+Quotes:
+- E04: It seems to explain things pretty well, it does not seems to be overly technical. (interviewer's observation) Provides clear, less technical explanations.
+
+4.
+Label: analyzes and interprets ai responses for model plotting
+Quotes:
+- E04: Interesting because it's trying to plot the name, which I know is wrong, but I'm just trying to remember how to... (interviewer's observation) E04 reasons through the responses of ChatGPT.
+
+5.
+Label: emphasizing the need for users to critically evaluate ai generated outputs
+Quotes:
+- E01: Some of this advice may be wrong. Use your good judgment. This is like Apple maps in 2010 or whatever, that tells you to turn right into the river and you have to go. (interviewer's observation) Users need to use their own judgment to evaluate ChatGPT's responses.
+
+6.
+Label: indicating the value of interactive guidance and customization
+Quotes:
+- E04: I thought it was really cool that, you know, that it knew exactly what I wanted to do and then kind of allowed me to define like the certain parameters for what I wanted to do. (interviewer's observation) Having the interface to clarify parameters helps.
+
+7.
+Label: e04 praises better ai troubleshooting capabilities
+Quotes:
+- E04: It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent. (interviewer's observation) Better troubleshooting capability.
+
+8.
+Label: chatlogo ability (positive)
+Quotes:
+- E04: It includes debugging, it is actually trying to incorporate like a unit test, which is really cool and really helpful, especially for beginners, because they can kind of, you know, check their inputs. Beginners, everyone really. They can debug their code appropriately. (interviewer's observation) Debugging capability.
+- E04: It was really nice that it, like with the troubleshooting errors, for example, like at least in principle, I know that we had this one that we couldn't fix. It seemed like it was able to kind of do some better troubleshooting to a certain extent. (interviewer's observation) Better troubleshooting capability.
+- E04: I thought it was really cool that, you know, that it knew exactly what I wanted to do and then kind of allowed me to define like the certain parameters for what I wanted to do. (interviewer's observation) Having the interface to clarify parameters helps.
+- E04: It seems to explain things pretty well, it does not seems to be overly technical. (interviewer's observation) Provides clear, less technical explanations.
+- E04: It's basically following best practices. It is not trying to ruthlessly create a model. (interviewer's observation) Not "ruthlessly create a model".
+
+9.
+Label: asking chat gpt to verify code
+Quotes:
+- E01: "can you verify that no more names are reserved words in NetLogo?" I don't know if it can do that. (interviewer's observation) When E01 sees a bug after the third iteration, he asks ChatGPT to verify the code and produce no more bug. Unsure if it could do that.
+
+10.
+Label: values iterative approach
+Quotes:
+- E01: I've observed when I tried to suggest ChatGPT to other people, they're, um, they are amazed at the output that I can get. And that's because I know how to ask six questions in a row to zero in on what I'm after. (interviewer's observation) To maximize the capability of ChatGPT, one needs to know how to iteratively ask questions.
+
+11.
+Label: exploring alternative actions
+Quotes:
+- E04: Oh and you can run it. That's cool. (interviewer's observation) E04 reads the AI output and decides to copy & paste it although he could also run it.
+
+12.
+Label: importance of iterative questioning
+Quotes:
+- E01: I've observed when I tried to suggest ChatGPT to other people, they're, um, they are amazed at the output that I can get. And that's because I know how to ask six questions in a row to zero in on what I'm after. (interviewer's observation) To maximize the capability of ChatGPT, one needs to know how to iteratively ask questions.
+- E01: If you know how to ask iterative questions, I think it could do pretty well. (interviewer's observation) E01 thinks ChatGPT would do well if one knows how to ask iterative questions.
+
+13.
+Label: unsure if it could do that
+Quotes:
+- E01: "can you verify that no more names are reserved words in NetLogo?" I don't know if it can do that. (interviewer's observation) When E01 sees a bug after the third iteration, he asks ChatGPT to verify the code and produce no more bug. Unsure if it could do that.
+
+14.
+Label: identifying potential improvements
+Quotes:
+- E04: Interesting because it's trying to plot the name, which I know is wrong, but I'm just trying to remember how to... (interviewer's observation) E04 reasons through the responses of ChatGPT.
+
+15.
+Label: valuing accessibility
+Quotes:
+- E04: It seems to explain things pretty well, it does not seems to be overly technical. (interviewer's observation) Provides clear, less technical explanations.
+
+16.
+Label: values ai assistance despite potential mistakes
+Quotes:
+- E01: The problem I posted was about 100 pages of NetLogo and then 100 pages, 100 lines of NetLogo. And it was a real problem that I had looked at. I would love to help this person, but this is going to take me minimum of two hours to figure out what are they trying to do? (interviewer's observation) Although AI made mistake, E01 still believes in the value in having an AI-generated solution (compared with no solution or no help).
+
+17.
+Label: ai's time saving potential
+Quotes:
+- E01: But if a tool can do your, can do most of your work in five minutes, why would you spend two weeks? ... I would never hire someone who spent two weeks solving a problem that they could do in five minutes. (interviewer's observation) AI might be able to save people's time.
+
+18.
+Label: demonstrating decisiveness in ai use
+Quotes:
+- E04: So that's interesting anyways, I'm going back to Perceptron. (interviewer's observation) E04 gives up immediately after the AI asks the same question again.
+
+19.
+Label: familiar with outdated functionality
+Quotes:
+- E04: I guess, in their databases, they still have like, NetLogo 5 in there and stuff. So like, for example, you know, the anonymous functions, they still use like, the old, sometimes I'll get like, the old functionality for the anonymous functions. (interviewer's observation) Writing code in older versions of NetLogo
+
+20.
+Label: discussing code complexity
+Quotes:
+- E01: You know, so in point of fact, I considered a much higher virtue for that kind of code to go, write this in the most standard dumb ass idiot accessible way that you can. So that when I come back to it later, I could figure out why it, why it's not working anymore. (interviewer's observation) Discussion on code complexity & quality. Plain / not-tricky code's advantage in maintenance.
+
+21.
+Label: chatgpt ability (positive): provides immediate feedback
+Quotes:
+- E04: I'll go on Stack Exchange or Stack Overflow, I'm part of the NetLogo listserv, but obviously there's a delay there. So in the instance that I need immediate feedback, it is really helpful. (interviewer's observation) Nice to have immediate feedback.
+
+22.
+Label: recognizing the value of ai in facilitating user support
+Quotes:
+- E01: Let's suppose that I'm trying to debug this error and I have trouble and I can't figure it out. So my next step would be to go to the user group. So if I had a button here that said please explain my situation so that I can paste it to the user group. User is attempting to write this. This is the code I wrote. This is the error it generates that the user doesn't understand. Can any human figure out what's wrong? I just press a button and it says, okay, paste it to the user group and we're done. And it's hard for users. (interviewer's observation) E01 suggests that AI could potentially help users write "help" posts that summarizes the situation: the need, the code, the error that the user does not understand.
+
+23.
+Label: critiquing individualism
+Quotes:
+- E01: What you have in America is this, this cult of individualism to a point of obsession. And people don't naturally stop and go, how can I get help with this? (interviewer's observation) Continued: reflection on the individualism.
+
+24.
+Label: prioritizing problem solving over explanation
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 chooses to fix the problem rather than showing the explanation.
+===
+Here are the definitions for each code:
+
+1.
+Criteria: Expresses difficulties with navigating the interface, mentioning a learning curve or uncertainty about how to use the interface.
+Label: Difficulty with Interface Navigation
+
+2.
+Criteria: Reflects on the cultural context of individualism in the US, mentioning its potential impact on work habits or attitudes towards help-seeking.
+Label: Reflection on Individualistic Culture
+
+3.
+Criteria: Finds the explanations provided by the AI to be clear and not overly technical.
+Label: Clear and Accessible Explanations
+
+4.
+Criteria: Analyzes and interprets AI responses, reasoning through potential errors or issues with the output.
+Label: Analyzing AI Responses
+
+5.
+Criteria: Emphasizes the importance of critically evaluating AI-generated outputs, recognizing that they may be incorrect or misleading.
+Label: Critical Evaluation of AI Output
+
+6.
+Criteria: Values interactive guidance and customization, appreciating when the interface helps clarify parameters or troubleshoots errors.
+Label: Importance of Interactive Guidance
+
+7.
+Criteria: Praises the AI's troubleshooting capabilities, finding them helpful for identifying and resolving errors.
+Label: Appreciation for Troubleshooting Capability
+
+8.
+Criteria: Positively evaluates the AI's ability to assist with coding, mentioning features such as debugging, unit testing, and clear explanations.
+Label: Positive Evaluation of AI Assistance
+
+9.
+Criteria: Asks the AI to verify code or produce a specific output, uncertain if it can perform the task.
+Label: Request for Code Verification
+
+10.
+Criteria: Values an iterative approach to working with the AI, recognizing that multiple questions or interactions may be necessary to achieve the desired outcome.
+Label: Importance of Iterative Questioning
+
+11.
+Criteria: Explores alternative actions or approaches when working with the AI, considering different ways to achieve a goal.
+Label: Exploring Alternative Actions
+
+12.
+Criteria: Emphasizes the importance of iterative questioning in maximizing the AI's capabilities and achieving the desired outcome.
+Label: Importance of Iterative Questioning
+
+13.
+Criteria: Expresses uncertainty about the AI's capabilities, doubting whether it can perform a specific task or provide a particular output.
+Label: Uncertainty about AI Capabilities
+
+14.
+Criteria: Identifies potential improvements or areas for growth in the AI's performance, suggesting ways to enhance its capabilities.
+Label: Identifying Areas for Improvement
+
+15.
+Criteria: Values accessibility, appreciating when the AI provides clear and non-technical explanations or assistance.
+Label: Importance of Accessibility
+
+16.
+Criteria: Recognizes the value of AI assistance despite potential mistakes or errors, believing it can still provide helpful guidance.
+Label: Appreciation for AI Assistance Despite Errors
+
+17.
+Criteria: Highlights the AI's potential to save time and increase efficiency, comparing it to manual approaches or human assistance.
+Label: Time-Saving Potential of AI
+
+18.
+Criteria: Demonstrates decisiveness in AI use, quickly moving on from a task or abandoning an approach when encountering difficulties.
+Label: Decisiveness in AI Use
+
+19.
+Criteria: Displays familiarity with outdated functionality or older versions of NetLogo, mentioning specific features or limitations.
+Label: Familiarity with Outdated Functionality
+
+20.
+Criteria: Discusses code complexity, weighing the trade-offs between simple, accessible code and more complex or optimized code.
+Label: Discussion of Code Complexity
+
+21.
+Criteria: Appreciates the AI's ability to provide immediate feedback, valuing the timely response and guidance.
+Label: Appreciation for Immediate Feedback
+
+22.
+Criteria: Recognizes the value of AI in facilitating user support, suggesting ways to leverage AI to improve help-seeking and problem-solving.
+Label: Value of AI in User Support
+
+23.
+Criteria: Critiques individualism, arguing that it can hinder collaboration, help-seeking, or effective problem-solving.
+Label: Critique of Individualism
+
+24.
+Criteria: Prioritizes problem-solving over explanation, choosing to focus on resolving the issue rather than understanding the underlying explanation.
+Label: Prioritizing Problem-Solving over Explanation

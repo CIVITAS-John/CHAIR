@@ -1,0 +1,382 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: interacts with ai tool, engages with ai interface
+- The participant interacts with ChatGPT, dictating parameter fields.
+- The expert engages with the AI interface, dictating parameter fields.
+
+2.
+Concepts: dictates parameters, dictates parameter fields
+- The participant dictates parameters, specifying requirements for the AI-generated code.
+- The participant dictates parameter fields, potentially for AI assistance.
+
+3.
+Concepts: seeks specific code changes, proposes code modifications
+- Participant requests specific code changes from the AI.
+- Participant proactively suggests modifications to the AI's code or asks for help with implementing their own ideas.
+
+4.
+Concepts: initiates ai interaction, describes initial request
+- The participant begins an interaction with AI, providing a task or request.
+- The participant describes an initial request or task for AI to complete.
+
+5.
+Concepts: sets new task, sets up ai tasks, sets up a task
+- The participant sets a new task or request for AI to complete.
+- The participant sets up tasks or parameters for AI assistance.
+- The participant sets up a task or problem for the AI-driven system.
+
+6.
+Concepts: envisions ai model, conceptualizes ai concept
+- The participant envisions a simple neural network task.
+- The participant mentions a simple neural network or AI-related concept.
+
+7.
+Concepts: neural network task, defines the task of creating a simple neural network
+- Participants are tasked with creating a simple neural network in NetLogo.
+- Participant defines and describes the task of creating a simple neural network.
+
+8.
+Concepts: establishes process for building abms, follows an established process for abm creation
+- Participants establish a clear process for building agent-based models before engaging AI.
+- Participant demonstrates a clear, established process of building agent-based models.
+
+9.
+Concepts: establishes a clear modeling process, iteratively builds models with ai assistance
+- Participant establishes a clear process for building models and seeking AI assistance.
+- Participant iteratively creates models with AI assistance, having a clear idea and established process.
+
+10.
+Concepts: uses ai for equation development, seeking ai assistance for agent-based modeling, finds ai helpful for equation creation
+- Participant uses AI for developing equations in agent-based models.
+- Seeks AI assistance for agent-based modeling, specifically for creating equations.
+- Participant finds AI helpful for creating equations in agent-based models.
+
+11.
+Concepts: uses ai frequently, relies on ai for model development
+- Frequently uses AI for specific tasks, such as developing equations for agent-based models.
+- Participant relies on AI for developing specific aspects of agent-based models.
+
+12.
+Concepts: seeks ai visualization guidance, requesting visualization assistance
+- Participant seeks AI guidance on visualization or data representation.
+- The participant requests visualization assistance from the AI.
+
+13.
+Concepts: seeks ai assistance for plotting, uses ai for model output plotting
+- Participant asks AI for help with plotting model output.
+- Participant uses AI to assist with plotting model output.
+
+14.
+Concepts: shares extensive programming experience, shares diverse programming experience
+- Shares extensive programming experience and background.
+- Shares extensive experience in various programming languages and software development environments.
+
+15.
+Concepts: values plain code, values code simplicity, prefers simple code
+- The interviewee values plain, accessible code for maintenance purposes.
+- The interviewee prioritizes simplicity in code writing.
+- The interviewee prefers plain, accessible code for maintenance and debugging purposes.
+
+16.
+Concepts: suggests ai as a peer programmer, advocates for peer programming with ai, discusses ai as a programming peer
+- Interviewees suggest AI as a peer programmer, providing assistance and support.
+- Interviewees advocate for pair programming and AI's potential role in it.
+- Interviewees discuss AI as a potential peer programmer, providing feedback and support during coding.
+
+17.
+Concepts: considers ai for code optimization, views ai as a coding assistant, envisions ai for code optimization
+- The interviewee considers using AI for code optimization.
+- The interviewee sees AI as a coding assistant for optimizing and debugging code.
+- The interviewee envisions using AI to optimize code and improve its quality.
+
+18.
+Concepts: writes code manually with ai guidance, manually codes with ai guidance
+- Interviewees write code manually with AI guidance.
+- Interviewees manually code with AI guidance and maintain control over the process.
+
+19.
+Concepts: adapts to time constraints, uses ai code due to time constraints, ai code adoption under time pressure
+- Participants adapt to time constraints by using AI-generated code or seeking shortcuts.
+- Participants use AI-generated code due to time constraints.
+- Participant uses AI-generated code fully when under time constraints.
+
+20.
+Concepts: uses ai for quick support, seeks human assistance but relies on instant feedback
+- Participants use AI for quick support or immediate feedback, often due to time constraints.
+- Values immediate feedback from AI due to time constraints.
+
+21.
+Concepts: resets from ai code, identifies the need for a reset
+- The interviewee realizes the need to reset from AI code.
+- The interviewee identifies the need for a reset in the setup based on AI-generated code.
+
+22.
+Concepts: finds ai helpful for syntax reminders, appreciates ai's syntax assistance
+- Participant finds AI helpful for syntax reminders.
+- The participant appreciates AI's role in explaining syntax and errors.
+
+23.
+Concepts: asks ai for syntax help, figures out syntax with ai
+- Interviewee asks AI for specific syntax help.
+- The interviewee figures out syntax and error resolution with AI.
+
+24.
+Concepts: requests slow scrolling, requesting detailed code evaluation
+- The interviewee requests slow scrolling to carefully read and evaluate AI-generated code.
+- Requests detailed code evaluation, asking the interviewer to scroll slowly.
+
+25.
+Concepts: seeks ai verification, requests ai verification
+- The expert seeks error-free code and verification from AI.
+- The participant requests AI verification of code or results.
+
+26.
+Concepts: mentions need for external validation, mentions need for external information
+- The interviewee mentions the need for external validation of the AI-generated code.
+- The interviewee mentions the need for external information to improve AI-generated code.
+
+27.
+Concepts: adapts code with ai, relies on ai for code structures
+- The interviewee uses AI to adapt existing code.
+- Interviewee relies on AI for code structures and syntax.
+
+28.
+Concepts: adopts ai code, executes ai-generated code
+- Interviewees decide to copy and paste AI-generated code.
+- Interviewees decide to use AI-generated code in their work.
+
+29.
+Concepts: selectively integrates ai code, selectively copies ai code
+- Interviewees selectively integrate AI-generated code into their model.
+- Interviewees selectively copy AI-generated code snippets for integration into their model.
+
+30.
+Concepts: engages with ai output, analyzes ai-generated code
+- Interviewees engage with AI output, reading and evaluating generated code.
+- Interviewees read through AI-generated code to understand and debug.
+
+31.
+Concepts: shares ai experience, shares positive ai experience
+- The participant shares their previous experience with AI-generated code.
+- The participant shares a positive experience with AI-generated code or assistance.
+
+32.
+Concepts: uses ai code as reference, selectively uses ai-generated code
+- The participant uses AI-generated code as a reference when writing their own code.
+- Interviewees use AI-generated code as a reference while writing code manually.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: interacts with ai tool, engages with ai interface
+Relationship: The concepts are related as the participant engages with the AI interface to interact with the AI tool.
+Criteria: Participants engage with AI interfaces to interact with AI tools.
+Phrase: Engaging with AI interfaces.
+
+2.
+Concepts: dictates parameters, dictates parameter fields
+Relationship: The concepts are related as the participant dictates parameters and parameter fields to the AI.
+Criteria: Participants dictate parameters and parameter fields to AI systems.
+Phrase: Dictating parameters.
+
+3.
+Concepts: seeks specific code changes, proposes code modifications
+Relationship: The concepts are related as the participant seeks specific code changes by proposing modifications to the AI.
+Criteria: Participants seek specific code changes by proposing modifications to AI-generated code.
+Phrase: Proposing code modifications.
+
+4.
+Concepts: initiates ai interaction, describes initial request
+Relationship: The concepts are related as the participant initiates AI interaction by describing their initial request.
+Criteria: Participants initiate AI interactions by describing their initial requests.
+Phrase: Initiating AI interactions.
+
+5.
+Concepts: sets new task, sets up ai tasks, sets up a task
+Relationship: The concepts are related as the participant sets up tasks or requests for AI to complete.
+Criteria: Participants set up tasks or requests for AI to complete.
+Phrase: Setting up tasks.
+
+6.
+Concepts: envisions ai model, conceptualizes ai concept
+Relationship: The concepts are related as the participant envisions an AI model by conceptualizing AI-related concepts.
+Criteria: Participants envision AI models by conceptualizing AI-related concepts.
+Phrase: Envisioning AI models.
+
+7.
+Concepts: neural network task, defines the task of creating a simple neural network
+Relationship: The concepts are related as the participant defines the task of creating a simple neural network.
+Criteria: Participants define tasks related to creating simple neural networks.
+Phrase: Defining neural network tasks.
+
+8.
+Concepts: establishes process for building abms, follows an established process for abm creation
+Relationship: The concepts are related as the participant establishes a process for building agent-based models.
+Criteria: Participants establish processes for building agent-based models.
+Phrase: Establishing ABM processes.
+
+9.
+Concepts: establishes a clear modeling process, iteratively builds models with ai assistance
+Relationship: The concepts are related as the participant establishes a clear process for building models with AI assistance.
+Criteria: Participants establish clear processes for building models with AI assistance.
+Phrase: Establishing modeling processes.
+
+10.
+Concepts: uses ai for equation development, seeking ai assistance for agent-based modeling, finds ai helpful for equation creation
+Relationship: The concepts are related as the participant uses AI for equation development and finds it helpful.
+Criteria: Participants use AI for equation development and find it helpful.
+Phrase: Using AI for equation development.
+
+11.
+Concepts: uses ai frequently, relies on ai for model development
+Relationship: The concepts are related as the participant frequently uses AI for model development.
+Criteria: Participants frequently use AI for model development.
+Phrase: Frequently using AI.
+
+12.
+Concepts: seeks ai visualization guidance, requesting visualization assistance
+Relationship: The concepts are related as the participant seeks AI guidance on visualization.
+Criteria: Participants seek AI guidance on visualization.
+Phrase: Seeking AI visualization guidance.
+
+13.
+Concepts: seeks ai assistance for plotting, uses ai for model output plotting
+Relationship: The concepts are related as the participant seeks AI assistance for plotting model output.
+Criteria: Participants seek AI assistance for plotting model output.
+Phrase: Seeking AI plotting assistance.
+
+14.
+Concepts: shares extensive programming experience, shares diverse programming experience
+Relationship: The concepts are related as the participant shares their extensive programming experience.
+Criteria: Participants share their extensive programming experience.
+Phrase: Sharing programming experience.
+
+15.
+Concepts: values plain code, values code simplicity, prefers simple code
+Relationship: The concepts are related as the participant values simplicity in code writing.
+Criteria: Participants value simplicity in code writing.
+Phrase: Valuing code simplicity.
+
+16.
+Concepts: suggests ai as a peer programmer, advocates for peer programming with ai, discusses ai as a programming peer
+Relationship: The concepts are related as the participant suggests AI as a peer programmer.
+Criteria: Participants suggest AI as a peer programmer.
+Phrase: Suggesting AI as a peer programmer.
+
+17.
+Concepts: considers ai for code optimization, views ai as a coding assistant, envisions ai for code optimization
+Relationship: The concepts are related as the participant considers AI for code optimization.
+Criteria: Participants consider AI for code optimization.
+Phrase: Considering AI for code optimization.
+
+18.
+Concepts: writes code manually with ai guidance, manually codes with ai guidance
+Relationship: The concepts are related as the participant writes code manually with AI guidance.
+Criteria: Participants write code manually with AI guidance.
+Phrase: Writing code with AI guidance.
+
+19.
+Concepts: adapts to time constraints, uses ai code due to time constraints, ai code adoption under time pressure
+Relationship: The concepts are related as the participant adapts to time constraints by using AI-generated code.
+Criteria: Participants adapt to time constraints by using AI-generated code.
+Phrase: Adapting to time constraints.
+
+20.
+Concepts: uses ai for quick support, seeks human assistance but relies on instant feedback
+Relationship: The concepts are related as the participant uses AI for quick support.
+Criteria: Participants use AI for quick support.
+Phrase: Using AI for quick support.
+
+21.
+Concepts: resets from ai code, identifies the need for a reset
+Relationship: The concepts are related as the participant resets from AI code.
+Criteria: Participants reset from AI code.
+Phrase: Resetting from AI code.
+
+22.
+Concepts: finds ai helpful for syntax reminders, appreciates ai's syntax assistance
+Relationship: The concepts are related as the participant finds AI helpful for syntax reminders.
+Criteria: Participants find AI helpful for syntax reminders.
+Phrase: Finding AI helpful for syntax.
+
+23.
+Concepts: asks ai for syntax help, figures out syntax with ai
+Relationship: The concepts are related as the participant asks AI for syntax help.
+Criteria: Participants ask AI for syntax help.
+Phrase: Asking AI for syntax help.
+
+24.
+Concepts: requests slow scrolling, requesting detailed code evaluation
+Relationship: The concepts are related as the participant requests slow scrolling for detailed code evaluation.
+Criteria: Participants request slow scrolling for detailed code evaluation.
+Phrase: Requesting slow scrolling.
+
+25.
+Concepts: seeks ai verification, requests ai verification
+Relationship: The concepts are related as the participant seeks AI verification.
+Criteria: Participants seek AI verification.
+Phrase: Seeking AI verification.
+
+26.
+Concepts: mentions need for external validation, mentions need for external information
+Relationship: The concepts are related as the participant mentions the need for external validation.
+Criteria: Participants mention the need for external validation.
+Phrase: Mentioning the need for external validation.
+
+27.
+Concepts: adapts code with ai, relies on ai for code structures
+Relationship: The concepts are related as the participant adapts code with AI.
+Criteria: Participants adapt code with AI.
+Phrase: Adapting code with AI.
+
+28.
+Concepts: adopts ai code, executes ai-generated code
+Relationship: The concepts are related as the participant adopts AI-generated code.
+Criteria: Participants adopt AI-generated code.
+Phrase: Adopting AI-generated code.
+
+29.
+Concepts: selectively integrates ai code, selectively copies ai code
+Relationship: The concepts are related as the participant selectively integrates AI-generated code.
+Criteria: Participants selectively integrate AI-generated code.
+Phrase: Selectively integrating AI code.
+
+30.
+Concepts: engages with ai output, analyzes ai-generated code
+Relationship: The concepts are related as the participant engages with AI output.
+Criteria: Participants engage with AI output.
+Phrase: Engaging with AI output.
+
+31.
+Concepts: shares ai experience, shares positive ai experience
+Relationship: The concepts are related as the participant shares their AI experience.
+Criteria: Participants share their AI experience.
+Phrase: Sharing AI experience.
+
+32.
+Concepts: uses ai code as reference, selectively uses ai-generated code
+Relationship: The concepts are related as the participant uses AI-generated code as a reference.
+Criteria: Participants use AI-generated code as a reference.
+Phrase: Using AI code as a reference.
