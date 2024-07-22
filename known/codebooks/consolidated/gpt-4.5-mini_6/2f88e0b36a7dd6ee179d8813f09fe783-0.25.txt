@@ -1,0 +1,57 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: seek ai assistance, seek ai assistance for troubleshooting
+- Users seek help from AI for error verification and assistance in ensuring their code is correct.
+- Users seek AI help for troubleshooting coding issues and specific syntax guidance.
+
+2.
+Concepts: emphasize syntax support, rely on ai for syntax support
+- Users emphasize the value of AI in clarifying syntax and error messages to aid learning.
+- Users rely on AI to help recall syntax and programming structures, acknowledging their tendency to forget.
+
+3.
+Concepts: engaging ai with user input, formulating queries for ai assistance
+- Users provide specific queries to the AI, asking it to implement their ideas or propose alternative tasks.
+- Users engage with AI by asking specific queries regarding coding needs.
+===
+---
+Definitions for each code (3 in total):
+1. 
+Concepts: seek ai assistance, seek ai assistance for troubleshooting
+Relationship: The first concept encompasses the broader action of seeking AI help, while the second specifies the context of troubleshooting within that action.
+Criteria: Users seek AI assistance to verify errors and troubleshoot coding issues, ensuring their code is correct.
+Phrase: Seek AI assistance for troubleshooting.
+
+2. 
+Concepts: emphasize syntax support, rely on ai for syntax support
+Relationship: The first concept highlights the importance placed on syntax support, while the second indicates the dependence on AI for that support.
+Criteria: Users emphasize the importance of AI in clarifying syntax and rely on it to recall programming structures, aiding their learning process.
+Phrase: Emphasize and rely on AI for syntax support.
+
+3. 
+Concepts: engaging ai with user input, formulating queries for ai assistance
+Relationship: The first concept describes the interaction with AI, while the second specifies the method of interaction through queries.
+Criteria: Users engage with AI by formulating specific queries to address their coding needs and implement their ideas.
+Phrase: Engage AI by formulating queries. 
+---

@@ -1,0 +1,46 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (2 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+2. 
+Concepts: {Repeat the input 2}
+Relationship: {What is logical relationship between concepts in code 2, or N/A if not applicable}
+Criteria: {Who did what, and how for code 2}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: engage in human-like interaction, values natural language processing
+- Users describe their conversational approach to interacting with AI, treating it as a person for better engagement.
+- Interviewees describe their interactions with AI as conversational, treating it like a human to enhance communication.
+
+2.
+Concepts: adjust setup based on ai, adjusts model setup based on ai insights
+- Users recognize the need to reset their setups based on insights gained from AI-generated code.
+- Users realize necessary adjustments to their setup based on AI-generated insights.
+===
+---
+Definitions for each code (2 in total):
+1.
+Concepts: engage in human-like interaction, values natural language processing
+Relationship: The concepts are logically related as both emphasize the importance of treating AI as a conversational partner to improve user experience and communication effectiveness.
+Criteria: Users engage in conversations with AI, treating it as a human-like entity to enhance their interaction and communication through natural language processing.
+Phrase: Engage in conversational interaction with AI.
+
+2. 
+Concepts: adjust setup based on ai, adjusts model setup based on ai insights
+Relationship: The concepts are logically related as both highlight the users' recognition of the need to modify their setups in response to insights provided by AI, indicating a dynamic interaction with the technology.
+Criteria: Users adjust their model setups based on insights gained from AI-generated code to improve their work processes.
+Phrase: Adjust model setup based on AI insights.
+---

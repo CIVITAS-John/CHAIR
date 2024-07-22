@@ -1,0 +1,79 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (5 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+5. 
+Concepts: {Repeat the input 5}
+Relationship: {What is logical relationship between concepts in code 5, or N/A if not applicable}
+Criteria: {Who did what, and how for code 5}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: engages ai for debugging support, seek optimization and leverage ai assistance
+- The user utilizes AI assistance for error identification and debugging tasks.
+- E01 seeks AI assistance in optimizing code and leverages AI for effective debugging.
+
+2.
+Concepts: utilize ai for code generation, decide to copy and paste ai-generated code
+- Users utilize AI for generating syntax and selectively adapt AI-generated code in their work.
+- Users consciously decide to utilize AI-generated code by copying and pasting it for execution.
+
+3.
+Concepts: workflow improvement, adapt based on ai feedback
+- Incorporates AI as a tool for optimizing coding practices during development.
+- Users adjust their coding setups and approaches according to insights provided by AI.
+
+4.
+Concepts: envision ai for social support, user group interaction
+- Users envision AI assisting in creating help requests for community support in online platforms.
+- Users describe their interactions with community support systems and express a desire for AI to assist in summarizing issues for help requests.
+
+5.
+Concepts: suggest ai for knowledge preservation, suggest ai for learning efficiency
+- Users highlight the role of AI in preserving collective knowledge and facilitating learning.
+- Users suggest that AI can enhance learning efficiency and advocate for its role in peer programming scenarios.
+===
+---
+Definitions for each code (5 in total):
+1.
+Concepts: engages ai for debugging support, seek optimization and leverage ai assistance
+Relationship: The concepts are interrelated as both involve the user employing AI to enhance their coding experience, focusing on debugging and optimization.
+Criteria: Users engage AI to identify errors and optimize their code while leveraging AI assistance for effective debugging.
+Phrase: Utilize AI for debugging and optimization.
+
+2.
+Concepts: utilize ai for code generation, decide to copy and paste ai-generated code
+Relationship: The concepts are connected as users not only use AI for generating code but also actively choose to incorporate that generated code into their projects.
+Criteria: Users employ AI to generate code and make deliberate decisions to copy and paste the AI-generated code for their implementation.
+Phrase: Employ AI-generated code in practice.
+
+3.
+Concepts: workflow improvement, adapt based on ai feedback
+Relationship: The concepts are linked as both pertain to the user’s ability to enhance their coding workflow by incorporating feedback from AI.
+Criteria: Users improve their coding workflow by adapting their practices based on feedback provided by AI.
+Phrase: Optimize workflow through AI feedback.
+
+4.
+Concepts: envision ai for social support, user group interaction
+Relationship: The concepts are related as they both involve the users’ envisioning of AI's role in facilitating social interactions and support requests within user communities.
+Criteria: Users envision AI aiding in the formulation of help requests and enhancing their interactions within community support systems.
+Phrase: Envision AI for community support.
+
+5.
+Concepts: suggest ai for knowledge preservation, suggest ai for learning efficiency
+Relationship: The concepts are closely related as both highlight the potential benefits of AI in enhancing learning experiences and preserving collective knowledge.
+Criteria: Users advocate for AI's role in preserving knowledge and improving learning efficiency in collaborative programming environments.
+Phrase: Advocate for AI in learning and knowledge preservation.
+---

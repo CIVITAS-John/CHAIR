@@ -1,0 +1,79 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (5 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+5. 
+Concepts: {Repeat the input 5}
+Relationship: {What is logical relationship between concepts in code 5, or N/A if not applicable}
+Criteria: {Who did what, and how for code 5}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: seek help, help-seeking
+- Users actively seek help from AI for various coding challenges.
+- Users articulate the need for AI assistance in formulating requests for help in user groups regarding coding issues.
+
+2.
+Concepts: discuss ai's capacity limitations, limitation: human's ability is limited
+- Users recognize limitations in AI's capacity and input that affect its analytical abilities.
+- Users acknowledge the limitations of human ability to assist with complex problems, even when AI makes mistakes.
+
+3.
+Concepts: limitations (large dataset), express frustration with ai limitations
+- Users express frustration with AI's limitations regarding large datasets.
+- Users express frustration with AI's inability to fix certain errors and its overall limitations.
+
+4.
+Concepts: critique unhelpful system feedback, call for improved error messaging
+- Users critique the inadequacy of system feedback and find error messages unhelpful.
+- Users express confusion and frustration with misleading error messages, advocating for clearer guidance.
+
+5.
+Concepts: highlight risks in debugging ai, highlight the need for expertise in debugging
+- Users highlight the expertise required to debug AI code and the risks involved.
+- Users emphasize the need for practice and experience in debugging before using AI.
+===
+---
+Definitions for each code (5 in total):
+1.
+Concepts: seek help, help-seeking
+Relationship: The concepts are interrelated as users actively seek assistance from AI, indicating a proactive approach to overcoming coding challenges.
+Criteria: Users actively seek help from AI for coding challenges and articulate their need for AI assistance in user groups.
+Phrase: Actively seek AI assistance.
+
+2.
+Concepts: discuss ai's capacity limitations, limitation: human's ability is limited
+Relationship: The concepts are connected through the recognition of both AI and human limitations in problem-solving capabilities.
+Criteria: Users recognize the limitations of AI's analytical abilities and acknowledge the constraints of human assistance with complex problems.
+Phrase: Recognize limitations in AI and human capacity.
+
+3.
+Concepts: limitations (large dataset), express frustration with ai limitations
+Relationship: The concepts relate to users' frustrations stemming from specific limitations of AI, particularly in handling large datasets and fixing errors.
+Criteria: Users express frustration with AI's limitations related to large datasets and its inability to resolve certain errors.
+Phrase: Express frustration with AI limitations.
+
+4.
+Concepts: critique unhelpful system feedback, call for improved error messaging
+Relationship: The concepts are logically linked as users critique the feedback system while simultaneously advocating for enhancements in error messaging.
+Criteria: Users critique the inadequacy of system feedback and express confusion over misleading error messages, calling for clearer guidance.
+Phrase: Critique inadequate system feedback.
+
+5.
+Concepts: highlight risks in debugging ai, highlight the need for expertise in debugging
+Relationship: The concepts are related through the emphasis on the necessity of expertise and the inherent risks involved in debugging AI code.
+Criteria: Users highlight the expertise required for debugging AI code and emphasize the need for practice and experience before using AI.
+Phrase: Highlight expertise and risks in debugging AI.
+---

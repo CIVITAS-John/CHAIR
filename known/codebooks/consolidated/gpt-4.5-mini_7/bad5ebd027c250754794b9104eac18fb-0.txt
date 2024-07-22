@@ -1,0 +1,89 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (6 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+6. 
+Concepts: {Repeat the input 6}
+Relationship: {What is logical relationship between concepts in code 6, or N/A if not applicable}
+Criteria: {Who did what, and how for code 6}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: critique ai's limitations, limitation: human's ability is limited
+- Users note the limitations of AI in providing flexible options and learning from user feedback.
+- Users acknowledge the limitations of human ability to solve complex problems quickly, even with AI assistance.
+
+2.
+Concepts: mentions learning curve, discuss learning curve challenges
+- The perceived difficulty and effort required to learn and effectively use the LLM-driven interface.
+- User discusses the challenges of navigating the learning curve associated with AI tools.
+
+3.
+Concepts: describe typical use cases for ai, utilize ai for iterative debugging
+- User describes a specific instance of using AI to debug code.
+- Users copy error messages to the AI for assistance in debugging and describe the process of using AI to debug code by providing error details and requesting fixes.
+
+4.
+Concepts: usability, evaluate and summarize ai-generated code
+- Evaluates the usability of AI-generated code in terms of readability and documentation.
+- User summarizes and reflects on the AI's code to understand its functionality and evaluate the AI-generated code, commenting on its effectiveness and understanding.
+
+5.
+Concepts: emphasize expertise in error understanding, caution against blind reliance on ai
+- The interviewee notes that understanding errors requires a certain level of expertise, warning against blind reliance on AI.
+- Interviewees caution that AI-generated advice may be incorrect and emphasize the need for personal judgment, cautioning against blindly following AI guidance, especially for less experienced users.
+
+6.
+Concepts: envision ai as pair programmer, envision ai as a collaborative partner
+- Users imagine AI functioning as a collaborative partner in programming tasks.
+- Users consider how AI could act as a peer programmer that prompts critical thinking and advocate for the benefits of peer programming, suggesting that AI could enhance this collaborative process.
+===
+---
+Definitions for each code (6 in total):
+1.
+Concepts: critique ai's limitations, limitation: human's ability is limited
+Relationship: Users critique the limitations of AI while simultaneously acknowledging the inherent limitations of human problem-solving capabilities.
+Criteria: Users critique AI's limitations in flexibility and learning from feedback while recognizing their own limitations in solving complex problems quickly, even with AI assistance.
+Phrase: Critique AI's limitations and acknowledge human constraints.
+
+2.
+Concepts: mentions learning curve, discuss learning curve challenges
+Relationship: The concepts are interrelated as the perceived difficulty of learning the interface directly contributes to the challenges users face.
+Criteria: Users mention the learning curve associated with the LLM-driven interface and discuss the challenges they encounter while trying to navigate it effectively.
+Phrase: Discuss learning curve challenges.
+
+3.
+Concepts: describe typical use cases for ai, utilize ai for iterative debugging
+Relationship: The concepts are connected as users describe specific use cases that illustrate how they utilize AI for debugging tasks.
+Criteria: Users describe typical use cases for AI, particularly focusing on how they utilize it for iterative debugging by providing error messages and seeking assistance.
+Phrase: Utilize AI for debugging.
+
+4.
+Concepts: usability, evaluate and summarize ai-generated code
+Relationship: The concepts are related as evaluating usability involves summarizing and reflecting on the AI-generated code's effectiveness and clarity.
+Criteria: Users evaluate the usability of AI-generated code by summarizing its readability and documentation, reflecting on its functionality and effectiveness.
+Phrase: Evaluate AI-generated code usability.
+
+5.
+Concepts: emphasize expertise in error understanding, caution against blind reliance on ai
+Relationship: The concepts are logically connected as the need for expertise in understanding errors highlights the risks of relying solely on AI.
+Criteria: Interviewees emphasize the importance of expertise in understanding errors and caution against blind reliance on AI-generated advice, advocating for personal judgment.
+Phrase: Caution against blind reliance on AI.
+
+6.
+Concepts: envision ai as pair programmer, envision ai as a collaborative partner
+Relationship: The concepts are interrelated as envisioning AI as a pair programmer inherently suggests a collaborative partnership in programming tasks.
+Criteria: Users envision AI as a collaborative partner and peer programmer, considering its potential to enhance critical thinking and collaborative processes in programming.
+Phrase: Envision AI as a collaborative partner.

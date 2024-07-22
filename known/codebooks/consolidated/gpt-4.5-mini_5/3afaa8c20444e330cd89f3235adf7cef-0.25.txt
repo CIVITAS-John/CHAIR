@@ -1,0 +1,46 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (2 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+2. 
+Concepts: {Repeat the input 2}
+Relationship: {What is logical relationship between concepts in code 2, or N/A if not applicable}
+Criteria: {Who did what, and how for code 2}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: ai utility, acknowledge ai's time-saving benefits
+- Users acknowledge the utility of AI in enhancing productivity and efficiency.
+- Users perceive that AI can save time in learning and performing tasks while reflecting on its advantages in work tasks.
+
+2.
+Concepts: create optimized code with ai, optimize coding practices with ai feedback
+- Users generate well-documented code with AI and optimize their coding workflows.
+- Users recognize the AI's ability to optimize their coding practices and appreciate its timely feedback to enhance their code.
+===
+---
+Definitions for each code (2 in total):
+1.
+Concepts: ai utility, acknowledge ai's time-saving benefits
+Relationship: The concepts are related as they both emphasize the recognition of AI's role in improving productivity and efficiency, particularly in terms of time savings.
+Criteria: Users acknowledge the utility of AI in enhancing productivity and efficiency by recognizing its time-saving benefits in learning and performing tasks.
+Phrase: Acknowledge AI's time-saving utility.
+
+2. 
+Concepts: create optimized code with ai, optimize coding practices with ai feedback
+Relationship: The concepts are interconnected as they both focus on the process of using AI to improve coding quality and efficiency through optimization and feedback.
+Criteria: Users generate well-documented code and optimize their coding practices by utilizing AI feedback to enhance their coding workflows.
+Phrase: Optimize coding practices with AI feedback. 
+---

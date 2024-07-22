@@ -1,0 +1,183 @@
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
+Consider provided quotes, and note that each quote is independent of others.
+Write clear and generalizable criteria for each code and do not introduce unnecessary details.
+If necessary, refine labels to be more accurate, but do not repeat yourself.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (18 in total):
+1. 
+Criteria: {Who did what, and how for code 1}
+Label: {A descriptive label of code 1}
+...
+18.
+Criteria: {Who did what, and how for code 18}
+Label: {A descriptive label of code 18}
+---
+~~~
+1.
+Label: critique novices' expectations of ai
+Quotes:
+- E01: And, and they don't, this is an unfamiliar task to them apparently. So they want to ask one question and get the right answer the first time. And I, I don't have that expectation. I'll ask the right question and it'll get me 80% of the way there. (interviewer's observation) Novices might have a too high expectation for ChatGPT (but it cannot achieve that).
+
+2.
+Label: finds value in structured guidance
+Quotes:
+- E04: I thought it was really cool that, you know, that it knew exactly what I wanted to do and then kind of allowed me to define like the certain parameters for what I wanted to do. (interviewer's observation) Having the interface to clarify parameters helps.
+
+3.
+Label: human-ai (negative): conflict?
+Quotes:
+- E04: maybe you saw something that I didn't, but from my perspective, it seemed as though the code was set up appropriately, but it was marking the syntax as wrong. So maybe I was missing something, but I didn't see anything missing. So that was kind of frustrating. (interviewer's observation) Shows error messages even when it seems to be correct (that's a bug identified)
+
+4.
+Label: demonstrate task execution
+Quotes:
+- E01: (no verbal response) (interviewer's observation) E01 dictated each of the parameter fields.
+
+5.
+Label: prefers non complex solutions
+Quotes:
+- E01: You know, so in point of fact, I considered a much higher virtue for that kind of code to go, write this in the most standard dumb ass idiot accessible way that you can. So that when I come back to it later, I could figure out why it, why it's not working anymore. (interviewer's observation) Discussion on code complexity & quality. Plain / not-tricky code's advantage in maintenance.
+
+6.
+Label: notes ai getting stuck
+Quotes:
+- E04: And then like the only other thing I didn't like was, you know, kind of how it was getting stuck on itself and it wasn't able to fix that one error. (interviewer's observation) Could get stuck in a loop and cannot fix that.
+
+7.
+Label: notes ai's adherence to best practices
+Quotes:
+- E04: It's basically following best practices. It is not trying to ruthlessly create a model. (interviewer's observation) Not "ruthlessly create a model".
+
+8.
+Label: human-ai: difference
+Quotes:
+- E04: I know that Perceptron model exists in the NetLogo model library. So it's interesting to me that it didn't pull that up, but it could be that I used like the wrong verbiage, but it doesn't understand what I'm trying to do. (interviewer's observation) E04 expects ChatLogo to find "Perceptron" model from the library but it does not. He evaluates the search results of the AI.
+
+9.
+Label: underscores need for accurate ai responses
+Quotes:
+- E01: So maybe the details are wrong and, you know, Michael Tamalo or somebody jumped on me because I posted some answer and it used some function that wasn't available. AI had hallucinated some function. (interviewer's observation) AI might hallucinates.
+
+10.
+Label: encounters outdated net logo versions in ai
+Quotes:
+- E04: I guess, in their databases, they still have like, NetLogo 5 in there and stuff. So like, for example, you know, the anonymous functions, they still use like, the old, sometimes I'll get like, the old functionality for the anonymous functions. (interviewer's observation) Writing code in older versions of NetLogo
+
+11.
+Label: express need for better integration with external tools
+Quotes:
+- E01: And some of them we still haven't been doing like hive mind, like how we are going to have the machine learning back from the user feedback or just from the compiler, right? You generate some code, but it doesn't work. So we have to tell you that this time, you didn't work. (interviewer's observation) The current ChatGPT implementation cannot check the generated code with external information (compiler, etc.) (partially solved by the Interpreter plugin, but only Python at this time)
+
+12.
+Label: share successful experience with ai
+Quotes:
+- E01: I want to do this in visual basic... So I made a spreadsheet and I asked ChatGPT, how do you do this? And it wrote the code and the code worked out of the box. (interviewer's observation) ChatGPT helped with a VBA task out of the box before.
+
+13.
+Label: addresses issues systematically
+Quotes:
+- E04: (no verbal response) (interviewer's observation) E04 was prompted to copy and paste error messages to ChatGPT.
+
+14.
+Label: integration
+Quotes:
+- E04: And it could take a lot of time to like search the documentation and go online and try and figure out all those answers and just to have it like right there. So you can kind of stay within the task is really nice. (interviewer's observation) The capability to search for documentation and read it inside the workspace: esp. beneficial for novices.
+- E04: I really liked how, like the code that it generates, if you could just kind of place that into the model automatically.  (interviewer's observation) The capability to put into the model automatically.
+- E04: Oh and you can run it. That's cool. (interviewer's observation) E04 reads the AI output and decides to copy & paste it although he could also run it.
+
+15.
+Label: emphasizes user exercises
+Quotes:
+- E01: Part of this, the user needs a little practice in debugging their own code. There should be some exercises before you ask GPT to do this.  (interviewer's observation) Users need practice in debugging their own code and need to have exercises before asking AI.
+
+16.
+Label: selectively copies code to the model
+Quotes:
+- E04: (no verbal response) (interviewer's observation) Again, he reads the code and selectively copies code to the model.
+
+17.
+Label: advocate for community driven learning
+Quotes:
+- E01: So one of the things that certainly about ChatGPT is, or whatever the AI tool is that you build, is that it will probably always be advancing, and always stay pretty close to the state of the art about all these things. So if it has, especially if it has a hive business, so that if any user discovers something, they can feed it back into the system. And then everybody knows it now. (interviewer's observation) AI could be used to preserve, process, and retrieve fragmented knowledge generated by human as a collaboration process.
+
+18.
+Label: makes informed choices
+Quotes:
+- E04: "How about without the R extension" (interviewer's observation) E04 evaluates the AI response and decides that he does not need to use the R extension.
+===
+Here are the definitions for each code:
+
+---
+1.
+Criteria: The participant expresses a critical view of novices' high expectations from AI, highlighting the difference between their own realistic expectations and those of newcomers.
+Label: Critique of Novice Expectations
+
+2.
+Criteria: The participant values the structured guidance provided by the LLM-driven interface, which helps clarify parameters and facilitate task execution.
+Label: Appreciation for Structured Guidance
+
+3.
+Criteria: The participant experiences conflict or frustration when the AI provides incorrect or misleading feedback, such as error messages despite correct code.
+Label: Human-AI Conflict
+
+4.
+Criteria: The participant demonstrates task execution by providing step-by-step instructions or dictating parameter fields.
+Label: Task Execution Demonstration
+
+5.
+Criteria: The participant prefers simple, non-complex solutions that are easy to understand and maintain, rather than intricate or clever code.
+Label: Preference for Simple Solutions
+
+6.
+Criteria: The participant notes instances where the AI gets stuck or unable to fix an error, highlighting a limitation of the technology.
+Label: AI Getting Stuck
+
+7.
+Criteria: The participant observes that the AI adheres to best practices in coding, rather than attempting to create overly complex models.
+Label: AI Adherence to Best Practices
+
+8.
+Criteria: The participant highlights the difference between human and AI understanding, where the AI may not fully comprehend the user's intent or context.
+Label: Human-AI Understanding Gap
+
+9.
+Criteria: The participant emphasizes the importance of accurate AI responses, citing the potential risks of hallucinated functions or incorrect information.
+Label: Need for Accurate AI Responses
+
+10.
+Criteria: The participant encounters outdated NetLogo versions or functionalities in the AI's responses, which can lead to compatibility issues.
+Label: Outdated NetLogo Versions
+
+11.
+Criteria: The participant expresses the need for better integration with external tools, such as compilers or user feedback mechanisms, to improve the overall development process.
+Label: Need for Better Integration
+
+12.
+Criteria: The participant shares a successful experience with the AI, where it provided helpful code or solutions that worked as intended.
+Label: Successful AI Experience
+
+13.
+Criteria: The participant addresses issues systematically, such as copying and pasting error messages to the AI, to troubleshoot and resolve problems.
+Label: Systematic Issue Resolution
+
+14.
+Criteria: The participant values the integration of the AI with the development environment, including features like searching documentation, generating code, and running models.
+Label: Appreciation for Integration
+
+15.
+Criteria: The participant emphasizes the importance of user exercises and practice in debugging their own code before relying on AI assistance.
+Label: Emphasis on User Exercises
+
+16.
+Criteria: The participant selectively copies code from the AI's output to the model, demonstrating a critical and discerning approach to using AI-generated code.
+Label: Selective Code Integration
+
+17.
+Criteria: The participant advocates for community-driven learning, where users can contribute to and benefit from a collective knowledge base, facilitated by AI tools.
+Label: Advocacy for Community-Driven Learning
+
+18.
+Criteria: The participant makes informed choices when using the AI, evaluating its responses and deciding when to use or modify the generated code.
+Label: Informed Decision-Making

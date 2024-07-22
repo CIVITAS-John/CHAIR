@@ -1,0 +1,740 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (64 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+64. 
+Concepts: {Repeat the input 64}
+Relationship: {What is logical relationship between concepts in code 64, or N/A if not applicable}
+Criteria: {Who did what, and how for code 64}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: suggests ai debugging, seeks ai help with troubleshooting
+- Describes the process of using AI to debug code by providing error details and requesting fixes.
+- Seeks assistance from AI for troubleshooting coding issues.
+
+2.
+Concepts: human-ai: seek help, seeking assistance with personal ideas
+- E01 and E04 express the need for AI assistance in verifying code and generating ideas for problem-solving.
+- Seeks assistance from AI to refine personal coding ideas and concepts.
+
+3.
+Concepts: formulates queries to ai, seek specific syntax help
+- Users formulate specific queries to the AI regarding coding syntax and structures.
+- Users articulate specific coding tasks they wish to accomplish using AI assistance.
+
+4.
+Concepts: relies on ai for syntax support, wiki type of assistance on the side
+- Users rely on AI for syntax assistance when they forget coding syntax.
+- User utilizes AI as a reference tool for syntax while coding.
+
+5.
+Concepts: efficiency, peer-programming vs. do your own work, advocates for peer programming
+- Advocates for collaborative programming as a more efficient approach than solo coding.
+- Users advocate for peer programming as an efficient method, suggesting that AI could play a similar role.
+- User advocates for the benefits of peer programming and its efficiency compared to solo programming.
+
+6.
+Concepts: imagines ai as a pair programmer, seeks collaborative problem solving
+- Users imagine AI functioning as a collaborative partner in programming tasks.
+- Users seek collaborative problem-solving by asking AI to assist with specific programming tasks.
+
+7.
+Concepts: model integration, integrating generated code into models
+- Values the capability of the AI to facilitate the integration of code into models.
+- Discusses the desire for seamless integration of AI-generated code into existing models.
+
+8.
+Concepts: netlogo ability (positive): auto?, chatlogo ability (negative): automation
+- User acknowledges the positive aspects of AI's ability to generate code automatically.
+- Appreciates the automation of code integration into models by the AI.
+
+9.
+Concepts: appreciates executable code, appreciates workflow efficiency, likes automatic code integration
+- Users express appreciation for the ability to execute AI-generated code directly.
+- User appreciates the efficiency of automatically integrating AI-generated code into their workflow.
+- E04 expresses appreciation for the automatic integration of AI-generated code into models.
+
+10.
+Concepts: utilize ai for equation development, translation and equation development
+- Users utilize AI to develop equations for agent-based models.
+- The AI's capability to assist in translating models from other languages and developing equations.
+
+11.
+Concepts: integration into existing workflow, integrates ai into established workflow
+- How E04 plans to integrate AI into their established process of building models.
+- User integrates AI into their established workflow for iterative model building.
+
+12.
+Concepts: constraint, integrates ai generated code fully, utilizes ai-generated code under time constraints
+- Uses AI-generated code while managing time constraints.
+- Fully utilizes AI-generated code when under time constraints.
+- Interviewees utilize AI-generated code directly when under time constraints.
+
+13.
+Concepts: customizes ai generated code, reads and adapts ai responses
+- User selectively copies and modifies AI-generated code for their own use.
+- User reads and selectively adapts AI responses for their coding tasks.
+
+14.
+Concepts: avoids direct code copying, selectively incorporates ai-generated code, use ai-generated code as reference
+- User references AI-generated code for guidance but does not copy it directly.
+- Users selectively utilize AI-generated code rather than copying it entirely.
+- Users utilize AI-generated code as a reference point while writing their own code manually.
+
+15.
+Concepts: describes typical use cases, describes successful code generation
+- Users describe typical scenarios in which they utilize AI for coding tasks.
+- Users describe instances where AI successfully generates code for specific tasks.
+
+16.
+Concepts: appreciate ai's code commenting, providing functional and well-documented code, values documentation in ai output
+- Users appreciate AI's ability to annotate and document code, making it easier to understand.
+- User appreciates AI's ability to generate functional and well-documented code.
+- Interviewee values the documentation and comments provided alongside AI-generated code.
+
+17.
+Concepts: evaluates chatgpt's code, evaluate ai-generated code
+- Assesses and critiques the code generated by ChatGPT for accuracy and relevance.
+- Users engage in detailed evaluation of AI-generated code, commenting on its structure and functionality.
+
+18.
+Concepts: notes ai's efficiency, value timely feedback from ai
+- User notes the efficiency of AI in providing quick feedback on code.
+- Users value feedback from AI as a means to improve their coding practices.
+
+19.
+Concepts: compares with initial code, highlights iterative improvement
+- User compares AI-generated code with their own to evaluate improvements.
+- User utilizes AI to receive suggestions for improving code iteratively.
+
+20.
+Concepts: focus on efficiency, workflow enhancement through ai
+- Interviewee emphasizes the importance of efficiency in their coding practices.
+- Interviewee describes using AI to optimize their coding workflow.
+
+21.
+Concepts: independent code correction, proposing personal fixes to ai
+- Interviewee describes their ability to independently correct errors in code generated by AI.
+- Interviewee suggests modifications to AI-generated code based on their own ideas.
+
+22.
+Concepts: ai's fast iteration capabilities, adapts based on ai-generated code
+- Interviewee highlights the rapid development and adaptability of AI tools in coding practices.
+- Interviewees adapt their approach based on insights gained from AI-generated code, indicating responsiveness to feedback.
+
+23.
+Concepts: speed, chatgpt
+- E01 emphasizes the speed advantage of using ChatGPT compared to traditional methods.
+- E01 highlights the advantages of using ChatGPT for coding tasks over traditional methods.
+
+24.
+Concepts: prefers ai over human interns, compares ai to human interns
+- E01 compares the efficiency of ChatGPT to hiring a human intern for coding tasks.
+- Compares the capabilities of AI to those of human interns, particularly regarding handling large codebases.
+
+25.
+Concepts: hiring criteria, argues for ai efficiency
+- Discusses the efficiency of AI in completing tasks compared to traditional methods.
+- User argues for the efficiency of AI in completing tasks quickly compared to traditional methods.
+
+26.
+Concepts: human-ai: support, reduce learning curve and even save human's needs for learning some programming knowledge
+- Interviewees highlight the potential for AI to save time in learning new extensions or concepts within programming.
+- User believes AI can reduce the learning curve and save time in acquiring new programming knowledge.
+
+27.
+Concepts: cost saving, highlights cost saving
+- User reflects on the cost-saving potential of using AI compared to hiring additional help.
+- User highlights the potential for AI to foster a culture of early problem-solving to reduce costs.
+
+28.
+Concepts: time-saving, time efficiency
+- The perception that AI can save time in learning and performing tasks.
+- The interviewee's perception that LLM-driven interfaces can save time in learning and problem-solving.
+
+29.
+Concepts: clearness, appreciates clarity in ai explanations
+- Acknowledges the clarity of error explanations provided by the AI, which aids user understanding.
+- Users appreciate AI's ability to provide clear and comprehensible explanations without excessive technical jargon.
+
+30.
+Concepts: notes less technical language, human effort (positive): support learning by providing non-technical explanation
+- E04 appreciates the use of less technical language in AI explanations, making them more accessible.
+- User values AI's ability to provide non-technical explanations that support learning.
+
+31.
+Concepts: find ai interface user-friendly, chatlogo ability (positive): straightforward
+- Users describe the AI interface as straightforward and intuitive, indicating ease of use.
+- Describes the AI interface as straightforward and user-friendly.
+
+32.
+Concepts: satisfaction, expresses satisfaction, user satisfaction
+- Instances where E04 expresses satisfaction with the AI's capabilities or features.
+- Users express satisfaction with AI-generated solutions that work effectively, indicating positive experiences.
+- E04 and E01 express satisfaction with the usability and intuitiveness of the AI tools.
+
+33.
+Concepts: finds interface helpful, appreciates ai's parameter clarification
+- Users find the interface helpful in clarifying parameters for their tasks, indicating its utility.
+- User expresses satisfaction with AI's ability to clarify parameters for tasks.
+
+34.
+Concepts: highlight ai's time-saving benefits, recognizes ai's convenience for assistance
+- Users highlight the time-saving benefits of having immediate access to information within the AI interface.
+- Users find immediate AI assistance beneficial for resolving simple questions efficiently.
+
+35.
+Concepts: emotion, emotional reactions
+- Explicit or implicit emotions expressed by the interviewee during the interaction.
+- The interviewee's emotional responses to using AI, explicitly or implicitly expressed.
+
+36.
+Concepts: ai intuition, allows ai's intuition
+- Interviewees appreciate instances where AI demonstrates intuitive responses that diverge from conventional programming norms.
+- User acknowledges AI's ability to use unconventional terms while still being functional.
+
+37.
+Concepts: evaluating chatgpt's intuitive responses, engage in conversational interaction with ai
+- User interacts with AI in a conversational manner, treating it as a person to enhance communication.
+- Users engage in conversations with AI, treating it as a human-like entity to enhance their interaction and communication through natural language processing.
+
+38.
+Concepts: human-ai, great insight on relationship between human & ai
+- Reflects on the collaborative relationship between humans and AI in knowledge generation.
+- Users emphasize the importance of human judgment in conjunction with AI capabilities, highlighting a collaborative relationship.
+
+39.
+Concepts: capability enhancement, enhance capabilities with ai
+- E01 discusses the importance of enhancing human judgment and capabilities through AI, rather than replacing them.
+- Users perceive AI as an augmentation tool that enhances human capabilities rather than replacing them.
+
+40.
+Concepts: value immediate feedback from ai, seeks human assistance but due to time constraint rely on instant feedback
+- Users appreciate the importance and value of receiving real-time responses and assistance from the LLM-driven interface.
+- Users seek immediate feedback from AI due to time constraints, preferring it over delayed human assistance.
+
+41.
+Concepts: deviates their directions, human-ai: no need to blindly follow
+- User acknowledges the necessity of expertise to effectively use AI and the risks of blind reliance.
+- Users express concerns about the necessity of expertise to effectively use AI without blindly following it.
+
+42.
+Concepts: comparison to past tech, compares ai mistakes to early apple maps errors
+- Compares AI responses to past technological experiences, emphasizing the need for user judgment.
+- User compares AI's mistakes to historical errors in technology, emphasizing the need for user judgment.
+
+43.
+Concepts: highlight the importance of human judgment, advise personal judgment in ai evaluation
+- Users emphasize the importance of maintaining human judgment alongside AI assistance.
+- Users express concerns about the accuracy of AI-generated advice and the need for personal judgment.
+
+44.
+Concepts: evaluates ai search accuracy, human-ai: difference, evaluates ai's information retrieval
+- User evaluates the accuracy of AI-generated search results related to model creation.
+- User compares AI's search capabilities to existing resources and evaluates its effectiveness in retrieving relevant information.
+- Users evaluate the AI's performance in retrieving relevant information from its database.
+
+45.
+Concepts: model library, model retrieval
+- User evaluates AI's ability to retrieve specific models from the NetLogo library.
+- Users experiment with AI to see how well it can retrieve models based on specific requests, indicating a testing approach.
+
+46.
+Concepts: r extension, decides against using r extension
+- User evaluates AI's suggestions regarding the use of specific extensions and makes decisions accordingly.
+- Evaluates the necessity of specific extensions and decides against using them based on AI suggestions.
+
+47.
+Concepts: evaluate ai response variability, chatgpt ability (positive): various feedback
+- Users reflect on the unpredictable nature of AI responses and identify inconsistencies in outputs, emphasizing implications for their work.
+- Users evaluate the variability in AI responses, noting that the feedback can be unpredictable and not always deterministic.
+
+48.
+Concepts: evaluating ai output, evaluates ai responses
+- Interviewees evaluate AI outputs regularly, reflecting on the variability and reliability of the responses.
+- The process by which the interviewee assesses the quality and usefulness of the outputs generated by the LLM-driven interface.
+
+49.
+Concepts: decision making, evaluation on output and made a decision based on expertise, evaluates choices
+- User evaluates AI responses to make informed decisions about coding options.
+- User evaluates AI-generated output and makes decisions based on their own expertise and knowledge.
+- Users evaluate their choices based on the feedback received from the AI system.
+
+50.
+Concepts: assesses ai's understanding, human-effort: interpretation
+- Users assess AI's understanding of their coding requests and its implications for their work.
+- User evaluates AI's understanding of their requests and the effectiveness of its responses.
+
+51.
+Concepts: refines query approach, refine prompts for better ai responses, considers optimal phrasing for queries
+- Refines the approach to querying AI for better results.
+- Users refine their requests to the AI based on its feedback, providing more detailed instructions.
+- User considers the optimal phrasing of their requests to the AI for better results.
+
+52.
+Concepts: optimize ai interaction, emphasizes importance of iterative questioning, values iterative improvement
+- Users believe that asking iterative questions enhances AI assistance and suggest strategies for effective use.
+- Interviewee emphasizes the effectiveness of asking iterative questions to improve AI responses.
+- User values the iterative approach in maximizing AI's capabilities through repeated questioning.
+
+53.
+Concepts: human-ai: ask questions, asks questions and seeks human intervention, follows up with specific queries
+- User engages with AI by asking clarifying questions to enhance understanding and resolve issues.
+- Interviewees indicate a tendency to seek further clarification or assistance from AI when faced with challenges.
+- Users engage in follow-up questioning to clarify or expand on AI responses.
+
+54.
+Concepts: neural network, requests ai assistance for neural network creation
+- User describes their interest in creating simple neural network models using AI.
+- User expresses a desire to create a neural network using AI assistance.
+
+55.
+Concepts: pattern creation, request for specific programming output
+- User requests AI to create specific patterns in programming tasks.
+- Participants request specific programming tasks or outputs from the LLM-driven interface, demonstrating a need for assistance in generating code for visual patterns or designs.
+
+56.
+Concepts: task initiation, test ai capabilities
+- User initiates tasks by requesting specific code from AI.
+- Users assign specific tasks to the AI, such as writing code.
+
+57.
+Concepts: parameter fields, dictates parameters for ai
+- User dictates parameter fields during coding tasks.
+- Users provide detailed instructions to the AI for code generation.
+
+58.
+Concepts: user input, proposes alternative ai, asks ai to implement ideas
+- Users provide their own ideas or concepts for the AI to work with.
+- Users suggest alternative prompts or tasks for the AI to perform.
+- Users ask the AI to implement their own ideas or modifications.
+
+59.
+Concepts: customization and flexibility, desires flexibility in ai interactions
+- The need for more options and flexibility in the AI's responses and functionalities.
+- User expresses a desire for more flexible options in AI interactions based on experience level.
+
+60.
+Concepts: highlights design tension between user levels, directions & differences in needs for user groups based on experience level
+- User notes the tension between novice-oriented and expert-oriented design in AI options.
+- User notes differing needs for AI assistance based on user experience levels.
+
+61.
+Concepts: potential support for novice, suggests ai for customized documentation
+- E01 suggests that AI could help tailor documentation to different user groups and contexts.
+- User believes AI can help customize documentation to fit different user contexts.
+
+62.
+Concepts: knowledge preservation, knowledge fragmentation
+- The ability of AI to store and retrieve fragmented knowledge.
+- The interviewee's perception of how AI could help in managing fragmented knowledge.
+
+63.
+Concepts: hive mind, hive feedback system concept
+- Users propose a collaborative system where collective knowledge improves AI performance.
+- Interviewee envisions a collaborative feedback system where user contributions enhance AI knowledge.
+
+64.
+Concepts: suggests improvements based on user feedback, hive feedback system - collect information to minimize miscommunication
+- Discusses the potential for user feedback to enhance AI systems and improve productivity.
+- User discusses the potential of AI to collect and disseminate user feedback for continuous improvement.
+===
+---
+Definitions for each code (64 in total):
+1.
+Concepts: suggests ai debugging, seeks ai help with troubleshooting
+Relationship: Both concepts involve the use of AI to identify and resolve coding errors.
+Criteria: Users utilize AI to debug their code by providing error details and requesting assistance for troubleshooting coding issues.
+Phrase: Utilize AI for debugging and troubleshooting.
+
+2.
+Concepts: human-ai: seek help, seeking assistance with personal ideas
+Relationship: Both concepts highlight the need for AI support in personal coding tasks and idea generation.
+Criteria: Users seek AI assistance to verify their code and refine their personal coding ideas.
+Phrase: Seek AI assistance for personal coding support.
+
+3.
+Concepts: formulates queries to ai, seek specific syntax help
+Relationship: Both concepts involve users actively engaging with AI to obtain specific coding information.
+Criteria: Users articulate specific queries to the AI regarding coding syntax and tasks they wish to accomplish.
+Phrase: Formulate specific queries for syntax assistance.
+
+4.
+Concepts: relies on ai for syntax support, wiki type of assistance on the side
+Relationship: Both concepts emphasize the reliance on AI as a reference tool for coding syntax.
+Criteria: Users depend on AI for syntax assistance and utilize it as a reference while coding.
+Phrase: Rely on AI for syntax support.
+
+5.
+Concepts: efficiency, peer-programming vs. do your own work, advocates for peer programming
+Relationship: All concepts relate to the efficiency of collaborative coding versus solo efforts.
+Criteria: Users advocate for peer programming as an efficient method, suggesting that AI could play a similar collaborative role.
+Phrase: Advocate for collaborative programming efficiency.
+
+6.
+Concepts: imagines ai as a pair programmer, seeks collaborative problem solving
+Relationship: Both concepts involve envisioning AI as a collaborative partner in programming tasks.
+Criteria: Users seek AI's assistance for collaborative problem-solving in programming tasks.
+Phrase: Envision AI as a collaborative partner.
+
+7.
+Concepts: model integration, integrating generated code into models
+Relationship: Both concepts focus on the integration of AI-generated code into existing models.
+Criteria: Users value the capability of AI to facilitate seamless integration of code into their models.
+Phrase: Facilitate integration of AI-generated code.
+
+8.
+Concepts: netlogo ability (positive): auto?, chatlogo ability (negative): automation
+Relationship: Both concepts reflect on the capabilities of AI in code generation and automation.
+Criteria: Users acknowledge the positive aspects of AI's ability to generate code automatically while noting concerns about automation.
+Phrase: Acknowledge AI's code generation capabilities.
+
+9.
+Concepts: appreciates executable code, appreciates workflow efficiency, likes automatic code integration
+Relationship: All concepts express appreciation for the functionality and efficiency of AI-generated code.
+Criteria: Users express appreciation for the ability to execute AI-generated code and its efficiency in workflow integration.
+Phrase: Appreciate executable and efficient AI-generated code.
+
+10.
+Concepts: utilize ai for equation development, translation and equation development
+Relationship: Both concepts involve using AI for developing and translating equations.
+Criteria: Users utilize AI to assist in developing equations for agent-based models and translating models from other languages.
+Phrase: Utilize AI for equation development.
+
+11.
+Concepts: integration into existing workflow, integrates ai into established workflow
+Relationship: Both concepts emphasize the incorporation of AI into existing processes.
+Criteria: Users integrate AI into their established workflows for iterative model building.
+Phrase: Integrate AI into existing workflows.
+
+12.
+Concepts: constraint, integrates ai generated code fully, utilizes ai-generated code under time constraints
+Relationship: All concepts relate to the use of AI-generated code in time-sensitive situations.
+Criteria: Users fully utilize AI-generated code while managing time constraints.
+Phrase: Utilize AI-generated code under time constraints.
+
+13.
+Concepts: customizes ai generated code, reads and adapts ai responses
+Relationship: Both concepts involve modifying AI-generated content for personal use.
+Criteria: Users selectively copy and modify AI-generated code and responses for their coding tasks.
+Phrase: Customize and adapt AI-generated code.
+
+14.
+Concepts: avoids direct code copying, selectively incorporates ai-generated code, use ai-generated code as reference
+Relationship: All concepts emphasize a selective approach to using AI-generated content.
+Criteria: Users reference AI-generated code for guidance without copying it directly.
+Phrase: Selectively incorporate AI-generated code.
+
+15.
+Concepts: describes typical use cases, describes successful code generation
+Relationship: Both concepts involve sharing experiences with AI in coding tasks.
+Criteria: Users describe typical scenarios and instances where AI successfully generates code.
+Phrase: Describe typical use cases for AI-generated code.
+
+16.
+Concepts: appreciate ai's code commenting, providing functional and well-documented code, values documentation in ai output
+Relationship: All concepts highlight the importance of documentation in AI-generated code.
+Criteria: Users appreciate AI's ability to generate functional, well-documented code with annotations.
+Phrase: Appreciate AI's documentation capabilities.
+
+17.
+Concepts: evaluates chatgpt's code, evaluate ai-generated code
+Relationship: Both concepts involve assessing the quality of AI-generated code.
+Criteria: Users assess and critique the code generated by AI for accuracy and relevance.
+Phrase: Evaluate AI-generated code for accuracy.
+
+18.
+Concepts: notes ai's efficiency, value timely feedback from ai
+Relationship: Both concepts reflect on the efficiency of AI in providing feedback.
+Criteria: Users note the efficiency of AI in delivering quick feedback on coding tasks.
+Phrase: Value timely feedback from AI.
+
+19.
+Concepts: compares with initial code, highlights iterative improvement
+Relationship: Both concepts involve comparing AI-generated code with original code for enhancements.
+Criteria: Users compare AI-generated code with their own to evaluate improvements iteratively.
+Phrase: Compare AI-generated code for iterative improvement.
+
+20.
+Concepts: focus on efficiency, workflow enhancement through ai
+Relationship: Both concepts emphasize the role of AI in enhancing coding efficiency.
+Criteria: Users describe using AI to optimize their coding workflow for greater efficiency.
+Phrase: Focus on efficiency through AI.
+
+21.
+Concepts: independent code correction, proposing personal fixes to ai
+Relationship: Both concepts involve users taking initiative in correcting AI-generated code.
+Criteria: Users independently correct errors in AI-generated code and suggest modifications based on their ideas.
+Phrase: Independently correct AI-generated code.
+
+22.
+Concepts: ai's fast iteration capabilities, adapts based on ai-generated code
+Relationship: Both concepts highlight the adaptability of users in response to AI-generated insights.
+Criteria: Users adapt their approach based on the rapid development and insights gained from AI-generated code.
+Phrase: Adapt based on AI-generated insights.
+
+23.
+Concepts: speed, chatgpt
+Relationship: Both concepts emphasize the speed advantage of using AI for coding tasks.
+Criteria: Users highlight the speed of ChatGPT compared to traditional coding methods.
+Phrase: Emphasize speed advantage of ChatGPT.
+
+24.
+Concepts: prefers ai over human interns, compares ai to human interns
+Relationship: Both concepts involve comparing the efficiency of AI with human assistance.
+Criteria: Users compare the capabilities of AI to those of human interns, particularly in handling coding tasks.
+Phrase: Compare AI efficiency to human interns.
+
+25.
+Concepts: hiring criteria, argues for ai efficiency
+Relationship: Both concepts discuss the efficiency of AI in task completion.
+Criteria: Users argue for the efficiency of AI compared to traditional methods in completing tasks quickly.
+Phrase: Argue for AI efficiency in task completion.
+
+26.
+Concepts: human-ai: support, reduce learning curve and even save human's needs for learning some programming knowledge
+Relationship: Both concepts highlight the potential of AI to assist in learning programming.
+Criteria: Users believe AI can reduce the learning curve and save time in acquiring new programming knowledge.
+Phrase: Support learning through AI assistance.
+
+27.
+Concepts: cost saving, highlights cost saving
+Relationship: Both concepts reflect on the financial benefits of using AI.
+Criteria: Users highlight the cost-saving potential of using AI compared to hiring additional help.
+Phrase: Highlight cost-saving potential of AI.
+
+28.
+Concepts: time-saving, time efficiency
+Relationship: Both concepts emphasize the time-saving benefits of AI.
+Criteria: Users perceive that LLM-driven interfaces can save time in learning and problem-solving.
+Phrase: Recognize time-saving benefits of AI.
+
+29.
+Concepts: clearness, appreciates clarity in ai explanations
+Relationship: Both concepts focus on the clarity of AI's explanations.
+Criteria: Users acknowledge the clarity of error explanations provided by AI, aiding understanding.
+Phrase: Appreciate clarity in AI explanations.
+
+30.
+Concepts: notes less technical language, human effort (positive): support learning by providing non-technical explanation
+Relationship: Both concepts emphasize the accessibility of AI's language.
+Criteria: Users appreciate AI's use of less technical language that supports learning.
+Phrase: Value non-technical explanations from AI.
+
+31.
+Concepts: find ai interface user-friendly, chatlogo ability (positive): straightforward
+Relationship: Both concepts highlight the ease of use of the AI interface.
+Criteria: Users describe the AI interface as straightforward and user-friendly.
+Phrase: Find AI interface user-friendly.
+
+32.
+Concepts: satisfaction, expresses satisfaction, user satisfaction
+Relationship: All concepts reflect positive experiences with AI.
+Criteria: Users express satisfaction with AI-generated solutions and the usability of AI tools.
+Phrase: Express satisfaction with AI capabilities.
+
+33.
+Concepts: finds interface helpful, appreciates ai's parameter clarification
+Relationship: Both concepts emphasize the utility of the AI interface.
+Criteria: Users find the interface helpful in clarifying parameters for their tasks.
+Phrase: Find AI interface helpful for parameter clarification.
+
+34.
+Concepts: highlight ai's time-saving benefits, recognizes ai's convenience for assistance
+Relationship: Both concepts focus on the convenience and efficiency of AI assistance.
+Criteria: Users highlight the time-saving benefits of immediate access to information within the AI interface.
+Phrase: Highlight AI's time-saving benefits.
+
+35.
+Concepts: emotion, emotional reactions
+Relationship: Both concepts involve the emotional responses of users during AI interactions.
+Criteria: Users express explicit or implicit emotions related to their experiences with AI.
+Phrase: Express emotional reactions to AI interactions.
+
+36.
+Concepts: ai intuition, allows ai's intuition
+Relationship: Both concepts appreciate the intuitive capabilities of AI.
+Criteria: Users acknowledge instances where AI demonstrates intuitive responses that diverge from conventional programming norms.
+Phrase: Appreciate AI's intuitive responses.
+
+37.
+Concepts: evaluating chatgpt's intuitive responses, engage in conversational interaction with ai
+Relationship: Both concepts involve interactive engagement with AI.
+Criteria: Users engage in conversational interactions with AI to enhance communication and understanding.
+Phrase: Engage in conversational interaction with AI.
+
+38.
+Concepts: human-ai, great insight on relationship between human & ai
+Relationship: Both concepts reflect on the collaborative relationship between humans and AI.
+Criteria: Users emphasize the importance of human judgment in conjunction with AI capabilities.
+Phrase: Reflect on human-AI collaboration.
+
+39.
+Concepts: capability enhancement, enhance capabilities with ai
+Relationship: Both concepts focus on the enhancement of human capabilities through AI.
+Criteria: Users perceive AI as a tool that enhances human capabilities rather than replacing them.
+Phrase: Enhance capabilities with AI.
+
+40.
+Concepts: value immediate feedback from ai, seeks human assistance but due to time constraint rely on instant feedback
+Relationship: Both concepts emphasize the importance of real-time feedback from AI.
+Criteria: Users seek immediate feedback from AI due to time constraints, valuing it over delayed human assistance.
+Phrase: Value immediate feedback from AI.
+
+41.
+Concepts: deviates their directions, human-ai: no need to blindly follow
+Relationship: Both concepts involve the necessity of expertise in using AI effectively.
+Criteria: Users acknowledge the importance of expertise to use AI without blindly following its suggestions.
+Phrase: Avoid blind reliance on AI.
+
+42.
+Concepts: comparison to past tech, compares ai mistakes to early apple maps errors
+Relationship: Both concepts involve drawing parallels between AI and past technological experiences.
+Criteria: Users compare AI's mistakes to historical errors in technology, emphasizing the need for user judgment.
+Phrase: Compare AI mistakes to past technology errors.
+
+43.
+Concepts: highlight the importance of human judgment, advise personal judgment in ai evaluation
+Relationship: Both concepts emphasize the necessity of human judgment alongside AI assistance.
+Criteria: Users express concerns about the accuracy of AI-generated advice and the need for personal judgment.
+Phrase: Highlight importance of human judgment.
+
+44.
+Concepts: evaluates ai search accuracy, human-ai: difference, evaluates ai's information retrieval
+Relationship: All concepts involve assessing the effectiveness of AI's information retrieval capabilities.
+Criteria: Users evaluate the accuracy of AI-generated search results and its effectiveness in retrieving relevant information.
+Phrase: Evaluate AI's information retrieval accuracy.
+
+45.
+Concepts: model library, model retrieval
+Relationship: Both concepts involve evaluating AI's ability to retrieve models.
+Criteria: Users assess AI's capability to retrieve specific models from the NetLogo library.
+Phrase: Evaluate AI's model retrieval capabilities.
+
+46.
+Concepts: r extension, decides against using r extension
+Relationship: Both concepts involve decision-making based on AI's suggestions.
+Criteria: Users evaluate AI's suggestions regarding specific extensions and decide against using them accordingly.
+Phrase: Decide against using AI-suggested extensions.
+
+47.
+Concepts: evaluate ai response variability, chatgpt ability (positive): various feedback
+Relationship: Both concepts reflect on the unpredictability of AI responses.
+Criteria: Users evaluate the variability in AI responses, noting that feedback can be unpredictable.
+Phrase: Evaluate variability in AI responses.
+
+48.
+Concepts: evaluating ai output, evaluates ai responses
+Relationship: Both concepts involve assessing the quality of AI outputs.
+Criteria: Users regularly evaluate AI outputs, reflecting on their variability and reliability.
+Phrase: Evaluate AI outputs for quality.
+
+49.
+Concepts: decision making, evaluation on output and made a decision based on expertise, evaluates choices
+Relationship: All concepts involve making informed decisions based on AI-generated outputs.
+Criteria: Users evaluate AI responses to make informed decisions about coding options.
+Phrase: Make decisions based on AI evaluations.
+
+50.
+Concepts: assesses ai's understanding, human-effort: interpretation
+Relationship: Both concepts involve evaluating AI's comprehension of user requests.
+Criteria: Users assess AI's understanding of their coding requests and its implications for their work.
+Phrase: Assess AI's understanding of requests.
+
+51.
+Concepts: refines query approach, refine prompts for better ai responses, considers optimal phrasing for queries
+Relationship: All concepts involve improving the way users interact with AI for better results.
+Criteria: Users refine their queries to the AI based on feedback for better results.
+Phrase: Refine queries for better AI responses.
+
+52.
+Concepts: optimize ai interaction, emphasizes importance of iterative questioning, values iterative improvement
+Relationship: Both concepts highlight the benefits of iterative questioning in AI interactions.
+Criteria: Users believe that asking iterative questions enhances AI assistance and suggest strategies for effective use.
+Phrase: Optimize AI interaction through iterative questioning.
+
+53.
+Concepts: human-ai: ask questions, asks questions and seeks human intervention, follows up with specific queries
+Relationship: All concepts involve engaging with AI through questioning for clarification.
+Criteria: Users engage with AI by asking clarifying questions to enhance understanding and resolve issues.
+Phrase: Ask questions for clarification with AI.
+
+54.
+Concepts: neural network, requests ai assistance for neural network creation
+Relationship: Both concepts involve the desire to create neural networks with AI support.
+Criteria: Users express interest in creating simple neural network models using AI assistance.
+Phrase: Request AI assistance for neural network creation.
+
+55.
+Concepts: pattern creation, request for specific programming output
+Relationship: Both concepts involve requesting specific outputs from AI for programming tasks.
+Criteria: Users request AI to create specific patterns in programming tasks.
+Phrase: Request specific programming outputs from AI.
+
+56.
+Concepts: task initiation, test ai capabilities
+Relationship: Both concepts involve initiating tasks with AI.
+Criteria: Users assign specific tasks to the AI, such as writing code.
+Phrase: Initiate tasks with AI.
+
+57.
+Concepts: parameter fields, dictates parameters for ai
+Relationship: Both concepts involve providing detailed instructions to AI for coding tasks.
+Criteria: Users dictate parameter fields during coding tasks to guide AI.
+Phrase: Dictate parameters for AI tasks.
+
+58.
+Concepts: user input, proposes alternative ai, asks ai to implement ideas
+Relationship: Both concepts involve users providing their own ideas for AI to work with.
+Criteria: Users suggest alternative prompts or tasks for the AI to perform based on their own ideas.
+Phrase: Propose ideas for AI implementation.
+
+59.
+Concepts: customization and flexibility, desires flexibility in ai interactions
+Relationship: Both concepts emphasize the need for flexibility in AI responses.
+Criteria: Users express a desire for more flexible options in AI interactions based on their experience level.
+Phrase: Desire flexibility in AI interactions.
+
+60.
+Concepts: highlights design tension between user levels, directions & differences in needs for user groups based on experience level
+Relationship: Both concepts reflect on the varying needs of different user groups.
+Criteria: Users note the tension between novice-oriented and expert-oriented design in AI options.
+Phrase: Highlight design tension based on user experience.
+
+61.
+Concepts: potential support for novice, suggests ai for customized documentation
+Relationship: Both concepts involve the potential of AI to assist novice users.
+Criteria: Users suggest that AI could help tailor documentation to different user groups and contexts.
+Phrase: Suggest AI for customized documentation.
+
+62.
+Concepts: knowledge preservation, knowledge fragmentation
+Relationship: Both concepts involve the management of knowledge through AI.
+Criteria: Users perceive AI's ability to store and retrieve fragmented knowledge effectively.
+Phrase: Manage knowledge preservation with AI.
+
+63.
+Concepts: hive mind, hive feedback system concept
+Relationship: Both concepts involve collaborative knowledge enhancement through user contributions.
+Criteria: Users propose a collaborative feedback system where collective knowledge improves AI performance.
+Phrase: Propose a hive feedback system for AI.
+
+64.
+Concepts: suggests improvements based on user feedback, hive feedback system - collect information to minimize miscommunication
+Relationship: Both concepts emphasize the role of user feedback in enhancing AI systems.
+Criteria: Users discuss the potential for user feedback to improve AI systems and productivity.
+Phrase: Suggest improvements based on user feedback.
+---

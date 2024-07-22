@@ -1,0 +1,46 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (2 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+2. 
+Concepts: {Repeat the input 2}
+Relationship: {What is logical relationship between concepts in code 2, or N/A if not applicable}
+Criteria: {Who did what, and how for code 2}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: values ai's helpfulness, commends error clarification
+- Users express satisfaction with AI's assistance in resolving errors and clarifying coding issues.
+- Users acknowledge the AI's effectiveness in explaining programming syntax and errors.
+
+2.
+Concepts: unclear error message, critique misleading error messages
+- User describes specific instances where unclear error messages hindered their progress.
+- Users find error messages confusing and critique their vagueness, resulting in difficulties during code debugging efforts.
+===
+---
+Definitions for each code (2 in total):
+1.
+Concepts: values ai's helpfulness, commends error clarification
+Relationship: The concepts are related as they both reflect a positive perception of the AI's role in facilitating a clearer understanding of coding problems and enhancing user experience.
+Criteria: Users actively express satisfaction with the AI's assistance in error resolution and clarify coding issues through recognition of its effectiveness.
+Phrase: Acknowledge AI's effectiveness in error resolution 
+
+2. 
+Concepts: unclear error message, critique misleading error messages
+Relationship: The concepts are interrelated as both highlight the user experience concerning the shortcomings of error messages, leading to frustration and misunderstandings during coding tasks.
+Criteria: Users identify and critique specific instances of misleading and vague error messages that hinder their coding progress.
+Phrase: Critique vagueness of error messages
+---

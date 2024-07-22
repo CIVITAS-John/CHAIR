@@ -1,0 +1,385 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: notes ai limitations, notes limitations on ai's capacity, notes ai output limitations
+- Participants note AI limitations.
+- Participants note limitations on AI's capacity.
+- Participants note AI output limitations.
+- Participants note instances where AI gets stuck or fails to fix errors.
+
+2.
+Concepts: discusses ai limitations, identifies limitations in ai options
+- Participants discuss AI limitations.
+- Participants identify limitations in AI options.
+
+3.
+Concepts: expresses frustration with limited ai options, expresses frustration with ai limitations
+- Participants express frustration with limited AI options.
+- Participants express frustration with AI's inability to analyze extensive inputs or code, highlighting its limitations.
+- Participants express frustration with AI's error loop, failure, or unresolvable issues.
+
+4.
+Concepts: gets stuck on unclear error messages, feels stuck in troubleshooting, feels stuck due to ambiguous messages
+- Participants get stuck due to unclear AI error messages or limitations, highlighting the need for clearer error messages.
+- Participants express frustration and feeling stuck when troubleshooting issues with the LLM-driven interface, highlighting the need for clearer error messages.
+- Participants feel stuck due to ambiguous or unclear error messages or feedback, highlighting the need for improvement.
+
+5.
+Concepts: expresses frustration with error messages, experiences confusion from unclear error messages
+- Participants express frustration with error messages that are unclear, misleading, or incorrect, which hinders debugging and problem-solving.
+- Participants experience confusion due to unclear error messages, which can hinder debugging and problem-solving.
+
+6.
+Concepts: describes unhelpful feedback, identifies unclear error messages
+- Participants describe instances where error messages are unhelpful or unclear, highlighting the need for improvement.
+- Participants identify unclear or misleading error messages that hinder progress and understanding.
+
+7.
+Concepts: advocating for conceptual linting, advocating for conceptual error detection, advocating for enhanced debugging tools
+- Participants express the need for conceptual linting in the system to identify and correct conceptual errors.
+- Participants advocate for linting features that identify and correct conceptual errors.
+- Participants advocate for enhanced debugging tools, such as linting features, to identify and correct conceptual errors.
+
+8.
+Concepts: wants ai to catch structural mistakes, desires ai to catch conceptual errors
+- Expresses the need for AI to catch structural mistakes and conceptual errors.
+- Users desire AI to catch conceptual errors, particularly through linting features.
+
+9.
+Concepts: identifies ai feedback bugs, identifies potential ai bugs, identifies bugs in error reporting
+- Participants identify AI feedback bugs.
+- Participants identify potential AI bugs.
+- Participants identify bugs in error reporting.
+
+10.
+Concepts: attempts to fix ai-generated errors, interprets and corrects ai-generated errors
+- Participants attempt to fix AI-generated errors.
+- Participants interpret and correct AI-generated errors.
+
+11.
+Concepts: interprets and corrects ai-generated code, identifies and fixes errors in ai-generated code, identifies errors and issues with ai-generated code
+- Participants interpret and correct AI-generated code.
+- Participants identify and fix errors in AI-generated code.
+- Participants identify errors and issues with AI-generated code.
+
+12.
+Concepts: critiques ai accuracy in error reporting, critiques ai limitations in error detection
+- Participants critique AI accuracy in error reporting.
+- Participants critique AI limitations in error detection.
+
+13.
+Concepts: encounters outdated code, experiences inconsistencies with ai's code
+- Participants encounter outdated functions or code in AI responses, highlighting the need for improvement.
+- Participants experience inconsistencies or errors in AI-generated code, highlighting the need for improvement.
+
+14.
+Concepts: notes missing code structures, identifies gaps in ai's code generation
+- Participants note missing code structures or identify limitations in AI-generated code.
+- Participants identify gaps in AI's code generation or recognize missing AI-generated structures.
+
+15.
+Concepts: manually fixes errors, uses ai for specific code adjustments
+- The participant manually fixes AI code errors.
+- Participant uses the LLM-driven interface to make specific code adjustments, often to fix errors or improve functionality.
+
+16.
+Concepts: corrects code independently, corrects errors independently
+- Learners can correct code independently.
+- The participant corrects errors independently, showing self-reliance.
+
+17.
+Concepts: works independently, debugs code independently
+- The participant works independently, relying on their own debugging skills.
+- The participant debugs code independently, analyzing and troubleshooting issues.
+
+18.
+Concepts: utilizes ai for debugging, collaborates with ai for debugging
+- Participant uses AI to fix errors or resolve issues.
+- Participant works with AI to debug code.
+
+19.
+Concepts: analyzes code for errors, differentiates between structural and syntax errors
+- Participant reads and analyzes code to identify and fix errors.
+- The participant differentiates between structural and syntax errors in code.
+
+20.
+Concepts: emphasizes user preparation and practice, emphasizes importance of preparation and debugging skills
+- Users emphasize the importance of user preparation and practice in debugging.
+- Users emphasize the importance of preparation and debugging skills.
+
+21.
+Concepts: emphasizes debugging and testing, emphasizes iterative debugging and refinement
+- Users emphasize the importance of debugging and testing.
+- Users emphasize the importance of iterative debugging and refinement.
+
+22.
+Concepts: notes ai debugging success, acknowledges ai debugging capabilities, appreciates ai debugging capability
+- Participants note AI debugging success.
+- Participants acknowledge AI debugging capabilities.
+- Participants appreciate AI debugging capability.
+
+23.
+Concepts: highlights unit testing and ai debugging, suggests ai debugging and user practice
+- Users highlight the importance of unit testing and AI debugging.
+- Users suggest the importance of AI debugging and user debugging practice.
+
+24.
+Concepts: reflects on debugging process, reflects on learning processes
+- Participant reflects on their own thought process and actions during debugging.
+- Reflects on the learning process, including iterative debugging and practice.
+
+25.
+Concepts: seeks debugging assistance, reflects on user challenges
+- Participant seeks help or faces challenges during debugging.
+- The participant reflects on user challenges, such as debugging errors and seeking help.
+
+26.
+Concepts: shares ai debugging experience, describes past ai debugging experiences, describes ai-assisted debugging
+- Participant shares their experience of using AI for debugging.
+- Describes past experiences with debugging using AI.
+- The participant describes the iterative debugging process, reflecting on AI's role in the process.
+
+27.
+Concepts: mentions desire for autocompletion, suggests need for smart editor features
+- The interviewee expresses a desire for autocompletion features in NetLogo.
+- The participant suggests the need for smart editor features in NetLogo, such as autocomplete or variable suggestions.
+
+28.
+Concepts: critiquing netlogo's features, critiques existing tools for lacking functionality
+- Participants critique NetLogo's lack of modern features, such as smart code editors, and its editor.
+- The participant critiques existing tools for lacking functionality, suggesting that NetLogo needs to improve its error detection and correction capabilities.
+
+29.
+Concepts: calls for better error messaging, critiques unhelpful error messages
+- Calls for better error messaging in NetLogo.
+- Users critique the unhelpful error messages in NetLogo.
+
+30.
+Concepts: identifying common issues, identifying learning challenges
+- Participants identify "scope" as a common issue in NetLogo and recognize struggles with scope, context, and variable space.
+- Participants identify learning challenges related to "scope" in NetLogo and recognize it as a challenging concept.
+
+31.
+Concepts: identifying the need for ai support, suggesting ai support for conceptual understanding
+- Participants identify the need for AI support in learning specific concepts, such as "scope", in NetLogo.
+- Participants suggest AI support for understanding specific concepts, such as "scope", in NetLogo.
+
+32.
+Concepts: expressing competence, expressing confidence
+- Participants express competence in NetLogo and confidence in their NetLogo skills.
+- Participants feel competent with NetLogo, express confidence in their NetLogo skills, and acknowledge their personal competence.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: notes ai limitations, notes limitations on ai's capacity, notes ai output limitations
+Relationship: The concepts are related to the idea that participants acknowledge the limitations of AI in various aspects.
+Criteria: Participants note AI limitations in capacity and output.
+Phrase: Notes AI limitations.
+
+2.
+Concepts: discusses ai limitations, identifies limitations in ai options
+Relationship: The concepts are related to the idea that participants discuss and identify the limitations of AI options.
+Criteria: Participants discuss and identify limitations in AI options.
+Phrase: Discusses AI limitations.
+
+3.
+Concepts: expresses frustration with limited ai options, expresses frustration with ai limitations
+Relationship: The concepts are related to the idea that participants express frustration with AI limitations and options.
+Criteria: Participants express frustration with limited AI options and limitations.
+Phrase: Expresses frustration with AI limitations.
+
+4.
+Concepts: gets stuck on unclear error messages, feels stuck in troubleshooting, feels stuck due to ambiguous messages
+Relationship: The concepts are related to the idea that participants experience frustration and feeling stuck due to unclear error messages.
+Criteria: Participants get stuck due to unclear error messages.
+Phrase: Gets stuck on unclear error messages.
+
+5.
+Concepts: expresses frustration with error messages, experiences confusion from unclear error messages
+Relationship: The concepts are related to the idea that participants express frustration and experience confusion due to unclear error messages.
+Criteria: Participants express frustration and experience confusion from unclear error messages.
+Phrase: Expresses frustration with error messages.
+
+6.
+Concepts: describes unhelpful feedback, identifies unclear error messages
+Relationship: The concepts are related to the idea that participants describe and identify unhelpful feedback and unclear error messages.
+Criteria: Participants describe and identify unhelpful feedback and unclear error messages.
+Phrase: Describes unhelpful feedback.
+
+7.
+Concepts: advocating for conceptual linting, advocating for conceptual error detection, advocating for enhanced debugging tools
+Relationship: The concepts are related to the idea that participants advocate for improved debugging tools and features.
+Criteria: Participants advocate for conceptual linting and enhanced debugging tools.
+Phrase: Advocates for enhanced debugging tools.
+
+8.
+Concepts: wants ai to catch structural mistakes, desires ai to catch conceptual errors
+Relationship: The concepts are related to the idea that participants want AI to catch structural and conceptual errors.
+Criteria: Participants want AI to catch structural and conceptual errors.
+Phrase: Wants AI to catch errors.
+
+9.
+Concepts: identifies ai feedback bugs, identifies potential ai bugs, identifies bugs in error reporting
+Relationship: The concepts are related to the idea that participants identify bugs and errors in AI feedback and error reporting.
+Criteria: Participants identify bugs and errors in AI feedback and error reporting.
+Phrase: Identifies AI feedback bugs.
+
+10.
+Concepts: attempts to fix ai-generated errors, interprets and corrects ai-generated errors
+Relationship: The concepts are related to the idea that participants attempt to fix and correct AI-generated errors.
+Criteria: Participants attempt to fix and correct AI-generated errors.
+Phrase: Attempts to fix AI-generated errors.
+
+11.
+Concepts: interprets and corrects ai-generated code, identifies and fixes errors in ai-generated code, identifies errors and issues with ai-generated code
+Relationship: The concepts are related to the idea that participants interpret, correct, and fix errors in AI-generated code.
+Criteria: Participants interpret, correct, and fix errors in AI-generated code.
+Phrase: Interprets and corrects AI-generated code.
+
+12.
+Concepts: critiques ai accuracy in error reporting, critiques ai limitations in error detection
+Relationship: The concepts are related to the idea that participants critique AI accuracy and limitations in error reporting and detection.
+Criteria: Participants critique AI accuracy and limitations in error reporting and detection.
+Phrase: Critiques AI accuracy.
+
+13.
+Concepts: encounters outdated code, experiences inconsistencies with ai's code
+Relationship: The concepts are related to the idea that participants encounter outdated code and inconsistencies in AI-generated code.
+Criteria: Participants encounter outdated code and inconsistencies in AI-generated code.
+Phrase: Encounters outdated code.
+
+14.
+Concepts: notes missing code structures, identifies gaps in ai's code generation
+Relationship: The concepts are related to the idea that participants note missing code structures and identify gaps in AI-generated code.
+Criteria: Participants note missing code structures and identify gaps in AI-generated code.
+Phrase: Notes missing code structures.
+
+15.
+Concepts: manually fixes errors, uses ai for specific code adjustments
+Relationship: The concepts are related to the idea that participants manually fix errors and use AI for specific code adjustments.
+Criteria: Participants manually fix errors and use AI for specific code adjustments.
+Phrase: Manually fixes errors.
+
+16.
+Concepts: corrects code independently, corrects errors independently
+Relationship: The concepts are related to the idea that participants correct code and errors independently.
+Criteria: Participants correct code and errors independently.
+Phrase: Corrects code independently.
+
+17.
+Concepts: works independently, debugs code independently
+Relationship: The concepts are related to the idea that participants work and debug code independently.
+Criteria: Participants work and debug code independently.
+Phrase: Works independently.
+
+18.
+Concepts: utilizes ai for debugging, collaborates with ai for debugging
+Relationship: The concepts are related to the idea that participants utilize AI for debugging and collaborate with AI for debugging.
+Criteria: Participants utilize AI for debugging and collaborate with AI for debugging.
+Phrase: Utilizes AI for debugging.
+
+19.
+Concepts: analyzes code for errors, differentiates between structural and syntax errors
+Relationship: The concepts are related to the idea that participants analyze code for errors and differentiate between structural and syntax errors.
+Criteria: Participants analyze code for errors and differentiate between structural and syntax errors.
+Phrase: Analyzes code for errors.
+
+20.
+Concepts: emphasizes user preparation and practice, emphasizes importance of preparation and debugging skills
+Relationship: The concepts are related to the idea that participants emphasize the importance of user preparation, practice, and debugging skills.
+Criteria: Participants emphasize the importance of user preparation, practice, and debugging skills.
+Phrase: Emphasizes user preparation.
+
+21.
+Concepts: emphasizes debugging and testing, emphasizes iterative debugging and refinement
+Relationship: The concepts are related to the idea that participants emphasize the importance of debugging, testing, and iterative refinement.
+Criteria: Participants emphasize the importance of debugging, testing, and iterative refinement.
+Phrase: Emphasizes debugging and testing.
+
+22.
+Concepts: notes ai debugging success, acknowledges ai debugging capabilities, appreciates ai debugging capability
+Relationship: The concepts are related to the idea that participants note AI debugging success and acknowledge AI debugging capabilities.
+Criteria: Participants note AI debugging success and acknowledge AI debugging capabilities.
+Phrase: Notes AI debugging success.
+
+23.
+Concepts: highlights unit testing and ai debugging, suggests ai debugging and user practice
+Relationship: The concepts are related to the idea that participants highlight the importance of unit testing and AI debugging, and suggest the need for AI debugging and user practice.
+Criteria: Participants highlight the importance of unit testing and AI debugging, and suggest the need for AI debugging and user practice.
+Phrase: Highlights unit testing and AI debugging.
+
+24.
+Concepts: reflects on debugging process, reflects on learning processes
+Relationship: The concepts are related to the idea that participants reflect on their debugging process and learning experiences.
+Criteria: Participants reflect on their debugging process and learning experiences.
+Phrase: Reflects on debugging process.
+
+25.
+Concepts: seeks debugging assistance, reflects on user challenges
+Relationship: The concepts are related to the idea that participants seek debugging assistance and reflect on user challenges.
+Criteria: Participants seek debugging assistance and reflect on user challenges.
+Phrase: Seeks debugging assistance.
+
+26.
+Concepts: shares ai debugging experience, describes past ai debugging experiences, describes ai-assisted debugging
+Relationship: The concepts are related to the idea that participants share their AI debugging experiences and describe past experiences.
+Criteria: Participants share their AI debugging experiences and describe past experiences.
+Phrase: Shares AI debugging experience.
+
+27.
+Concepts: mentions desire for autocompletion, suggests need for smart editor features
+Relationship: The concepts are related to the idea that participants mention their desire for autocompletion features and suggest the need for smart editor features.
+Criteria: Participants mention their desire for autocompletion features and suggest the need for smart editor features.
+Phrase: Mentions desire for autocompletion.
+
+28.
+Concepts: critiquing netlogo's features, critiques existing tools for lacking functionality
+Relationship: The concepts are related to the idea that participants critique NetLogo's features and existing tools for lacking functionality.
+Criteria: Participants critique NetLogo's features and existing tools for lacking functionality.
+Phrase: Critiques NetLogo's features.
+
+29.
+Concepts: calls for better error messaging, critiques unhelpful error messages
+Relationship: The concepts are related to the idea that participants call for better error messaging and critique unhelpful error messages.
+Criteria: Participants call for better error messaging and critique unhelpful error messages.
+Phrase: Calls for better error messaging.
+
+30.
+Concepts: identifying common issues, identifying learning challenges
+Relationship: The concepts are related to the idea that participants identify common issues and learning challenges.
+Criteria: Participants identify common issues and learning challenges.
+Phrase: Identifies common issues.
+
+31.
+Concepts: identifying the need for ai support, suggesting ai support for conceptual understanding
+Relationship: The concepts are related to the idea that participants identify the need for AI support and suggest AI support for conceptual understanding.
+Criteria: Participants identify the need for AI support and suggest AI support for conceptual understanding.
+Phrase: Identifies the need for AI support.
+
+32.
+Concepts: expressing competence, expressing confidence
+Relationship: The concepts are related to the idea that participants express competence and confidence in their NetLogo skills.
+Criteria: Participants express competence and confidence in their NetLogo skills.
+Phrase: Expresses competence.

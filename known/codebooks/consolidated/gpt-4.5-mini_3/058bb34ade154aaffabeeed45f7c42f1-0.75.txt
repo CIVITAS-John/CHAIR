@@ -1,0 +1,90 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (6 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+6. 
+Concepts: {Repeat the input 6}
+Relationship: {What is logical relationship between concepts in code 6, or N/A if not applicable}
+Criteria: {Who did what, and how for code 6}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: debugs independently, prefer hands-on debugging
+- Users engage in self-evaluation and debugging of AI-generated code.
+- Users express a preference for self-driven debugging over AI assistance.
+
+2.
+Concepts: novice, highlight challenges faced by novices
+- Identifying the challenges faced by novices in understanding and utilizing AI assistance.
+- Users highlight specific challenges faced by beginners in their interactions with AI tools.
+
+3.
+Concepts: find misleading error messages, identify misunderstandings with ai
+- Users find AI’s error messages misleading and express frustration with its outputs.
+- Users identify AI misunderstandings and experience frustration with its bug identification performance.
+
+4.
+Concepts: describe typical use cases for ai, utilize ai for code translation
+- Users outline common use cases for AI in code development.
+- Users utilize AI for code translation and express the importance of documentation in AI-generated code.
+
+5.
+Concepts: customize ai-generated code, adapt and reflect on ai-generated code
+- Users interact with AI-generated code, using it and customizing it for their purposes.
+- Users adapt AI-generated code and reflect on their learning from it.
+
+6.
+Concepts: value ai's timely feedback, value prompt feedback from ai
+- Users highlight the importance of receiving timely responses from AI.
+- Users leverage AI feedback for rapid analysis of coding tasks.
+===
+---
+Definitions for each code (6 in total):
+1. 
+Concepts: debugs independently, prefer hands-on debugging
+Relationship: Users prefer to engage in self-directed debugging rather than relying on AI assistance, indicating a desire for autonomy in the debugging process.
+Criteria: Users independently evaluate and debug AI-generated code while favoring hands-on methods over AI support.
+Phrase: Engage in self-driven debugging.
+
+2. 
+Concepts: novice, highlight challenges faced by novices
+Relationship: Users who are novices point out specific difficulties they encounter, illustrating the unique hurdles beginners face when using AI tools.
+Criteria: Novice users identify and articulate challenges they experience while trying to understand and utilize AI assistance.
+Phrase: Identify challenges faced by novices.
+
+3. 
+Concepts: find misleading error messages, identify misunderstandings with ai
+Relationship: Users experience frustration due to misleading error messages from AI, which reflects a broader issue of misunderstanding AI’s capabilities.
+Criteria: Users discover misleading error messages from AI and articulate their frustrations regarding AI's bug identification accuracy.
+Phrase: Discover AI's misleading outputs.
+
+4. 
+Concepts: describe typical use cases for ai, utilize ai for code translation
+Relationship: Users recognize and articulate the practical applications of AI, particularly in translating code, which highlights the functionality of AI in real-world scenarios.
+Criteria: Users outline common applications of AI in code development and utilize it specifically for code translation while emphasizing the need for documentation.
+Phrase: Outline AI use cases.
+
+5. 
+Concepts: customize ai-generated code, adapt and reflect on ai-generated code
+Relationship: Users actively modify AI-generated code to suit their needs while reflecting on their learning experiences, indicating a dynamic interaction with the technology.
+Criteria: Users interact with, customize, and reflect on their experiences with AI-generated code.
+Phrase: Customize and reflect on AI code.
+
+6. 
+Concepts: value ai's timely feedback, value prompt feedback from ai
+Relationship: Users express a strong appreciation for quick and efficient feedback from AI, which underscores the importance of responsiveness in AI interactions.
+Criteria: Users emphasize the significance of timely feedback from AI for rapid analysis and decision-making in coding tasks.
+Phrase: Appreciate timely AI feedback.
+---

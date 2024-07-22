@@ -1,0 +1,388 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: notes inefficiencies, notes the tendency to write large code chunks
+- Notes inefficiencies in coding practices, such as writing large chunks of code before checking for errors.
+- The participant notes the tendency to write large code chunks, which can lead to errors.
+
+2.
+Concepts: express frustration with technical documentation, expresses frustration with linear learning
+- Expresses frustration with technical documentation.
+- The code expresses frustration with linear learning, critiquing the existing situation of technical documentation.
+
+3.
+Concepts: frustration with coding inefficiencies, frustration with coding tools
+- Expresses frustration with coding inefficiencies in NetLogo.
+- Participant expresses frustration with the limitations or difficulties of using coding tools, such as NetLogo.
+
+4.
+Concepts: highlights resulting frustration, expresses frustration with beginners' approach
+- The participant highlights the resulting frustration when beginners write chunks of code and encounter many errors.
+- Expresses frustration with beginners' approaches to coding and problem-solving.
+
+5.
+Concepts: notes issues with code submissions, highlights code submission issues
+- Notes issues with code submissions, such as lack of background information.
+- The participant highlights issues with code submissions, such as lack of background information.
+
+6.
+Concepts: emphasize need for incremental coding, emphasizes need for iterative coding
+- The participant emphasizes the need for incremental coding, where code is written and checked in small chunks to avoid errors.
+- The participant emphasizes the need for iterative coding, highlighting the importance of writing small chunks of code and checking for errors.
+
+7.
+Concepts: novice (negative): debug, suggests practice in debugging, importance of debugging practice
+- Believes that users need practice in debugging their own code before seeking AI assistance.
+- The participant suggests that users need practice in debugging their own code before seeking AI assistance.
+- The participant suggests that users need practice in debugging their own code before asking AI for help.
+
+8.
+Concepts: emphasis on user exercises, emphasizes preparatory exercises, emphasizes user preparation, emphasizes learning process
+- The participant emphasizes the importance of user exercises and practice in debugging their own code before relying on AI assistance.
+- The participant emphasizes the importance of preparatory exercises, such as practicing debugging, before asking AI for help.
+- Participant emphasizes the importance of preparatory exercises or practice in debugging code before seeking AI assistance.
+- The code emphasizes the importance of user preparation, such as practicing debugging their own code before seeking AI assistance.
+- User emphasizes the importance of the learning process, including practicing debugging and exercises before seeking AI assistance.
+
+9.
+Concepts: emphasizes the need for debugging skills, emphasizes need for foundational skills, recognizes the need for foundational skills
+- Emphasizes the importance of debugging skills or practices for effective AI use.
+- Emphasizes the importance of foundational skills, such as debugging, for effective human-AI collaboration.
+- Recognizes the need for users to develop foundational skills, such as debugging, before using AI-driven interfaces.
+
+10.
+Concepts: critiques learning process, reflects on learning and debugging
+- Critiques the learning process for beginners and the importance of debugging.
+- Reflects on the learning process and the importance of practice in debugging.
+
+11.
+Concepts: highlights learning needs, highlights importance of effective learning tools
+- Highlights the need for users to develop debugging skills and practice.
+- Highlights the importance of effective learning tools, such as debugging capabilities.
+
+12.
+Concepts: advocates for linting features, advocates for enhanced debugging tools
+- The code advocates for linting features, such as identifying conceptual mistakes, to support users.
+- The participant advocates for enhanced debugging tools, such as linting features that identify conceptual mistakes.
+
+13.
+Concepts: calls for linting features in netlogo, suggests linting features for conceptual errors
+- Call for linting features in NetLogo, emphasizing the need for conceptual mistake identification.
+- Suggests incorporating linting features to identify conceptual errors in NetLogo code.
+
+14.
+Concepts: calls for conceptual error detection, express need for conceptual error detection
+- Calls for conceptual error detection in AI
+- Expresses the need for conceptual error detection
+
+15.
+Concepts: wants ai to catch structural mistakes, wants ai to catch conceptual errors, expresses need for structural error detection
+- Expresses the need for AI to identify conceptual mistakes
+- The participant wants AI-driven interfaces to catch conceptual errors in code.
+- The participant expresses a need for structural error detection, using AI to identify conceptual mistakes in code.
+
+16.
+Concepts: critiques current ai limitations, critiques ai's error detection limitations, critiques current limitations of ai in debugging
+- The code critiques the current limitations of AI, such as not being able to check generated code with external information.
+- The code critiques the current limitations of AI in error detection, such as not checking generated code with external information.
+- Critiques current limitations of AI in debugging, such as not checking generated code with external information.
+
+17.
+Concepts: suggests improvement, implies room for improvement
+- The participant suggests improvements to the AI, such as checking generated code with external information.
+- User implies that there is room for improvement in AI's ability to check generated code with external information.
+
+18.
+Concepts: acknowledges need for external verification, mentions need for external validation
+- Acknowledges the need for external verification, such as checking generated code with a compiler.
+- The participant mentions the need for external validation, such as checking the generated code with external information like a compiler.
+
+19.
+Concepts: thorough code checking need, highlight need for verification
+- Highlights the need for thorough checking and verification of the AI-generated code.
+- Highlights the need for verification and validation of AI-generated code.
+
+20.
+Concepts: emphasizes the importance of testing, emphasizes the importance of thorough testing, highlights the need for thorough testing
+- Emphasizes the importance of testing and debugging in the AI-driven system.
+- Emphasizes the importance of thorough testing and verification of AI-generated code.
+- Highlights the need for thorough testing of AI-generated code.
+
+21.
+Concepts: careful analysis, highlight need for careful analysis
+- The participant implies careful analysis of AI responses.
+- Participant highlights the need for careful analysis of the AI's responses and error messages.
+
+22.
+Concepts: emphasizes thorough evaluation, emphasizes the need for careful review
+- Reflects on the importance of thorough evaluation, reading and evaluating AI-generated code.
+- The participant emphasizes the need for careful review and evaluation of AI-generated code.
+
+23.
+Concepts: self corrects common mistakes, independent error correction, corrects code independently
+- Corrects common mistakes in NetLogo code
+- Corrects common NetLogo mistakes independently.
+- The code corrects code independently, fixing common NetLogo mistakes by themselves.
+
+24.
+Concepts: independent problem-solving, takes initiative in debugging
+- Identifies and fixes common NetLogo mistakes independently.
+- Takes initiative in debugging, fixing common NetLogo mistakes by themselves.
+
+25.
+Concepts: hands-on problem-solving, engages in manual error correction, manually fixes ai code errors
+- Engages in hands-on problem-solving, such as manually fixing errors in the AI-generated code.
+- The participant engages in manual error correction, trying to fix errors in the AI-generated code.
+- The participant manually fixes AI code errors, preferring to correct mistakes themselves rather than relying on AI.
+
+26.
+Concepts: chooses not to seek explanations from ai, chooses not to rely solely on ai explanations
+- Choice not to seek explanations from AI, preferring manual error fixing.
+- Chooses not to rely solely on AI explanations and instead tries to fix errors manually.
+
+27.
+Concepts: avoids "explain it" option, attempts to fix ai-generated errors manually
+- Avoids using the "explain it" option and instead tries to fix errors manually.
+- Tries to fix errors in AI-generated code manually instead of seeking explanations.
+
+28.
+Concepts: self-reliant in fixing errors, self reliant in debugging
+- Shows self-reliance in fixing errors, attempting to debug code independently.
+- The participant is self-reliant in debugging, preferring to read through code and identify errors themselves.
+
+29.
+Concepts: works independently, fixes common mistakes independently, independently debugs
+- The participant works independently, trying to debug code on their own before seeking help.
+- Participant independently fixes common mistakes or errors in their code, without relying on AI assistance.
+- The participant manually tries to fix errors in AI-generated code without seeking explanations.
+
+30.
+Concepts: debugging ai code, engages in independent troubleshooting, self-debugging when ai fails
+- The participant debugs AI-generated code on their own.
+- Participant engages in independent troubleshooting of AI-generated code errors.
+- Participant attempts to debug code themselves when the AI fails.
+
+31.
+Concepts: relies on own debugging skills, prefers hands-on debugging
+- Rely on personal debugging skills rather than AI assistance.
+- Participant prefers to manually debug code rather than using AI-assisted debugging features.
+
+32.
+Concepts: debugs code independently, independently troubleshoots code issues
+- Debugs code independently, without relying solely on AI-generated solutions.
+- Independently troubleshoots or debugs code issues without AI assistance.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: notes inefficiencies, notes the tendency to write large code chunks
+Relationship: The concepts are related to the participant's observation of inefficient coding practices.
+Criteria: Participants note inefficiencies in coding practices and the tendency to write large code chunks.
+Phrase: Notes coding inefficiencies.
+
+2.
+Concepts: express frustration with technical documentation, expresses frustration with linear learning
+Relationship: The concepts are related to the participant's frustration with the current state of technical documentation and learning.
+Criteria: Participants express frustration with technical documentation and linear learning.
+Phrase: Expresses frustration with documentation.
+
+3.
+Concepts: frustration with coding inefficiencies, frustration with coding tools
+Relationship: The concepts are related to the participant's frustration with coding inefficiencies and the limitations of coding tools.
+Criteria: Participants express frustration with coding inefficiencies and the limitations of coding tools.
+Phrase: Expresses frustration with coding tools.
+
+4.
+Concepts: highlights resulting frustration, expresses frustration with beginners' approach
+Relationship: The concepts are related to the participant's frustration with the consequences of inefficient coding practices.
+Criteria: Participants highlight the resulting frustration and express frustration with beginners' approaches to coding.
+Phrase: Highlights frustration with beginners' approach.
+
+5.
+Concepts: notes issues with code submissions, highlights code submission issues
+Relationship: The concepts are related to the participant's observation of issues with code submissions.
+Criteria: Participants note issues with code submissions.
+Phrase: Notes code submission issues.
+
+6.
+Concepts: emphasize need for incremental coding, emphasizes need for iterative coding
+Relationship: The concepts are related to the participant's emphasis on the importance of incremental coding.
+Criteria: Participants emphasize the need for incremental coding.
+Phrase: Emphasizes incremental coding.
+
+7.
+Concepts: novice (negative): debug, suggests practice in debugging, importance of debugging practice
+Relationship: The concepts are related to the participant's suggestion for novice coders to practice debugging.
+Criteria: Participants suggest that novice coders practice debugging.
+Phrase: Suggests debugging practice.
+
+8.
+Concepts: emphasis on user exercises, emphasizes preparatory exercises, emphasizes user preparation, emphasizes learning process
+Relationship: The concepts are related to the participant's emphasis on the importance of user exercises and preparation.
+Criteria: Participants emphasize the importance of user exercises and preparation.
+Phrase: Emphasizes user preparation.
+
+9.
+Concepts: emphasizes the need for debugging skills, emphasizes need for foundational skills, recognizes the need for foundational skills
+Relationship: The concepts are related to the participant's emphasis on the importance of debugging skills and foundational skills.
+Criteria: Participants emphasize the need for debugging skills and foundational skills.
+Phrase: Emphasizes debugging skills.
+
+10.
+Concepts: critiques learning process, reflects on learning and debugging
+Relationship: The concepts are related to the participant's critique of the learning process and reflection on learning and debugging.
+Criteria: Participants critique the learning process and reflect on learning and debugging.
+Phrase: Critiques learning process.
+
+11.
+Concepts: highlights learning needs, highlights importance of effective learning tools
+Relationship: The concepts are related to the participant's highlighting of learning needs and the importance of effective learning tools.
+Criteria: Participants highlight learning needs and the importance of effective learning tools.
+Phrase: Highlights learning needs.
+
+12.
+Concepts: advocates for linting features, advocates for enhanced debugging tools
+Relationship: The concepts are related to the participant's advocacy for linting features and enhanced debugging tools.
+Criteria: Participants advocate for linting features and enhanced debugging tools.
+Phrase: Advocates for linting features.
+
+13.
+Concepts: calls for linting features in netlogo, suggests linting features for conceptual errors
+Relationship: The concepts are related to the participant's call for linting features in NetLogo.
+Criteria: Participants call for linting features in NetLogo.
+Phrase: Calls for linting features.
+
+14.
+Concepts: calls for conceptual error detection, express need for conceptual error detection
+Relationship: The concepts are related to the participant's call for conceptual error detection.
+Criteria: Participants call for conceptual error detection.
+Phrase: Calls for conceptual error detection.
+
+15.
+Concepts: wants ai to catch structural mistakes, wants ai to catch conceptual errors, expresses need for structural error detection
+Relationship: The concepts are related to the participant's desire for AI to catch structural mistakes and conceptual errors.
+Criteria: Participants want AI to catch structural mistakes and conceptual errors.
+Phrase: Wants AI to catch errors.
+
+16.
+Concepts: critiques current ai limitations, critiques ai's error detection limitations, critiques current limitations of ai in debugging
+Relationship: The concepts are related to the participant's critique of current AI limitations.
+Criteria: Participants critique current AI limitations.
+Phrase: Critiques AI limitations.
+
+17.
+Concepts: suggests improvement, implies room for improvement
+Relationship: The concepts are related to the participant's suggestion for improvement and implication of room for improvement.
+Criteria: Participants suggest improvement and imply room for improvement.
+Phrase: Suggests improvement.
+
+18.
+Concepts: acknowledges need for external verification, mentions need for external validation
+Relationship: The concepts are related to the participant's acknowledgment of the need for external verification and validation.
+Criteria: Participants acknowledge the need for external verification and validation.
+Phrase: Acknowledges need for verification.
+
+19.
+Concepts: thorough code checking need, highlight need for verification
+Relationship: The concepts are related to the participant's highlighting of the need for thorough code checking and verification.
+Criteria: Participants highlight the need for thorough code checking and verification.
+Phrase: Highlights need for verification.
+
+20.
+Concepts: emphasizes the importance of testing, emphasizes the importance of thorough testing, highlights the need for thorough testing
+Relationship: The concepts are related to the participant's emphasis on the importance of testing and thorough testing.
+Criteria: Participants emphasize the importance of testing and thorough testing.
+Phrase: Emphasizes testing importance.
+
+21.
+Concepts: careful analysis, highlight need for careful analysis
+Relationship: The concepts are related to the participant's highlighting of the need for careful analysis.
+Criteria: Participants highlight the need for careful analysis.
+Phrase: Highlights need for analysis.
+
+22.
+Concepts: emphasizes thorough evaluation, emphasizes the need for careful review
+Relationship: The concepts are related to the participant's emphasis on the importance of thorough evaluation and careful review.
+Criteria: Participants emphasize the importance of thorough evaluation and careful review.
+Phrase: Emphasizes evaluation importance.
+
+23.
+Concepts: self corrects common mistakes, independent error correction, corrects code independently
+Relationship: The concepts are related to the participant's ability to self-correct common mistakes and correct code independently.
+Criteria: Participants self-correct common mistakes and correct code independently.
+Phrase: Self-corrects mistakes.
+
+24.
+Concepts: independent problem-solving, takes initiative in debugging
+Relationship: The concepts are related to the participant's independent problem-solving and initiative in debugging.
+Criteria: Participants take initiative in debugging and solve problems independently.
+Phrase: Takes initiative in debugging.
+
+25.
+Concepts: hands-on problem-solving, engages in manual error correction, manually fixes ai code errors
+Relationship: The concepts are related to the participant's hands-on problem-solving and manual error correction.
+Criteria: Participants engage in hands-on problem-solving and manual error correction.
+Phrase: Engages in manual error correction.
+
+26.
+Concepts: chooses not to seek explanations from ai, chooses not to rely solely on ai explanations
+Relationship: The concepts are related to the participant's choice not to seek explanations from AI and not to rely solely on AI explanations.
+Criteria: Participants choose not to seek explanations from AI and not to rely solely on AI explanations.
+Phrase: Chooses not to rely on AI.
+
+27.
+Concepts: avoids "explain it" option, attempts to fix ai-generated errors manually
+Relationship: The concepts are related to the participant's avoidance of the "explain it" option and attempt to fix errors manually.
+Criteria: Participants avoid the "explain it" option and attempt to fix errors manually.
+Phrase: Avoids "explain it" option.
+
+28.
+Concepts: self-reliant in fixing errors, self reliant in debugging
+Relationship: The concepts are related to the participant's self-reliance in fixing errors and debugging.
+Criteria: Participants are self-reliant in fixing errors and debugging.
+Phrase: Is self-reliant in debugging.
+
+29.
+Concepts: works independently, fixes common mistakes independently, independently debugs
+Relationship: The concepts are related to the participant's independent work and debugging.
+Criteria: Participants work independently and debug code independently.
+Phrase: Works independently.
+
+30.
+Concepts: debugging ai code, engages in independent troubleshooting, self-debugging when ai fails
+Relationship: The concepts are related to the participant's debugging of AI code and independent troubleshooting.
+Criteria: Participants debug AI code and engage in independent troubleshooting.
+Phrase: Debugs AI code.
+
+31.
+Concepts: relies on own debugging skills, prefers hands-on debugging
+Relationship: The concepts are related to the participant's reliance on their own debugging skills and preference for hands-on debugging.
+Criteria: Participants rely on their own debugging skills and prefer hands-on debugging.
+Phrase: Relies on own debugging skills.
+
+32.
+Concepts: debugs code independently, independently troubleshoots code issues
+Relationship: The concepts are related to the participant's independent debugging and troubleshooting of code issues.
+Criteria: Participants debug code independently and troubleshoot code issues independently.
+Phrase: Debugs code independently.

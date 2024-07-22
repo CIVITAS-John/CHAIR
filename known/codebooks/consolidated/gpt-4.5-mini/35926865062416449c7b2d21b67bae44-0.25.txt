@@ -1,0 +1,59 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: maintenance, clarity in coding practices, enhancing error resolution
+- Emphasizes the importance of writing maintainable code for future reference.
+- Interviewee emphasizes the importance of writing clear and maintainable code for future reference.
+- Discusses the importance of clear and maintainable code for future troubleshooting.
+
+2.
+Concepts: simplicity, simple coding task proposal
+- Mentions the simplicity of a coding task they wish to accomplish.
+- Interviewee proposes a straightforward coding task to illustrate their needs.
+
+3.
+Concepts: prefers simple, simplicity of code, prefers readable code
+- Prefers straightforward and accessible coding practices for better maintenance.
+- Users value simplicity in code, emphasizing the importance of writing accessible and maintainable code.
+- User prefers code that is readable and well-commented, valuing clarity over complexity.
+===
+---
+Definitions for each code (3 in total):
+1. 
+Concepts: maintenance, clarity in coding practices, enhancing error resolution
+Relationship: The concepts are interconnected as they all focus on the importance of writing clear and maintainable code to facilitate future reference and troubleshooting.
+Criteria: Interviewees emphasize the need for clear and maintainable coding practices to enhance future error resolution and maintenance.
+Phrase: Emphasize clear and maintainable coding practices.
+
+2. 
+Concepts: simplicity, simple coding task proposal
+Relationship: The concepts are related as they both highlight the desire for simplicity in coding tasks, with one concept proposing a specific task to illustrate this need.
+Criteria: Interviewees express a desire for simplicity by proposing straightforward coding tasks to meet their needs.
+Phrase: Propose straightforward coding tasks.
+
+3. 
+Concepts: prefers simple, simplicity of code, prefers readable code
+Relationship: The concepts are related as they all reflect a preference for simplicity and readability in coding practices, emphasizing the importance of accessible code.
+Criteria: Users express a preference for simple and readable coding practices to enhance maintainability and clarity.
+Phrase: Value simplicity and readability in coding. 
+---

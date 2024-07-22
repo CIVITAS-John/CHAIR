@@ -1,0 +1,45 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (2 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+2. 
+Concepts: {Repeat the input 2}
+Relationship: {What is logical relationship between concepts in code 2, or N/A if not applicable}
+Criteria: {Who did what, and how for code 2}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: values error detection, value ai's error detection and assistance
+- User values AI's ability to detect errors that may not be obvious to them.
+- Interviewees appreciate the AI's ability to detect errors and clarify messages while acknowledging its overall value despite occasional inaccuracies.
+
+2.
+Concepts: help-seeking, values streamlined help seeking
+- Interviewees express a desire for AI to assist them in formulating help requests or summarizing their issues for user groups.
+- Interviewees express a desire for AI to facilitate streamlined communication when seeking help from user groups.
+===
+---
+Definitions for each code (2 in total):
+1.
+Concepts: values error detection, value ai's error detection and assistance
+Relationship: The concepts are logically related as they both focus on the appreciation of AI's capabilities in identifying and clarifying errors, highlighting the value users place on these functions despite some limitations.
+Criteria: Interviewees recognize and value the AI's ability to detect and clarify errors, appreciating its assistance even when it may not be entirely accurate.
+Phrase: Appreciate AI's error detection and assistance
+
+2. 
+Concepts: help-seeking, values streamlined help seeking
+Relationship: The concepts are logically related as they both emphasize the interviewees' desire for AI to enhance the process of seeking help, focusing on the need for effective communication and assistance in articulating issues.
+Criteria: Interviewees express a need for AI to aid in formulating help requests and improving communication efficiency when seeking assistance from user groups.
+Phrase: Desire AI's assistance in help-seeking

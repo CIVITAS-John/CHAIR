@@ -1,0 +1,381 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: human effort in debugging, expertise requirement for debugging
+- Identifies the need for human effort in debugging, requiring expertise to understand errors.
+- Requires expertise to debug effectively, highlighting the importance of user knowledge.
+
+2.
+Concepts: demands expertise and experience, recognizes the need for expertise in debugging
+- The participant demands expertise and experience in debugging and coding before seeking AI assistance.
+- Recognizes the need for expertise in debugging AI-generated code
+
+3.
+Concepts: human-ai: no need to blindly follow, foundational knowledge importance
+- Interviewee emphasizes the need for expertise to understand and debug AI-generated code, and warns against blindly following AI responses.
+- The participant emphasizes the need for foundational knowledge and expertise to understand errors and debug them, highlighting the risks of blindly following AI guidance.
+
+4.
+Concepts: debugs hands-on, debugging code manually
+- Participants preferring to debug code manually rather than relying on AI explanations, engaging in hands-on debugging and problem-solving, rather than relying solely on AI.
+- Participants read and debug code, actively seeking specific syntax and code structures, and manually reading through code to identify errors or issues.
+
+5.
+Concepts: highlights learning needs, notes lack of debugging skills
+- Participants highlight the need for user preparation and practice in debugging.
+- Participants noting the lack of debugging skills or knowledge among novice users, and identifying lack of debugging skills as a common issue.
+
+6.
+Concepts: emphasizes foundational skills, identifies gaps in foundational knowledge
+- Participants emphasize the need for foundational skills and debugging skills.
+- The participant recognizes gaps in debugging knowledge and emphasizes the need for foundational knowledge.
+
+7.
+Concepts: calls for preparatory exercises, emphasize need for preparatory exercises
+- Interviewee calls for preparatory exercises to help users debug their own code.
+- Emphasizes the need for preparatory exercises, including practicing debugging and coding skills.
+
+8.
+Concepts: evaluate error messages, critique error messages
+- Participants evaluate and read error messages carefully.
+- Participants critique error messages and call for better messaging.
+
+9.
+Concepts: focus on error messages, engagement with error messages
+- Focuses on error messages or debugging
+- Engages with error messages and feedback
+
+10.
+Concepts: identifies unclear error message, emphasizes the disconnect between code and feedback
+- Identifies unclear error messages that hinder the development process.
+- Emphasizes the disconnect between code and feedback, highlighting the need for more informative error messages.
+
+11.
+Concepts: bugs in error messaging, identifies bugs in ai error messaging
+- Identifies bugs in error messaging, recognizing when error messages are incorrect.
+- The quote identifies bugs or errors in the error messaging of an LLM-driven interface.
+
+12.
+Concepts: emphasizes error correction process, step-by-step error detection and correction
+- Emphasizes the importance of error correction process
+- Suggests a step-by-step approach to error detection and correction.
+
+13.
+Concepts: suggests one error at a time, manageable feedback preferences
+- Suggests one error at a time
+- Suggests presenting errors one at a time for better feedback
+
+14.
+Concepts: calls for conceptual error detection, need for conceptual error detection
+- Calls for conceptual error detection beyond syntax checking.
+- Expresses a need for a feature that detects conceptual errors in code.
+
+15.
+Concepts: recognize potential for error detection, highlights need for better error identification
+- Recognizes potential for error detection
+- Highlights the need for better error identification and conceptual mistake detection
+
+16.
+Concepts: desires linting features, expresses need for structural error detection
+- The participant desires linting features in NetLogo to support error detection and correction.
+- The participant expresses a need for structural error detection and linting features.
+
+17.
+Concepts: request ai support, highlights conceptual understanding needs
+- Participants request AI support for scope understanding and conceptual learning.
+- The participant highlights the need for conceptual understanding or support in the AI.
+
+18.
+Concepts: suggest better novice support, suggests simplifying error feedback
+- Participants suggest the need for better support for novices, especially with error handling.
+- Participant suggests simplifying error feedback for users, especially novices.
+
+19.
+Concepts: values error clarification, recognizes need for clear explanations
+- The participant values error detection and clarification capabilities.
+- Participants recognize the need for clear explanations, especially for error codes.
+
+20.
+Concepts: constraint, relies on ai output under time constraints
+- The participant is constrained by time or other limitations and uses AI to compensate.
+- Relies on AI output when facing time constraints
+
+21.
+Concepts: time-pressured adoption, makes pragmatic coding decisions, adapts code for immediate needs, makes quick decisions based on urgency
+- Adopts AI-generated code under time pressure, prioritizing efficiency over manual coding.
+- Participants use AI-generated code due to time constraints.
+- Participants adapt code generated by the LLM-driven interface to meet immediate needs, often due to time constraints.
+- Makes quick decisions based on urgency, often relying on AI-generated code.
+
+22.
+Concepts: chatgpt for coding tasks, proposes using chatgpt for coding
+- Leverages ChatGPT for coding tasks, including non-NetLogo tasks.
+- Proposes using ChatGPT for coding tasks, such as generating code for a specific task.
+
+23.
+Concepts: implementing ideas, seeks ai-driven idea development
+- Asks AI to implement ideas or fix code
+- Requests AI to adapt or build upon existing ideas
+
+24.
+Concepts: engages in creative coding, merging personal ideas with ai output, ai-assisted code development
+- Engages in creative coding by attempting to modify or extend AI-generated code.
+- Seeks to merge personal ideas with AI-generated code or output.
+- Uses AI to implement own ideas, seeking AI assistance for code development.
+
+25.
+Concepts: summarizes ai-generated code, curates ai-generated code outputs, engages with ai suggestions
+- Participants summarize AI-generated code.
+- Participants curate AI-generated code outputs, choosing relevant code snippets and selectively copying code.
+- Participants engage with AI suggestions, copying and pasting code.
+
+26.
+Concepts: adapts to ai-generated code, integrates ai-generated code
+- The participant adapts their approach based on AI-generated code.
+- The participant integrates AI-generated code fully into their work.
+
+27.
+Concepts: appreciates runnable code, finds ai-generated code runnable, finds value in running ai-generated code
+- Participants appreciate the ability to run AI-generated code directly.
+- Recognizes the ability to run AI-generated code.
+- Finds value in running AI-generated code
+
+28.
+Concepts: balances learning with productivity, efficiency and learning balance
+- Interviewee balances learning with productivity and values AI assistance.
+- The participant balances efficiency with learning, using AI-generated code to save time while still learning and understanding the underlying concepts.
+
+29.
+Concepts: iterative code construction, creates code skeletons before seeking ai assistance
+- The participant iteratively constructs code skeletons.
+- The participant creates code skeletons or outlines before seeking AI assistance.
+
+30.
+Concepts: establishes a coding process, preparing the interface for coding
+- The participant establishes a coding process or approach before interacting with AI.
+- Participant prepares the interface before coding and has a clear process for building agent-based models.
+
+31.
+Concepts: automation in model building, expresses a desire for automation in model building
+- Values automation in model building, including code generation.
+- The quote expresses a desire for automation in model building or code generation using an LLM-driven interface.
+
+32.
+Concepts: values readability of generated code, values efficiency in coding processes
+- Values the readability and maintainability of AI-generated code.
+- Values the efficiency of the LLM-driven interface in coding processes, such as automatic code generation.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: human effort in debugging, expertise requirement for debugging
+Relationship: Human effort in debugging is contingent upon having the necessary expertise.
+Criteria: Experts debug code effectively, requiring human effort and knowledge.
+Phrase: Requires expertise for effective debugging.
+
+2.
+Concepts: demands expertise and experience, recognizes the need for expertise in debugging
+Relationship: Demanding expertise and experience is a precursor to recognizing the need for expertise in debugging.
+Criteria: Experts demand expertise and experience before seeking AI assistance, recognizing the need for human expertise in debugging.
+Phrase: Demands expertise before seeking AI assistance.
+
+3.
+Concepts: human-ai: no need to blindly follow, foundational knowledge importance
+Relationship: The importance of foundational knowledge is highlighted by the need to not blindly follow AI responses.
+Criteria: Experts emphasize the need for foundational knowledge, warning against blindly following AI responses.
+Phrase: Emphasizes foundational knowledge over blind AI following.
+
+4.
+Concepts: debugs hands-on, debugging code manually
+Relationship: Debugging code manually is a hands-on process.
+Criteria: Participants engage in hands-on debugging, reading and debugging code manually.
+Phrase: Engages in hands-on debugging.
+
+5.
+Concepts: highlights learning needs, notes lack of debugging skills
+Relationship: Highlighting learning needs is a response to the lack of debugging skills.
+Criteria: Participants highlight the need for user preparation and practice in debugging, noting the lack of debugging skills.
+Phrase: Highlights learning needs due to lack of debugging skills.
+
+6.
+Concepts: emphasizes foundational skills, identifies gaps in foundational knowledge
+Relationship: Emphasizing foundational skills is a response to identifying gaps in foundational knowledge.
+Criteria: Participants emphasize the need for foundational skills, identifying gaps in debugging knowledge.
+Phrase: Emphasizes foundational skills due to knowledge gaps.
+
+7.
+Concepts: calls for preparatory exercises, emphasize need for preparatory exercises
+Relationship: Calling for preparatory exercises is a response to the need for preparatory exercises.
+Criteria: Participants call for preparatory exercises, emphasizing the need for practice in debugging and coding skills.
+Phrase: Calls for preparatory exercises for better debugging.
+
+8.
+Concepts: evaluate error messages, critique error messages
+Relationship: Evaluating error messages involves critiquing them.
+Criteria: Participants evaluate and read error messages carefully, critiquing their quality.
+Phrase: Critiques error messages for improvement.
+
+9.
+Concepts: focus on error messages, engagement with error messages
+Relationship: Focusing on error messages involves engaging with them.
+Criteria: Participants focus on error messages, engaging with them to understand errors.
+Phrase: Engages with error messages for understanding.
+
+10.
+Concepts: identifies unclear error message, emphasizes the disconnect between code and feedback
+Relationship: Identifying unclear error messages highlights the disconnect between code and feedback.
+Criteria: Participants identify unclear error messages, emphasizing the need for better messaging.
+Phrase: Identifies unclear error messages and calls for improvement.
+
+11.
+Concepts: bugs in error messaging, identifies bugs in ai error messaging
+Relationship: Identifying bugs in error messaging involves recognizing errors in AI-generated error messages.
+Criteria: Participants identify bugs in error messaging, recognizing when error messages are incorrect.
+Phrase: Identifies bugs in AI error messaging.
+
+12.
+Concepts: emphasizes error correction process, step-by-step error detection and correction
+Relationship: Emphasizing the error correction process involves a step-by-step approach.
+Criteria: Participants emphasize the importance of the error correction process, suggesting a step-by-step approach.
+Phrase: Emphasizes step-by-step error correction.
+
+13.
+Concepts: suggests one error at a time, manageable feedback preferences
+Relationship: Suggesting one error at a time is a manageable feedback preference.
+Criteria: Participants suggest presenting errors one at a time for better feedback.
+Phrase: Suggests manageable feedback preferences.
+
+14.
+Concepts: calls for conceptual error detection, need for conceptual error detection
+Relationship: Calling for conceptual error detection is a response to the need for it.
+Criteria: Participants call for conceptual error detection beyond syntax checking.
+Phrase: Calls for conceptual error detection.
+
+15.
+Concepts: recognize potential for error detection, highlights need for better error identification
+Relationship: Recognizing the potential for error detection highlights the need for better error identification.
+Criteria: Participants recognize the potential for error detection, highlighting the need for better error identification.
+Phrase: Recognizes potential for better error detection.
+
+16.
+Concepts: desires linting features, expresses need for structural error detection
+Relationship: Desiring linting features is a response to the need for structural error detection.
+Criteria: Participants desire linting features in NetLogo to support error detection and correction.
+Phrase: Desires linting features for error detection.
+
+17.
+Concepts: request ai support, highlights conceptual understanding needs
+Relationship: Requesting AI support highlights the need for conceptual understanding.
+Criteria: Participants request AI support for scope understanding and conceptual learning.
+Phrase: Requests AI support for conceptual understanding.
+
+18.
+Concepts: suggest better novice support, suggests simplifying error feedback
+Relationship: Suggesting better novice support involves simplifying error feedback.
+Criteria: Participants suggest better support for novices, especially with error handling.
+Phrase: Suggests better novice support through simplified error feedback.
+
+19.
+Concepts: values error clarification, recognizes need for clear explanations
+Relationship: Valuing error clarification involves recognizing the need for clear explanations.
+Criteria: Participants value error detection and clarification capabilities, recognizing the need for clear explanations.
+Phrase: Values clear error explanations.
+
+20.
+Concepts: constraint, relies on ai output under time constraints
+Relationship: Being under constraint involves relying on AI output.
+Criteria: Participants rely on AI output when facing time constraints.
+Phrase: Relies on AI output under time constraints.
+
+21.
+Concepts: time-pressured adoption, makes pragmatic coding decisions, adapts code for immediate needs, makes quick decisions based on urgency
+Relationship: Time-pressured adoption involves making pragmatic coding decisions and adapting code for immediate needs.
+Criteria: Participants adopt AI-generated code under time pressure, making quick decisions based on urgency.
+Phrase: Adopts AI-generated code under time pressure.
+
+22.
+Concepts: chatgpt for coding tasks, proposes using chatgpt for coding
+Relationship: Proposing to use ChatGPT for coding tasks involves leveraging it for coding.
+Criteria: Participants leverage ChatGPT for coding tasks, including non-NetLogo tasks.
+Phrase: Proposes using ChatGPT for coding.
+
+23.
+Concepts: implementing ideas, seeks ai-driven idea development
+Relationship: Implementing ideas involves seeking AI-driven idea development.
+Criteria: Participants ask AI to implement ideas or fix code, seeking AI-driven idea development.
+Phrase: Seeks AI-driven idea development.
+
+24.
+Concepts: engages in creative coding, merging personal ideas with ai output, ai-assisted code development
+Relationship: Engaging in creative coding involves merging personal ideas with AI output.
+Criteria: Participants engage in creative coding, merging personal ideas with AI-generated code or output.
+Phrase: Engages in creative coding with AI assistance.
+
+25.
+Concepts: summarizes ai-generated code, curates ai-generated code outputs, engages with ai suggestions
+Relationship: Summarizing AI-generated code involves curating and engaging with AI suggestions.
+Criteria: Participants summarize AI-generated code, curating code outputs and engaging with AI suggestions.
+Phrase: Engages with AI-generated code.
+
+26.
+Concepts: adapts to ai-generated code, integrates ai-generated code
+Relationship: Adapting to AI-generated code involves integrating it.
+Criteria: Participants adapt their approach based on AI-generated code, integrating it fully into their work.
+Phrase: Adapts to AI-generated code.
+
+27.
+Concepts: appreciates runnable code, finds ai-generated code runnable, finds value in running ai-generated code
+Relationship: Appreciating runnable code involves finding value in running AI-generated code.
+Criteria: Participants appreciate the ability to run AI-generated code directly, finding value in running it.
+Phrase: Appreciates runnable AI-generated code.
+
+28.
+Concepts: balances learning with productivity, efficiency and learning balance
+Relationship: Balancing learning with productivity involves finding an efficiency and learning balance.
+Criteria: Participants balance learning with productivity, valuing AI assistance.
+Phrase: Balances learning with productivity.
+
+29.
+Concepts: iterative code construction, creates code skeletons before seeking ai assistance
+Relationship: Iterative code construction involves creating code skeletons before seeking AI assistance.
+Criteria: Participants iteratively construct code skeletons, creating outlines before seeking AI assistance.
+Phrase: Creates code skeletons before seeking AI assistance.
+
+30.
+Concepts: establishes a coding process, preparing the interface for coding
+Relationship: Establishing a coding process involves preparing the interface for coding.
+Criteria: Participants establish a coding process or approach before interacting with AI, preparing the interface.
+Phrase: Establishes a coding process.
+
+31.
+Concepts: automation in model building, expresses a desire for automation in model building
+Relationship: Expressing a desire for automation in model building involves valuing automation.
+Criteria: Participants value automation in model building, including code generation.
+Phrase: Desires automation in model building.
+
+32.
+Concepts: values readability of generated code, values efficiency in coding processes
+Relationship: Valuing readability of generated code involves valuing efficiency in coding processes.
+Criteria: Participants value the readability and maintainability of AI-generated code, valuing the efficiency of the LLM-driven interface.
+Phrase: Values efficient and readable AI-generated code.

@@ -1,0 +1,382 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: suggests need for better support, suggests need for better novice support
+- The interviewee suggests the need for better support for beginners.
+- Suggests the need for better support for novice users.
+
+2.
+Concepts: describes beginners' confusion, mentions beginners' struggles
+- Participant describes beginners' confusion.
+- The participant mentions or highlights the struggles or challenges faced by beginners, such as understanding "scope".
+
+3.
+Concepts: describing resulting errors, recognizing common patterns in beginner coding
+- Participants describe the errors and frustration that result from beginners' coding habits.
+- Participants recognize common patterns in beginner coding and potential errors.
+
+4.
+Concepts: expresses frustration with beginner's approach, steep learning curve & frustration point
+- Expresses frustration with beginners' approaches to coding.
+- The quote describes a steep learning curve and frustration point, particularly for beginners who lack debugging skills.
+
+5.
+Concepts: highlights novice struggles, observes novice struggles with code submissions
+- Identifies common struggles faced by novices in coding, such as difficulties with syntax and errors.
+- Observes novice struggles with large code submissions and debugging.
+
+6.
+Concepts: mentions challenges for beginners, identify challenges in novice code submissions
+- Mentions challenges faced by beginners when posting large code blocks for help.
+- The quote identifies challenges in novice code submissions, highlighting the need for context and background information.
+
+7.
+Concepts: frustration with incomplete outputs, expresses frustration with lack of "fix" option
+- The participant expresses frustration with incomplete outputs.
+- The participant expresses frustration about the lack of a "fix" option.
+
+8.
+Concepts: frustration with coding inefficiencies, frustration with missing code structures
+- Expresses frustration with coding inefficiencies and lack of smart editors.
+- The participant experiences frustration with missing code structures.
+
+9.
+Concepts: reflects on user frustrations, describing lack of debugging skills
+- Participants reflect on user frustrations and experience debugging frustration.
+- Participants describe and experience difficulties in debugging.
+
+10.
+Concepts: human-effort: debug, human-effort (negative): debugging conceptual errors
+- The participant highlights the need for human effort in debugging, requiring expertise to understand errors and fix them.
+- The participant expresses a negative view of human effort, noting that debugging conceptual errors is a challenging task.
+
+11.
+Concepts: challenges with current design, considers need for better design
+- Participant expresses challenges with the current design.
+- Participant considers the need for better design, citing learning curves and difficulties with current designs.
+
+12.
+Concepts: highlight issues with code submissions, identifies code submission challenges
+- Identifies challenges in seeking help online
+- Notes issues with code submissions, such as lack of background information.
+
+13.
+Concepts: critiquing code block posting, describing unstructured code posts
+- The participant critiques the posting of large code blocks without background information, making it difficult to provide help.
+- Participants describe unstructured code posts and mention the challenges of posting code blocks without context.
+
+14.
+Concepts: critiques complex coding practices, critique novices' code sharing practices
+- The participant critiques complex coding practices.
+- The participant critiques the code-sharing practices of novices.
+
+15.
+Concepts: reflects on knowledge transfer challenges, recognizes challenges in knowledge sharing
+- Reflects on the challenges of knowledge transfer and retention.
+- The participant recognizes the challenges of knowledge sharing and oral tradition.
+
+16.
+Concepts: emphasizing context in help-seeking, suggests need for better help seeking methods, highlighting need for context in assistance
+- Participants emphasize the need for context in help-seeking and identify challenges faced by novice users.
+- The participant identifies the need for better methods for seeking help, such as providing context or background information.
+- The participant highlights the need for context when seeking assistance, such as providing background information when posting code.
+
+17.
+Concepts: lack of contextual information, critiques lack of background information, highlights lack of context in novice queries
+- Highlights the lack of contextual information in seeking help.
+- Critique the lack of background information in help requests, making it difficult to assist.
+- Highlights the lack of context in novice queries and the challenges of seeking help.
+
+18.
+Concepts: annoyance with explanation option, finds explanation option insufficient
+- The participant finds the explanation option annoying or unnecessary.
+- Finds the explanation option insufficient for their needs.
+
+19.
+Concepts: implies patience in problem solving, shows persistence in resolving issues
+- Displays patience and persistence when working through problems or errors.
+- Shows persistence in resolving issues, even when faced with unclear error messages.
+
+20.
+Concepts: systematic issue resolution, communicates issues for resolution
+- Addresses issues or errors in a systematic and methodical way.
+- Communicates issues or errors to resolve them.
+
+21.
+Concepts: focus on error messages, reads error messages carefully, demonstrates careful attention to error messages
+- The participant notes a focus on error messages.
+- Participants read error messages carefully before making a choice.
+- The participant demonstrates careful attention to error messages and recognizes the importance of checking inputs during the coding process.
+
+22.
+Concepts: issues with error clarity, notes incorrect error messages, need for clear error reporting
+- Identifies issues with error clarity
+- The code notes incorrect error messages and the need for accurate feedback.
+- The need for clearer communication in error reporting is called for.
+
+23.
+Concepts: critiquing error messages, finds error messages misleading, calls for better error messaging
+- Participants critique and describe error messages and reporting confusion.
+- Participants find error messages misleading and experience frustration.
+- Participants call for better error messaging and improved error handling.
+
+24.
+Concepts: critiques existing error detection methods, differentiates between structural and syntax errors, highlights need for better error identification
+- Critiques existing error detection methods and suggests improvements, such as linting features.
+- Participant differentiates between structural and syntax errors, highlighting the need for linting features that address conceptual mistakes.
+- Highlights the need for better error identification and linting features
+
+25.
+Concepts: linting, desires linting features
+- The participant mentions the need for a feature that checks for conceptual errors in code, similar to linting in Unix.
+- Participants desire and suggest incorporating linting features for conceptual error detection.
+
+26.
+Concepts: highlights need for verification, notes lack of external verification
+- Participant highlights the need for verification.
+- Participants note the lack of external verification and acknowledge the need.
+
+27.
+Concepts: requests ai verification, need for thorough validation
+- The participant requests AI verification or seeks assurance in outputs.
+- The participant implies a need for thorough validation of AI outputs.
+
+28.
+Concepts: requests verification, seeks confirmation of error resolution
+- Requests verification of code and the ability of AI to produce no more bugs.
+- Seeks confirmation of error resolution and verification of code correctness.
+
+29.
+Concepts: seeks ai help, queries ai syntax
+- Participants seek help from AI, specifically syntax help.
+- Participants query AI for missing syntax and search for specific syntax.
+
+30.
+Concepts: wants ai error detection, expressing need for structural error detection
+- Participants want and call for AI to catch conceptual errors.
+- The participant expresses a need for structural error detection, such as identifying conceptual mistakes.
+
+31.
+Concepts: one error at a time, suggesting gradual error presentation
+- Suggests showing one error at a time to avoid overwhelming users.
+- Suggests presenting errors or feedback one at a time in the AI-driven system.
+
+32.
+Concepts: values incremental feedback, emphasizes the need for manageable feedback
+- Values incremental feedback, providing users with manageable, bite-sized information.
+- Emphasizes the need for manageable feedback, including smaller requests and iterative questioning.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: suggests need for better support, suggests need for better novice support
+Relationship: The concepts are related in that they both express the need for improved support, specifically for novice users.
+Criteria: Interviewees suggest that better support is needed for beginners.
+Phrase: Suggesting better support for novices.
+
+2.
+Concepts: describes beginners' confusion, mentions beginners' struggles
+Relationship: The concepts are related in that they both describe the challenges faced by beginners.
+Criteria: Participants describe the confusion and struggles faced by beginners.
+Phrase: Describing beginner struggles.
+
+3.
+Concepts: describing resulting errors, recognizing common patterns in beginner coding
+Relationship: The concepts are related in that they both describe the consequences of beginner coding habits.
+Criteria: Participants describe errors resulting from beginner coding habits and recognize common patterns.
+Phrase: Describing errors in beginner coding.
+
+4.
+Concepts: expresses frustration with beginner's approach, steep learning curve & frustration point
+Relationship: The concepts are related in that they both express the challenges and frustrations faced by beginners.
+Criteria: Participants express frustration with beginners' approaches and the steep learning curve.
+Phrase: Expressing frustration with beginner approaches.
+
+5.
+Concepts: highlights novice struggles, observes novice struggles with code submissions
+Relationship: The concepts are related in that they both highlight the challenges faced by novice users.
+Criteria: Participants highlight novice struggles with code submissions and debugging.
+Phrase: Highlighting novice struggles.
+
+6.
+Concepts: mentions challenges for beginners, identify challenges in novice code submissions
+Relationship: The concepts are related in that they both identify the challenges faced by beginners.
+Criteria: Participants mention challenges faced by beginners and identify challenges in novice code submissions.
+Phrase: Identifying beginner challenges.
+
+7.
+Concepts: frustration with incomplete outputs, expresses frustration with lack of "fix" option
+Relationship: The concepts are related in that they both express frustration with the current system.
+Criteria: Participants express frustration with incomplete outputs and the lack of a "fix" option.
+Phrase: Expressing frustration with incomplete outputs.
+
+8.
+Concepts: frustration with coding inefficiencies, frustration with missing code structures
+Relationship: The concepts are related in that they both express frustration with the current coding process.
+Criteria: Participants express frustration with coding inefficiencies and missing code structures.
+Phrase: Expressing frustration with coding inefficiencies.
+
+9.
+Concepts: reflects on user frustrations, describing lack of debugging skills
+Relationship: The concepts are related in that they both reflect on the frustrations faced by users.
+Criteria: Participants reflect on user frustrations and describe the lack of debugging skills.
+Phrase: Reflecting on user frustrations.
+
+10.
+Concepts: human-effort: debug, human-effort (negative): debugging conceptual errors
+Relationship: The concepts are related in that they both describe the role of human effort in debugging.
+Criteria: Participants highlight the need for human effort in debugging and express a negative view of human effort in debugging conceptual errors.
+Phrase: Describing human effort in debugging.
+
+11.
+Concepts: challenges with current design, considers need for better design
+Relationship: The concepts are related in that they both express dissatisfaction with the current design.
+Criteria: Participants express challenges with the current design and consider the need for better design.
+Phrase: Expressing dissatisfaction with current design.
+
+12.
+Concepts: highlight issues with code submissions, identifies code submission challenges
+Relationship: The concepts are related in that they both identify challenges with code submissions.
+Criteria: Participants highlight issues with code submissions and identify challenges.
+Phrase: Highlighting code submission challenges.
+
+13.
+Concepts: critiquing code block posting, describing unstructured code posts
+Relationship: The concepts are related in that they both critique the current code posting practices.
+Criteria: Participants critique code block posting and describe unstructured code posts.
+Phrase: Critiquing code posting practices.
+
+14.
+Concepts: critiques complex coding practices, critique novices' code sharing practices
+Relationship: The concepts are related in that they both critique current coding practices.
+Criteria: Participants critique complex coding practices and novices' code sharing practices.
+Phrase: Critiquing coding practices.
+
+15.
+Concepts: reflects on knowledge transfer challenges, recognizes challenges in knowledge sharing
+Relationship: The concepts are related in that they both reflect on the challenges of knowledge transfer.
+Criteria: Participants reflect on knowledge transfer challenges and recognize challenges in knowledge sharing.
+Phrase: Reflecting on knowledge transfer challenges.
+
+16.
+Concepts: emphasizing context in help-seeking, suggests need for better help seeking methods, highlighting need for context in assistance
+Relationship: The concepts are related in that they all emphasize the importance of context in help-seeking.
+Criteria: Participants emphasize the need for context in help-seeking and suggest better methods for seeking help.
+Phrase: Emphasizing context in help-seeking.
+
+17.
+Concepts: lack of contextual information, critiques lack of background information, highlights lack of context in novice queries
+Relationship: The concepts are related in that they all highlight the lack of contextual information.
+Criteria: Participants highlight the lack of contextual information and critique the lack of background information.
+Phrase: Highlighting lack of contextual information.
+
+18.
+Concepts: annoyance with explanation option, finds explanation option insufficient
+Relationship: The concepts are related in that they both express dissatisfaction with the explanation option.
+Criteria: Participants express annoyance with the explanation option and find it insufficient.
+Phrase: Expressing dissatisfaction with explanation option.
+
+19.
+Concepts: implies patience in problem solving, shows persistence in resolving issues
+Relationship: The concepts are related in that they both describe the participant's approach to problem-solving.
+Criteria: Participants display patience and persistence in resolving issues.
+Phrase: Displaying patience in problem-solving.
+
+20.
+Concepts: systematic issue resolution, communicates issues for resolution
+Relationship: The concepts are related in that they both describe the participant's approach to issue resolution.
+Criteria: Participants address issues systematically and communicate them for resolution.
+Phrase: Addressing issues systematically.
+
+21.
+Concepts: focus on error messages, reads error messages carefully, demonstrates careful attention to error messages
+Relationship: The concepts are related in that they all describe the participant's attention to error messages.
+Criteria: Participants focus on error messages and read them carefully.
+Phrase: Focusing on error messages.
+
+22.
+Concepts: issues with error clarity, notes incorrect error messages, need for clear error reporting
+Relationship: The concepts are related in that they all describe the issues with error messages.
+Criteria: Participants identify issues with error clarity and note incorrect error messages.
+Phrase: Identifying issues with error messages.
+
+23.
+Concepts: critiquing error messages, finds error messages misleading, calls for better error messaging
+Relationship: The concepts are related in that they all express dissatisfaction with error messages.
+Criteria: Participants critique error messages and find them misleading.
+Phrase: Critiquing error messages.
+
+24.
+Concepts: critiques existing error detection methods, differentiates between structural and syntax errors, highlights need for better error identification
+Relationship: The concepts are related in that they all describe the limitations of current error detection methods.
+Criteria: Participants critique existing error detection methods and highlight the need for better error identification.
+Phrase: Critiquing error detection methods.
+
+25.
+Concepts: linting, desires linting features
+Relationship: The concepts are related in that they both describe the desire for linting features.
+Criteria: Participants mention the need for linting features.
+Phrase: Desiring linting features.
+
+26.
+Concepts: highlights need for verification, notes lack of external verification
+Relationship: The concepts are related in that they both highlight the need for verification.
+Criteria: Participants highlight the need for verification and note the lack of external verification.
+Phrase: Highlighting need for verification.
+
+27.
+Concepts: requests ai verification, need for thorough validation
+Relationship: The concepts are related in that they both express the need for verification and validation.
+Criteria: Participants request AI verification and express the need for thorough validation.
+Phrase: Requesting AI verification.
+
+28.
+Concepts: requests verification, seeks confirmation of error resolution
+Relationship: The concepts are related in that they both express the need for verification.
+Criteria: Participants request verification and seek confirmation of error resolution.
+Phrase: Requesting verification.
+
+29.
+Concepts: seeks ai help, queries ai syntax
+Relationship: The concepts are related in that they both describe the participant's desire for AI assistance.
+Criteria: Participants seek AI help and query AI syntax.
+Phrase: Seeking AI help.
+
+30.
+Concepts: wants ai error detection, expressing need for structural error detection
+Relationship: The concepts are related in that they both express the need for AI error detection.
+Criteria: Participants want AI to catch conceptual errors and express the need for structural error detection.
+Phrase: Expressing need for AI error detection.
+
+31.
+Concepts: one error at a time, suggesting gradual error presentation
+Relationship: The concepts are related in that they both describe the desired approach to error presentation.
+Criteria: Participants suggest showing one error at a time to avoid overwhelming users.
+Phrase: Suggesting gradual error presentation.
+
+32.
+Concepts: values incremental feedback, emphasizes the need for manageable feedback
+Relationship: The concepts are related in that they both describe the importance of manageable feedback.
+Criteria: Participants value incremental feedback and emphasize the need for manageable feedback.
+Phrase: Valuing incremental feedback.

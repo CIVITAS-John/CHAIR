@@ -1,0 +1,57 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: notes adherence to best practices
+- Users recognize the adherence to best practices while working on their projects.
+- Users recognize AI's adherence to recognized conventions in coding practices.
+
+2.
+Concepts: values ai feedback
+- Users express the value they place on feedback from the AI to optimize their coding practices and improve overall quality.
+- Users appreciate clear commenting and quality documentation within AI-generated code outputs.
+
+3.
+Concepts: discuss importance of code quality
+- Users discuss the importance of writing clear, maintainable code.
+- Users underscore the importance of writing maintainable code to ease future processes.
+===
+---
+Definitions for each code (3 in total):
+1.
+Concepts: notes adherence to best practices
+Relationship: The concepts are logically connected as they both emphasize users' recognition of established coding standards and practices followed by both themselves and the AI.
+Criteria: Users identify and acknowledge adherence to established best practices in their projects and the AI's coding outputs, enhancing the reliability of their work.
+Phrase: Recognizes adherence to best practices.
+
+2.
+Concepts: values ai feedback
+Relationship: The concepts are linked as they both involve users valuing the role of AI feedback in refining their coding skills and enhancing the clarity and documentation of their outputs.
+Criteria: Users express appreciation for AI feedback that optimizes coding practices and values clear documentation and commenting in AI-generated outputs to elevate code quality.
+Phrase: Appreciates AI feedback for improvement.
+
+3.
+Concepts: discuss importance of code quality
+Relationship: The concepts are related, as both emphasize users' discussions around the significance of producing clear and maintainable code to facilitate future development and processes.
+Criteria: Users engage in discourse about the criticality of writing code that is both clear and maintainable, emphasizing its impact on future work endeavors.
+Phrase: Engages in discussions on code quality.
+---

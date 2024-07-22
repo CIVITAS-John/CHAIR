@@ -1,0 +1,385 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (32 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+32. 
+Concepts: {Repeat the input 32}
+Relationship: {What is logical relationship between concepts in code 32, or N/A if not applicable}
+Criteria: {Who did what, and how for code 32}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: prefers manual coding, prefers a hands on approach to coding
+- Prefers to write code manually, using the AI-generated code only as a reference.
+- The participant prefers a hands-on approach to coding, writing code manually with the AI's guidance.
+
+2.
+Concepts: manual coding with ai, manual coding with ai guidance, write code manually with ai guidance
+- The participant writes code manually with AI assistance.
+- The participant manually codes with AI guidance.
+- The participant writes code manually with guidance from AI-driven interfaces.
+
+3.
+Concepts: active learning with ai, prefers to learn through active coding
+- Engages in active learning by writing code with AI guidance.
+- The user prefers to learn through active coding with AI guidance.
+
+4.
+Concepts: chatgpt usage: reference, uses ai-generated code as reference
+- Uses AI-generated code as a reference, rather than copying and pasting it.
+- Uses AI-generated code as a reference or guide for their own coding.
+
+5.
+Concepts: avoids blind ai code adoption, avoids direct copy pasting from ai
+- Avoids blindly copying and pasting AI-generated code, instead using it as a reference.
+- The participant avoids directly copying and pasting code from the AI, instead using it as a reference.
+
+6.
+Concepts: selectively copies code, selective copying of ai code, chooses specific ai code snippets
+- The participant selectively copies code from AI's output.
+- The participant selectively copies AI code.
+- The participant chooses specific AI code snippets, selectively copying code to the model.
+
+7.
+Concepts: chooses relevant parts for integration, engages in thoughtful code integration
+- Selectively copies code to the model.
+- Engages in thoughtful code integration, selectively copying code to the model.
+
+8.
+Concepts: decides to run ai code, finds value in running ai-generated code
+- Decides to run AI-generated code to test its functionality.
+- Finds value in running AI-generated code to test its functionality.
+
+9.
+Concepts: decides to copy and paste, decides to copy and paste ai output, decides to copy and paste for efficiency
+- Decides to copy and paste AI-generated code.
+- Decides to copy and paste AI output.
+- The participant decides to copy and paste the AI's output for efficiency.
+
+10.
+Concepts: decides to copy code, decides to copy paste code
+- Decides to copy code instead of running it.
+- Interviewee decides to copy and paste code provided by AI, rather than running it directly.
+
+11.
+Concepts: focus on problem-solving, implies problem-solving focus
+- Focuses on problem-solving rather than explaining the process.
+- Focuses on problem-solving rather than explanation.
+
+12.
+Concepts: chooses problem solving, chooses problem-solving over explanation
+- The participant chooses problem-solving over explanation, preferring to fix the problem rather than understanding the explanation.
+- Interviewee prioritizes problem-solving over explanation, focusing on fixing errors rather than understanding them.
+
+13.
+Concepts: prioritizes fixing, prioritize action over explanation, prioritizes action
+- Prioritizes fixing problems over explaining them.
+- Prioritizes action over explanation, choosing to fix problems rather than showing explanations.
+- Participant prioritizes taking action, choosing to fix problems rather than showing explanations.
+
+14.
+Concepts: reflects on practical choice, reflects on practical decision making
+- Chooses to fix a problem rather than showing the explanation.
+- Participant reflects on practical decision-making, choosing to fix problems rather than showing explanations.
+
+15.
+Concepts: chooses to fix problem, chooses to fix problems directly
+- Chooses to fix problems rather than showing explanations.
+- Chooses to fix problems directly in LLM-driven interfaces rather than seeking explanations.
+
+16.
+Concepts: opts for self-directed problem-solving, choose to solve problems directly
+- Chooses not to seek explanations
+- Chooses not to seek explanations from AI, instead opting to manually fix errors.
+- Chooses to solve problems directly rather than seeking explanations.
+
+17.
+Concepts: self-reliance in error fixing, fixes common mistakes independently
+- Shows self-reliance in fixing errors without external help.
+- Participant fixes common mistakes independently, demonstrating self-sufficiency in debugging.
+
+18.
+Concepts: corrects errors independently, self-reliant in error correction
+- Corrects errors independently without AI assistance.
+- Shows self-reliance in correcting errors without AI assistance.
+
+19.
+Concepts: avoids "explain it" option, avoiding relying on explanations
+- Avoids using the "explain it" option and instead tries to fix errors manually.
+- Participant chooses not to use the "explain it" option.
+- The participant avoids relying on explanations or instead prefers to fix errors manually.
+
+20.
+Concepts: prefers self-debugging, prefers hands-on debugging
+- The participant prefers self-debugging and manual error-fixing.
+- Participant prefers to manually debug code rather than using AI assistance.
+
+21.
+Concepts: self reliant in debugging, independently troubleshoots code issues
+- Takes personal responsibility for debugging and troubleshooting code.
+- Independently troubleshoots code issues without relying on external help.
+
+22.
+Concepts: works independently, debug code independently, independently debugs
+- The participant works independently, trying to debug the code without seeking help.
+- The participant debugs code independently without relying on AI-driven interfaces.
+- The participant attempts to fix errors in the AI-generated code without seeking explanations.
+
+23.
+Concepts: highlights unit testing, values ai's unit testing
+- Participant highlights the importance of unit testing in AI-generated code.
+- The participant appreciates the AI's ability to perform unit testing or debugging.
+
+24.
+Concepts: values unit testing, values unit testing for beginners
+- The code highlights the importance of unit testing in debugging and its benefits for beginners and everyone.
+- The code values unit testing for beginners, highlighting its importance in debugging.
+
+25.
+Concepts: values unit tests for beginners, values unit testing and debugging
+- Values the inclusion of unit tests and debugging capabilities in the LLM-driven interface, especially for beginners.
+- Recognizes the importance of unit testing and debugging in LLM-driven interfaces, particularly for beginners.
+
+26.
+Concepts: emphasizes user preparation, recognizes the need for foundational skills
+- The user needs practice in debugging their own code before using AI.
+- Highlights the need for users to develop foundational skills, such as debugging their own code, before using AI assistance.
+
+27.
+Concepts: suggests user debugging practice, suggesting practice in debugging
+- The participant suggests the importance of user debugging practice before seeking AI assistance.
+- The participant suggests that users need practice in debugging their own code before seeking AI assistance.
+
+28.
+Concepts: recognizes need for expertise, recognizes the need for expertise in debugging
+- Recognizes the need for expertise to understand and debug AI-generated code.
+- The participant recognizes the need for expertise in debugging, highlighting the risks of blindly following the AI's guidance.
+
+29.
+Concepts: emphasizes debugging and testing, highlights the importance of effective learning tools
+- Emphasizes the importance of debugging and unit testing.
+- Highlights the importance of effective learning tools, including debugging and unit testing.
+
+30.
+Concepts: emphasizes the need for debugging skills, importance of user exercises and debugging
+- Emphasizes the need for debugging skills and practices in users.
+- Emphasizes the importance of user exercises and practice in debugging their own code.
+
+31.
+Concepts: advocates for preparatory exercises, advocates for debugging practice
+- Calls for preparatory exercises to improve debugging skills.
+- Advocates for debugging practices or exercises to improve users' skills and abilities.
+
+32.
+Concepts: highlights ai debugging, iterative debugging value
+- The participant highlights the importance of AI debugging capabilities.
+- The participant highlights the value of iterative debugging with AI.
+===
+Here are the definitions for each code:
+
+---
+1.
+Concepts: prefers manual coding, prefers a hands-on approach to coding
+Relationship: The concepts are related as they both convey a preference for manual coding and hands-on approach.
+Criteria: Participants prefer to write code manually, using AI-generated code only as a reference.
+Phrase: Prefers manual coding.
+
+2.
+Concepts: manual coding with ai, manual coding with ai guidance, write code manually with ai guidance
+Relationship: The concepts are related as they all describe manual coding with AI assistance.
+Criteria: Participants write code manually with AI guidance.
+Phrase: Writes code manually with AI guidance.
+
+3.
+Concepts: active learning with ai, prefers to learn through active coding
+Relationship: The concepts are related as they both describe active learning with AI guidance.
+Criteria: Participants engage in active learning by writing code with AI guidance.
+Phrase: Engages in active learning.
+
+4.
+Concepts: chatgpt usage: reference, uses ai-generated code as reference
+Relationship: The concepts are related as they both describe using AI-generated code as a reference.
+Criteria: Participants use AI-generated code as a reference.
+Phrase: Uses AI-generated code as reference.
+
+5.
+Concepts: avoids blind ai code adoption, avoids direct copy pasting from ai
+Relationship: The concepts are related as they both convey avoiding blind adoption of AI-generated code.
+Criteria: Participants avoid blindly copying and pasting AI-generated code.
+Phrase: Avoids blind AI code adoption.
+
+6.
+Concepts: selectively copies code, selective copying of ai code, chooses specific ai code snippets
+Relationship: The concepts are related as they all describe selective copying of AI-generated code.
+Criteria: Participants selectively copy code from AI's output.
+Phrase: Selectively copies code.
+
+7.
+Concepts: chooses relevant parts for integration, engages in thoughtful code integration
+Relationship: The concepts are related as they both describe thoughtful code integration.
+Criteria: Participants engage in thoughtful code integration, selectively copying code to the model.
+Phrase: Engages in thoughtful code integration.
+
+8.
+Concepts: decides to run ai code, finds value in running ai-generated code
+Relationship: The concepts are related as they both describe deciding to run AI-generated code.
+Criteria: Participants decide to run AI-generated code to test its functionality.
+Phrase: Decides to run AI code.
+
+9.
+Concepts: decides to copy and paste, decides to copy and paste ai output, decides to copy and paste for efficiency
+Relationship: The concepts are related as they all describe deciding to copy and paste AI-generated code.
+Criteria: Participants decide to copy and paste AI-generated code for efficiency.
+Phrase: Decides to copy and paste.
+
+10.
+Concepts: decides to copy code, decides to copy paste code
+Relationship: The concepts are related as they both describe deciding to copy code.
+Criteria: Participants decide to copy code instead of running it.
+Phrase: Decides to copy code.
+
+11.
+Concepts: focus on problem-solving, implies problem-solving focus
+Relationship: The concepts are related as they both convey a focus on problem-solving.
+Criteria: Participants focus on problem-solving rather than explaining the process.
+Phrase: Focuses on problem-solving.
+
+12.
+Concepts: chooses problem solving, chooses problem-solving over explanation
+Relationship: The concepts are related as they both describe choosing problem-solving over explanation.
+Criteria: Participants choose problem-solving over explanation, preferring to fix the problem rather than understanding the explanation.
+Phrase: Chooses problem-solving.
+
+13.
+Concepts: prioritizes fixing, prioritize action over explanation, prioritizes action
+Relationship: The concepts are related as they all describe prioritizing fixing over explanation.
+Criteria: Participants prioritize fixing problems over explaining them.
+Phrase: Prioritizes fixing.
+
+14.
+Concepts: reflects on practical choice, reflects on practical decision making
+Relationship: The concepts are related as they both describe reflecting on practical decision-making.
+Criteria: Participants reflect on practical decision-making, choosing to fix problems rather than showing explanations.
+Phrase: Reflects on practical choice.
+
+15.
+Concepts: chooses to fix problem, chooses to fix problems directly
+Relationship: The concepts are related as they both describe choosing to fix problems directly.
+Criteria: Participants choose to fix problems directly in LLM-driven interfaces rather than seeking explanations.
+Phrase: Chooses to fix problems.
+
+16.
+Concepts: opts for self-directed problem-solving, choose to solve problems directly
+Relationship: The concepts are related as they both describe opting for self-directed problem-solving.
+Criteria: Participants choose to solve problems directly rather than seeking explanations.
+Phrase: Opts for self-directed problem-solving.
+
+17.
+Concepts: self-reliance in error fixing, fixes common mistakes independently
+Relationship: The concepts are related as they both describe self-reliance in fixing errors.
+Criteria: Participants show self-reliance in fixing errors without external help.
+Phrase: Shows self-reliance.
+
+18.
+Concepts: corrects errors independently, self-reliant in error correction
+Relationship: The concepts are related as they both describe correcting errors independently.
+Criteria: Participants correct errors independently without AI assistance.
+Phrase: Corrects errors independently.
+
+19.
+Concepts: avoids "explain it" option, avoiding relying on explanations
+Relationship: The concepts are related as they both describe avoiding relying on explanations.
+Criteria: Participants avoid using the "explain it" option and instead try to fix errors manually.
+Phrase: Avoids "explain it" option.
+
+20.
+Concepts: prefers self-debugging, prefers hands-on debugging
+Relationship: The concepts are related as they both describe preferring self-debugging.
+Criteria: Participants prefer self-debugging and manual error-fixing.
+Phrase: Prefers self-debugging.
+
+21.
+Concepts: self reliant in debugging, independently troubleshoots code issues
+Relationship: The concepts are related as they both describe being self-reliant in debugging.
+Criteria: Participants independently troubleshoot code issues without relying on external help.
+Phrase: Independently troubleshoots.
+
+22.
+Concepts: works independently, debug code independently, independently debugs
+Relationship: The concepts are related as they all describe working independently in debugging.
+Criteria: Participants work independently, trying to debug the code without seeking help.
+Phrase: Works independently.
+
+23.
+Concepts: highlights unit testing, values ai's unit testing
+Relationship: The concepts are related as they both describe highlighting the importance of unit testing.
+Criteria: Participants highlight the importance of unit testing in AI-generated code.
+Phrase: Highlights unit testing.
+
+24.
+Concepts: values unit testing, values unit testing for beginners
+Relationship: The concepts are related as they both describe valuing unit testing.
+Criteria: Participants value unit testing for beginners, highlighting its importance in debugging.
+Phrase: Values unit testing.
+
+25.
+Concepts: values unit tests for beginners, values unit testing and debugging
+Relationship: The concepts are related as they both describe valuing unit testing and debugging.
+Criteria: Participants value the inclusion of unit tests and debugging capabilities in LLM-driven interfaces, especially for beginners.
+Phrase: Values unit tests and debugging.
+
+26.
+Concepts: emphasizes user preparation, recognizes the need for foundational skills
+Relationship: The concepts are related as they both describe emphasizing user preparation.
+Criteria: Participants emphasize the need for users to develop foundational skills, such as debugging their own code, before using AI assistance.
+Phrase: Emphasizes user preparation.
+
+27.
+Concepts: suggests user debugging practice, suggesting practice in debugging
+Relationship: The concepts are related as they both describe suggesting user debugging practice.
+Criteria: Participants suggest the importance of user debugging practice before seeking AI assistance.
+Phrase: Suggests user debugging practice.
+
+28.
+Concepts: recognizes need for expertise, recognizes the need for expertise in debugging
+Relationship: The concepts are related as they both describe recognizing the need for expertise.
+Criteria: Participants recognize the need for expertise to understand and debug AI-generated code.
+Phrase: Recognizes need for expertise.
+
+29.
+Concepts: emphasizes debugging and testing, highlights the importance of effective learning tools
+Relationship: The concepts are related as they both describe emphasizing debugging and testing.
+Criteria: Participants emphasize the importance of debugging and unit testing.
+Phrase: Emphasizes debugging and testing.
+
+30.
+Concepts: emphasizes the need for debugging skills, importance of user exercises and debugging
+Relationship: The concepts are related as they both describe emphasizing the need for debugging skills.
+Criteria: Participants emphasize the need for debugging skills and practices in users.
+Phrase: Emphasizes the need for debugging skills.
+
+31.
+Concepts: advocates for preparatory exercises, advocates for debugging practice
+Relationship: The concepts are related as they both describe advocating for preparatory exercises.
+Criteria: Participants advocate for debugging practices or exercises to improve users' skills and abilities.
+Phrase: Advocates for preparatory exercises.
+
+32.
+Concepts: highlights ai debugging, iterative debugging value
+Relationship: The concepts are related as they both describe highlighting AI debugging capabilities.
+Criteria: Participants highlight the importance of AI debugging capabilities.
+Phrase: Highlights AI debugging.
+
+Let me know if you need any further assistance!

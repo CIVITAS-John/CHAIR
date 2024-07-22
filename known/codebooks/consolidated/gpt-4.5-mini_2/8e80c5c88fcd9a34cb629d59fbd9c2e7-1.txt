@@ -1,0 +1,57 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: ai helpfulness, values ai for error detection
+- Interviewee finds AI helpful in troubleshooting errors and clarifying coding issues or syntax.
+- The interviewee appreciates AI’s role in detecting overlooked coding errors.
+
+2.
+Concepts: other tech, ways for debugging: seek online support
+- Discussion of proper help-seeking behaviors in online communities and the importance of effective communication.
+- Reflecting on effective practices for seeking online help, stressing the importance of clear communication and prior research.
+
+3.
+Concepts: background information, identify novice programming challenges
+- Identifying challenges faced by novice users in effectively communicating the context of their coding issues.
+- Users identify common difficulties and mistakes of novice programmers.
+===
+---
+Definitions for each code (3 in total):
+1. 
+Concepts: ai helpfulness, values ai for error detection 
+Relationship: The concepts are logically related as both highlight the positive perception of AI's role in addressing coding errors, with one focusing on the general helpfulness and the other on specific error detection.
+Criteria: Interviewee values the AI's assistance in identifying and troubleshooting coding errors effectively.
+Phrase: Recognizes AI's assistance for error troubleshooting.
+
+2. 
+Concepts: other tech, ways for debugging: seek online support 
+Relationship: The concepts are related as they both emphasize resources outside of personal knowledge, focusing on effective strategies for obtaining help from online communities.
+Criteria: Users discuss and reflect on seeking support from online platforms through effective communication.
+Phrase: Engages in seeking online support for debugging.
+
+3. 
+Concepts: background information, identify novice programming challenges 
+Relationship: The concepts are interconnected as both involve understanding the struggles of novice programmers in articulating their issues and recognizing common mistakes.
+Criteria: Users identify and articulate the challenges novice programmers face in communication and problem-solving.
+Phrase: Identifies challenges faced by novice programmers.
+---

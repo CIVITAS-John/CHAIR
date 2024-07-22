@@ -1,0 +1,68 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (4 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+4. 
+Concepts: {Repeat the input 4}
+Relationship: {What is logical relationship between concepts in code 4, or N/A if not applicable}
+Criteria: {Who did what, and how for code 4}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: seek ai help for debugging, identify gaps in ai assistance
+- Users actively seek AI help for debugging while expressing dissatisfaction with its limitations.
+- Users express concerns about the inadequacies of AI assistance and its effectiveness in identifying bugs.
+
+2.
+Concepts: highlight novice challenges in coding, highlight beginners' struggles with scope
+- Interviewees highlight the challenges faced by novices in posting code and common debugging errors.
+- Individuals highlight the struggles beginners have with understanding variable scope in coding.
+
+3.
+Concepts: customize ai-generated code, strategically use ai-generated code
+- Users actively customize AI-generated code and engage in manual coding while referencing AI outputs for guidance.
+- Interviewees adapt their coding strategies based on insights from AI-generated code and selectively incorporate it into their work.
+
+4.
+Concepts: prefers readable code, seek well-documented ai-generated code
+- Prefers AI-generated code that is well-structured and easy to read, reflecting a desire for clarity in outputs.
+- Interviewees seek clear, well-documented AI-generated code that meets their programming needs.
+===
+---
+Definitions for each code (4 in total):
+1. 
+Concepts: seek ai help for debugging, identify gaps in ai assistance
+Relationship: Users are motivated to seek AI help for debugging due to their recognition of the gaps and limitations in AI assistance.
+Criteria: Users actively seek AI help for debugging while identifying and expressing dissatisfaction with the inadequacies of AI assistance.
+Phrase: Seek AI assistance for debugging.
+
+2. 
+Concepts: highlight novice challenges in coding, highlight beginners' struggles with scope
+Relationship: Both concepts center on the difficulties faced by inexperienced users in coding, including specific technical challenges.
+Criteria: Interviewees emphasize the challenges faced by novices in coding, particularly regarding debugging errors and understanding variable scope.
+Phrase: Emphasize challenges faced by novices.
+
+3. 
+Concepts: customize ai-generated code, strategically use ai-generated code
+Relationship: Users not only adapt AI-generated code but also apply strategic decision-making about how to integrate it into their coding practices.
+Criteria: Users customize AI-generated code and strategically incorporate it into their coding work based on their insights and needs.
+Phrase: Customize and strategically use AI-generated code.
+
+4. 
+Concepts: prefers readable code, seek well-documented ai-generated code
+Relationship: Both concepts relate to the preference for clarity and documentation in coding outputs, underscoring a focus on usability.
+Criteria: Interviewees prefer AI-generated code that is clear and well-documented, reflecting their need for readability and structure in outputs.
+Phrase: Seek clear and well-documented AI-generated code.
+---

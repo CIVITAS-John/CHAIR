@@ -1,0 +1,57 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: note ai's unpredictable nature, reflect on and evaluate ai outputs
+- Users observe the unpredictable nature of AI outputs and note discrepancies in responses.
+- Users regularly evaluate AI outputs and acknowledge their unpredictable nature during interactions.
+
+2.
+Concepts: support for non-cs people, promote collaborative productivity with ai
+- The user discusses the collaborative potential of AI to enhance productivity across various professional fields.
+- Users discuss the collaborative potential of AI tools to enhance productivity and disseminate knowledge.
+
+3.
+Concepts: utilize ai for debugging tasks, describe iterative debugging processes
+- Users describe the process of utilizing AI to identify and correct bugs in code.
+- The interviewee details the iterative process of debugging supported by AI assistance.
+===
+---
+Definitions for each code (3 in total):
+1.
+Concepts: note ai's unpredictable nature, reflect on and evaluate ai outputs
+Relationship: Users recognize the inconsistencies in AI responses and actively engage in assessing these outputs.
+Criteria: Users observe AI's unpredictable nature and regularly evaluate its outputs during interactions.
+Phrase: Evaluate AI outputs for unpredictability
+
+2.
+Concepts: support for non-cs people, promote collaborative productivity with ai
+Relationship: Users identify the ability of AI to facilitate collaboration among diverse professionals, enhancing productivity.
+Criteria: Users discuss AI's collaborative potential to support non-computer science individuals and promote productivity across fields.
+Phrase: Enhance collaborative productivity with AI
+
+3.
+Concepts: utilize ai for debugging tasks, describe iterative debugging processes
+Relationship: Users demonstrate how AI assists in the ongoing process of identifying and resolving coding errors through repeated efforts.
+Criteria: Users describe how they utilize AI to facilitate iterative debugging tasks.
+Phrase: Facilitate iterative debugging with AI
+---

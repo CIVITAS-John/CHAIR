@@ -1,0 +1,101 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (7 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+7. 
+Concepts: {Repeat the input 7}
+Relationship: {What is logical relationship between concepts in code 7, or N/A if not applicable}
+Criteria: {Who did what, and how for code 7}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: appreciates ai's code commenting, express satisfaction with ai-generated code
+- Users appreciate the AI's ability to provide comments and documentation for generated code.
+- Interviewees express satisfaction with the AI's ability to generate functional and well-documented code.
+
+2.
+Concepts: value prompt feedback from ai, value timely feedback from ai
+- Interviewees appreciate the promptness of AI in providing immediate feedback.
+- Users value and appreciate the prompt feedback provided by AI during coding tasks.
+
+3.
+Concepts: manually fixes ai code errors, fix errors in ai-generated code
+- Users manually attempt to resolve errors in AI-generated code without seeking explanations.
+- Users engage in self-directed error fixing while interpreting and correcting mistakes in AI-generated code.
+
+4.
+Concepts: share ai debugging experiences, addressing debugging difficulties
+- Users describe specific instances of using AI to debug code and share their experiences.
+- Users discuss the challenges of debugging and the potential for AI to assist in this process.
+
+5.
+Concepts: identify frustration points with ai, express frustration with ai interactions
+- Interviewees express frustration with the AI's failure to resolve specific errors and identify points of contention.
+- Users express frustration with AI's error messages that do not align with their expectations.
+
+6.
+Concepts: critiques current ai limitations, critique limited options in ai
+- Users critique the current limitations of AI in learning from user feedback.
+- Users express frustration with the limited options available in AI responses and critique the AI interface for its lack of flexibility.
+
+7.
+Concepts: acknowledge ai's capacity limitations, describe limitations in processing long code
+- Users note the limitations of AI in processing long code segments and its capacity constraints.
+- Users describe limitations in AI's ability to process long code segments, affecting usability.
+===
+---
+Definitions for each code (7 in total):
+1.
+Concepts: appreciates ai's code commenting, express satisfaction with ai-generated code
+Relationship: Both concepts highlight positive user experiences with AI, focusing on its ability to enhance code clarity and functionality.
+Criteria: Users appreciate the AI's ability to provide comments and documentation for generated code and express satisfaction with the AI's ability to generate functional and well-documented code.
+Phrase: Value AI's code documentation and functionality.
+
+2.
+Concepts: value prompt feedback from ai, value timely feedback from ai
+Relationship: Both concepts emphasize the importance of immediate responses from AI, enhancing the coding experience through timely assistance.
+Criteria: Interviewees appreciate the promptness of AI in providing immediate feedback and value the prompt feedback provided by AI during coding tasks.
+Phrase: Appreciate AI's timely feedback.
+
+3.
+Concepts: manually fixes ai code errors, fix errors in ai-generated code
+Relationship: Both concepts involve user actions focused on self-correction of AI-generated code, indicating a hands-on approach to problem-solving.
+Criteria: Users manually attempt to resolve errors in AI-generated code without seeking explanations and engage in self-directed error fixing while interpreting and correcting mistakes in AI-generated code.
+Phrase: Engage in self-directed error correction.
+
+4.
+Concepts: share ai debugging experiences, addressing debugging difficulties
+Relationship: Both concepts relate to user experiences with AI in the context of debugging, highlighting both the sharing of experiences and the challenges faced.
+Criteria: Users describe specific instances of using AI to debug code and share their experiences while discussing the challenges of debugging and the potential for AI to assist in this process.
+Phrase: Share experiences of AI-assisted debugging.
+
+5.
+Concepts: identify frustration points with ai, express frustration with ai interactions
+Relationship: Both concepts reflect negative user experiences, focusing on dissatisfaction with AI's performance and communication.
+Criteria: Interviewees express frustration with the AI's failure to resolve specific errors and identify points of contention, as well as express frustration with AI's error messages that do not align with their expectations.
+Phrase: Express frustration with AI interactions.
+
+6.
+Concepts: critiques current ai limitations, critique limited options in ai
+Relationship: Both concepts involve critical assessments of AI's capabilities, focusing on its limitations and lack of flexibility.
+Criteria: Users critique the current limitations of AI in learning from user feedback and express frustration with the limited options available in AI responses, critiquing the AI interface for its lack of flexibility.
+Phrase: Critique AI's limitations and options.
+
+7.
+Concepts: acknowledge ai's capacity limitations, describe limitations in processing long code
+Relationship: Both concepts address the constraints of AI, specifically regarding its processing capabilities and usability challenges.
+Criteria: Users note the limitations of AI in processing long code segments and its capacity constraints, describing limitations in AI's ability to process long code segments, affecting usability.
+Phrase: Acknowledge AI's processing limitations.
+---

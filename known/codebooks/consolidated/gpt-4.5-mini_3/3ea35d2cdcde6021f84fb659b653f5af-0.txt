@@ -1,0 +1,68 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (4 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+4. 
+Concepts: {Repeat the input 4}
+Relationship: {What is logical relationship between concepts in code 4, or N/A if not applicable}
+Criteria: {Who did what, and how for code 4}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: error identification and debugging, human-effort (negative): debug. the interesting thing is about "conceptual error"
+- The interviewee's perception of AI's role in identifying and debugging code errors.
+- Interviewee discusses the need for AI to identify conceptual errors in addition to syntax errors.
+
+2.
+Concepts: experiences gaps in ai assistance, notes discrepancies in ai understanding
+- Identifies gaps in AI assistance regarding necessary code structures.
+- User notes discrepancies in AI's understanding of specific coding tasks.
+
+3.
+Concepts: external validation, notes lack of external verification
+- Discusses the need for external validation of AI-generated code.
+- User notes the lack of external verification for AI-generated code.
+
+4.
+Concepts: requests verification, request error verification from ai
+- Interviewee requests verification from the AI regarding specific coding issues.
+- Users seek AI's help in verifying code correctness.
+===
+---
+Definitions for each code (4 in total):
+1. 
+Concepts: error identification and debugging, human-effort (negative): debug. the interesting thing is about "conceptual error"
+Relationship: The concepts are logically related as they both focus on the interviewee's perception of AI's capabilities in identifying and addressing errors, particularly emphasizing the distinction between conceptual and syntax errors.
+Criteria: The interviewee perceives AI as a tool for identifying and debugging code errors, highlighting the need for it to address both conceptual and syntax errors.
+Phrase: Identifying and debugging code errors.
+
+2. 
+Concepts: experiences gaps in ai assistance, notes discrepancies in ai understanding
+Relationship: The concepts are related as they both reflect the interviewee's experiences with AI, specifically focusing on the limitations and misunderstandings in AI's assistance with coding tasks.
+Criteria: The user identifies gaps in AI assistance and notes discrepancies in its understanding of necessary code structures.
+Phrase: Identifying gaps in AI assistance.
+
+3. 
+Concepts: external validation, notes lack of external verification
+Relationship: The concepts are logically connected as they both emphasize the importance of external validation and the absence of verification for AI-generated code.
+Criteria: The user discusses the need for external validation of AI-generated code and notes the lack of external verification.
+Phrase: Seeking external validation for AI-generated code.
+
+4. 
+Concepts: requests verification, request error verification from ai
+Relationship: The concepts are related as they both involve the user's proactive approach in seeking confirmation from AI regarding the correctness of their code.
+Criteria: The interviewee requests verification from the AI concerning specific coding issues and seeks assistance in verifying code correctness.
+Phrase: Requesting verification from AI. 
+---

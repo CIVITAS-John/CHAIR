@@ -1,0 +1,112 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (8 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+8. 
+Concepts: {Repeat the input 8}
+Relationship: {What is logical relationship between concepts in code 8, or N/A if not applicable}
+Criteria: {Who did what, and how for code 8}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: error verification, express uncertainty about ai's verification capabilities
+- User requests verification of code correctness from AI, expressing uncertainty about its capabilities.
+- Interviewees express uncertainty about AI's ability to verify specific programming constraints and assist with code errors.
+
+2.
+Concepts: praise ai's debugging capabilities, values ai's user-friendly debugging features
+- Users appreciate the debugging capabilities of the AI, especially for beginners.
+- Interviewees appreciate AI features that assist with debugging and unit testing, especially for beginners.
+
+3.
+Concepts: iterative debugging, engage in iterative debugging
+- Describes the iterative process of debugging with AI assistance.
+- Users reflect on the iterative process of debugging with AI and the learning opportunities it provides.
+
+4.
+Concepts: use ai for debugging assistance, engage in debugging ai-generated code
+- Users analyze error messages and AI responses to reason through issues encountered in their code.
+- Interviewees engage in reasoning through AI's responses while debugging code.
+
+5.
+Concepts: critique misleading error messages, experience debugging frustration
+- Interviewees express frustration with misleading error messages and describe confusion arising from them.
+- Interviewees express frustration with error messages that do not accurately reflect code issues, indicating a need for clearer feedback.
+
+6.
+Concepts: value clarity in coding, value code readability
+- Interviewees value clarity in coding and prefer code that is simple and easy to understand.
+- Interviewees value code readability, emphasizing the importance of writing clear and maintainable code.
+
+7.
+Concepts: experiment with search phrases, assesses ai search accuracy
+- Interviewees experiment with AI to determine its ability to generate correct outputs based on specific queries.
+- Interviewees test the AI's ability to accurately search for specific coding models or structures, assessing its search capabilities.
+
+8.
+Concepts: engage in human-like interaction with ai, describe conversational interaction with ai
+- Participants reflect on their interactions with AI, emphasizing the human-like qualities of the conversation.
+- Users describe their conversational approach to interacting with AI, treating it like a person.
+===
+---
+Definitions for each code (8 in total):
+1. 
+Concepts: error verification, express uncertainty about ai's verification capabilities
+Relationship: The concepts are related as both involve users' concerns regarding the AI's ability to accurately verify code correctness.
+Criteria: Users request verification of code correctness from AI while expressing uncertainty about its verification capabilities.
+Phrase: Request verification and express uncertainty.
+
+2. 
+Concepts: praise ai's debugging capabilities, values ai's user-friendly debugging features
+Relationship: The concepts are interconnected as both highlight users' appreciation for the AI's debugging features, particularly for beginners.
+Criteria: Users appreciate the AI's debugging capabilities and its user-friendly features that assist beginners.
+Phrase: Appreciate debugging capabilities and user-friendly features.
+
+3. 
+Concepts: iterative debugging, engage in iterative debugging
+Relationship: The concepts are logically linked as both describe the process of engaging in debugging through an iterative approach with AI assistance.
+Criteria: Users engage in an iterative debugging process with AI assistance, reflecting on the learning opportunities it provides.
+Phrase: Engage in iterative debugging.
+
+4. 
+Concepts: use ai for debugging assistance, engage in debugging ai-generated code
+Relationship: The concepts are related as both involve users utilizing AI to assist in debugging their code, including AI-generated code.
+Criteria: Users analyze error messages and AI responses while engaging in debugging assistance for their code.
+Phrase: Utilize AI for debugging assistance.
+
+5. 
+Concepts: critique misleading error messages, experience debugging frustration
+Relationship: The concepts are connected as both reflect users' frustrations stemming from misleading error messages during debugging.
+Criteria: Interviewees express frustration with misleading error messages that do not accurately reflect code issues.
+Phrase: Critique misleading error messages.
+
+6. 
+Concepts: value clarity in coding, value code readability
+Relationship: The concepts are related as both emphasize the importance of clarity and readability in coding practices.
+Criteria: Interviewees value clarity and readability in coding, preferring simple and maintainable code.
+Phrase: Value clarity and readability in coding.
+
+7. 
+Concepts: experiment with search phrases, assesses ai search accuracy
+Relationship: The concepts are logically linked as both involve users testing the AI's search capabilities through specific queries.
+Criteria: Interviewees experiment with search phrases to assess the AI's ability to generate correct outputs and search accurately.
+Phrase: Experiment with search phrases.
+
+8. 
+Concepts: engage in human-like interaction with ai, describe conversational interaction with ai
+Relationship: The concepts are related as both describe the nature of users' interactions with AI, emphasizing human-like qualities.
+Criteria: Participants reflect on and describe their conversational interactions with AI, emphasizing its human-like qualities.
+Phrase: Engage in conversational interaction with AI.
+---

@@ -1,0 +1,58 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (3 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+3. 
+Concepts: {Repeat the input 3}
+Relationship: {What is logical relationship between concepts in code 3, or N/A if not applicable}
+Criteria: {Who did what, and how for code 3}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: note ai's time-saving efficiency, suggest ai to enhance efficiency
+- Users acknowledge the efficiency and time-saving advantages of AI in coding tasks.
+- Users recommend utilizing AI to save time when learning about specific coding tools.
+
+2.
+Concepts: task completion, rely on ai-generated code due to time constraints
+- User utilizes AI-generated code quickly when pressed for time.
+- Users resort to AI for rapid coding solutions under time constraints.
+
+3.
+Concepts: selectively use ai code, customize ai-generated code for projects
+- Users selectively utilize pieces of generated code, integrating only what is needed for their models.
+- Users customize AI outputs to improve relevance and applicability for their tasks.
+===
+---
+Definitions for each code (3 in total):
+
+1. 
+Concepts: note ai's time-saving efficiency, suggest ai to enhance efficiency
+Relationship: Users recognize that AI offers inherent benefits in terms of efficiency and proactively recommend leveraging these tools to maximize productivity. 
+Criteria: Users acknowledge AI's capabilities and encourage its application to improve workflow efficiency during coding tasks.
+Phrase: Acknowledge and recommend AI for efficiency. 
+
+2. 
+Concepts: task completion, rely on ai-generated code due to time constraints
+Relationship: Users depend on AI-generated coding solutions as a direct response to urgency, indicating a reliance on technology when under pressure.
+Criteria: Users leverage AI for quick solutions to meet deadlines when time is limited.
+Phrase: Utilize AI for rapid task completion.
+
+3. 
+Concepts: selectively use ai code, customize ai-generated code for projects
+Relationship: Users exercise discretion in selecting AI-generated content to ensure it aligns with their specific needs, highlighting a critical approach to integration and adaptation.
+Criteria: Users tailor AI outputs to fit the requirements of their projects by selectively applying relevant pieces of code.
+Phrase: Customize and selectively integrate AI code. 
+---

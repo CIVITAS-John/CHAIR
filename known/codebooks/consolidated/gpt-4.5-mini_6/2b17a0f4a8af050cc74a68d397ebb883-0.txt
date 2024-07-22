@@ -1,0 +1,214 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (17 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+17. 
+Concepts: {Repeat the input 17}
+Relationship: {What is logical relationship between concepts in code 17, or N/A if not applicable}
+Criteria: {Who did what, and how for code 17}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: values ai's debugging ability, value ai's debugging support
+- Values the ability of AI to assist in debugging processes.
+- Users appreciate the AI's debugging and troubleshooting capabilities, especially for beginners.
+
+2.
+Concepts: clearness, notes benefit for novices
+- Notes the clarity of error explanations provided by AI, which helps users, especially novices, understand issues better.
+- Users note that AI can clarify error codes, which is particularly beneficial for novices who struggle with syntax.
+
+3.
+Concepts: values error clarification, human effort (positive): learn
+- The interviewee appreciates the AI's ability to clarify error messages for users.
+- User recognizes the value of AI in clarifying error messages for learning purposes.
+
+4.
+Concepts: highlight challenges faced by novices, discuss issues with unstructured code submissions
+- Interviewees note the challenges novices face when seeking help without providing sufficient context.
+- Users note challenges novices face when posting code without sufficient context.
+
+5.
+Concepts: novice (negative), novice's challenge of asking the right question
+- Discusses the limitations of novices in conceptualizing problems for AI assistance.
+- Describes the challenges novices face in formulating effective questions for AI assistance.
+
+6.
+Concepts: suggest practice for debugging skills, suggest foundational learning for debugging
+- Users highlight the need for practice and exercises in debugging before using AI tools.
+- Users reflect on the lack of debugging skills among novices and the need for foundational learning.
+
+7.
+Concepts: suggest incremental coding practices, need for improved help-seeking strategies
+- Interviewees reflect on the common practices of beginners in coding, suggesting a need for incremental coding.
+- Interviewee suggests that novices need better methods for seeking help with coding issues.
+
+8.
+Concepts: addressing scope-related challenges in coding tasks, beginners struggle when switching between scope context variable space
+- User identifies challenges related to understanding variable scope in coding tasks.
+- User identifies struggles beginners face when switching between different coding contexts.
+
+9.
+Concepts: queries ai for missing code structures, identify missing elements in ai-generated code
+- Users query the AI for specific code structures that are missing from the generated output.
+- Interviewees note instances where AI-generated code lacks necessary elements, indicating a need for thoroughness.
+
+10.
+Concepts: experiences gaps in ai assistance, notes discrepancies in ai understanding
+- Identifies gaps in AI assistance regarding necessary code structures.
+- User notes discrepancies in AI's understanding of specific coding tasks.
+
+11.
+Concepts: ai generated code, chatgpt ability (negative): errors in generating codes
+- An individual discusses their experience with AI-generated code, including its limitations and the need for manual corrections.
+- An individual identifies instances where AI-generated code lacks necessary components or structures.
+
+12.
+Concepts: questions ai capabilities, question ai's capability to verify code
+- User questions the capabilities of the AI in translating commands into code.
+- Interviewees express doubts about the AI's capabilities in verifying specific coding details.
+
+13.
+Concepts: external validation, identify constraints in ai capabilities
+- Discusses the limitations of AI in verifying code against external validation sources.
+- Users identify current limitations in the AI's ability to check generated code against external information.
+
+14.
+Concepts: outdated code, outdated dataset to train ai, identify outdated functionalities in ai responses
+- An individual notes the use of outdated coding practices or functions in AI-generated code.
+- Users note that the AI may be trained on outdated datasets, leading to the use of older coding practices.
+- Users encounter outdated functionalities and inconsistencies in the AI's responses related to coding.
+
+15.
+Concepts: discuss unclear error messages, calls for better error messaging, critique unhelpful system feedback
+- Individuals discuss instances where error messages are unclear or misleading.
+- An individual critiques the clarity and helpfulness of error messages provided by a programming language.
+- Users critique the lack of helpful feedback from the system, especially regarding error messages.
+
+16.
+Concepts: chatlogo ability (negative), chatlogo ability (negative): no fix option?, chatlogo ability (negative): error
+- Reflects on the limitations of ChatLogo in providing effective assistance.
+- Users express frustration with the AI's inability to provide a "fix" option after identifying errors.
+- Notes that AI can become stuck on certain errors, indicating limitations in its troubleshooting capabilities.
+
+17.
+Concepts: critique feature gaps in netlogo, suggests need for smart editor features
+- Interviewees critique the lack of advanced features in NetLogo, such as smart code editors.
+- Users express the need for smart editor features in NetLogo to enhance coding efficiency.
+===
+---
+Definitions for each code (17 in total):
+1.
+Concepts: values ai's debugging ability, value ai's debugging support
+Relationship: Both concepts emphasize the appreciation for AI's role in enhancing the debugging process, particularly for beginners.
+Criteria: Users value the AI's ability to assist in debugging processes and support users, especially novices.
+Phrase: Value AI's debugging support.
+
+2.
+Concepts: clearness, notes benefit for novices
+Relationship: The clarity of error explanations directly benefits novices, helping them understand issues better.
+Criteria: Users note that the clarity of error explanations provided by AI is particularly beneficial for novices.
+Phrase: Appreciate clarity in error explanations.
+
+3.
+Concepts: values error clarification, human effort (positive): learn
+Relationship: The appreciation for AI's error clarification is linked to its role in facilitating learning for users.
+Criteria: Users recognize the value of AI in clarifying error messages to aid learning.
+Phrase: Value AI's error clarification for learning.
+
+4.
+Concepts: highlight challenges faced by novices, discuss issues with unstructured code submissions
+Relationship: Both concepts address the difficulties novices encounter when seeking help without adequate context.
+Criteria: Interviewees note the challenges novices face when posting code without sufficient context.
+Phrase: Highlight novices' challenges in seeking help.
+
+5.
+Concepts: novice (negative), novice's challenge of asking the right question
+Relationship: The limitations of novices in conceptualizing problems are directly related to their difficulty in formulating effective questions.
+Criteria: Discusses the challenges novices face in conceptualizing problems for AI assistance.
+Phrase: Address novices' challenges in questioning.
+
+6.
+Concepts: suggest practice for debugging skills, suggest foundational learning for debugging
+Relationship: Both concepts emphasize the need for foundational skills and practice in debugging before utilizing AI tools.
+Criteria: Users highlight the need for practice and foundational learning in debugging for novices.
+Phrase: Suggest foundational learning for debugging.
+
+7.
+Concepts: suggest incremental coding practices, need for improved help-seeking strategies
+Relationship: The need for incremental coding practices is linked to the necessity for better help-seeking strategies among novices.
+Criteria: Interviewees suggest that novices need better methods for seeking help with coding issues.
+Phrase: Recommend improved help-seeking strategies.
+
+8.
+Concepts: addressing scope-related challenges in coding tasks, beginners struggle when switching between scope context variable space
+Relationship: Both concepts focus on the difficulties beginners face in understanding and managing variable scope in coding tasks.
+Criteria: Users identify challenges related to understanding variable scope in coding tasks.
+Phrase: Address scope-related challenges in coding.
+
+9.
+Concepts: queries ai for missing code structures, identify missing elements in ai-generated code
+Relationship: The act of querying the AI for missing structures highlights the need for thoroughness in AI-generated code.
+Criteria: Users query the AI for specific code structures that are missing from the generated output.
+Phrase: Query AI for missing code structures.
+
+10.
+Concepts: experiences gaps in ai assistance, notes discrepancies in ai understanding
+Relationship: Both concepts reflect on the limitations and inconsistencies in AI assistance regarding coding tasks.
+Criteria: Identifies gaps in AI assistance and discrepancies in its understanding of specific coding tasks.
+Phrase: Identify gaps in AI assistance.
+
+11.
+Concepts: ai generated code, chatgpt ability (negative): errors in generating codes
+Relationship: The limitations of AI-generated code are highlighted by the need for manual corrections and the presence of errors.
+Criteria: Discusses experiences with AI-generated code, including its limitations and errors.
+Phrase: Critique AI-generated code errors.
+
+12.
+Concepts: questions ai capabilities, question ai's capability to verify code
+Relationship: Both concepts express skepticism regarding the AI's ability to perform specific tasks related to code verification.
+Criteria: Users question the capabilities of the AI in translating commands and verifying code.
+Phrase: Question AI's verification capabilities.
+
+13.
+Concepts: external validation, identify constraints in ai capabilities
+Relationship: The limitations of AI are discussed in the context of its inability to verify code against external validation sources.
+Criteria: Discusses the limitations of AI in verifying code against external validation sources.
+Phrase: Identify constraints in AI capabilities.
+
+14.
+Concepts: outdated code, outdated dataset to train ai, identify outdated functionalities in ai responses
+Relationship: The presence of outdated coding practices and functionalities is linked to the AI's training on outdated datasets.
+Criteria: Users note the use of outdated coding practices and functionalities in AI-generated responses.
+Phrase: Identify outdated functionalities in AI responses.
+
+15.
+Concepts: discuss unclear error messages, calls for better error messaging, critique unhelpful system feedback
+Relationship: The critique of unclear error messages is connected to the call for improved feedback from the system.
+Criteria: Individuals discuss instances of unclear error messages and critique the lack of helpful feedback.
+Phrase: Critique unclear error messages.
+
+16.
+Concepts: chatlogo ability (negative), chatlogo ability (negative): no fix option?, chatlogo ability (negative): error
+Relationship: The limitations of ChatLogo are highlighted by its inability to provide effective assistance and troubleshooting options.
+Criteria: Reflects on the limitations of ChatLogo in providing effective assistance and troubleshooting.
+Phrase: Critique ChatLogo's limitations.
+
+17.
+Concepts: critique feature gaps in netlogo, suggests need for smart editor features
+Relationship: The critique of feature gaps in NetLogo is directly related to the expressed need for advanced coding features.
+Criteria: Interviewees critique the lack of advanced features in NetLogo and suggest the need for smart editor features.
+Phrase: Suggest need for smart editor features.
+---

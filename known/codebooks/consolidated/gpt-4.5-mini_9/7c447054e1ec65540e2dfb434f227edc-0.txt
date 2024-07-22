@@ -1,0 +1,730 @@
+You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
+Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
+For each code, reflect on the logical relationship between the concepts.
+Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+Finally, write an accurate verb phrase to best represent the code.
+The research question is: In the context of NetLogo learning and practice: What perceptions - strengths, weaknesses, and adoption plans - do interviewees perceive LLM-driven interfaces? How do they use it to support their work? What are their needs for LLM-based interfaces?
+Always follow the output format:
+---
+Definitions for each code (64 in total):
+1.
+Concepts: {Repeat the input 1}
+Relationship: {What is logical relationship between concepts in code 1, or N/A if not applicable}
+Criteria: {Who did what, and how for code 1}
+Phrase: {The most representative verb phrase for the concepts}
+...
+64. 
+Concepts: {Repeat the input 64}
+Relationship: {What is logical relationship between concepts in code 64, or N/A if not applicable}
+Criteria: {Who did what, and how for code 64}
+Phrase: {The most representative verb phrase for the concepts}
+---
+~~~
+1.
+Concepts: conversation, human-ai: talk, initial confusion
+- Interviewee expresses confusion about the capabilities of the AI system in relation to their tasks.
+- Expresses initial confusion about the capabilities of the AI system in relation to NetLogo commands.
+- Users experience initial confusion regarding the capabilities of the AI system.
+
+2.
+Concepts: system capabilities, seeks clarification on capabilities
+- Users express confusion regarding the AI's capabilities and how it processes commands.
+- Users inquire about the functionalities of the AI system.
+
+3.
+Concepts: notes lack of determinism, expresses concerns about ai unpredictability, reflects on ai unpredictability
+- Notes the unpredictability of AI responses in terms of consistency and reliability.
+- Users express concerns about the unpredictability and inconsistency of AI responses.
+- The interviewee reflects on the variability and unpredictability of AI responses.
+
+4.
+Concepts: doubts ai's capability, trust issues in ai
+- Interviewees express doubts about the AI's capabilities.
+- Interviewee expresses skepticism about the reliability of AI-generated content.
+
+5.
+Concepts: suspects bug in ai, identifies potential bug
+- Users suspect that the AI may be generating incorrect outputs, leading to confusion.
+- Interviewee identifies a potential bug in the AI's output, indicating a critical evaluation of the AI's performance.
+
+6.
+Concepts: identifies misunderstanding, notes discrepancies in ai understanding
+- Users identify and reflect on misunderstandings in AI's interpretation of their requests.
+- User notes discrepancies in AI's understanding of specific coding tasks or models.
+
+7.
+Concepts: error handling, clarification and troubleshooting
+- Issues related to AI's ability to handle and communicate errors effectively.
+- The need for the AI to provide clear explanations and effective troubleshooting for errors.
+
+8.
+Concepts: notes ai failures, identifies inability to fix certain errors
+- Interviewees describe situations where the AI fails to resolve errors.
+- Interviewee notes the AI's inability to resolve certain errors, indicating limitations in its troubleshooting capabilities.
+
+9.
+Concepts: interpretation, recognition of ai plotting errors
+- Interviewee interprets AI-generated outputs and corrects errors based on their understanding.
+- Interviewee identifies and reasons through errors in AI-generated plots.
+
+10.
+Concepts: critiques system feedback, calls for better error messaging
+- Users comment on the unhelpfulness of error messages provided by the system.
+- Users find error messages in NetLogo to be unhelpful.
+
+11.
+Concepts: chatlogo ability (negative), chatlogo ability (negative): no fix option?
+- Critiques the AI's ability to assist effectively, leading to user frustration.
+- Users express frustration with the AI's inability to provide a "fix" option after identifying errors.
+
+12.
+Concepts: outdated code, notes compatibility issues with netlogo
+- E04 notes that AI-generated code sometimes reflects older versions of NetLogo, leading to compatibility issues.
+- Users note issues related to using older versions of NetLogo and the challenges it presents in the context of AI assistance.
+
+13.
+Concepts: compares ai to human interns, highlight ai's processing limitations
+- Compares the limitations of AI in processing large codebases to human capabilities.
+- Users note the AI's limitations in processing long code segments and large datasets.
+
+14.
+Concepts: has only used chatgpt 3.5, indicates limited experience with ai version
+- User indicates they have only used a specific version of ChatGPT (3.5).
+- Users indicate limited usage of ChatGPT version 3.5.
+
+15.
+Concepts: persistence, abandons task after ai repetition
+- Indicates a lack of persistence in engaging with the AI after receiving repetitive responses.
+- Users abandon tasks when faced with repetitive AI responses that do not provide new information.
+
+16.
+Concepts: human-effort (negative): more time to explore, other tech(negative): search engine would take more time
+- Discusses the time-consuming nature of searching for documentation and the benefits of having immediate access.
+- Interviewees express that using a search engine for documentation is time-consuming compared to having immediate access to information.
+
+17.
+Concepts: language proficiency, reflects on effort constraints
+- User reflects on their proficiency in multiple programming languages and time constraints.
+- Interviewees reflect on the challenges of learning multiple programming languages.
+
+18.
+Concepts: system support, suggests system support
+- Users reflect on the need for system support to manage fragmented learning experiences.
+- Interviewees reflect on the fragmented nature of their work and the need for system support to help them remember past tasks.
+
+19.
+Concepts: professional challenges, benefit of ai - interpretation of context
+- Interviewee reflects on the fragmented nature of professional learning and the challenges it presents.
+- Interviewees reflect on the fragmented nature of professional learning and the need for contextual support.
+
+20.
+Concepts: knowledge preservation, knowledge fragmentation
+- The ability of AI to store and retrieve fragmented knowledge.
+- The interviewee's perception of how AI could help in managing fragmented knowledge.
+
+21.
+Concepts: expert usability, notes need for expert friendly features
+- Users mention challenges in adapting to the learning curve associated with expert-level tools and interfaces.
+- Interviewee mentions the learning curve associated with using the AI, particularly for experts.
+
+22.
+Concepts: design tension, highlights tension between novice and expert needs
+- User notes the tension between novice-oriented and expert-oriented design in AI tools.
+- Discusses the limitations of AI options for different skill levels, highlighting the needs of both novices and experts.
+
+23.
+Concepts: ai decides which direction the problem goes into, ai can limit options & points to different sometimes wrong directions
+- User expresses concern that AI may lead less experienced users down unproductive paths due to its guidance.
+- Users observe that AI can infer their needs from context, but this may lead to incorrect assumptions.
+
+24.
+Concepts: debugging risks, highlights risks for novices
+- User expresses concern that less experienced individuals may struggle to debug errors generated by the AI.
+- Users express concerns about the risks for novices in relying on AI without sufficient expertise.
+
+25.
+Concepts: suggests gradual learning, critiques novices' expectations
+- User observes that novices may have unrealistic expectations of AI's ability to provide immediate, correct answers.
+- Users note and critique novices for having unrealistic expectations of the AI's capabilities.
+
+26.
+Concepts: instruction writing, discusses instruction writing skills
+- User reflects on the importance of writing clear instructions for effective AI interaction.
+- Users discuss the importance of instruction writing skills in effectively utilizing AI.
+
+27.
+Concepts: debug: ability to ask questions, novice's challenge of asking the right question
+- Interviewee emphasizes the importance of asking questions to effectively utilize AI, particularly for novices.
+- Describes the challenges novices face in formulating effective questions for AI assistance.
+
+28.
+Concepts: notes inefficiencies, suggests incremental coding
+- User highlights the inefficiencies faced by beginners when writing extensive code before testing.
+- Suggests that beginners often write extensive code before checking for errors, leading to confusion.
+
+29.
+Concepts: steep learning curve & frustration point, expresses frustration with debugging challenges
+- E01 reflects on the challenges beginners face in debugging and programming concepts, leading to frustration.
+- Users express frustration with unclear and unhelpful error messages during debugging.
+
+30.
+Concepts: notes lack of debugging skills, observes beginners' struggles
+- Users reflect on the foundational knowledge that beginners may lack.
+- Users observe that beginners often struggle with conceptual errors in programming, indicating a need for better support tools.
+
+31.
+Concepts: scope, addressing scope-related challenges in coding tasks
+- User discusses the importance of understanding variable scope in programming.
+- User identifies challenges related to understanding variable scope in coding tasks.
+
+32.
+Concepts: seeking ai help for troubleshooting, need for improved help-seeking methods
+- Interviewees express a need for assistance from AI in various coding tasks and error resolution.
+- Interviewee suggests that novices need better methods for seeking help with coding issues.
+
+33.
+Concepts: human-ai: seek help, seeks collaborative problem solving
+- E01 and E04 express instances of seeking help from ChatGPT for code verification and problem-solving.
+- Users seek collaborative problem-solving by asking the AI to assist with specific coding challenges.
+
+34.
+Concepts: emphasizes need for expertise, demand for expertise & experience
+- Users recognize the need for expertise to debug AI-generated code.
+- Users highlight the need for practice and exercises to enhance debugging skills before using AI.
+
+35.
+Concepts: concept understanding, calls for conceptual error detection
+- User reflects on the need for AI to support understanding of programming concepts.
+- Users discuss the importance of AI identifying conceptual errors in programming.
+
+36.
+Concepts: problem solving, problem complexity
+- User reflects on their experiences with problem-solving and seeking help online.
+- User reflects on the complexity of problems encountered and the value of AI assistance.
+
+37.
+Concepts: prefers simple, prefers straightforward tasks
+- Prefers code that is simple and accessible for easier future understanding and maintenance.
+- Users prefer to work on simple tasks or models that are easy to understand and implement.
+
+38.
+Concepts: seeks easier ai interaction, adjusts task complexity
+- User simplifies tasks to facilitate easier interaction with AI.
+- Interviewee simplifies tasks when working with the AI, indicating a strategy to manage complexity.
+
+39.
+Concepts: switches to simpler task, decides to change approach
+- Interviewees switch to simpler tasks when faced with challenges in their current work.
+- Interviewees decide to change their approach when faced with challenges in their current task.
+
+40.
+Concepts: values proactive problem solving, prefers ai solutions over prolonged problem solving
+- User values a proactive approach to problem-solving with the help of AI.
+- User prefers AI solutions that save time over prolonged problem-solving efforts.
+
+41.
+Concepts: speed, chatgpt
+- E01 emphasizes the speed at which ChatGPT can perform tasks compared to traditional methods.
+- E01 highlights the advantages of using ChatGPT, noting its speed and cost-effectiveness.
+
+42.
+Concepts: hiring criteria, argues for ai efficiency
+- Discusses the efficiency of AI in completing tasks quickly compared to traditional methods.
+- User argues for the efficiency of AI in completing tasks quickly compared to traditional methods.
+
+43.
+Concepts: ai utility, recognizes time-saving benefits
+- Users acknowledge the utility of AI in enhancing productivity and efficiency.
+- Users acknowledge the time-saving benefits of using AI.
+
+44.
+Concepts: relies on ai for efficiency, human-ai (positive): time-saving
+- The interviewee indicates reliance on AI-generated solutions when facing time constraints.
+- Interviewee highlights the time-saving benefits of using AI tools for problem-solving.
+
+45.
+Concepts: time-saving, time efficiency
+- The perception that AI can save time in learning and performing tasks.
+- The interviewee's perception that LLM-driven interfaces can save time in learning and problem-solving.
+
+46.
+Concepts: ai advancements, anticipates rapid ai advancements
+- Interviewee acknowledges the potential for AI to evolve and improve over time, enhancing its utility for users.
+- Interviewee expresses belief in the rapid advancement of AI technologies and their potential future capabilities.
+
+47.
+Concepts: values streamlined help seeking, ai ability (positive): convenient way to seek help from
+- Interviewee appreciates the potential for AI to streamline the process of seeking help.
+- Discusses the potential of AI to encourage proactive help-seeking behavior.
+
+48.
+Concepts: values immediate feedback, values prompt feedback from ai
+- The interviewee values the importance of receiving quick responses and assistance from the LLM-driven interface.
+- Interviewees appreciate the promptness of AI in providing feedback compared to other resources.
+
+49.
+Concepts: human-ai, facilitating collaborative knowledge sharing with ai
+- Discusses the role of AI in facilitating communication and knowledge sharing among users.
+- Users discuss the potential for AI to facilitate collaborative knowledge sharing and problem-solving among users.
+
+50.
+Concepts: ai ability (positive): customization, discussing collaborative ai for productivity enhancement
+- Discusses the potential for a collaborative AI system to enhance productivity through shared knowledge.
+- Users discuss the potential for collaborative AI systems to enhance productivity in their work.
+
+51.
+Concepts: learning process improvement, imagines ai improving the learning process
+- Critiques the current learning process and envisions AI as a tool for improvement.
+- User imagines how AI could enhance the learning process by providing better guidance.
+
+52.
+Concepts: discusses jargon translation, ai ability (positive): translation
+- The interviewee discusses the need for AI to translate jargon between different user groups.
+- E01 discusses the potential for AI to translate jargon for different professional contexts.
+
+53.
+Concepts: value of incremental feedback, recommending gradual error presentation
+- Interviewee suggests that AI should provide feedback incrementally to avoid overwhelming users.
+- Users suggest that AI should present errors one at a time to avoid overwhelming users with information.
+
+54.
+Concepts: user feedback, suggests improvements
+- Discusses the potential for user feedback to enhance AI systems and productivity.
+- Suggests improvements for AI systems to incorporate user feedback and external validation of generated code.
+
+55.
+Concepts: suggests ai could save time, reduce learning curve and save human's needs for learning programming knowledge
+- The interviewees express that AI could save time when learning new extensions compared to core concepts of NetLogo.
+- User believes AI can reduce the learning curve for new extensions in NetLogo.
+
+56.
+Concepts: learning extensions, human-ai: support
+- Users express a desire for AI to assist in learning about new extensions within time constraints.
+- Interviewee expresses a desire for AI to help streamline the learning process for new extensions in programming.
+
+57.
+Concepts: beginner support, seeking ai support for learning initiation
+- Interviewee discusses the need for AI to support beginners in their learning process.
+- Interviewees express the need for AI to assist in finding appropriate starting points for learning and improving existing resources.
+
+58.
+Concepts: calls for preparatory exercises, suggests foundational skill for ai use
+- Interviewee reiterates the need for preparatory exercises to enhance user skills before engaging with AI.
+- Interviewee discusses the foundational skills necessary for effectively using AI tools.
+
+59.
+Concepts: emphasize human-ai collaboration, great insight on relationship between human & ai
+- Interviewees advocate for collaboration with AI that enhances human capabilities instead of replacing them.
+- Interviewees discuss the relationship between human judgment and AI, emphasizing augmentation rather than replacement.
+
+60.
+Concepts: ability, capability enhancement
+- Emphasizes the role of AI in augmenting human capabilities and judgment.
+- E01 emphasizes the importance of enhancing human judgment and capabilities rather than replacing them with AI.
+
+61.
+Concepts: warns against blind reliance on ai, human-ai: no need to blindly follow
+- User warns against relying solely on AI without understanding its limitations.
+- Users caution against blindly following AI guidance without understanding the underlying issues.
+
+62.
+Concepts: error understanding, warns about potential ai errors
+- Interviewee notes the necessity of expertise to understand and fix errors, warning against blindly following AI guidance.
+- Interviewee warns users to apply their judgment when interpreting AI responses, acknowledging potential inaccuracies.
+
+63.
+Concepts: deviates their directions, emphasizing user expertise
+- Interviewee reiterates the importance of expertise in effectively using AI tools.
+- Interviewee highlights the necessity of user expertise to effectively utilize AI and avoid blindly following its suggestions.
+
+64.
+Concepts: comparison to past tech, compares ai mistakes to early apple maps errors
+- Compares AI responses to past technology experiences to emphasize the need for user judgment.
+- Interviewee compares AI's mistakes to historical errors in technology, emphasizing the need for user judgment.
+===
+---
+Definitions for each code (64 in total):
+1.
+Concepts: conversation, human-ai: talk, initial confusion
+Relationship: The concepts are interconnected as they all relate to the user's experience of confusion during initial interactions with the AI system.
+Criteria: Interviewees express confusion about the AI's capabilities in relation to their tasks and NetLogo commands during conversations.
+Phrase: Express confusion about AI capabilities.
+
+2.
+Concepts: system capabilities, seeks clarification on capabilities
+Relationship: The concepts are logically related as users' confusion leads them to seek clarification about the AI's functionalities.
+Criteria: Users express confusion regarding the AI's capabilities and inquire about its functionalities.
+Phrase: Seek clarification on AI capabilities.
+
+3.
+Concepts: notes lack of determinism, expresses concerns about ai unpredictability, reflects on ai unpredictability
+Relationship: These concepts are related as they all address the unpredictability and inconsistency of AI responses.
+Criteria: Users note and express concerns about the unpredictability and inconsistency of AI responses.
+Phrase: Reflect on AI unpredictability.
+
+4.
+Concepts: doubts ai's capability, trust issues in ai
+Relationship: The concepts are related as doubts about AI's capabilities contribute to trust issues among users.
+Criteria: Interviewees express doubts and skepticism about the reliability of AI-generated content.
+Phrase: Express doubts about AI capabilities.
+
+5.
+Concepts: suspects bug in ai, identifies potential bug
+Relationship: The concepts are connected as users suspect bugs in the AI's output, leading to critical evaluations of its performance.
+Criteria: Users suspect incorrect outputs from the AI and identify potential bugs in its performance.
+Phrase: Identify potential bugs in AI.
+
+6.
+Concepts: identifies misunderstanding, notes discrepancies in ai understanding
+Relationship: These concepts are related as users identify misunderstandings and discrepancies in the AI's interpretation of their requests.
+Criteria: Users identify and reflect on misunderstandings in the AI's interpretation of their requests.
+Phrase: Identify misunderstandings in AI.
+
+7.
+Concepts: error handling, clarification and troubleshooting
+Relationship: The concepts are related as they both address the need for effective communication and handling of errors by the AI.
+Criteria: Users express the need for the AI to effectively handle and communicate errors.
+Phrase: Seek clarification on error handling.
+
+8.
+Concepts: notes ai failures, identifies inability to fix certain errors
+Relationship: The concepts are interconnected as they both highlight the limitations of the AI in resolving errors.
+Criteria: Interviewees describe situations where the AI fails to resolve errors and note its limitations.
+Phrase: Note AI's inability to fix errors.
+
+9.
+Concepts: interpretation, recognition of ai plotting errors
+Relationship: The concepts are related as users interpret AI-generated outputs and correct errors based on their understanding.
+Criteria: Interviewees interpret AI-generated outputs and identify errors in plots.
+Phrase: Recognize errors in AI outputs.
+
+10.
+Concepts: critiques system feedback, calls for better error messaging
+Relationship: The concepts are connected as critiques of system feedback lead to calls for improved error messaging.
+Criteria: Users comment on the unhelpfulness of error messages and call for better messaging.
+Phrase: Critique system feedback.
+
+11.
+Concepts: chatlogo ability (negative), chatlogo ability (negative): no fix option?
+Relationship: The concepts are related as they both express frustration with the AI's inability to assist effectively.
+Criteria: Users express frustration with the AI's lack of a "fix" option after identifying errors.
+Phrase: Critique AI's assistance ability.
+
+12.
+Concepts: outdated code, notes compatibility issues with netlogo
+Relationship: The concepts are connected as outdated AI-generated code leads to compatibility issues with NetLogo.
+Criteria: Users note that AI-generated code reflects older versions of NetLogo, causing compatibility issues.
+Phrase: Note compatibility issues with AI code.
+
+13.
+Concepts: compares ai to human interns, highlight ai's processing limitations
+Relationship: The concepts are related as users compare AI's limitations in processing to human capabilities.
+Criteria: Users compare the limitations of AI in processing large codebases to those of human interns.
+Phrase: Compare AI to human capabilities.
+
+14.
+Concepts: has only used chatgpt 3.5, indicates limited experience with ai version
+Relationship: The concepts are connected as limited experience with a specific version of AI informs users' perceptions.
+Criteria: Users indicate their limited usage of ChatGPT version 3.5.
+Phrase: Indicate limited experience with AI.
+
+15.
+Concepts: persistence, abandons task after ai repetition
+Relationship: The concepts are related as a lack of persistence leads users to abandon tasks after repetitive AI responses.
+Criteria: Users abandon tasks when faced with repetitive AI responses that do not provide new information.
+Phrase: Abandon tasks due to repetition.
+
+16.
+Concepts: human-effort (negative): more time to explore, other tech(negative): search engine would take more time
+Relationship: The concepts are interconnected as both highlight the time-consuming nature of searching for documentation.
+Criteria: Interviewees express that using a search engine for documentation is time-consuming compared to immediate access.
+Phrase: Note time-consuming nature of searching.
+
+17.
+Concepts: language proficiency, reflects on effort constraints
+Relationship: The concepts are related as users' proficiency in multiple programming languages affects their learning efforts.
+Criteria: Users reflect on their proficiency in multiple programming languages and the associated time constraints.
+Phrase: Reflect on language proficiency.
+
+18.
+Concepts: system support, suggests system support
+Relationship: The concepts are connected as users' reflections on fragmented learning experiences lead to suggestions for system support.
+Criteria: Users reflect on the need for system support to manage fragmented learning experiences.
+Phrase: Suggest system support for learning.
+
+19.
+Concepts: professional challenges, benefit of ai - interpretation of context
+Relationship: The concepts are related as users reflect on professional learning challenges and the potential benefits of AI in providing contextual support.
+Criteria: Interviewees reflect on the fragmented nature of professional learning and the need for contextual support.
+Phrase: Reflect on professional challenges.
+
+20.
+Concepts: knowledge preservation, knowledge fragmentation
+Relationship: The concepts are interconnected as AI's ability to store fragmented knowledge relates to users' perceptions of knowledge management.
+Criteria: Users discuss how AI could help in managing fragmented knowledge.
+Phrase: Discuss knowledge preservation.
+
+21.
+Concepts: expert usability, notes need for expert friendly features
+Relationship: The concepts are related as challenges in adapting to expert-level tools highlight the need for user-friendly features.
+Criteria: Users mention challenges in adapting to expert-level tools and the need for expert-friendly features.
+Phrase: Note need for expert-friendly features.
+
+22.
+Concepts: design tension, highlights tension between novice and expert needs
+Relationship: The concepts are connected as the tension between novice and expert needs informs the design of AI tools.
+Criteria: Users note the tension between novice-oriented and expert-oriented design in AI tools.
+Phrase: Highlight design tension.
+
+23.
+Concepts: ai decides which direction the problem goes into, ai can limit options & points to different sometimes wrong directions
+Relationship: The concepts are related as AI's guidance can lead users down unproductive paths.
+Criteria: Users express concern that AI may lead less experienced users down unproductive paths.
+Phrase: Express concern about AI guidance.
+
+24.
+Concepts: debugging risks, highlights risks for novices
+Relationship: The concepts are interconnected as concerns about debugging risks relate to the challenges faced by novices.
+Criteria: Users express concerns about the risks for novices in relying on AI without sufficient expertise.
+Phrase: Highlight debugging risks for novices.
+
+25.
+Concepts: suggests gradual learning, critiques novices' expectations
+Relationship: The concepts are related as critiques of novices' expectations inform suggestions for gradual learning.
+Criteria: Users observe that novices may have unrealistic expectations of AI's ability to provide immediate, correct answers.
+Phrase: Critique novices' expectations.
+
+26.
+Concepts: instruction writing, discusses instruction writing skills
+Relationship: The concepts are connected as the importance of writing clear instructions is essential for effective AI interaction.
+Criteria: Users reflect on the importance of writing clear instructions for effective AI interaction.
+Phrase: Discuss instruction writing skills.
+
+27.
+Concepts: debug: ability to ask questions, novice's challenge of asking the right question
+Relationship: The concepts are related as the ability to ask questions is crucial for novices to effectively utilize AI.
+Criteria: Interviewees emphasize the importance of asking questions to effectively utilize AI, particularly for novices.
+Phrase: Emphasize importance of asking questions.
+
+28.
+Concepts: notes inefficiencies, suggests incremental coding
+Relationship: The concepts are interconnected as inefficiencies in coding lead to suggestions for incremental coding practices.
+Criteria: Users highlight the inefficiencies faced by beginners when writing extensive code before testing.
+Phrase: Suggest incremental coding practices.
+
+29.
+Concepts: steep learning curve & frustration point, expresses frustration with debugging challenges
+Relationship: The concepts are related as the steep learning curve contributes to frustration during debugging.
+Criteria: Users express frustration with unclear and unhelpful error messages during debugging.
+Phrase: Express frustration with debugging challenges.
+
+30.
+Concepts: notes lack of debugging skills, observes beginners' struggles
+Relationship: The concepts are connected as a lack of debugging skills contributes to beginners' struggles.
+Criteria: Users reflect on the foundational knowledge that beginners may lack and observe their struggles.
+Phrase: Note beginners' struggles.
+
+31.
+Concepts: scope, addressing scope-related challenges in coding tasks
+Relationship: The concepts are related as understanding variable scope is crucial for addressing coding challenges.
+Criteria: Users discuss the importance of understanding variable scope in programming tasks.
+Phrase: Address scope-related challenges.
+
+32.
+Concepts: seeking ai help for troubleshooting, need for improved help-seeking methods
+Relationship: The concepts are interconnected as the need for assistance from AI informs the search for better help-seeking methods.
+Criteria: Interviewees express a need for assistance from AI in various coding tasks and error resolution.
+Phrase: Seek AI help for troubleshooting.
+
+33.
+Concepts: human-ai: seek help, seeks collaborative problem solving
+Relationship: The concepts are related as seeking help from AI is a form of collaborative problem-solving.
+Criteria: Users seek collaborative problem-solving by asking the AI to assist with specific coding challenges.
+Phrase: Seek collaborative problem-solving.
+
+34.
+Concepts: emphasizes need for expertise, demand for expertise & experience
+Relationship: The concepts are interconnected as the need for expertise is emphasized in the context of debugging AI-generated code.
+Criteria: Users recognize the need for expertise to debug AI-generated code and highlight the demand for practice.
+Phrase: Emphasize need for expertise.
+
+35.
+Concepts: concept understanding, calls for conceptual error detection
+Relationship: The concepts are related as understanding programming concepts is essential for detecting errors.
+Criteria: Users reflect on the need for AI to support understanding of programming concepts and identify conceptual errors.
+Phrase: Call for conceptual error detection.
+
+36.
+Concepts: problem solving, problem complexity
+Relationship: The concepts are interconnected as experiences with problem-solving relate to the complexity of encountered problems.
+Criteria: Users reflect on their experiences with problem-solving and the complexity of problems encountered.
+Phrase: Reflect on problem-solving experiences.
+
+37.
+Concepts: prefers simple, prefers straightforward tasks
+Relationship: The concepts are related as preferences for simplicity inform users' choices in tasks.
+Criteria: Users prefer to work on simple tasks or models that are easy to understand and implement.
+Phrase: Prefer straightforward tasks.
+
+38.
+Concepts: seeks easier ai interaction, adjusts task complexity
+Relationship: The concepts are interconnected as simplifying tasks facilitates easier interaction with AI.
+Criteria: Users simplify tasks to facilitate easier interaction with AI.
+Phrase: Seek easier AI interaction.
+
+39.
+Concepts: switches to simpler task, decides to change approach
+Relationship: The concepts are related as challenges in current tasks lead users to switch to simpler tasks.
+Criteria: Interviewees switch to simpler tasks when faced with challenges in their current work.
+Phrase: Switch to simpler tasks.
+
+40.
+Concepts: values proactive problem solving, prefers ai solutions over prolonged problem solving
+Relationship: The concepts are interconnected as a proactive approach to problem-solving informs preferences for AI solutions.
+Criteria: Users value a proactive approach to problem-solving with the help of AI.
+Phrase: Value proactive problem-solving.
+
+41.
+Concepts: speed, chatgpt
+Relationship: The concepts are related as the speed of ChatGPT is highlighted as an advantage over traditional methods.
+Criteria: Interviewees emphasize the speed at which ChatGPT can perform tasks compared to traditional methods.
+Phrase: Highlight speed of ChatGPT.
+
+42.
+Concepts: hiring criteria, argues for ai efficiency
+Relationship: The concepts are interconnected as discussions about AI efficiency relate to hiring criteria.
+Criteria: Users discuss the efficiency of AI in completing tasks quickly compared to traditional methods.
+Phrase: Argue for AI efficiency.
+
+43.
+Concepts: ai utility, recognizes time-saving benefits
+Relationship: The concepts are related as recognizing AI's utility is linked to its time-saving benefits.
+Criteria: Users acknowledge the utility of AI in enhancing productivity and efficiency.
+Phrase: Recognize AI's time-saving benefits.
+
+44.
+Concepts: relies on ai for efficiency, human-ai (positive): time-saving
+Relationship: The concepts are interconnected as reliance on AI is driven by its time-saving benefits.
+Criteria: Interviewees indicate reliance on AI-generated solutions when facing time constraints.
+Phrase: Rely on AI for efficiency.
+
+45.
+Concepts: time-saving, time efficiency
+Relationship: The concepts are related as perceptions of AI's time-saving capabilities inform users' views on time efficiency.
+Criteria: Users perceive that AI can save time in learning and performing tasks.
+Phrase: Perceive AI as time-saving.
+
+46.
+Concepts: ai advancements, anticipates rapid ai advancements
+Relationship: The concepts are interconnected as acknowledging AI's potential for evolution informs expectations for future advancements.
+Criteria: Interviewees acknowledge the potential for AI to evolve and improve over time.
+Phrase: Anticipate rapid AI advancements.
+
+47.
+Concepts: values streamlined help seeking, ai ability (positive): convenient way to seek help from
+Relationship: The concepts are related as valuing streamlined help-seeking is linked to the convenience of AI assistance.
+Criteria: Interviewees appreciate the potential for AI to streamline the process of seeking help.
+Phrase: Value streamlined help-seeking.
+
+48.
+Concepts: values immediate feedback, values prompt feedback from ai
+Relationship: The concepts are interconnected as the value placed on immediate feedback informs users' expectations of AI.
+Criteria: Interviewees value the importance of receiving quick responses and assistance from the AI.
+Phrase: Value prompt feedback from AI.
+
+49.
+Concepts: human-ai, facilitating collaborative knowledge sharing with ai
+Relationship: The concepts are related as AI's role in facilitating communication informs collaborative knowledge sharing.
+Criteria: Users discuss the potential for AI to facilitate collaborative knowledge sharing and problem-solving.
+Phrase: Facilitate collaborative knowledge sharing.
+
+50.
+Concepts: ai ability (positive): customization, discussing collaborative ai for productivity enhancement
+Relationship: The concepts are interconnected as customization capabilities inform discussions about AI's potential for productivity enhancement.
+Criteria: Users discuss the potential for collaborative AI systems to enhance productivity in their work.
+Phrase: Discuss collaborative AI for productivity.
+
+51.
+Concepts: learning process improvement, imagines ai improving the learning process
+Relationship: The concepts are related as critiques of the current learning process inform visions for AI's role in improvement.
+Criteria: Users critique the current learning process and envision AI as a tool for improvement.
+Phrase: Imagine AI improving learning processes.
+
+52.
+Concepts: discusses jargon translation, ai ability (positive): translation
+Relationship: The concepts are interconnected as the need for jargon translation informs discussions about AI's capabilities.
+Criteria: Interviewees discuss the need for AI to translate jargon between different user groups.
+Phrase: Discuss jargon translation.
+
+53.
+Concepts: value of incremental feedback, recommending gradual error presentation
+Relationship: The concepts are related as valuing incremental feedback informs recommendations for error presentation.
+Criteria: Interviewees suggest that AI should provide feedback incrementally to avoid overwhelming users.
+Phrase: Recommend gradual error presentation.
+
+54.
+Concepts: user feedback, suggests improvements
+Relationship: The concepts are interconnected as user feedback is essential for enhancing AI systems.
+Criteria: Users discuss the potential for user feedback to enhance AI systems and suggest improvements.
+Phrase: Suggest improvements based on user feedback.
+
+55.
+Concepts: suggests ai could save time, reduce learning curve and save human's needs for learning programming knowledge
+Relationship: The concepts are related as suggestions for AI's time-saving capabilities inform discussions about reducing the learning curve.
+Criteria: Interviewees express that AI could save time when learning new extensions compared to core concepts of NetLogo.
+Phrase: Suggest AI could save time.
+
+56.
+Concepts: learning extensions, human-ai: support
+Relationship: The concepts are interconnected as the desire for AI support in learning extensions informs discussions about its role.
+Criteria: Users express a desire for AI to assist in learning about new extensions within time constraints.
+Phrase: Seek AI support for learning extensions.
+
+57.
+Concepts: beginner support, seeking ai support for learning initiation
+Relationship: The concepts are related as the need for AI support informs discussions about helping beginners initiate their learning process.
+Criteria: Interviewees discuss the need for AI to support beginners in their learning process.
+Phrase: Seek AI support for beginners.
+
+58.
+Concepts: calls for preparatory exercises, suggests foundational skill for ai use
+Relationship: The concepts are interconnected as the need for preparatory exercises informs discussions about foundational skills for AI use.
+Criteria: Interviewees reiterate the need for preparatory exercises to enhance user skills before engaging with AI.
+Phrase: Call for preparatory exercises.
+
+59.
+Concepts: emphasize human-ai collaboration, great insight on relationship between human & ai
+Relationship: The concepts are related as advocating for collaboration informs insights on the relationship between human and AI.
+Criteria: Interviewees advocate for collaboration with AI that enhances human capabilities.
+Phrase: Emphasize human-AI collaboration.
+
+60.
+Concepts: ability, capability enhancement
+Relationship: The concepts are interconnected as enhancing human capabilities is a key role of AI.
+Criteria: Users emphasize the role of AI in augmenting human capabilities and judgment.
+Phrase: Enhance human capabilities.
+
+61.
+Concepts: warns against blind reliance on ai, human-ai: no need to blindly follow
+Relationship: The concepts are related as warnings against blind reliance inform discussions about understanding AI's limitations.
+Criteria: Users warn against relying solely on AI without understanding its limitations.
+Phrase: Warn against blind reliance on AI.
+
+62.
+Concepts: error understanding, warns about potential ai errors
+Relationship: The concepts are interconnected as understanding errors is crucial for users to avoid blindly following AI guidance.
+Criteria: Interviewees note the necessity of expertise to understand and fix errors, warning against blindly following AI guidance.
+Phrase: Warn about potential AI errors.
+
+63.
+Concepts: deviates their directions, emphasizing user expertise
+Relationship: The concepts are related as emphasizing user expertise informs discussions about effectively using AI tools.
+Criteria: Interviewees highlight the necessity of user expertise to effectively utilize AI and avoid blindly following its suggestions.
+Phrase: Emphasize user expertise.
+
+64.
+Concepts: comparison to past tech, compares ai mistakes to early apple maps errors
+Relationship: The concepts are interconnected as comparisons to past technology experiences inform discussions about the need for user judgment.
+Criteria: Interviewees compare AI's mistakes to historical errors in technology, emphasizing the need for user judgment.
+Phrase: Compare AI mistakes to past technology.
+---
