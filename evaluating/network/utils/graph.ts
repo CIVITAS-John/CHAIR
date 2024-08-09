@@ -83,7 +83,8 @@ export function BuildSemanticGraph(Dataset: CodebookComparison<any>, Parameter: 
         MinimumDistance: MinDistance };
     // Identify the components
     Graph.Components = FindCommunities(Graph.Nodes, Graph.Links, (Node, Links) => {
-        return Math.sqrt(Node.Data.Examples?.length ?? 0) + Node.TotalWeight * 10;
+        // Only to solve ties
+        return Math.sqrt(Node.Data.Examples?.length ?? 0) * 0.001;
     });
     // Look at every link - and if the source and target are in different components, reduce the weight
     // Thus, we will have a more close spatial arrangement of the components
@@ -136,7 +137,8 @@ export function FindCommunities<T>(Nodes: Node<T>[], Links: Link<T>[],
     // Find the communities
     var Communities = (graphologyLibrary.communitiesLouvain as any)(Graph, {
         getEdgeWeight: (Edge: any) => Weights.get(Edge)!,
-        resolution: 1.5
+        resolution: 1.5,
+        rng: new (Math as any).seedrandom('deterministic')
     }) as Record<string, number>;
     // Create the components
     var Components: Component<T>[] = new Array(Object.values(Communities).reduce((a, b) => Math.max(a, b), 0) + 1);
@@ -182,23 +184,9 @@ export function SortNodesByCentrality<T>(Nodes: Node<T>[], Links: Link<T>[],
     });
     // Translate the result
     for (var Node of Nodes) {
-        Result[Node.ID] = Result[Node.ID]! + NodeEvaluator(Node, Links);
+        Result[Node.ID] = Result[Node.ID]! * Node.TotalWeight + NodeEvaluator(Node, Links);
     }
     return Nodes.sort((A, B) => Result[B.ID] - Result[A.ID]);
-}
-
-/** FindBestNode: Find the best node in the set. */
-export function FindBestNode<T>(Nodes: Node<T>[], Links: Link<T>[], NodeEvaluator: (Node: Node<T>, Links: Link<T>[]) => number): Node<T> {
-    var Best: Node<T> | undefined = undefined;
-    var BestValue = Number.MIN_VALUE;
-    for (var Node of Nodes) {
-        var Value = NodeEvaluator(Node, Links.filter(Link => Node == Link.Source || Node == Link.Target));
-        if (Value > BestValue) {
-            Best = Node;
-            BestValue = Value;
-        }
-    }
-    return Best!;
 }
 
 /** FilterNodeByOwner: Filter a node by presence of the owner. */

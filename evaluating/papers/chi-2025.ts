@@ -58,7 +58,8 @@ async function RepeatedlyEvaluateInFolder(Times: number, Temperatures: number[],
     }
     // Write the CSV to a file
     SourcePath = GetMessagesPath(SourcePath);
-    File.writeFileSync(SourcePath + "/chi-2025/results/" + Folders.join("-") + `-${LLM}.csv`, CSVResults.join("\n"));
+    if (Times > 1) 
+        File.writeFileSync(SourcePath + "/chi-2025/results/" + Folders.join("-") + `-${LLM}.csv`, CSVResults.join("\n"));
 }
 
 // Task: Compare the 4 approaches with GPT-4o described in the pilot study.
@@ -69,6 +70,10 @@ async function RepeatedlyEvaluateInFolder(Times: number, Temperatures: number[],
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 2", "gpt-4.5-mini", new RefiningReferenceBuilder(true, true), "pilot-study");
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 2", "llama3-70b", new RefiningReferenceBuilder(true, true), "pilot-study");
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 2", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), "pilot-study");
+
+// Task: (Qualitatively) compare coding approaches' potential biases
+await RepeatedlyEvaluateInFolder(1, [0.5], "Coded Dataset 1", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), "pilot-study");
+await RepeatedlyEvaluateInFolder(1, [0.5], "Coded Dataset 2", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), "pilot-study");
 
 // Task: Does it matter if we only merge very similar names?
 // We don't report this, but yes, it biases towards having more codes (low-level-*).

@@ -145,7 +145,7 @@ export class Dialog extends Panel {
         // Build the panel
         var Panel = $(`<div class="panel"></div>`);
         // Add the title
-        Panel.append($(`<h3>Codebook Coverage by Clusters</h3>`));
+        var Title = $(`<h3>Potential Bias of Codebooks (By Clusters)</h3>`).appendTo(Panel);
         Panel.append($(`<hr/>`));
         // Evaluate the coverage
         var Graph = this.GetGraph<Code>();
@@ -157,24 +157,32 @@ export class Dialog extends Panel {
         // Build the table
         this.BuildTable(
             Results, (Row, {Component, Coverages, Differences}, Index) => {
-                Row.append($(`<td class="actionable"><h4>${Component.Representative!.Data.Label}</h4><p class="tips">${Component.Nodes.length} codes</p></td>`)
+                Row.append($(`<td class="actionable"><h4>${Index + 1}. ${Component.Representative!.Data.Label}</h4><p class="tips">${Component.Nodes.length} codes</p></td>`)
                     .on("click", () => this.SidePanel.ShowPanel<CodeSection>("Codes").ShowComponent(Component)));
                 Coverages.forEach((Coverage, I) => {
                     var Difference = Differences[I];
                     var Color = Colors(Math.min(1, Difference));
                     var Cell = $(`<td class="metric-cell actionable"></td>`)
-                        .text(d3.format(".1%")(Coverage))
+                        .text(d3.format("+.1%")(Difference))
                         .css("background", Color)
                         .css("color", d3.lab(Color).l > 70 ? "black" : "white")
                         .on("click", () => {
                             this.Visualizer.SetFilter(false, new OwnerFilter(), I + 1, false);
                             this.SidePanel.ShowPanel<CodeSection>("Codes").ShowComponent(Component);
                         })
-                        .append($(`<p></p>`).text(d3.format("+.1%")(Difference)));
+                        .append($(`<p></p>`).text(d3.format(".1%")(Coverage)));
                     Row.append(Cell);
                 });
             }, ["Cluster", ...this.Dataset.Names.slice(1)]
         ).appendTo(Panel);
+        // Copy to clipboard
+        Title.append($(`<span><a href="javascript:void(0)" class="copy">Copy to Clipboard</a></span>`).on("click", () => {
+            var Table = ["ID\tCluster\tCodes\t" + this.Dataset.Names.slice(1).join("\t")];
+            Results.forEach(({Component, Coverages, Differences}, Index) => {
+                Table.push(`${Index + 1}.\t${Component.Representative!.Data.Label}\t${Component.Nodes.length}\t${Differences.map(Difference => d3.format(".1%")(Difference).replace("−", "-")).join("\t")}`);
+            });
+            navigator.clipboard.writeText(Table.join("\n"));
+        }));
         // Show the dialog
         this.ShowPanel(Panel);
     }
