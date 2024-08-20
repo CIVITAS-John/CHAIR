@@ -137,7 +137,7 @@ export class OwnerFilter<T> extends FilterBase<T, number> {
             return new OwnerColorizer(Visualizer.Dataset.Names.map((_, Index) => Index).slice(1), Visualizer);
         } else if (this.Parameters.length == 1) {
             if (this.Mode == "Novelty" || this.Mode == "Divergence")
-                return new NoveltyColorizer(this.Parameters[0]);
+                return new NoveltyColorizer(this.Parameters[0], Visualizer);
             else return new CoverageColorizer(this.Parameters[0]);
         } else if (this.Parameters.length == 2) {
             return new ComparisonColorizer(this.Parameters[0], this.Parameters[1], Visualizer);
@@ -166,19 +166,21 @@ export class CoverageColorizer<T> implements Colorizer<T> {
 /** NoveltyColorizer: Colorize the nodes by their novelty. */
 export class NoveltyColorizer<T> implements Colorizer<T> {
     /** Constructor: Create a novelty colorizer. */
-    public constructor(public Owner: number) { }
+    public constructor(public Owner: number, public Visualizer: Visualizer) { }
     /** Colorize: The colorizer function. */
     public Colorize(Node: Node<T>): string {
         // Not covered
         if (!Node.NearOwners.has(this.Owner))
             return "#999999";
-        // Novel
-        if (Node.Owners.size == (Node.Owners.has(0) ? 2 : 1) && Node.Owners.has(this.Owner))
-            return d3.interpolatePlasma(1);
-        // Conform
-        if (Node.Owners.has(this.Owner))
-            return d3.interpolatePlasma(0.7);
-        else
+        if (Node.Owners.has(this.Owner)) {
+            var Novel = true;
+            Node.Owners.forEach(Owner => { 
+                if (Owner != this.Owner && this.Visualizer.Dataset.Weights![Owner] > 0) Novel = false;
+            });
+            // Novel / Conform
+            return d3.interpolatePlasma(Novel ? 1 : 0.7);
+        } else
+            // Nearly conform
             return d3.interpolatePlasma(0.35);
     }
     /** Examples: The examples of the colorizer. */

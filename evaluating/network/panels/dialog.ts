@@ -177,7 +177,7 @@ export class Dialog extends Panel {
         ).appendTo(Panel);
         // Copy to clipboard
         Title.append($(`<span><a href="javascript:void(0)" class="copy">Copy to Clipboard</a></span>`).on("click", () => {
-            var Table = ["ID\tCluster\tCodes\t" + this.Dataset.Names.slice(1).join("\t")];
+            var Table = ["ID\tCluster (Representative Code)\tCodes\t" + this.Dataset.Names.slice(1).join("\t")];
             Results.forEach(({Component, Coverages, Differences}, Index) => {
                 Table.push(`${Index + 1}.\t${Component.Representative!.Data.Label}\t${Component.Nodes.length}\t${Differences.map(Difference => d3.format(".1%")(Difference).replace("−", "-")).join("\t")}`);
             });
