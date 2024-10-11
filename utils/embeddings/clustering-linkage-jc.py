@@ -107,9 +107,22 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
     return traverse(node.get_left(), depth + 1, cluster, prob, color) + traverse(node.get_right(), depth + 1, cluster, prob, color)
 nodes = traverse(root, 0)
 
-# Plot the distances
+# Plot the distribution of distances with log scale
+if True:    
+    import matplotlib.pyplot as plt
+    fig, ax = plt.subplots()
+    # Filter out distances > 0.8
+    distances = distances[distances < 0.7]
+    ax.hist(distances.flatten(), bins=70, log=True)
+    ax.set_xlabel('Distance')
+    ax.set_ylabel('Log Frequency')
+    ax.set_title('Distribution of Distances')
+    wm = plt.get_current_fig_manager()
+    wm.window.state('zoomed')
+    plt.show()
+
+# Plot the dendrogram
 if Plotting:
-    # Do a dendrogram
     from scipy.cluster.hierarchy import dendrogram
     import matplotlib.pyplot as plt
     fig = plt.figure()

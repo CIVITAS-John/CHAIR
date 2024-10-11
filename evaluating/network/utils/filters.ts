@@ -178,16 +178,16 @@ export class NoveltyColorizer<T> implements Colorizer<T> {
                 if (Owner != this.Owner && this.Visualizer.Dataset.Weights![Owner] > 0) Novel = false;
             });
             // Novel / Conform
-            return d3.interpolatePlasma(Novel ? 1 : 0.7);
+            return d3.interpolatePlasma(Novel ? 1 : 0.35);
         } else
             // Nearly conform
-            return d3.interpolatePlasma(0.35);
+            return d3.interpolatePlasma(0.7);
     }
     /** Examples: The examples of the colorizer. */
     public Examples: Record<string, string> = {
         "Novel: only in this codebook": d3.interpolatePlasma(1),
-        "Conform: in the codebook": d3.interpolatePlasma(0.7),
-        "Conform: has a similar concept": d3.interpolatePlasma(0.35),
+        "Conform: has a similar concept": d3.interpolatePlasma(0.7),
+        "Conform: in the codebook": d3.interpolatePlasma(0.35),
         "Not covered": "#999999"
     };
 }

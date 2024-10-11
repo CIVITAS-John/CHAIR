@@ -96,6 +96,18 @@ export function InitializeLLM(LLM: string) {
                 maxTokens: MaxOutput,
             });
             break;
+        case "o1-mini":
+            // 3$ / 12$
+            MaxInput = 16385;
+            MaxOutput = 4096;
+            MaxItems = 64;
+            Model = (Temp) => new ChatOpenAI({
+                temperature: Temp,
+                modelName: "o1-mini",
+                streaming: false,
+                maxTokens: MaxOutput,
+            });
+            break;
         case "claude3-haiku":
             // 0.25$ / 0.75$
             MaxInput = 200000;
@@ -138,7 +150,7 @@ export function InitializeLLM(LLM: string) {
             MaxOutput = 32000;
             MaxItems = 32;
             Model = (Temp) => new ChatMistralAI({
-                temperature: Temp,
+                temperature: 1,
                 modelName: "open-mixtral-8x22b",
                 streaming: false,
                 maxTokens: MaxOutput,
