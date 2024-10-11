@@ -1,11 +1,11 @@
-import * as File from 'fs';
-import { CodedThread, Conversation, Message } from '../../utils/schema.js';
-import { BuildMessagePrompt, ConversationAnalyzer } from './conversations.js';
-import { PythonShell } from 'python-shell';
-import chalk from 'chalk';
-import { CodingNotes, ResearchQuestion } from '../../constants.js';
-import { RequestLLMWithCache } from '../../utils/llms.js';
-import { SystemMessage, HumanMessage } from '@langchain/core/messages';
+import * as File from "fs";
+import { CodedThread, Conversation, Message } from "../../utils/schema.js";
+import { BuildMessagePrompt, ConversationAnalyzer } from "./conversations.js";
+import { PythonShell } from "python-shell";
+import chalk from "chalk";
+import { CodingNotes, ResearchQuestion } from "../../constants.js";
+import { RequestLLMWithCache } from "../../utils/llms.js";
+import { SystemMessage, HumanMessage } from "@langchain/core/messages";
 
 /** BertopicAnalyzer2: Conduct the first-round bertopic coding of the conversations. */
 // Differece from BertopicAnalyzer1: The prompt specifically asks for a verb phrase.
@@ -25,13 +25,13 @@ export default class BertopicAnalyzer2 extends ConversationAnalyzer {
     /** BatchPreprocess: Preprocess the conversations in batch. */
     public async BatchPreprocess(Conversations: Conversation[], Analyzed: CodedThread[]): Promise<void> {
         // Write the messages into the file.
-        var Messages = Conversations.flatMap(Conversation => 
-            Conversation.AllItems!.filter(Message => Message.Content?.length > 0 && 
-                (!Message.Chunk || Message.Chunk == Conversation.ID)));
-        var Content = Messages.map(Message => BuildMessagePrompt(Message, undefined, undefined, true).replaceAll("\n", " "));
+        var Messages = Conversations.flatMap((Conversation) =>
+            Conversation.AllItems!.filter((Message) => Message.Content?.length > 0 && (!Message.Chunk || Message.Chunk == Conversation.ID)),
+        );
+        var Content = Messages.map((Message) => BuildMessagePrompt(Message, undefined, undefined, true).replaceAll("\n", " "));
         File.writeFileSync("./known/temp.text", Content.join("\n"));
         // Run the Python script
-        var Topics: Record<number, { IDs: number[], Probabilities: number[], Keywords: string[] }> = {};
+        var Topics: Record<number, { IDs: number[]; Probabilities: number[]; Keywords: string[] }> = {};
         await PythonShell.run(`coding/conversations/bertopic-impl.py`, {
             args: [Messages.length.toString()],
             parser: (Message) => {
@@ -41,14 +41,14 @@ export default class BertopicAnalyzer2 extends ConversationAnalyzer {
                 } else {
                     console.log(chalk.gray(Message));
                 }
-            }
+            },
         });
         // Generate a label and definition for each topic
         for (var Index in Topics) {
             var Topic = Topics[Index];
             var IDs = Topic.IDs.sort((A, B) => Topic.Probabilities[B] - Topic.Probabilities[A]);
             // Maximum 5 examples sorted by probabilities
-            var Examples = IDs.slice(0, 5).map(ID => Messages[ID]);
+            var Examples = IDs.slice(0, 5).map((ID) => Messages[ID]);
             // Build the prompt
             var Prompt = `
 You are an expert in thematic analysis with grounded theory, working on open coding.
@@ -64,12 +64,19 @@ Phrase: {A single verb phrase that faithfully describes the topic}
             // Find 5 keywords from the topic
             var Keywords = Topic.Keywords.slice(0, 5);
             // Request the LLM
-            var Response = await RequestLLMWithCache([
-                new SystemMessage(Prompt),
-                new HumanMessage(`Quotes:
-${Examples.map(Message => `- ${BuildMessagePrompt(Message, undefined, undefined, true)}`).join("\n")}
-Keywords: ${Keywords.join(", ")}`.trim())
-            ], `messaging-groups/${this.Name}`, this.BaseTemperature, false);
+            var Response = await RequestLLMWithCache(
+                [
+                    new SystemMessage(Prompt),
+                    new HumanMessage(
+                        `Quotes:
+${Examples.map((Message) => `- ${BuildMessagePrompt(Message, undefined, undefined, true)}`).join("\n")}
+Keywords: ${Keywords.join(", ")}`.trim(),
+                    ),
+                ],
+                `messaging-groups/${this.Name}`,
+                this.BaseTemperature,
+                false,
+            );
             // Parse the response
             var Phrase = "";
             var Lines = Response.split("\n");
@@ -87,14 +94,20 @@ Keywords: ${Keywords.join(", ")}`.trim())
         }
     }
     /** ParseResponse: Parse the response from the LLM. */
-    public async ParseResponse(Analysis: CodedThread, Lines: string[], Subunits: Message[], ChunkStart: number, Iteration: number): Promise<Record<number, string>> {
+    public async ParseResponse(
+        Analysis: CodedThread,
+        Lines: string[],
+        Subunits: Message[],
+        ChunkStart: number,
+        Iteration: number,
+    ): Promise<Record<number, string>> {
         var Results: Record<number, string> = {};
         for (var I = 0; I < Subunits.length; I++) {
             var Code = this.Codes[Subunits[I].ID] ?? "";
             // Sometimes, the code ends with a period
             if (Code.endsWith(".")) Code = Code.slice(0, -1);
             // Sometimes, the code is inside a quote
-            if (Code.startsWith("\"") && Code.endsWith("\"")) Code = Code.slice(1, -1);
+            if (Code.startsWith('"') && Code.endsWith('"')) Code = Code.slice(1, -1);
             Results[I + 1] = Code;
         }
         return Results;

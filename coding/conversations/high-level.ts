@@ -1,5 +1,5 @@
-import { AssembleExampleFrom, Code, CodedThread, Message } from '../../utils/schema.js';
-import { ConversationAnalyzer, RevertMessageFormat } from './conversations.js';
+import { AssembleExampleFrom, Code, CodedThread, Message } from "../../utils/schema.js";
+import { ConversationAnalyzer, RevertMessageFormat } from "./conversations.js";
 
 /** HighLevelAnalyzerBase: Conduct the first-round high-level coding of the conversations. */
 // Authored by John Chen.
@@ -78,22 +78,21 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                     Line = RevertMessageFormat(Line);
                     // Add the example if it is not already in the list
                     CurrentCode.Examples = CurrentCode.Examples ?? [];
-                    var Message = Messages.find(Message => Message.Content == Line);
+                    var Message = Messages.find((Message) => Message.Content == Line);
                     if (!Message) {
                         var LowerLine = Line.toLowerCase();
                         // Remove everything after "..."
                         var Index = LowerLine.indexOf("...");
                         if (Index != -1) LowerLine = LowerLine.substring(0, Index).trim();
                         if (LowerLine.endsWith(".")) LowerLine = LowerLine.substring(0, LowerLine.length - 1);
-                        Message = Messages.find(Message => {
+                        Message = Messages.find((Message) => {
                             var Lower = Message.Content.toLowerCase();
                             return Lower.includes(LowerLine) || LowerLine.includes(Lower);
                         });
                     }
                     if (!Message) console.log(`Cannot find message for: ${Line}`);
                     var Example = Message ? AssembleExampleFrom(Message) : Line;
-                    if (Message && !CurrentCode.Examples.includes(Example))
-                        CurrentCode.Examples.push(Example);
+                    if (Message && !CurrentCode.Examples.includes(Example)) CurrentCode.Examples.push(Example);
                 }
             }
         }

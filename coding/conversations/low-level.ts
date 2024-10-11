@@ -1,7 +1,7 @@
-import { GetSpeakerName } from '../../constants.js';
-import { MaxItems } from '../../utils/llms.js';
-import { CodedThread, Message } from '../../utils/schema.js';
-import { ConversationAnalyzer } from './conversations.js';
+import { GetSpeakerName } from "../../constants.js";
+import { MaxItems } from "../../utils/llms.js";
+import { CodedThread, Message } from "../../utils/schema.js";
+import { ConversationAnalyzer } from "./conversations.js";
 
 /** LowLevelAnalyzerBase: Conduct the first-round low-level coding of the conversations. */
 // Authored by John Chen.
@@ -23,14 +23,14 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
         for (var I = 0; I < Lines.length; I++) {
             var Line = Lines[I];
             var NextLine = I + 1 < Lines.length ? Lines[I + 1] : "";
-            if (Line.startsWith("Thoughts:")) 
-                Analysis.Plan = Line.substring(9).trim(); 
-            else if (Line.startsWith("Summary:")) 
-                Analysis.Summary = Line.substring(8).trim(); 
+            if (Line.startsWith("Thoughts:")) Analysis.Plan = Line.substring(9).trim();
+            else if (Line.startsWith("Summary:")) Analysis.Summary = Line.substring(8).trim();
             else if (Line.startsWith("Notes:")) {
-                Analysis.Reflection = Line.substring(6).trim(); 
-                if (Analysis.Reflection == "") 
-                    Analysis.Reflection = Lines.slice(I + 1).join("\n").trim();
+                Analysis.Reflection = Line.substring(6).trim();
+                if (Analysis.Reflection == "")
+                    Analysis.Reflection = Lines.slice(I + 1)
+                        .join("\n")
+                        .trim();
             } else {
                 var Match = Line.match(/^(\d+)\. (.*)$/);
                 if (Match) {
@@ -65,13 +65,12 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     // Sometimes the LLM will return "{codes}."
                     if (Codes.endsWith(".")) Codes = Codes.substring(0, Codes.length - 1).trim();
                     // Sometimes the LLM will return "preliminary tags: {codes}"
-                    if (Codes.toLowerCase().startsWith(`preliminary ${this.TagsName}:`)) 
-                        Codes = Codes.substring(17).trim();
+                    if (Codes.toLowerCase().startsWith(`preliminary ${this.TagsName}:`)) Codes = Codes.substring(17).trim();
                     // Sometimes the LLM will return codes such as AcknowledgingResponse, which should be split into two words
                     Codes = Codes.replace(/((?<=[a-z][a-z])[A-Z]|[A-Z](?=[a-z]))/g, " $1").trim();
                     // Sometimes the LLM will use -_ to separate words
-                    Codes = Codes.replaceAll("-", " ")
-                    Codes = Codes.replaceAll("_", " ")
+                    Codes = Codes.replaceAll("-", " ");
+                    Codes = Codes.replaceAll("_", " ");
                     // Sometimes the LLM will generate multiple spaces
                     Codes = Codes.replaceAll(/\s+/g, " ");
                     // Sometimes the LLM will return "{speaker}, {other codes}"
@@ -84,11 +83,12 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                 }
             }
         }
-        if (Object.values(Results).every(Value => Value == "")) throw new Error(`Invalid response: all codes are empty.`);
+        if (Object.values(Results).every((Value) => Value == "")) throw new Error(`Invalid response: all codes are empty.`);
         if (Analysis.Plan == undefined) throw new Error(`Invalid response: no plans`);
         if (Analysis.Reflection == undefined) throw new Error(`Invalid response: no reflections`);
         if (Analysis.Summary == undefined) throw new Error(`Invalid response: no summary`);
-        if (Object.keys(Results).length != Messages.length) throw new Error(`Invalid response: ${Object.keys(Results).length} results for ${Messages.length} messages.`);
+        if (Object.keys(Results).length != Messages.length)
+            throw new Error(`Invalid response: ${Object.keys(Results).length} results for ${Messages.length} messages.`);
         // Check keys
         //for (var I = 0; I < Object.keys(Results).length; I++)
         //    if (!Results[I + 1]) throw new Error(`Invalid response: missing message ${I + 1}`);

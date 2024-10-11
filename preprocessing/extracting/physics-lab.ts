@@ -1,8 +1,8 @@
-import * as File from 'fs';
-import * as Mongo from 'mongodb';
-import { Project, Comment, User } from '../../utils/schema.js';
-import { GetDatasetPath } from '../../utils/loader.js';
-import { CutoffDate } from './message-groups.js';
+import * as File from "fs";
+import * as Mongo from "mongodb";
+import { Project, Comment, User } from "../../utils/schema.js";
+import { GetDatasetPath } from "../../utils/loader.js";
+import { CutoffDate } from "./message-groups.js";
 
 /** Users: Known users in Physics Lab. */
 const Users = new Map<string, User>();
@@ -20,7 +20,7 @@ async function ExportUser(Database: Mongo.Db, ID: Mongo.ObjectId, Nickname?: str
         Comments: 0,
         FirstUse: Statistics.Registration,
         Titles: [],
-    }
+    };
     // Sync the verification status at "now" time. - we used Sep 15, 2022 snapshot of Physics Lab's database
     SyncUser(Result, User.Verification, new Date(2022, 9, 15));
     Users.set(ID.toHexString(), Result);
@@ -32,11 +32,16 @@ async function SyncUser(User: User, Verification: string, Time: Date) {
     if (Verification == undefined) return;
     // If the user is banned, old-timer, or moderator, update the user.
     switch (Verification) {
-        case "Banned": User.Banned = true; break;
-        case "Oldtimer": User.Oldtimer = true; break;
-        case "": break;
+        case "Banned":
+            User.Banned = true;
+            break;
+        case "Oldtimer":
+            User.Oldtimer = true;
+            break;
+        case "":
+            break;
         default: {
-            User.Oldtimer = true; 
+            User.Oldtimer = true;
             User.Moderator = true;
             break;
         }
@@ -64,8 +69,7 @@ async function SyncUser(User: User, Verification: string, Time: Date) {
         }
     }
     // If the title is the latest, add it to the end.
-    if (User.Titles.length == 0 || User.Titles[User.Titles.length - 1][1] != Verification)
-        User.Titles.push([Time, Verification]);
+    if (User.Titles.length == 0 || User.Titles[User.Titles.length - 1][1] != Verification) User.Titles.push([Time, Verification]);
 }
 
 /** FindMentions: Find the mentions in the content. */
@@ -78,13 +82,16 @@ async function FindMentions(Database: Mongo.Db, Content: string): Promise<[strin
             console.log(`Invalid ID: ${Match[1]}`);
         }
     }
-    return [Content.replaceAll(/<user=(.*?)>(.*?)<\/user>/gs, (Match, ID) => {
-        if (Users.has(ID)) {
-            var Metadata = Users.get(ID)!;
-            Mentioned.push(Metadata.ID);
-            return `@${Metadata.Nickname}(${Metadata.ID})`
-        } else return Match;
-    }), Mentioned.length == 0 ? undefined : Mentioned];
+    return [
+        Content.replaceAll(/<user=(.*?)>(.*?)<\/user>/gs, (Match, ID) => {
+            if (Users.has(ID)) {
+                var Metadata = Users.get(ID)!;
+                Mentioned.push(Metadata.ID);
+                return `@${Metadata.Nickname}(${Metadata.ID})`;
+            } else return Match;
+        }),
+        Mentioned.length == 0 ? undefined : Mentioned,
+    ];
 }
 
 /** ExportComments: Export all comments from the database. */
@@ -103,8 +110,7 @@ async function ExportComments(Database: Mongo.Db, Collection: Mongo.Collection, 
         var User = await ExportUser(Database, Comment.UserID, Comment.Nickname);
         User.Comments++;
         SyncUser(User, Comment.Verification, new Date(Comment.Timestamp));
-        if (User.FirstComment == undefined) 
-            User.FirstComment = new Date(Comment.Timestamp);
+        if (User.FirstComment == undefined) User.FirstComment = new Date(Comment.Timestamp);
         // Create the comment metadata
         var Metadata: Comment = {
             ID: Comment._id.toHexString(),
@@ -112,8 +118,8 @@ async function ExportComments(Database: Mongo.Db, Collection: Mongo.Collection, 
             Nickname: User.Nickname,
             CurrentNickname: Comment.Nickname == User.Nickname ? undefined : Comment.Nickname,
             Time: new Date(Comment.Timestamp),
-            Content: Comment.Content
-        }
+            Content: Comment.Content,
+        };
         // Find the mentions
         var [Content, Mentioned] = await FindMentions(Database, Metadata.Content);
         Metadata.Content = Content;
@@ -137,7 +143,7 @@ const Tags = new Map<string, string>();
 async function ExportProjects(Database: Mongo.Db, Collection: Mongo.Collection): Promise<Project[]> {
     var Projects = await Collection.find({
         CreationDate: { $lte: CutoffDate.getTime() },
-        Visibility: 0
+        Visibility: 0,
     }).toArray();
     var Results: Project[] = [];
     // Go through each project.
@@ -146,8 +152,7 @@ async function ExportProjects(Database: Mongo.Db, Collection: Mongo.Collection):
         var User = await ExportUser(Database, Project.User._id, Project.Nickname);
         User.Projects++;
         SyncUser(User, Project.User.Verification, new Date(Project.UpdateDate));
-        if (User.FirstProject == undefined) 
-            User.FirstProject = new Date(Project.CreationDate);
+        if (User.FirstProject == undefined) User.FirstProject = new Date(Project.CreationDate);
         // Create the project metadata
         var ID = Project._id.toHexString();
         var Metadata: Project = {
@@ -164,15 +169,17 @@ async function ExportProjects(Database: Mongo.Db, Collection: Mongo.Collection):
             Supports: Project.Supports,
             Remixes: Project.Remixes,
             Tags: Project.Tags.map((Tag: string) => Tags.get(Tag) ?? Tag),
-            Cover: `http://physics-static-cn.turtlesim.com/experiments/images/${ID.substring(0, 4)}/${ID.substring(4, 6)}/${ID.substring(6, 8)}/${ID.substring(8, 24)}/${Project.Image}.jpg`,
-            Items: 0
-        }
+            Cover: `http://physics-static-cn.turtlesim.com/experiments/images/${ID.substring(0, 4)}/${ID.substring(4, 6)}/${ID.substring(
+                6,
+                8,
+            )}/${ID.substring(8, 24)}/${Project.Image}.jpg`,
+            Items: 0,
+        };
         // Find the mentions
         var [Content, Mentioned] = await FindMentions(Database, Metadata.Content);
         Metadata.Content = Content;
         Metadata.Mentions = Mentioned;
-        Metadata.AllItems = await ExportComments(Database, 
-            Database.collection("ExperimentComments"), { TargetID: Project._id })
+        Metadata.AllItems = await ExportComments(Database, Database.collection("ExperimentComments"), { TargetID: Project._id });
         Metadata.Items = Metadata.AllItems?.length ?? 0;
         // Get the comments
         Results.push(Metadata);
@@ -184,22 +191,21 @@ async function ExportProjects(Database: Mongo.Db, Collection: Mongo.Collection):
 async function ExportAll() {
     // Read projects and comments from the database, anonymize user ids, and export into JSON and CSV format.
     const RootPath = `${GetDatasetPath()}\\Projects and Comments`;
-    
+
     // Connect to the localhost
-    const Client = new Mongo.MongoClient('mongodb://127.0.0.1:27017');
+    const Client = new Mongo.MongoClient("mongodb://127.0.0.1:27017");
     await Client.connect();
-    const Database = Client.db('QuantumCN');
+    const Database = Client.db("QuantumCN");
     console.log("Connected to the server!");
-    
+
     // Read the tags
-    (await Database.collection("ContentTags").find().toArray())
-        .forEach(Tag => Tags.set(Tag.Identifier, Tag.Subject.English));
-    
+    (await Database.collection("ContentTags").find().toArray()).forEach((Tag) => Tags.set(Tag.Identifier, Tag.Subject.English));
+
     // Read the projects
     var Projects: Project[] = [];
     Projects = Projects.concat(await ExportProjects(Database, Database.collection("ExperimentSummaries")));
     Projects = Projects.concat(await ExportProjects(Database, Database.collection("Discussions")));
-    
+
     // Read personal messages
     var Messages: Comment[] = [];
     Messages = Messages.concat((await ExportComments(Database, Database.collection("PersonalComments")))!);
@@ -212,30 +218,39 @@ async function ExportAll() {
     var UserArray = Array.from(Users.values());
     File.writeFileSync(`${RootPath}\\Users.json`, JSON.stringify(UserArray, null, 4));
 
-    console.log(`Exported ${Users.size} users, their ${Projects.length} projects, ${Projects.reduce((Sum, Project) => Sum + (Project.Items ?? 0), 0)} comments on projects, and ${UserArray.reduce((Sum, User) => Sum + (User.Messages?.length ?? 0), 0)} personal comments.`);
-    
+    console.log(
+        `Exported ${Users.size} users, their ${Projects.length} projects, ${Projects.reduce(
+            (Sum, Project) => Sum + (Project.Items ?? 0),
+            0,
+        )} comments on projects, and ${UserArray.reduce((Sum, User) => Sum + (User.Messages?.length ?? 0), 0)} personal comments.`,
+    );
+
     // Calculate tokens
-    var FullContent = Projects.map(Project => {
+    var FullContent = Projects.map((Project) => {
         var Content = Project.Content;
         if (Project.CurrentNickname) Content += "\n" + Project.CurrentNickname;
         if (Project.AllItems) {
-            Content += "\n" + Project.AllItems.map(Comment => {
-                var Message = Comment.Content;
-                if (Comment.CurrentNickname) Message += "\n" + Comment.CurrentNickname;
-                return Message;
-            }).join("\n");
-        };
+            Content +=
+                "\n" +
+                Project.AllItems.map((Comment) => {
+                    var Message = Comment.Content;
+                    if (Comment.CurrentNickname) Message += "\n" + Comment.CurrentNickname;
+                    return Message;
+                }).join("\n");
+        }
         return Content;
     }).join("\n");
-    FullContent += UserArray.map(User => {
+    FullContent += UserArray.map((User) => {
         var Content = User.Nickname;
         if (User.Messages) {
-            Content += "\n" + User.Messages.map(Comment => {
-                var Message = Comment.Content;
-                if (Comment.CurrentNickname) Message += "\n" + Comment.CurrentNickname;
-                return Message;
-            }).join("\n");
-        };
+            Content +=
+                "\n" +
+                User.Messages.map((Comment) => {
+                    var Message = Comment.Content;
+                    if (Comment.CurrentNickname) Message += "\n" + Comment.CurrentNickname;
+                    return Message;
+                }).join("\n");
+        }
         return Content;
     }).join("\n");
 

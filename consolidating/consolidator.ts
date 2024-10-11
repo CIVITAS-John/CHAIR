@@ -1,11 +1,10 @@
 import { Code, Codebook, CodedThreads } from "../utils/schema.js";
 import { Analyzer } from "../analyzer.js";
-import chalk from 'chalk';
+import chalk from "chalk";
 import { Shuffle } from "../utils/math.js";
 
 /** CodebookConsolidator: The definition of an abstract codebook consolidator. */
-export abstract class CodebookConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedThreads> {
-}
+export abstract class CodebookConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedThreads> {}
 
 /** PipelineConsolidator: A pipeline consolidator that runs through multiple CodeConsolidator. */
 export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedThreads> {
@@ -44,7 +43,7 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         if (this.Index >= this.Consolidators.length) return [];
         console.log(chalk.white(chalk.bold(`Iteration ${Iteration}: ${this.Consolidators[this.Index].GetName()}`)));
         // Preprocess the subunits
-        Subunits = Subunits.filter(Code => Code.Label !== "[Merged]");
+        Subunits = Subunits.filter((Code) => Code.Label !== "[Merged]");
         // Reorder the subunits to prevent over-merging
         Subunits = Shuffle(Subunits, 0);
         var Result = await this.Consolidators[this.Index].Preprocess(Analysis.Codebook!, Subunits);
@@ -58,7 +57,13 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         return this.Consolidators[this.Index].SubunitFilter(Code);
     }
     /** BuildPrompts: Build the prompts for the LLM. */
-    public async BuildPrompts(Analysis: CodedThreads, Data: TUnit[], Codes: Code[], ChunkStart: number, Iteration: number): Promise<[string, string]> {
+    public async BuildPrompts(
+        Analysis: CodedThreads,
+        Data: TUnit[],
+        Codes: Code[],
+        ChunkStart: number,
+        Iteration: number,
+    ): Promise<[string, string]> {
         if (this.Index >= this.Consolidators.length || this.Consolidators[this.Index].Stopping) return ["", ""];
         var Prompts = await this.Consolidators[this.Index].BuildPrompts(Analysis.Codebook!, Codes);
         if (Prompts instanceof Array) {
@@ -100,13 +105,17 @@ export abstract class CodeConsolidator {
         return true;
     }
     /** Preprocess: Preprocess the subunits after filtering, before chunking. */
-    public async Preprocess(Codebook: Codebook, Subunits: Code[]): Promise<Code[] | Codebook> { 
+    public async Preprocess(Codebook: Codebook, Subunits: Code[]): Promise<Code[] | Codebook> {
         return Subunits;
     }
     /** BuildPrompts: Build the prompts for the code consolidator. */
-    public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<Codebook | [string, string] | [string, string, Codebook]> { return Codebook; }
+    public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<Codebook | [string, string] | [string, string, Codebook]> {
+        return Codebook;
+    }
     /** ParseResponse: Parse the response for the code consolidator. */
-    public async ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]): Promise<number | [number, Codebook]> { return 0; }
+    public async ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]): Promise<number | [number, Codebook]> {
+        return 0;
+    }
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // Return value: [Chunk size, Cursor movement]
     public GetChunkSize(Recommended: number, Remaining: number, Tries: number) {

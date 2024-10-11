@@ -1,7 +1,7 @@
-import { CodingNotes, ResearchQuestion } from '../../constants.js';
-import { CodedThread, Conversation, Message } from '../../utils/schema.js';
-import { BuildMessagePrompt } from './conversations.js';
-import { HighLevelAnalyzerBase } from './high-level.js';
+import { CodingNotes, ResearchQuestion } from "../../constants.js";
+import { CodedThread, Conversation, Message } from "../../utils/schema.js";
+import { BuildMessagePrompt } from "./conversations.js";
+import { HighLevelAnalyzerBase } from "./high-level.js";
 
 /** HighLevelAnalyzer1: Conduct the first-round high-level coding of the conversations. */
 /* Original prompt format:
@@ -21,7 +21,8 @@ export default class HighLevelAnalyzer1 extends HighLevelAnalyzerBase {
     public BaseTemperature: number = 0.5;
     /** BuildPrompts: Build the prompts for the LLM. */
     public async BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): Promise<[string, string]> {
-        return [`
+        return [
+            `
 Hi ChatGPT, I want to analyze the following interaction in one of Physics Lab's online message groups.
 Please give me a codebook to analyze factors within this interaction that could contribute to the research.
 ${ResearchQuestion}
@@ -35,6 +36,7 @@ Definition: A definition of code 1
 
 ## ...
 `.trim(),
-            Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join("\n")];
+            Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join("\n"),
+        ];
     }
 }

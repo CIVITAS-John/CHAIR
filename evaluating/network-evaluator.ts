@@ -1,11 +1,11 @@
 import { EvaluateTexts } from "../utils/embeddings.js";
 import { Code, Codebook, CodebookComparison, CodebookEvaluation, DataChunk, DataItem, Dataset } from "../utils/schema.js";
 import { MergeCodebooks } from "../consolidating/codebooks.js";
-import { CodebookEvaluator } from './codebooks.js';
-import { CreateOfflineBundle, CreateServer } from '../utils/server.js';
-import { ReadOrBuildCache } from '../utils/file.js';
-import md5 from 'md5';
-import { GetSpeakerName } from '../constants.js';
+import { CodebookEvaluator } from "./codebooks.js";
+import { CreateOfflineBundle, CreateServer } from "../utils/server.js";
+import { ReadOrBuildCache } from "../utils/file.js";
+import md5 from "md5";
+import { GetSpeakerName } from "../constants.js";
 
 /** NetworkEvaluator: A network evaluator of codebook against a reference codebook (#0) with potential human inputs. */
 export class NetworkEvaluator extends CodebookEvaluator {
@@ -20,14 +20,13 @@ export class NetworkEvaluator extends CodebookEvaluator {
     /** Title: The title of the evaluator. */
     public Title: string;
     /** constructor: Initialize the evaluator. */
-    public constructor(
-        { Dataset, Anonymize, Title }: { Dataset: Dataset<DataChunk<DataItem>>, Anonymize?: boolean, Title?: string }) {
+    public constructor({ Dataset, Anonymize, Title }: { Dataset: Dataset<DataChunk<DataItem>>; Anonymize?: boolean; Title?: string }) {
         super();
         this.Dataset = Dataset;
         this.Anonymize = Anonymize ?? true;
         this.Title = Title ?? "Network Evaluator";
     }
-    /** Evaluate: Evaluate a number of codebooks. */ 
+    /** Evaluate: Evaluate a number of codebooks. */
     public async Evaluate(Codebooks: Codebook[], Names: string[], ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
         var Hash = md5(JSON.stringify(Codebooks));
         // Weights
@@ -46,12 +45,19 @@ export class NetworkEvaluator extends CodebookEvaluator {
             var Merged = MergeCodebooks(Codebooks, true);
             // Then, we convert each code into an embedding and send to Python
             var Codes = Object.values(Merged);
-            var Labels = Codes.map(Code => Code.Label);
-            var CodeStrings = Labels.map(Label => GetCodeString(Merged[Label]!));
-            var CodeOwners = Labels.map(Label => Merged[Label]!.Owners!);
-            var Result = await EvaluateTexts<{Distances: number[][], Positions: [number, number][]}>
-                (CodeStrings, Labels, CodeOwners, Names, this.Name, 
-                    "network", this.Visualize.toString(), ExportPath ?? "./known");
+            var Labels = Codes.map((Code) => Code.Label);
+            var CodeStrings = Labels.map((Label) => GetCodeString(Merged[Label]!));
+            var CodeOwners = Labels.map((Label) => Merged[Label]!.Owners!);
+            var Result = await EvaluateTexts<{ Distances: number[][]; Positions: [number, number][] }>(
+                CodeStrings,
+                Labels,
+                CodeOwners,
+                Names,
+                this.Name,
+                "network",
+                this.Visualize.toString(),
+                ExportPath ?? "./known",
+            );
             // Infuse the results back into the reference codebook
             for (var I = 0; I < Codes.length; I++) {
                 Codes[I].Position = Result.Positions[I];
@@ -61,9 +67,8 @@ export class NetworkEvaluator extends CodebookEvaluator {
                 for (var Dataset of Object.values(this.Dataset.Data)) {
                     for (var Chunk of Object.values(Dataset)) {
                         for (var Item of Chunk.AllItems ?? []) {
-                                Item.Nickname = GetSpeakerName(Item.UserID);
-                                if ((Item as any).CurrentNickname) 
-                                    delete (Item as any).CurrentNickname;
+                            Item.Nickname = GetSpeakerName(Item.UserID);
+                            if ((Item as any).CurrentNickname) delete (Item as any).CurrentNickname;
                         }
                     }
                 }
@@ -76,14 +81,14 @@ export class NetworkEvaluator extends CodebookEvaluator {
                 Distances: Result.Distances,
                 Source: this.Dataset,
                 Title: this.Title,
-                Weights: Weights
+                Weights: Weights,
             };
             return Package;
         });
         // Run the HTTP server
         CreateOfflineBundle(ExportPath + "/network", ["evaluating/network", "out/evaluating/network"], ExportPath + "/network.json");
         // Return the results from the server
-        return await CreateServer(8080, ["evaluating/network", "out/evaluating/network"], ExportPath + "/network.json") ?? {};
+        return (await CreateServer(8080, ["evaluating/network", "out/evaluating/network"], ExportPath + "/network.json")) ?? {};
     }
 }
 

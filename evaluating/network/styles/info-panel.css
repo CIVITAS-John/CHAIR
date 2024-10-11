@@ -77,7 +77,7 @@
     color: #666;
 }
 .panel ol.quote li.split::marker {
-    content: ""
+    content: "";
 }
 .panel ol.quote li.custom::marker {
     content: attr(seq) ". ";
@@ -107,7 +107,7 @@ li.owners i {
 p.owners a:not(:last-child):after,
 li.owners a:not(:last-child):after,
 .panel a.source:not(:last-child):after {
-    content: ", "
+    content: ", ";
 }
 .panel a.source:before {
     content: " from ";

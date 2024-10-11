@@ -1,9 +1,9 @@
-import type { Cash } from 'cash-dom';
-import { Visualizer } from '../visualizer.js';
-import { Panel } from './panel.js';
-import { CodebookSection } from '../sections/codebook.js';
-import { DatasetSection } from '../sections/dataset.js';
-import { CodeSection } from '../sections/code.js';
+import type { Cash } from "cash-dom";
+import { Visualizer } from "../visualizer.js";
+import { Panel } from "./panel.js";
+import { CodebookSection } from "../sections/codebook.js";
+import { DatasetSection } from "../sections/dataset.js";
+import { CodeSection } from "../sections/code.js";
 
 /** SidePanel: The side panel for the visualizer. */
 export class SidePanel extends Panel {
@@ -24,21 +24,19 @@ export class SidePanel extends Panel {
         var Sections = [
             new DatasetSection(this.Contents, this.Visualizer),
             new CodebookSection(this.Contents, this.Visualizer),
-            new CodeSection(this.Contents, this.Visualizer)
+            new CodeSection(this.Contents, this.Visualizer),
         ];
-        for (var Section of Sections)
-            this.Subpanels[Section.Name] = Section;
+        for (var Section of Sections) this.Subpanels[Section.Name] = Section;
         // Add the menu
         var MenuContainer = this.Contents.children(".panel-menu");
         var BuildMenu = (Name: string) => {
-            return $(`<a href="javascript:void(0)" id="menu-${Name}">${this.Subpanels[Name].Name}</a>`)
-                .on("click", () => this.ShowPanel(Name));
+            return $(`<a href="javascript:void(0)" id="menu-${Name}">${this.Subpanels[Name].Name}</a>`).on("click", () => this.ShowPanel(Name));
         };
-        for (var Key in this.Subpanels)
-            MenuContainer.append(BuildMenu(Key));
+        for (var Key in this.Subpanels) MenuContainer.append(BuildMenu(Key));
         // Show the tutorial
-        MenuContainer.append($(`<a href="javascript:void(0)" id="menu-tutorial">?</a>`)
-            .on("click", () => this.Visualizer.Tutorial.ShowTutorial(true)));
+        MenuContainer.append(
+            $(`<a href="javascript:void(0)" id="menu-tutorial">?</a>`).on("click", () => this.Visualizer.Tutorial.ShowTutorial(true)),
+        );
     }
     /** ShowPanel: Show a side panel. */
     public ShowPanel<T extends Panel>(Name: string): T {
@@ -58,7 +56,7 @@ export class SidePanel extends Panel {
     /** Show: Show the side panel. */
     public Show() {
         this.Container.toggleClass("collapsed", false);
-        this.ShowPanel(this.CurrentPanel)
+        this.ShowPanel(this.CurrentPanel);
     }
     /** Hide: Hide the side panel. */
     public Hide() {

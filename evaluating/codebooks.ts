@@ -1,9 +1,9 @@
-import chalk from 'chalk';
-import md5 from 'md5';
+import chalk from "chalk";
+import md5 from "md5";
 import { Codebook, CodebookEvaluation } from "../utils/schema.js";
-import { ReadOrBuildCache } from '../utils/file.js';
-import { BuildReferenceAndExport, ReferenceBuilder } from './reference-builder.js';
-import { LoadCodebooks, LoadCodebooksInGroups } from '../utils/loader.js';
+import { ReadOrBuildCache } from "../utils/file.js";
+import { BuildReferenceAndExport, ReferenceBuilder } from "./reference-builder.js";
+import { LoadCodebooks, LoadCodebooksInGroups } from "../utils/loader.js";
 
 /** CodebookEvaluator: An evaluator of codebook. */
 export abstract class CodebookEvaluator {
@@ -14,9 +14,13 @@ export abstract class CodebookEvaluator {
 }
 
 /** EvaluateCodebooksWithReference: Evaluate a number of codebooks. */
-export async function EvaluateCodebooksWithReference(Source: string | string[], Evaluator: CodebookEvaluator, ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
+export async function EvaluateCodebooksWithReference(
+    Source: string | string[],
+    Evaluator: CodebookEvaluator,
+    ExportPath?: string,
+): Promise<Record<string, CodebookEvaluation>> {
     // Find all the codebooks under the path
-    var [ Codebooks, Names ] = await LoadCodebooks(Source);
+    var [Codebooks, Names] = await LoadCodebooks(Source);
     // Evaluate the codebooks
     var Results = await Evaluator.Evaluate(Codebooks, Names, ExportPath);
     console.log(chalk.green(JSON.stringify(Results, null, 4)));
@@ -24,10 +28,16 @@ export async function EvaluateCodebooksWithReference(Source: string | string[], 
 }
 
 /** BuildReferenceAndEvaluateCodebooks: Build a reference and evaluate a number of codebooks. */
-export async function BuildReferenceAndEvaluateCodebooks(Source: string | string[], ReferencePath: string, Builder: ReferenceBuilder, Evaluator: CodebookEvaluator, 
-    ExportPath?: string, CreateGroup?: boolean): Promise<Record<string, CodebookEvaluation>> {
+export async function BuildReferenceAndEvaluateCodebooks(
+    Source: string | string[],
+    ReferencePath: string,
+    Builder: ReferenceBuilder,
+    Evaluator: CodebookEvaluator,
+    ExportPath?: string,
+    CreateGroup?: boolean,
+): Promise<Record<string, CodebookEvaluation>> {
     // Find all the codebooks under the path
-    var [ Codebooks, Names ] = await LoadCodebooks(Source, CreateGroup);
+    var [Codebooks, Names] = await LoadCodebooks(Source, CreateGroup);
     // Build the reference codebook
     var RealCodebooks = Codebooks.filter((_, I) => Names[I].startsWith("group: ") == false);
     var Backup = JSON.stringify(RealCodebooks);
@@ -40,10 +50,15 @@ export async function BuildReferenceAndEvaluateCodebooks(Source: string | string
 }
 
 /** BuildReferenceAndEvaluateCodebooksInGroups: Build a reference and evaluate a number of codebooks, using folders as groups. */
-export async function BuildReferenceAndEvaluateCodebooksInGroups(Source: string[], ReferencePath: string, Builder: ReferenceBuilder, Evaluator: CodebookEvaluator, 
-    ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
+export async function BuildReferenceAndEvaluateCodebooksInGroups(
+    Source: string[],
+    ReferencePath: string,
+    Builder: ReferenceBuilder,
+    Evaluator: CodebookEvaluator,
+    ExportPath?: string,
+): Promise<Record<string, CodebookEvaluation>> {
     // Find all the codebooks under the path
-    var [ Codebooks, Names ] = await LoadCodebooksInGroups(Source);
+    var [Codebooks, Names] = await LoadCodebooksInGroups(Source);
     var Backup = JSON.stringify(Codebooks);
     var Hash = md5(Backup);
     // Build the reference codebook

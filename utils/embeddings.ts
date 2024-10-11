@@ -1,14 +1,14 @@
-import * as File from 'fs';
-import * as dotenv from 'dotenv'
-import md5 from 'md5';
+import * as File from "fs";
+import * as dotenv from "dotenv";
+import md5 from "md5";
 import { Embeddings } from "@langchain/core/embeddings";
 import { OpenAIEmbeddings } from "@langchain/openai";
-import { EnsureFolder } from './llms.js';
-import { PythonShell } from 'python-shell';
-import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai';
+import { EnsureFolder } from "./llms.js";
+import { PythonShell } from "python-shell";
+import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { TaskType } from "@google/generative-ai";
-import chalk from 'chalk';
-import { Code } from './schema.js';
+import chalk from "chalk";
+import { Code } from "./schema.js";
 
 // Model: The embedding model to use.
 export var Model: Embeddings;
@@ -25,48 +25,48 @@ export function InitializeEmbeddings(Embedding: string) {
             Dimensions = 512;
             Model = new OpenAIEmbeddings({
                 modelName: "text-embedding-3-small",
-                dimensions: Dimensions
+                dimensions: Dimensions,
             });
             break;
         case "openai-large-256":
             Dimensions = 256;
             Model = new OpenAIEmbeddings({
                 modelName: "text-embedding-3-large",
-                dimensions: Dimensions
+                dimensions: Dimensions,
             });
             break;
         case "openai-large-1024":
             Dimensions = 1024;
             Model = new OpenAIEmbeddings({
                 modelName: "text-embedding-3-large",
-                dimensions: Dimensions
+                dimensions: Dimensions,
             });
             break;
         case "gecko-768":
             Dimensions = 768;
             Model = new GoogleGenerativeAIEmbeddings({
-                model: "text-embedding-004"
+                model: "text-embedding-004",
             });
             break;
         case "gecko-768-classification":
             Dimensions = 768;
             Model = new GoogleGenerativeAIEmbeddings({
                 model: "text-embedding-004",
-                taskType: TaskType.CLASSIFICATION
+                taskType: TaskType.CLASSIFICATION,
             });
             break;
         case "gecko-768-clustering":
             Dimensions = 768;
             Model = new GoogleGenerativeAIEmbeddings({
                 model: "text-embedding-004",
-                taskType: TaskType.CLUSTERING
+                taskType: TaskType.CLUSTERING,
             });
             break;
         case "gecko-768-similarity":
             Dimensions = 768;
             Model = new GoogleGenerativeAIEmbeddings({
                 model: "text-embedding-004",
-                taskType: TaskType.SEMANTIC_SIMILARITY
+                taskType: TaskType.SEMANTIC_SIMILARITY,
             });
             break;
         default:
@@ -105,8 +105,7 @@ export async function RequestEmbeddings(Sources: string[], Cache: string): Promi
                     var Index = Requests[I + J];
                     var Embedding = new Float32Array(Results[J]);
                     // Check if all elements are 0
-                    if (Embedding.every((Value) => Value == 0))
-                        throw new Error(`Invalid embedding for: ${Sources[Index]}`);
+                    if (Embedding.every((Value) => Value == 0)) throw new Error(`Invalid embedding for: ${Sources[Index]}`);
                     Embeddings.set(Embedding, Dimensions * Index);
                     var CacheFile = `${CacheFolder}/${md5(Sources[Index])}.bytes`;
                     File.writeFileSync(CacheFile, Embedding);
@@ -142,7 +141,7 @@ export async function RequestEmbeddingWithCache(Source: string, Cache: string): 
 
 /** RequestEmbedding: Call the model to generate a text embedding. */
 export async function RequestEmbedding(Source: string): Promise<number[]> {
-    var Result = (await Model.embedDocuments([Source]))
+    var Result = await Model.embedDocuments([Source]);
     return Result[0];
 }
 
@@ -155,42 +154,75 @@ export interface ClusterItem {
 }
 
 /** ClusterCodes: Categorize the codes into clusters using linkage-jc. */
-export async function ClusterCodes(Sources: string[], Codes: Code[], Cache: string, ...ExtraOptions: string[]): Promise<Record<number, ClusterItem[]>> {
-    return await ClusterTexts(Sources, Codes.map(Code => {
-        return JSON.stringify({
-            Label: Code.Label,
-            Examples: Code.Examples?.map(Example => {
-                var Index = Example.indexOf("|||");
-                if (Index == -1) return Example;
-                return Example.substring(0, Index);
-            })
-        });
-    }), Cache, "linkage-jc", ...ExtraOptions);
+export async function ClusterCodes(
+    Sources: string[],
+    Codes: Code[],
+    Cache: string,
+    ...ExtraOptions: string[]
+): Promise<Record<number, ClusterItem[]>> {
+    return await ClusterTexts(
+        Sources,
+        Codes.map((Code) => {
+            return JSON.stringify({
+                Label: Code.Label,
+                Examples: Code.Examples?.map((Example) => {
+                    var Index = Example.indexOf("|||");
+                    if (Index == -1) return Example;
+                    return Example.substring(0, Index);
+                }),
+            });
+        }),
+        Cache,
+        "linkage-jc",
+        ...ExtraOptions,
+    );
 }
 
 /** ClusterCategories: Categorize the categories into clusters using linkage-jc. */
-export async function ClusterCategories(Sources: string[], Categories: Map<string, string[]>, Cache: string, ...ExtraOptions: string[]): Promise<Record<number, ClusterItem[]>> {
-    return await ClusterTexts(Sources, Sources.map(Category => {
-        return JSON.stringify({
-            Label: Category,
-            Examples: Categories.get(Category) ?? []
-        });
-    }), Cache, "linkage-jc", ...ExtraOptions);
+export async function ClusterCategories(
+    Sources: string[],
+    Categories: Map<string, string[]>,
+    Cache: string,
+    ...ExtraOptions: string[]
+): Promise<Record<number, ClusterItem[]>> {
+    return await ClusterTexts(
+        Sources,
+        Sources.map((Category) => {
+            return JSON.stringify({
+                Label: Category,
+                Examples: Categories.get(Category) ?? [],
+            });
+        }),
+        Cache,
+        "linkage-jc",
+        ...ExtraOptions,
+    );
 }
 
 /** ClusterTexts: Categorize the embeddings into clusters. */
-export async function ClusterTexts(Sources: string[], Names: string[], Cache: string, Method: string = "hdbscan", ...ExtraOptions: string[]): Promise<Record<number, ClusterItem[]>> {
+export async function ClusterTexts(
+    Sources: string[],
+    Names: string[],
+    Cache: string,
+    Method: string = "hdbscan",
+    ...ExtraOptions: string[]
+): Promise<Record<number, ClusterItem[]>> {
     console.log(chalk.gray("Requesting embeddings for: " + Sources.length));
     if (Sources.length == 0) return {};
     var Embeddings = await RequestEmbeddings(Sources, Cache);
     return await ClusterEmbeddings(Embeddings, Names, Method, ...ExtraOptions);
 }
 
-/** 
+/**
  * ClusterEmbeddings: Categorize the embeddings into clusters.
  * Return format: { Cluster: [ID, Probability][] }
  * */
-export async function ClusterEmbeddings(Embeddings: Float32Array, Names: string[], Method: string = "hdbscan", ...ExtraOptions: string[]): Promise<Record<number, ClusterItem[]>> {
+export async function ClusterEmbeddings(
+    Embeddings: Float32Array,
+    Names: string[],
+    Method: string = "hdbscan",
+    ...ExtraOptions: string[]
+): Promise<Record<number, ClusterItem[]>> {
     var Results: Record<number, ClusterItem[]> = {};
     // Write it into ./known/temp.bytes
     File.writeFileSync(`./known/temp.bytes`, Buffer.from(Embeddings.buffer));
@@ -199,7 +231,7 @@ export async function ClusterEmbeddings(Embeddings: Float32Array, Names: string[
     // Run the Python script
     await PythonShell.run(`utils/embeddings/clustering-${Method}.py`, {
         args: [Dimensions.toString(), Names.length.toString(), ...ExtraOptions],
-        parser: (Message) => { 
+        parser: (Message) => {
             if (Message.startsWith("[")) {
                 var Data = JSON.parse(Message) as number[][];
                 var Clusters = Data[0];
@@ -216,25 +248,46 @@ export async function ClusterEmbeddings(Embeddings: Float32Array, Names: string[
                         }
                     }
                 }
-                console.log(chalk.green(`Statistics: Clusters ${UniqueClusters.length - (NoCluster > 0 ? 1 : 0)} from ${Names.length} items; ${NoCluster} items unclustered.`));
+                console.log(
+                    chalk.green(
+                        `Statistics: Clusters ${UniqueClusters.length - (NoCluster > 0 ? 1 : 0)} from ${
+                            Names.length
+                        } items; ${NoCluster} items unclustered.`,
+                    ),
+                );
             } else console.log(chalk.gray(Message));
-        }
+        },
     });
     return Results;
 }
 
 /** EvaluateTexts: Evaluate a number of texts. */
-export async function EvaluateTexts<T>(Sources: string[], Labels: string[], Owners: number[][], OwnerLabels: string[], Cache: string, Method: string = "coverage", ...ExtraOptions: string[]): Promise<T> {
+export async function EvaluateTexts<T>(
+    Sources: string[],
+    Labels: string[],
+    Owners: number[][],
+    OwnerLabels: string[],
+    Cache: string,
+    Method: string = "coverage",
+    ...ExtraOptions: string[]
+): Promise<T> {
     console.log(chalk.gray("Requesting embeddings for: " + Sources.length));
     var Embeddings = await RequestEmbeddings(Sources, Cache);
     return await EvaluateEmbeddings(Embeddings, Labels, Owners, OwnerLabels, Method, ...ExtraOptions);
 }
 
-/** 
+/**
  * EvaluateEmbeddings: Evaluate a number of embeddings.
- * Return format: 
+ * Return format:
  * */
-export async function EvaluateEmbeddings<T>(Embeddings: Float32Array, Labels: string[], Owners: number[][], OwnerLabels: string[], Method: string = "coverage", ...ExtraOptions: string[]): Promise<T> {
+export async function EvaluateEmbeddings<T>(
+    Embeddings: Float32Array,
+    Labels: string[],
+    Owners: number[][],
+    OwnerLabels: string[],
+    Method: string = "coverage",
+    ...ExtraOptions: string[]
+): Promise<T> {
     var Results: T | undefined;
     // Write it into ./known/temp.bytes
     File.writeFileSync(`./known/temp.bytes`, Buffer.from(Embeddings.buffer));
@@ -244,11 +297,11 @@ export async function EvaluateEmbeddings<T>(Embeddings: Float32Array, Labels: st
     // Run the Python script
     await PythonShell.run(`utils/embeddings/evaluation-${Method}.py`, {
         args: [Dimensions.toString(), Labels.length.toString(), OwnerLabels.length.toString(), ...ExtraOptions],
-        parser: (Message) => { 
+        parser: (Message) => {
             if (Message.startsWith("{")) {
                 Results = JSON.parse(Message) as T;
             } else console.log(chalk.gray(Message));
-        }
+        },
     });
     if (!Results) throw new Error("No results returned from the Python script.");
     return Results;

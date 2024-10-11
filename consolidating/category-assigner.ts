@@ -19,11 +19,14 @@ export class CategoryAssigner extends CodeConsolidator {
         var Categories = Object.keys(Frequencies);
         // We have too many categories. Filter ones with more than 1 instances.
         // Categories = Categories.filter(Category => Codes.filter(Code => Code.Categories?.includes(Category)).length > 1).sort();
-        return [`
+        return [
+            `
 You are an expert in thematic analysis. You are assigning categories to qualitative codes based on their definitions.
 For each code, assign the closest category from the following list. Use "miscellaneous" if none fits.
 ---
-${Categories.filter(Category => Category != "miscellaneous").map((Category, Index) => `* ${Category}`).join("\n")}
+${Categories.filter((Category) => Category != "miscellaneous")
+    .map((Category, Index) => `* ${Category}`)
+    .join("\n")}
 ---
 ${ResearchQuestion}
 Always follow the output format:
@@ -34,11 +37,12 @@ Category for each code (${Codes.length} in total):
 ...
 ${Codes.length}. Code ${Codes.length}
 {The most relevant category for code ${Codes.length}}
----`.trim(), 
-                    `
+---`.trim(),
+            `
 Qualitative codes:
 ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0]}`).join("\n\n")}
-`.trim()];
+`.trim(),
+        ];
     }
     /** ParseResponse: Parse the response for the code consolidator. */
     public async ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]) {
@@ -66,8 +70,7 @@ ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0
         }
         // Update the codes
         if (Results.length != Codes.length) throw new Error(`Invalid response: ${Results.length} results for ${Codes.length} codes.`);
-        for (var I = 0; I < Codes.length; I++)
-            Codes[I].Categories = [Results[I]];
+        for (var I = 0; I < Codes.length; I++) Codes[I].Categories = [Results[I]];
         return 0;
     }
 }

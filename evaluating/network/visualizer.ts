@@ -1,16 +1,16 @@
-import * as d3 from 'd3';
-import { Code, CodebookComparison, DataChunk, DataItem } from '../../utils/schema.js';
-import { Node, Link, Graph, Component, GraphStatus } from './utils/schema.js';
-import { BuildSemanticGraph } from './utils/graph.js';
-import { Colorizer, ComponentFilter, OwnerFilter } from './utils/filters.js';
-import { Parameters, PostData } from './utils/utils.js';
-import type { Cash, CashStatic, Element } from 'cash-dom';
-import { InfoPanel } from './panels/info-panel.js';
-import { SidePanel } from './panels/side-panel.js';
-import { Dialog } from './panels/dialog.js';
-import { FilterBase } from './utils/filters.js';
-import { Tutorial } from './tutorial.js';
-import { Evaluate } from './utils/evaluate.js';
+import * as d3 from "d3";
+import { Code, CodebookComparison, DataChunk, DataItem } from "../../utils/schema.js";
+import { Node, Link, Graph, Component, GraphStatus } from "./utils/schema.js";
+import { BuildSemanticGraph } from "./utils/graph.js";
+import { Colorizer, ComponentFilter, OwnerFilter } from "./utils/filters.js";
+import { Parameters, PostData } from "./utils/utils.js";
+import type { Cash, CashStatic, Element } from "cash-dom";
+import { InfoPanel } from "./panels/info-panel.js";
+import { SidePanel } from "./panels/side-panel.js";
+import { Dialog } from "./panels/dialog.js";
+import { FilterBase } from "./utils/filters.js";
+import { Tutorial } from "./tutorial.js";
+import { Evaluate } from "./utils/evaluate.js";
 declare global {
     var $: typeof Cash.prototype.init & CashStatic;
 }
@@ -56,8 +56,7 @@ export class Visualizer {
         this.Dialog = new Dialog($(".dialog"), this);
         this.Tutorial = new Tutorial($(".portrait-overlay"), this);
         // Initialize the SVG
-        var Root = d3.select(Container.get(0)!)
-            .attr("style", `background-color: #290033`);
+        var Root = d3.select(Container.get(0)!).attr("style", `background-color: #290033`);
         this.Container = Root.append("svg");
         var Scaler = this.Container.append("g");
         this.HullLayer = Scaler.append("g").attr("class", "hulls");
@@ -68,16 +67,19 @@ export class Visualizer {
         this.LegendContainer = Container.find(".legends");
         this.FilterContainer = Container.find(".filters");
         // Zoom support
-        this.Zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", (event) => {
-            Scaler.attr("transform", event.transform);
-            var ScaleProgress = (1 - Math.max(0, 3 - event.transform.k) / 2);
-            this.LinkLayer.style("opacity", 0.3 + ScaleProgress);
-            // this.NodeLayer.style("opacity", 0.1 + ScaleProgress);
-            this.LabelLayer.style("opacity", ScaleProgress);
-            this.ComponentLayer.style("opacity", 2 - ScaleProgress * 2);
-            this.ComponentLayer.style("display", ScaleProgress > 0.9 ? "none" : "block");
-            // this.ComponentLayer.style("pointer-events", ScaleProgress > 0.6 ? "none" : "all");
-        }) as any;
+        this.Zoom = d3
+            .zoom()
+            .scaleExtent([1, 8])
+            .on("zoom", (event) => {
+                Scaler.attr("transform", event.transform);
+                var ScaleProgress = 1 - Math.max(0, 3 - event.transform.k) / 2;
+                this.LinkLayer.style("opacity", 0.3 + ScaleProgress);
+                // this.NodeLayer.style("opacity", 0.1 + ScaleProgress);
+                this.LabelLayer.style("opacity", ScaleProgress);
+                this.ComponentLayer.style("opacity", 2 - ScaleProgress * 2);
+                this.ComponentLayer.style("display", ScaleProgress > 0.9 ? "none" : "block");
+                // this.ComponentLayer.style("pointer-events", ScaleProgress > 0.6 ? "none" : "all");
+            }) as any;
         this.Container.call(this.Zoom as any);
         // Load the data
         d3.json("network.json").then((Data) => {
@@ -87,11 +89,9 @@ export class Visualizer {
             // Parse the date as needed
             var Datasets = this.Dataset.Source;
             for (var Dataset of Object.values(Datasets.Data))
-                for (var Chunk of Object.values(Dataset))
-                    for (var Item of Chunk.AllItems ?? [])
-                        Item.Time = new Date(Date.parse(Item.Time as any));
+                for (var Chunk of Object.values(Dataset)) for (var Item of Chunk.AllItems ?? []) Item.Time = new Date(Date.parse(Item.Time as any));
             // Calculate the weights
-            this.Dataset.Weights = this.Dataset.Weights ?? this.Dataset.Names.map((_, Index) => Index == 0 ? 0 : 1);
+            this.Dataset.Weights = this.Dataset.Weights ?? this.Dataset.Names.map((_, Index) => (Index == 0 ? 0 : 1));
             this.Dataset.TotalWeight = this.Dataset.Weights.reduce((A, B) => A + B, 0);
             // Build the default graph
             this.SetStatus("Code", BuildSemanticGraph(this.Dataset, this.Parameters));
@@ -110,7 +110,7 @@ export class Visualizer {
     public SetStatus<T>(Type: string, Graph: Graph<T>) {
         this.PreviewFilter = undefined;
         this.Filters.clear();
-        this.Status = { Graph, ChosenNodes: []};
+        this.Status = { Graph, ChosenNodes: [] };
         this.StatusType = Type;
         this.Rerender(true);
         this.CenterCamera(0, 0, 1);
@@ -122,17 +122,17 @@ export class Visualizer {
     /** Rerender: Rerender the visualization. */
     public Rerender(Relayout: boolean = false) {
         // Apply the filter
-        this.Status.Graph.Nodes.forEach(Node => {
+        this.Status.Graph.Nodes.forEach((Node) => {
             var Filtered = true;
-            this.Filters.forEach(Filter => Filtered = Filtered && Filter.Filter(this, Node));
+            this.Filters.forEach((Filter) => (Filtered = Filtered && Filter.Filter(this, Node)));
             if (this.PreviewFilter) Filtered = Filtered && this.PreviewFilter.Filter(this, Node);
             Node.Hidden = !Filtered;
         });
-        this.Status.Graph.Links.forEach(Link => {
+        this.Status.Graph.Links.forEach((Link) => {
             Link.Hidden = Link.Source.Hidden || Link.Target.Hidden;
         });
-        this.Status.Graph.Components?.forEach(Component => {
-            Component.CurrentNodes = Component.Nodes.filter(Node => !Node.Hidden);
+        this.Status.Graph.Components?.forEach((Component) => {
+            Component.CurrentNodes = Component.Nodes.filter((Node) => !Node.Hidden);
         });
         // Chose the renderer
         var Renderer = (Alpha: number) => {};
@@ -142,16 +142,17 @@ export class Visualizer {
                 break;
         }
         // Render the visualization
-        if (Relayout)
-            this.GenerateLayout(this.Status.Graph, Renderer);
+        if (Relayout) this.GenerateLayout(this.Status.Graph, Renderer);
         else Renderer(0);
     }
     /** CenterCamera: Center the viewport camera to a position and scale.*/
     public CenterCamera(X: number, Y: number, Zoom: number, Animated: boolean = true) {
         if (Animated) {
-            this.Container.transition().duration(500)
+            this.Container.transition()
+                .duration(500)
                 .call(this.Zoom.translateTo as any, X, Y)
-                .transition().call(this.Zoom.scaleTo as any, Zoom);
+                .transition()
+                .call(this.Zoom.scaleTo as any, Zoom);
         } else {
             this.Zoom.translateTo(this.Container as any, X, Y);
             this.Zoom.scaleTo(this.Container as any, Zoom);
@@ -163,7 +164,13 @@ export class Visualizer {
     /** PreviewFilter: The previewing filter of the graph. */
     private PreviewFilter?: FilterBase<any, any>;
     /** SetFilter: Try to set a filter for the visualization. */
-    public SetFilter<T>(Previewing: boolean, Filter: FilterBase<any, any>, Parameters: any = undefined, Additive: boolean = false, Mode: string = ""): boolean {
+    public SetFilter<T>(
+        Previewing: boolean,
+        Filter: FilterBase<any, any>,
+        Parameters: any = undefined,
+        Additive: boolean = false,
+        Mode: string = "",
+    ): boolean {
         if (Previewing) {
             if (Parameters == undefined) {
                 delete this.PreviewFilter;
@@ -235,11 +242,17 @@ export class Visualizer {
             for (var I = 0; I < Filter.Parameters.length; I++) {
                 var Parameter = Filter.Parameters[I];
                 var Label = Names[I];
-                Container.append($(`<a href="javascript:void(0)" class="parameter"></a>`).text(Label)
-                    .on("click", () => this.SetFilter(false, Filter, Parameter)));
+                Container.append(
+                    $(`<a href="javascript:void(0)" class="parameter"></a>`)
+                        .text(Label)
+                        .on("click", () => this.SetFilter(false, Filter, Parameter)),
+                );
             }
-            Container.append($(`<a href="javascript:void(0)" class="close"></a>`).text("X")
-                .on("click", () => this.SetFilter(false, Filter)));
+            Container.append(
+                $(`<a href="javascript:void(0)" class="close"></a>`)
+                    .text("X")
+                    .on("click", () => this.SetFilter(false, Filter)),
+            );
         });
     }
     // Node events
@@ -247,15 +260,13 @@ export class Visualizer {
     public NodeOver<T>(Event: Event, Node: Node<T>) {
         SetClassForNode(Node.ID, "hovering", true);
         SetClassForLinks(Node.ID, "hovering", true);
-        if (!this.GetStatus().ChosenNodes.includes(Node))
-            this.TriggerChosenCallback(Node, true);
+        if (!this.GetStatus().ChosenNodes.includes(Node)) this.TriggerChosenCallback(Node, true);
     }
     /** NodeOut: Handle the mouse-out event on a node. */
     public NodeOut<T>(Event: Event, Node: Node<T>) {
         SetClassForNode(Node.ID, "hovering", false);
         SetClassForLinks(Node.ID, "hovering", false);
-        if (!this.GetStatus().ChosenNodes.includes(Node))
-            this.TriggerChosenCallback(Node, false);
+        if (!this.GetStatus().ChosenNodes.includes(Node)) this.TriggerChosenCallback(Node, false);
     }
     /** OnChosen: The callback for chosen nodes. */
     public ChosenCallbacks: Map<string, (Node: any, Status: boolean) => void> = new Map();
@@ -276,7 +287,7 @@ export class Visualizer {
         // If there is a new mode and no shift key, remove all
         var Removal = Node == undefined || (!Additive && !Incumbent && !(Event as any).shiftKey);
         if (Removal) {
-            Chosens.forEach(Node => {
+            Chosens.forEach((Node) => {
                 SetClassForNode(Node.ID, "chosen", false);
                 SetClassForLinks(Node.ID, "chosen-neighbor", false);
                 this.TriggerChosenCallback(Node, false);
@@ -308,8 +319,7 @@ export class Visualizer {
     public FocusOnNode(Element: SVGElement) {
         var Node = d3.select(Element).datum() as Node<any>;
         this.CenterCamera(Node.x!, Node.y!, 3, false);
-        if (!this.GetStatus().ChosenNodes.includes(Node))
-            this.NodeChosen(new Event("click"), Node);
+        if (!this.GetStatus().ChosenNodes.includes(Node)) this.NodeChosen(new Event("click"), Node);
     }
     // Component events
     /** ComponentOver: Handle the mouse-over event on a component. */
@@ -323,7 +333,7 @@ export class Visualizer {
     /** ComponentChosen: Handle the click event on a component. */
     public ComponentChosen<T>(Event: Event, Component: Component<T>) {
         var Status = this.SetFilter(false, new ComponentFilter(), Component, (Event as any)?.shiftKey == true);
-        if (Status) this.CenterCamera(d3.mean(Component.Nodes.map(Node => Node.x!))!, d3.mean(Component.Nodes.map(Node => Node.y!))!, 3);
+        if (Status) this.CenterCamera(d3.mean(Component.Nodes.map((Node) => Node.x!))!, d3.mean(Component.Nodes.map((Node) => Node.y!))!, 3);
         SetClassForComponent(Component, "chosen", Status, false);
         this.Container.classed("component-chosen", Status);
     }
@@ -331,7 +341,7 @@ export class Visualizer {
     /** RenderLegends: Render the legends for the visualization. */
     private RenderLegends(Colorizer: Colorizer<any>) {
         // Check if the legends are up-to-date
-        var Hash = JSON.stringify(Colorizer.Examples) + JSON.stringify(Object.values(Colorizer.Results!).map(Values => Values.length));
+        var Hash = JSON.stringify(Colorizer.Examples) + JSON.stringify(Object.values(Colorizer.Results!).map((Values) => Values.length));
         if (this.LegendContainer.data("hash") == Hash) return;
         this.LegendContainer.empty().data("hash", Hash);
         // Render the legends
@@ -347,7 +357,10 @@ export class Visualizer {
     public RenderCodes(Alpha: number) {
         // Basic settings
         this.Container.attr("viewBox", "0 0 300 300");
-        this.Zoom.extent([[0, 0], [300, 300]]);
+        this.Zoom.extent([
+            [0, 0],
+            [300, 300],
+        ]);
         // Find the colorizer to use
         var Colorizer = this.GetColorizer();
         Colorizer.Results = {};
@@ -355,118 +368,133 @@ export class Visualizer {
         var Graph = this.GetStatus<Code>().Graph;
         var AllNodes = this.NodeLayer.selectAll("circle").data(Graph.Nodes);
         AllNodes.exit().remove();
-        AllNodes.join((Enter) => 
-            Enter.append("circle")
-                 .attr("id", (Node) => `node-${Node.ID}`)
-                 .attr("label", (Node) => Node.Data.Label)
-                 .on("mouseover", (Event, Node) => this.NodeOver(Event, Node))
-                 .on("mouseout", (Event, Node) => this.NodeOut(Event, Node))
-                 .on("click", (Event, Node) => this.NodeChosen(Event, Node)), 
-            (Update) => Update)
-                // Set the fill color based on the number of owners
-                .attr("fill", (Node) => {
-                    var Color = Colorizer!.Colorize(Node);
-                    if (Node.Hidden) Color = "#999999";
-                    if (!Colorizer!.Results![Color]) Colorizer!.Results![Color] = [];
-                    Colorizer!.Results![Color].push(Node);
-                    return Color;
-                })
-                // Set the radius based on the number of examples
-                .attr("r", (Node) => (Node as any).Size * 0.5)
-                .attr("cx", (Node) => Node.x!)
-                .attr("cy", (Node) => Node.y!)
-                .classed("hidden", (Node) => Node.Hidden ?? false);
+        AllNodes.join(
+            (Enter) =>
+                Enter.append("circle")
+                    .attr("id", (Node) => `node-${Node.ID}`)
+                    .attr("label", (Node) => Node.Data.Label)
+                    .on("mouseover", (Event, Node) => this.NodeOver(Event, Node))
+                    .on("mouseout", (Event, Node) => this.NodeOut(Event, Node))
+                    .on("click", (Event, Node) => this.NodeChosen(Event, Node)),
+            (Update) => Update,
+        )
+            // Set the fill color based on the number of owners
+            .attr("fill", (Node) => {
+                var Color = Colorizer!.Colorize(Node);
+                if (Node.Hidden) Color = "#999999";
+                if (!Colorizer!.Results![Color]) Colorizer!.Results![Color] = [];
+                Colorizer!.Results![Color].push(Node);
+                return Color;
+            })
+            // Set the radius based on the number of examples
+            .attr("r", (Node) => (Node as any).Size * 0.5)
+            .attr("cx", (Node) => Node.x!)
+            .attr("cy", (Node) => Node.y!)
+            .classed("hidden", (Node) => Node.Hidden ?? false);
         // Render legends
         this.RenderLegends(Colorizer);
         // Render labels
         var AllLabels = this.LabelLayer.selectAll("text").data(Graph.Nodes);
         AllLabels.exit().remove();
         if (Alpha <= 0.3) {
-            AllLabels.join((Enter) => 
-                Enter.append("text")
-                    .attr("id", (Node) => `label-${Node.ID}`)
-                    .text((Node) => Node.Data.Label)
-                    .attr("fill", "#e0e0e0")
-                    .attr("fill-opacity", 0.7)
-                    .attr("font-size", 1.2),
-                (Update) => Update)
-                    .attr("x", (Node) => Node.x! + (Node as any).Size * 0.5 + 0.25)
-                    .attr("y", (Node) => Node.y! + 0.27)
-                    .classed("hidden", (Node) => Node.Hidden ?? false);
+            AllLabels.join(
+                (Enter) =>
+                    Enter.append("text")
+                        .attr("id", (Node) => `label-${Node.ID}`)
+                        .text((Node) => Node.Data.Label)
+                        .attr("fill", "#e0e0e0")
+                        .attr("fill-opacity", 0.7)
+                        .attr("font-size", 1.2),
+                (Update) => Update,
+            )
+                .attr("x", (Node) => Node.x! + (Node as any).Size * 0.5 + 0.25)
+                .attr("y", (Node) => Node.y! + 0.27)
+                .classed("hidden", (Node) => Node.Hidden ?? false);
         }
         // Render links
-        var DistanceLerp = d3.scaleSequential().clamp(true)
-            .domain([Graph.MaximumDistance, this.Parameters.LinkMinimumDistance]);
-        var DistanceColor = d3.scaleSequential().clamp(true)
+        var DistanceLerp = d3.scaleSequential().clamp(true).domain([Graph.MaximumDistance, this.Parameters.LinkMinimumDistance]);
+        var DistanceColor = d3
+            .scaleSequential()
+            .clamp(true)
             .domain([Graph.MaximumDistance, this.Parameters.LinkMinimumDistance])
             .interpolator(d3.interpolateViridis);
-        var AllLinks = this.LinkLayer.selectAll("line").data(Graph.Links)
+        var AllLinks = this.LinkLayer.selectAll("line").data(Graph.Links);
         AllLinks.exit().remove();
-        AllLinks.join((Enter) => 
-            Enter.append("line")
-                 .attr("sourceid", (Link) => `${ Link.Source.ID }`)
-                 .attr("targetid", (Link) => `${ Link.Target.ID }`)
-                 .attr("stroke-width", 0.2)
-                 // Color the links based on the distance
-                 .attr("stroke", (Link) => DistanceColor(Link.Distance))
-                 .attr("stroke-opacity", 0.2)
-                 .attr("distance", (Link) => Link.Distance)
-                 .attr("interpolated", (Link) => DistanceLerp(Link.Distance)),
-            (Update) => Update)
-                .attr("x1", (Link) => Link.Source.x!)
-                .attr("y1", (Link) => Link.Source.y!)
-                .attr("x2", (Link) => Link.Target.x!)
-                .attr("y2", (Link) => Link.Target.y!)
-                .classed("hidden", (Link) => Link.Hidden ?? false);
+        AllLinks.join(
+            (Enter) =>
+                Enter.append("line")
+                    .attr("sourceid", (Link) => `${Link.Source.ID}`)
+                    .attr("targetid", (Link) => `${Link.Target.ID}`)
+                    .attr("stroke-width", 0.2)
+                    // Color the links based on the distance
+                    .attr("stroke", (Link) => DistanceColor(Link.Distance))
+                    .attr("stroke-opacity", 0.2)
+                    .attr("distance", (Link) => Link.Distance)
+                    .attr("interpolated", (Link) => DistanceLerp(Link.Distance)),
+            (Update) => Update,
+        )
+            .attr("x1", (Link) => Link.Source.x!)
+            .attr("y1", (Link) => Link.Source.y!)
+            .attr("x2", (Link) => Link.Target.x!)
+            .attr("y2", (Link) => Link.Target.y!)
+            .classed("hidden", (Link) => Link.Hidden ?? false);
         // Visualize components
         if (Graph.Components) {
             var Filtered = this.PreviewFilter != undefined || this.Filters.size > 0;
             // Calculate the hulls
-            Graph.Components.forEach(Component => {
-                var Hull = d3.polygonHull(Component.Nodes.map(Node => [Node.x!, Node.y!]));
+            Graph.Components.forEach((Component) => {
+                var Hull = d3.polygonHull(Component.Nodes.map((Node) => [Node.x!, Node.y!]));
                 if (Hull) {
                     Component.Hull = Hull;
                     Component.Centroid = d3.polygonCentroid(Hull);
                 } else delete Component.Hull;
             });
-            var Components = Graph.Components.filter(Component => Component.Hull);
+            var Components = Graph.Components.filter((Component) => Component.Hull);
             var AllHulls = this.HullLayer.selectAll("path").data(Components);
             AllHulls.exit().remove();
-            AllHulls.join((Enter) => 
-                Enter.append("path")
-                     .attr("id", (Component) => `hull-${Component.ID}`)
-                     .attr("fill", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length))
-                     .attr("stroke", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length))
-                     .on("mouseover", (Event, Component) => { this.ComponentOver(Event, Component); })
-                     .on("mouseout", (Event, Component) => { this.ComponentOut(Event, Component); })
-                     .on("click", (Event, Component) => { this.ComponentChosen(Event, Component); }),
-                (Update) => Update)
-                    .attr("d", (Component) => `M${Component.Hull!.join("L")}Z`);
+            AllHulls.join(
+                (Enter) =>
+                    Enter.append("path")
+                        .attr("id", (Component) => `hull-${Component.ID}`)
+                        .attr("fill", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length))
+                        .attr("stroke", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length))
+                        .on("mouseover", (Event, Component) => {
+                            this.ComponentOver(Event, Component);
+                        })
+                        .on("mouseout", (Event, Component) => {
+                            this.ComponentOut(Event, Component);
+                        })
+                        .on("click", (Event, Component) => {
+                            this.ComponentChosen(Event, Component);
+                        }),
+                (Update) => Update,
+            ).attr("d", (Component) => `M${Component.Hull!.join("L")}Z`);
             // Render the component labels
             var AllComponents = this.ComponentLayer.selectAll("text").data(Components);
             AllComponents.exit().remove();
-            AllComponents.join((Enter) => 
-                Enter.append("text")
-                    .attr("id", (Component) => `component-${Component.ID}`)
-                    .attr("font-size", 5)
-                    .attr("text-anchor", "middle")
-                    .attr("dominant-baseline", "middle")
-                    .attr("stroke", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length)),
-                (Update) => Update)
-                    .text((Component) => {
-                        if (Component.CurrentNodes && Filtered)
-                            return `${Component.Representative!.Data.Label} (${Component.CurrentNodes.length}/${Component.Nodes.length})`
-                        else return `${Component.Representative!.Data.Label} (${Component.Nodes.length})`;
-                    })
-                    .attr("fill", (Component) => {
-                        if (Component.CurrentNodes && Filtered)
-                            return d3.interpolateViridis(Component.CurrentNodes.length / Component.Nodes.length);
-                        else return "#ffffff";
-                    })
-                    .attr("x", (Component) => Component.Centroid![0])
-                    .attr("y", (Component) => Component.Centroid![1]);
-                // .attr("x", (Component) => d3.mean(Component.Nodes.map(Node => Node.x!))!)
-                // .attr("y", (Component) => d3.mean(Component.Nodes.map(Node => Node.y!))!);
+            AllComponents.join(
+                (Enter) =>
+                    Enter.append("text")
+                        .attr("id", (Component) => `component-${Component.ID}`)
+                        .attr("font-size", 5)
+                        .attr("text-anchor", "middle")
+                        .attr("dominant-baseline", "middle")
+                        .attr("stroke", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length)),
+                (Update) => Update,
+            )
+                .text((Component) => {
+                    if (Component.CurrentNodes && Filtered)
+                        return `${Component.Representative!.Data.Label} (${Component.CurrentNodes.length}/${Component.Nodes.length})`;
+                    else return `${Component.Representative!.Data.Label} (${Component.Nodes.length})`;
+                })
+                .attr("fill", (Component) => {
+                    if (Component.CurrentNodes && Filtered) return d3.interpolateViridis(Component.CurrentNodes.length / Component.Nodes.length);
+                    else return "#ffffff";
+                })
+                .attr("x", (Component) => Component.Centroid![0])
+                .attr("y", (Component) => Component.Centroid![1]);
+            // .attr("x", (Component) => d3.mean(Component.Nodes.map(Node => Node.x!))!)
+            // .attr("y", (Component) => d3.mean(Component.Nodes.map(Node => Node.y!))!);
         } else this.ComponentLayer.selectAll("text").remove();
     }
     // Layouting
@@ -478,13 +506,25 @@ export class Visualizer {
         this.Simulation = d3.forceSimulation();
         var ForceLink = d3.forceLink();
         this.Simulation.nodes(Graph.Nodes)
-            .force("repulse", d3.forceManyBody().distanceMax(30).strength(-DistanceScale * 5))
+            .force(
+                "repulse",
+                d3
+                    .forceManyBody()
+                    .distanceMax(30)
+                    .strength(-DistanceScale * 5),
+            )
             .force("center", d3.forceCenter().strength(0.01))
-            .force("link", ForceLink.links(Graph.Links.filter(Link => Link.VisualizeWeight! >= 0.1))
-                .id((Node) => Node.index!)
-                .distance((Link) => DistanceScale)
-                .strength((Link) => (Link as any).VisualizeWeight))
-            .force("collide", d3.forceCollide().radius((Node) => (Node as any).Size + 2))
+            .force(
+                "link",
+                ForceLink.links(Graph.Links.filter((Link) => Link.VisualizeWeight! >= 0.1))
+                    .id((Node) => Node.index!)
+                    .distance((Link) => DistanceScale)
+                    .strength((Link) => (Link as any).VisualizeWeight),
+            )
+            .force(
+                "collide",
+                d3.forceCollide().radius((Node) => (Node as any).Size + 2),
+            )
             .on("tick", () => {
                 Renderer(this.Simulation!.alpha());
                 if (this.Simulation!.alpha() <= 0.001) {
@@ -519,10 +559,11 @@ export class Visualizer {
 function SetClassForComponent<T>(Component: Component<T>, Class: string, Status: boolean, ForNodes: boolean = true) {
     $(`#component-${Component.ID}`).toggleClass(Class, Status);
     $(`#hull-${Component.ID}`).toggleClass(Class, Status);
-    if (ForNodes) Component.Nodes.forEach(Node => {
-        SetClassForNode(Node.ID, Class, Status);
-        // SetClassForLinks(Node.ID, Class, Status, (Other) => Component.Nodes.findIndex(Node => Node.ID == Other) != -1);
-    });
+    if (ForNodes)
+        Component.Nodes.forEach((Node) => {
+            SetClassForNode(Node.ID, Class, Status);
+            // SetClassForLinks(Node.ID, Class, Status, (Other) => Component.Nodes.findIndex(Node => Node.ID == Other) != -1);
+        });
 }
 
 /** SetClassForNode: Set a class for a node and its label. */
@@ -536,13 +577,13 @@ function SetClassForLinks<T>(ID: string, Class: string, Status: boolean, Filter?
     var Links = $(`line[sourceid="${ID}"]`);
     Links.each((Index, Element) => {
         var Filtered = Filter?.($(Element).attr("targetid")!) ?? true;
-        $(Element).toggleClass(Class, Status && Filtered)
+        $(Element).toggleClass(Class, Status && Filtered);
         SetClassForNode($(Element).attr("targetid")!, Class, Status && Filtered);
     });
     Links = $(`line[targetid="${ID}"]`);
     Links.each((Index, Element) => {
         var Filtered = Filter?.($(Element).attr("sourceid")!) ?? true;
-        $(Element).toggleClass(Class, Status && Filtered)
+        $(Element).toggleClass(Class, Status && Filtered);
         SetClassForNode($(Element).attr("sourceid")!, Class, Status && Filtered);
     });
 }

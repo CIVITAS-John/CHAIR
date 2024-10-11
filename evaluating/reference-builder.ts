@@ -1,12 +1,12 @@
-import * as File from 'fs';
+import * as File from "fs";
 import chalk from "chalk";
 import { Codebook } from "../utils/schema.js";
 import { ConsolidateCodebook, MergeCodebooks } from "../consolidating/codebooks.js";
-import { SimpleMerger } from '../consolidating/simple-merger.js';
+import { SimpleMerger } from "../consolidating/simple-merger.js";
 import { PipelineConsolidator } from "../consolidating/consolidator.js";
 import { ExportChunksForCoding } from "../utils/export.js";
-import { RefineMerger } from '../consolidating/refine-merger.js';
-import { DefinitionGenerator } from '../consolidating/definition-generator.js';
+import { RefineMerger } from "../consolidating/refine-merger.js";
+import { DefinitionGenerator } from "../consolidating/definition-generator.js";
 
 /** ReferenceBuilder: A builder of reference codebook. */
 export class ReferenceBuilder {
@@ -18,7 +18,7 @@ export class ReferenceBuilder {
     public BaseTemperature: number = 0.5;
     /** BuildReference: Build a reference codebook from a list of codebooks. */
     public async BuildReference(Codebooks: Codebook[]): Promise<Codebook> {
-        var Statistics = Codebooks.map(Codebook => Object.keys(Codebook).length);
+        var Statistics = Codebooks.map((Codebook) => Object.keys(Codebook).length);
         console.log(`Start merging ${Codebooks.length} codebooks into a reference codebook.`);
         console.log(chalk.green(`Statistics: ${Statistics.reduce((Prev, Curr) => Curr + Prev)} codes found (${Statistics.join(", ")}).`));
         // Remove alternatives from individual codebooks
@@ -30,7 +30,7 @@ export class ReferenceBuilder {
     }
     /** RefineCodebook: Further merge the codebook.*/
     protected async RefineCodebook(Codebook: Codebook): Promise<Codebook> {
-        var Threads = { Codebook: Codebook, Threads: {} };;
+        var Threads = { Codebook: Codebook, Threads: {} };
         var Consolidator = new PipelineConsolidator(
             // Merge codes that have been merged
             // new AlternativeMerger(),
@@ -47,14 +47,13 @@ export class ReferenceBuilder {
     }
     /** SanityCheck: Check if original codes are still present in the consolidated one. */
     protected async SanityCheck(Iteration: number, Codebook: Codebook) {
-        File.writeFileSync(`./known/codebook-${Iteration}.json`, JSON.stringify(Codebook, null, 4), 'utf8');
+        File.writeFileSync(`./known/codebook-${Iteration}.json`, JSON.stringify(Codebook, null, 4), "utf8");
         if (Iteration == 0) {
-            this.OriginalCodes = new Set<string>(Object.values(Codebook).map(Code => Code.Label))
+            this.OriginalCodes = new Set<string>(Object.values(Codebook).map((Code) => Code.Label));
         } else {
-            var NewCodes = new Set<string>(Object.values(Codebook).flatMap(Code => [Code.Label, ...Code.Alternatives ?? []]));
-            this.OriginalCodes.forEach(Code => {
-                if (!NewCodes.has(Code))
-                    console.log(chalk.red(`Error: Code ${Code} disappeared in iteration ${Iteration}.`));
+            var NewCodes = new Set<string>(Object.values(Codebook).flatMap((Code) => [Code.Label, ...(Code.Alternatives ?? [])]));
+            this.OriginalCodes.forEach((Code) => {
+                if (!NewCodes.has(Code)) console.log(chalk.red(`Error: Code ${Code} disappeared in iteration ${Iteration}.`));
             });
         }
     }
@@ -78,7 +77,7 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
     /** RefineCodebook: Further merge the codebook.*/
     protected async RefineCodebook(Codebook: Codebook): Promise<Codebook> {
         var Threads = { Codebook: Codebook, Threads: {} };
-        Object.values(Codebook).forEach(Code => Code.Alternatives = []);
+        Object.values(Codebook).forEach((Code) => (Code.Alternatives = []));
         var Consolidator = new PipelineConsolidator(
             // Merge codes that have been merged
             // new AlternativeMerger(),
@@ -108,7 +107,7 @@ export async function BuildReferenceAndExport(Builder: ReferenceBuilder, Codeboo
     var Result = await Builder.BuildReference(Codebooks);
     // Export it to JSON
     console.log(chalk.green(`Exporting the reference codebook to ${TargetPath}.`));
-    File.writeFileSync(TargetPath + ".json", JSON.stringify(Result, null, 4), 'utf8');
+    File.writeFileSync(TargetPath + ".json", JSON.stringify(Result, null, 4), "utf8");
     // Export it to Excel
     var Book = ExportChunksForCoding([], { Codebook: Result, Threads: {} });
     await Book.xlsx.writeFile(TargetPath + ".xlsx");

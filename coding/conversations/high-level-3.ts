@@ -1,7 +1,7 @@
-import { CodingNotes, ResearchQuestion } from '../../constants.js';
-import { CodedThread, Conversation, Message } from '../../utils/schema.js';
-import { BuildMessagePrompt } from './conversations.js';
-import { HighLevelAnalyzerBase } from './high-level.js';
+import { CodingNotes, ResearchQuestion } from "../../constants.js";
+import { CodedThread, Conversation, Message } from "../../utils/schema.js";
+import { BuildMessagePrompt } from "./conversations.js";
+import { HighLevelAnalyzerBase } from "./high-level.js";
 
 /** HighLevelAnalyzer3: Conduct the first-round high-level coding of the conversations. */
 /* Original prompt format:
@@ -22,7 +22,8 @@ export default class HighLevelAnalyzer3 extends HighLevelAnalyzerBase {
     public BaseTemperature: number = 0.5;
     /** BuildPrompts: Build the prompts for the LLM. */
     public async BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): Promise<[string, string]> {
-        return [`
+        return [
+            `
 You are an expert in thematic analysis with grounded theory, working on open coding.
 Please give me a codebook to analyze factors within this interaction that could contribute to the research.
 ${ResearchQuestion}
@@ -44,6 +45,7 @@ Definition: A definition of phrase 1
 ## ...
 # ...
 `.trim(),
-            Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join("\n")];
+            Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join("\n"),
+        ];
     }
 }

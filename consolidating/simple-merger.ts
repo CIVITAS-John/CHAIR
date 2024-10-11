@@ -14,7 +14,17 @@ export class SimpleMerger extends CodeConsolidator {
     /** UseDefinition: Whether we use definitions in merging (they will be used to inform LLM). */
     public UseDefinition: boolean;
     /** Constructor: Create a new NameMerger. */
-    constructor({Maximum = 0.35, Minimum = 0.35, Looping = false, UseDefinition = false}: {Maximum?: number, Minimum?: number, Looping?: boolean, UseDefinition?: boolean}) {
+    constructor({
+        Maximum = 0.35,
+        Minimum = 0.35,
+        Looping = false,
+        UseDefinition = false,
+    }: {
+        Maximum?: number;
+        Minimum?: number;
+        Looping?: boolean;
+        UseDefinition?: boolean;
+    }) {
         super();
         this.Looping = Looping;
         this.Maximum = Maximum;
@@ -25,17 +35,17 @@ export class SimpleMerger extends CodeConsolidator {
     public async Preprocess(Codebook: Codebook, Codes: Code[]) {
         var Length = Object.keys(Codebook).length;
         // Categorize the strings
-        var Labels = Codes.map(Code => {
+        var Labels = Codes.map((Code) => {
             if (this.UseDefinition) {
                 var Text = `Label: ${Code.Label}`;
-                if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinitions:\n${Code.Definitions!.map(Definition => "- " + Definition).join("\n")}`;
+                if ((Code.Definitions?.length ?? 0) > 0)
+                    Text += `\nDefinitions:\n${Code.Definitions!.map((Definition) => "- " + Definition).join("\n")}`;
                 return Text.trim();
             } else {
                 return Code.Label;
             }
         });
-        var Clusters = await ClusterCodes(Labels, Codes, 
-            "consolidator", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString());
+        var Clusters = await ClusterCodes(Labels, Codes, "consolidator", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString());
         // Merge the codes
         var Result = MergeCodesByCluster(Clusters, Codes);
         // Check if we should stop - when nothing is merged

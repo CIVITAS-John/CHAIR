@@ -1,4 +1,4 @@
-import * as File from 'fs';
+import * as File from "fs";
 import { SystemMessage, HumanMessage } from "@langchain/core/messages";
 import { EnsureFolder, LLMName, MaxItems, MaxOutput, RequestLLMWithCache } from "../../utils/llms.js";
 import { Preprocess } from "../../utils/glossary.js";
@@ -12,7 +12,7 @@ export function LoadCache(): void {
     EnsureFolder(`./known/translation/${LLMName}`);
     var Translations = 0;
     for (const Type of File.readdirSync(`./known/translation/${LLMName}`)) {
-        const Data = File.readFileSync(`./known/translation/${LLMName}/${Type}`, 'utf-8');
+        const Data = File.readFileSync(`./known/translation/${LLMName}/${Type}`, "utf-8");
         const Cache = new Map<string, string>(JSON.parse(Data));
         for (const [Key, Value] of Cache) Cache.set(Key.trim(), Value.trim());
         Translations += Cache.size;
@@ -46,7 +46,7 @@ export async function TranslateStrings(Type: string, Source: string[]): Promise<
             // Special: if no Chinese characters, skip the translation
             Result.push(Text);
             continue;
-        } 
+        }
         if (Cache.has(Text)) {
             Result.push(Cache.get(Text)!);
         } else {
@@ -70,8 +70,7 @@ export async function TranslateStrings(Type: string, Source: string[]): Promise<
         } catch (Error: any) {
             // Remove the cache if failed
             for (let I = 0; I < ToTranslate.length; I++) {
-                if (Cache.get(ToTranslate[I]) === ToTranslate[I])
-                    Cache.delete(ToTranslate[I]);
+                if (Cache.get(ToTranslate[I]) === ToTranslate[I]) Cache.delete(ToTranslate[I]);
             }
             SaveCache();
             throw Error;
@@ -90,7 +89,8 @@ export async function TranslateStringsWithLLM(Type: string, Source: string[]): P
             break;
     }
     // Call the LLM
-    var Results: string[] = [], Requests: string[] = [];
+    var Results: string[] = [],
+        Requests: string[] = [];
     var Tokens = Tokenize(SystemPrompt).length + 16; // Leave some space for internal tokens
     for (var Text of Source) {
         var CurrentTokens = Tokenize(Text).length + 16;
@@ -101,8 +101,7 @@ export async function TranslateStringsWithLLM(Type: string, Source: string[]): P
         }
         Requests.push(Text);
     }
-    if (Requests.length > 0)
-        Results = Results.concat(await TranslateChunkedStringsWithLLMRetries(Type, Requests, SystemPrompt));
+    if (Requests.length > 0) Results = Results.concat(await TranslateChunkedStringsWithLLMRetries(Type, Requests, SystemPrompt));
     return Results;
 }
 
@@ -123,24 +122,30 @@ async function TranslateChunkedStringsWithLLMRetries(Type: string, Requests: str
 async function TranslateChunkedStringsWithLLM(Type: string, Source: string[], SystemPrompt: string, Tries: number): Promise<string[]> {
     var Separator = "\n---\n";
     // Call the LLM
-    const Result = await RequestLLMWithCache([new SystemMessage(`${SystemPrompt} Always follow the output format:
+    const Result = await RequestLLMWithCache(
+        [
+            new SystemMessage(
+                `${SystemPrompt} Always follow the output format:
 ---
 1. Translated Text 1
 ---
 2. Translated Text 2
 ---
-...`.trim()), new HumanMessage(
-        Source.map((Text, Index) => `${Index + 1}. ${Text}`).join(Separator))], "translation-cache", Tries * 0.2);
+...`.trim(),
+            ),
+            new HumanMessage(Source.map((Text, Index) => `${Index + 1}. ${Text}`).join(Separator)),
+        ],
+        "translation-cache",
+        Tries * 0.2,
+    );
     // Split the result
     var Results = Result.split(/\n *--- *\n/gm);
     // Sometimes GPT-4.5-turbo ignores the proceding line break.
-    if (Results.length == 1)
-        Results = Result.split(/\n? *--- *\n/gm);
+    if (Results.length == 1) Results = Result.split(/\n? *--- *\n/gm);
     // Filter empty strings
-    Results = Results.filter(Text => Text.trim() !== "");
+    Results = Results.filter((Text) => Text.trim() !== "");
     // Claude loves to add a sentence at the beginning.
-    if (!Results[0].startsWith("1.") && Results.length == Source.length + 1)
-        Results.shift();
+    if (!Results[0].startsWith("1.") && Results.length == Source.length + 1) Results.shift();
     if (Results.length !== Source.length) {
         throw new Error(`Translation Error: ${Results.length} results for ${Source.length} sources.`);
     }
@@ -150,9 +155,8 @@ async function TranslateChunkedStringsWithLLM(Type: string, Source: string[], Sy
         Results[I] = Results[I].trim();
         if (Results[I].endsWith("---")) Results[I] = Results[I].substring(0, Results[I].length - 3).trim();
         // Sometimes, some LLM inevitably includes a proceding text
-        if (I == 0 && !Results[I].startsWith("1."))
-            Results[I] = Results[I].substring(Results[I].indexOf(".") - 1);
-        Results[I] = Results[I].replace(/^(\d+)\.?(\s|\n)/gs, '');
+        if (I == 0 && !Results[I].startsWith("1.")) Results[I] = Results[I].substring(Results[I].indexOf(".") - 1);
+        Results[I] = Results[I].replace(/^(\d+)\.?(\s|\n)/gs, "");
         if (Source[I] == Results[I] && Tries == 0) throw new Error(`Translation Error: ${Source[I]} => ${Results[I]}`);
         Cache.set(Source[I], Results[I]);
     }

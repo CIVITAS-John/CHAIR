@@ -23,7 +23,8 @@ export class CategoryRefiner extends CodeConsolidator {
         // We have too many categories. Filter ones with more than 1 instances.
         // Categories = Categories.filter(Category => Codes.filter(Code => Code.Categories?.includes(Category)).length > 1).sort();
         console.log(`Statistics: categories to merge: ${Categories.length}`);
-        return [`
+        return [
+            `
 You are an expert in thematic analysis.
 You will identify input categories that can be merged into another. Find as many as possible. Prioritize merging smaller categories. Avoid creating huge categories. Names of new categories must concisely cover the aspects and stay in the research context.
 ${ResearchQuestion}
@@ -55,13 +56,14 @@ Improve the draft plan into the final merging plan in the next section, followin
 * Category k
 => Category l
 ...
----`.trim(), 
-/*`# Initial categories
+---`.trim(),
+            /*`# Initial categories
 ${Categories.map((Category, Index) => `${Index + 1}. ${Category}. Codes:
 ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `* ${Code.Label}`).join("\n")}
 `.trim()).join("\n")}*/
-        `${Categories.map((Category, Index) => `${Index + 1}. ${Category} (${Frequencies.get(Category)} codes)`).join("\n")}
-        `.trim()];
+            `${Categories.map((Category, Index) => `${Index + 1}. ${Category} (${Frequencies.get(Category)} codes)`).join("\n")}
+        `.trim(),
+        ];
     }
     /** ParseResponse: Parse the response for the code consolidator. */
     public async ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]) {
@@ -85,7 +87,7 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `* ${Cod
                 var Target = Towards[1].trim().toLowerCase();
                 // Sometimes, the LLM will return "{category} (10 codes)"
                 if (Target.includes("(")) Target = Target.substring(0, Target.indexOf("(")).trim();
-                OldCategories.forEach(Category => Mappings.set(Category, Target));
+                OldCategories.forEach((Category) => Mappings.set(Category, Target));
                 OldCategories = [];
             }
             // Parse the merging source

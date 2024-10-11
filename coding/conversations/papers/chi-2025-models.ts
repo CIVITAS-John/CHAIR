@@ -1,5 +1,5 @@
-import { UseLLMs } from '../../../utils/llms.js';
-import { ProcessDataset } from '../../../analyzer.js';
+import { UseLLMs } from "../../../utils/llms.js";
+import { ProcessDataset } from "../../../analyzer.js";
 
 // This code replicates our study for CHI 2025 regarding the use of different models with the same analyzers.
 // Running it requires access to OpenAI, Groq, Claude, and Mistral APIs.
@@ -12,7 +12,7 @@ var AnalyzerNames = ["bertopic-1", "high-level-1", "high-level-2", "low-level-3"
 var Models = ["gpt-3.5-turbo", "gpt-4.5-omni", "llama3-70b", "claude3-haiku", "claude3.5-sonnet", "mixtral-8x22b"];
 
 for (var AnalyzerName of AnalyzerNames) {
-    var Analyzer = new (await import(`./../${AnalyzerName}.js`)).default;
+    var Analyzer = new (await import(`./../${AnalyzerName}.js`)).default();
     await UseLLMs(async () => {
         await ProcessDataset(Analyzer, "Coded Dataset 1", false);
         await ProcessDataset(Analyzer, "Coded Dataset 2", false);

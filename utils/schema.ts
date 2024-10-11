@@ -76,9 +76,7 @@ export interface CodebookComparison<T extends DataChunk<DataItem>> {
 }
 
 /** Codebook: A codebook for the qualitative codes. */
-export interface Codebook extends Record<string, Code> {
-
-}
+export interface Codebook extends Record<string, Code> {}
 
 /** GetCategories: Get the categories from the codebook. */
 export function GetCategories(Codebook: Codebook): Map<string, string[]> {
@@ -87,17 +85,14 @@ export function GetCategories(Codebook: Codebook): Map<string, string[]> {
         for (var Category of Code.Categories ?? []) {
             if (Category == "") continue;
             if (!Categories.has(Category)) Categories.set(Category, []);
-            if (Categories.get(Category)!.indexOf(Code.Label) == -1)
-                Categories.get(Category)!.push(Code.Label);
+            if (Categories.get(Category)!.indexOf(Code.Label) == -1) Categories.get(Category)!.push(Code.Label);
         }
     }
     return Categories;
 }
 
 /** CodebookEvaluation: Evaluation of a codebook. */
-export interface CodebookEvaluation extends Record<string, number> {
-
-}
+export interface CodebookEvaluation extends Record<string, number> {}
 
 /** Code: A qualitative code. */
 export interface Code {
@@ -120,7 +115,7 @@ export interface Code {
 }
 
 /** AssembleExample: Assemble an example. */
-export function AssembleExample(ID: string, UserID: string, Content: string){
+export function AssembleExample(ID: string, UserID: string, Content: string) {
     return `${ID}|||${GetSpeakerNameForExample(UserID)}: ${Content}`;
 }
 
@@ -210,7 +205,7 @@ export interface Project extends DataChunk<Comment>, DataItem {
     /** Remixes: Number of total remixes (until now, not the cutoff date). */
     Remixes: number;
     /** Cover: The cover image of the project. */
-    Cover: string,
+    Cover: string;
 }
 
 /** Comment: A comment on a project or a user. */

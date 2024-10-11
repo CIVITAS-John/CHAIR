@@ -2,12 +2,16 @@ import { Code, Codebook, DataChunk, DataItem } from "../../../utils/schema.js";
 
 /** FindConsolidatedCode: Find a consolidated code by name. */
 export function FindConsolidatedCode(Consolidated: Codebook, Name: string) {
-    return Object.values(Consolidated).find(Code => Code.Label == Name || Code.Alternatives?.includes(Name));
+    return Object.values(Consolidated).find((Code) => Code.Label == Name || Code.Alternatives?.includes(Name));
 }
 
 /** GetConsolidatedSize: Get the size of the consolidated codebook. */
 export function GetConsolidatedSize(Baseline: Codebook, Codebook: Codebook) {
-    return new Set(Object.keys(Codebook).map(Code => FindConsolidatedCode(Baseline, Code)?.Label).map(Code => Code)).size
+    return new Set(
+        Object.keys(Codebook)
+            .map((Code) => FindConsolidatedCode(Baseline, Code)?.Label)
+            .map((Code) => Code),
+    ).size;
 }
 
 /** ExtractExamples: Extract examples from a code. */
@@ -33,17 +37,20 @@ export function ExtractExamples(Examples: string[]): Map<string, string[]> {
     }
     // Sort by the score
     var NewResults: Map<string, string[]> = new Map();
-    Array.from(Scores.keys()).sort((A, B) => Scores.get(B)! - Scores.get(A)!).forEach(Key => {
-        NewResults.set(Key, Results.get(Key)!);
-    });
+    Array.from(Scores.keys())
+        .sort((A, B) => Scores.get(B)! - Scores.get(A)!)
+        .forEach((Key) => {
+            NewResults.set(Key, Results.get(Key)!);
+        });
     return NewResults;
 }
 
 /** FindOriginalCodes: Find the original codes from an owner. */
 export function FindOriginalCodes(Codebook: Codebook, Source: Code, Owner: number, Example?: string): Code[] {
     var Codes = Object.values(Codebook);
-    Codes = Codes.filter(Code => Source.Label == Code.Label || Source.Alternatives?.includes(Code.Label));
-    if (Example) Codes = Codes.filter(Code => Code.Examples?.includes(Example) || Code.Examples?.some(Current => Current.startsWith(`${Example}|||`)));
+    Codes = Codes.filter((Code) => Source.Label == Code.Label || Source.Alternatives?.includes(Code.Label));
+    if (Example)
+        Codes = Codes.filter((Code) => Code.Examples?.includes(Example) || Code.Examples?.some((Current) => Current.startsWith(`${Example}|||`)));
     return Codes;
 }
 
@@ -51,20 +58,20 @@ export function FindOriginalCodes(Codebook: Codebook, Source: Code, Owner: numbe
 export function FindExampleSources(Codebook: Codebook, Source: Code, Example: string, Owner: number): Code[] {
     var Codes = FindOriginalCodes(Codebook, Source, Owner);
     var SoftMatch = `|||${Example}`;
-    return Codes.filter(Code => Code.Examples?.findIndex(Current => Current == Example || Current.endsWith(SoftMatch)) != -1);
+    return Codes.filter((Code) => Code.Examples?.findIndex((Current) => Current == Example || Current.endsWith(SoftMatch)) != -1);
 }
 
 /** GetChunks: Get the chunks from the sources. */
 export function GetChunks(Sources: Record<string, Record<string, DataChunk<DataItem>>>): DataChunk<DataItem>[] {
-    return Object.values(Sources).flatMap(Source => Object.values(Source));
+    return Object.values(Sources).flatMap((Source) => Object.values(Source));
 }
 
 /** GetItems: Get the items from the sources. */
 export function GetItems(Sources: Record<string, Record<string, DataChunk<DataItem>>>): DataItem[] {
-    return GetChunks(Sources).flatMap(Chunk => Chunk.AllItems ?? []);
+    return GetChunks(Sources).flatMap((Chunk) => Chunk.AllItems ?? []);
 }
 
 /** GetItems: Get the items from a source. */
 export function GetItemsFromDataset(Sources: Record<string, DataChunk<DataItem>>): DataItem[] {
-    return Object.values(Sources).flatMap(Chunk => Chunk.AllItems ?? []);
+    return Object.values(Sources).flatMap((Chunk) => Chunk.AllItems ?? []);
 }

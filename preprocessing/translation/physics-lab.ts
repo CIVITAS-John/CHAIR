@@ -1,5 +1,5 @@
-import { MaxOutput } from '../../utils/llms.js';
-import { Project, Comment } from '../../utils/schema.js';
+import { MaxOutput } from "../../utils/llms.js";
+import { Project, Comment } from "../../utils/schema.js";
 import { TranslateStrings } from "./general.js";
 
 // TranslateProjects: Translate a bunch of projects.
@@ -28,7 +28,7 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
                 return `Reply @${ID}:`;
             } else return `@${ID} `;
         });
-    }
+    };
     // Get the contents to translate
     var Contents = Projects.map((Project) => {
         Project.Content = HandleContent(Project.Content);
@@ -40,8 +40,7 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
         // Truncate the message if it's too long
         // Here we leave some rooms since the model might need more tokens than the source text to translate
         Project.Content = `${Project.Title}\n${Project.Content}`;
-        if (Project.Content.length >= MaxOutput * 0.75) 
-            Project.Content = Project.Content.substring(0, MaxOutput * 0.75) + " (Too long to translate)";
+        if (Project.Content.length >= MaxOutput * 0.75) Project.Content = Project.Content.substring(0, MaxOutput * 0.75) + " (Too long to translate)";
         return Project.Content;
     });
 
@@ -56,8 +55,7 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
     for (let I = 0; I < Projects.length; I++) {
         // Decipher the nicknames
         Projects[I].Nickname = NameTranslations.get(Projects[I].Nickname)!;
-        if (Projects[I].CurrentNickname) 
-            Projects[I].CurrentNickname = NameTranslations.get(Projects[I].CurrentNickname!)!;
+        if (Projects[I].CurrentNickname) Projects[I].CurrentNickname = NameTranslations.get(Projects[I].CurrentNickname!)!;
         // Handle the mentioned users (=> @Nickname (ID))
         var Content = TranslatedContents[I];
         Content = Content.replaceAll(/@(\d+)(\s|$|:)/g, (Match, ID, Ends) => {
@@ -67,25 +65,26 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
         });
         Projects[I].Title = Content.split("\n")[0].trim();
         Projects[I].Content = Content.substring(Projects[I].Title.length + 1).trim();
-        if (Projects[I].AllItems) 
-            Projects[I].AllItems = await TranslateComments(Projects[I].AllItems!, UserMappings, NameTranslations);
+        if (Projects[I].AllItems) Projects[I].AllItems = await TranslateComments(Projects[I].AllItems!, UserMappings, NameTranslations);
     }
     return Projects;
 }
 
 // TranslateComments: Translate a bunch of comments.
-export async function TranslateComments(Comments: Comment[], UserMappings: Map<string, string>, NameTranslations: Map<string, string>): Promise<Comment[]> {
+export async function TranslateComments(
+    Comments: Comment[],
+    UserMappings: Map<string, string>,
+    NameTranslations: Map<string, string>,
+): Promise<Comment[]> {
     var Contents = Comments.map((Comment) => {
-        if (Comment.Content.length >= MaxOutput * 0.75) 
-            Comment.Content = Comment.Content.substring(0, MaxOutput * 0.75) + " (Too long to translate)";
+        if (Comment.Content.length >= MaxOutput * 0.75) Comment.Content = Comment.Content.substring(0, MaxOutput * 0.75) + " (Too long to translate)";
         return Comment.Content;
     });
     var TranslatedContents = await TranslateStrings("messages", Contents);
     for (let I = 0; I < Comments.length; I++) {
         // Decipher the nicknames
         Comments[I].Nickname = NameTranslations.get(Comments[I].Nickname)!;
-        if (Comments[I].CurrentNickname) 
-            Comments[I].CurrentNickname = NameTranslations.get(Comments[I].CurrentNickname!)!;
+        if (Comments[I].CurrentNickname) Comments[I].CurrentNickname = NameTranslations.get(Comments[I].CurrentNickname!)!;
         // Handle the mentioned users (=> @Nickname (ID))
         var Content = TranslatedContents[I];
         Content = Content.replaceAll(/@(\d+)(\s|$|:)/g, (Match, ID, Ends) => {

@@ -12,19 +12,33 @@ export abstract class Panel {
     /** Container: The container for the side panel. */
     protected Container: Cash;
     /** Dataset: The codebook dataset of the visualizer. */
-    protected get Dataset() { return this.Visualizer.Dataset; }
+    protected get Dataset() {
+        return this.Visualizer.Dataset;
+    }
     /** Source: The source dataset of the visualizer. */
-    protected get Source() { return this.Visualizer.Dataset.Source; }
+    protected get Source() {
+        return this.Visualizer.Dataset.Source;
+    }
     /** InfoPanel: The information panel for the visualization. */
-    protected get InfoPanel() { return this.Visualizer.InfoPanel; }
+    protected get InfoPanel() {
+        return this.Visualizer.InfoPanel;
+    }
     /** SidePanel: The side panel for the visualization. */
-    protected get SidePanel() { return this.Visualizer.SidePanel; }
+    protected get SidePanel() {
+        return this.Visualizer.SidePanel;
+    }
     /** Dialog: Dialog for the visualization. */
-    protected get Dialog() { return this.Visualizer.Dialog; }
+    protected get Dialog() {
+        return this.Visualizer.Dialog;
+    }
     /** Parameters: The parameters of the visualizer. */
-    protected get Parameters() { return this.Visualizer.Parameters; }
+    protected get Parameters() {
+        return this.Visualizer.Parameters;
+    }
     /** Graph: The current graph of the visualizer. */
-    protected GetGraph<T>() { return this.Visualizer.GetStatus<T>().Graph; }
+    protected GetGraph<T>() {
+        return this.Visualizer.GetStatus<T>().Graph;
+    }
     /** Constructor: Constructing the side panel. */
     public constructor(Container: Cash, Visualizer: Visualizer) {
         this.Visualizer = Visualizer;
@@ -48,7 +62,7 @@ export abstract class Panel {
         this.Refresh();
     }
     /** Refresh: The current program that actually renders the panel. Optional. */
-    protected Refresh: () => void = () => { };
+    protected Refresh: () => void = () => {};
     /** SetRefresh: Set the refresh function for the panel. */
     protected SetRefresh(Refresh: () => void) {
         this.Refresh = Refresh;
@@ -57,8 +71,7 @@ export abstract class Panel {
     /** BuildTable: Build a table for the panel. */
     protected BuildTable<T>(Data: T[], Builder: (Row: Cash, Data: T, Index: number) => void, Columns: string[] = []) {
         var Table = $(`<table class="data-table"></table>`).appendTo(this.Container);
-        if (Columns.length > 0)
-            Table.append($(`<tr></tr>`).append(...Columns.map(C => $(`<th></th>`).text(C))));
+        if (Columns.length > 0) Table.append($(`<tr></tr>`).append(...Columns.map((C) => $(`<th></th>`).text(C))));
         Data.forEach((Item, Index) => Builder($(`<tr></tr>`).appendTo(Table), Item, Index));
         return Table;
     }

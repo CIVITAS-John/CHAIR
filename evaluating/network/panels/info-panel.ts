@@ -1,10 +1,10 @@
-import type { Cash } from 'cash-dom';
-import { Visualizer } from '../visualizer.js';
-import { Node } from '../utils/schema.js';
-import { Code } from '../../../utils/schema.js';
-import { GetCodebookColor } from '../utils/utils.js';
-import { Panel } from './panel.js';
-import { ExtractExamples, FindExampleSources, FindOriginalCodes } from '../utils/dataset.js';
+import type { Cash } from "cash-dom";
+import { Visualizer } from "../visualizer.js";
+import { Node } from "../utils/schema.js";
+import { Code } from "../../../utils/schema.js";
+import { GetCodebookColor } from "../utils/utils.js";
+import { Panel } from "./panel.js";
+import { ExtractExamples, FindExampleSources, FindOriginalCodes } from "../utils/dataset.js";
 
 /** InfoPanel: The info panel for the visualizer. */
 export class InfoPanel extends Panel {
@@ -13,8 +13,7 @@ export class InfoPanel extends Panel {
     /** Constructor: Constructing the side panel. */
     public constructor(Container: Cash, Visualizer: Visualizer) {
         super(Container, Visualizer);
-        Visualizer.RegisterChosenCallback<Code>("Code", 
-            (Node, Status) => this.ShowOrHidePanel<Code>(Node, Status));
+        Visualizer.RegisterChosenCallback<Code>("Code", (Node, Status) => this.ShowOrHidePanel<Code>(Node, Status));
     }
     /** ShowOrHidePanel: Show or hide a panel. */
     public ShowOrHidePanel<T>(Node: Node<T>, Status: boolean) {
@@ -51,11 +50,15 @@ export class InfoPanel extends Panel {
     }
     /** BuildPanelForCode: Build a panel for a code. */
     public BuildPanelForCode(Panel: Cash, Code: Code, Everything: boolean = true) {
-        if (Everything)
-            Panel.append($(`<h3>${Code.Label}</h3>`));
-        else Panel.append($(`<h3></h3>`).append($(`<a href="javascript:void(0)">${Code.Label}</span>`).on("click", () => {
-            this.Dialog.ShowCode(0, Code);
-        })));
+        if (Everything) Panel.append($(`<h3>${Code.Label}</h3>`));
+        else
+            Panel.append(
+                $(`<h3></h3>`).append(
+                    $(`<a href="javascript:void(0)">${Code.Label}</span>`).on("click", () => {
+                        this.Dialog.ShowCode(0, Code);
+                    }),
+                ),
+            );
         if (Code.Owners && Code.Owners.length > 0) {
             var Owners = $(`<p class="owners">By: </p>`).appendTo(Panel);
             for (var Owner of Code.Owners) {
@@ -65,34 +68,38 @@ export class InfoPanel extends Panel {
         } else if (Code.Alternatives && Code.Alternatives.length > 0) {
             Panel.append($(`<p class="alternatives">Consolidated from: ${Code.Alternatives.join(", ")}</p>`));
         }
-        if (Code.Definitions && Code.Definitions.length > 0)
-            Panel.append($(`<p class="definition">${Code.Definitions[0]}</p>`));
-        else
-            Panel.append($(`<p><i>No definition available.</i></p>`));
+        if (Code.Definitions && Code.Definitions.length > 0) Panel.append($(`<p class="definition">${Code.Definitions[0]}</p>`));
+        else Panel.append($(`<p><i>No definition available.</i></p>`));
         if (Code.Examples && Code.Examples.length > 0) {
             var Examples = ExtractExamples(Code.Examples);
             Panel.append($(`<hr>`));
             if (Everything) {
                 var List = $(`<ol class="quote"></ol>`).appendTo(Panel);
                 for (var Example of Examples) {
-                    $(`<li></li>`).appendTo(List)
-                        .append(this.BuildExample(Code, Example[0], Example[1]));
+                    $(`<li></li>`).appendTo(List).append(this.BuildExample(Code, Example[0], Example[1]));
                 }
             } else {
                 var Quote = $(`<p class="quote"></p>`).appendTo(Panel);
                 $("<span></span>").appendTo(Quote).text(Examples.keys().next().value);
-                if (Code.Examples.length > 1) $(`<a href="javascript:void(0)">(${Code.Examples.length - 1} more)</a>`).appendTo(Quote).on("click", () => {
-                    this.Dialog.ShowCode(0, Code);
-                });
+                if (Code.Examples.length > 1)
+                    $(`<a href="javascript:void(0)">(${Code.Examples.length - 1} more)</a>`)
+                        .appendTo(Quote)
+                        .on("click", () => {
+                            this.Dialog.ShowCode(0, Code);
+                        });
             }
         }
     }
     /** BuildOwnerLink: Build a link for an owner. */
-    public BuildOwnerLink(Code: Code, Sources: Code[], Owner: number)  {
-        var Link = $(`<a href="javascript:void(0)" style="color: ${GetCodebookColor(Owner, this.Dataset.Codebooks.length)}">${this.Dataset.Names[Owner]}</a>`);
+    public BuildOwnerLink(Code: Code, Sources: Code[], Owner: number) {
+        var Link = $(
+            `<a href="javascript:void(0)" style="color: ${GetCodebookColor(Owner, this.Dataset.Codebooks.length)}">${this.Dataset.Names[Owner]}</a>`,
+        );
         if (Sources.length > 0) {
-            Link.attr("title", Sources.map(Original => Original.Label).join(", "));
-            Link.on("click", () => { this.Dialog.ShowCode(Owner, Code, ...Sources); });
+            Link.attr("title", Sources.map((Original) => Original.Label).join(", "));
+            Link.on("click", () => {
+                this.Dialog.ShowCode(Owner, Code, ...Sources);
+            });
         }
         return Link;
     }
@@ -100,8 +107,7 @@ export class InfoPanel extends Panel {
     public BuildExample(Code: Code, Example: string, IDs: string[] = []): Cash {
         var Element = $(`<p>${Example}</p>`);
         // Add the source links
-        if (IDs.length > 0)
-            IDs.forEach(ID => Element.append(this.BuildSourceLink(ID)));
+        if (IDs.length > 0) IDs.forEach((ID) => Element.append(this.BuildSourceLink(ID)));
         // Add the owners
         if (Code.Owners && Code.Owners.length > 0) {
             var Owners = $(`<p class="owners">By: </p>`);

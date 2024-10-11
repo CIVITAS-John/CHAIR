@@ -1,8 +1,8 @@
-import { CodingNotes, ResearchQuestion } from '../../constants.js';
-import { MaxItems } from '../../utils/llms.js';
-import { CodedThread, Conversation, Message } from '../../utils/schema.js';
-import { BuildMessagePrompt } from './conversations.js';
-import { LowLevelAnalyzerBase } from './low-level.js';
+import { CodingNotes, ResearchQuestion } from "../../constants.js";
+import { MaxItems } from "../../utils/llms.js";
+import { CodedThread, Conversation, Message } from "../../utils/schema.js";
+import { BuildMessagePrompt } from "./conversations.js";
+import { LowLevelAnalyzerBase } from "./low-level.js";
 
 /** LowLevelAnalyzer3: Conduct the first-round low-level coding of the conversations. */
 // Change from LowLevelAnalyzer2: We try to give some more background on the data and directions. Also, improved the prompt for the planning stage.
@@ -22,7 +22,8 @@ export default class LowLevelAnalyzer3 extends LowLevelAnalyzerBase {
     }
     /** BuildPrompts: Build the prompts for the LLM. */
     public async BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): Promise<[string, string]> {
-        return [`
+        return [
+            `
 You are an expert in thematic analysis with grounded theory, working on open coding.
 Your goal is to identify multiple low-level tags for each message.
 When writing tags, balance between specifics and generalizability across messages.
@@ -38,6 +39,7 @@ Tags for each message (${Messages.length} in total):
 ${Messages.length}. tag 4; tag 5; tag 6...
 Summary: {A somehow detailed summary of the conversation, including previous ones}
 Notes: {Notes and hypotheses about the conversation until now}`.trim(),
-            Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message, Analysis.Items[Message.ID])}`).join("\n")];
+            Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message, Analysis.Items[Message.ID])}`).join("\n"),
+        ];
     }
 }
