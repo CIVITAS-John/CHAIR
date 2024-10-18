@@ -108,7 +108,7 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
 nodes = traverse(root, 0)
 
 # Plot the distribution of distances with log scale
-if True:    
+if False:    
     import matplotlib.pyplot as plt
     fig, ax = plt.subplots()
     # Filter out distances > 0.8
