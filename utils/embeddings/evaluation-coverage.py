@@ -1,12 +1,12 @@
-import sys
-import os
-import numpy as np
 import math
-import matplotlib.pyplot as plt
+import sys
+
 import matplotlib.patheffects as PathEffects
+import matplotlib.pyplot as plt
 import matplotlib.transforms as mtransforms
+import numpy as np
+from embedding import cpus, embeddings, labels
 from matplotlib.markers import MarkerStyle
-from embedding import Dimensions, Items, cpus, labels, embeddings
 
 # Evaluate coverage of codebooks through KDE
 # Get the arguments
@@ -31,11 +31,13 @@ else:
 # Calculate the distance matrix
 from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.preprocessing import normalize
+
 embeddings = normalize(embeddings, norm='l2')
 distances = pairwise_distances(embeddings, embeddings, metric='euclidean', n_jobs=cpus)
 
 # Use UMap to reduce the dimensions
 from umap import UMAP
+
 umap = UMAP(n_components=2, metric='precomputed') # densmap=True, 
 embeddings = umap.fit_transform(distances)
 x, y = embeddings[:, 0], embeddings[:, 1]
@@ -244,4 +246,5 @@ for i, codebook in enumerate(group_ids[1:]):
 
 # Send the evaluations
 import json
+
 print(json.dumps(evaluation))

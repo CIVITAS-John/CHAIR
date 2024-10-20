@@ -1,9 +1,9 @@
-import * as http from 'http';
-import * as fs from 'fs';
-import * as path from 'path';
-import open, { apps } from 'open';
-import chalk from 'chalk';
-import { EnsureFolder } from './llms.js';
+import * as http from "http";
+import * as fs from "fs";
+import * as path from "path";
+import open, { apps } from "open";
+import chalk from "chalk";
+import { EnsureFolder } from "./llms.js";
 import { setTimeout } from "timers/promises";
 
 /** CreateServer: Create a local server for interactivity. */
@@ -16,11 +16,13 @@ export function CreateServer<T>(Port: number, BaseDirectories: string[], ...Data
         // Handle dynamic requests
         if (Url.startsWith("/api/report/")) {
             // Read the body
-            let Body = '';
-            Request.on('data', chunk => { Body += chunk.toString(); });
-            Request.on('end', () => {
+            let Body = "";
+            Request.on("data", (chunk) => {
+                Body += chunk.toString();
+            });
+            Request.on("end", () => {
                 let Data = JSON.parse(Body);
-                Response.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+                Response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
                 Response.end(JSON.stringify(Data));
                 Shutdown(Data);
             });
@@ -45,7 +47,7 @@ export function CreateServer<T>(Port: number, BaseDirectories: string[], ...Data
         Response.end(`Error loading ${path.basename(Url)}`);
     });
     // Send data to the client
-    const SendData = function(Response: http.ServerResponse, FilePath: string) {
+    const SendData = function (Response: http.ServerResponse, FilePath: string) {
         fs.readFile(FilePath, (err: NodeJS.ErrnoException | null, data: Buffer) => {
             if (err) {
                 Response.writeHead(404);
@@ -54,64 +56,66 @@ export function CreateServer<T>(Port: number, BaseDirectories: string[], ...Data
             }
             // Determine content type by file extension
             let ext: string = path.extname(FilePath).toLowerCase();
-            let contentType: string = 'text/html; charset=utf-8'; // Default content type
+            let contentType: string = "text/html; charset=utf-8"; // Default content type
             switch (ext) {
-                case '.js':
-                    contentType = 'text/javascript; charset=utf-8';
+                case ".js":
+                    contentType = "text/javascript; charset=utf-8";
                     let content = data.toString();
                     // Remove all import statements
                     content = HandleScript(content);
                     data = Buffer.from(content);
                     break;
-                case '.css':
-                    contentType = 'text/css; charset=utf-8';
+                case ".css":
+                    contentType = "text/css; charset=utf-8";
                     break;
-                case '.json':
-                    contentType = 'application/json; charset=utf-8';
+                case ".json":
+                    contentType = "application/json; charset=utf-8";
                     break;
-                case '.svg':
-                    contentType = 'image/svg+xml';
+                case ".svg":
+                    contentType = "image/svg+xml";
                     break;
-                case '.png':
-                    contentType = 'image/png';
+                case ".png":
+                    contentType = "image/png";
                     break;
-                case '.jpg':
-                case '.jpeg':
-                    contentType = 'image/jpeg';
+                case ".jpg":
+                case ".jpeg":
+                    contentType = "image/jpeg";
                     break;
             }
-            Response.writeHead(200, { 'Content-Type': contentType });
+            Response.writeHead(200, { "Content-Type": contentType });
             Response.end(data);
         });
-    }
+    };
     // Start the server
     return new Promise<T | undefined>((Resolve, Reject) => {
         Server.listen(Port, async () => {
             console.log(`Server running at http://localhost:${Port}/`);
-            console.log('Press Ctrl+C to shut down the server.')
+            console.log("Press Ctrl+C to shut down the server.");
             // Automatically open the browser when the server starts
             // Wait for 5 seconds or the browser tab to close
             // On Windows, the browser tab may close prematurely, so we delay the shutdown
-            await Promise.all([open(`http://localhost:${Port}/`, { wait: true, app: { name: apps.chrome } }), 
-                setTimeout(process.platform == "win32" ? 6000000 : 5000)])
-            console.log('The browser tab has closed, shutting down the server.')
+            await Promise.all([
+                open(`http://localhost:${Port}/`, { wait: true, app: { name: apps.chrome } }),
+                setTimeout(process.platform == "win32" ? 6000000 : 5000),
+            ]);
+            console.log("The browser tab has closed, shutting down the server.");
             Shutdown();
         });
         // Handle server shutdown
         Shutdown = (Data) => {
             Server.close((Error) => {
                 if (Error) {
-                    console.error('Failed to close server:', Error);
+                    console.error("Failed to close server:", Error);
                     Reject(Error); // Reject the promise on server close error
                 } else {
-                    console.log('Server shut down gracefully.');
+                    console.log("Server shut down gracefully.");
                     Resolve(Data); // Resolve the promise when server closes successfully
                 }
             });
         };
         // Listen for SIGINT (e.g., Ctrl+C) and SIGTERM (sent from OS shutdown, etc.)
-        process.on('SIGINT', Shutdown);
-        process.on('SIGTERM', Shutdown);
+        process.on("SIGINT", Shutdown);
+        process.on("SIGTERM", Shutdown);
     });
 }
 
@@ -126,7 +130,7 @@ export function CreateOfflineBundle(TargetDirectory: string, BaseDirectories: st
         fs.copyFileSync(dataFile, path.join(OfflineBundleDirectory, name));
     }
     // Copy the web files recursively to the offline bundle directory while keeping the structure
-    const CopyFiles = function(Source: string, Destination: string) {
+    const CopyFiles = function (Source: string, Destination: string) {
         const files = fs.readdirSync(Source);
         for (const file of files) {
             const filePath = path.join(Source, file);
@@ -139,20 +143,19 @@ export function CreateOfflineBundle(TargetDirectory: string, BaseDirectories: st
                 const name = path.basename(filePath);
                 if (name.endsWith(".ts")) continue; // Skip TypeScript files
                 if (name.endsWith(".js")) {
-                    let content = fs.readFileSync(filePath, 'utf8');
+                    let content = fs.readFileSync(filePath, "utf8");
                     // Remove all import statements
                     content = HandleScript(content);
                     fs.writeFileSync(path.join(Destination, name), content);
                 } else fs.copyFileSync(filePath, path.join(Destination, name));
             }
         }
-    }
-    for (const BaseDirectory of BaseDirectories)
-        CopyFiles(BaseDirectory, OfflineBundleDirectory);
+    };
+    for (const BaseDirectory of BaseDirectories) CopyFiles(BaseDirectory, OfflineBundleDirectory);
     console.log(chalk.blue(`Offline bundle created in: ${OfflineBundleDirectory}.`));
 }
 
 /** HandleScript: Filter a script content to exclude import statements. */
 function HandleScript(Content: string): string {
-    return Content.replaceAll(/^(.*)import(.*?) from ['"]([^\/]*?)['"];?$/gm, '').replaceAll(/^\/\/\# sourceMappingURL(.*)/gm, '');
+    return Content.replaceAll(/^(.*)import(.*?) from ['"]([^\/]*?)['"];?$/gm, "").replaceAll(/^\/\/\# sourceMappingURL(.*)/gm, "");
 }

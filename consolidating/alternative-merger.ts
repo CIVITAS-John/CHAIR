@@ -12,8 +12,8 @@ export class AlternativeMerger extends CodeConsolidator {
         var Result: Record<string, Code> = {};
         var Alternatives: Map<string, Code[]> = new Map();
         // Record the alternatives
-        Codes.forEach(Code => {
-            Code.Alternatives?.forEach(Alternative => {
+        Codes.forEach((Code) => {
+            Code.Alternatives?.forEach((Alternative) => {
                 if (!Alternatives.has(Alternative)) Alternatives.set(Alternative, []);
                 Alternatives.get(Alternative)!.push(Code);
             });
@@ -30,9 +30,9 @@ export class AlternativeMerger extends CodeConsolidator {
             }
         });
         // Remove alternatives from the codebook
-        Codes.forEach(Code => Code.Alternatives = []);
+        Codes.forEach((Code) => (Code.Alternatives = []));
         // Merge the codes
-        Codes.forEach(Code => {
+        Codes.forEach((Code) => {
             if ((Code.Alternatives?.length ?? 0) > 0 || !BestAlternatives.has(Code.Label)) {
                 Result[Code.Label] = Code;
             } else {

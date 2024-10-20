@@ -13,7 +13,7 @@ export class CategoryNameMerger extends CodeConsolidator {
     /** Minimum: The minimum threshold for merging categories. */
     public Minimum: number;
     /** Constructor: Create a new CategoryNameMerger. */
-    constructor({Maximum = 0.4, Minimum = 0.4}: {Maximum?: number, Minimum?: number}) {
+    constructor({ Maximum = 0.4, Minimum = 0.4 }: { Maximum?: number; Minimum?: number }) {
         super();
         this.Maximum = Maximum;
         this.Minimum = Minimum;
@@ -29,8 +29,14 @@ export class CategoryNameMerger extends CodeConsolidator {
         var Frequencies = GetCategories(Codebook);
         var Categories = Object.keys(Frequencies);
         // Cluster categories using text embeddings
-        var Clusters = await ClusterCategories(Categories, Frequencies, "consolidated", 
-            "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString()
+        var Clusters = await ClusterCategories(
+            Categories,
+            Frequencies,
+            "consolidated",
+            "euclidean",
+            "ward",
+            this.Maximum.toString(),
+            this.Minimum.toString(),
         );
         // Update the categories
         MergeCategoriesByCluster(Clusters, Categories, Codes, true);

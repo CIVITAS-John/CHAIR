@@ -39,13 +39,11 @@ export abstract class DefinitionParser extends CodeConsolidator {
                 Status = "Label";
             } else if (Line.startsWith("Criteria:") && CurrentCode) {
                 var Definition = Line.substring(9).trim();
-                if (Definition !== "")
-                    CurrentCode.Definitions = [Definition];
+                if (Definition !== "") CurrentCode.Definitions = [Definition];
                 Status = "Criteria";
             } else if (Line.startsWith("Category:") && CurrentCode) {
                 var Category = Line.substring(9).trim();
-                if (Category !== "")
-                    CurrentCode.Categories = [Category.toLowerCase()];
+                if (Category !== "") CurrentCode.Categories = [Category.toLowerCase()];
                 Status = "Category";
             } else if (Status == "Label") {
                 CurrentCode!.Label = `${CurrentCode!.Label}\n${Line}`.trim();
@@ -65,18 +63,17 @@ export abstract class DefinitionParser extends CodeConsolidator {
             // Sometimes, the new label starts with "phrase:"
             if (NewCode.Label.startsWith("phrase:")) NewCode.Label = NewCode.Label.substring(7).trim();
             // Sometimes, the new label is wrapped in ""
-            if (NewCode.Label.startsWith("\"") && NewCode.Label.endsWith("\"")) NewCode.Label = NewCode.Label.substring(1, NewCode.Label.length - 1);
+            if (NewCode.Label.startsWith('"') && NewCode.Label.endsWith('"')) NewCode.Label = NewCode.Label.substring(1, NewCode.Label.length - 1);
             // Sometimes, the new label ends with "."
             if (NewCode.Label.endsWith(".")) NewCode.Label = NewCode.Label.substring(0, NewCode.Label.length - 1).trim();
             // Sometimes, the order of labels is wrong (! found for gpt-3.5-turbo)
-            var Found = Codes.findIndex(Code => Code.Label == NewCode.Label);
-            if (Found != -1 && Found !== I) 
-                throw new Error(`Invalid response: code ${NewCode.Label}'s mapping order is wrong.`);
+            var Found = Codes.findIndex((Code) => Code.Label == NewCode.Label);
+            if (Found != -1 && Found !== I) throw new Error(`Invalid response: code ${NewCode.Label}'s mapping order is wrong.`);
         }
         // Update the codes
         UpdateCodes(Codebook, Pendings, Codes);
         // Remove temp labels
-        Codes.forEach(Code => delete Code.OldLabels);
+        Codes.forEach((Code) => delete Code.OldLabels);
         // Return the cursor movement
         return Object.keys(Pendings).length - Codes.length;
     }
@@ -90,9 +87,10 @@ export class DefinitionGenerator extends DefinitionParser {
         return super.SubunitFilter(Code) && (Code.Definitions?.length ?? 0) == 0;
     }
     /** BuildPrompts: Build the prompts for the code consolidator. */
-    public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]>{
+    public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
         // Generate definitions for codes
-        return [`
+        return [
+            `
 You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
 Consider provided quotes, and note that each quote is independent of others.
 Write clear and generalizable criteria for each code and do not introduce unnecessary details.
@@ -108,12 +106,17 @@ Label: {A descriptive label of code 1}
 ${Codes.length}.
 Criteria: {Who did what, and how for code ${Codes.length}}
 Label: {A descriptive label of code ${Codes.length}}
----`.trim(), 
-            Codes.map((Code, Index) => `
+---`.trim(),
+            Codes.map((Code, Index) =>
+                `
 ${Index + 1}.
 Label: ${Code.Label}
 Quotes:
-${TakeExamples(Code.Examples ?? [], 5).map(Example => `- ${Example}`).join("\n")}`.trim()).join("\n\n")];
+${TakeExamples(Code.Examples ?? [], 5)
+    .map((Example) => `- ${Example}`)
+    .join("\n")}`.trim(),
+            ).join("\n\n"),
+        ];
     }
 }
 
@@ -130,5 +133,7 @@ export function TakeExamples(Examples: string[], Take: number = 1000000): string
     for (var [Example, Count] of ExampleMap) {
         ExampleMap.set(Example, Count * Example.length);
     }
-    return Array.from(ExampleMap.keys()).sort((A, B) => ExampleMap.get(B)! - ExampleMap.get(A)!).slice(0, Take);
+    return Array.from(ExampleMap.keys())
+        .sort((A, B) => ExampleMap.get(B)! - ExampleMap.get(A)!)
+        .slice(0, Take);
 }

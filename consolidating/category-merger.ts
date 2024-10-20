@@ -13,7 +13,7 @@ export class CategoryMerger extends CodeConsolidator {
     /** Minimum: The minimum threshold for merging categories. */
     public Minimum: number;
     /** Constructor: Create a new NameMerger. */
-    constructor({Maximum = 0.65, Minimum = 0.5, Looping = false}: {Maximum?: number, Minimum?: number, Looping?: boolean}) {
+    constructor({ Maximum = 0.65, Minimum = 0.5, Looping = false }: { Maximum?: number; Minimum?: number; Looping?: boolean }) {
         super();
         this.Maximum = Maximum;
         this.Minimum = Minimum;
@@ -33,17 +33,25 @@ export class CategoryMerger extends CodeConsolidator {
         var Frequencies = GetCategories(Codebook);
         var Categories = Object.keys(Frequencies);
         // Map the categories to strings
-        var CategoryStrings = Categories.map(Category => {
+        var CategoryStrings = Categories.map((Category) => {
             var Text = `Category: ${Category}
 Items:
-${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Code.Label}`).join("\n")}
+${Codes.filter((Code) => Code.Categories?.includes(Category))
+    .map((Code) => `- ${Code.Label}`)
+    .join("\n")}
 `.trim();
-// ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Code.Label} (${Code.Definitions![0]})`).join("\n")}
+            // ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Code.Label} (${Code.Definitions![0]})`).join("\n")}
             return Text.trim();
         });
         // Cluster categories using text embeddings
-        var Clusters = await ClusterCategories(CategoryStrings, Frequencies, "consolidated", 
-            "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString()
+        var Clusters = await ClusterCategories(
+            CategoryStrings,
+            Frequencies,
+            "consolidated",
+            "euclidean",
+            "ward",
+            this.Maximum.toString(),
+            this.Minimum.toString(),
         );
         this.OldCategories = Categories;
         this.NewCategories = MergeCategoriesByCluster(Clusters, Categories, Codes);
@@ -56,7 +64,8 @@ ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `- ${Cod
     public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
         var Count = Object.keys(this.NewCategories).length;
         // Ask LLMs to write new names for each category
-        return [`
+        return [
+            `
 You are an expert in thematic analysis. You are assigning names for categories based on the merging results.
 Make sure those merged names are concise, accurate, and related to the research question. Use 2-4 words and avoid over-generalization.
 ${ResearchQuestion}
@@ -66,7 +75,17 @@ Names for each category (${Count} in total):
 1. {2-4 words for category 1}
 ...
 ${Count}. {2-4 words for category ${Count}}
----`.trim(), "Merge results:\n" + Object.keys(this.NewCategories).map((Category, Index) => `${Index + 1}.\n${Category.split("|").map(Current => `- ${Current}`).join("\n")}`).join("\n\n")];
+---`.trim(),
+            "Merge results:\n" +
+                Object.keys(this.NewCategories)
+                    .map(
+                        (Category, Index) =>
+                            `${Index + 1}.\n${Category.split("|")
+                                .map((Current) => `- ${Current}`)
+                                .join("\n")}`,
+                    )
+                    .join("\n\n"),
+        ];
     }
     /** ParseResponse: Parse the response for the code consolidator. */
     public async ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]) {
@@ -82,7 +101,8 @@ ${Count}. {2-4 words for category ${Count}}
             }
         }
         // Update the categories
-        if (Results.length != Object.keys(this.NewCategories).length) throw new Error(`Invalid response: ${Results.length} results for ${this.OldCategories.length} categories.`);
+        if (Results.length != Object.keys(this.NewCategories).length)
+            throw new Error(`Invalid response: ${Results.length} results for ${this.OldCategories.length} categories.`);
         UpdateCategories(Object.keys(this.NewCategories), Results, Codes);
         // Check if we are done
         var OldLength = this.OldCategories.length;

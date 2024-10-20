@@ -1,8 +1,8 @@
 import { Code, CodebookComparison, CodebookEvaluation } from "../../../utils/schema.js";
 import { GetConsolidatedSize } from "./dataset.js";
 import { BuildSemanticGraph } from "./graph.js";
-import { CalculateJSD, Parameters } from './utils.js';
-import { Graph, Component } from './schema.js';
+import { CalculateJSD, Parameters } from "./utils.js";
+import { Graph, Component } from "./schema.js";
 
 /** Evaluate: Evaluate all codebooks based on the network structure. */
 export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameters): Record<string, CodebookEvaluation> {
@@ -59,8 +59,12 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
 }
 
 /** Evaluate: Evaluate all codebooks per cluster, based on the network structure. */
-export function EvaluatePerCluster(Dataset: CodebookComparison<any>, Graph: Graph<Code>, Parameters: Parameters): { Component: Component<Code>, Coverages: number[], Differences: number[] }[] {
-    var Results: { Component: Component<Code>, Coverages: number[], Differences: number[] }[] = [];
+export function EvaluatePerCluster(
+    Dataset: CodebookComparison<any>,
+    Graph: Graph<Code>,
+    Parameters: Parameters,
+): { Component: Component<Code>; Coverages: number[]; Differences: number[] }[] {
+    var Results: { Component: Component<Code>; Coverages: number[]; Differences: number[] }[] = [];
     // Prepare for the results
     var Codebooks = Dataset.Codebooks;
     var TotalCoverages = Dataset.Names.map(() => 0);
@@ -79,12 +83,12 @@ export function EvaluatePerCluster(Dataset: CodebookComparison<any>, Graph: Grap
                 TotalCoverages[I] += Weight * Observed;
             }
         }
-        Coverages = Coverages.map(Coverage => Coverage / TotalWeight);
+        Coverages = Coverages.map((Coverage) => Coverage / TotalWeight);
         // Put it back to the results
         Results.push({ Component: Cluster, Coverages: Coverages.slice(1), Differences: [] });
     }
     // Calculate the total coverage and relative difference
-    TotalCoverages = TotalCoverages.map(Coverage => Coverage / TotalCoverages[0]);
+    TotalCoverages = TotalCoverages.map((Coverage) => Coverage / TotalCoverages[0]);
     for (var Result of Results) {
         Result.Differences = Result.Coverages.map((Coverage, I) => Coverage / TotalCoverages[I + 1] - 1);
     }

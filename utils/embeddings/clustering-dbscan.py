@@ -1,6 +1,6 @@
 import sys
 import numpy as np
-from embedding import Dimensions, Items, cpus, labels, embeddings
+from embedding import Dimensions, Items, cpus, embeddings
 
 # DBScan Clustering
 

@@ -1,7 +1,7 @@
-import * as File from 'fs';
-import { Tokenize } from '../../utils/tokenizer.js';
-import { Message, Participant } from '../../utils/schema.js';
-import { GetMessagesPath, GetParticipantsPath } from '../../utils/loader.js';
+import * as File from "fs";
+import { Tokenize } from "../../utils/tokenizer.js";
+import { Message, Participant } from "../../utils/schema.js";
+import { GetMessagesPath, GetParticipantsPath } from "../../utils/loader.js";
 
 // CutoffDate: The cutoff date for the dataset.
 export const CutoffDate = new Date(2021, 0, 1);
@@ -9,22 +9,29 @@ export const CutoffDate = new Date(2021, 0, 1);
 /** ReadQQMessages: Read messages from a text record of QQ groups. */
 function ReadQQMessages(Path: string, Prefix: string): Message[] {
     const Messages: Message[] = [];
-    const Sources = File.readFileSync(Path, 'utf-8').split('\r\n');
+    const Sources = File.readFileSync(Path, "utf-8").split("\r\n");
     var LastMessage: Message | undefined;
     for (const Source of Sources) {
         var Match = Source.match(/(\d{4})-(\d{2})-(\d{2}) ([0-1]?\d):(\d{2}):(\d{2}) (AM|PM) (.*?)(\(\d+\)|<.*?>)/);
         if (Match !== null) {
-            const Time = new Date(Number(Match[1]), Number(Match[2]) - 1, Number(Match[3]), 
-                Number(Match[4]) + (Match[7] === 'PM' ? 12 : 0), Number(Match[5]), Number(Match[6]));
-            LastMessage = { 
+            const Time = new Date(
+                Number(Match[1]),
+                Number(Match[2]) - 1,
+                Number(Match[3]),
+                Number(Match[4]) + (Match[7] === "PM" ? 12 : 0),
+                Number(Match[5]),
+                Number(Match[6]),
+            );
+            LastMessage = {
                 ID: `${Prefix}-${Messages.length.toString()}`,
-                UserID: Match[9].substring(1, Match[9].length - 1), 
-                Nickname: Match[8].replaceAll(/"|,/g, '').replaceAll(/^【.{2}】/g, ''),
-                Time, 
-                Content: '' };
+                UserID: Match[9].substring(1, Match[9].length - 1),
+                Nickname: Match[8].replaceAll(/"|,/g, "").replaceAll(/^【.{2}】/g, ""),
+                Time,
+                Content: "",
+            };
             if (LastMessage.Time > CutoffDate) break;
             Messages.push(LastMessage);
-        }  else if (LastMessage !== undefined) {
+        } else if (LastMessage !== undefined) {
             LastMessage.Content += Source.replace("\r", "\n").trim() + "\n";
         }
     }
@@ -32,13 +39,13 @@ function ReadQQMessages(Path: string, Prefix: string): Message[] {
 }
 
 // Read emojis
-const Emojis = File.readFileSync(`./known/emoji.csv`, 'utf-8').split('\n');
+const Emojis = File.readFileSync(`./known/emoji.csv`, "utf-8").split("\n");
 const EmojiMap = new Map<string | RegExp, string>();
 for (const Emoji of Emojis) {
-    var LastSeperator = Emoji.lastIndexOf(',');
+    var LastSeperator = Emoji.lastIndexOf(",");
     var [Source, Translation] = [Emoji.substring(0, LastSeperator), Emoji.substring(LastSeperator + 1)];
     if (Source.includes("{")) {
-        EmojiMap.set(new RegExp(Source, 'g'), Translation.trim());
+        EmojiMap.set(new RegExp(Source, "g"), Translation.trim());
     } else {
         if (!Source.startsWith("[")) Source = `\/${Source}`;
         EmojiMap.set(Source, Translation.trim());
@@ -57,11 +64,11 @@ for (const Group of Groups) {
     // First pass: get the participants and anonymize the user ids.
     for (const Message of Messages) {
         if (!Participants.has(Message.UserID)) {
-            Participants.set(Message.UserID, { 
-                ID: Participants.size.toString(), 
-                Nickname: Message.Nickname, 
+            Participants.set(Message.UserID, {
+                ID: Participants.size.toString(),
+                Nickname: Message.Nickname,
                 Messages: 0,
-                FirstSeen: Message.Time
+                FirstSeen: Message.Time,
             });
             Message.FirstSeen = true;
         } else {
@@ -95,26 +102,41 @@ for (const Group of Groups) {
         Message.Content = Message.Content.trim();
         // Identify unknown emojis
         for (const UnknownEmoji of Message.Content.matchAll(/\/([\u4e00-\u9fa5]{1,4})/g)) {
-            if (UnknownEmojis.has(UnknownEmoji[1])) 
-                UnknownEmojis.set(UnknownEmoji[1], UnknownEmojis.get(UnknownEmoji[1])! + 1);
+            if (UnknownEmojis.has(UnknownEmoji[1])) UnknownEmojis.set(UnknownEmoji[1], UnknownEmojis.get(UnknownEmoji[1])! + 1);
             else UnknownEmojis.set(UnknownEmoji[1], 1);
         }
     }
     // Sort messages by time (sometimes, my computer may receive records in incorrect orders)
     Messages.sort((A, B) => A.Time.getTime() - B.Time.getTime());
     // Write the unknown emojis into a CSV file.
-    File.writeFileSync(`./known/unknown-emoji.csv`, 
-        'Emoji,Frequency\n' + Array.from(UnknownEmojis).filter(Emoji => Emoji[1] > 2).map(Emoji => `${Emoji[0]},${Emoji[1]}`).join(',\n'));
+    File.writeFileSync(
+        `./known/unknown-emoji.csv`,
+        "Emoji,Frequency\n" +
+            Array.from(UnknownEmojis)
+                .filter((Emoji) => Emoji[1] > 2)
+                .map((Emoji) => `${Emoji[0]},${Emoji[1]}`)
+                .join(",\n"),
+    );
     // Write the messages into a JSON file.
     File.writeFileSync(GetMessagesPath(Group, "Messages.json"), JSON.stringify(Messages, null, 4));
     // Write the messages (metadata) into a CSV file using Unix timestamp. Only length of content is stored.
-    File.writeFileSync(GetMessagesPath(Group, "Messages.csv"), 'Source,ID,Time,Timestamp,First,Length,Mentions\n' + 
-        Messages.filter(Message => Message.UserID != "0").map((Message, Index) => `${Index},${Message.UserID},${Message.Time.toISOString()},${Message.Time.getTime()},${Message.FirstSeen},${Message.Content.length},${Message.Mentions?.length ?? 0}`).join('\n'));
+    File.writeFileSync(
+        GetMessagesPath(Group, "Messages.csv"),
+        "Source,ID,Time,Timestamp,First,Length,Mentions\n" +
+            Messages.filter((Message) => Message.UserID != "0")
+                .map(
+                    (Message, Index) =>
+                        `${Index},${Message.UserID},${Message.Time.toISOString()},${Message.Time.getTime()},${Message.FirstSeen},${
+                            Message.Content.length
+                        },${Message.Mentions?.length ?? 0}`,
+                )
+                .join("\n"),
+    );
     NameMappings.clear();
     Index++;
     // Calculate tokens
-    var Content = Messages.map(Message => Message.Content).join("\n");
-    console.log(`Exported ${Messages.length} messages, at ${Content.length} chars.`)
+    var Content = Messages.map((Message) => Message.Content).join("\n");
+    console.log(`Exported ${Messages.length} messages, at ${Content.length} chars.`);
 }
 
 // For Stata: need to + 315619200000
@@ -123,9 +145,14 @@ const ParticipantArray = Array.from(Participants.values());
 File.writeFileSync(GetParticipantsPath("Participants.json"), JSON.stringify(ParticipantArray, null, 4));
 
 // Write all participants into a CSV file.
-File.writeFileSync(GetParticipantsPath("Participants.csv"), 'ID,Messages,FirstSeen,FirstTimestamp\n' + 
-    ParticipantArray.map(Participant => `${Participant.ID},${Participant.Messages},${Participant.FirstSeen.toISOString()},${Participant.FirstSeen.getTime()}`).join('\n'));
+File.writeFileSync(
+    GetParticipantsPath("Participants.csv"),
+    "ID,Messages,FirstSeen,FirstTimestamp\n" +
+        ParticipantArray.map(
+            (Participant) => `${Participant.ID},${Participant.Messages},${Participant.FirstSeen.toISOString()},${Participant.FirstSeen.getTime()}`,
+        ).join("\n"),
+);
 
 // Calculate tokens
-var Tokens = Tokenize(ParticipantArray.map(Participant => Participant.Nickname).join("\n")).length;
-console.log(`Exported ${Participants.size} participants, estimated at ${Tokens} tokens.`)
+var Tokens = Tokenize(ParticipantArray.map((Participant) => Participant.Nickname).join("\n")).length;
+console.log(`Exported ${Participants.size} participants, estimated at ${Tokens} tokens.`);

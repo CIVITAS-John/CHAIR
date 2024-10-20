@@ -1,4 +1,4 @@
-import d3 from 'd3';
+import d3 from "d3";
 
 /** Parameters: The parameters for the visualizer. */
 export class Parameters {
@@ -17,7 +17,7 @@ export class Parameters {
 
 /** Lerp: Linearly interpolate between two values. */
 export function InverseLerp(a: number, b: number, t: number, clamp: boolean = true): number {
-    var result = (t - a) / (b - a)
+    var result = (t - a) / (b - a);
     if (clamp) return Math.min(1, Math.max(0, result));
     return result;
 }
@@ -31,7 +31,7 @@ export function CalculateJSD(P: number[], Q: number[]): number {
                 return sum;
             }
             if (Q[i] === 0) {
-                throw new Error('KL Divergence is not defined when Q[i] is 0 and P[i] is non-zero');
+                throw new Error("KL Divergence is not defined when Q[i] is 0 and P[i] is non-zero");
             }
             return sum + p * Math.log(p / Q[i]);
         }, 0);
@@ -40,8 +40,8 @@ export function CalculateJSD(P: number[], Q: number[]): number {
     // Normalize the distributions to make them probability distributions
     const sumP = P.reduce((a, b) => a + b, 0);
     const sumQ = Q.reduce((a, b) => a + b, 0);
-    const normalizedP = P.map(p => p / sumP);
-    const normalizedQ = Q.map(q => q / sumQ);
+    const normalizedP = P.map((p) => p / sumP);
+    const normalizedQ = Q.map((q) => q / sumQ);
 
     // Calculate the average distribution
     const M = normalizedP.map((p, i) => (p + normalizedQ[i]) / 2);
@@ -52,28 +52,33 @@ export function CalculateJSD(P: number[], Q: number[]): number {
     return jsd;
 }
 
-
 /** GetCodebookColor: Get the color of a codebook. */
 export function GetCodebookColor(Number: number, Codebooks: number): string {
-    if (Codebooks <= 10)
-        return d3.schemeTableau10[Number];
+    if (Codebooks <= 10) return d3.schemeTableau10[Number];
     else return d3.interpolateSinebow(Number / Codebooks);
 }
 
 /** FormatDate: Format a date. */
 export function FormatDate(Date: Date) {
     if (!Date) return "(Unknown)";
-    return Date.toLocaleString(undefined, 
-        { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false } as any);
+    return Date.toLocaleString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        hour12: false,
+    } as any);
 }
 
 /** PostData: Post data to a URL in the browser context. */
 export function PostData(URL: string, Data: any) {
     return fetch(URL, {
-        method: 'POST',
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
         },
-        body: JSON.stringify(Data)
+        body: JSON.stringify(Data),
     });
 }

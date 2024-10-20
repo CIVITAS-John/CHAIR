@@ -1,10 +1,9 @@
-import { CodedItem, CodedThread, CodedThreads, Conversation, Message } from '../../utils/schema.js';
-import { Analyzer } from '../../analyzer.js';
-import { GetSpeakerName, GetSpeakerNameForExample } from '../../constants.js';
+import { CodedItem, CodedThread, CodedThreads, Conversation, Message } from "../../utils/schema.js";
+import { Analyzer } from "../../analyzer.js";
+import { GetSpeakerName, GetSpeakerNameForExample } from "../../constants.js";
 
 /** ConversationAnalyzer: The definition of an abstract conversation analyzer. */
-export abstract class ConversationAnalyzer extends Analyzer<Conversation, Message, CodedThread> {
-}
+export abstract class ConversationAnalyzer extends Analyzer<Conversation, Message, CodedThread> {}
 
 /** BuildMessagePrompt: Build a prompt segment with a message. */
 export function BuildMessagePrompt(Message: Message, Coded?: CodedItem, TagsName: string = "tags", ShortenName: boolean = false): string {

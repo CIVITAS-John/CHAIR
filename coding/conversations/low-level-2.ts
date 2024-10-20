@@ -1,7 +1,7 @@
-import { ResearchQuestion } from '../../constants.js';
-import { CodedThread, Conversation, Message } from '../../utils/schema.js';
-import { BuildMessagePrompt } from './conversations.js';
-import { LowLevelAnalyzerBase } from './low-level.js';
+import { ResearchQuestion } from "../../constants.js";
+import { CodedThread, Conversation, Message } from "../../utils/schema.js";
+import { BuildMessagePrompt } from "./conversations.js";
+import { LowLevelAnalyzerBase } from "./low-level.js";
 
 /** LowLevelAnalyzer2: Conduct the first-round low-level coding of the conversations. */
 // Change from LowLevelAnalyzer1: We try to get the LLMs look from multiple angles and give more tags. Also, the temperature is raised.
@@ -13,7 +13,8 @@ export default class LowLevelAnalyzer2 extends LowLevelAnalyzerBase {
     public BaseTemperature: number = 0.5;
     /** BuildPrompts: Build the prompts for the LLM. */
     public async BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): Promise<[string, string]> {
-        return [`
+        return [
+            `
 You are an expert in thematic analysis. Now, you are working on the open coding.
 This conversation comes from Physics Lab's online messaging groups. The goal is to identify multiple low-level tags of each message with a focus on social interactions.
 The research question is: How did Physics Lab's online community emerge?
@@ -26,6 +27,7 @@ Analysis for all ${Messages.length} messages:
 ${Messages.length}. tag4; tag5; tag6; ...
 Summary: {Summary of the entire conversation}
 Notes: {Summary and specific notes about the entire conversation}`.trim(),
-            Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join("\n")];
+            Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join("\n"),
+        ];
     }
 }

@@ -1,8 +1,9 @@
 import sys
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
 import seaborn as sns
-from embedding import Dimensions, Items, cpus, labels, embeddings
+from embedding import Dimensions, cpus, embeddings, labels
 
 # HDBScan Clustering
 
@@ -17,6 +18,7 @@ print("Method:", Method, ", MinCluster:", MinCluster, ", MinSamples:", MinSample
 
 # Use UMap to reduce the dimensions
 from umap import UMAP
+
 if TargetDimensions < Dimensions:
     umap = UMAP(n_components = TargetDimensions)
     embeddings = umap.fit_transform(embeddings)
@@ -24,16 +26,19 @@ if TargetDimensions < Dimensions:
 
 # Calculate distances
 from sklearn.metrics.pairwise import pairwise_distances
+
 distances = pairwise_distances(embeddings, embeddings, metric=Metrics, n_jobs=cpus)
 
 # Send into HDBScan
 import hdbscan
+
 hdb = hdbscan.HDBSCAN(min_cluster_size = MinCluster, min_samples = MinSamples, cluster_selection_method = Method, core_dist_n_jobs = cpus, metric = 'precomputed') # , prediction_data = True
 hdb.fit(distances.astype(np.float64))
 linkage = hdb.single_linkage_tree_._linkage
 
 # Send the results
 import json
+
 print(json.dumps([hdb.labels_.tolist(), hdb.probabilities_.tolist()]))
 
 # Plot the clusters

@@ -1,6 +1,6 @@
-import commonPathPrefix from 'common-path-prefix';
-import * as File from 'fs';
-import * as Path from 'path';
+import commonPathPrefix from "common-path-prefix";
+import * as File from "fs";
+import * as Path from "path";
 
 /** GetFilesRecursively: Get all files in a directory recursively. */
 export function GetFilesRecursively(Source: string): string[] {
@@ -28,9 +28,9 @@ export function GetFilesRecursively(Source: string): string[] {
 export async function ReadOrBuildCache<T>(CachePath: string, Hash: string, Build: () => Promise<T>): Promise<T> {
     // Check if the cache exists
     if (File.existsSync(CachePath + ".json") && File.existsSync(CachePath + ".hash")) {
-        if (Hash == File.readFileSync(CachePath + ".hash", 'utf8')) {
+        if (Hash == File.readFileSync(CachePath + ".hash", "utf8")) {
             console.log(`Reading cache from ${CachePath}.json.`);
-            return JSON.parse(File.readFileSync(CachePath + ".json", 'utf8'));
+            return JSON.parse(File.readFileSync(CachePath + ".json", "utf8"));
         }
     }
     // Build and write the cache
@@ -46,13 +46,18 @@ export async function ReadOrBuildCache<T>(CachePath: string, Hash: string, Build
 export function RemoveCommonality(Names: string[]): string[] {
     // Find common prefixes and remove them
     var Prefix = commonPathPrefix(Names, Names[0].includes("\\") ? "\\" : "/");
-    Names = Names.map(Name => Name.substring(Prefix.length));
+    Names = Names.map((Name) => Name.substring(Prefix.length));
     Prefix = commonPathPrefix(Names, "-");
-    Names = Names.map(Name => Name.substring(Prefix.length));
+    Names = Names.map((Name) => Name.substring(Prefix.length));
     // Find common suffixes and remove them
-    var Suffix = Reverse(commonPathPrefix(Names.map(Name => Reverse(Name)), "-"));
-    Names = Names.map(Name => Name.substring(0, Name.length - Suffix.length));
-    Names = Names.map(Name => Name == "" ? "root" : Name);
+    var Suffix = Reverse(
+        commonPathPrefix(
+            Names.map((Name) => Reverse(Name)),
+            "-",
+        ),
+    );
+    Names = Names.map((Name) => Name.substring(0, Name.length - Suffix.length));
+    Names = Names.map((Name) => (Name == "" ? "root" : Name));
     return Names;
 }
 
