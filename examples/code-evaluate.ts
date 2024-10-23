@@ -14,12 +14,14 @@ var Configuration = {
         { 
             "Action": "Code",
             "Analyzers": ["low-level-5"],
-            "Models": ["gpt-4.5-omni"]
+            "Models": ["gpt-4.5-omni", "gpt-4.5-mini", "claude3.5-sonnet", "llama3-70b"]
         },
         {
             "Action": "Evaluate",
+            "Name": "evaluation",
             "Analyzers": ["low-level-5"],
-            "Models": ["gpt-4.5-omni"]
+            "Models": ["gpt-4.5-omni", "gpt-4.5-mini", "claude3.5-sonnet", "llama3-70b"],
+            "Evaluators": ["gpt-4.5-omni"]
         }
     ]
 };
@@ -30,22 +32,22 @@ InitializeEmbeddings("gecko-768-similarity");
 for (var Step of Configuration.Steps) {
     switch (Step.Action) {
         case "Code":
-            for (var Analyzer of Step.Analyzers) {
+            for (var Analyzer of Step.Analyzers!) {
                 await UseLLMs(async () => {
                     await ProcessDataset(new (await import(`./../coding/conversations/${Analyzer}.js`)).default(), Configuration.Dataset, false);
-                });
+                }, ...Step.Models!);
             }
             break;
         case "Evaluate":
             await UseLLMs(async () => {
-                await EvaluateAnalyzers(Configuration.Dataset, Step.Models[0], new RefiningReferenceBuilder(), "", [Analyzer]);
-            });
+                await Evaluate(Configuration.Dataset, new RefiningReferenceBuilder(), Step.Name ?? "evaluation", Step.Analyzers, Step.Models);
+            }, ...Step.Evaluators!);
             break;
     }
 }
 
-/** EvaluateAnalyzers: Evaluate the performance of different analyzers using the same model. */
-async function EvaluateAnalyzers(SourcePath: string, LLM: string, Builder: ReferenceBuilder, Suffix: string, Analyzers: string[]) {
+/** Evaluate: Evaluate the performance of multiple coding results. */
+async function Evaluate(SourcePath: string, Builder: ReferenceBuilder, Suffix: string, Analyzers: string[], Models: string[]) {
     // Get the dataset
     var Dataset = await LoadDataset(SourcePath);
     var Evaluator = new NetworkEvaluator({ Dataset: Dataset });
@@ -53,14 +55,15 @@ async function EvaluateAnalyzers(SourcePath: string, LLM: string, Builder: Refer
     // Ensure the folders
     var ReferencePath = SourcePath + "/references";
     EnsureFolder(ReferencePath);
-    var TargetPath = SourcePath + "/evaluation/" + LLM + Builder.Suffix;
+    var TargetPath = SourcePath + "/evaluation/" + Suffix;
     EnsureFolder(TargetPath);
     // Build the paths
     var Paths = Analyzers.flatMap(Analyzer => 
-        Object.keys(Dataset.Data).map(Name => SourcePath + "/" + Analyzer + "/" + Name + "-" + LLM + ".json"));
+        Models.flatMap(Model =>
+            Object.keys(Dataset.Data).map(Name => SourcePath + "/" + Analyzer + "/" + Name + "-" + Model + ".json")));
     // Build the reference and evaluate the codebooks
     var Results = await BuildReferenceAndEvaluateCodebooks(
-        Paths, ReferencePath + "/" + LLM + Suffix + Builder.Suffix, Builder, Evaluator, TargetPath);
+        Paths, ReferencePath + "/" + Analyzers.join("-") + "_" + Models.join("-") + Builder.Suffix, Builder, Evaluator, TargetPath);
     File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
 }
 
