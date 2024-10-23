@@ -2,9 +2,13 @@
 Documentation in progress...
 
 # Installation
-Please install the latest `node.js` from [https://nodejs.org/en](the official website).
-Then, in the terminal of this folder, run `npm install` to install the project's dependencies.
-You may also need to run `npm install -D typescript` to install Typescript locally.
+Please install the latest [https://nodejs.org/en](node.js); and [https://python.org](python).
+Then, run the following command in your terminal at this folder:
+```
+pip install -r requirements.txt
+npm install
+npm install -D typescript
+```
 
 # API Access
 To run the code in this repository, you need to create the `.env` file in the repository folder with the following:
