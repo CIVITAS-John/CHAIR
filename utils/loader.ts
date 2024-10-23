@@ -99,12 +99,12 @@ export function GetProjectsPath(Name: string): string {
 
 /** GetMessagesPath: Get the saving path of certain messages. */
 export function GetMessagesPath(Group: string, Name?: string): string {
-    return `${GetDatasetPath()}/Conversations/${Group}${Name ? "/" + Name : ""}`;
+    return `${GetDatasetPath()}/${Group}${Name ? "/" + Name : ""}`;
 }
 
 /** GetParticipantsPath: Get the saving path of messaging group participants. */
 export function GetParticipantsPath(Name: string): string {
-    return `${GetDatasetPath()}/Conversations/${Name}`;
+    return `${GetDatasetPath()}/${Name}`;
 }
 
 /** LoadCodedConversations: Import coding results from an Excel workbook. */

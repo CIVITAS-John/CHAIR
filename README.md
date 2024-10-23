@@ -14,10 +14,10 @@ ANTHROPIC_API_KEY={Your Anthropic API Key}
 MISTRAL_API_KEY={Your Mistral API Key}
 GROQ_API_KEY={Your Groq API Key} # for llama3 series models
 GOOGLE_API_KEY={Your Google API Key} # for gecko embedding models
-DATASET_PATH={The root to the dataset path}
+DATASET_PATH=./examples # or the root path to your datasets
 ```
 
-For Google API, get the key at https://aistudio.google.com/app/u/1/apikey
+For Google API, get the key at [https://aistudio.google.com/app/u/1/apikey](Google AI Studio).
 
 # Run the example analysis
-Now, please go to `./examples/code-evaluate.ts`. If you are using Visual Studio Code, use `Run` => `Start Debugging` on the file.
+Now, please go to `./examples/code-evaluate.ts`. If you are using Visual Studio Code, use `Run` => `Start Debugging` on the file. If you only have an API key for OpenAI, please change `gecko-768-similarity` to `openai-large-1024`. The performance of the evaluation/visualization would be slightly worse, though.
