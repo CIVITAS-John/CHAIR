@@ -3,7 +3,8 @@ Documentation in progress...
 
 # Installation
 Please install the latest `node.js` from [https://nodejs.org/en](the official website).
-Then, in the terminal of this folder, run `npm install`.
+Then, in the terminal of this folder, run `npm install` to install the project's dependencies.
+You may also need to run `npm install -D typescript` to install Typescript locally.
 
 # API Access
 To run the code in this repository, you need to create the `.env` file in the repository folder with the following:
