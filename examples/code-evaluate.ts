@@ -3,30 +3,31 @@ import { ProcessDataset } from "../analyzer.js";
 import { EnsureFolder, UseLLMs } from "../utils/llms.js";
 import { GetMessagesPath, LoadDataset } from "../utils/loader.js";
 import { BuildReferenceAndEvaluateCodebooks } from "../evaluating/codebooks.js";
-import { InitializeEmbeddings } from '../utils/embeddings.js';
-import { ReferenceBuilder, RefiningReferenceBuilder } from '../evaluating/reference-builder.js';
-import { NetworkEvaluator } from '../evaluating/network-evaluator.js';
+import { InitializeEmbeddings } from "../utils/embeddings.js";
+import { ReferenceBuilder, RefiningReferenceBuilder } from "../evaluating/reference-builder.js";
+import { NetworkEvaluator } from "../evaluating/network-evaluator.js";
 
 // An example configuration
 var Configuration = {
-    "Dataset": "data",
-    "Steps": [
-        { 
-            "Action": "Code",
-            "Analyzers": ["low-level-5"],
-            "Models": ["gpt-4.5-omni", "gpt-4.5-mini", "claude3.5-sonnet", "llama3-70b"]
+    Dataset: "data",
+    EmbeddingModel: "openai-small-512",
+    Steps: [
+        {
+            Action: "Code",
+            Analyzers: ["low-level-5"],
+            Models: ["llama3-70b"],
         },
         {
-            "Action": "Evaluate",
-            "Name": "evaluation",
-            "Analyzers": ["low-level-5"],
-            "Models": ["gpt-4.5-omni", "gpt-4.5-mini", "claude3.5-sonnet", "llama3-70b"],
-            "Evaluators": ["gpt-4.5-omni"]
-        }
-    ]
+            Action: "Evaluate",
+            Name: "evaluation",
+            Analyzers: ["low-level-5"],
+            Models: ["llama3-70b"],
+            Evaluators: ["llama3-70b"],
+        },
+    ],
 };
 
-InitializeEmbeddings("gecko-768-similarity");
+InitializeEmbeddings(Configuration.EmbeddingModel);
 
 // Follow the configuration
 for (var Step of Configuration.Steps) {
@@ -58,12 +59,17 @@ async function Evaluate(SourcePath: string, Builder: ReferenceBuilder, Suffix: s
     var TargetPath = SourcePath + "/evaluation/" + Suffix;
     EnsureFolder(TargetPath);
     // Build the paths
-    var Paths = Analyzers.flatMap(Analyzer => 
-        Models.flatMap(Model =>
-            Object.keys(Dataset.Data).map(Name => SourcePath + "/" + Analyzer + "/" + Name + "-" + Model + ".json")));
+    var Paths = Analyzers.flatMap((Analyzer) =>
+        Models.flatMap((Model) => Object.keys(Dataset.Data).map((Name) => SourcePath + "/" + Analyzer + "/" + Name + "-" + Model + ".json")),
+    );
     // Build the reference and evaluate the codebooks
     var Results = await BuildReferenceAndEvaluateCodebooks(
-        Paths, ReferencePath + "/" + Analyzers.join("-") + "_" + Models.join("-") + Builder.Suffix, Builder, Evaluator, TargetPath);
+        Paths,
+        ReferencePath + "/" + Analyzers.join("-") + "_" + Models.join("-") + Builder.Suffix,
+        Builder,
+        Evaluator,
+        TargetPath,
+    );
     File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
 }
 
