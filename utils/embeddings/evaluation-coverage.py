@@ -206,8 +206,8 @@ def plot_comparison(codebooks, distribution, type="heatmap"):
             (extent[3] - extent[2]) * plot_size_per_unit,
         )
     )
-    if type == "overlap":
-        heatmap = ax.imshow(
+    heatmap = (
+        ax.imshow(
             overlapping,
             origin="lower",
             vmax=len(codebooks),
@@ -216,8 +216,8 @@ def plot_comparison(codebooks, distribution, type="heatmap"):
             aspect="auto",
             cmap="magma",
         )
-    elif type == "heatmap":
-        heatmap = ax.imshow(
+        if type == "overlap"
+        else ax.imshow(
             dis,
             origin="lower",
             vmax=max_density,
@@ -226,6 +226,7 @@ def plot_comparison(codebooks, distribution, type="heatmap"):
             aspect="auto",
             cmap="viridis",
         )
+    )
 
     # Plot the texts
     offset = mtransforms.ScaledTranslation(5 / 72, -3 / 72, plt.gcf().dpi_scale_trans)
