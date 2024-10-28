@@ -4,7 +4,7 @@ Implementation of BERTopic using the `all-MiniLM-L12-v2` model
 
 import json
 import sys
-from typing import Literal, Mapping, Tuple, Union, cast
+from typing import List, Literal, Tuple, Union, cast
 
 from bertopic import BERTopic
 from bertopic.representation import KeyBERTInspired
@@ -35,7 +35,7 @@ model = BERTopic(
     representation_model=representation_model,
 )
 topics, probs = model.fit_transform(messages[:n_samples])
-if not probs:
+if probs is None:
     sys.stderr.write("No probabilities found\n")
     sys.exit(1)
 
@@ -44,9 +44,9 @@ output = {}
 for index, row in model.get_topic_info().iterrows():
     topic = row["Topic"]
     _keywords = cast(
-        Union[Mapping[str, Tuple[str, float]], Literal[False]], model.get_topic(topic)
+        Union[List[Tuple[str, float]], Literal[False]], model.get_topic(topic)
     )
-    if not _keywords:
+    if _keywords is False:
         sys.stderr.write(f"Topic {topic} has no keywords\n")
         continue
     # Get the keys from the keywords [(key, value), ...] to [key, ...] (remove the values)
