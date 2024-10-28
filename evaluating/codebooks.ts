@@ -1,9 +1,10 @@
 import chalk from "chalk";
 import md5 from "md5";
 import { Codebook, CodebookEvaluation } from "../utils/schema.js";
-import { ReadOrBuildCache } from "../utils/file.js";
+import { ReadOrBuildCache, RemoveCommonality } from "../utils/file.js";
 import { BuildReferenceAndExport, ReferenceBuilder } from "./reference-builder.js";
 import { LoadCodebooks, LoadCodebooksInGroups } from "../utils/loader.js";
+import * as Path from 'path';
 
 /** CodebookEvaluator: An evaluator of codebook. */
 export abstract class CodebookEvaluator {
@@ -38,6 +39,9 @@ export async function BuildReferenceAndEvaluateCodebooks(
 ): Promise<Record<string, CodebookEvaluation>> {
     // Find all the codebooks under the path
     var [Codebooks, Names] = await LoadCodebooks(Source, CreateGroup);
+    // Remove commonality from multiple codebooks
+    if (Names.length == 1) Names = [Path.basename(Names[0])];
+    else Names = RemoveCommonality(Names);
     // Build the reference codebook
     var RealCodebooks = Codebooks.filter((_, I) => Names[I].startsWith("group: ") == false);
     var Backup = JSON.stringify(RealCodebooks);

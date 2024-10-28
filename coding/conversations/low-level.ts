@@ -23,9 +23,21 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
         for (var I = 0; I < Lines.length; I++) {
             var Line = Lines[I];
             var NextLine = I + 1 < Lines.length ? Lines[I + 1] : "";
-            if (Line.startsWith("Thoughts:")) Analysis.Plan = Line.substring(9).trim();
-            else if (Line.startsWith("Summary:")) Analysis.Summary = Line.substring(8).trim();
-            else if (Line.startsWith("Notes:")) {
+            if (Line.startsWith("**") && Line.endsWith("**"))
+                Line = Line.substring(2, Line.length - 2).trim();
+            if (Line.startsWith("Thoughts:")) {
+                Analysis.Plan = Line.substring(9).trim();
+                if (Analysis.Plan == "")
+                    Analysis.Plan = Lines.slice(I + 1)
+                        .join("\n")
+                        .trim();
+            } else if (Line.startsWith("Summary:")) {
+                Analysis.Summary = Line.substring(8).trim();
+                if (Analysis.Summary == "")
+                    Analysis.Summary = Lines.slice(I + 1)
+                        .join("\n")
+                        .trim();
+            } else if (Line.startsWith("Notes:")) {
                 Analysis.Reflection = Line.substring(6).trim();
                 if (Analysis.Reflection == "")
                     Analysis.Reflection = Lines.slice(I + 1)
