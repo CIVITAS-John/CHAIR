@@ -1,7 +1,7 @@
 import * as File from "fs";
 import * as dotenv from "dotenv";
 import { BaseChatModel } from "@langchain/core/language_models/chat_models";
-import { BaseMessage } from "@langchain/core/messages";
+import { BaseMessage, HumanMessage } from "@langchain/core/messages";
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatAnthropic } from "@langchain/anthropic";
 import { ChatMistralAI } from "@langchain/mistralai";
@@ -29,6 +29,8 @@ export var OutputTokens: number = 0;
 export var ExpectedItems: number = 0;
 // FinishedItems: The total finished items for requests so far.
 export var FinishedItems: number = 0;
+// SystemMessage: Whether the model supports system messages.
+export var SystemMessage: boolean = true;
 /** CountItems: Count the expected and finished items. */
 export function CountItems(Expected: number, Finished: number) {
     ExpectedItems += Expected;
@@ -105,12 +107,29 @@ export function InitializeLLM(LLM: string) {
             MaxInput = 16385;
             MaxOutput = 4096;
             MaxItems = 64;
+            SystemMessage = false;
             Model = (Temp) =>
                 new ChatOpenAI({
-                    temperature: Temp,
+                    // Does not support temperature
                     modelName: "o1-mini",
                     streaming: false,
-                    maxTokens: MaxOutput,
+                    // maxCompletionTokens: MaxOutput,
+                    // need to update the package, it seems
+                });
+            break;
+        case "o1-preview":
+            // 15$ / 60$
+            MaxInput = 16385;
+            MaxOutput = 4096;
+            MaxItems = 64;
+            SystemMessage = false;
+            Model = (Temp) =>
+                new ChatOpenAI({
+                    // Does not support temperature
+                    modelName: "o1-mini",
+                    streaming: false,
+                    // maxCompletionTokens: MaxOutput,
+                    // need to update the package, it seems
                 });
             break;
         case "claude3-haiku":
@@ -241,6 +260,8 @@ export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, 
                 `LLM Request ${Temperature ?? 0}: \n${Messages.map((Message) => `${Message._getType()}: ${Message.content}`).join("\n---\n")}\n`,
             ),
         );
+        if (!SystemMessage)
+            Messages = Messages.map(Message => new HumanMessage(Message.content as string));
         if (!FakeRequest) {
             await PromiseWithTimeout(
                 Model(Temperature ?? 0)
