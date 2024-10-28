@@ -1,11 +1,19 @@
+"""
+Linkage-based Clustering - John Chen's heuristic
+A penalty is applied to the relative size (e.g. numbers of examples or codes) of the clusters
+"""
+
 import json
 import sys
 
+import matplotlib.pyplot as plt
 import numpy as np
 from embedding import Dimensions, Items, cpus, embeddings, labels
-
-# Linkage-based Clustering - John Chen's heuristic
-# A penalty is applied to the relative size (e.g. numbers of examples or codes) of the clusters
+from scipy.cluster.hierarchy import dendrogram, linkage, to_tree
+from scipy.spatial.distance import squareform
+from sklearn.metrics.pairwise import pairwise_distances
+from sklearn.preprocessing import normalize
+from umap import UMAP
 
 # Get the arguments
 Metrics = sys.argv[3] if len(sys.argv) > 3 else "euclidean"
@@ -34,24 +42,16 @@ labels = [source["Label"] for source in sources]
 examples = [set(source["Examples"]) for source in sources]
 
 # Use UMap to reduce the dimensions
-from umap import UMAP
-
 if TargetDimensions < Dimensions:
     umap = UMAP(n_components=TargetDimensions)
     embeddings = umap.fit_transform(embeddings)
-    from sklearn.preprocessing import normalize
-
     embeddings = normalize(embeddings, norm="l2")
     print("Embeddings reduced:", embeddings.shape)
 
 # Calculate distances
-from sklearn.metrics.pairwise import pairwise_distances
-
 distances = pairwise_distances(embeddings, embeddings, metric=Metrics, n_jobs=cpus)
 
 # Consdense distances
-from scipy.spatial.distance import squareform
-
 condensed_distances = squareform(distances)
 
 # For average sizes, we only consider those with more than 1
@@ -62,8 +62,8 @@ penalty_coff = max_size - avg_size
 print("Average size:", avg_size, ", Max penalty size:", max_size)
 
 
-# Calculate the unique differences of examples after merged
 def count_merged(code1, code2):
+    """Calculate the unique differences of examples after merged."""
     return len(examples[code1] - examples[code2]) / len(
         examples[code1] | examples[code2]
     )
@@ -78,16 +78,14 @@ for i in range(Items):
             distances[i][j] += penalty * Penalty
 
 # Calculate the linkage
-from scipy.cluster.hierarchy import linkage, to_tree
-
 linkages = linkage(condensed_distances, method=Linkage)
 root = to_tree(linkages)
 
-# Pre-traverse the tree for bottom-up depth (leaf = size of the leaf, root = total_size)
 tree_examples = {}
 
 
 def pre_traverse(node):
+    """Pre-traverse the tree for bottom-up depth (leaf = size of the leaf, root = total_size)."""
     if node.is_leaf():
         return examples[node.id]
     tree_examples[node.id] = pre_traverse(node.get_left()) | pre_traverse(
@@ -105,8 +103,8 @@ probs = np.full(Items, 1.0)
 colors = {}
 
 
-# Traverse the tree
 def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
+    """Traverse the tree."""
     global cluster_index
     colors[node.id] = color
     # If it is a leaf, assign the cluster
@@ -121,9 +119,9 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
     criteria = max(MaxDistance - penalty * Penalty, MinDistance)
     # print("Node:", node.id, ", Size:", len(tree_examples[node.id]), ", % Penalty:", penalty, ", Distance:", node.dist, ", Criteria:", criteria)
     # Verbose: show the cluster
-    left_id = node.get_left().id
+    # left_id = node.get_left().id
     # leftlabel = labels[left_id] if left_id < Items else "cluster-" + str(left_id)
-    right_id = node.get_right().id
+    # right_id = node.get_right().id
     # rightlabel = labels[right_id] if right_id < Items else "cluster-" + str(right_id)
     if cluster == -1 and node.dist <= criteria:
         cluster = cluster_index
@@ -140,25 +138,20 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
 nodes = traverse(root, 0)
 
 # Plot the distribution of distances with log scale
-if False:    
-    import matplotlib.pyplot as plt
-
-    fig, ax = plt.subplots()
-    # Filter out distances > 0.8
-    distances = distances[distances < 0.7]
-    ax.hist(distances.flatten(), bins=70, log=True)
-    ax.set_xlabel("Distance")
-    ax.set_ylabel("Log Frequency")
-    ax.set_title("Distribution of Distances")
-    wm = plt.get_current_fig_manager()
-    wm.window.state("zoomed")
-    plt.show()
+# if False:
+#     fig, ax = plt.subplots()
+#     # Filter out distances > 0.8
+#     distances = distances[distances < 0.7]
+#     ax.hist(distances.flatten(), bins=70, log=True)
+#     ax.set_xlabel("Distance")
+#     ax.set_ylabel("Log Frequency")
+#     ax.set_title("Distribution of Distances")
+#     wm = plt.get_current_fig_manager()
+#     wm.window.state("zoomed")
+#     plt.show()
 
 # Plot the dendrogram
 if Plotting:
-    import matplotlib.pyplot as plt
-    from scipy.cluster.hierarchy import dendrogram
-
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     dendrogram(
@@ -171,7 +164,8 @@ if Plotting:
     ax.tick_params(axis="x", which="major", labelsize=10)
     ax.tick_params(axis="y", which="major", labelsize=10)
     wm = plt.get_current_fig_manager()
-    wm.window.state("zoomed")
+    if wm is not None:
+        wm.window.state("zoomed")  # type: ignore
     plt.show()
 
 # Send the results
