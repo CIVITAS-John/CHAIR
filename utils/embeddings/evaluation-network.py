@@ -18,7 +18,7 @@ distances = pairwise_distances(embeddings, embeddings, metric="euclidean", n_job
 
 # Use UMap to reduce the dimensions
 umap = UMAP(n_components=2, metric="precomputed")  # densmap=True,
-embeddings = cast(NDArray[float32], umap.fit_transform(embeddings))
+embeddings = cast(NDArray[float32], umap.fit_transform(distances))
 print("Embeddings reduced:", embeddings.shape)
 
 # Reshape the positions using MinMaxScaler
