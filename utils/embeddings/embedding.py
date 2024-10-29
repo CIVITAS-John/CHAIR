@@ -2,9 +2,11 @@
 Processes embeddings
 """
 
+import json
 import multiprocessing
 import os
 import sys
+from typing import List, TypedDict
 
 import numpy as np
 
@@ -28,9 +30,16 @@ with open("./known/temp.bytes", "rb") as file:
     embeddings = np.frombuffer(float_bytes, dtype=np.float32)
     # print("Embeddings received:", len(embeddings), ", expected:", Dimensions * Embeddings)
 
-# Read from `./known.temp.text` for labels
-with open("./known/temp.text", "r", encoding="utf-8") as file:
-    labels = file.read().splitlines()
+# Read from `./known/temp.json` for labels
+Source = TypedDict(
+    "Source",
+    {
+        "Label": str,
+        "Examples": List[str],
+    },
+)
+with open("./known/temp.json", "r", encoding="utf-8") as file:  # type: ignore
+    sources: List[Source] = json.load(file)
 
 # Reshape the embeddings
 embeddings = embeddings.reshape((Items, Dimensions))

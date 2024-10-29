@@ -8,7 +8,7 @@ import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
-from embedding import Dimensions, Items, cpus, embeddings, labels
+from embedding import Dimensions, Items, cpus, embeddings, sources
 from scipy.cluster.hierarchy import dendrogram, linkage, to_tree
 from scipy.spatial.distance import squareform
 from sklearn.metrics.pairwise import pairwise_distances
@@ -37,7 +37,7 @@ print(
 )
 
 # Separate the examples from labels
-sources = [json.loads(label) for label in labels]
+# sources = [json.loads(label) for label in labels]
 labels = [source["Label"] for source in sources]
 examples = [set(source["Examples"]) for source in sources]
 
