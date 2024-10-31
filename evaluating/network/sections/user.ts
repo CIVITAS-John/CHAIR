@@ -67,18 +67,18 @@ export class UserSection extends Panel {
                     .appendTo(Row);
                 Summary.append($(`<h4></h4>`).text(this.Dataset.UserIDToNicknames?.get(Key) ?? Key))
                     .append($(`<p class="tips"></p>`).text(`${Results[Key]["Count"]} items`))
-                    .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new UserFilter(), Users[Index]))
+                    .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new UserFilter(), Key))
                     .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new UserFilter()))
                     .on("click", (Event) => {
                         if (Event.shiftKey) {
-                            this.Visualizer.SetFilter(false, new UserFilter(), Users[Index], true);
+                            this.Visualizer.SetFilter(false, new UserFilter(), Key, true);
                         } else {
-                            if (!this.Visualizer.IsFilterApplied("User", Users[Index]))
-                                this.Visualizer.SetFilter(false, new UserFilter(), Users[Index], Event.shiftKey, "Coverage");
-                            this.Visualizer.Dialog.ShowUser(Users[Index]);
+                            if (!this.Visualizer.IsFilterApplied("User", Key))
+                                this.Visualizer.SetFilter(false, new UserFilter(), Key, Event.shiftKey, "Coverage");
+                            this.Visualizer.Dialog.ShowUser(Key);
                         }
                     })
-                    .toggleClass("chosen", this.Visualizer.IsFilterApplied("User", Users[Index]));
+                    .toggleClass("chosen", this.Visualizer.IsFilterApplied("User", Key));
                 // Evaluation results
                 Metrics.forEach((Metric) => {
                     var MetricValue = Value[Metric];
@@ -86,12 +86,12 @@ export class UserSection extends Panel {
                     var Cell = $(`<td class="metric-cell"></td>`)
                         .attr("id", `metric-${Index}-${Metric}`)
                         .text(d3.format(Metric == "Divergence" ? ".1%" : ".1%")(MetricValue))
-                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new UserFilter(), Users[Index], false, Metric))
+                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new UserFilter(), Key, false, Metric))
                         .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new UserFilter()))
-                        .on("click", (Event) => this.Visualizer.SetFilter(false, new UserFilter(), Users[Index], Event.shiftKey, Metric))
+                        .on("click", (Event) => this.Visualizer.SetFilter(false, new UserFilter(), Key, Event.shiftKey, Metric))
                         .css("background", Color)
                         .css("color", d3.lab(Color).l > 70 ? "black" : "white")
-                        .toggleClass("chosen", this.Visualizer.IsFilterApplied("User", Users[Index], Metric));
+                        .toggleClass("chosen", this.Visualizer.IsFilterApplied("User", Key, Metric));
                     Row.append(Cell);
                 });
             },
