@@ -84,7 +84,7 @@ export function BuildSemanticGraph(Dataset: CodebookComparison<any>,
             Source.Weights[Owner] = 1;
         }
         Source.Novel = RealOwners == 1;
-        Source.TotalWeight = Source.Weights.reduce((A, B, I) => (I == 0 ? A : A + B * GetWeight(Owner)), 0);
+        Source.TotalWeight = Source.Weights.reduce((A, B, I) => (I == 0 ? A : A + B * GetWeight(I)), 0);
     }
     // Store it
     var Graph: Graph<Code> = {
