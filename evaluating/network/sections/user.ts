@@ -95,7 +95,7 @@ export class UserSection extends Panel {
                     Row.append(Cell);
                 });
             },
-            ["Codebook", ...Metrics],
+            ["Speaker", ...Metrics],
         );
     }
 }
