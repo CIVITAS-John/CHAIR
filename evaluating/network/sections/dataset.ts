@@ -86,7 +86,7 @@ export class DatasetSection extends Panel {
                         this.Visualizer.SetFilter(false, new DatasetFilter(), Key, Event.shiftKey),
                     );
                 },
-                ["Metadata", "Items", "Filtered", "Total"],
+                ["Metadata", "Items", "Filtered", "Codes"],
             );
         });
     }
@@ -143,7 +143,7 @@ export class DatasetSection extends Panel {
                         this.Visualizer.SetFilter(false, new ChunkFilter(), Key, Event.shiftKey),
                     );
                 },
-                ["Metadata", "Items", "Filtered", "Total"],
+                ["Metadata", "Items", "Filtered", "Codes"],
             );
         });
     }

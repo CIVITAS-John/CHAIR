@@ -71,6 +71,8 @@ export interface CodebookComparison<T extends DataChunk<DataItem>> {
     Weights?: number[];
     /** TotalWeight: The total weight of the codebooks. */
     TotalWeight?: number;
+    /** UserIDToNicknames: The mapping from user ID to nicknames. */
+    UserIDToNicknames?: Map<string, string>;
     /** Distances: The distance matrix between codes in the first codebook. */
     Distances: number[][];
 }

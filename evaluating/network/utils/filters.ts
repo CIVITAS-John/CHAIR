@@ -1,6 +1,6 @@
 import d3 from "d3";
 import { Visualizer } from "../visualizer.js";
-import { FilterNodeByExample, FilterNodeByOwner, FilterNodeByOwners } from "./graph.js";
+import { FilterItemByUser, FilterNodeByExample, FilterNodeByOwner, FilterNodeByOwners } from "./graph.js";
 import { Component, Node } from "./schema.js";
 import { Code } from "../../../utils/schema.js";
 
@@ -105,6 +105,29 @@ export class ChunkFilter extends FilterBase<Code, string> {
                 ),
             );
         }
+        return FilterNodeByExample(Node, this.ExampleIDs);
+    }
+    /** SetParameter: Set the parameters of the filter. */
+    public SetParameter(NewParameters: string[]) {
+        this.Parameters = NewParameters;
+        this.ExampleIDs = [];
+    }
+}
+
+/** UserFilter: Filter the nodes by the item's UserID. */
+export class UserFilter extends FilterBase<Code, string> {
+    /** Name: The name of the filter. */
+    public Name: string = "Speaker";
+    /** ExampleIDs: The IDs of the examples. */
+    private ExampleIDs: string[] = [];
+    /** GetParameterNames: Get the names of the parameters. */
+    public GetParameterNames(Visualizer: Visualizer): string[] {
+        return this.Parameters.map((Parameter) => Visualizer.Dataset.UserIDToNicknames?.get(Parameter) ?? Parameter);
+    }
+    /** Filter: The filter function. */
+    public Filter(Visualizer: Visualizer, Node: Node<Code>): boolean {
+        if (this.ExampleIDs.length == 0)
+            this.ExampleIDs = FilterItemByUser(Visualizer.Dataset.Source, this.Parameters).map((Item) => Item.ID);
         return FilterNodeByExample(Node, this.ExampleIDs);
     }
     /** SetParameter: Set the parameters of the filter. */

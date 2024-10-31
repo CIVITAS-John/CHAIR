@@ -1,4 +1,4 @@
-import { Code, CodebookComparison } from "../../../utils/schema.js";
+import { Code, CodebookComparison, Dataset, DataChunk, DataItem } from "../../../utils/schema.js";
 import { Node, Link, Graph, Component } from "./schema.js";
 import * as graphology from "graphology";
 import * as graphologyLibrary from "graphology-library";
@@ -220,6 +220,18 @@ export function FilterNodeByExample<T extends Code>(Node: Node<T>, IDs: string[]
         Node.Data.Examples?.some((Example) => {
             return IDs.some((ID) => Example == ID || Example.startsWith(ID + "|||"));
         }) ?? false
+    );
+}
+
+/** FilterItemByUser: Filter items by user ID. */
+export function FilterItemByUser(Dataset: Dataset<DataChunk<DataItem>>, Parameters: string[]): DataItem[] {
+    return Array.from(
+        new Set(
+            Object.values(Dataset.Data)
+                .flatMap((Chunk) => Object.entries(Chunk))
+                .flatMap(([Key, Value]) => Value.AllItems ?? [])
+                .filter((Item) => Parameters.includes(Item.UserID))
+        ),
     );
 }
 
