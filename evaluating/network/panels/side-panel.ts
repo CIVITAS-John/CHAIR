@@ -4,6 +4,7 @@ import { Panel } from "./panel.js";
 import { CodebookSection } from "../sections/codebook.js";
 import { DatasetSection } from "../sections/dataset.js";
 import { CodeSection } from "../sections/code.js";
+import { UserSection } from "../sections/user.js";
 
 /** SidePanel: The side panel for the visualizer. */
 export class SidePanel extends Panel {
@@ -25,6 +26,7 @@ export class SidePanel extends Panel {
             new DatasetSection(this.Contents, this.Visualizer),
             new CodebookSection(this.Contents, this.Visualizer),
             new CodeSection(this.Contents, this.Visualizer),
+            new UserSection(this.Contents, this.Visualizer),
         ];
         for (var Section of Sections) this.Subpanels[Section.Name] = Section;
         // Add the menu

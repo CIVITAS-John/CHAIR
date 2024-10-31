@@ -10,7 +10,7 @@ import { SidePanel } from "./panels/side-panel.js";
 import { Dialog } from "./panels/dialog.js";
 import { FilterBase } from "./utils/filters.js";
 import { Tutorial } from "./tutorial.js";
-import { Evaluate } from "./utils/evaluate.js";
+import { EvaluateCodebooks } from "./utils/evaluate.js";
 declare global {
     var $: typeof Cash.prototype.init & CashStatic;
 }
@@ -102,7 +102,7 @@ export class Visualizer {
             this.SetStatus("Code", BuildSemanticGraph(this.Dataset, this.Parameters));
             this.SidePanel.Show();
             // Evaluate and send back the results
-            var Results = Evaluate(this.Dataset, this.Parameters);
+            var Results = EvaluateCodebooks(this.Dataset, this.Parameters);
             PostData("/api/report/", Results);
         });
     }

@@ -62,7 +62,6 @@ export class Dialog extends Panel {
     /** ShowUser: Show a dialog for a user. */
     public ShowUser(ID: string, Owners: number[] = [], ScrollTo?: string) {
         this.Visualizer.PushState(`speaker-${ID}`, () => this.ShowUser(ID, Owners, ScrollTo));
-        this.Visualizer.SetFilter(false, new UserFilter(), ID, false);
         // Build the panel
         var Panel = $(`<div class="panel"></div>`);
         // Add the title

@@ -4,8 +4,8 @@ import { BuildSemanticGraph } from "./graph.js";
 import { CalculateJSD, Parameters } from "./utils.js";
 import { Graph, Component } from "./schema.js";
 
-/** Evaluate: Evaluate all codebooks based on the network structure. */
-export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameters): Record<string, CodebookEvaluation> {
+/** EvaluateCodebooks: Evaluate all codebooks based on the network structure. */
+export function EvaluateCodebooks(Dataset: CodebookComparison<any>, Parameters: Parameters): Record<string, CodebookEvaluation> {
     var Results: Record<string, CodebookEvaluation> = {};
     var Observations: number[][] = [[]];
     // Prepare for the results
@@ -54,6 +54,77 @@ export function Evaluate(Dataset: CodebookComparison<any>, Parameters: Parameter
         Result["Divergence"] = Math.sqrt(CalculateJSD(Observations[0], Observations[I]));
         Result["Count"] = Object.keys(Codebooks[I]).length;
         Result["Consolidated"] = Consolidated[I];
+    }
+    return Results;
+}
+
+/** EvaluateUsers: Evaluate all users based on the network structure. */
+export function EvaluateUsers(Dataset: CodebookComparison<any>, Parameters: Parameters): Record<string, CodebookEvaluation> {
+    var Results: Record<string, CodebookEvaluation> = {};
+    var Observations: number[][] = [[]];
+    // Prepare for the results
+    var Users = Array.from(Dataset.UserIDToNicknames?.keys() ?? []);
+    Users.unshift("# Everyone");
+    for (var I = 1; I < Users.length; I++) {
+        Results[Users[I]] = { Coverage: 0, Novelty: 0, Divergence: 0, Count: 0 };
+        Observations.push([]);
+    }
+    // Prepare for the examples
+    var Examples: Map<string, number> = new Map<string, number>();
+    Object.values(Dataset.Source.Data)
+        .flatMap((Chunk) => Object.entries(Chunk))
+        .flatMap(([Key, Value]) => Value.AllItems ?? [])
+        .forEach(Item => {
+            Examples.set(Item.ID, Users.indexOf(Item.UserID));
+            Results[Item.UserID]["Count"] += 1;
+        });
+    // Calculate weights per user
+    var Weights = new Array(Users.length).fill(1);
+    Weights[0] = 0;
+    // Calculate weights per node
+    var Graph = BuildSemanticGraph(Dataset, Parameters, Users.length, (Code) => {
+        var Owners = new Set<number>();
+        Owners.add(0);
+        for (var Example of Code.Examples ?? []) {
+            Example = Example.split("|||")[0];
+            if (Examples.has(Example)) {
+                var User = Examples.get(Example)!;
+                if (!Owners.has(User)) {
+                    Owners.add(Examples.get(Example)!);
+                }
+            }
+        }
+        return Owners;
+    }, Weights);
+    var NodeWeights: Map<string, number> = new Map<string, number>();
+    var TotalWeight: number = 0;
+    for (var Node of Graph.Nodes) {
+        var Weight = Node.TotalWeight / (Users.length - 1);
+        Observations[0].push(Weight);
+        NodeWeights.set(Node.ID, Weight);
+        TotalWeight += Weight;
+    }
+    // Check if each node is covered by the codebooks
+    var TotalNovelty = 0;
+    for (var Node of Graph.Nodes) {
+        var Weight = NodeWeights.get(Node.ID)!;
+        // Check novelty
+        if (Node.Novel) TotalNovelty += Weight;
+        // Calculate on each user
+        for (var I = 1; I < Users.length; I++) {
+            var Result = Results[Users[I]];
+            var Observed = Node.Weights[I];
+            Result["Coverage"] += Weight * Observed;
+            Result["Novelty"] += Weight * Observed * (Node.Novel ? 1 : 0);
+            Observations[I].push(Observed);
+        }
+    }
+    // Finalize the results
+    for (var I = 1; I < Users.length; I++) {
+        var Result = Results[Users[I]];
+        Result["Coverage"] = Result["Coverage"] / TotalWeight;
+        Result["Novelty"] = Result["Novelty"] / TotalNovelty;
+        Result["Divergence"] = Math.sqrt(CalculateJSD(Observations[0], Observations[I]));
     }
     return Results;
 }
