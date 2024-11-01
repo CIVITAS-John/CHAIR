@@ -31,7 +31,7 @@ Now, please go to `./examples/code-evaluate.ts`. If you are using Visual Studio 
 ## macOS
 If you are using macOS and have issues with Python or Node.js, try using [https://brew.sh/](Homebrew). Then:
 ```
-brew install python
+brew install python@3.12
 brew install node
 brew install cargo-c
 python3 -m venv .venv
