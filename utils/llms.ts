@@ -77,7 +77,7 @@ export function InitializeLLM(LLM: string) {
                 });
             break;
         case "gpt-4.5-omni":
-            // 5$ / 15$
+            // 2.5$ / 10$
             MaxInput = 16385;
             MaxOutput = 4096;
             MaxItems = 64;
@@ -98,6 +98,20 @@ export function InitializeLLM(LLM: string) {
                 new ChatOpenAI({
                     temperature: Temp,
                     modelName: "gpt-4o-mini",
+                    streaming: false,
+                    maxTokens: MaxOutput,
+                });
+            break;
+        case "gpt-4.5-audio":
+            // 2.5$ / 10$
+            // 100$ / 200$ audio
+            MaxInput = 16385;
+            MaxOutput = 4096;
+            MaxItems = 64;
+            Model = (Temp) =>
+                new ChatOpenAI({
+                    temperature: Temp,
+                    modelName: "gpt-4o-audio-preview",
                     streaming: false,
                     maxTokens: MaxOutput,
                 });
