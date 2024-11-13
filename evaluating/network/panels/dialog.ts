@@ -283,8 +283,12 @@ export class Dialog extends Panel {
         // Load from clipboard
         Title.append(
             $(`<span><a href="javascript:void(0)" class="copy">Load from Clipboard</a></span>`).on("click", () => {
+                if (!confirm("Are you sure you want to load ownerships from the clipboard?")) return;
                 navigator.clipboard.readText().then(Text => {
-                    var Table = Text.split("\n").map(Line => Line.trim().split("\t"));
+                    var Table = Text.split("\n").map(Line => {
+                        if (Line.endsWith("\r")) Line = Line.slice(0, -1);
+                        return Line.split("\t");
+                    });
                     var Header = Table[0];
                     var Indexes = Header.slice(1).map(Name => this.Dataset.Names.indexOf(Name));
                     Table.slice(1).forEach(([Label, ...Owners]) => {
@@ -297,6 +301,14 @@ export class Dialog extends Panel {
                     });
                     this.ValidateCoverageByCodes();
                 });
+            }),
+        );
+        // Clear the values
+        Title.append(
+            $(`<span><a href="javascript:void(0)" class="copy">Clear All</a></span>`).on("click", () => {
+                if (!confirm("Are you sure you want to clear all ownerships?")) return;
+                this.VerifiedOwnerships.forEach(Owners => Owners.clear());
+                this.ValidateCoverageByCodes();
             }),
         );
         // Show the dialog

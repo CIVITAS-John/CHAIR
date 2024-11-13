@@ -9,8 +9,8 @@ import { NetworkEvaluator } from "../evaluating/network-evaluator.js";
 
 // An example configuration
 var Configuration = {
-    Dataset: "Coded Dataset 1",
-    EmbeddingModel: "gecko-768-similarity",
+    Dataset: "data",
+    EmbeddingModel: "openai-small-512",
     Steps: [
         {
             Action: "Code",
