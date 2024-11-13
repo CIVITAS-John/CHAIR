@@ -46,6 +46,16 @@
     color: rgb(235, 219, 178);
     background: rgb(40, 40, 40);
 }
+.dialog td.codes a {
+    color: rgb(235, 219, 178);
+}
+.dialog td.description p:before {
+    content: "“";
+}
+.dialog td.description p:after {
+    content: "”";
+    margin-right: 0.2em;
+}
 /* Individual panels. */
 .info-panel > .panel {
     width: 30rem;
@@ -106,7 +116,8 @@ li.owners i {
 }
 p.owners a:not(:last-child):after,
 li.owners a:not(:last-child):after,
-.panel a.source:not(:last-child):after {
+.panel a.source:not(:last-child):after,
+.dialog td.codes a:not(:last-child):after {
     content: ", ";
 }
 .panel a.source:before {
