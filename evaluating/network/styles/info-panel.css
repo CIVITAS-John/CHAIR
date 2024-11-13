@@ -46,13 +46,32 @@
     color: rgb(235, 219, 178);
     background: rgb(40, 40, 40);
 }
-.dialog td.codes a {
-    color: rgb(235, 219, 178);
+.dialog table.code-table {
+    color: #333333;
 }
-.dialog td.description p:before {
+.dialog table.code-table td {
+    border-width: 0;
+    background-color: #ffffff;
+}
+.dialog table.code-table td:hover {
+    background-color: #f0f0f0;
+}
+.dialog table.code-table td input {
+    vertical-align: bottom;
+}
+.dialog table.code-table a:nth-child(2n+3) {
+    color: #131072;
+}
+.dialog table.code-table td:nth-child(2n+3) {
+    background-color: #f8f8f8;
+}
+.dialog tr.description td {
+    background-color: #f0f0f0;
+}
+.dialog tr.description p:before {
     content: "“";
 }
-.dialog td.description p:after {
+.dialog tr.description p:after {
     content: "”";
     margin-right: 0.2em;
 }

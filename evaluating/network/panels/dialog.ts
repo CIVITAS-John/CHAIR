@@ -207,14 +207,19 @@ export class Dialog extends Panel {
         // Build the panel
         var Panel = $(`<div class="panel"></div>`);
         // Add the title
-        var Title = $(`<h3>Potential Bias of Codebooks (By Codes)</h3>`).appendTo(Panel);
+        var Title = $(`<h3>Ownership of Codes</h3>`).appendTo(Panel);
         Panel.append($(`<hr/>`));
-        // Sort the codes by clusters
+        // Get the codebooks
+        var Indexes = this.Visualizer.GetFilter("Owner")?.Parameters ?? 
+            this.Visualizer.Dataset.Weights!.map((Weight, Index) => Weight > 0 ? Index : -1).filter(Index => Index >= 0);
+        var Names = Indexes.map(Index => this.Dataset.Names[Index]);
+        // Get the codes
         var Graph = this.GetGraph<Code>();
+        var Distances = this.Visualizer.Dataset.Distances;
         var Codes = Graph.Components!.flatMap((Component) => Component.Nodes);
         Codes.forEach(Node => {
             if (!this.VerifiedOwnerships.has(Node.ID))
-                this.VerifiedOwnerships.set(Node.ID, new Set())
+                this.VerifiedOwnerships.set(Node.ID, new Set(Node.NearOwners));
         });
         // Build the table
         this.BuildTable(
@@ -226,11 +231,11 @@ export class Dialog extends Panel {
                     ).on("click", () => this.ShowCode(0, Node.Data)),
                 );
                 // Show the description
-                var Description = $(`<tr><td></td><td class="description" colspan="100"><p></p></td></tr>`);
+                var Description = $(`<tr class="description"><td></td><td colspan="100"><p></p></td></tr>`);
                 Description.find("p").text(`${Node.Data.Definitions?.join(", ")}`);
                 Row.after(Description);
                 // Show the ownerships
-                for (var Index = 1; Index < this.Dataset.Names.length; Index++) {
+                for (var Codebook of Indexes) {
                     ((Index) => {
                         var Codebook = this.Dataset.Codebooks[Index];
                         var Cell = $(`<td class="codes"></td>`).appendTo(Row);
@@ -249,9 +254,9 @@ export class Dialog extends Panel {
                             Related = FindOriginalCodes(Codebook, Node.Data, Index);
                         } else {
                             // Find the closest owned code
-                            var Nearest = Node.Links.filter(Link => Link.Source.Owners.has(Index) || Link.Target.Owners.has(Index))
-                                .sort((A, B) => A.Distance - B.Distance)
-                                .map(Link => Link.Source.Owners.has(Index) ? Link.Source : Link.Target);
+                            var Nearest = Codes.filter(Code => Code.Owners.has(Index) && 
+                                Distances[Node.Index][Code.Index] <= Graph.MaximumDistance)
+                                .sort((A, B) => Distances[A.Index][Node.Index] - Distances[B.Index][Node.Index]);
                             if (Nearest.length > 0) Related = FindOriginalCodes(Codebook, Nearest[0].Data, Index);
                         }
                         // Show the related codes
@@ -259,17 +264,39 @@ export class Dialog extends Panel {
                             var Link = $(`<a href="javascript:void(0)"></a>`).text(Code.Label).appendTo(Cell);
                             Link.on("click", () => this.ShowCode(Index, Code));
                         }
-                    })(Index);
+                    })(Codebook);
                 }
             },
-            ["Label", ...this.Dataset.Names.slice(1)],
-        ).appendTo(Panel);
+            ["Label", ...Names],
+        ).addClass("code-table").appendTo(Panel);
         // Copy to clipboard
         Title.append(
             $(`<span><a href="javascript:void(0)" class="copy">Save to Clipboard</a></span>`).on("click", () => {
-                var Table = ["Label\t" + this.Dataset.Names.slice(1).join("\t")];
-                
+                var Table = ["Label\t" + Names.join("\t")];
+                Codes.forEach(Node => {
+                    var Owners = this.VerifiedOwnerships.get(Node.ID)!;
+                    Table.push(`${Node.Data.Label}\t${Indexes.map(Index => Owners.has(Index) ? "Y" : "N").join("\t")}`);
+                });
                 navigator.clipboard.writeText(Table.join("\n"));
+            }),
+        );
+        // Load from clipboard
+        Title.append(
+            $(`<span><a href="javascript:void(0)" class="copy">Load from Clipboard</a></span>`).on("click", () => {
+                navigator.clipboard.readText().then(Text => {
+                    var Table = Text.split("\n").map(Line => Line.trim().split("\t"));
+                    var Header = Table[0];
+                    var Indexes = Header.slice(1).map(Name => this.Dataset.Names.indexOf(Name));
+                    Table.slice(1).forEach(([Label, ...Owners]) => {
+                        var Node = Codes.find(Node => Node.Data.Label == Label);
+                        if (!Node) return;
+                        Owners.forEach((Owner, Index) => {
+                            if (Owner.trim() == "Y") this.VerifiedOwnerships.get(Node!.ID)!.add(Indexes[Index]);
+                            else this.VerifiedOwnerships.get(Node!.ID)!.delete(Indexes[Index]);
+                        });
+                    });
+                    this.ValidateCoverageByCodes();
+                });
             }),
         );
         // Show the dialog

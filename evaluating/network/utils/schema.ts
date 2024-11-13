@@ -40,6 +40,8 @@ export interface Component<T> {
 
 /** Node: A node in the graph. */
 export interface Node<T> extends d3.SimulationNodeDatum {
+    /** Index: The index of the node (for using the distance matrix). */
+    Index: number;
     /** ID: The unique identifier of the node. */
     ID: string;
     /** Data: The data associated with the node. */

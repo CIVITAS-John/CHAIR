@@ -11,6 +11,7 @@ export function BuildSemanticGraph(Dataset: CodebookComparison<any>,
     var Nodes: Node<Code>[] = Dataset.Codes.map((Code, Index) => ({
         Type: "Code",
         ID: Index.toString(),
+        Index: Index,
         Data: Code,
         Links: [],
         Owners: OwnerGetter(Code),
