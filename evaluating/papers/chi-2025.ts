@@ -1,6 +1,5 @@
 import * as File from "fs";
 import { GetMessagesPath, LoadDataset } from "../../utils/loader.js";
-import { CoverageEvaluator } from "../coverage-evaluator.js";
 import { NetworkEvaluator } from "../network-evaluator.js";
 import { BuildReferenceAndEvaluateCodebooks } from "../codebooks.js";
 import { InitializeEmbeddings } from "../../utils/embeddings.js";
@@ -8,7 +7,7 @@ import { EnsureFolder, LLMName, UseLLMs } from "../../utils/llms.js";
 import { ReferenceBuilder, RefiningReferenceBuilder } from "../reference-builder.js";
 import { CodebookEvaluation } from "../../utils/schema.js";
 
-// This code replicates our study for CHI 2025.
+// This code replicates our study for ACL Rolling Review 2025.
 // Specifically, it evaluates the performance of different codebooks in the pilot study.
 // It also generates 60 evaluation runs for the output analysis.
 // Running it requires access to the Groq API.
@@ -24,9 +23,9 @@ async function EvaluateInFolder(SourcePath: string, Builder: ReferenceBuilder, S
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
     var EvaluationName = Folders.join("-") + Suffix;
-    var ReferencePath = SourcePath + "/chi-2025/references";
+    var ReferencePath = SourcePath + "/acl-2025/references";
     EnsureFolder(ReferencePath);
-    var TargetPath = SourcePath + "/chi-2025/results/" + EvaluationName;
+    var TargetPath = SourcePath + "/acl-2025/results/" + EvaluationName;
     EnsureFolder(TargetPath);
     // Build the reference and evaluate the codebooks
     var Results = await BuildReferenceAndEvaluateCodebooks(
@@ -74,10 +73,10 @@ async function RepeatedlyEvaluateInFolder(
     }
     // Write the CSV to a file
     SourcePath = GetMessagesPath(SourcePath);
-    if (Times > 1) File.writeFileSync(SourcePath + "/chi-2025/results/" + Folders.join("-") + `-${LLM}.csv`, CSVResults.join("\n"));
+    if (Times > 1) File.writeFileSync(SourcePath + "/acl-2025/results/" + Folders.join("-") + `-${LLM}.csv`, CSVResults.join("\n"));
 }
 
-// Task: Compare the 4 approaches with GPT-4o described in the pilot study.
+// Task: Compare the 5 approaches with GPT-4o described in the pilot study.
 // Also, an output analysis of the results with 10 runs
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 1", "gpt-4.5-mini", new RefiningReferenceBuilder(true, true), "pilot-study");
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 1", "llama3-70b", new RefiningReferenceBuilder(true, true), "pilot-study");
