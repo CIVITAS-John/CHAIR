@@ -1,19 +1,21 @@
-import { Code, CodebookComparison } from "../../../utils/schema.js";
+import { Code, CodebookComparison, Dataset, DataChunk, DataItem } from "../../../utils/schema.js";
 import { Node, Link, Graph, Component } from "./schema.js";
 import * as graphology from "graphology";
 import * as graphologyLibrary from "graphology-library";
 import { InverseLerp, Parameters } from "./utils.js";
 
 /** BuildSemanticGraph: Build a semantic code graph from the dataset. */
-export function BuildSemanticGraph(Dataset: CodebookComparison<any>, Parameter: Parameters = new Parameters()): Graph<Code> {
+export function BuildSemanticGraph(Dataset: CodebookComparison<any>, 
+    Parameter: Parameters = new Parameters(), AllOwners = Dataset.Codebooks.length,
+    OwnerGetter = (Code: Code) => new Set(Code.Owners), OwnerWeights = Dataset.Weights!): Graph<Code> {
     var Nodes: Node<Code>[] = Dataset.Codes.map((Code, Index) => ({
         Type: "Code",
         ID: Index.toString(),
         Data: Code,
         Links: [],
-        Owners: new Set(Code.Owners),
-        NearOwners: new Set(Code.Owners),
-        Weights: new Array(Dataset.Codebooks.length).fill(0),
+        Owners: OwnerGetter(Code),
+        NearOwners: OwnerGetter(Code),
+        Weights: new Array(AllOwners).fill(0),
         TotalWeight: 0,
         Neighbors: 0,
         Size: Math.sqrt(Code.Examples?.length ?? 1),
@@ -23,6 +25,7 @@ export function BuildSemanticGraph(Dataset: CodebookComparison<any>, Parameter: 
     var Links: Map<string, Link<Code>> = new Map();
     var MaxDistance = 0;
     var MinDistance = Number.MAX_VALUE;
+    var GetWeight = (ID: number) => OwnerWeights![ID];
     // Create the links
     for (var I = 0; I < Nodes.length; I++) {
         var Source = Nodes[I];
@@ -54,11 +57,11 @@ export function BuildSemanticGraph(Dataset: CodebookComparison<any>, Parameter: 
                 Target.Links.push(Link);
                 Links.set(LinkID, Link);
                 if (Distance <= Parameter.LinkMinimumDistance) {
-                    Source.Data.Owners?.forEach((Owner) => {
+                    Source.Owners.forEach((Owner) => {
                         Target.NearOwners.add(Owner);
                         Target.Weights[Owner] += 1;
                     });
-                    Target.Data.Owners?.forEach((Owner) => {
+                    Target.Owners.forEach((Owner) => {
                         Source.NearOwners.add(Owner);
                         Source.Weights[Owner] += 1;
                     });
@@ -73,15 +76,15 @@ export function BuildSemanticGraph(Dataset: CodebookComparison<any>, Parameter: 
     // Calculate the weights
     for (var I = 0; I < Nodes.length; I++) {
         var Source = Nodes[I];
-        for (var Owner = 0; Owner < Dataset.Codebooks.length; Owner++)
+        for (var Owner = 0; Owner < AllOwners; Owner++)
             Source.Weights[Owner] = Math.min(Math.max(Source.Weights[Owner] / Math.max(Source.Neighbors, 1), 0), 1);
         var RealOwners = 0;
         for (var Owner of Source.Owners) {
-            if (Dataset.Weights![Owner] > 0) RealOwners++;
+            if (GetWeight(Owner) > 0) RealOwners++;
             Source.Weights[Owner] = 1;
         }
         Source.Novel = RealOwners == 1;
-        Source.TotalWeight = Source.Weights.reduce((A, B, I) => (I == 0 ? A : A + B * Dataset.Weights![I]), 0);
+        Source.TotalWeight = Source.Weights.reduce((A, B, I) => (I == 0 ? A : A + B * GetWeight(I)), 0);
     }
     // Store it
     var Graph: Graph<Code> = {
@@ -216,10 +219,27 @@ export function FilterNodesByOwner<T>(Nodes: Node<T>[], Owner: number, NearOwner
 
 /** FilterNodeByExample: Filter a node by presence of any examples. */
 export function FilterNodeByExample<T extends Code>(Node: Node<T>, IDs: string[]): boolean {
+    return FilterCodeByExample(Node.Data, IDs);
+}
+
+/** FilterCodeByExample: Filter a code by presence of any examples. */
+export function FilterCodeByExample<T extends Code>(Code: T, IDs: string[]): boolean {
     return (
-        Node.Data.Examples?.some((Example) => {
+        Code.Examples?.some((Example) => {
             return IDs.some((ID) => Example == ID || Example.startsWith(ID + "|||"));
         }) ?? false
+    );
+}
+
+/** FilterItemByUser: Filter items by user ID. */
+export function FilterItemByUser(Dataset: Dataset<DataChunk<DataItem>>, Parameters: string[]): DataItem[] {
+    return Array.from(
+        new Set(
+            Object.values(Dataset.Data)
+                .flatMap((Chunk) => Object.entries(Chunk))
+                .flatMap(([Key, Value]) => Value.AllItems ?? [])
+                .filter((Item) => Parameters.includes(Item.UserID))
+        ),
     );
 }
 

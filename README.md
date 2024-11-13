@@ -22,7 +22,7 @@ GOOGLE_API_KEY={Your Google API Key} # for gecko embedding models
 DATASET_PATH=./examples # or the root path to your datasets
 ```
 
-For Google API, get the key at [https://aistudio.google.com/app/u/1/apikey](Google AI Studio).
+For Google API, get the key at [Google AI Studio](https://aistudio.google.com/app/u/1/apikey).
 
 # Run the example analysis
 Now, please go to `./examples/code-evaluate.ts`. If you are using Visual Studio Code, use `Run` => `Start Debugging` on the file. If you only have an API key for OpenAI, please change `gecko-768-similarity` to `openai-large-1024`. The performance of the evaluation/visualization would be slightly worse, though.
@@ -31,7 +31,7 @@ Now, please go to `./examples/code-evaluate.ts`. If you are using Visual Studio 
 ## macOS
 If you are using macOS and have issues with Python or Node.js, try using [https://brew.sh/](Homebrew). Then:
 ```
-brew install python
+brew install python@3.12
 brew install node
 brew install cargo-c
 python3 -m venv .venv

@@ -92,7 +92,7 @@ export class CodeSection extends Panel {
                         .append($(`<p></p>`).text(`100%`))
                         .on("click", (Event) => this.Visualizer.ComponentChosen(Event, Component));
                 },
-                ["Cluster", "Filtered", "Total"],
+                ["Cluster", "Filtered", "Codes"],
             );
         });
     }

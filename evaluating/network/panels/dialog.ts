@@ -2,13 +2,14 @@ import d3 from "d3";
 import type { Cash } from "cash-dom";
 import { Visualizer } from "../visualizer.js";
 import { Code, DataChunk, DataItem } from "../../../utils/schema.js";
-import { FormatDate, GetCodebookColor } from "../utils/utils.js";
+import { GetCodebookColor } from "../utils/utils.js";
 import { Panel } from "./panel.js";
-import { FindOriginalCodes, GetChunks } from "../utils/dataset.js";
-import { FilterNodeByExample, FilterNodeByOwners } from "../utils/graph.js";
+import { GetChunks } from "../utils/dataset.js";
 import { EvaluatePerCluster } from "../utils/evaluate.js";
 import { CodeSection } from "../sections/code.js";
-import { OwnerFilter } from "../utils/filters.js";
+import { OwnerFilter, UserFilter } from "../utils/filters.js";
+import { RenderExamples, RenderItem } from "../utils/render.js";
+import { FilterItemByUser } from "../utils/graph.js";
 
 /** Dialog: The dialog for the visualizer. */
 export class Dialog extends Panel {
@@ -58,6 +59,39 @@ export class Dialog extends Panel {
         // Show the dialog
         this.ShowPanel(Panel);
     }
+    /** ShowUser: Show a dialog for a user. */
+    public ShowUser(ID: string, Owners: number[] = [], ScrollTo?: string) {
+        this.Visualizer.PushState(`speaker-${ID}`, () => this.ShowUser(ID, Owners, ScrollTo));
+        // Build the panel
+        var Panel = $(`<div class="panel"></div>`);
+        // Add the title
+        Panel.append($(`<h3>User ${this.Visualizer.Dataset.UserIDToNicknames?.get(ID) ?? ID}</h3>`));
+        Panel.append($(`<hr/>`));
+        var Codes = this.GetGraph<Code>().Nodes;
+        // Show the items
+        var List = $(`<ol class="quote"></ol>`).appendTo(Panel);
+        var Items = FilterItemByUser(this.Visualizer.Dataset.Source, [ID])
+        var TargetElement: Cash | undefined;
+        Items.forEach((Item) => {
+            // Show the item
+            var Current = RenderItem(this.Visualizer, Item, Owners).appendTo(List);
+            if (Item.ID == ScrollTo) {
+                TargetElement = Current;
+                Current.addClass("highlighted");
+            }
+            // Show related codes
+            Current.append(RenderExamples(Codes, this.Visualizer, Item, Owners));
+        });
+        // Show the dialog
+        this.ShowPanel(Panel);
+        // Scroll to the target element
+        if (TargetElement) {
+            var Offset = TargetElement.offset()!.top;
+            this.Container.children("div.content")
+                .get(0)
+                ?.scrollTo(0, Offset - 60);
+        }
+    }
     /** ShowChunk: Show a dialog for a chunk. */
     public ShowChunk(Name: string, Chunk: DataChunk<DataItem>, Owners: number[] = [], ScrollTo?: string) {
         this.Visualizer.PushState(`chunk-${Name}`, () => this.ShowChunk(Name, Chunk, Owners, ScrollTo));
@@ -84,55 +118,13 @@ export class Dialog extends Panel {
                 Orthodox = !Orthodox;
             }
             // Show the item
-            var Current = $(`<li class="custom"></li>`).attr("seq", Item.ID).appendTo(List);
-            var Header = $(`<p><strong></strong> at <i></i></p>`).appendTo(Current);
-            Header.children("strong").text(Item.Nickname);
-            Header.children("i").text(FormatDate(Item.Time));
-            $(`<p></p>`).text(Item.Content).appendTo(Current);
+            var Current = RenderItem(this.Visualizer, Item, Owners).appendTo(List);
             if (Item.ID == ScrollTo) {
                 TargetElement = Current;
                 Current.addClass("highlighted");
             }
             // Show related codes
-            var Examples = Codes.filter((Node) => FilterNodeByExample(Node, [Item.ID]));
-            Examples = Examples.filter((Node) => Owners.length == 0 || FilterNodeByOwners(Node, Owners, this.Parameters.UseNearOwners));
-            if (Owners.length == 1) {
-                $(`<p class="codes">Coded as:<span></span></p>`)
-                    .appendTo(Current)
-                    .children("span")
-                    .text(Examples.map((Code) => Code.Data.Label).join(", "));
-            } else {
-                var CodeList = $(`<ol class="codes"></ol>`).appendTo(Current);
-                var CodeItems: Cash[] = [];
-                // Show the codes
-                Examples.forEach((Code) => {
-                    var CodeItem = $(`<li class="owners"><i></i> from </li>`);
-                    CodeItem.children("i")
-                        .text(Code.Data.Label)
-                        .css("cursor", "pointer")
-                        .on("click", () => {
-                            this.Visualizer.PushState(`chunk-${Name}`, () => this.ShowChunk(Name, Chunk, Owners, Item.ID));
-                            this.ShowCode(0, Code.Data);
-                        });
-                    // Show the owners
-                    var RealOwners = 0;
-                    for (var Owner of Code.Data.Owners!) {
-                        if (Owner == 0) continue;
-                        var Originals = FindOriginalCodes(this.Dataset.Codebooks[Owner], Code.Data, Owner, Item.ID);
-                        // Only show the owner if the code is related to THIS quote
-                        if (Originals.length > 0) {
-                            this.InfoPanel.BuildOwnerLink(Code.Data, Originals, Owner).appendTo(CodeItem);
-                            RealOwners++;
-                        }
-                    }
-                    CodeItem.data("owners", RealOwners);
-                    // Only show the code if it has owners
-                    if (RealOwners > 0) CodeItems.push(CodeItem);
-                });
-                // Sort the codes by the number of owners
-                CodeItems.sort((A, B) => parseInt(B.data("owners")) - parseInt(A.data("owners")));
-                CodeItems.forEach((Item) => Item.appendTo(CodeList));
-            }
+            Current.append(RenderExamples(Codes, this.Visualizer, Item, Owners));
         });
         // Show the dialog
         this.ShowPanel(Panel);

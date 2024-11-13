@@ -2,21 +2,20 @@ import d3 from "d3";
 import { Cash } from "cash-dom";
 import { Panel } from "../panels/panel.js";
 import { Visualizer } from "../visualizer.js";
-import { EvaluateCodebooks } from "../utils/evaluate.js";
-import { GetConsolidatedSize } from "../utils/dataset.js";
-import { OwnerFilter } from "../utils/filters.js";
+import { EvaluateUsers } from "../utils/evaluate.js";
+import { UserFilter } from "../utils/filters.js";
 
-/** CodebookSection: The codebook side panel. */
-export class CodebookSection extends Panel {
+/** UserSection: The speaker side panel. */
+export class UserSection extends Panel {
     /** Name: The short name of the panel. */
-    public Name: string = "Coders";
+    public Name: string = "Speakers";
     /** Title: The title of the panel. */
-    public override Title: string = "Codebook Overview";
+    public override Title: string = "Speaker Overview";
     /** Constructor: Constructing the panel. */
     public constructor(Container: Cash, Visualizer: Visualizer) {
         super(Container, Visualizer);
         this.Visualizer = Visualizer;
-        this.Container = $(`<div class="codebook"></div>`).appendTo(Container).hide();
+        this.Container = $(`<div class="user"></div>`).appendTo(Container).hide();
     }
     /** Render: Render the panel. */
     public override Render() {
@@ -28,17 +27,17 @@ export class CodebookSection extends Panel {
             ),
         );
         // Evaluate the codebooks
-        var Names = this.Dataset.Names;
-        var Codebooks = this.Dataset.Codebooks;
-        var Results = EvaluateCodebooks(this.Visualizer.Dataset, this.Parameters);
-        var Metrics = Object.keys(Results[Names[1]]).slice(0, -2);
+        var Users = Array.from(this.Dataset.UserIDToNicknames?.keys() ?? []);
+        var Results = EvaluateUsers(this.Visualizer.Dataset, this.Parameters);
+        var Metrics = Object.keys(Results[Users[0]]).slice(0, -1);
         var Colors: Record<string, d3.ScaleSequential<string, never>> = {};
         // Flatten the dataset
-        var Dataset: { Name: string; Metric: string; Value: number }[] = [];
-        for (var I = 1; I < Names.length; I++) {
-            var Result = Results[Names[I]];
+        var Dataset: { ID: string; Name: string; Metric: string; Value: number }[] = [];
+        for (var I = 0; I < Users.length; I++) {
+            var Result = Results[Users[I]];
             for (var J = 0; J < Metrics.length; J++) {
-                Dataset.push({ Name: Names[I], Metric: Metrics[J], Value: Result[Metrics[J]] });
+                Dataset.push({ ID: Users[I], Name: this.Dataset.UserIDToNicknames?.get(Users[I]) ?? "", 
+                    Metric: Metrics[J], Value: Result[Metrics[J]] });
             }
         }
         // Build color scales
@@ -61,27 +60,25 @@ export class CodebookSection extends Panel {
         this.BuildTable(
             Object.entries(Results),
             (Row, [Key, Value], Index) => {
-                var Codebook = Codebooks[Index + 1];
                 // Name of the codebook
                 var Summary = $(`<td class="codebook-cell"></td>`)
-                    .attr("id", `codebook-${Index + 1}`)
+                    .attr("id", `user-${Index + 1}`)
                     .addClass("actionable")
                     .appendTo(Row);
-                Summary.append($(`<h4></h4>`).text(Key))
-                    .append($(`<p class="tips"></p>`).text(`${Object.keys(Codebook).length} codes`))
-                    .append($(`<p class="tips"></p>`).text(`${GetConsolidatedSize(Codebooks[0], Codebook)} consolidated`))
-                    .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1))
-                    .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
+                Summary.append($(`<h4></h4>`).text(this.Dataset.UserIDToNicknames?.get(Key) ?? Key))
+                    .append($(`<p class="tips"></p>`).text(`${Results[Key]["Count"]} items`))
+                    .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new UserFilter(), Key))
+                    .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new UserFilter()))
                     .on("click", (Event) => {
                         if (Event.shiftKey) {
-                            this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, true);
+                            this.Visualizer.SetFilter(false, new UserFilter(), Key, true);
                         } else {
-                            if (!this.Visualizer.IsFilterApplied("Owner", Index + 1))
-                                this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey, "Coverage");
-                            this.Visualizer.SidePanel.ShowPanel("Codes");
+                            if (!this.Visualizer.IsFilterApplied("User", Key))
+                                this.Visualizer.SetFilter(false, new UserFilter(), Key, Event.shiftKey, "Coverage");
+                            this.Visualizer.Dialog.ShowUser(Key);
                         }
                     })
-                    .toggleClass("chosen", this.Visualizer.IsFilterApplied("Owner", Index + 1));
+                    .toggleClass("chosen", this.Visualizer.IsFilterApplied("User", Key));
                 // Evaluation results
                 Metrics.forEach((Metric) => {
                     var MetricValue = Value[Metric];
@@ -89,16 +86,16 @@ export class CodebookSection extends Panel {
                     var Cell = $(`<td class="metric-cell"></td>`)
                         .attr("id", `metric-${Index}-${Metric}`)
                         .text(d3.format(Metric == "Divergence" ? ".1%" : ".1%")(MetricValue))
-                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1, false, Metric))
-                        .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
-                        .on("click", (Event) => this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey, Metric))
+                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new UserFilter(), Key, false, Metric))
+                        .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new UserFilter()))
+                        .on("click", (Event) => this.Visualizer.SetFilter(false, new UserFilter(), Key, Event.shiftKey, Metric))
                         .css("background", Color)
                         .css("color", d3.lab(Color).l > 70 ? "black" : "white")
-                        .toggleClass("chosen", this.Visualizer.IsFilterApplied("Owner", Index + 1, Metric));
+                        .toggleClass("chosen", this.Visualizer.IsFilterApplied("User", Key, Metric));
                     Row.append(Cell);
                 });
             },
-            ["Codebook", ...Metrics],
+            ["Speaker", ...Metrics],
         );
     }
 }

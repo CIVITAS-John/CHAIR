@@ -10,7 +10,7 @@ import { SidePanel } from "./panels/side-panel.js";
 import { Dialog } from "./panels/dialog.js";
 import { FilterBase } from "./utils/filters.js";
 import { Tutorial } from "./tutorial.js";
-import { Evaluate } from "./utils/evaluate.js";
+import { EvaluateCodebooks } from "./utils/evaluate.js";
 declare global {
     var $: typeof Cash.prototype.init & CashStatic;
 }
@@ -86,10 +86,15 @@ export class Visualizer {
             this.Dataset = Data as any;
             // Set the title
             document.title = this.Dataset.Title + document.title.substring(document.title.indexOf(":"));
-            // Parse the date as needed
+            // Parse the date and nicknames as needed
             var Datasets = this.Dataset.Source;
+            this.Dataset.UserIDToNicknames = new Map();
             for (var Dataset of Object.values(Datasets.Data))
-                for (var Chunk of Object.values(Dataset)) for (var Item of Chunk.AllItems ?? []) Item.Time = new Date(Date.parse(Item.Time as any));
+                for (var Chunk of Object.values(Dataset)) 
+                    for (var Item of Chunk.AllItems ?? []) {
+                        Item.Time = new Date(Date.parse(Item.Time as any));
+                        this.Dataset.UserIDToNicknames.set(Item.UserID, Item.Nickname);
+                    }
             // Calculate the weights
             this.Dataset.Weights = this.Dataset.Weights ?? this.Dataset.Names.map((_, Index) => (Index == 0 ? 0 : 1));
             this.Dataset.TotalWeight = this.Dataset.Weights.reduce((A, B) => A + B, 0);
@@ -97,7 +102,7 @@ export class Visualizer {
             this.SetStatus("Code", BuildSemanticGraph(this.Dataset, this.Parameters));
             this.SidePanel.Show();
             // Evaluate and send back the results
-            var Results = Evaluate(this.Dataset, this.Parameters);
+            var Results = EvaluateCodebooks(this.Dataset, this.Parameters);
             PostData("/api/report/", Results);
         });
     }
