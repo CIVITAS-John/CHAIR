@@ -218,7 +218,7 @@ export class Dialog extends Panel {
         // Get the codes
         var Graph = this.GetGraph<Code>();
         var Distances = this.Visualizer.Dataset.Distances;
-        var Codes = Graph.Nodes;
+        var Codes = [...Graph.Nodes];
         Shuffle(Codes, 131072);
         Codes.forEach(Node => {
             if (!this.VerifiedOwnerships.has(Node.ID)) {
