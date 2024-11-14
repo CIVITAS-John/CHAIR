@@ -549,7 +549,8 @@ export class Visualizer {
     /** PushState: Push a new state to the history. */
     public PushState(Name: string, Callback: () => void) {
         this.History.set(Name, Callback);
-        window.history.pushState(Name, Name, `#${Name}`);
+        if (window.location.hash != `#${Name}`)
+            window.history.pushState(Name, Name, `#${Name}`);
     }
     /** PopState: Handle the pop state event. */
     public PopState(Event: PopStateEvent) {
