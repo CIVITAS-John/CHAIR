@@ -223,7 +223,7 @@ export class Dialog extends Panel {
         Codes.forEach(Node => {
             if (!this.VerifiedOwnerships.has(Node.ID)) {
                 var Default = new Map<number, number>();
-                for (var Index = 0; Index < Indexes.length; Index++)
+                for (var Index = 0; Index < this.Visualizer.Dataset.Codebooks.length; Index++)
                     Default.set(Index, Node.Owners.has(Index) ? 2 : Node.NearOwners.has(Index) ? 1 : 0);
                 this.VerifiedOwnerships.set(Node.ID, Default);
             }
