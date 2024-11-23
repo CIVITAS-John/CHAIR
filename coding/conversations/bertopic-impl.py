@@ -13,7 +13,7 @@ from hdbscan import HDBSCAN
 
 config = dotenv_values(".env")
 
-# Read from `./known.temp.json` for messages
+# Read from `./known/bertopic.temp.json` for messages
 with open("./known/bertopic.temp.json", "r", encoding="utf-8") as file:
     messages = json.load(file)
 
