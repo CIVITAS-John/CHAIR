@@ -10,10 +10,12 @@ import hdbscan
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-from embedding import Dimensions, cpus, embeddings, labels
+from embedding import Dimensions, cpus, embeddings, load_temp_json
 from numpy.typing import NDArray
 from sklearn.metrics.pairwise import pairwise_distances
 from umap import UMAP
+
+labels = [source["Label"] for source in load_temp_json("clustering")]
 
 # Get the arguments
 Metrics = sys.argv[3] if len(sys.argv) > 3 else "cosine"

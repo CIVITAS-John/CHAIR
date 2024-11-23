@@ -13,9 +13,9 @@ from hdbscan import HDBSCAN
 
 config = dotenv_values(".env")
 
-# Read from `./known.temp.text` for messages
-with open("./known/temp.text", "r", encoding="utf-8") as file:
-    messages = file.read().splitlines()
+# Read from `./known.temp.json` for messages
+with open("./known/bertopic.temp.json", "r", encoding="utf-8") as file:
+    messages = json.load(file)
 
 # Get the number of items
 n_samples = int(sys.argv[1]) if len(sys.argv) > 1 else len(messages)

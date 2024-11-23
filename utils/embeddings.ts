@@ -229,7 +229,7 @@ export async function ClusterEmbeddings(
     // Write it into ./known/temp.bytes
     File.writeFileSync(`./known/temp.bytes`, Buffer.from(Embeddings.buffer));
     // File.writeFileSync(`./known/temp.text`, Names.join("\n"));
-    File.writeFileSync(`./known/temp.json`, JSON.stringify(Names));
+    File.writeFileSync(`./known/clustering.temp.json`, JSON.stringify(Names));
     // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
     // Run the Python script
     await PythonShell.run(`utils/embeddings/clustering-${Method}.py`, {
@@ -301,7 +301,7 @@ export async function EvaluateEmbeddings<T>(
     }));
     // File.writeFileSync(`./known/temp.text`, OwnerLabels.concat(TextData).join("\n"));
     File.writeFileSync(
-        `./known/temp.json`,
+        `./known/evaluation.temp.json`,
         JSON.stringify({
             OwnerLabels,
             Labels: TextData,

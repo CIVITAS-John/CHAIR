@@ -6,7 +6,7 @@ import json
 import multiprocessing
 import os
 import sys
-from typing import List, TypedDict
+from typing import List, Literal, TypedDict, cast, overload
 
 import numpy as np
 
@@ -30,7 +30,10 @@ with open("./known/temp.bytes", "rb") as file:
     embeddings = np.frombuffer(float_bytes, dtype=np.float32)
     # print("Embeddings received:", len(embeddings), ", expected:", Dimensions * Embeddings)
 
-# Read from `./known/temp.json` for labels
+# Reshape the embeddings
+embeddings = embeddings.reshape((Items, Dimensions))
+
+# Type for clustering.temp.json
 Source = TypedDict(
     "Source",
     {
@@ -38,8 +41,37 @@ Source = TypedDict(
         "Examples": List[str],
     },
 )
-with open("./known/temp.json", "r", encoding="utf-8") as file:  # type: ignore
-    sources: List[Source] = json.load(file)
 
-# Reshape the embeddings
-embeddings = embeddings.reshape((Items, Dimensions))
+# Types for evaluation.temp.json
+Label = TypedDict(
+    "Label",
+    {
+        "Label": str,
+        "Owners": List[int],
+    },
+)
+LabelsMeta = TypedDict(
+    "LabelsMeta",
+    {
+        "OwnerLabels": List[str],
+        "Labels": List[Label],
+    },
+)
+
+
+@overload
+def load_temp_json(mode: Literal["clustering"]) -> List[Source]: ...
+
+
+@overload
+def load_temp_json(mode: Literal["evaluation"]) -> LabelsMeta: ...
+
+
+def load_temp_json(mode: Literal["clustering", "evaluation"]):
+    """Load the temp JSON file from the known directory."""
+    with open(f"./known/{mode}.temp.json", "r", encoding="utf-8") as f:
+        if mode == "clustering":
+            return cast(List[Source], json.load(f))
+        if mode == "evaluation":
+            return cast(LabelsMeta, json.load(f))
+        return None

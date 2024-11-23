@@ -8,12 +8,14 @@ from typing import Literal, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
-from embedding import Dimensions, Items, cpus, embeddings, labels
+from embedding import Dimensions, Items, cpus, embeddings, load_temp_json
 from numpy.typing import NDArray
 from scipy.cluster.hierarchy import dendrogram
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.metrics.pairwise import pairwise_distances
 from umap import UMAP
+
+labels = [source["Label"] for source in load_temp_json("clustering")]
 
 # Get the arguments
 Metrics = sys.argv[3] if len(sys.argv) > 3 else "cosine"

@@ -11,7 +11,7 @@ import matplotlib.patheffects as PathEffects
 import matplotlib.pyplot as plt
 import matplotlib.transforms as mtransforms
 import numpy as np
-from embedding import cpus, embeddings, labels
+from embedding import cpus, embeddings, load_temp_json
 from matplotlib.markers import MarkerStyle
 from numpy.typing import NDArray
 from scipy.stats import gaussian_kde
@@ -19,24 +19,33 @@ from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.preprocessing import normalize
 from umap import UMAP
 
+labels_meta = load_temp_json("evaluation")
+
 # Get the arguments
-Owners = int(sys.argv[3]) if len(sys.argv) > 3 else 2
+# Owners = int(sys.argv[3]) if len(sys.argv) > 3 else 2
+Owners = len(labels_meta["OwnerLabels"])
 Visualize = sys.argv[4].lower() == "true" if len(sys.argv) > 4 else False
 OutputPath = sys.argv[5] if len(sys.argv) > 5 else "./known"
 print("Owners:", Owners, ", Visualize:", Visualize)
 
 # Seperate owners' names from labels (the first few items)
-groups = labels[:Owners]
+# groups = labels[:Owners]
+groups = labels_meta["OwnerLabels"]
 group_ids = list(range(Owners))
-labels = labels[Owners:]
+# labels = labels[Owners:]
+labels_objs = labels_meta["Labels"]
 
 # Separate the owners from labels (format: owner1,owner2,owner3|label)
-if labels[0].count("|") > 0:
-    _owners = [label.split("|")[0].split(",") for label in labels]
-    owners = [{int(owner) for owner in owner_list} for owner_list in _owners]
-    labels = [label.split("|")[1] for label in labels]
-else:
-    owners = [{0}] * len(labels)
+# if labels[0].count("|") > 0:
+#     _owners = [label.split("|")[0].split(",") for label in labels]
+#     owners = [{int(owner) for owner in owner_list} for owner_list in _owners]
+#     labels = [label.split("|")[1] for label in labels]
+# else:
+#     owners = [{0}] * len(labels)
+
+# Separate the owners from labels (format: {"Label": str, "Owners": List[int]} )
+owners = [set(label["Owners"]) for label in labels_objs]
+labels = [label["Label"] for label in labels_objs]
 
 # Calculate the distance matrix
 embeddings = normalize(embeddings, norm="l2")
