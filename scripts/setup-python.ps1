@@ -26,12 +26,14 @@ if (-not $pip) {
     Write-Host "pip cannot be detected." -ForegroundColor Yellow
     $pip = Read-Host "Provide the path to pip, or leave empty to install pip"
     if ($pip -eq "") {
+        Write-Host "Installing pip..."
         & $python -m ensurepip
         $pip = (Get-Command -Name pip -ErrorAction SilentlyContinue).Source
         if (-not $pip) {
-            Write-Host "pip cannot be installed. Please visit https://pip.pypa.io/en/stable/installation/ to install pip." -ForegroundColor Red
+            Write-Host "pip cannot be installed. Please follow https://pip.pypa.io/en/stable/installation/ to install pip." -ForegroundColor Red
             exit 1
         }
+        Write-Host "pip has been installed." -ForegroundColor Green
     }
 }
 
