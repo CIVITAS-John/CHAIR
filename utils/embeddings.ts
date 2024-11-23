@@ -232,7 +232,7 @@ export async function ClusterEmbeddings(
     File.writeFileSync(`./known/clustering.temp.json`, JSON.stringify(Names));
     // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
     // Run the Python script
-    await PythonShell.run(`utils/embeddings/clustering-${Method}.py`, {
+    await PythonShell.run(`utils/embeddings/clustering_${Method}.py`, {
         args: [Dimensions.toString(), Names.length.toString(), ...ExtraOptions],
         parser: (Message) => {
             if (Message.startsWith("[")) {
@@ -309,7 +309,7 @@ export async function EvaluateEmbeddings<T>(
     );
     console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Labels.length + " embeddings)");
     // Run the Python script
-    await PythonShell.run(`utils/embeddings/evaluation-${Method}.py`, {
+    await PythonShell.run(`utils/embeddings/evaluation_${Method}.py`, {
         args: [Dimensions.toString(), Labels.length.toString(), OwnerLabels.length.toString(), ...ExtraOptions],
         parser: (Message) => {
             if (Message.startsWith("{")) {
