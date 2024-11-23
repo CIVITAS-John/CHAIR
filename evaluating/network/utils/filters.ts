@@ -167,7 +167,8 @@ export class OwnerFilter<T> extends FilterBase<T, number> {
     /** GetColorizer: Get the colorizer for this filter. */
     public GetColorizer(Visualizer: Visualizer): Colorizer<T> {
         if (this.Parameters.length == 0) {
-            return new OwnerColorizer(Visualizer.Dataset.Names.map((_, Index) => Index).slice(1), Visualizer);
+            return new OwnerColorizer(Visualizer.Dataset.Weights!
+                .map((Weight, Index) => Weight > 0 ? Index : -1).filter(Index => Index >= 0), Visualizer);
         } else if (this.Parameters.length == 1) {
             if (this.Mode == "Novelty" || this.Mode == "Divergence") return new NoveltyColorizer(this.Parameters[0], Visualizer);
             else return new CoverageColorizer(this.Parameters[0]);

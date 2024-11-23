@@ -1,14 +1,13 @@
 import * as File from "fs";
 import { GetMessagesPath, LoadDataset } from "../../utils/loader.js";
-import { CoverageEvaluator } from "../coverage-evaluator.js";
 import { NetworkEvaluator } from "../network-evaluator.js";
 import { BuildReferenceAndEvaluateCodebooks } from "../codebooks.js";
 import { InitializeEmbeddings } from "../../utils/embeddings.js";
-import { EnsureFolder, LLMName, UseLLMs } from "../../utils/llms.js";
+import { EnsureFolder, LLMName, UseLLM, UseLLMs } from "../../utils/llms.js";
 import { ReferenceBuilder, RefiningReferenceBuilder } from "../reference-builder.js";
 import { CodebookEvaluation } from "../../utils/schema.js";
 
-// This code replicates our study for CHI 2025.
+// This code replicates our study for CSCL 2025 / ACL Rolling Review 2025.
 // Specifically, it evaluates the performance of different codebooks in the pilot study.
 // It also generates 60 evaluation runs for the output analysis.
 // Running it requires access to the Groq API.
@@ -24,13 +23,14 @@ async function EvaluateInFolder(SourcePath: string, Builder: ReferenceBuilder, S
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
     var EvaluationName = Folders.join("-") + Suffix;
-    var ReferencePath = SourcePath + "/chi-2025/references";
+    var ReferencePath = SourcePath + "/cscl-2025/references";
     EnsureFolder(ReferencePath);
-    var TargetPath = SourcePath + "/chi-2025/results/" + EvaluationName;
+    var TargetPath = SourcePath + "/cscl-2025/results/" + EvaluationName;
     EnsureFolder(TargetPath);
     // Build the reference and evaluate the codebooks
+    if (Suffix != "-no-human") Folders = Folders.concat("human");
     var Results = await BuildReferenceAndEvaluateCodebooks(
-        Folders.concat(["human"]).map((Folder) => SourcePath + "/" + Folder),
+        Folders.map((Folder) => SourcePath + "/" + Folder),
         ReferencePath + "/" + EvaluationName,
         Builder,
         Evaluator,
@@ -74,28 +74,27 @@ async function RepeatedlyEvaluateInFolder(
     }
     // Write the CSV to a file
     SourcePath = GetMessagesPath(SourcePath);
-    if (Times > 1) File.writeFileSync(SourcePath + "/chi-2025/results/" + Folders.join("-") + `-${LLM}.csv`, CSVResults.join("\n"));
+    if (Times > 1) File.writeFileSync(SourcePath + "/cscl-2025/results/" + Folders.join("-") + `-${LLM}.csv`, CSVResults.join("\n"));
 }
 
-// Task: Compare the 4 approaches with GPT-4o described in the pilot study.
+// Task: Compare the 5 approaches with GPT-4o described in the pilot study.
 // Also, an output analysis of the results with 10 runs
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 1", "gpt-4.5-mini", new RefiningReferenceBuilder(true, true), "pilot-study");
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 1", "llama3-70b", new RefiningReferenceBuilder(true, true), "pilot-study");
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 1", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), "pilot-study");
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 2", "gpt-4.5-mini", new RefiningReferenceBuilder(true, true), "pilot-study");
 // await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 2", "llama3-70b", new RefiningReferenceBuilder(true, true), "pilot-study");
-// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 2", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), "pilot-study");
+// await RepeatedlyEvaluateInFolder(10, [0, 0.25, 0.5, 0.75, 1], "Coded Dataset 2", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), "pilot-study", "human");
 
 // Task: (Qualitatively) compare coding approaches' potential biases
-await RepeatedlyEvaluateInFolder(1, [0.5], "Coded Dataset 1", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), "pilot-study");
-await RepeatedlyEvaluateInFolder(1, [0.5], "Coded Dataset 2", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), "pilot-study");
+// await RepeatedlyEvaluateInFolder(1, [0.5], "Coded Dataset 1", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), "pilot-study", "human");
+// await RepeatedlyEvaluateInFolder(1, [0.5], "Coded Dataset 2", "gpt-4.5-omni", new RefiningReferenceBuilder(true, true), "pilot-study", "human");
 
-// Task: Does it matter if we only merge very similar names?
-// We don't report this, but yes, it biases towards having more codes (low-level-*).
-/* await UseLLMs(async () => {
-    await EvaluateInFolder("Coded Dataset 1", "pilot-study", new ReferenceBuilder());
-    await EvaluateInFolder("Coded Dataset 2", "pilot-study", new ReferenceBuilder());
-}, "gpt-4.5-omni"); */
+// Task: (Qualitatively) compare coding approaches, but in 2 groups: BERTopic+High-level; Low-level+Humans
+UseLLM("gpt-4.5-omni");
+await EvaluateInFolder("Coded Dataset 1", new RefiningReferenceBuilder(true, true), "", "cscl-high-level");
+await EvaluateInFolder("Coded Dataset 1", new RefiningReferenceBuilder(true, true), "-no-human", "cscl-high-level-no-human");
+await EvaluateInFolder("Coded Dataset 1", new RefiningReferenceBuilder(true, true), "", "cscl-low-level");
 
 // Task: Evaluate different models with the same approaches.
 var Approaches = ["low-level-5", "high-level-2"];

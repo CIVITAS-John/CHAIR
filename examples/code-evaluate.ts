@@ -15,14 +15,14 @@ var Configuration = {
         {
             Action: "Code",
             Analyzers: ["low-level-5"],
-            Models: ["llama3-70b"],
+            Models: ["gpt-4.5-omni", "gpt-4.5-mini"],
         },
         {
             Action: "Evaluate",
             Name: "evaluation",
             Analyzers: ["low-level-5"],
-            Models: ["llama3-70b"],
-            Evaluators: ["llama3-70b"],
+            Models: ["gpt-4.5-omni", "gpt-4.5-mini"],
+            Evaluators: ["gpt-4.5-omni"],
         },
     ],
 };

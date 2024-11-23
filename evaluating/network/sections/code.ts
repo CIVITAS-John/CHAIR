@@ -34,7 +34,8 @@ export class CodeSection extends Panel {
             $(`<p class="tips"></p>`)
                 .appendTo(this.Container)
                 .html(
-                    `Clusters are not deterministic, only to help understand the data. Names are chosen by connectedness. <a href="javascript:void(0)">Click here</a> to visualize codebooks' coverage by clusters.`,
+                    `Clusters are not deterministic, only to help understand the data. Names are chosen by connectedness.
+                    <a href="javascript:void(0)">Click here</a> to visualize codebooks' coverage by clusters.`,
                 )
                 .find("a")
                 .on("click", () => this.Visualizer.Dialog.CompareCoverageByClusters());

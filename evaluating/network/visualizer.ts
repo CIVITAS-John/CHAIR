@@ -231,6 +231,10 @@ export class Visualizer {
         if (!Colorizer) Colorizer = new OwnerFilter().GetColorizer(this);
         return Colorizer;
     }
+    /** GetFilter: Get a filter by its name. */
+    public GetFilter(Name: string) {
+        return this.Filters.get(Name);
+    }
     /** IsFilterApplied: Check if a filter is applied. */
     public IsFilterApplied(Name: string, Parameter: any, Mode?: string): boolean {
         var Filter = this.Filters.get(Name);
@@ -545,7 +549,8 @@ export class Visualizer {
     /** PushState: Push a new state to the history. */
     public PushState(Name: string, Callback: () => void) {
         this.History.set(Name, Callback);
-        window.history.pushState(Name, Name, `#${Name}`);
+        if (window.location.hash != `#${Name}`)
+            window.history.pushState(Name, Name, `#${Name}`);
     }
     /** PopState: Handle the pop state event. */
     public PopState(Event: PopStateEvent) {

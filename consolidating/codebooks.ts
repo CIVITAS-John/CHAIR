@@ -40,9 +40,11 @@ export function MergeCodebooks(Codebooks: Codebook[], WithReference: boolean = f
             var NewLabel = Label;
             if (WithReference) {
                 // Merge the alternatives
-                if (Index == 0) Code.Alternatives?.forEach((Alternative) => Alternatives.set(Alternative, Label));
+                if (Index == 0) 
+                    Code.Alternatives?.forEach((Alternative) => Alternatives.set(Alternative, Label));
                 else {
-                    if (Alternatives.has(Label)) NewLabel = Alternatives.get(Label)!;
+                    if (Alternatives.has(Label)) 
+                        NewLabel = Alternatives.get(Label)!;
                 }
                 // Merge the code
                 if (!Codes.has(NewLabel)) {
@@ -53,8 +55,9 @@ export function MergeCodebooks(Codebooks: Codebook[], WithReference: boolean = f
                     NewInstance.Owners = [Index];
                     Codes.set(NewLabel, NewInstance);
                 } else {
-                    Code = Codes.get(NewLabel)!;
-                    if (!Code.Owners!.includes(Index)) Code.Owners!.push(Index);
+                    var Instance = Codes.get(NewLabel)!;
+                    if (!Instance.Owners!.includes(Index)) 
+                        Instance.Owners!.push(Index);
                 }
             } else {
                 // Merge the code

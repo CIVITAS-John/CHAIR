@@ -46,6 +46,36 @@
     color: rgb(235, 219, 178);
     background: rgb(40, 40, 40);
 }
+.dialog table.code-table {
+    color: #333333;
+}
+.dialog table.code-table td {
+    border-width: 0;
+    background-color: #ffffff;
+}
+.dialog table.code-table td:hover {
+    background-color: #f0f0f0;
+}
+.dialog table.code-table td select {
+    margin-right: 0.1rem;
+    vertical-align: bottom;
+}
+.dialog table.code-table a:nth-child(2n+3) {
+    color: #131072;
+}
+.dialog table.code-table td:nth-child(2n+3) {
+    background-color: #f8f8f8;
+}
+.dialog tr.description td {
+    background-color: #f0f0f0;
+}
+.dialog tr.description p:before {
+    content: "“";
+}
+.dialog tr.description p:after {
+    content: "”";
+    margin-right: 0.2em;
+}
 /* Individual panels. */
 .info-panel > .panel {
     width: 30rem;
@@ -106,7 +136,8 @@ li.owners i {
 }
 p.owners a:not(:last-child):after,
 li.owners a:not(:last-child):after,
-.panel a.source:not(:last-child):after {
+.panel a.source:not(:last-child):after,
+.dialog td.codes a:not(:last-child):after {
     content: ", ";
 }
 .panel a.source:before {
