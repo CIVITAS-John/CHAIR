@@ -80,7 +80,9 @@ export class InfoPanel extends Panel {
                 }
             } else {
                 var Quote = $(`<p class="quote"></p>`).appendTo(Panel);
-                $("<span></span>").appendTo(Quote).text(Examples.keys().next().value!);
+                $("<span></span>")
+                    .appendTo(Quote)
+                    .text(Examples.keys().next().value ?? "");
                 if (Code.Examples.length > 1)
                     $(`<a href="javascript:void(0)">(${Code.Examples.length - 1} more)</a>`)
                         .appendTo(Quote)

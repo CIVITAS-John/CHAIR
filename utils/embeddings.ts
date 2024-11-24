@@ -162,16 +162,14 @@ export async function ClusterCodes(
 ): Promise<Record<number, ClusterItem[]>> {
     return await ClusterTexts(
         Sources,
-        Codes.map((Code) => {
-            return JSON.stringify({
-                Label: Code.Label,
-                Examples: Code.Examples?.map((Example) => {
-                    var Index = Example.indexOf("|||");
-                    if (Index == -1) return Example;
-                    return Example.substring(0, Index);
-                }),
-            });
-        }),
+        Codes.map((Code) => ({
+            Label: Code.Label,
+            Examples: Code.Examples?.map((Example) => {
+                var Index = Example.indexOf("|||");
+                if (Index == -1) return Example;
+                return Example.substring(0, Index);
+            }),
+        })),
         Cache,
         "linkage-jc",
         ...ExtraOptions,
@@ -187,12 +185,10 @@ export async function ClusterCategories(
 ): Promise<Record<number, ClusterItem[]>> {
     return await ClusterTexts(
         Sources,
-        Sources.map((Category) => {
-            return JSON.stringify({
-                Label: Category,
-                Examples: Categories.get(Category) ?? [],
-            });
-        }),
+        Sources.map((Category) => ({
+            Label: Category,
+            Examples: Categories.get(Category) ?? [],
+        })),
         Cache,
         "linkage-jc",
         ...ExtraOptions,
@@ -202,7 +198,10 @@ export async function ClusterCategories(
 /** ClusterTexts: Categorize the embeddings into clusters. */
 export async function ClusterTexts(
     Sources: string[],
-    Names: string[],
+    Names: {
+        Label: string;
+        Examples?: string[];
+    }[],
     Cache: string,
     Method: string = "hdbscan",
     ...ExtraOptions: string[]
@@ -219,17 +218,21 @@ export async function ClusterTexts(
  * */
 export async function ClusterEmbeddings(
     Embeddings: Float32Array,
-    Names: string[],
+    Names: {
+        Label: string;
+        Examples?: string[];
+    }[],
     Method: string = "hdbscan",
     ...ExtraOptions: string[]
 ): Promise<Record<number, ClusterItem[]>> {
     var Results: Record<number, ClusterItem[]> = {};
     // Write it into ./known/temp.bytes
     File.writeFileSync(`./known/temp.bytes`, Buffer.from(Embeddings.buffer));
-    File.writeFileSync(`./known/temp.text`, Names.join("\n"));
+    // File.writeFileSync(`./known/temp.text`, Names.join("\n"));
+    File.writeFileSync(`./known/clustering.temp.json`, JSON.stringify(Names));
     // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
     // Run the Python script
-    await PythonShell.run(`utils/embeddings/clustering-${Method}.py`, {
+    await PythonShell.run(`utils/embeddings/clustering_${Method}.py`, {
         args: [Dimensions.toString(), Names.length.toString(), ...ExtraOptions],
         parser: (Message) => {
             if (Message.startsWith("[")) {
@@ -291,11 +294,22 @@ export async function EvaluateEmbeddings<T>(
     var Results: T | undefined;
     // Write it into ./known/temp.bytes
     File.writeFileSync(`./known/temp.bytes`, Buffer.from(Embeddings.buffer));
-    var TextData = Labels.map((Label, Index) => `${Owners[Index].join(",")}|${Label}`);
-    File.writeFileSync(`./known/temp.text`, OwnerLabels.concat(TextData).join("\n"));
+    // var TextData = Labels.map((Label, Index) => `${Owners[Index].join(",")}|${Label}`);
+    var TextData = Labels.map((Label, Index) => ({
+        Label,
+        Owners: Owners[Index],
+    }));
+    // File.writeFileSync(`./known/temp.text`, OwnerLabels.concat(TextData).join("\n"));
+    File.writeFileSync(
+        `./known/evaluation.temp.json`,
+        JSON.stringify({
+            OwnerLabels,
+            Labels: TextData,
+        }),
+    );
     console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Labels.length + " embeddings)");
     // Run the Python script
-    await PythonShell.run(`utils/embeddings/evaluation-${Method}.py`, {
+    await PythonShell.run(`utils/embeddings/evaluation_${Method}.py`, {
         args: [Dimensions.toString(), Labels.length.toString(), OwnerLabels.length.toString(), ...ExtraOptions],
         parser: (Message) => {
             if (Message.startsWith("{")) {

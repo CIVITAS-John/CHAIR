@@ -25,13 +25,13 @@ export default class BertopicAnalyzer1 extends ConversationAnalyzer {
     public async BatchPreprocess(Conversations: Conversation[], Analyzed: CodedThread[]): Promise<void> {
         // Write the messages into the file.
         var Messages = Conversations.flatMap((Conversation) =>
-            Conversation.AllItems!.filter((Message) => Message.Content?.length > 0 && Message.Chunk == Conversation.ID),
+            Conversation.AllItems!.filter((Message) => Message.Content?.length > 0 && (!Message.Chunk || Message.Chunk == Conversation.ID)),
         );
         var Content = Messages.map((Message) => BuildMessagePrompt(Message, undefined, undefined, true).replaceAll("\n", " "));
-        File.writeFileSync("./known/temp.text", Content.join("\n"));
+        File.writeFileSync("./known/bertopic.temp.json", JSON.stringify(Content));
         // Run the Python script
         var Topics: Record<number, { IDs: number[]; Probabilities: number[]; Keywords: string[] }> = {};
-        await PythonShell.run(`coding/conversations/bertopic-impl.py`, {
+        await PythonShell.run(`coding/conversations/bertopic_impl.py`, {
             args: [Messages.length.toString()],
             parser: (Message) => {
                 if (Message.startsWith("{")) {
