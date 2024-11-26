@@ -8,7 +8,7 @@ import { ReferenceBuilder, RefiningReferenceBuilder } from "../evaluating/refere
 import { NetworkEvaluator } from "../evaluating/network-evaluator.js";
 
 // An example configuration
-var Configuration = {
+const Configuration = {
     Dataset: "data",
     EmbeddingModel: "openai-small-512",
     Steps: [
@@ -30,19 +30,36 @@ var Configuration = {
 InitializeEmbeddings(Configuration.EmbeddingModel);
 
 // Follow the configuration
-for (var Step of Configuration.Steps) {
+for (const Step of Configuration.Steps) {
     switch (Step.Action) {
         case "Code":
-            for (var Analyzer of Step.Analyzers!) {
-                await UseLLMs(async () => {
-                    await ProcessDataset(new (await import(`./../coding/conversations/${Analyzer}.js`)).default(), Configuration.Dataset, false);
-                }, ...Step.Models!);
+            for (const Analyzer of Step.Analyzers) {
+                await UseLLMs(
+                    async () => {
+                        await ProcessDataset(
+                            new (
+                                (await import(`./../coding/conversations/${Analyzer}.js`)) as {
+                                    default: new () => Parameters<typeof ProcessDataset>[0];
+                                }
+                            ).default(),
+                            Configuration.Dataset,
+                            false,
+                        );
+                    },
+                    ...Step.Models,
+                );
             }
             break;
         case "Evaluate":
-            await UseLLMs(async () => {
-                await Evaluate(Configuration.Dataset, new RefiningReferenceBuilder(), Step.Name ?? "evaluation", Step.Analyzers, Step.Models);
-            }, ...Step.Evaluators!);
+            if (!Step.Evaluators) {
+                throw new Error("Evaluators are required for the evaluation step.");
+            }
+            await UseLLMs(
+                async () => {
+                    await Evaluate(Configuration.Dataset, new RefiningReferenceBuilder(), Step.Name, Step.Analyzers, Step.Models);
+                },
+                ...Step.Evaluators,
+            );
             break;
     }
 }
@@ -50,27 +67,27 @@ for (var Step of Configuration.Steps) {
 /** Evaluate: Evaluate the performance of multiple coding results. */
 async function Evaluate(SourcePath: string, Builder: ReferenceBuilder, Suffix: string, Analyzers: string[], Models: string[]) {
     // Get the dataset
-    var Dataset = await LoadDataset(SourcePath);
-    var Evaluator = new NetworkEvaluator({ Dataset: Dataset });
+    const Dataset = LoadDataset(SourcePath);
+    const Evaluator = new NetworkEvaluator({ Dataset: Dataset });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
-    var ReferencePath = SourcePath + "/references";
+    const ReferencePath = `${SourcePath}/references`;
     EnsureFolder(ReferencePath);
-    var TargetPath = SourcePath + "/evaluation/" + Suffix;
+    const TargetPath = `${SourcePath}/evaluation/${Suffix}`;
     EnsureFolder(TargetPath);
     // Build the paths
-    var Paths = Analyzers.flatMap((Analyzer) =>
-        Models.flatMap((Model) => Object.keys(Dataset.Data).map((Name) => SourcePath + "/" + Analyzer + "/" + Name + "-" + Model + ".json")),
+    const Paths = Analyzers.flatMap((Analyzer) =>
+        Models.flatMap((Model) => Object.keys(Dataset.Data).map((Name) => `${SourcePath}/${Analyzer}/${Name}-${Model}.json`)),
     );
     // Build the reference and evaluate the codebooks
-    var Results = await BuildReferenceAndEvaluateCodebooks(
+    const Results = await BuildReferenceAndEvaluateCodebooks(
         Paths,
-        ReferencePath + "/" + Analyzers.join("-") + "_" + Models.join("-") + Builder.Suffix,
+        `${ReferencePath}/${Analyzers.join("-")}_${Models.join("-")}${Builder.Suffix}`,
         Builder,
         Evaluator,
         TargetPath,
     );
-    File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
+    File.writeFileSync(`${TargetPath}-${Evaluator.Name}.json`, JSON.stringify(Results, null, 4));
 }
 
 process.exit(0);
