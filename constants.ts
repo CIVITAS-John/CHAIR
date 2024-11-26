@@ -1,18 +1,18 @@
 import { DataChunk, DataItem, Dataset } from "./utils/schema.js";
 
 // ResearchQuestion: The research question.
-export var ResearchQuestion = "(Unset)"
+export let ResearchQuestion = "(Unset)";
 
 // CodingNotes: The notes for qualitative coding.
-export var CodingNotes = "(Unset)"
+export let CodingNotes = "(Unset)";
 
-var getSpeakerName: (ID: string) => string;
+let getSpeakerName: (ID: string) => string;
 /** GetSpeakerName: Get the name (used in prompts) in place of a speaker. */
 export function GetSpeakerName(ID: string): string {
     return getSpeakerName(ID);
 }
 
-var getSpeakerNameForExample: (ID: string) => string;
+let getSpeakerNameForExample: (ID: string) => string;
 /** GetSpeakerNameForExample: Get the name (used in prompts) in place of a speaker for examples. */
 export function GetSpeakerNameForExample(ID: string): string {
     return getSpeakerNameForExample(ID);
@@ -21,7 +21,7 @@ export function GetSpeakerNameForExample(ID: string): string {
 //
 /** InitializeDataset: Initialize constants from a dataset.. */
 export function InitializeDataset(Dataset: Dataset<DataChunk<DataItem>>) {
-    ResearchQuestion = "The research question is: " + Dataset.ResearchQuestion;
+    ResearchQuestion = `The research question is: ${Dataset.ResearchQuestion}`;
     CodingNotes = Dataset.CodingNotes;
     getSpeakerName = Dataset.GetSpeakerName ?? ((ID: string) => ID);
     getSpeakerNameForExample = Dataset.GetSpeakerNameForExample ?? getSpeakerName;

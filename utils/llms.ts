@@ -1,6 +1,6 @@
 import * as File from "fs";
 import * as dotenv from "dotenv";
-import { BaseChatModel } from "@langchain/core/language_models/chat_models";
+import { BaseChatModel, BaseChatModelCallOptions } from "@langchain/core/language_models/chat_models";
 import { BaseMessage, HumanMessage } from "@langchain/core/messages";
 import { ChatOpenAI } from "@langchain/openai";
 import { ChatAnthropic } from "@langchain/anthropic";
@@ -11,26 +11,26 @@ import md5 from "md5";
 import chalk from "chalk";
 
 // Model: The chat model to use.
-export var Model: (Temperature: number) => BaseChatModel;
+export let Model: (Temperature: number) => BaseChatModel;
 // LLMName: The name of the current LLM.
-export var LLMName = "";
+export let LLMName = "";
 // MaxInput: The maximum input tokens for each request.
-export var MaxInput: number = 16000;
+export let MaxInput = 16000;
 // MaxOutput: The maximum output tokens for each request.
-export var MaxOutput: number = 16000;
+export let MaxOutput = 16000;
 // MaxItems: The maximum input items for each request.
 // Unfortunately, weaker LLMs like GPT-3.5 turbo sometimes cannot remember all bundled tasks.
-export var MaxItems: number = 64;
+export let MaxItems = 64;
 // InputTokens: The total input tokens for requests so far.
-export var InputTokens: number = 0;
+export let InputTokens = 0;
 // OutputTokens: The total output tokens for requests so far.
-export var OutputTokens: number = 0;
+export let OutputTokens = 0;
 // ExpectedItems: The total expected items for requests so far.
-export var ExpectedItems: number = 0;
+export let ExpectedItems = 0;
 // FinishedItems: The total finished items for requests so far.
-export var FinishedItems: number = 0;
+export let FinishedItems = 0;
 // SystemMessage: Whether the model supports system messages.
-export var SystemMessage: boolean = true;
+export let SystemMessage = true;
 /** CountItems: Count the expected and finished items. */
 export function CountItems(Expected: number, Finished: number) {
     ExpectedItems += Expected;
@@ -45,9 +45,13 @@ export function InitializeLLM(LLM: string) {
     ExpectedItems = 0;
     FinishedItems = 0;
     // Handle the multiple experiments
-    if (LLM.endsWith("_0")) LLM = LLM.substring(0, LLM.length - 2);
-    var RealLLM = LLM;
-    if (LLM.indexOf("_")) RealLLM = LLM.split("_")[0];
+    if (LLM.endsWith("_0")) {
+        LLM = LLM.substring(0, LLM.length - 2);
+    }
+    let RealLLM = LLM;
+    if (LLM.indexOf("_")) {
+        RealLLM = LLM.split("_")[0];
+    }
     // Initialize the LLM
     switch (RealLLM) {
         case "gpt-3.5-turbo":
@@ -122,7 +126,7 @@ export function InitializeLLM(LLM: string) {
             MaxOutput = 4096;
             MaxItems = 64;
             SystemMessage = false;
-            Model = (Temp) =>
+            Model = (_Temp) =>
                 new ChatOpenAI({
                     // Does not support temperature
                     modelName: "o1-mini",
@@ -137,7 +141,7 @@ export function InitializeLLM(LLM: string) {
             MaxOutput = 4096;
             MaxItems = 64;
             SystemMessage = false;
-            Model = (Temp) =>
+            Model = (_Temp) =>
                 new ChatOpenAI({
                     // Does not support temperature
                     modelName: "o1-mini",
@@ -190,7 +194,7 @@ export function InitializeLLM(LLM: string) {
             MaxInput = 32000;
             MaxOutput = 32000;
             MaxItems = 32;
-            Model = (Temp) =>
+            Model = (_Temp) =>
                 new ChatMistralAI({
                     temperature: 1,
                     modelName: "open-mixtral-8x22b",
@@ -236,22 +240,17 @@ export async function UseLLMs(Task: () => Promise<void>, ...LLMs: string[]): Pro
 }
 
 /** RequestLLMWithCache: Call the model to generate text with cache. */
-export async function RequestLLMWithCache(
-    Messages: BaseMessage[],
-    Cache: string,
-    Temperature?: number,
-    FakeRequest: boolean = false,
-): Promise<string> {
-    var Input = Messages.map((Message) => Message.content).join("\n~~~\n");
-    var CacheFolder = `known/${Cache}/${LLMName}`;
+export async function RequestLLMWithCache(Messages: BaseMessage[], Cache: string, Temperature?: number, FakeRequest = false): Promise<string> {
+    const Input = Messages.map((Message) => Message.content).join("\n~~~\n");
+    const CacheFolder = `known/${Cache}/${LLMName}`;
     EnsureFolder(CacheFolder);
     // Check if the cache exists
-    var CacheFile = `${CacheFolder}/${md5(Input)}-${Temperature}.txt`;
+    const CacheFile = `${CacheFolder}/${md5(Input)}-${Temperature}.txt`;
     if (File.existsSync(CacheFile)) {
-        var Cache = File.readFileSync(CacheFile, "utf-8");
-        var Split = Cache.split("\n===\n");
-        if (Split.length == 2) {
-            var Content = Split[1].trim();
+        const Cache = File.readFileSync(CacheFile, "utf-8");
+        const Split = Cache.split("\n===\n");
+        if (Split.length === 2) {
+            const Content = Split[1].trim();
             if (Content.length > 0) {
                 InputTokens += Tokenize(Input).length;
                 OutputTokens += Tokenize(Content).length;
@@ -260,26 +259,27 @@ export async function RequestLLMWithCache(
         }
     }
     // If not, call the model
-    var Result = await RequestLLM(Messages, Temperature, FakeRequest);
+    const Result = await RequestLLM(Messages, Temperature, FakeRequest);
     File.writeFileSync(CacheFile, `${Input}\n===\n${Result}`);
     return Result;
 }
 
 /** RequestLLM: Call the model to generate text. */
-export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, FakeRequest: boolean = false): Promise<string> {
-    var Text = "";
+export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, FakeRequest = false): Promise<string> {
+    let Text = "";
     try {
         console.log(
             chalk.dim(
-                `LLM Request ${Temperature ?? 0}: \n${Messages.map((Message) => `${Message._getType()}: ${Message.content}`).join("\n---\n")}\n`,
+                `LLM Request ${Temperature ?? 0}: \n${Messages.map((Message) => `${Message.getType()}: ${Message.content as string}`).join("\n---\n")}\n`,
             ),
         );
-        if (!SystemMessage)
-            Messages = Messages.map(Message => new HumanMessage(Message.content as string));
+        if (!SystemMessage) {
+            Messages = Messages.map((Message) => new HumanMessage(Message.content as string));
+        }
         if (!FakeRequest) {
             await PromiseWithTimeout(
-                Model(Temperature ?? 0)
-                    .invoke(Messages, { temperature: Temperature } as any)
+                (Model(Temperature ?? 0) as BaseChatModel<{ temperature: number } & BaseChatModelCallOptions>)
+                    .invoke(Messages, { temperature: Temperature ?? 0 })
                     .then((Result) => {
                         Text = Result.content as string;
                     }),
@@ -287,12 +287,12 @@ export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, 
             );
             console.log(chalk.cyan(`LLM Result: \n${Text}`));
         }
-        var Input = Messages.map((Message) => Tokenize(Message.content as string).length).reduce((Prev, Curr) => Prev + Curr);
-        var Output = Tokenize(Text).length;
+        const Input = Messages.map((Message) => Tokenize(Message.content as string).length).reduce((Prev, Curr) => Prev + Curr);
+        const Output = Tokenize(Text).length;
         InputTokens += Input;
         OutputTokens += Output;
         console.log(chalk.gray(`LLM Tokens: Input ${Input}, Output ${Output}\n`));
-    } catch (Error: any) {
+    } catch (Error: unknown) {
         console.log(Error);
         throw Error;
     }
@@ -303,7 +303,9 @@ export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, 
 export function PromiseWithTimeout<T>(promise: Promise<T>, time: number, timeoutError = new Error("Sorry, the AI stopped responding.")): Promise<T> {
     // create a promise that rejects in milliseconds
     const timeout = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(timeoutError), time);
+        setTimeout(() => {
+            reject(timeoutError);
+        }, time);
     });
     // returns a race between timeout and the passed promise
     return Promise.race<T>([promise, timeout]);
@@ -311,5 +313,7 @@ export function PromiseWithTimeout<T>(promise: Promise<T>, time: number, timeout
 
 /** EnsureFolder: Ensure that a folder exists. */
 export function EnsureFolder(Folder: string) {
-    if (!File.existsSync(Folder)) File.mkdirSync(Folder, { recursive: true });
+    if (!File.existsSync(Folder)) {
+        File.mkdirSync(Folder, { recursive: true });
+    }
 }

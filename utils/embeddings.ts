@@ -11,11 +11,14 @@ import chalk from "chalk";
 import { Code } from "./schema.js";
 
 // Model: The embedding model to use.
-export var Model: Embeddings;
+export let Model: Embeddings;
 // EmbeddingName: The name of the embedding model.
-export var EmbeddingName: string;
+export let EmbeddingName: string;
 // Dimensions: The number of dimensions in the embedding model.
-export var Dimensions: number;
+export let Dimensions: number;
+
+/** sleep: Wait for a number of milliseconds. */
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /** InitializeEmbeddings: Initialize the embeddings with the given name. */
 export function InitializeEmbeddings(Embedding: string) {
@@ -78,44 +81,48 @@ export function InitializeEmbeddings(Embedding: string) {
 /** RequestEmbeddings: Call the model to generate text embeddings with cache. */
 export async function RequestEmbeddings(Sources: string[], Cache: string): Promise<Float32Array> {
     // Create the cache folder
-    var CacheFolder = `known/embeddings/${Cache}/${EmbeddingName}`;
+    const CacheFolder = `known/embeddings/${Cache}/${EmbeddingName}`;
     EnsureFolder(CacheFolder);
     // Check if the cache exists
-    var Embeddings = new Float32Array(Dimensions * Sources.length);
-    var Requests: number[] = [];
-    for (var I = 0; I < Sources.length; I++) {
-        var Source = Sources[I];
-        var CacheFile = `${CacheFolder}/${md5(Source)}.bytes`;
+    const Embeddings = new Float32Array(Dimensions * Sources.length);
+    const Requests: number[] = [];
+    for (let I = 0; I < Sources.length; I++) {
+        const Source = Sources[I];
+        const CacheFile = `${CacheFolder}/${md5(Source)}.bytes`;
         if (File.existsSync(CacheFile)) {
-            var Buffer = File.readFileSync(CacheFile);
-            var Embedding = new Float32Array(Buffer.buffer, Buffer.byteOffset, Buffer.byteLength / 4);
+            const Buffer = File.readFileSync(CacheFile);
+            const Embedding = new Float32Array(Buffer.buffer, Buffer.byteOffset, Buffer.byteLength / 4);
             Embeddings.set(Embedding, Dimensions * I);
         } else {
             Requests.push(I);
         }
     }
     // Request the online embeddings
-    var BatchSize = 50;
-    for (var I = 0; I < Requests.length; I += BatchSize) {
-        var Retry = 0;
-        while (true) {
+    const BatchSize = 50;
+    for (let I = 0; I < Requests.length; I += BatchSize) {
+        let Retry = 0;
+        while (Retry < 10) {
             try {
-                var Results = await Model.embedDocuments(Requests.slice(I, I + BatchSize).map((Index) => Sources[Index]));
-                for (var J = 0; J < Results.length; J++) {
-                    var Index = Requests[I + J];
-                    var Embedding = new Float32Array(Results[J]);
+                const Results = await Model.embedDocuments(Requests.slice(I, I + BatchSize).map((Index) => Sources[Index]));
+                for (let J = 0; J < Results.length; J++) {
+                    const Index = Requests[I + J];
+                    const Embedding = new Float32Array(Results[J]);
                     // Check if all elements are 0
-                    if (Embedding.every((Value) => Value == 0)) throw new Error(`Invalid embedding for: ${Sources[Index]}`);
+                    if (Embedding.every((Value) => Value === 0)) {
+                        throw new Error(`Invalid embedding for: ${Sources[Index]}`);
+                    }
                     Embeddings.set(Embedding, Dimensions * Index);
-                    var CacheFile = `${CacheFolder}/${md5(Sources[Index])}.bytes`;
+                    const CacheFile = `${CacheFolder}/${md5(Sources[Index])}.bytes`;
                     File.writeFileSync(CacheFile, Embedding);
                 }
                 break;
             } catch (Error) {
-                if (Retry >= 10) throw Error;
+                if (Retry >= 10) {
+                    throw Error;
+                }
                 console.error(Error);
                 // Wait for 6-60 seconds
-                await new Promise((Resolve) => setTimeout(Resolve, (Retry + 1) * 6000));
+                await sleep((Retry + 1) * 6000);
                 Retry++;
             }
         }
@@ -125,23 +132,22 @@ export async function RequestEmbeddings(Sources: string[], Cache: string): Promi
 
 /** RequestEmbeddingWithCache: Call the model to generate a text embedding with cache. */
 export async function RequestEmbeddingWithCache(Source: string, Cache: string): Promise<Float32Array> {
-    var CacheFolder = `known/embeddings/${Cache}/${EmbeddingName}`;
+    const CacheFolder = `known/embeddings/${Cache}/${EmbeddingName}`;
     EnsureFolder(CacheFolder);
     // Check if the cache exists
-    var CacheFile = `${CacheFolder}/${md5(Source)}.bytes`;
+    const CacheFile = `${CacheFolder}/${md5(Source)}.bytes`;
     if (File.existsSync(CacheFile)) {
-        var Buffer = File.readFileSync(CacheFile);
+        const Buffer = File.readFileSync(CacheFile);
         return new Float32Array(Buffer.buffer, Buffer.byteOffset, Buffer.byteLength / 4);
-    } else {
-        var Result = Float32Array.from(await RequestEmbedding(Source));
-        File.writeFileSync(CacheFile, Result);
-        return Result;
     }
+    const Result = Float32Array.from(await RequestEmbedding(Source));
+    File.writeFileSync(CacheFile, Result);
+    return Result;
 }
 
 /** RequestEmbedding: Call the model to generate a text embedding. */
 export async function RequestEmbedding(Source: string): Promise<number[]> {
-    var Result = await Model.embedDocuments([Source]);
+    const Result = await Model.embedDocuments([Source]);
     return Result[0];
 }
 
@@ -165,8 +171,10 @@ export async function ClusterCodes(
         Codes.map((Code) => ({
             Label: Code.Label,
             Examples: Code.Examples?.map((Example) => {
-                var Index = Example.indexOf("|||");
-                if (Index == -1) return Example;
+                const Index = Example.indexOf("|||");
+                if (Index === -1) {
+                    return Example;
+                }
                 return Example.substring(0, Index);
             }),
         })),
@@ -203,12 +211,14 @@ export async function ClusterTexts(
         Examples?: string[];
     }[],
     Cache: string,
-    Method: string = "hdbscan",
+    Method = "hdbscan",
     ...ExtraOptions: string[]
 ): Promise<Record<number, ClusterItem[]>> {
-    console.log(chalk.gray("Requesting embeddings for: " + Sources.length));
-    if (Sources.length == 0) return {};
-    var Embeddings = await RequestEmbeddings(Sources, Cache);
+    console.log(chalk.gray(`Requesting embeddings for: ${Sources.length}`));
+    if (Sources.length === 0) {
+        return {};
+    }
+    const Embeddings = await RequestEmbeddings(Sources, Cache);
     return await ClusterEmbeddings(Embeddings, Names, Method, ...ExtraOptions);
 }
 
@@ -222,32 +232,34 @@ export async function ClusterEmbeddings(
         Label: string;
         Examples?: string[];
     }[],
-    Method: string = "hdbscan",
+    Method = "hdbscan",
     ...ExtraOptions: string[]
 ): Promise<Record<number, ClusterItem[]>> {
-    var Results: Record<number, ClusterItem[]> = {};
+    const Results: Record<number, ClusterItem[]> = {};
     // Write it into ./known/temp.bytes
-    File.writeFileSync(`./known/temp.bytes`, Buffer.from(Embeddings.buffer));
+    File.writeFileSync("./known/temp.bytes", Buffer.from(Embeddings.buffer));
     // File.writeFileSync(`./known/temp.text`, Names.join("\n"));
-    File.writeFileSync(`./known/clustering.temp.json`, JSON.stringify(Names));
+    File.writeFileSync("./known/clustering.temp.json", JSON.stringify(Names));
     // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
     // Run the Python script
     await PythonShell.run(`utils/embeddings/clustering_${Method}.py`, {
         args: [Dimensions.toString(), Names.length.toString(), ...ExtraOptions],
         parser: (Message) => {
             if (Message.startsWith("[")) {
-                var Data = JSON.parse(Message) as number[][];
-                var Clusters = Data[0];
-                var Probabilities = Data[1];
+                const Data = JSON.parse(Message) as number[][];
+                const Clusters = Data[0];
+                const Probabilities = Data[1];
                 // Get unique clusters
-                var UniqueClusters = [...new Set(Clusters)].sort();
-                var NoCluster = 0;
-                for (var Cluster of UniqueClusters) {
+                const UniqueClusters = [...new Set(Clusters)].sort();
+                let NoCluster = 0;
+                for (const Cluster of UniqueClusters) {
                     Results[Cluster] = [];
-                    for (var J = 0; J < Clusters.length; J++) {
-                        if (Clusters[J] == Cluster) {
+                    for (let J = 0; J < Clusters.length; J++) {
+                        if (Clusters[J] === Cluster) {
                             Results[Cluster].push({ ID: J, Probability: Probabilities[J] });
-                            if (Cluster == -1) NoCluster++;
+                            if (Cluster === -1) {
+                                NoCluster++;
+                            }
                         }
                     }
                 }
@@ -258,7 +270,9 @@ export async function ClusterEmbeddings(
                         } items; ${NoCluster} items unclustered.`,
                     ),
                 );
-            } else console.log(chalk.gray(Message));
+            } else {
+                console.log(chalk.gray(Message));
+            }
         },
     });
     return Results;
@@ -271,11 +285,11 @@ export async function EvaluateTexts<T>(
     Owners: number[][],
     OwnerLabels: string[],
     Cache: string,
-    Method: string = "coverage",
+    Method = "coverage",
     ...ExtraOptions: string[]
 ): Promise<T> {
-    console.log(chalk.gray("Requesting embeddings for: " + Sources.length));
-    var Embeddings = await RequestEmbeddings(Sources, Cache);
+    console.log(chalk.gray(`Requesting embeddings for: ${Sources.length}`));
+    const Embeddings = await RequestEmbeddings(Sources, Cache);
     return await EvaluateEmbeddings(Embeddings, Labels, Owners, OwnerLabels, Method, ...ExtraOptions);
 }
 
@@ -288,35 +302,39 @@ export async function EvaluateEmbeddings<T>(
     Labels: string[],
     Owners: number[][],
     OwnerLabels: string[],
-    Method: string = "coverage",
+    Method = "coverage",
     ...ExtraOptions: string[]
 ): Promise<T> {
-    var Results: T | undefined;
+    let Results: T | undefined;
     // Write it into ./known/temp.bytes
-    File.writeFileSync(`./known/temp.bytes`, Buffer.from(Embeddings.buffer));
+    File.writeFileSync("./known/temp.bytes", Buffer.from(Embeddings.buffer));
     // var TextData = Labels.map((Label, Index) => `${Owners[Index].join(",")}|${Label}`);
-    var TextData = Labels.map((Label, Index) => ({
+    const TextData = Labels.map((Label, Index) => ({
         Label,
         Owners: Owners[Index],
     }));
     // File.writeFileSync(`./known/temp.text`, OwnerLabels.concat(TextData).join("\n"));
     File.writeFileSync(
-        `./known/evaluation.temp.json`,
+        "./known/evaluation.temp.json",
         JSON.stringify({
             OwnerLabels,
             Labels: TextData,
         }),
     );
-    console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Labels.length + " embeddings)");
+    console.log(`Embeddings sent: ${Embeddings.buffer.byteLength} (${Labels.length} embeddings)`);
     // Run the Python script
     await PythonShell.run(`utils/embeddings/evaluation_${Method}.py`, {
         args: [Dimensions.toString(), Labels.length.toString(), OwnerLabels.length.toString(), ...ExtraOptions],
         parser: (Message) => {
             if (Message.startsWith("{")) {
                 Results = JSON.parse(Message) as T;
-            } else console.log(chalk.gray(Message));
+            } else {
+                console.log(chalk.gray(Message));
+            }
         },
     });
-    if (!Results) throw new Error("No results returned from the Python script.");
+    if (!Results) {
+        throw new Error("No results returned from the Python script.");
+    }
     return Results;
 }

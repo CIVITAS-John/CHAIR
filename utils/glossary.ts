@@ -7,10 +7,10 @@ import * as Jieba from "nodejs-jieba";
 Jieba.load();
 
 // Read Glossaries
-const Glossaries = File.readFileSync(`./known/glossary.csv`, "utf-8").split("\n");
+const Glossaries = File.readFileSync("./known/glossary.csv", "utf-8").split("\n");
 const GlossaryMap = new Map<string, string>();
 for (const Glossary of Glossaries) {
-    var [Source, Translation] = Glossary.split(",");
+    const [Source, Translation] = Glossary.split(",");
     Jieba.insertWord(Source);
     GlossaryMap.set(Source, Translation.trim());
 }
@@ -25,7 +25,7 @@ export function HandleGlossary(Text: string): string {
 export function Preprocess(Text: string): string {
     // Remove overly repetitive pattern.
     // Otherwise, some AI will complain and refuse to translate.
-    Text = Text.replaceAll(/(.)\1{9,}/g, (Match, Char) => Char.repeat(9));
+    Text = Text.replaceAll(/(.)\1{9,}/g, (_Match, Char: string) => Char.repeat(9));
     // Trim the text's white spaces in each line.
     Text = Text.split("\n")
         .map((Line) => Line.trim())

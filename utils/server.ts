@@ -8,20 +8,22 @@ import { setTimeout } from "timers/promises";
 
 /** CreateServer: Create a local server for interactivity. */
 export function CreateServer<T>(Port: number, BaseDirectories: string[], ...DataFiles: string[]): Promise<T | undefined> {
-    var Shutdown: (Data?: T) => void;
+    let Shutdown: (Data?: T) => void;
     // Create the server
     const Server: http.Server = http.createServer((Request: http.IncomingMessage, Response: http.ServerResponse) => {
-        var Url = Request.url ?? "/";
-        if (Url == "/") Url = "/index.html";
+        let Url = Request.url ?? "/";
+        if (Url === "/") {
+            Url = "/index.html";
+        }
         // Handle dynamic requests
         if (Url.startsWith("/api/report/")) {
             // Read the body
             let Body = "";
-            Request.on("data", (chunk) => {
+            Request.on("data", (chunk: Buffer) => {
                 Body += chunk.toString();
             });
             Request.on("end", () => {
-                let Data = JSON.parse(Body);
+                const Data = JSON.parse(Body) as T;
                 Response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
                 Response.end(JSON.stringify(Data));
                 Shutdown(Data);
@@ -55,12 +57,13 @@ export function CreateServer<T>(Port: number, BaseDirectories: string[], ...Data
                 return;
             }
             // Determine content type by file extension
-            let ext: string = path.extname(FilePath).toLowerCase();
-            let contentType: string = "text/html; charset=utf-8"; // Default content type
+            const ext: string = path.extname(FilePath).toLowerCase();
+            let contentType = "text/html; charset=utf-8"; // Default content type
+            let content = "";
             switch (ext) {
                 case ".js":
                     contentType = "text/javascript; charset=utf-8";
-                    let content = data.toString();
+                    content = data.toString();
                     // Remove all import statements
                     content = HandleScript(content);
                     data = Buffer.from(content);
@@ -88,18 +91,20 @@ export function CreateServer<T>(Port: number, BaseDirectories: string[], ...Data
     };
     // Start the server
     return new Promise<T | undefined>((Resolve, Reject) => {
-        Server.listen(Port, async () => {
-            console.log(`Server running at http://localhost:${Port}/`);
-            console.log("Press Ctrl+C to shut down the server.");
-            // Automatically open the browser when the server starts
-            // Wait for 5 seconds or the browser tab to close
-            // On Windows, the browser tab may close prematurely, so we delay the shutdown
-            await Promise.all([
-                open(`http://localhost:${Port}/`, { wait: true, app: { name: apps.chrome } }),
-                setTimeout(process.platform == "win32" ? 6000000 : 5000),
-            ]);
-            console.log("The browser tab has closed, shutting down the server.");
-            Shutdown();
+        Server.listen(Port, () => {
+            void (async () => {
+                console.log(`Server running at http://localhost:${Port}/`);
+                console.log("Press Ctrl+C to shut down the server.");
+                // Automatically open the browser when the server starts
+                // Wait for 5 seconds or the browser tab to close
+                // On Windows, the browser tab may close prematurely, so we delay the shutdown
+                await Promise.all([
+                    open(`http://localhost:${Port}/`, { wait: true, app: { name: apps.chrome } }),
+                    setTimeout(process.platform === "win32" ? 6000000 : 5000),
+                ]);
+                console.log("The browser tab has closed, shutting down the server.");
+                Shutdown();
+            })();
         });
         // Handle server shutdown
         Shutdown = (Data) => {
@@ -141,21 +146,27 @@ export function CreateOfflineBundle(TargetDirectory: string, BaseDirectories: st
                 CopyFiles(filePath, newDestination);
             } else {
                 const name = path.basename(filePath);
-                if (name.endsWith(".ts")) continue; // Skip TypeScript files
+                if (name.endsWith(".ts")) {
+                    continue;
+                } // Skip TypeScript files
                 if (name.endsWith(".js")) {
                     let content = fs.readFileSync(filePath, "utf8");
                     // Remove all import statements
                     content = HandleScript(content);
                     fs.writeFileSync(path.join(Destination, name), content);
-                } else fs.copyFileSync(filePath, path.join(Destination, name));
+                } else {
+                    fs.copyFileSync(filePath, path.join(Destination, name));
+                }
             }
         }
     };
-    for (const BaseDirectory of BaseDirectories) CopyFiles(BaseDirectory, OfflineBundleDirectory);
+    for (const BaseDirectory of BaseDirectories) {
+        CopyFiles(BaseDirectory, OfflineBundleDirectory);
+    }
     console.log(chalk.blue(`Offline bundle created in: ${OfflineBundleDirectory}.`));
 }
 
 /** HandleScript: Filter a script content to exclude import statements. */
 function HandleScript(Content: string): string {
-    return Content.replaceAll(/^(.*)import(.*?) from ['"]([^\/]*?)['"];?$/gm, "").replaceAll(/^\/\/\# sourceMappingURL(.*)/gm, "");
+    return Content.replaceAll(/^(.*)import(.*?) from ['"]([^/]*?)['"];?$/gm, "").replaceAll(/^\/\/# sourceMappingURL(.*)/gm, "");
 }
