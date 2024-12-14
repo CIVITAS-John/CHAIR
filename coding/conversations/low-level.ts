@@ -63,6 +63,8 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     if (Message.Content == "[Checkin]") Codes = "Checkin";
                     // Remove the () part
                     Codes = Codes.replace(/\(.*?\)/, "").trim();
+                    // Remove the ** part
+                    Codes = Codes.replace(/\*(.*?)\*/, "$1").trim();
                     // Sometimes the LLM will return "tag{number}: {codes}"
                     Codes = Codes.replace(new RegExp(`^${this.TagName}(\d+)\:`), "").trim();
                     // Sometimes the LLM will put the message back

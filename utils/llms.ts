@@ -51,8 +51,13 @@ export function InitializeLLM(LLM: string) {
     if (LLM.indexOf("_")) RealLLM = LLM.split("_")[0];
     // ollama Support
     var LocalModel = false;
-    if (LLM.startsWith("o:")) {
+    if (LLM.startsWith("o_")) {
         var Ollama = LLM.substring(2);
+        if (Ollama.indexOf("_") != -1) {
+            var Split = Ollama.split("_");
+            RealLLM = Split[0];
+            Ollama = `${Split[0]}:${Split.slice(1).join("_")}`;
+        } else RealLLM = Ollama;
         Model = (Temp) =>
             new ChatOllama({
                 temperature: Temp,
@@ -61,9 +66,6 @@ export function InitializeLLM(LLM: string) {
                 baseUrl: process.env.OLLAMA_URL
             });
         LocalModel = true;
-        RealLLM = Ollama;
-        if (RealLLM.indexOf(":") != -1)
-            RealLLM = Ollama.split(":")[0];
     }
     // Initialize the LLM
     switch (RealLLM) {
@@ -347,7 +349,6 @@ export function PromiseWithTimeout<T>(promise: Promise<T>, time: number, timeout
 
 /** EnsureFolder: Ensure that a folder exists. */
 export function EnsureFolder(Folder: string) {
-    Folder = Folder.replaceAll(":", "_");
     if (!File.existsSync(Folder)) File.mkdirSync(Folder, { recursive: true });
     return Folder;
 }
