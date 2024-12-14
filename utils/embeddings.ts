@@ -88,8 +88,8 @@ export async function RequestEmbeddings(Sources: string[], Cache: string): Promi
         var CacheFile = `${CacheFolder}/${md5(Source)}.bytes`;
         if (File.existsSync(CacheFile)) {
             var Buffer = File.readFileSync(CacheFile);
-            var Embedding = new Float32Array(Buffer.buffer, Buffer.byteOffset, Buffer.byteLength / 4);
-            Embeddings.set(Embedding, Dimensions * I);
+            var Cached = new Float32Array(Buffer.buffer, Buffer.byteOffset, Buffer.byteLength / 4);
+            Embeddings.set(Cached, Dimensions * I);
         } else {
             Requests.push(I);
         }

@@ -9,20 +9,20 @@ import { NetworkEvaluator } from "../evaluating/network-evaluator.js";
 
 // An example configuration
 var Configuration = {
-    Dataset: "data",
-    EmbeddingModel: "openai-small-512",
+    Dataset: "Coded Dataset 1",
+    EmbeddingModel: "gecko-768-similarity",
     Steps: [
         {
             Action: "Code",
             Analyzers: ["low-level-5"],
-            Models: ["gpt-4.5-omni", "gpt-4.5-mini"],
+            Models: ["o:gemma2:27b-instruct-q5_K_M"],
         },
         {
             Action: "Evaluate",
             Name: "evaluation",
             Analyzers: ["low-level-5"],
-            Models: ["gpt-4.5-omni", "gpt-4.5-mini"],
-            Evaluators: ["gpt-4.5-omni"],
+            Models: ["o:gemma2:27b-instruct-q5_K_M"],
+            Evaluators: ["o:gemma2:27b-instruct-q5_K_M"],
         },
     ],
 };
