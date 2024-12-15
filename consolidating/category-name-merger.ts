@@ -1,5 +1,5 @@
 import { ClusterCategories } from "../utils/embeddings.js";
-import { Codebook, Code, GetCategories } from "../utils/schema.js";
+import { Code, Codebook, GetCategories } from "../utils/schema.js";
 import { MergeCategoriesByCluster } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
 
@@ -24,12 +24,14 @@ export class CategoryNameMerger extends CodeConsolidator {
     }
     /** Preprocess: Preprocess the subunits before chunking. */
     public async Preprocess(Codebook: Codebook, Codes: Code[]): Promise<Code[]> {
-        if (Codes.length == 0) return [];
+        if (Codes.length === 0) {
+            return [];
+        }
         // Collect the existing categories from the codebook
-        var Frequencies = GetCategories(Codebook);
-        var Categories = Object.keys(Frequencies);
+        const Frequencies = GetCategories(Codebook);
+        const Categories = Object.keys(Frequencies);
         // Cluster categories using text embeddings
-        var Clusters = await ClusterCategories(
+        const Clusters = await ClusterCategories(
             Categories,
             Frequencies,
             "consolidated",

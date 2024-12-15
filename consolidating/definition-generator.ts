@@ -1,5 +1,5 @@
 import { ResearchQuestion } from "../constants.js";
-import { Codebook, Code } from "../utils/schema.js";
+import { Code, Codebook } from "../utils/schema.js";
 import { UpdateCodes } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
 
@@ -11,19 +11,22 @@ export abstract class DefinitionParser extends CodeConsolidator {
         this.Chunkified = true;
     }
     /** ParseResponse: Parse the response for the code consolidator. */
-    public async ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]) {
-        var Pendings: Code[] = [];
-        var CurrentCode: Code | undefined;
-        var Status = "";
+    public ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]) {
+        const Pendings: Code[] = [];
+        let CurrentCode: Code | undefined;
+        let Status = "";
         // Parse the definitions
-        for (var I = 0; I < Lines.length; I++) {
-            var Line = Lines[I];
-            if (Line == "" || Line.startsWith("---")) continue;
+        for (let Line of Lines) {
+            if (Line === "" || Line.startsWith("---")) {
+                continue;
+            }
             // Sometimes, LLMs will do **(...)** for anything. We need to remove that.
             Line = Line.replace(/\*\*/g, "");
             // If we see "...", that means later codes are not processed and should be truncated
-            if (Line == "...") break;
-            var Match = Line.match(/^(\d+)\./);
+            if (Line === "...") {
+                break;
+            }
+            const Match = /^(\d+)\./.exec(Line);
             if (Match) {
                 Line = Line.substring(Match[0].length).trim();
                 // Sometimes, the label is merged with the number
@@ -38,44 +41,60 @@ export abstract class DefinitionParser extends CodeConsolidator {
                 CurrentCode.Label = Line.substring(7).trim().toLowerCase();
                 Status = "Label";
             } else if (Line.startsWith("Criteria:") && CurrentCode) {
-                var Definition = Line.substring(9).trim();
-                if (Definition !== "") CurrentCode.Definitions = [Definition];
+                const Definition = Line.substring(9).trim();
+                if (Definition !== "") {
+                    CurrentCode.Definitions = [Definition];
+                }
                 Status = "Criteria";
             } else if (Line.startsWith("Category:") && CurrentCode) {
-                var Category = Line.substring(9).trim();
-                if (Category !== "") CurrentCode.Categories = [Category.toLowerCase()];
+                const Category = Line.substring(9).trim();
+                if (Category !== "") {
+                    CurrentCode.Categories = [Category.toLowerCase()];
+                }
                 Status = "Category";
-            } else if (Status == "Label") {
-                CurrentCode!.Label = `${CurrentCode!.Label}\n${Line}`.trim();
-            } else if (Status == "Criteria") {
-                CurrentCode!.Definitions!.push(Line.trim());
-            } else if (Status == "Theme") {
+            } else if (Status === "Label" && CurrentCode) {
+                CurrentCode.Label = `${CurrentCode.Label}\n${Line}`.trim();
+            } else if (Status === "Criteria" && CurrentCode) {
+                CurrentCode.Definitions?.push(Line.trim());
+            } else if (Status === "Theme" && CurrentCode) {
                 // Sometimes, the theme ends with a "."
-                if (Line.endsWith(".")) Line = Line.substring(0, Line.length - 1).trim();
-                CurrentCode!.Categories!.push(Line.trim());
+                if (Line.endsWith(".")) {
+                    Line = Line.substring(0, Line.length - 1).trim();
+                }
+                CurrentCode.Categories?.push(Line.trim());
             }
         }
         // Check if we have all the codes and avoid mismatches
-        for (var I = 0; I < Pendings.length; I++) {
-            var NewCode = Pendings[I];
+        for (let I = 0; I < Pendings.length; I++) {
+            const NewCode = Pendings[I];
             // Sometimes, the new label starts with "label:"
-            if (NewCode.Label.startsWith("label:")) NewCode.Label = NewCode.Label.substring(6).trim();
+            if (NewCode.Label.startsWith("label:")) {
+                NewCode.Label = NewCode.Label.substring(6).trim();
+            }
             // Sometimes, the new label starts with "phrase:"
-            if (NewCode.Label.startsWith("phrase:")) NewCode.Label = NewCode.Label.substring(7).trim();
+            if (NewCode.Label.startsWith("phrase:")) {
+                NewCode.Label = NewCode.Label.substring(7).trim();
+            }
             // Sometimes, the new label is wrapped in ""
-            if (NewCode.Label.startsWith('"') && NewCode.Label.endsWith('"')) NewCode.Label = NewCode.Label.substring(1, NewCode.Label.length - 1);
+            if (NewCode.Label.startsWith('"') && NewCode.Label.endsWith('"')) {
+                NewCode.Label = NewCode.Label.substring(1, NewCode.Label.length - 1);
+            }
             // Sometimes, the new label ends with "."
-            if (NewCode.Label.endsWith(".")) NewCode.Label = NewCode.Label.substring(0, NewCode.Label.length - 1).trim();
+            if (NewCode.Label.endsWith(".")) {
+                NewCode.Label = NewCode.Label.substring(0, NewCode.Label.length - 1).trim();
+            }
             // Sometimes, the order of labels is wrong (! found for gpt-3.5-turbo)
-            var Found = Codes.findIndex((Code) => Code.Label == NewCode.Label);
-            if (Found != -1 && Found !== I) throw new Error(`Invalid response: code ${NewCode.Label}'s mapping order is wrong.`);
+            const Found = Codes.findIndex((Code) => Code.Label === NewCode.Label);
+            if (Found !== -1 && Found !== I) {
+                throw new Error(`Invalid response: code ${NewCode.Label}'s mapping order is wrong.`);
+            }
         }
         // Update the codes
         UpdateCodes(Codebook, Pendings, Codes);
         // Remove temp labels
         Codes.forEach((Code) => delete Code.OldLabels);
         // Return the cursor movement
-        return Object.keys(Pendings).length - Codes.length;
+        return Promise.resolve(Object.keys(Pendings).length - Codes.length);
     }
 }
 
@@ -84,12 +103,12 @@ export class DefinitionGenerator extends DefinitionParser {
     /** SubunitFilter: Filter the subunits before chunking. */
     public SubunitFilter(Code: Code): boolean {
         // Only when the code has no definitions should we generate them
-        return super.SubunitFilter(Code) && (Code.Definitions?.length ?? 0) == 0;
+        return super.SubunitFilter(Code) && (Code.Definitions?.length ?? 0) === 0;
     }
     /** BuildPrompts: Build the prompts for the code consolidator. */
-    public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
+    public BuildPrompts(_Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
         // Generate definitions for codes
-        return [
+        return Promise.resolve([
             `
 You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
 Consider provided quotes, and note that each quote is independent of others.
@@ -116,24 +135,25 @@ ${TakeExamples(Code.Examples ?? [], 5)
     .map((Example) => `- ${Example}`)
     .join("\n")}`.trim(),
             ).join("\n\n"),
-        ];
+        ]);
     }
 }
 
 /** TakeExamples: Take some best unique examples from a set. */
 // Here, best is defined as the longest * most frequent unique quotes.
-export function TakeExamples(Examples: string[], Take: number = 1000000): string[] {
-    var ExampleMap = new Map<string, number>();
-    for (var Example of Examples) {
-        var Index = Example.indexOf("|||");
-        if (Index != -1) Example = Example.substring(Index + 3);
-        if (!ExampleMap.has(Example)) ExampleMap.set(Example, 0);
-        ExampleMap.set(Example, ExampleMap.get(Example)! + 1);
+export function TakeExamples(Examples: string[], Take = 1000000): string[] {
+    const ExampleMap = new Map<string, number>();
+    for (let Example of Examples) {
+        const Index = Example.indexOf("|||");
+        if (Index !== -1) {
+            Example = Example.substring(Index + 3);
+        }
+        ExampleMap.set(Example, (ExampleMap.get(Example) ?? 0) + 1);
     }
-    for (var [Example, Count] of ExampleMap) {
+    for (const [Example, Count] of ExampleMap) {
         ExampleMap.set(Example, Count * Example.length);
     }
     return Array.from(ExampleMap.keys())
-        .sort((A, B) => ExampleMap.get(B)! - ExampleMap.get(A)!)
+        .sort((A, B) => (ExampleMap.get(B) ?? 0) - (ExampleMap.get(A) ?? 0))
         .slice(0, Take);
 }

@@ -1,6 +1,6 @@
 import { ResearchQuestion } from "../constants.js";
 import { ClusterCodes } from "../utils/embeddings.js";
-import { Codebook, Code } from "../utils/schema.js";
+import { Code, Codebook } from "../utils/schema.js";
 import { MergeCodesByCluster } from "./codebooks.js";
 import { DefinitionParser } from "./definition-generator.js";
 
@@ -41,39 +41,54 @@ export class RefineMerger extends DefinitionParser {
         return `${super.GetName()} (Maximum ${this.Maximum}, Minimum ${this.Minimum}, Definition ${this.UseDefinition})`;
     }
     /** Preprocess: Preprocess the subunits before filtering and chunking. */
-    public async Preprocess(Codebook: Codebook, Codes: Code[]) {
-        var Length = Codes.length;
+    public async Preprocess(_Codebook: Codebook, Codes: Code[]) {
+        const Length = Codes.length;
         // Cluster codes using text embeddings
         // Only when the code has more than one definition should we merge them
         Codes = Codes.filter((Code) => (this.UseDefinition ? (Code.Definitions?.length ?? 0) > 0 : true));
-        if (Codes.length == 0) return {};
+        if (Codes.length === 0) {
+            return {};
+        }
         // Combine each code into a string for clustering
-        var CodeStrings = Codes.map((Code) => {
+        const CodeStrings = Codes.map((Code) => {
             if (this.UseDefinition) {
-                var Text = `Label: ${Code.Label}`;
-                if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
+                let Text = `Label: ${Code.Label}`;
+                if (Code.Definitions && Code.Definitions.length > 0) {
+                    Text += `\nDefinition: ${Code.Definitions[0]}`;
+                }
                 // if ((Code.Alternatives?.length ?? 0) > 0) Text += `\nAlternatives: ${Code.Alternatives!.join(", ")}`;
                 return Text.trim();
-            } else return Code.Label;
+            }
+            return Code.Label;
         });
         // Categorize the strings
-        var Clusters = await ClusterCodes(CodeStrings, Codes, "consolidator", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString());
+        const Clusters = await ClusterCodes(
+            CodeStrings,
+            Codes,
+            "consolidator",
+            "euclidean",
+            "ward",
+            this.Maximum.toString(),
+            this.Minimum.toString(),
+        );
         // Merge the codes
-        var Result = MergeCodesByCluster(Clusters, Codes);
+        const Result = MergeCodesByCluster(Clusters, Codes);
         // Check if we should stop - when nothing is merged
-        this.Stopping = Object.keys(Result).length == Length;
+        this.Stopping = Object.keys(Result).length === Length;
         return Result;
     }
     /** SubunitFilter: Filter the subunits before chunking. */
     public SubunitFilter(Code: Code): boolean {
         // Only when the code has multiple definitions should we refine them
-        if (this.UseDefinition) return super.SubunitFilter(Code) && (Code.Definitions?.length ?? 0) > 1;
-        else return super.SubunitFilter(Code) && (Code.OldLabels?.length ?? 0) > 0;
+        if (this.UseDefinition) {
+            return super.SubunitFilter(Code) && (Code.Definitions?.length ?? 0) > 1;
+        }
+        return super.SubunitFilter(Code) && (Code.OldLabels?.length ?? 0) > 0;
     }
     /** BuildPrompts: Build the prompts for the code consolidator. */
     // In this case, we do not really use the LLM, so we just merge the codes
-    public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
-        return [
+    public BuildPrompts(_Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
+        return Promise.resolve([
             `
 You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
 Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
@@ -99,9 +114,9 @@ ${this.UseVerbPhrases ? "Phrase" : "Label"}: {The most representative ${this.Use
             Codes.map((Code, Index) =>
                 `
 ${Index + 1}.
-Concepts: ${[Code.Label, ...(Code.OldLabels ?? [])].join(", ") ?? ""}
+Concepts: ${[Code.Label, ...(Code.OldLabels ?? [])].join(", ")}
 ${Code.Definitions?.map((Definition) => `- ${Definition}`).join("\n")}`.trim(),
             ).join("\n\n"),
-        ];
+        ]);
     }
 }

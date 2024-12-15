@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { ResearchQuestion } from "../constants.js";
 import { ClusterCategories } from "../utils/embeddings.js";
-import { Codebook, Code, GetCategories } from "../utils/schema.js";
+import { Code, Codebook, GetCategories } from "../utils/schema.js";
 import { MergeCategoriesByCluster, UpdateCategories } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
 
@@ -30,11 +30,11 @@ export class CategoryMerger extends CodeConsolidator {
     /** Preprocess: Preprocess the subunits before chunking. */
     public async Preprocess(Codebook: Codebook, Codes: Code[]): Promise<Code[]> {
         // Collect the existing categories from the codebook
-        var Frequencies = GetCategories(Codebook);
-        var Categories = Object.keys(Frequencies);
+        const Frequencies = GetCategories(Codebook);
+        const Categories = Object.keys(Frequencies);
         // Map the categories to strings
-        var CategoryStrings = Categories.map((Category) => {
-            var Text = `Category: ${Category}
+        const CategoryStrings = Categories.map((Category) => {
+            const Text = `Category: ${Category}
 Items:
 ${Codes.filter((Code) => Code.Categories?.includes(Category))
     .map((Code) => `- ${Code.Label}`)
@@ -44,7 +44,7 @@ ${Codes.filter((Code) => Code.Categories?.includes(Category))
             return Text.trim();
         });
         // Cluster categories using text embeddings
-        var Clusters = await ClusterCategories(
+        const Clusters = await ClusterCategories(
             CategoryStrings,
             Frequencies,
             "consolidated",
@@ -56,15 +56,15 @@ ${Codes.filter((Code) => Code.Categories?.includes(Category))
         this.OldCategories = Categories;
         this.NewCategories = MergeCategoriesByCluster(Clusters, Categories, Codes);
         // Check if we should stop - when nothing is merged
-        this.Stopping = Object.keys(this.NewCategories).length == 0;
+        this.Stopping = Object.keys(this.NewCategories).length === 0;
         return Codes;
     }
     /** BuildPrompts: Build the prompts for the code consolidator. */
     // In this case, we do not really use the LLM, so we just merge the codes
-    public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
-        var Count = Object.keys(this.NewCategories).length;
+    public BuildPrompts(_Codebook: Codebook, _Codes: Code[]): Promise<[string, string]> {
+        const Count = Object.keys(this.NewCategories).length;
         // Ask LLMs to write new names for each category
-        return [
+        return Promise.resolve([
             `
 You are an expert in thematic analysis. You are assigning names for categories based on the merging results.
 Make sure those merged names are concise, accurate, and related to the research question. Use 2-4 words and avoid over-generalization.
@@ -76,39 +76,42 @@ Names for each category (${Count} in total):
 ...
 ${Count}. {2-4 words for category ${Count}}
 ---`.trim(),
-            "Merge results:\n" +
-                Object.keys(this.NewCategories)
-                    .map(
-                        (Category, Index) =>
-                            `${Index + 1}.\n${Category.split("|")
-                                .map((Current) => `- ${Current}`)
-                                .join("\n")}`,
-                    )
-                    .join("\n\n"),
-        ];
+            `Merge results:\n${Object.keys(this.NewCategories)
+                .map(
+                    (Category, Index) =>
+                        `${Index + 1}.\n${Category.split("|")
+                            .map((Current) => `- ${Current}`)
+                            .join("\n")}`,
+                )
+                .join("\n\n")}`,
+        ]);
     }
     /** ParseResponse: Parse the response for the code consolidator. */
-    public async ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]) {
-        var Results: string[] = [];
+    public ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]) {
+        const Results: string[] = [];
         // Parse the categories
-        for (var I = 0; I < Lines.length; I++) {
-            var Line = Lines[I];
-            if (Line == "" || Line.startsWith("---")) continue;
-            var Match = Line.match(/^(\d+)\./);
+        for (const Line of Lines) {
+            if (Line === "" || Line.startsWith("---")) {
+                continue;
+            }
+            const Match = /^(\d+)\./.exec(Line);
             if (Match) {
-                var Category = Line.substring(Match[0].length).trim().toLowerCase();
+                const Category = Line.substring(Match[0].length).trim().toLowerCase();
                 Results.push(Category);
             }
         }
         // Update the categories
-        if (Results.length != Object.keys(this.NewCategories).length)
+        if (Results.length !== Object.keys(this.NewCategories).length) {
             throw new Error(`Invalid response: ${Results.length} results for ${this.OldCategories.length} categories.`);
+        }
         UpdateCategories(Object.keys(this.NewCategories), Results, Codes);
         // Check if we are done
-        var OldLength = this.OldCategories.length;
-        var NewLength = GetCategories(Codebook).size;
-        if (OldLength == NewLength) this.Stopping = true;
+        const OldLength = this.OldCategories.length;
+        const NewLength = GetCategories(Codebook).size;
+        if (OldLength === NewLength) {
+            this.Stopping = true;
+        }
         console.log(chalk.green(`Statistics: Categories merged from ${OldLength} to ${NewLength}`));
-        return 0;
+        return Promise.resolve(0);
     }
 }

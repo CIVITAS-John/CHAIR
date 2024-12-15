@@ -1,4 +1,4 @@
-import { UseLLMs, LLMName } from "../utils/llms.js";
+import { UseLLMs } from "../utils/llms.js";
 import { ConsolidateChunks } from "./codebooks.js";
 import { InitializeEmbeddings } from "../utils/embeddings.js";
 import { PipelineConsolidator } from "./consolidator.js";
@@ -8,8 +8,8 @@ import { SimpleMerger } from "./simple-merger.js";
 
 await UseLLMs(async () => {
     InitializeEmbeddings("gecko-768-similarity");
-    var Humans = ["Lexie", "Lily", "John"];
-    for (var Human of Humans) {
+    const Humans = ["Lexie", "Lily", "John"];
+    for (const Human of Humans) {
         await ConsolidateChunks(
             new PipelineConsolidator(
                 // Merge very similar names

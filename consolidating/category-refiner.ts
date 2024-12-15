@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import { ResearchQuestion } from "../constants.js";
-import { Codebook, Code, GetCategories } from "../utils/schema.js";
+import { Code, Codebook, GetCategories } from "../utils/schema.js";
 import { UpdateCategoriesByMap } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
 
@@ -17,13 +17,13 @@ export class CategoryRefiner extends CodeConsolidator {
     private NewCategories: Record<string, string[]> = {};
     /** BuildPrompts: Build the prompts for the code consolidator. */
     // In this case, we do not really use the LLM, so we just merge the codes
-    public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
-        var Frequencies = GetCategories(Codebook);
-        var Categories = Object.keys(Frequencies);
+    public BuildPrompts(Codebook: Codebook, _Codes: Code[]): Promise<[string, string]> {
+        const Frequencies = GetCategories(Codebook);
+        const Categories = Object.keys(Frequencies);
         // We have too many categories. Filter ones with more than 1 instances.
         // Categories = Categories.filter(Category => Codes.filter(Code => Code.Categories?.includes(Category)).length > 1).sort();
         console.log(`Statistics: categories to merge: ${Categories.length}`);
-        return [
+        return Promise.resolve([
             `
 You are an expert in thematic analysis.
 You will identify input categories that can be merged into another. Find as many as possible. Prioritize merging smaller categories. Avoid creating huge categories. Names of new categories must concisely cover the aspects and stay in the research context.
@@ -61,50 +61,60 @@ Improve the draft plan into the final merging plan in the next section, followin
 ${Categories.map((Category, Index) => `${Index + 1}. ${Category}. Codes:
 ${Codes.filter(Code => Code.Categories?.includes(Category)).map(Code => `* ${Code.Label}`).join("\n")}
 `.trim()).join("\n")}*/
-            `${Categories.map((Category, Index) => `${Index + 1}. ${Category} (${Frequencies.get(Category)} codes)`).join("\n")}
+            `${Categories.map((Category, Index) => `${Index + 1}. ${Category} (${Frequencies.get(Category)?.length} codes)`).join("\n")}
         `.trim(),
-        ];
+        ]);
     }
     /** ParseResponse: Parse the response for the code consolidator. */
-    public async ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]) {
-        var Started = false;
-        var Mappings = new Map<string, string>();
-        var OldCategories: string[] = [];
-        var OldLength = GetCategories(Codebook).size;
+    public ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]) {
+        let Started = false;
+        const Mappings = new Map<string, string>();
+        let OldCategories: string[] = [];
+        const OldLength = GetCategories(Codebook).size;
         // Parse the categories
-        for (var I = 0; I < Lines.length; I++) {
-            var Line = Lines[I];
-            if (Line == "" || Line.startsWith("---")) continue;
+        for (const Line of Lines) {
+            if (Line === "" || Line.startsWith("---")) {
+                continue;
+            }
             // Start parsing when we see the final merging
-            if (Line.toLowerCase() == "# draft merging") Started = true;
-            else if (Line.toLowerCase() == "# final merging") {
+            if (Line.toLowerCase() === "# draft merging") {
+                Started = true;
+            } else if (Line.toLowerCase() === "# final merging") {
                 Started = true;
                 Mappings.clear();
-            } else if (!Started) continue;
+            } else if (!Started) {
+                continue;
+            }
             // Parse the merging destination
-            var Towards = Line.match(/^\=\> (.*)/);
+            const Towards = /^=> (.*)/.exec(Line);
             if (Towards) {
-                var Target = Towards[1].trim().toLowerCase();
+                let Target = Towards[1].trim().toLowerCase();
                 // Sometimes, the LLM will return "{category} (10 codes)"
-                if (Target.includes("(")) Target = Target.substring(0, Target.indexOf("(")).trim();
+                if (Target.includes("(")) {
+                    Target = Target.substring(0, Target.indexOf("(")).trim();
+                }
                 OldCategories.forEach((Category) => Mappings.set(Category, Target));
                 OldCategories = [];
             }
             // Parse the merging source
-            var Item = Line.match(/^\* (.*)/);
+            const Item = /^\* (.*)/.exec(Line);
             if (Item) {
-                var Source = Item[1].trim().toLowerCase();
+                let Source = Item[1].trim().toLowerCase();
                 // Sometimes, the LLM will return "{category} (10 codes)"
-                if (Source.includes("(")) Target = Source.substring(0, Source.indexOf("(")).trim();
-                OldCategories.push(Item[1].trim().toLowerCase());
+                if (Source.includes("(")) {
+                    Source = Source.substring(0, Source.indexOf("(")).trim();
+                }
+                OldCategories.push(Source);
             }
         }
         // Update the categories
-        if (Mappings.size == 0) throw new Error("No categories are merged.");
+        if (Mappings.size === 0) {
+            throw new Error("No categories are merged.");
+        }
         UpdateCategoriesByMap(Mappings, Codes);
         // Write the logs
-        var NewLength = GetCategories(Codebook).size;
+        const NewLength = GetCategories(Codebook).size;
         console.log(chalk.green(`Statistics: Categories merged from ${OldLength} to ${NewLength}`));
-        return 0;
+        return Promise.resolve(0);
     }
 }
