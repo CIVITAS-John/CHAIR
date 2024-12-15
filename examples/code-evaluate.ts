@@ -15,14 +15,14 @@ var Configuration = {
         {
             Action: "Code",
             Analyzers: ["low-level-5"],
-            Models: ["o:gemma2:27b-instruct-q5_K_M"],
+            Models: ["o_gemma2_27b-instruct-q5_K_M", "o_mistral-small_22b-instruct-2409-q5_K_M", "gpt-4.5-omni"],
         },
         {
             Action: "Evaluate",
             Name: "evaluation",
             Analyzers: ["low-level-5"],
-            Models: ["o:gemma2:27b-instruct-q5_K_M"],
-            Evaluators: ["o:gemma2:27b-instruct-q5_K_M"],
+            Models: ["o_gemma2_27b-instruct-q5_K_M", "o_mistral-small_22b-instruct-2409-q5_K_M", "gpt-4.5-omni"],
+            Evaluators: ["gpt-4.5-omni"],
         },
     ],
 };

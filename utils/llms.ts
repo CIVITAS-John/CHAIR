@@ -321,7 +321,7 @@ export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, 
                     .then((Result) => {
                         Text = Result.content as string;
                     }),
-                LLMName.startsWith("o:") ? 3000000 : 300000,
+                LLMName.startsWith("o_") ? 3600000 : 300000,
             );
             console.log(chalk.cyan(`LLM Result: \n${Text}`));
         }
