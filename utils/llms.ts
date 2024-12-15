@@ -46,9 +46,7 @@ export function InitializeLLM(LLM: string) {
     ExpectedItems = 0;
     FinishedItems = 0;
     // Handle the multiple experiments
-    if (LLM.endsWith("_0")) LLM = LLM.substring(0, LLM.length - 2);
     var RealLLM = LLM;
-    if (LLM.indexOf("_")) RealLLM = LLM.split("_")[0];
     // ollama Support
     var LocalModel = false;
     if (LLM.startsWith("o_")) {
@@ -66,6 +64,9 @@ export function InitializeLLM(LLM: string) {
                 baseUrl: process.env.OLLAMA_URL
             });
         LocalModel = true;
+    } else {
+        if (LLM.endsWith("_0")) LLM = LLM.substring(0, LLM.length - 2);
+        if (LLM.indexOf("_")) RealLLM = LLM.split("_")[0];
     }
     // Initialize the LLM
     switch (RealLLM) {
@@ -238,16 +239,24 @@ export function InitializeLLM(LLM: string) {
             if (!LocalModel) throw new Error(`LLM ${LLM} is local only through ollama.`);
             break;
         case "mistral-small":
+            // Assuming 22b
             MaxInput = 64000;
             MaxOutput = 64000;
             MaxItems = 32;
+            if (!LocalModel) throw new Error(`LLM ${LLM} is local only through ollama.`);
+            break;
+        case "qwen-2.5":
+            // Assuming 14b (32b takes a bit too much vrams)
+            MaxInput = 8192;
+            MaxOutput = 8192;
+            MaxItems = 16;
             if (!LocalModel) throw new Error(`LLM ${LLM} is local only through ollama.`);
             break;
         case "mistral-nemo":
             // It claims to support 128k, but I don't think it would work well with that large window.
             MaxInput = 8192;
             MaxOutput = 8192;
-            MaxItems = 8;
+            MaxItems = 16;
             if (!LocalModel) throw new Error(`LLM ${LLM} is local only through ollama.`);
             break;
         default:
