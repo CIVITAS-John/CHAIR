@@ -1,21 +1,28 @@
-import { LLMName, UseLLMs } from "../../../utils/llms.js";
+import { UseLLMs } from "../../../utils/llms.js";
 import { ProcessDataset } from "../../../analyzer.js";
 
 // This code replicates our study for CHI 2025 regarding resampling the same model for multiple times.
 // Running it requires access to OpenAI, Groq, Claude, and Mistral APIs.
 // It also needs access to our dataset, which we will release before the conference.
 
-var AnalyzerNames = ["low-level-5"];
-var Models = ["gpt-4.5-mini"]; // "llama3-70b", "gpt-4.5-omni"
+const AnalyzerNames = ["low-level-5"];
+const Models = ["gpt-4.5-mini"]; // "llama3-70b", "gpt-4.5-omni"
 
-for (var AnalyzerName of AnalyzerNames) {
-    for (var I = 0; I < 5; I++) {
-        var Analyzer = new (await import(`./../${AnalyzerName}.js`)).default();
-        Analyzer.Suffix += `~0.2`; // 0.2 is the weight
-        await UseLLMs(async () => {
-            await ProcessDataset(Analyzer, "Coded Dataset 1", false);
-            await ProcessDataset(Analyzer, "Coded Dataset 2", false);
-        }, ...Models.map((Model) => Model + `_${I}`));
+for (const AnalyzerName of AnalyzerNames) {
+    for (let I = 0; I < 5; I++) {
+        const Analyzer = new (
+            (await import(`./../${AnalyzerName}.js`)) as {
+                default: new () => Parameters<typeof ProcessDataset>[0];
+            }
+        ).default();
+        Analyzer.Suffix += "~0.2"; // 0.2 is the weight
+        await UseLLMs(
+            async () => {
+                await ProcessDataset(Analyzer, "Coded Dataset 1", false);
+                await ProcessDataset(Analyzer, "Coded Dataset 2", false);
+            },
+            ...Models.map((Model) => `${Model}_${I}`),
+        );
     }
 }
 

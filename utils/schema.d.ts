@@ -249,3 +249,12 @@ export interface User {
     /** Messages: Messages on the profile. */
     Messages?: Comment[];
 }
+
+export type BertopicTopics = Record<
+    number,
+    {
+        IDs: number[];
+        Probabilities: number[];
+        Keywords: string[];
+    }
+>;
