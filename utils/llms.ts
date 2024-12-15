@@ -231,6 +231,19 @@ export function InitializeLLM(LLM: string) {
                     maxTokens: MaxOutput,
                 });
             break;
+        case "llama3.3-70b":
+            // 0.59$ / 0.79$
+            MaxInput = 8192;
+            MaxOutput = 8192;
+            MaxItems = 32;
+            if (!LocalModel) Model = (Temp) =>
+                new ChatGroq({
+                    temperature: Temp,
+                    modelName: "llama-3.3-70b-versatile",
+                    streaming: false,
+                    maxTokens: MaxOutput,
+                });
+            break;
         case "gemma2":
             // Assuming 27b; models <= 10b generally don't really work
             MaxInput = 64000;
