@@ -61,7 +61,7 @@ export function InitializeLLM(LLM: string) {
                 temperature: Temp,
                 model: Ollama,
                 streaming: false,
-                baseUrl: process.env.OLLAMA_URL
+                baseUrl: process.env.OLLAMA_URL ?? "https://127.0.0.1:11434"
             });
         LocalModel = true;
     } else {
@@ -245,7 +245,7 @@ export function InitializeLLM(LLM: string) {
             MaxItems = 32;
             if (!LocalModel) throw new Error(`LLM ${LLM} is local only through ollama.`);
             break;
-        case "qwen-2.5":
+        case "qwen2.5":
             // Assuming 14b (32b takes a bit too much vrams)
             MaxInput = 8192;
             MaxOutput = 8192;
