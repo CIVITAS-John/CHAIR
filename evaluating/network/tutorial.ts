@@ -1,7 +1,7 @@
 import { Cash } from "cash-dom";
 import { Panel } from "./panels/panel.js";
 import { Visualizer } from "./visualizer.js";
-import { driver, DriveStep } from "driver.js";
+import { driver } from "driver.js";
 
 /** Tutorial: The interactive tutorial for the visualizer. */
 export class Tutorial extends Panel {
@@ -9,12 +9,12 @@ export class Tutorial extends Panel {
     public constructor(Container: Cash, Visualizer: Visualizer) {
         super(Container, Visualizer);
         Container.show();
-        (driver as any) = (window as any).driver.js.driver || driver;
+        (driver as any) = (window as any).driver.js.driver ?? driver;
     }
     /** ShowTutorial: Show the tutorial. */
     public ShowTutorial(Restart = false) {
         // Create the tutorial
-        var Tutorial = driver({
+        const Tutorial = driver({
             showProgress: true,
             stagePadding: 0,
             steps: [
@@ -66,7 +66,7 @@ export class Tutorial extends Panel {
 <p>Whenever you select a code, it - along with its neighbors - will be highlighted. Hold the <strong>shift</strong> key to select more.</p>`,
                     },
                     onHighlightStarted: () => {
-                        this.Visualizer.FocusOnNode(document.querySelector(".visualization .nodes circle:first-child")!);
+                        this.Visualizer.FocusOnNode(document.querySelector(".visualization .nodes circle:first-child"));
                         Tutorial.getConfig().stagePadding = 100;
                     },
                 },
@@ -91,7 +91,7 @@ export class Tutorial extends Panel {
 <p>Since <strong>each code is merged from multiple ones</strong>, hover on each codebook to see their original names.</p>`,
                     },
                     onHighlightStarted: () => {
-                        this.Visualizer.FocusOnNode(document.querySelector(".visualization .nodes circle:first-child")!);
+                        this.Visualizer.FocusOnNode(document.querySelector(".visualization .nodes circle:first-child"));
                     },
                 },
                 {
@@ -151,8 +151,8 @@ export class Tutorial extends Panel {
                     },
                 },
             ],
-            onHighlighted: (Element, Step) => {
-                window.localStorage.setItem("tutorial-step", Tutorial.getActiveIndex()!.toString());
+            onHighlighted: () => {
+                window.localStorage.setItem("tutorial-step", (Tutorial.getActiveIndex() ?? NaN).toString());
                 console.log("Tutorial step", Tutorial.getActiveIndex());
             },
         });
@@ -160,7 +160,7 @@ export class Tutorial extends Panel {
         const Step = window.localStorage.getItem("tutorial-step");
         if (Restart) {
             Tutorial.drive();
-        } else if (Step == "-1") {
+        } else if (Step === "-1") {
             return;
         } else if (Step) {
             Tutorial.drive(parseInt(Step));
