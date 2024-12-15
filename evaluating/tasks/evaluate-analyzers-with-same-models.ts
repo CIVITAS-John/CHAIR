@@ -1,6 +1,5 @@
 import * as File from "fs";
 import { GetMessagesPath, LoadDataset } from "../../utils/loader.js";
-import { CoverageEvaluator } from "../coverage-evaluator.js";
 import { BuildReferenceAndEvaluateCodebooks } from "../codebooks.js";
 import { InitializeEmbeddings } from "../../utils/embeddings.js";
 import { EnsureFolder, UseLLM } from "../../utils/llms.js";
@@ -13,27 +12,25 @@ UseLLM("llama3-70b");
 /** EvaluateAnalyzers: Evaluate the performance of different analyzers using the same model. */
 async function EvaluateAnalyzers(SourcePath: string, LLM: string, Builder: ReferenceBuilder, Suffix: string, Analyzers: string[]) {
     // Get the dataset
-    var Dataset = await LoadDataset(SourcePath);
-    var Evaluator = new NetworkEvaluator({ Dataset: Dataset });
+    const Dataset = LoadDataset(SourcePath);
+    const Evaluator = new NetworkEvaluator({ Dataset: Dataset });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
-    var ReferencePath = SourcePath + "/evaluation/references";
+    const ReferencePath = `${SourcePath}/evaluation/references`;
     EnsureFolder(ReferencePath);
-    var TargetPath = SourcePath + "/evaluation/results/" + LLM + Builder.Suffix;
+    const TargetPath = `${SourcePath}/evaluation/results/${LLM}${Builder.Suffix}`;
     EnsureFolder(TargetPath);
     // Build the paths
-    var Paths = Analyzers.flatMap((Analyzer) =>
-        Object.keys(Dataset.Data).map((Name) => SourcePath + "/" + Analyzer + "/" + Name + "-" + LLM + ".json"),
-    );
+    const Paths = Analyzers.flatMap((Analyzer) => Object.keys(Dataset.Data).map((Name) => `${SourcePath}/${Analyzer}/${Name}-${LLM}.json`));
     // Build the reference and evaluate the codebooks
-    var Results = await BuildReferenceAndEvaluateCodebooks(
+    const Results = await BuildReferenceAndEvaluateCodebooks(
         Paths,
-        ReferencePath + "/" + LLM + Suffix + Builder.Suffix,
+        `${ReferencePath}/${LLM}${Suffix}${Builder.Suffix}`,
         Builder,
         Evaluator,
         TargetPath,
     );
-    File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
+    File.writeFileSync(`${TargetPath}-${Evaluator.Name}.json`, JSON.stringify(Results, null, 4));
 }
 
 await EvaluateAnalyzers("Coded Dataset 2", "llama3-70b", new RefiningReferenceBuilder(), "", [

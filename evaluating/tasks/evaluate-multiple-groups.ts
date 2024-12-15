@@ -1,6 +1,5 @@
 import * as File from "fs";
 import { GetMessagesPath, LoadDataset } from "../../utils/loader.js";
-import { CoverageEvaluator } from "../coverage-evaluator.js";
 import { BuildReferenceAndEvaluateCodebooksInGroups } from "../codebooks.js";
 import { InitializeEmbeddings } from "../../utils/embeddings.js";
 import { EnsureFolder, UseLLM } from "../../utils/llms.js";
@@ -14,23 +13,23 @@ UseLLM("llama3-70b");
 /** EvaluateMultipleGroups: Evaluate multiple groups of codebooks but merge each folder into one codebook. */
 async function EvaluateMultipleGroups(SourcePath: string, TaskName: string, ReferenceName: string, Builder: ReferenceBuilder, Sources: string[]) {
     // Get the dataset
-    var Dataset = await LoadDataset(SourcePath);
-    var Evaluator = new NetworkEvaluator({ Dataset: Dataset });
+    const Dataset = LoadDataset(SourcePath);
+    const Evaluator = new NetworkEvaluator({ Dataset: Dataset });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
-    var ReferencePath = SourcePath + "/evaluation/references";
+    const ReferencePath = `${SourcePath}/evaluation/references`;
     EnsureFolder(ReferencePath);
-    var TargetPath = SourcePath + "/evaluation/results/" + TaskName + Builder.Suffix;
+    const TargetPath = `${SourcePath}/evaluation/results/${TaskName}${Builder.Suffix}`;
     EnsureFolder(TargetPath);
     // Build the reference and evaluate the codebooks
-    var Results = await BuildReferenceAndEvaluateCodebooksInGroups(
-        Sources.map((Path) => SourcePath + "/" + Path),
-        ReferencePath + "/" + ReferenceName + Builder.Suffix,
+    const Results = await BuildReferenceAndEvaluateCodebooksInGroups(
+        Sources.map((Path) => `${SourcePath}/${Path}`),
+        `${ReferencePath}/${ReferenceName}${Builder.Suffix}`,
         Builder,
         Evaluator,
         TargetPath,
     );
-    File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
+    File.writeFileSync(`${TargetPath}-${Evaluator.Name}.json`, JSON.stringify(Results, null, 4));
 }
 
 /* await EvaluateMultipleGroups("Coded Dataset 1", 

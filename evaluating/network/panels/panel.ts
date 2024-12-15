@@ -4,9 +4,9 @@ import { Visualizer } from "../visualizer.js";
 /** Panel: A panel for the visualizer. */
 export abstract class Panel {
     /** Name: The short name of the panel. */
-    public Name: string = "";
+    public Name = "";
     /** Title: The title of the panel. */
-    public Title: string = "";
+    public Title = "";
     /** Visualizer: The visualizer in-use. */
     protected Visualizer: Visualizer;
     /** Container: The container for the side panel. */
@@ -62,7 +62,9 @@ export abstract class Panel {
         this.Refresh();
     }
     /** Refresh: The current program that actually renders the panel. Optional. */
-    protected Refresh: () => void = () => {};
+    protected Refresh: () => void = () => {
+        // This method is intentionally left empty
+    };
     /** SetRefresh: Set the refresh function for the panel. */
     protected SetRefresh(Refresh: () => void) {
         this.Refresh = Refresh;
@@ -70,19 +72,25 @@ export abstract class Panel {
     }
     /** BuildTable: Build a table for the panel. */
     protected BuildTable<T>(Data: T[], Builder: (Row: Cash, Data: T, Index: number) => void, Columns: string[] = []) {
-        var Table = $(`<table class="data-table"></table>`).appendTo(this.Container);
-        if (Columns.length > 0) Table.append($(`<tr></tr>`).append(...Columns.map((C) => $(`<th></th>`).text(C))));
-        Data.forEach((Item, Index) => Builder($(`<tr></tr>`).appendTo(Table), Item, Index));
+        const Table = $('<table class="data-table"></table>').appendTo(this.Container);
+        if (Columns.length > 0) {
+            Table.append($("<tr></tr>").append(...Columns.map((C) => $("<th></th>").text(C))));
+        }
+        Data.forEach((Item, Index) => {
+            Builder($("<tr></tr>").appendTo(Table), Item, Index);
+        });
         return Table;
     }
     /** BuildList: Build a list for the panel. */
     protected BuildList<T>(Data: T[], Builder: (Item: Cash, Data: T, Index: number) => void, Type: "ul" | "ol" = "ul") {
-        var List = $(`<${Type}></${Type}>`).appendTo(this.Container);
-        Data.forEach((Item, Index) => Builder($(`<li></li>`).appendTo(List), Item, Index));
+        const List = $(`<${Type}></${Type}>`).appendTo(this.Container);
+        Data.forEach((Item, Index) => {
+            Builder($("<li></li>").appendTo(List), Item, Index);
+        });
         return List;
     }
     /** BuildReturn: Build a return button. */
     protected BuildReturn(Callback: () => void) {
-        return $(`<a href="javascript:void(0)">↑</a>`).on("click", Callback);
+        return $('<a href="javascript:void(0)">↑</a>').on("click", Callback);
     }
 }
