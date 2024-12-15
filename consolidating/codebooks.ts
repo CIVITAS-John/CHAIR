@@ -83,8 +83,7 @@ export function MergeCodebooks(Codebooks: Codebook[], WithReference = false) {
                 if (!Codes.has(NewLabel)) {
                     Codes.set(NewLabel, Code);
                 } else {
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    MergeCodes(Codes.get(NewLabel)!, Code);
+                    MergeCodes(Codes.get(NewLabel) ?? ({} as Code), Code);
                 }
             }
         }

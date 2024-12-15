@@ -39,8 +39,7 @@ export class AlternativeMerger extends CodeConsolidator {
             if ((Code.Alternatives?.length ?? 0) > 0 || !BestAlternatives.has(Code.Label)) {
                 Result[Code.Label] = Code;
             } else {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                MergeCodes(BestAlternatives.get(Code.Label)!, Code);
+                MergeCodes(BestAlternatives.get(Code.Label) ?? ({} as Code), Code);
             }
         });
         console.log(chalk.green(`Statistics: Codes merged from ${Object.keys(Codebook).length} to ${Object.keys(Result).length}`));

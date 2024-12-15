@@ -1,36 +1,41 @@
 import { MaxOutput } from "../../utils/llms.js";
-import { Project, Comment } from "../../utils/schema.js";
+import { Comment, Project } from "../../utils/schema.js";
 import { TranslateStrings } from "./general.js";
 
 // TranslateProjects: Translate a bunch of projects.
 export async function TranslateProjects(Projects: Project[]): Promise<Project[]> {
     // Mappings: ID => Name
-    var UserMappings = new Map<string, string>();
+    const UserMappings = new Map<string, string>();
     // Get names to translate
-    var Nicknames = new Set<string>();
-    for (let Project of Projects) {
+    const Nicknames = new Set<string>();
+    for (const Project of Projects) {
         Nicknames.add(Project.Nickname);
-        if (Project.CurrentNickname) Nicknames.add(Project.CurrentNickname);
+        if (Project.CurrentNickname) {
+            Nicknames.add(Project.CurrentNickname);
+        }
         if (Project.AllItems) {
-            for (let Comment of Project.AllItems) {
+            for (const Comment of Project.AllItems) {
                 Nicknames.add(Comment.Nickname);
-                if (Comment.CurrentNickname) Nicknames.add(Comment.CurrentNickname);
+                if (Comment.CurrentNickname) {
+                    Nicknames.add(Comment.CurrentNickname);
+                }
             }
         }
     }
 
     // Handle the mentioned users (=> @ID)
-    var HandleContent = (Content: string) => {
-        return Content.replaceAll(/(回复)?@(.*?)\((\d+)\)(\s|$|:)/g, (Match, Reply, Name, ID) => {
+    const HandleContent = (Content: string) => {
+        return Content.replaceAll(/(回复)?@(.*?)\((\d+)\)(\s|$|:)/g, (_Match, Reply, Name: string, ID: string) => {
             UserMappings.set(ID, Name);
             Nicknames.add(Name);
             if (Reply) {
                 return `Reply @${ID}:`;
-            } else return `@${ID} `;
+            }
+            return `@${ID} `;
         });
     };
     // Get the contents to translate
-    var Contents = Projects.map((Project) => {
+    const Contents = Projects.map((Project) => {
         Project.Content = HandleContent(Project.Content);
         // For comments
         Project.AllItems?.forEach((Comment) => {
@@ -40,32 +45,40 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
         // Truncate the message if it's too long
         // Here we leave some rooms since the model might need more tokens than the source text to translate
         Project.Content = `${Project.Title}\n${Project.Content}`;
-        if (Project.Content.length >= MaxOutput * 0.75) Project.Content = Project.Content.substring(0, MaxOutput * 0.75) + " (Too long to translate)";
+        if (Project.Content.length >= MaxOutput * 0.75) {
+            Project.Content = `${Project.Content.substring(0, MaxOutput * 0.75)} (Too long to translate)`;
+        }
         return Project.Content;
     });
 
     // Translate the nicknames and contents
-    var NicknameArrays = Array.from(Nicknames);
-    var TranslatedNicknames = await TranslateStrings("nickname", NicknameArrays);
-    var NameTranslations = new Map<string, string>();
+    const NicknameArrays = Array.from(Nicknames);
+    const TranslatedNicknames = await TranslateStrings("nickname", NicknameArrays);
+    const NameTranslations = new Map<string, string>();
     TranslatedNicknames.forEach((Translation, Index) => NameTranslations.set(NicknameArrays[Index], Translation));
     // Translate the and contents
-    var TranslatedContents = await TranslateStrings("contents", Contents);
+    const TranslatedContents = await TranslateStrings("contents", Contents);
     // Assign the translated nicknames and contents
     for (let I = 0; I < Projects.length; I++) {
+        const Project = Projects[I];
         // Decipher the nicknames
-        Projects[I].Nickname = NameTranslations.get(Projects[I].Nickname)!;
-        if (Projects[I].CurrentNickname) Projects[I].CurrentNickname = NameTranslations.get(Projects[I].CurrentNickname!)!;
+        Project.Nickname = NameTranslations.get(Project.Nickname) ?? "";
+        if (Project.CurrentNickname) {
+            Project.CurrentNickname = NameTranslations.get(Project.CurrentNickname);
+        }
         // Handle the mentioned users (=> @Nickname (ID))
-        var Content = TranslatedContents[I];
-        Content = Content.replaceAll(/@(\d+)(\s|$|:)/g, (Match, ID, Ends) => {
+        let Content = TranslatedContents[I];
+        Content = Content.replaceAll(/@(\d+)(\s|$|:)/g, (_Match, ID: string, Ends) => {
             if (UserMappings.has(ID)) {
-                return `@${NameTranslations.get(UserMappings.get(ID)!)!} (${ID})${Ends}`;
-            } else return `@${ID}${Ends}`;
+                return `@${NameTranslations.get(UserMappings.get(ID) ?? "")} (${ID})${Ends}`;
+            }
+            return `@${ID}${Ends}`;
         });
-        Projects[I].Title = Content.split("\n")[0].trim();
-        Projects[I].Content = Content.substring(Projects[I].Title.length + 1).trim();
-        if (Projects[I].AllItems) Projects[I].AllItems = await TranslateComments(Projects[I].AllItems!, UserMappings, NameTranslations);
+        Project.Title = Content.split("\n")[0].trim();
+        Project.Content = Content.substring(Project.Title.length + 1).trim();
+        if (Project.AllItems) {
+            Project.AllItems = await TranslateComments(Project.AllItems, UserMappings, NameTranslations);
+        }
     }
     return Projects;
 }
@@ -76,23 +89,29 @@ export async function TranslateComments(
     UserMappings: Map<string, string>,
     NameTranslations: Map<string, string>,
 ): Promise<Comment[]> {
-    var Contents = Comments.map((Comment) => {
-        if (Comment.Content.length >= MaxOutput * 0.75) Comment.Content = Comment.Content.substring(0, MaxOutput * 0.75) + " (Too long to translate)";
+    const Contents = Comments.map((Comment) => {
+        if (Comment.Content.length >= MaxOutput * 0.75) {
+            Comment.Content = `${Comment.Content.substring(0, MaxOutput * 0.75)} (Too long to translate)`;
+        }
         return Comment.Content;
     });
-    var TranslatedContents = await TranslateStrings("messages", Contents);
+    const TranslatedContents = await TranslateStrings("messages", Contents);
     for (let I = 0; I < Comments.length; I++) {
+        const Comment = Comments[I];
         // Decipher the nicknames
-        Comments[I].Nickname = NameTranslations.get(Comments[I].Nickname)!;
-        if (Comments[I].CurrentNickname) Comments[I].CurrentNickname = NameTranslations.get(Comments[I].CurrentNickname!)!;
+        Comment.Nickname = NameTranslations.get(Comment.Nickname) ?? "";
+        if (Comment.CurrentNickname) {
+            Comment.CurrentNickname = NameTranslations.get(Comment.CurrentNickname);
+        }
         // Handle the mentioned users (=> @Nickname (ID))
-        var Content = TranslatedContents[I];
-        Content = Content.replaceAll(/@(\d+)(\s|$|:)/g, (Match, ID, Ends) => {
+        let Content = TranslatedContents[I];
+        Content = Content.replaceAll(/@(\d+)(\s|$|:)/g, (_Match, ID: string, Ends) => {
             if (UserMappings.has(ID)) {
-                return `@${NameTranslations.get(UserMappings.get(ID)!)!} (${ID})${Ends}`;
-            } else return `@${ID}${Ends}`;
+                return `@${NameTranslations.get(UserMappings.get(ID) ?? "")} (${ID})${Ends}`;
+            }
+            return `@${ID}${Ends}`;
         });
-        Comments[I].Content = Content;
+        Comment.Content = Content;
     }
     return Comments;
 }
