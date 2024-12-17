@@ -1,7 +1,8 @@
 import chalk from "chalk";
 
 import { ResearchQuestion } from "../constants.js";
-import { Code, Codebook, GetCategories } from "../utils/schema.js";
+import type { Code, Codebook } from "../utils/schema.js";
+import { GetCategories } from "../utils/schema.js";
 
 import { UpdateCategoriesByMap } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";

@@ -1,12 +1,12 @@
-import { Cash } from "cash-dom";
+import type { Cash } from "cash-dom";
 import d3 from "d3";
 
-import { Code } from "../../../utils/schema.js";
+import type { Code } from "../../../utils/schema.js";
 import { Panel } from "../panels/panel.js";
 import { FilterNodesByOwner } from "../utils/graph.js";
-import { Component } from "../utils/schema.js";
+import type { Component } from "../utils/schema.js";
 import { GetCodebookColor } from "../utils/utils.js";
-import { Visualizer } from "../visualizer.js";
+import type { Visualizer } from "../visualizer.js";
 
 /** CodeSection: The code side panel. */
 export class CodeSection extends Panel {

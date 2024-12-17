@@ -10,19 +10,8 @@ import { MergeCodebook, MergeCodebooks } from "../consolidating/codebooks.js";
 import { InitializeDataset } from "../constants.js";
 
 import { GetFilesRecursively, RemoveCommonality } from "./file.js";
-import {
-    AssembleExample,
-    Code,
-    Codebook,
-    CodedItem,
-    CodedThread,
-    CodedThreads,
-    Conversation,
-    DataChunk,
-    DataItem,
-    Dataset,
-    Participant,
-} from "./schema.js";
+import type { Code, Codebook, CodedItem, CodedThread, CodedThreads, Conversation, DataChunk, DataItem, Dataset, Participant } from "./schema.js";
+import { AssembleExample } from "./schema.js";
 
 /** GetDatasetPath: Get the dataset path. */
 export function GetDatasetPath(): string {

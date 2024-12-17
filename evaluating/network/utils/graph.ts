@@ -3,9 +3,9 @@ import type louvain from "graphology-communities-louvain";
 import * as graphologyLibrary from "graphology-library";
 import type seedrandom from "seedrandom";
 
-import { Code, CodebookComparison, DataChunk, DataItem, Dataset } from "../../../utils/schema.js";
+import type { Code, CodebookComparison, DataChunk, DataItem, Dataset } from "../../../utils/schema.js";
 
-import { Component, Graph, Link, Node } from "./schema.js";
+import type { Component, Graph, Link, Node } from "./schema.js";
 import { InverseLerp, Parameters } from "./utils.js";
 
 declare global {

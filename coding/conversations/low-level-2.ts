@@ -1,4 +1,4 @@
-import { CodedThread, Conversation, Message } from "../../utils/schema.js";
+import type { CodedThread, Conversation, Message } from "../../utils/schema.js";
 
 import { BuildMessagePrompt } from "./conversations.js";
 import { LowLevelAnalyzerBase } from "./low-level.js";

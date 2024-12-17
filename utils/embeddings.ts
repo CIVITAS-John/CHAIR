@@ -1,7 +1,7 @@
 import * as File from "fs";
 
 import { TaskType } from "@google/generative-ai";
-import { Embeddings } from "@langchain/core/embeddings";
+import type { Embeddings } from "@langchain/core/embeddings";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { OllamaEmbeddings } from "@langchain/ollama";
 import { OpenAIEmbeddings } from "@langchain/openai";
@@ -11,7 +11,7 @@ import md5 from "md5";
 import { PythonShell } from "python-shell";
 
 import { EnsureFolder } from "./llms.js";
-import { Code } from "./schema.js";
+import type { Code } from "./schema.js";
 
 // Model: The embedding model to use.
 export let Model: Embeddings;

@@ -1,5 +1,5 @@
 import { ClusterCodes } from "../utils/embeddings.js";
-import { Code, Codebook } from "../utils/schema.js";
+import type { Code, Codebook } from "../utils/schema.js";
 
 import { MergeCodesByCluster } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";

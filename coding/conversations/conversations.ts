@@ -1,6 +1,6 @@
 import { Analyzer } from "../../analyzer.js";
 import { GetSpeakerName, GetSpeakerNameForExample } from "../../constants.js";
-import { CodedItem, CodedThread, Conversation, Message } from "../../utils/schema.js";
+import type { CodedItem, CodedThread, Conversation, Message } from "../../utils/schema.js";
 
 /** ConversationAnalyzer: The definition of an abstract conversation analyzer. */
 export abstract class ConversationAnalyzer extends Analyzer<Conversation, Message, CodedThread> {}

@@ -1,4 +1,5 @@
-import { AssembleExampleFrom, Code, CodedThread, Message } from "../../utils/schema.js";
+import type { Code, CodedThread, Message } from "../../utils/schema.js";
+import { AssembleExampleFrom } from "../../utils/schema.js";
 
 import { ConversationAnalyzer, RevertMessageFormat } from "./conversations.js";
 

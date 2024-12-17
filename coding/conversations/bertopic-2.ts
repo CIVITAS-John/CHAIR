@@ -6,7 +6,7 @@ import { PythonShell } from "python-shell";
 
 import { CodingNotes, ResearchQuestion } from "../../constants.js";
 import { RequestLLMWithCache } from "../../utils/llms.js";
-import { BertopicTopics, CodedThread, Conversation, Message } from "../../utils/schema.js";
+import type { BertopicTopics, CodedThread, Conversation, Message } from "../../utils/schema.js";
 
 import { BuildMessagePrompt, ConversationAnalyzer } from "./conversations.js";
 

@@ -1,4 +1,4 @@
-import { DataChunk, DataItem, Dataset } from "./utils/schema.js";
+import type { DataChunk, DataItem, Dataset } from "./utils/schema.js";
 
 // ResearchQuestion: The research question.
 export let ResearchQuestion = "(Unset)";

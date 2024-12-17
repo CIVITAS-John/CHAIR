@@ -3,7 +3,7 @@ import * as File from "fs";
 import { ExportChunksForCoding, ExportMessages } from "../../utils/export.js";
 import { EnsureFolder, LLMName, MaxOutput } from "../../utils/llms.js";
 import { GetMessagesPath, GetParticipantsPath, LoadConversations, LoadItems, LoadParticipants } from "../../utils/loader.js";
-import { Conversation, Message, Participant } from "../../utils/schema.js";
+import type { Conversation, Message, Participant } from "../../utils/schema.js";
 
 import { TranslateStrings } from "./general.js";
 

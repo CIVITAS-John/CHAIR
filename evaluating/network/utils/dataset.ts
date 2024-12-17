@@ -1,4 +1,4 @@
-import { Code, Codebook, DataChunk, DataItem } from "../../../utils/schema.js";
+import type { Code, Codebook, DataChunk, DataItem } from "../../../utils/schema.js";
 
 /** FindConsolidatedCode: Find a consolidated code by name. */
 export function FindConsolidatedCode(Consolidated: Codebook, Name: string) {

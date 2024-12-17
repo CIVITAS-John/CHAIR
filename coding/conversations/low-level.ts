@@ -1,6 +1,6 @@
 import { GetSpeakerName } from "../../constants.js";
 import { MaxItems } from "../../utils/llms.js";
-import { CodedThread, Message } from "../../utils/schema.js";
+import type { CodedThread, Message } from "../../utils/schema.js";
 
 import { ConversationAnalyzer } from "./conversations.js";
 

@@ -1,4 +1,4 @@
-import * as d3 from "d3";
+import type * as d3 from "d3";
 
 /** GraphStatus: The visualization status of a graph. */
 export interface GraphStatus<T> {

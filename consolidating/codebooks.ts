@@ -4,13 +4,13 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import chalk from "chalk";
 
 import { LoopThroughChunks } from "../analyzer.js";
-import { ClusterItem } from "../utils/embeddings.js";
+import type { ClusterItem } from "../utils/embeddings.js";
 import { ExportChunksForCoding } from "../utils/export.js";
 import { EnsureFolder, LLMName, RequestLLMWithCache } from "../utils/llms.js";
 import { GetMessagesPath, LoadAnalyses, LoadChunksForAnalysis } from "../utils/loader.js";
-import { Code, Codebook, CodedThreads, DataChunk, DataItem } from "../utils/schema.js";
+import type { Code, Codebook, CodedThreads, DataChunk, DataItem } from "../utils/schema.js";
 
-import { CodebookConsolidator } from "./consolidator.js";
+import type { CodebookConsolidator } from "./consolidator.js";
 
 /** MergeCodebook: Simply merge the codebooks without further consolidating. */
 export function MergeCodebook(Analyses: CodedThreads) {

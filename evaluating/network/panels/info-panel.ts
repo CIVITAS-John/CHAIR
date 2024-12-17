@@ -1,10 +1,10 @@
 import type { Cash } from "cash-dom";
 
-import { Code } from "../../../utils/schema.js";
+import type { Code } from "../../../utils/schema.js";
 import { ExtractExamples, FindExampleSources, FindOriginalCodes } from "../utils/dataset.js";
-import { Node } from "../utils/schema.js";
+import type { Node } from "../utils/schema.js";
 import { GetCodebookColor } from "../utils/utils.js";
-import { Visualizer } from "../visualizer.js";
+import type { Visualizer } from "../visualizer.js";
 
 import { Panel } from "./panel.js";
 

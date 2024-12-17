@@ -1,6 +1,6 @@
 import { MergeCodebooks } from "../consolidating/codebooks.js";
 import { EvaluateTexts } from "../utils/embeddings.js";
-import { Code, Codebook, CodebookEvaluation } from "../utils/schema.js";
+import type { Code, Codebook, CodebookEvaluation } from "../utils/schema.js";
 
 import { CodebookEvaluator } from "./codebooks.js";
 

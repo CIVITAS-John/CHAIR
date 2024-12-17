@@ -1,6 +1,6 @@
 import Excel from "exceljs";
 
-import { Code, CodedThreads, DataChunk, DataItem, Message, Project } from "./schema.js";
+import type { Code, CodedThreads, DataChunk, DataItem, Message, Project } from "./schema.js";
 const { Workbook } = Excel;
 
 // Range: Generate a range of numbers.

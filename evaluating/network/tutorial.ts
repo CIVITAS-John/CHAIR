@@ -1,8 +1,8 @@
-import { Cash } from "cash-dom";
+import type { Cash } from "cash-dom";
 import { driver as driverJS } from "driver.js";
 
 import { Panel } from "./panels/panel.js";
-import { Visualizer } from "./visualizer.js";
+import type { Visualizer } from "./visualizer.js";
 
 let driver: typeof driverJS;
 declare global {

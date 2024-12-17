@@ -3,7 +3,7 @@ import * as File from "fs";
 import * as Mongo from "mongodb";
 
 import { GetDatasetPath } from "../../utils/loader.js";
-import { Comment, Project, User } from "../../utils/schema.js";
+import type { Comment, Project, User } from "../../utils/schema.js";
 
 import { CutoffDate } from "./message-groups.js";
 

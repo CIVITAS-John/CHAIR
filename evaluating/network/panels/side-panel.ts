@@ -4,7 +4,7 @@ import { CodeSection } from "../sections/code.js";
 import { CodebookSection } from "../sections/codebook.js";
 import { DatasetSection } from "../sections/dataset.js";
 import { UserSection } from "../sections/user.js";
-import { Visualizer } from "../visualizer.js";
+import type { Visualizer } from "../visualizer.js";
 
 import { Panel } from "./panel.js";
 

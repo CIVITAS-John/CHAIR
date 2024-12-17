@@ -2,7 +2,7 @@ import chalk from "chalk";
 
 import { Analyzer } from "../analyzer.js";
 import { Shuffle } from "../utils/math.js";
-import { Code, Codebook, CodedThreads } from "../utils/schema.js";
+import type { Code, Codebook, CodedThreads } from "../utils/schema.js";
 
 /** CodebookConsolidator: The definition of an abstract codebook consolidator. */
 // ESLint does not recognize type parameters in array

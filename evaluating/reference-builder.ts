@@ -8,7 +8,7 @@ import { DefinitionGenerator } from "../consolidating/definition-generator.js";
 import { RefineMerger } from "../consolidating/refine-merger.js";
 import { SimpleMerger } from "../consolidating/simple-merger.js";
 import { ExportChunksForCoding } from "../utils/export.js";
-import { Codebook } from "../utils/schema.js";
+import type { Codebook } from "../utils/schema.js";
 
 /** ReferenceBuilder: A builder of reference codebook. */
 export class ReferenceBuilder {

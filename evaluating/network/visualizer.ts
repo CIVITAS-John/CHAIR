@@ -1,16 +1,17 @@
 import type { Cash, CashStatic } from "cash-dom";
 import * as d3 from "d3";
 
-import { Code, CodebookComparison, DataChunk, DataItem } from "../../utils/schema.js";
+import type { Code, CodebookComparison, DataChunk, DataItem } from "../../utils/schema.js";
 
 import { Dialog } from "./panels/dialog.js";
 import { InfoPanel } from "./panels/info-panel.js";
 import { SidePanel } from "./panels/side-panel.js";
 import { Tutorial } from "./tutorial.js";
 import { EvaluateCodebooks } from "./utils/evaluate.js";
-import { Colorizer, ComponentFilter, FilterBase, OwnerFilter } from "./utils/filters.js";
+import type { Colorizer, FilterBase } from "./utils/filters.js";
+import { ComponentFilter, OwnerFilter } from "./utils/filters.js";
 import { BuildSemanticGraph } from "./utils/graph.js";
-import { Component, Graph, GraphStatus, Link, Node } from "./utils/schema.js";
+import type { Component, Graph, GraphStatus, Link, Node } from "./utils/schema.js";
 import { Parameters, PostData } from "./utils/utils.js";
 
 declare global {

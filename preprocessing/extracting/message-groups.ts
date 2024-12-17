@@ -1,7 +1,7 @@
 import * as File from "fs";
 
 import { GetMessagesPath, GetParticipantsPath } from "../../utils/loader.js";
-import { Message, Participant } from "../../utils/schema.js";
+import type { Message, Participant } from "../../utils/schema.js";
 import { Tokenize } from "../../utils/tokenizer.js";
 
 // CutoffDate: The cutoff date for the dataset.

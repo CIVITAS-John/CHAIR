@@ -1,8 +1,9 @@
 import * as File from "fs";
 
 import { ChatAnthropic } from "@langchain/anthropic";
-import { BaseChatModel, BaseChatModelCallOptions } from "@langchain/core/language_models/chat_models";
-import { BaseMessage, HumanMessage } from "@langchain/core/messages";
+import type { BaseChatModel, BaseChatModelCallOptions } from "@langchain/core/language_models/chat_models";
+import type { BaseMessage } from "@langchain/core/messages";
+import { HumanMessage } from "@langchain/core/messages";
 import { ChatGroq } from "@langchain/groq";
 import { ChatMistralAI } from "@langchain/mistralai";
 import { ChatOllama } from "@langchain/ollama";

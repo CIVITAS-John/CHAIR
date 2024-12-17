@@ -4,7 +4,7 @@ import { MergeCodebooks } from "../consolidating/codebooks.js";
 import { GetSpeakerName } from "../constants.js";
 import { EvaluateTexts } from "../utils/embeddings.js";
 import { ReadOrBuildCache } from "../utils/file.js";
-import { Code, Codebook, CodebookComparison, CodebookEvaluation, DataChunk, DataItem, Dataset } from "../utils/schema.js";
+import type { Code, Codebook, CodebookComparison, CodebookEvaluation, DataChunk, DataItem, Dataset } from "../utils/schema.js";
 import { CreateOfflineBundle, CreateServer } from "../utils/server.js";
 
 import { CodebookEvaluator } from "./codebooks.js";

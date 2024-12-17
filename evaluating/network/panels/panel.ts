@@ -1,6 +1,6 @@
-import { Cash } from "cash-dom";
+import type { Cash } from "cash-dom";
 
-import { Visualizer } from "../visualizer.js";
+import type { Visualizer } from "../visualizer.js";
 
 /** Panel: A panel for the visualizer. */
 export abstract class Panel {

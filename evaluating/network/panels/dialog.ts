@@ -1,8 +1,8 @@
 import type { Cash } from "cash-dom";
 import d3 from "d3";
 
-import { Code, DataChunk, DataItem } from "../../../utils/schema.js";
-import { CodeSection } from "../sections/code.js";
+import type { Code, DataChunk, DataItem } from "../../../utils/schema.js";
+import type { CodeSection } from "../sections/code.js";
 import { FindOriginalCodes, GetChunks } from "../utils/dataset.js";
 import { EvaluatePerCluster } from "../utils/evaluate.js";
 import { OwnerFilter } from "../utils/filters.js";
@@ -10,7 +10,7 @@ import { FilterItemByUser } from "../utils/graph.js";
 import { Shuffle } from "../utils/math.js";
 import { RenderExamples, RenderItem } from "../utils/render.js";
 import { GetCodebookColor } from "../utils/utils.js";
-import { Visualizer } from "../visualizer.js";
+import type { Visualizer } from "../visualizer.js";
 
 import { Panel } from "./panel.js";
 

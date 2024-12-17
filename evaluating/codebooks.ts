@@ -5,9 +5,10 @@ import md5 from "md5";
 
 import { ReadOrBuildCache, RemoveCommonality } from "../utils/file.js";
 import { LoadCodebooks, LoadCodebooksInGroups } from "../utils/loader.js";
-import { Codebook, CodebookEvaluation } from "../utils/schema.js";
+import type { Codebook, CodebookEvaluation } from "../utils/schema.js";
 
-import { BuildReferenceAndExport, ReferenceBuilder } from "./reference-builder.js";
+import type { ReferenceBuilder } from "./reference-builder.js";
+import { BuildReferenceAndExport } from "./reference-builder.js";
 
 /** CodebookEvaluator: An evaluator of codebook. */
 export abstract class CodebookEvaluator {
