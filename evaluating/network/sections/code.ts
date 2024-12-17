@@ -1,11 +1,12 @@
-import d3 from "d3";
 import { Cash } from "cash-dom";
-import { Panel } from "../panels/panel.js";
-import { Visualizer } from "../visualizer.js";
+import d3 from "d3";
+
 import { Code } from "../../../utils/schema.js";
+import { Panel } from "../panels/panel.js";
 import { FilterNodesByOwner } from "../utils/graph.js";
-import { GetCodebookColor } from "../utils/utils.js";
 import { Component } from "../utils/schema.js";
+import { GetCodebookColor } from "../utils/utils.js";
+import { Visualizer } from "../visualizer.js";
 
 /** CodeSection: The code side panel. */
 export class CodeSection extends Panel {

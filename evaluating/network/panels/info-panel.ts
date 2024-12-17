@@ -1,10 +1,13 @@
 import type { Cash } from "cash-dom";
-import { Visualizer } from "../visualizer.js";
-import { Node } from "../utils/schema.js";
+
 import { Code } from "../../../utils/schema.js";
-import { GetCodebookColor } from "../utils/utils.js";
-import { Panel } from "./panel.js";
 import { ExtractExamples, FindExampleSources, FindOriginalCodes } from "../utils/dataset.js";
+import { Node } from "../utils/schema.js";
+import { GetCodebookColor } from "../utils/utils.js";
+import { Visualizer } from "../visualizer.js";
+
+import { Panel } from "./panel.js";
+
 
 /** InfoPanel: The info panel for the visualizer. */
 export class InfoPanel extends Panel {

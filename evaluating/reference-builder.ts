@@ -1,12 +1,14 @@
 import * as File from "fs";
+
 import chalk from "chalk";
-import { Codebook } from "../utils/schema.js";
+
 import { ConsolidateCodebook, MergeCodebooks } from "../consolidating/codebooks.js";
-import { SimpleMerger } from "../consolidating/simple-merger.js";
 import { PipelineConsolidator } from "../consolidating/consolidator.js";
-import { ExportChunksForCoding } from "../utils/export.js";
-import { RefineMerger } from "../consolidating/refine-merger.js";
 import { DefinitionGenerator } from "../consolidating/definition-generator.js";
+import { RefineMerger } from "../consolidating/refine-merger.js";
+import { SimpleMerger } from "../consolidating/simple-merger.js";
+import { ExportChunksForCoding } from "../utils/export.js";
+import { Codebook } from "../utils/schema.js";
 
 /** ReferenceBuilder: A builder of reference codebook. */
 export class ReferenceBuilder {

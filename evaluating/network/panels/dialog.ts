@@ -1,16 +1,18 @@
-import d3 from "d3";
 import type { Cash } from "cash-dom";
-import { Visualizer } from "../visualizer.js";
+import d3 from "d3";
+
 import { Code, DataChunk, DataItem } from "../../../utils/schema.js";
-import { GetCodebookColor } from "../utils/utils.js";
-import { Panel } from "./panel.js";
+import { CodeSection } from "../sections/code.js";
 import { FindOriginalCodes, GetChunks } from "../utils/dataset.js";
 import { EvaluatePerCluster } from "../utils/evaluate.js";
-import { CodeSection } from "../sections/code.js";
 import { OwnerFilter } from "../utils/filters.js";
-import { RenderExamples, RenderItem } from "../utils/render.js";
 import { FilterItemByUser } from "../utils/graph.js";
 import { Shuffle } from "../utils/math.js";
+import { RenderExamples, RenderItem } from "../utils/render.js";
+import { GetCodebookColor } from "../utils/utils.js";
+import { Visualizer } from "../visualizer.js";
+
+import { Panel } from "./panel.js";
 
 /** Dialog: The dialog for the visualizer. */
 export class Dialog extends Panel {

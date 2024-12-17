@@ -1,7 +1,8 @@
 import { Cash } from "cash-dom";
+import { driver } from "driver.js";
+
 import { Panel } from "./panels/panel.js";
 import { Visualizer } from "./visualizer.js";
-import { driver } from "driver.js";
 
 /** Tutorial: The interactive tutorial for the visualizer. */
 export class Tutorial extends Panel {

@@ -1,7 +1,7 @@
 import { InitializeEmbeddings } from "../utils/embeddings.js";
 import { GetMessagesPath, LoadCodebooks } from "../utils/loader.js";
-import { BuildReferenceAndExport } from "./reference-builder.js";
-import { ReferenceBuilder } from "./reference-builder.js";
+
+import { BuildReferenceAndExport , ReferenceBuilder } from "./reference-builder.js";
 
 InitializeEmbeddings("gecko-768-similarity");
 

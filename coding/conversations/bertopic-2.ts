@@ -1,11 +1,16 @@
 import * as File from "fs";
-import { BertopicTopics, CodedThread, Conversation, Message } from "../../utils/schema.js";
-import { BuildMessagePrompt, ConversationAnalyzer } from "./conversations.js";
-import { PythonShell } from "python-shell";
+
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import chalk from "chalk";
+import { PythonShell } from "python-shell";
+
 import { CodingNotes, ResearchQuestion } from "../../constants.js";
 import { RequestLLMWithCache } from "../../utils/llms.js";
-import { HumanMessage, SystemMessage } from "@langchain/core/messages";
+import { BertopicTopics, CodedThread, Conversation, Message } from "../../utils/schema.js";
+
+import { BuildMessagePrompt, ConversationAnalyzer } from "./conversations.js";
+
+
 
 /** BertopicAnalyzer2: Conduct the first-round bertopic coding of the conversations. */
 // Differece from BertopicAnalyzer1: The prompt specifically asks for a verb phrase.

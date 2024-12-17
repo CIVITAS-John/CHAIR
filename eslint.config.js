@@ -1,19 +1,25 @@
 // @ts-check
 
-import eslint from "@eslint/js";
 import { includeIgnoreFile } from "@eslint/compat";
-import tseslint from "typescript-eslint";
+import eslint from "@eslint/js";
+import tsParser from "@typescript-eslint/parser";
 import eslintConfigPrettier from "eslint-config-prettier";
+import eslintPluginImportX from "eslint-plugin-import-x";
+import tseslint from "typescript-eslint";
 
 export default tseslint.config(
     eslint.configs.recommended,
     tseslint.configs.strictTypeChecked,
     tseslint.configs.stylisticTypeChecked,
     eslintConfigPrettier,
-    includeIgnoreFile(`${import.meta.dirname}/.gitignore`),
+    eslintPluginImportX.flatConfigs.recommended,
+    eslintPluginImportX.flatConfigs.typescript,
     {
         languageOptions: {
             parserOptions: {
+                parser: tsParser,
+                ecmaVersion: "latest",
+                sourceType: "module",
                 projectService: {
                     allowDefaultProject: ["*.js"],
                 },
@@ -29,14 +35,27 @@ export default tseslint.config(
                     caughtErrors: "all",
                     caughtErrorsIgnorePattern: "^_",
                     destructuredArrayIgnorePattern: "^_",
-                    varsIgnorePattern: "^_",
                     ignoreRestSiblings: true,
+                    varsIgnorePattern: "^_",
                 },
             ],
             "@typescript-eslint/restrict-template-expressions": ["error", {}],
             curly: "error",
             "dot-notation": "error",
             eqeqeq: "error",
+            "import-x/no-dynamic-require": "warn",
+            "import-x/no-named-as-default-member": "off",
+            "import-x/order": [
+                "error",
+                {
+                    alphabetize: {
+                        caseInsensitive: true,
+                        order: "asc",
+                    },
+                    groups: ["builtin", "external", "internal", "parent", "sibling", "index"],
+                    "newlines-between": "always",
+                },
+            ],
             "no-else-return": "error",
             "no-empty": [
                 "error",
@@ -78,5 +97,9 @@ export default tseslint.config(
     {
         files: ["**/*.js"],
         extends: [tseslint.configs.disableTypeChecked],
+    },
+    includeIgnoreFile(`${import.meta.dirname}/.gitignore`),
+    {
+        ignores: ["evaluating/network/dependencies/", "examples/data/**/*", "!examples/data/*.*"],
     },
 );

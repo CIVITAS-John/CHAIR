@@ -1,10 +1,11 @@
-import d3 from "d3";
 import { Cash } from "cash-dom";
+import d3 from "d3";
+
 import { Panel } from "../panels/panel.js";
-import { Visualizer } from "../visualizer.js";
-import { EvaluateCodebooks } from "../utils/evaluate.js";
 import { GetConsolidatedSize } from "../utils/dataset.js";
+import { EvaluateCodebooks } from "../utils/evaluate.js";
 import { OwnerFilter } from "../utils/filters.js";
+import { Visualizer } from "../visualizer.js";
 
 /** CodebookSection: The codebook side panel. */
 export class CodebookSection extends Panel {

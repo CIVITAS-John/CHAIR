@@ -1,10 +1,14 @@
+import * as Path from "path";
+
 import chalk from "chalk";
 import md5 from "md5";
-import { Codebook, CodebookEvaluation } from "../utils/schema.js";
+
 import { ReadOrBuildCache, RemoveCommonality } from "../utils/file.js";
-import { BuildReferenceAndExport, ReferenceBuilder } from "./reference-builder.js";
 import { LoadCodebooks, LoadCodebooksInGroups } from "../utils/loader.js";
-import * as Path from "path";
+import { Codebook, CodebookEvaluation } from "../utils/schema.js";
+
+import { BuildReferenceAndExport, ReferenceBuilder } from "./reference-builder.js";
+
 
 /** CodebookEvaluator: An evaluator of codebook. */
 export abstract class CodebookEvaluator {

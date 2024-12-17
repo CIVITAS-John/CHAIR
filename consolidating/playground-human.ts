@@ -1,6 +1,7 @@
-import { UseLLMs } from "../utils/llms.js";
-import { ConsolidateChunks } from "./codebooks.js";
 import { InitializeEmbeddings } from "../utils/embeddings.js";
+import { UseLLMs } from "../utils/llms.js";
+
+import { ConsolidateChunks } from "./codebooks.js";
 import { PipelineConsolidator } from "./consolidator.js";
 import { DefinitionGenerator } from "./definition-generator.js";
 import { RefineMerger } from "./refine-merger.js";

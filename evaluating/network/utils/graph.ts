@@ -1,7 +1,9 @@
-import { Code, CodebookComparison, DataChunk, DataItem, Dataset } from "../../../utils/schema.js";
-import { Component, Graph, Link, Node } from "./schema.js";
 import * as graphology from "graphology";
 import * as graphologyLibrary from "graphology-library";
+
+import { Code, CodebookComparison, DataChunk, DataItem, Dataset } from "../../../utils/schema.js";
+
+import { Component, Graph, Link, Node } from "./schema.js";
 import { InverseLerp, Parameters } from "./utils.js";
 // import louvain from "graphology-library/communities-louvain.js";
 

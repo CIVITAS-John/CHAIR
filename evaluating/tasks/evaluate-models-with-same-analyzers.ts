@@ -1,9 +1,10 @@
 import * as File from "fs";
-import { GetMessagesPath, LoadDataset } from "../../utils/loader.js";
-import { NetworkEvaluator } from "../network-evaluator.js";
-import { BuildReferenceAndEvaluateCodebooks } from "../codebooks.js";
+
 import { InitializeEmbeddings } from "../../utils/embeddings.js";
 import { EnsureFolder, UseLLM } from "../../utils/llms.js";
+import { GetMessagesPath, LoadDataset } from "../../utils/loader.js";
+import { BuildReferenceAndEvaluateCodebooks } from "../codebooks.js";
+import { NetworkEvaluator } from "../network-evaluator.js";
 import { ReferenceBuilder, RefiningReferenceBuilder } from "../reference-builder.js";
 
 InitializeEmbeddings("gecko-768-similarity");

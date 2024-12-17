@@ -1,9 +1,10 @@
-import d3 from "d3";
 import { Cash } from "cash-dom";
+import d3 from "d3";
+
 import { Panel } from "../panels/panel.js";
-import { Visualizer } from "../visualizer.js";
 import { EvaluateUsers } from "../utils/evaluate.js";
 import { UserFilter } from "../utils/filters.js";
+import { Visualizer } from "../visualizer.js";
 
 /** UserSection: The speaker side panel. */
 export class UserSection extends Panel {

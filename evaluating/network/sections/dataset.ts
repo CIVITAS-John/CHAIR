@@ -1,12 +1,13 @@
-import d3 from "d3";
 import { Cash } from "cash-dom";
-import { Panel } from "../panels/panel.js";
-import { Visualizer } from "../visualizer.js";
+import d3 from "d3";
+
 import { Code, DataChunk, DataItem } from "../../../utils/schema.js";
+import { Panel } from "../panels/panel.js";
+import { GetItemsFromDataset } from "../utils/dataset.js";
+import { ChunkFilter, DatasetFilter } from "../utils/filters.js";
 import { FilterNodeByExample } from "../utils/graph.js";
 import { FormatDate } from "../utils/utils.js";
-import { ChunkFilter, DatasetFilter } from "../utils/filters.js";
-import { GetItemsFromDataset } from "../utils/dataset.js";
+import { Visualizer } from "../visualizer.js";
 
 /** DatasetSection: The dataset side panel. */
 export class DatasetSection extends Panel {

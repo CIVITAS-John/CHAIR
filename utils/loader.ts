@@ -1,9 +1,14 @@
 // Data loader from exported JSON or spreadsheet files
 import * as File from "fs";
 import * as Path from "path";
-import * as dotenv from "dotenv";
+
 import chalk from "chalk";
+import * as dotenv from "dotenv";
 import Excel from "exceljs";
+
+import { MergeCodebook, MergeCodebooks } from "../consolidating/codebooks.js";
+import { InitializeDataset } from "../constants.js";
+
 import { GetFilesRecursively, RemoveCommonality } from "./file.js";
 import {
     AssembleExample,
@@ -18,8 +23,6 @@ import {
     Dataset,
     Participant,
 } from "./schema.js";
-import { MergeCodebook, MergeCodebooks } from "../consolidating/codebooks.js";
-import { InitializeDataset } from "../constants.js";
 
 /** GetDatasetPath: Get the dataset path. */
 export function GetDatasetPath(): string {

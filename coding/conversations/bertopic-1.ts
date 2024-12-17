@@ -1,11 +1,16 @@
 import * as File from "fs";
-import { BertopicTopics, CodedThread, Conversation, Message } from "../../utils/schema.js";
-import { BuildMessagePrompt, ConversationAnalyzer } from "./conversations.js";
-import { PythonShell } from "python-shell";
+
+import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import chalk from "chalk";
+import { PythonShell } from "python-shell";
+
 import { CodingNotes, ResearchQuestion } from "../../constants.js";
 import { RequestLLMWithCache } from "../../utils/llms.js";
-import { HumanMessage, SystemMessage } from "@langchain/core/messages";
+import { BertopicTopics, CodedThread, Conversation, Message } from "../../utils/schema.js";
+
+import { BuildMessagePrompt, ConversationAnalyzer } from "./conversations.js";
+
+
 
 /** BertopicAnalyzer1: Conduct the first-round bertopic coding of the conversations. */
 // Authored by John Chen.

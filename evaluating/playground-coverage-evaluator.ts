@@ -1,7 +1,8 @@
 import { InitializeEmbeddings } from "../utils/embeddings.js";
 import { GetMessagesPath } from "../utils/loader.js";
-import { CoverageEvaluator } from "./coverage-evaluator.js";
+
 import { EvaluateCodebooksWithReference } from "./codebooks.js";
+import { CoverageEvaluator } from "./coverage-evaluator.js";
 
 InitializeEmbeddings("gecko-768-similarity");
 const SourcePath = GetMessagesPath("Coded Dataset 1", "evaluation");

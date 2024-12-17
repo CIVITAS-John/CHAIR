@@ -1,8 +1,9 @@
 import { Code, CodebookComparison, CodebookEvaluation, DataChunk, DataItem } from "../../../utils/schema.js";
+
 import { GetConsolidatedSize } from "./dataset.js";
 import { BuildSemanticGraph } from "./graph.js";
-import { CalculateJSD, Parameters } from "./utils.js";
 import { Component, Graph } from "./schema.js";
+import { CalculateJSD, Parameters } from "./utils.js";
 
 /** EvaluateCodebooks: Evaluate all codebooks based on the network structure. */
 export function EvaluateCodebooks(Dataset: CodebookComparison<DataChunk<DataItem>>, Parameters: Parameters): Record<string, CodebookEvaluation> {

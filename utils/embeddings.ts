@@ -1,13 +1,15 @@
 import * as File from "fs";
+
+import { TaskType } from "@google/generative-ai";
+import { Embeddings } from "@langchain/core/embeddings";
+import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
+import { OpenAIEmbeddings } from "@langchain/openai";
+import chalk from "chalk";
 import * as dotenv from "dotenv";
 import md5 from "md5";
-import { Embeddings } from "@langchain/core/embeddings";
-import { OpenAIEmbeddings } from "@langchain/openai";
-import { EnsureFolder } from "./llms.js";
 import { PythonShell } from "python-shell";
-import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
-import { TaskType } from "@google/generative-ai";
-import chalk from "chalk";
+
+import { EnsureFolder } from "./llms.js";
 import { Code } from "./schema.js";
 
 // Model: The embedding model to use.

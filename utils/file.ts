@@ -1,6 +1,7 @@
-import commonPathPrefix from "common-path-prefix";
 import * as File from "fs";
 import * as Path from "path";
+
+import commonPathPrefix from "common-path-prefix";
 
 /** GetFilesRecursively: Get all files in a directory recursively. */
 export function GetFilesRecursively(Source: string): string[] {

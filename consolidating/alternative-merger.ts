@@ -1,5 +1,7 @@
 import chalk from "chalk";
+
 import { Code, Codebook } from "../utils/schema.js";
+
 import { MergeCodes } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
 

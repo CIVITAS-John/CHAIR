@@ -1,5 +1,6 @@
 import { ClusterCategories } from "../utils/embeddings.js";
 import { Code, Codebook, GetCategories } from "../utils/schema.js";
+
 import { MergeCategoriesByCluster } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
 

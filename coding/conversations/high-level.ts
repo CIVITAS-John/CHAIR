@@ -1,4 +1,5 @@
 import { AssembleExampleFrom, Code, CodedThread, Message } from "../../utils/schema.js";
+
 import { ConversationAnalyzer, RevertMessageFormat } from "./conversations.js";
 
 /** HighLevelAnalyzerBase: Conduct the first-round high-level coding of the conversations. */

@@ -1,13 +1,17 @@
 import * as File from "fs";
+
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-import { EnsureFolder, LLMName, RequestLLMWithCache } from "../utils/llms.js";
-import { Code, Codebook, CodedThreads, DataChunk, DataItem } from "../utils/schema.js";
-import { LoopThroughChunks } from "../analyzer.js";
-import { GetMessagesPath, LoadAnalyses, LoadChunksForAnalysis } from "../utils/loader.js";
-import { ExportChunksForCoding } from "../utils/export.js";
-import { ClusterItem } from "../utils/embeddings.js";
-import { CodebookConsolidator } from "./consolidator.js";
 import chalk from "chalk";
+
+import { LoopThroughChunks } from "../analyzer.js";
+import { ClusterItem } from "../utils/embeddings.js";
+import { ExportChunksForCoding } from "../utils/export.js";
+import { EnsureFolder, LLMName, RequestLLMWithCache } from "../utils/llms.js";
+import { GetMessagesPath, LoadAnalyses, LoadChunksForAnalysis } from "../utils/loader.js";
+import { Code, Codebook, CodedThreads, DataChunk, DataItem } from "../utils/schema.js";
+
+import { CodebookConsolidator } from "./consolidator.js";
+
 
 /** MergeCodebook: Simply merge the codebooks without further consolidating. */
 export function MergeCodebook(Analyses: CodedThreads) {

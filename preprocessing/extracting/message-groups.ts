@@ -1,7 +1,8 @@
 import * as File from "fs";
-import { Tokenize } from "../../utils/tokenizer.js";
-import { Message, Participant } from "../../utils/schema.js";
+
 import { GetMessagesPath, GetParticipantsPath } from "../../utils/loader.js";
+import { Message, Participant } from "../../utils/schema.js";
+import { Tokenize } from "../../utils/tokenizer.js";
 
 // CutoffDate: The cutoff date for the dataset.
 export const CutoffDate = new Date(2021, 0, 1);

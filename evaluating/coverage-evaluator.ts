@@ -1,6 +1,7 @@
+import { MergeCodebooks } from "../consolidating/codebooks.js";
 import { EvaluateTexts } from "../utils/embeddings.js";
 import { Code, Codebook, CodebookEvaluation } from "../utils/schema.js";
-import { MergeCodebooks } from "../consolidating/codebooks.js";
+
 import { CodebookEvaluator } from "./codebooks.js";
 
 /** CoverageEvaluator: An evaluator of codebook coverage against a reference codebook (#0). */

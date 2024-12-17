@@ -1,7 +1,9 @@
 import * as File from "fs";
+
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-import { EnsureFolder, LLMName, MaxItems, MaxOutput, RequestLLMWithCache } from "../../utils/llms.js";
+
 import { Preprocess } from "../../utils/glossary.js";
+import { EnsureFolder, LLMName, MaxItems, MaxOutput, RequestLLMWithCache } from "../../utils/llms.js";
 import { Tokenize } from "../../utils/tokenizer.js";
 
 // TranslatedCache: A cache for translated strings.

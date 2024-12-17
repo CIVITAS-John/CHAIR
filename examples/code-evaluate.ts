@@ -1,11 +1,12 @@
 import * as File from "fs";
+
 import { ProcessDataset } from "../analyzer.js";
+import { BuildReferenceAndEvaluateCodebooks } from "../evaluating/codebooks.js";
+import { NetworkEvaluator } from "../evaluating/network-evaluator.js";
+import { ReferenceBuilder, RefiningReferenceBuilder } from "../evaluating/reference-builder.js";
+import { InitializeEmbeddings } from "../utils/embeddings.js";
 import { EnsureFolder, UseLLMs } from "../utils/llms.js";
 import { GetMessagesPath, LoadDataset } from "../utils/loader.js";
-import { BuildReferenceAndEvaluateCodebooks } from "../evaluating/codebooks.js";
-import { InitializeEmbeddings } from "../utils/embeddings.js";
-import { ReferenceBuilder, RefiningReferenceBuilder } from "../evaluating/reference-builder.js";
-import { NetworkEvaluator } from "../evaluating/network-evaluator.js";
 
 // An example configuration
 const Configuration = {

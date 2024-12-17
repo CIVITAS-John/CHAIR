@@ -1,4 +1,5 @@
 import { Cash } from "cash-dom";
+
 import { Visualizer } from "../visualizer.js";
 
 /** Panel: A panel for the visualizer. */

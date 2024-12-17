@@ -1,14 +1,17 @@
 import * as File from "fs";
-import * as dotenv from "dotenv";
+
+import { ChatAnthropic } from "@langchain/anthropic";
 import { BaseChatModel, BaseChatModelCallOptions } from "@langchain/core/language_models/chat_models";
 import { BaseMessage, HumanMessage } from "@langchain/core/messages";
-import { ChatOpenAI } from "@langchain/openai";
-import { ChatAnthropic } from "@langchain/anthropic";
-import { ChatMistralAI } from "@langchain/mistralai";
 import { ChatGroq } from "@langchain/groq";
-import { Tokenize } from "./tokenizer.js";
-import md5 from "md5";
+import { ChatMistralAI } from "@langchain/mistralai";
+import { ChatOpenAI } from "@langchain/openai";
 import chalk from "chalk";
+import * as dotenv from "dotenv";
+import md5 from "md5";
+
+import { Tokenize } from "./tokenizer.js";
+
 
 // Model: The chat model to use.
 export let Model: (Temperature: number) => BaseChatModel;

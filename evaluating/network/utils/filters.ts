@@ -1,8 +1,10 @@
 import d3 from "d3";
+
+import { Code } from "../../../utils/schema.js";
 import { Visualizer } from "../visualizer.js";
+
 import { FilterItemByUser, FilterNodeByExample, FilterNodeByOwner, FilterNodeByOwners } from "./graph.js";
 import { Component, Node } from "./schema.js";
-import { Code } from "../../../utils/schema.js";
 
 /** FilterBase: The base class for filters. */
 export abstract class FilterBase<TNode, TParameter> {

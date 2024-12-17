@@ -1,10 +1,12 @@
 import type { Cash } from "cash-dom";
-import { Visualizer } from "../visualizer.js";
-import { Panel } from "./panel.js";
+
+import { CodeSection } from "../sections/code.js";
 import { CodebookSection } from "../sections/codebook.js";
 import { DatasetSection } from "../sections/dataset.js";
-import { CodeSection } from "../sections/code.js";
 import { UserSection } from "../sections/user.js";
+import { Visualizer } from "../visualizer.js";
+
+import { Panel } from "./panel.js";
 
 /** SidePanel: The side panel for the visualizer. */
 export class SidePanel extends Panel {

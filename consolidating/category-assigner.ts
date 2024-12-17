@@ -1,5 +1,6 @@
 import { ResearchQuestion } from "../constants.js";
 import { Code, Codebook, GetCategories } from "../utils/schema.js";
+
 import { CodeConsolidator } from "./consolidator.js";
 
 /** CategoryAssigner: Assign categories with LLMs. */
