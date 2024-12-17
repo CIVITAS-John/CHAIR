@@ -8,7 +8,6 @@ import open, { apps } from "open";
 
 import { EnsureFolder } from "./llms.js";
 
-
 /** CreateServer: Create a local server for interactivity. */
 export function CreateServer<T>(Port: number, BaseDirectories: string[], ...DataFiles: string[]): Promise<T | undefined> {
     let Shutdown: (Data?: T) => void;

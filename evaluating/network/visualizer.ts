@@ -8,10 +8,11 @@ import { InfoPanel } from "./panels/info-panel.js";
 import { SidePanel } from "./panels/side-panel.js";
 import { Tutorial } from "./tutorial.js";
 import { EvaluateCodebooks } from "./utils/evaluate.js";
-import { Colorizer , ComponentFilter, FilterBase, OwnerFilter } from "./utils/filters.js";
+import { Colorizer, ComponentFilter, FilterBase, OwnerFilter } from "./utils/filters.js";
 import { BuildSemanticGraph } from "./utils/graph.js";
 import { Component, Graph, GraphStatus, Link, Node } from "./utils/schema.js";
 import { Parameters, PostData } from "./utils/utils.js";
+
 declare global {
     const $: typeof Cash.prototype.init & CashStatic;
 }
@@ -35,7 +36,7 @@ export class Visualizer {
     /** FilterContainer: The interface container of filters. */
     private FilterContainer: Cash;
     /** Zoom: The zoom behavior in-use. */
-    private Zoom: d3.ZoomBehavior<globalThis.Element, unknown>;
+    private Zoom: d3.ZoomBehavior<SVGSVGElement, unknown>;
     /** Dataset: The underlying dataset. */
     public Dataset: CodebookComparison<DataChunk<DataItem>> = {} as CodebookComparison<DataChunk<DataItem>>;
     /** Parameters: The parameters for the visualizer. */
@@ -71,10 +72,10 @@ export class Visualizer {
         this.FilterContainer = Container.find(".filters");
         // Zoom support
         this.Zoom = d3
-            .zoom()
+            .zoom<SVGSVGElement, unknown>()
             .scaleExtent([1, 8])
-            .on("zoom", (event) => {
-                Scaler.attr("transform", event.transform);
+            .on("zoom", (event: { transform: d3.ZoomTransform }) => {
+                Scaler.attr("transform", event.transform.toString());
                 const ScaleProgress = 1 - Math.max(0, 3 - event.transform.k) / 2;
                 this.LinkLayer.style("opacity", 0.3 + ScaleProgress);
                 // this.NodeLayer.style("opacity", 0.1 + ScaleProgress);
@@ -83,7 +84,7 @@ export class Visualizer {
                 this.ComponentLayer.style("display", ScaleProgress > 0.9 ? "none" : "block");
                 // this.ComponentLayer.style("pointer-events", ScaleProgress > 0.6 ? "none" : "all");
             });
-        this.Container.call(this.Zoom as any);
+        this.Container.call(this.Zoom);
         // Load the data
         void d3.json("network.json").then((Data) => {
             this.Dataset = Data as CodebookComparison<DataChunk<DataItem>>;
@@ -113,7 +114,7 @@ export class Visualizer {
     }
     // Status management
     /** Status: The status of the visualization. */
-    public Status: GraphStatus<any> = {} as GraphStatus<any>;
+    public Status: GraphStatus<unknown> = {} as GraphStatus<unknown>;
     /** StatusType: The type of the status. */
     public StatusType = "";
     /** SetStatus: Use a new graph for visualization. */
@@ -168,7 +169,15 @@ export class Visualizer {
     /** CenterCamera: Center the viewport camera to a position and scale.*/
     public CenterCamera(X: number, Y: number, Zoom: number, Animated = true) {
         if (Animated) {
-            this.Container.transition().duration(500).call(this.Zoom.translateTo, X, Y).transition().call(this.Zoom.scaleTo, Zoom);
+            this.Container.transition()
+                .duration(500)
+                .call((selection) => {
+                    this.Zoom.translateTo(selection, X, Y);
+                })
+                .transition()
+                .call((selection) => {
+                    this.Zoom.scaleTo(selection, Zoom);
+                });
         } else {
             this.Zoom.translateTo(this.Container, X, Y);
             this.Zoom.scaleTo(this.Container, Zoom);
@@ -176,11 +185,17 @@ export class Visualizer {
     }
     // Filters
     /** Filters: The current filters of the graph. */
-    private Filters = new Map<string, FilterBase<any, any>>();
+    private Filters = new Map<string, FilterBase<unknown, unknown>>();
     /** PreviewFilter: The previewing filter of the graph. */
-    private PreviewFilter?: FilterBase<any, any>;
+    private PreviewFilter?: FilterBase<unknown, unknown>;
     /** SetFilter: Try to set a filter for the visualization. */
-    public SetFilter(Previewing: boolean, Filter: FilterBase<any, any>, Parameters: any = undefined, Additive = false, Mode = ""): boolean {
+    public SetFilter<TNode, TParameter>(
+        Previewing: boolean,
+        Filter: FilterBase<TNode, TParameter>,
+        Parameters: TParameter | undefined = undefined,
+        Additive = false,
+        Mode = "",
+    ): boolean {
         if (Previewing) {
             if (Parameters === undefined) {
                 delete this.PreviewFilter;
@@ -195,7 +210,7 @@ export class Visualizer {
                     Parameters = undefined;
                 }
             } else {
-                this.PreviewFilter = Filter;
+                this.PreviewFilter = Filter as FilterBase<unknown, unknown>;
                 this.PreviewFilter.SetParameter([Parameters]);
                 this.PreviewFilter.Mode = Mode;
             }
@@ -210,7 +225,7 @@ export class Visualizer {
                     Parameters = undefined;
                 }
             } else {
-                this.Filters.set(Filter.Name, Filter);
+                this.Filters.set(Filter.Name, Filter as FilterBase<unknown, unknown>);
                 Filter.SetParameter([Parameters]);
                 Filter.Mode = Mode;
             }
@@ -364,7 +379,7 @@ export class Visualizer {
         SetClassForComponent(Component, "hovering", false);
     }
     /** ComponentChosen: Handle the click event on a component. */
-    public ComponentChosen<T>(Event: MouseEvent, Component: Component<T>) {
+    public ComponentChosen<T extends Code>(Event: MouseEvent, Component: Component<T>) {
         const Status = this.SetFilter(false, new ComponentFilter(), Component, Event.shiftKey);
         if (Status) {
             this.CenterCamera(

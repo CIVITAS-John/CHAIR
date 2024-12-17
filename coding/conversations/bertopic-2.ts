@@ -10,8 +10,6 @@ import { BertopicTopics, CodedThread, Conversation, Message } from "../../utils/
 
 import { BuildMessagePrompt, ConversationAnalyzer } from "./conversations.js";
 
-
-
 /** BertopicAnalyzer2: Conduct the first-round bertopic coding of the conversations. */
 // Differece from BertopicAnalyzer1: The prompt specifically asks for a verb phrase.
 // Authored by John Chen.

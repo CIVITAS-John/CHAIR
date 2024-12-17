@@ -1,11 +1,18 @@
 import * as graphology from "graphology";
+import type louvain from "graphology-communities-louvain";
 import * as graphologyLibrary from "graphology-library";
+import type seedrandom from "seedrandom";
 
 import { Code, CodebookComparison, DataChunk, DataItem, Dataset } from "../../../utils/schema.js";
 
 import { Component, Graph, Link, Node } from "./schema.js";
 import { InverseLerp, Parameters } from "./utils.js";
-// import louvain from "graphology-library/communities-louvain.js";
+
+declare global {
+    interface Math {
+        seedrandom: new (seed: string) => seedrandom.PRNG;
+    }
+}
 
 type LinkCode = Link<Code> & {
     Weight: NonNullable<Link<Code>["Weight"]>;
@@ -182,8 +189,8 @@ export function FindCommunities<T>(
         }
     });
     // Find the communities
-    const Communities = graphologyLibrary.communitiesLouvain(Graph, {
-        getEdgeWeight: (Edge: string) => Weights.get(Edge),
+    const Communities = (graphologyLibrary.communitiesLouvain as typeof louvain)(Graph, {
+        getEdgeWeight: (Edge: string) => Weights.get(Edge) ?? NaN,
         resolution: 1.5,
         rng: new Math.seedrandom("deterministic"),
     }) as Record<string, number>;
@@ -231,6 +238,7 @@ export function SortNodesByCentrality<T>(
         }
     });
     // Find the central node
+    // eslint-disable-next-line import-x/namespace
     const Result = graphologyLibrary.metrics.centrality.pagerank(Graph, {
         getEdgeWeight: (Edge) => Weights.get(Edge) ?? 0,
     });

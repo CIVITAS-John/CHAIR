@@ -1,8 +1,19 @@
 import { Cash } from "cash-dom";
-import { driver } from "driver.js";
+import { driver as driverJS } from "driver.js";
 
 import { Panel } from "./panels/panel.js";
 import { Visualizer } from "./visualizer.js";
+
+let driver: typeof driverJS;
+declare global {
+    interface Window {
+        driver?: {
+            js: {
+                driver: typeof driverJS;
+            };
+        };
+    }
+}
 
 /** Tutorial: The interactive tutorial for the visualizer. */
 export class Tutorial extends Panel {
@@ -10,7 +21,7 @@ export class Tutorial extends Panel {
     public constructor(Container: Cash, Visualizer: Visualizer) {
         super(Container, Visualizer);
         Container.show();
-        (driver as any) = (window as any).driver.js.driver ?? driver;
+        driver = window.driver?.js.driver ?? driverJS;
     }
     /** ShowTutorial: Show the tutorial. */
     public ShowTutorial(Restart = false) {

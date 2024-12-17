@@ -8,7 +8,6 @@ import { Visualizer } from "../visualizer.js";
 
 import { Panel } from "./panel.js";
 
-
 /** InfoPanel: The info panel for the visualizer. */
 export class InfoPanel extends Panel {
     /** Panels: Panels in the info panel. */

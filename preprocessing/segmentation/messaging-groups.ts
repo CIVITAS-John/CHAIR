@@ -4,7 +4,7 @@ import spawnAsync from "@expo/spawn-async";
 
 import { ExportMessages } from "../../utils/export.js";
 import { GetMessagesPath, LoadItems } from "../../utils/loader.js";
-import { Conversation , Message } from "../../utils/schema.js";
+import { Conversation, Message } from "../../utils/schema.js";
 
 await SeperateMessages("Users of Physics Lab (Group 1)", "1");
 await SeperateMessages("Users of Physics Lab (Group 2)", "2");

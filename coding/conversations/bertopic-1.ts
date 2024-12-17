@@ -10,8 +10,6 @@ import { BertopicTopics, CodedThread, Conversation, Message } from "../../utils/
 
 import { BuildMessagePrompt, ConversationAnalyzer } from "./conversations.js";
 
-
-
 /** BertopicAnalyzer1: Conduct the first-round bertopic coding of the conversations. */
 // Authored by John Chen.
 export default class BertopicAnalyzer1 extends ConversationAnalyzer {

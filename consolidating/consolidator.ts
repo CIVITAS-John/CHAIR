@@ -5,6 +5,9 @@ import { Shuffle } from "../utils/math.js";
 import { Code, Codebook, CodedThreads } from "../utils/schema.js";
 
 /** CodebookConsolidator: The definition of an abstract codebook consolidator. */
+// ESLint does not recognize type parameters in array
+// See https://typescript-eslint.io/rules/no-unnecessary-type-parameters/#limitations
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export abstract class CodebookConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedThreads> {}
 
 /** PipelineConsolidator: A pipeline consolidator that runs through multiple CodeConsolidator. */

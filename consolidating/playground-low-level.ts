@@ -1,12 +1,11 @@
 import { InitializeEmbeddings } from "../utils/embeddings.js";
-import { LLMName , UseLLMs } from "../utils/llms.js";
+import { LLMName, UseLLMs } from "../utils/llms.js";
 
 import { ConsolidateChunks } from "./codebooks.js";
 import { PipelineConsolidator } from "./consolidator.js";
 import { DefinitionGenerator } from "./definition-generator.js";
 import { RefineMerger } from "./refine-merger.js";
 import { SimpleMerger } from "./simple-merger.js";
-
 
 await UseLLMs(
     async () => {

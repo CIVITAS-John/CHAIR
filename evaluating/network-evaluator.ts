@@ -9,9 +9,6 @@ import { CreateOfflineBundle, CreateServer } from "../utils/server.js";
 
 import { CodebookEvaluator } from "./codebooks.js";
 
-
-
-
 /** NetworkEvaluator: A network evaluator of codebook against a reference codebook (#0) with potential human inputs. */
 export class NetworkEvaluator extends CodebookEvaluator {
     /** Name: The name of the evaluator. */

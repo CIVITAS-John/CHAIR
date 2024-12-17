@@ -194,8 +194,12 @@ export class OwnerFilter<T> extends FilterBase<T, number> {
 
 /** CoverageColorizer: Colorize the nodes by an owner's coverage. */
 export class CoverageColorizer<T> implements Colorizer<T> {
+    /** Owner: The owner of the codebook. */
+    public Owner: number;
     /** Constructor: Create a coverage colorizer. */
-    public constructor(public Owner: number) {}
+    public constructor(Owner: number) {
+        this.Owner = Owner;
+    }
     /** Colorize: The colorizer function. */
     public Colorize(Node: Node<T>): string {
         return d3.interpolateCool(Node.Owners.has(this.Owner) ? 1 : Node.NearOwners.has(this.Owner) ? 0.55 : 0.1);
@@ -210,11 +214,15 @@ export class CoverageColorizer<T> implements Colorizer<T> {
 
 /** NoveltyColorizer: Colorize the nodes by their novelty. */
 export class NoveltyColorizer<T> implements Colorizer<T> {
+    /** Owner: The owner of the codebook. */
+    public Owner: number;
+    /** Visualizer: The visualizer. */
+    public Visualizer: Visualizer;
     /** Constructor: Create a novelty colorizer. */
-    public constructor(
-        public Owner: number,
-        public Visualizer: Visualizer,
-    ) {}
+    public constructor(Owner: number, Visualizer: Visualizer) {
+        this.Owner = Owner;
+        this.Visualizer = Visualizer;
+    }
     /** Colorize: The colorizer function. */
     public Colorize(Node: Node<T>): string {
         // Not covered

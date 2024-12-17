@@ -9,7 +9,6 @@ import { Codebook, CodebookEvaluation } from "../utils/schema.js";
 
 import { BuildReferenceAndExport, ReferenceBuilder } from "./reference-builder.js";
 
-
 /** CodebookEvaluator: An evaluator of codebook. */
 export abstract class CodebookEvaluator {
     /** Name: The name of the evaluator. */

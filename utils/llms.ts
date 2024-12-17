@@ -12,7 +12,6 @@ import md5 from "md5";
 
 import { Tokenize } from "./tokenizer.js";
 
-
 // Model: The chat model to use.
 export let Model: (Temperature: number) => BaseChatModel;
 // LLMName: The name of the current LLM.

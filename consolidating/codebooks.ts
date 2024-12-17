@@ -12,7 +12,6 @@ import { Code, Codebook, CodedThreads, DataChunk, DataItem } from "../utils/sche
 
 import { CodebookConsolidator } from "./consolidator.js";
 
-
 /** MergeCodebook: Simply merge the codebooks without further consolidating. */
 export function MergeCodebook(Analyses: CodedThreads) {
     Analyses.Codebook = {};
