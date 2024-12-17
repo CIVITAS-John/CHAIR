@@ -187,7 +187,7 @@ export class Dialog extends Panel {
                             Component.Nodes.length
                         } codes</p></td>`,
                     ).on("click", () => {
-                        this.SidePanel.ShowPanel<CodeSection>("Codes").ShowComponent(Component);
+                        (this.SidePanel.ShowPanel("Codes") as CodeSection).ShowComponent(Component);
                     }),
                 );
                 Coverages.forEach((Coverage, I) => {
@@ -199,7 +199,7 @@ export class Dialog extends Panel {
                         .css("color", d3.lab(Color).l > 70 ? "black" : "white")
                         .on("click", () => {
                             this.Visualizer.SetFilter(false, new OwnerFilter(), I + 1, false);
-                            this.SidePanel.ShowPanel<CodeSection>("Codes").ShowComponent(Component);
+                            (this.SidePanel.ShowPanel("Codes") as CodeSection).ShowComponent(Component);
                         })
                         .append($("<p></p>").text(d3.format(".1%")(Coverage)));
                     Row.append(Cell);

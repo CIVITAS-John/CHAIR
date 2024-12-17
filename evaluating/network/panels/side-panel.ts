@@ -49,7 +49,7 @@ export class SidePanel extends Panel {
         );
     }
     /** ShowPanel: Show a side panel. */
-    public ShowPanel(Name: string): Panel {
+    public ShowPanel(Name: string) {
         const Panel = this.Subpanels[Name];
         this.Header.text(Panel.Title);
         for (const Key in this.Subpanels) {

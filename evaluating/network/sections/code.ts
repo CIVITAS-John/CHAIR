@@ -100,14 +100,14 @@ export class CodeSection extends Panel {
                         .appendTo(Row)
                         .text(`${Filtered}`)
                         .append($("<p></p>").text(d3.format(".0%")(Filtered / Component.Nodes.length)))
-                        .on("click", (Event: Event) => {
+                        .on("click", (Event: MouseEvent) => {
                             this.Visualizer.ComponentChosen(Event, Component);
                         });
                     $('<td class="number-cell actionable"></td>')
                         .appendTo(Row)
                         .text(`${Component.Nodes.length}`)
                         .append($("<p></p>").text("100%"))
-                        .on("click", (Event: Event) => {
+                        .on("click", (Event: MouseEvent) => {
                             this.Visualizer.ComponentChosen(Event, Component);
                         });
                 },
@@ -119,7 +119,7 @@ export class CodeSection extends Panel {
     public ShowComponent(Component: Component<Code>) {
         // Switch to the component, if not already
         if (!this.Visualizer.IsFilterApplied("Component", Component)) {
-            this.Visualizer.ComponentChosen(new Event("virtual"), Component);
+            this.Visualizer.ComponentChosen(new MouseEvent("virtual"), Component);
         }
         // Show the component
         this.SetRefresh(() => {
@@ -135,7 +135,7 @@ export class CodeSection extends Panel {
             this.Container.append(
                 $(`<h3>${Component.Nodes.length} Codes</h3>`).prepend(
                     this.BuildReturn(() => {
-                        this.Visualizer.ComponentChosen(new Event("virtual"), Component);
+                        this.Visualizer.ComponentChosen(new MouseEvent("virtual"), Component);
                         this.ShowComponents();
                     }),
                 ),
@@ -151,7 +151,7 @@ export class CodeSection extends Panel {
                             this.Visualizer.NodeOut(Event, Node);
                         })
                         .toggleClass("chosen", this.Visualizer.GetStatus().ChosenNodes.includes(Node))
-                        .on("click", (Event: Event) => {
+                        .on("click", (Event: MouseEvent) => {
                             if (this.Visualizer.NodeChosen(Event, Node)) {
                                 this.Visualizer.CenterCamera(Node.x ?? 0, Node.y ?? 0, 3);
                             }
