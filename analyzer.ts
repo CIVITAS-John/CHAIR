@@ -170,7 +170,16 @@ export async function AnalyzeChunk<T extends DataItem>(
                 const Codes = Result.toLowerCase()
                     .split(SplitByComma ? /,/g : /\||;/g)
                     .map((Code) => Code.trim().replace(/\.$/, "").toLowerCase())
-                    .filter((Code) => Code !== Message.Content.toLowerCase() && Code.length > 0 && !Code.endsWith(`p${Message.UserID}`));
+                    .filter(
+                        (Code) =>
+                            Code.length > 0 &&
+                            Code !== Message.Content.toLowerCase() &&
+                            !Code.endsWith("...") &&
+                            !Code.endsWith("!") &&
+                            !Code.endsWith("?") &&
+                            !Code.endsWith(".") && // To avoid codes using the original content
+                            !Code.endsWith(`p${Message.UserID}`),
+                    );
                 // Record the codes from line-level coding
                 Analysis.Items[Message.ID].Codes = Codes;
                 Codes.forEach((Code) => {

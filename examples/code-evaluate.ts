@@ -10,19 +10,31 @@ import { GetMessagesPath, LoadDataset } from "../utils/loader.js";
 
 // An example configuration
 const Configuration = {
-    Dataset: "data",
-    EmbeddingModel: "openai-small-512",
+    Dataset: "Coded Dataset 1",
+    EmbeddingModel: "gecko-768-similarity",
     Steps: [
         {
             Action: "Code",
             Analyzers: ["low-level-5"],
-            Models: ["gpt-4.5-omni", "gpt-4.5-mini"],
+            Models: [
+                "o_gemma2_27b-instruct-q5_K_M",
+                "o_mistral-small_22b-instruct-2409-q5_K_M",
+                "o_mistral-nemo_12b-instruct-2407-q8_0",
+                "o_qwen2.5_14b-instruct-q8_0",
+                "gpt-4.5-omni",
+            ],
         },
         {
             Action: "Evaluate",
             Name: "evaluation",
             Analyzers: ["low-level-5"],
-            Models: ["gpt-4.5-omni", "gpt-4.5-mini"],
+            Models: [
+                "o_gemma2_27b-instruct-q5_K_M",
+                "o_mistral-small_22b-instruct-2409-q5_K_M",
+                "o_mistral-nemo_12b-instruct-2407-q8_0",
+                "o_qwen2.5_14b-instruct-q8_0",
+                "gpt-4.5-omni",
+            ],
             Evaluators: ["gpt-4.5-omni"],
         },
     ],

@@ -23,32 +23,35 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
     /** ParseResponse: Parse the responses from the LLM. */
     public ParseResponse(Analysis: CodedThread, Lines: string[], Messages: Message[], _ChunkStart: number): Promise<Record<number, string>> {
         const Results: Record<number, string> = {};
+        let NextMessage: ((Content: string) => void) | undefined;
         for (let I = 0; I < Lines.length; I++) {
             let Line = Lines[I];
             const NextLine = I + 1 < Lines.length ? Lines[I + 1] : "";
-            if (Line.startsWith("**") && Line.endsWith("**")) {
-                Line = Line.substring(2, Line.length - 2).trim();
-            }
+            // Remove **bold**
+            Line = Line.replaceAll(/\*\*(.*?)\*\*/g, "$1");
+            // Remove ##/###/.. header
+            Line = Line.replace(/^#+ /, "");
+            // Recongnize the parts
             if (Line.startsWith("Thoughts:")) {
                 Analysis.Plan = Line.substring(9).trim();
                 if (Analysis.Plan === "") {
-                    Analysis.Plan = Lines.slice(I + 1)
-                        .join("\n")
-                        .trim();
+                    NextMessage = (Content) => (Analysis.Plan = `${Analysis.Plan}${Content}\n`);
+                } else {
+                    NextMessage = undefined;
                 }
             } else if (Line.startsWith("Summary:")) {
                 Analysis.Summary = Line.substring(8).trim();
                 if (Analysis.Summary === "") {
-                    Analysis.Summary = Lines.slice(I + 1)
-                        .join("\n")
-                        .trim();
+                    NextMessage = (Content) => (Analysis.Summary = `${Analysis.Summary}${Content}\n`);
+                } else {
+                    NextMessage = undefined;
                 }
             } else if (Line.startsWith("Notes:")) {
                 Analysis.Reflection = Line.substring(6).trim();
                 if (Analysis.Reflection === "") {
-                    Analysis.Reflection = Lines.slice(I + 1)
-                        .join("\n")
-                        .trim();
+                    NextMessage = (Content) => (Analysis.Reflection = `${Analysis.Reflection}${Content}\n`);
+                } else {
+                    NextMessage = undefined;
                 }
             } else {
                 const Match = /^(\d+)\. (.*)$/.exec(Line);
@@ -77,12 +80,10 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     }
                     // Remove the () part
                     Codes = Codes.replace(/\(.*?\)/, "").trim();
+                    // Remove the ** part
+                    Codes = Codes.replace(/\*(.*?)\*/, "$1").trim();
                     // Sometimes the LLM will return "tag{number}: {codes}"
                     Codes = Codes.replace(new RegExp(`^${this.TagName}\\d+:`), "").trim();
-                    // Sometimes the LLM will put the message back
-                    if (Codes.startsWith(Message.Content)) {
-                        Codes = Codes.substring(Message.Content.length).trim();
-                    }
                     // Sometimes the LLM will return "{codes}, {codes}"
                     Codes = Codes.replace(/\{(.*?)\}/, "$1").trim();
                     // Sometimes the LLM will start with the original content
@@ -123,6 +124,9 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                         Codes = Codes.substring(0, Codes.indexOf(":")).trim();
                     }
                     Results[parseInt(Match[1])] = Codes;
+                    NextMessage = undefined;
+                } else if (Line !== "" && NextMessage) {
+                    NextMessage(Line);
                 }
             }
         }

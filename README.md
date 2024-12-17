@@ -24,6 +24,7 @@ MISTRAL_API_KEY={Your Mistral API Key}
 GROQ_API_KEY={Your Groq API Key} # for llama3 series models
 GOOGLE_API_KEY={Your Google API Key} # for gecko embedding models
 DATASET_PATH=./examples # or the root path to your datasets
+OLLAMA_URL=http://127.0.0.1:11434
 ```
 
 For Google API, get the key at [Google AI Studio](https://aistudio.google.com/app/u/1/apikey).

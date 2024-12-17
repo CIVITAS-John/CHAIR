@@ -3,6 +3,7 @@ import * as File from "fs";
 import { TaskType } from "@google/generative-ai";
 import { Embeddings } from "@langchain/core/embeddings";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
+import { OllamaEmbeddings } from "@langchain/ollama";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import chalk from "chalk";
 import * as dotenv from "dotenv";
@@ -25,6 +26,16 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 /** InitializeEmbeddings: Initialize the embeddings with the given name. */
 export function InitializeEmbeddings(Embedding: string) {
     dotenv.config();
+    // ollama Support
+    // let LocalModel = false;
+    if (Embedding.startsWith("o_")) {
+        Embedding = Embedding.substring(2);
+        Model = new OllamaEmbeddings({
+            model: Embedding,
+            baseUrl: process.env.OLLAMA_URL ?? "https://127.0.0.1:11434",
+        });
+        // LocalModel = true;
+    }
     switch (Embedding) {
         case "openai-small-512":
             Dimensions = 512;
@@ -74,6 +85,9 @@ export function InitializeEmbeddings(Embedding: string) {
                 taskType: TaskType.SEMANTIC_SIMILARITY,
             });
             break;
+        case "mxbai-embed-large":
+            Dimensions = 1024;
+            break;
         default:
             throw new Error(`Invalid embedding model: ${Embedding}`);
     }
@@ -93,8 +107,8 @@ export async function RequestEmbeddings(Sources: string[], Cache: string): Promi
         const CacheFile = `${CacheFolder}/${md5(Source)}.bytes`;
         if (File.existsSync(CacheFile)) {
             const Buffer = File.readFileSync(CacheFile);
-            const Embedding = new Float32Array(Buffer.buffer, Buffer.byteOffset, Buffer.byteLength / 4);
-            Embeddings.set(Embedding, Dimensions * I);
+            const Cached = new Float32Array(Buffer.buffer, Buffer.byteOffset, Buffer.byteLength / 4);
+            Embeddings.set(Cached, Dimensions * I);
         } else {
             Requests.push(I);
         }
