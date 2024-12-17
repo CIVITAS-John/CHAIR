@@ -7,6 +7,11 @@
         "Frank Zhang <fzhang@u.northwestern.edu>"
     ],
     "type": "module",
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "lint": "eslint . && prettier --check .",
+        "format": "eslint --fix . && prettier --write ."
+    },
     "dependencies": {
         "@dqbd/tiktoken": "^1.0.17",
         "@expo/spawn-async": "^1.7.2",
