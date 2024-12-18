@@ -11,7 +11,7 @@ import { GetMessagesPath, LoadDataset } from "../utils/loader.js";
 
 // An example configuration
 const Configuration = {
-    Dataset: "Coded Dataset 1",
+    Dataset: "data",
     EmbeddingModel: "gecko-768-similarity",
     Steps: [
         {

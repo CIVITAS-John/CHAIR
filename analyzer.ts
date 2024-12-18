@@ -122,9 +122,6 @@ export async function AnalyzeChunk<T extends DataItem>(
         console.log(`Chunk ${Key}: ${Messages.length} items`);
         // Initialize the analysis
         const Analysis = Analyzed.Threads[Key];
-        if (!Analysis.Iteration) {
-            throw new Error(`Iteration is not defined in chunk ${Key}.`);
-        }
         // Run the messages through chunks (as defined by the analyzer)
         let PreviousAnalysis: CodedThread | undefined;
         await LoopThroughChunks(Analyzer, Analysis, Chunk, Messages, async (Currents, ChunkStart, IsFirst, Tries, Iteration) => {
@@ -197,7 +194,9 @@ export async function AnalyzeChunk<T extends DataItem>(
             // Dial back the cursor if necessary
             return Object.keys(ItemResults).length - Currents.length;
         });
-        Analysis.Iteration++;
+        if (Analysis.Iteration !== undefined) {
+            Analysis.Iteration++;
+        }
     }
     // Consolidate a codebook
     MergeCodebook(Analyzed);
