@@ -66,7 +66,7 @@ export function InitializeLLM(LLM: string) {
                 temperature: Temp,
                 model: Ollama,
                 streaming: false,
-                baseUrl: process.env.OLLAMA_URL ?? "https://127.0.0.1:11434",
+                baseUrl: process.env.OLLAMA_URL ?? "http://127.0.0.1:11434",
             });
         LocalModel = true;
     } else {

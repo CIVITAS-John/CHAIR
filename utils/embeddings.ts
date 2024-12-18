@@ -32,7 +32,7 @@ export function InitializeEmbeddings(Embedding: string) {
         Embedding = Embedding.substring(2);
         Model = new OllamaEmbeddings({
             model: Embedding,
-            baseUrl: process.env.OLLAMA_URL ?? "https://127.0.0.1:11434",
+            baseUrl: process.env.OLLAMA_URL ?? "http://127.0.0.1:11434",
         });
         // LocalModel = true;
     }
