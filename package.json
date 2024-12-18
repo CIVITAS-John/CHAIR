@@ -9,8 +9,8 @@
     "type": "module",
     "scripts": {
         "build": "tsc -p tsconfig.json",
-        "lint": "eslint . && prettier --check .",
-        "format": "eslint --fix . && prettier --write ."
+        "lint": "eslint --cache . && prettier --check --cache .",
+        "format": "eslint --fix --cache . && prettier --write --cache ."
     },
     "dependencies": {
         "@dqbd/tiktoken": "^1.0.17",
