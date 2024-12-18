@@ -149,12 +149,12 @@ export function TakeExamples(Examples: string[], Take = 1000000): string[] {
         if (Index !== -1) {
             Example = Example.substring(Index + 3);
         }
-        ExampleMap.set(Example, (ExampleMap.get(Example) ?? 0) + 1);
+        ExampleMap.set(Example, (ExampleMap.get(Example) ?? NaN) + 1);
     }
     for (const [Example, Count] of ExampleMap) {
         ExampleMap.set(Example, Count * Example.length);
     }
     return Array.from(ExampleMap.keys())
-        .sort((A, B) => (ExampleMap.get(B) ?? 0) - (ExampleMap.get(A) ?? 0))
+        .sort((A, B) => (ExampleMap.get(B) ?? NaN) - (ExampleMap.get(A) ?? NaN))
         .slice(0, Take);
 }

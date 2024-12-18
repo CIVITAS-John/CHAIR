@@ -42,7 +42,7 @@ export function ExtractExamples(Examples: string[]): Map<string, string[]> {
     // Sort by the score
     const NewResults = new Map<string, string[]>();
     Array.from(Scores.keys())
-        .sort((A, B) => (Scores.get(B) ?? 0) - (Scores.get(A) ?? 0))
+        .sort((A, B) => (Scores.get(B) ?? NaN) - (Scores.get(A) ?? NaN))
         .forEach((Key) => {
             NewResults.set(Key, Results.get(Key) ?? []);
         });

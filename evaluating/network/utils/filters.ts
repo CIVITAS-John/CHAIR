@@ -232,7 +232,7 @@ export class NoveltyColorizer<T> implements Colorizer<T> {
         if (Node.Owners.has(this.Owner)) {
             let Novel = true;
             Node.Owners.forEach((Owner) => {
-                if (Owner !== this.Owner && (this.Visualizer.Dataset.Weights?.[Owner] ?? 0) > 0) {
+                if (Owner !== this.Owner && this.Visualizer.Dataset.Weights && this.Visualizer.Dataset.Weights[Owner] > 0) {
                     Novel = false;
                 }
             });

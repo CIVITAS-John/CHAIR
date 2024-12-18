@@ -235,12 +235,14 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
     Codes = SortCodes(Codes);
     // Write the codes
     for (const Code of Codes) {
-        const Categories = Code.Categories?.map((Category) => ((Code.Categories?.length ?? 0) > 1 ? `* ${Category}` : Category)).join("\n") ?? "";
+        const Categories =
+            Code.Categories?.map((Category) => (Code.Categories && Code.Categories.length > 1 ? `* ${Category}` : Category)).join("\n") ?? "";
         const Definitions =
-            Code.Definitions?.map((Definition) => ((Code.Definitions?.length ?? 0) > 1 ? `* ${Definition}` : Definition)).join("\n") ?? "";
+            Code.Definitions?.map((Definition) => (Code.Definitions && Code.Definitions.length > 1 ? `* ${Definition}` : Definition)).join("\n") ??
+            "";
         const Examples =
             Code.Examples?.map((Example) =>
-                (Code.Examples?.length ?? 0) > 1 ? `* ${Example.replace("|||", ": ")}` : Example.replace("|||", ": "),
+                Code.Examples && Code.Examples.length > 1 ? `* ${Example.replace("|||", ": ")}` : Example.replace("|||", ": "),
             ).join("\n") ?? "";
         const Alternatives = Code.Alternatives?.map((Code) => `* ${Code}`).join("\n") ?? "";
         const Row = Sheet.addRow({

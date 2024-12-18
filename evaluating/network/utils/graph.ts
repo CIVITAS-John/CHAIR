@@ -80,8 +80,8 @@ export function BuildSemanticGraph(
                     Target: Target,
                     Distance: Distance,
                     VisualizeDistance: InverseLerp(Parameter.LinkMinimumDistance, Parameter.LinkMaximumDistance, Distance),
-                    Weight: 0,
-                    VisualizeWeight: 0,
+                    Weight: NaN,
+                    VisualizeWeight: NaN,
                 };
                 Link.Weight = (1 - Link.VisualizeDistance) ** 2;
                 Link.VisualizeWeight = Link.Weight;

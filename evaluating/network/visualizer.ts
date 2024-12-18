@@ -445,11 +445,14 @@ export class Visualizer {
                 if (Node.Hidden) {
                     Color = "#999999";
                 }
-                if (!Colorizer.Results?.[Color]) {
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                    Colorizer.Results![Color] = [];
+                if (!Colorizer.Results) {
+                    throw new Error("Colorizer results are not initialized.");
                 }
-                Colorizer.Results?.[Color].push(Node);
+                // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                if (!Colorizer.Results[Color]) {
+                    Colorizer.Results[Color] = [];
+                }
+                Colorizer.Results[Color].push(Node);
                 return Color;
             })
             // Set the radius based on the number of examples

@@ -111,7 +111,7 @@ for (const Group of Groups) {
         Message.Content = Message.Content.trim();
         // Identify unknown emojis
         for (const UnknownEmoji of Message.Content.matchAll(/\/([\u4e00-\u9fa5]{1,4})/g)) {
-            UnknownEmojis.set(UnknownEmoji[1], (UnknownEmojis.get(UnknownEmoji[1]) ?? 0) + 1);
+            UnknownEmojis.set(UnknownEmoji[1], (UnknownEmojis.get(UnknownEmoji[1]) ?? NaN) + 1);
         }
     }
     // Sort messages by time (sometimes, my computer may receive records in incorrect orders)

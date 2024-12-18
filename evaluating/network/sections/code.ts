@@ -80,7 +80,7 @@ export class CodeSection extends Panel {
                     // Show the owners
                     const Owners = $('<p class="owners"></p>').appendTo(Summary);
                     this.Dataset.Names.forEach((_Name, NameIndex) => {
-                        const Count = Codebooks.get(NameIndex) ?? 0;
+                        const Count = Codebooks.get(NameIndex) ?? NaN;
                         if (NameIndex === 0 || Count === 0) {
                             return;
                         }

@@ -50,7 +50,7 @@ export class ReferenceBuilder {
         return Threads.Codebook;
     }
     /** SanityCheck: Check if original codes are still present in the consolidated one. */
-    protected SanityCheck(Iteration: number, Codebook: Codebook) {
+    protected SanityCheck(Iteration: number, Codebook: Codebook): Promise<void> {
         File.writeFileSync(`./known/codebook-${Iteration}.json`, JSON.stringify(Codebook, null, 4), "utf8");
         if (Iteration === 0) {
             this.OriginalCodes = new Set<string>(Object.values(Codebook).map((Code) => Code.Label));

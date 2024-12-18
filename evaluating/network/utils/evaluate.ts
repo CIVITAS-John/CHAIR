@@ -37,7 +37,7 @@ export function EvaluateCodebooks(Dataset: CodebookComparison<DataChunk<DataItem
     // Check if each node is covered by the codebooks
     let TotalNovelty = 0;
     for (const Node of Graph.Nodes) {
-        const Weight = NodeWeights.get(Node.ID) ?? 0;
+        const Weight = NodeWeights.get(Node.ID) ?? NaN;
         // Check novelty
         if (Node.Novel) {
             TotalNovelty += Weight;
@@ -98,9 +98,9 @@ export function EvaluateUsers(Dataset: CodebookComparison<DataChunk<DataItem>>, 
             for (let Example of Code.Examples ?? []) {
                 Example = Example.split("|||")[0];
                 if (Examples.has(Example)) {
-                    const User = Examples.get(Example) ?? -1;
+                    const User = Examples.get(Example) ?? NaN;
                     if (!Owners.has(User)) {
-                        Owners.add(Examples.get(Example) ?? -1);
+                        Owners.add(Examples.get(Example) ?? NaN);
                     }
                 }
             }
@@ -119,7 +119,7 @@ export function EvaluateUsers(Dataset: CodebookComparison<DataChunk<DataItem>>, 
     // Check if each node is covered by the codebooks
     let TotalNovelty = 0;
     for (const Node of Graph.Nodes) {
-        const Weight = NodeWeights.get(Node.ID) ?? 0;
+        const Weight = NodeWeights.get(Node.ID) ?? NaN;
         // Check novelty
         if (Node.Novel) {
             TotalNovelty += Weight;

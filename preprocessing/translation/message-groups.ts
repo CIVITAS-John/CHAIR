@@ -107,7 +107,7 @@ export async function TranslateMessages(Messages: Message[], Participants: Parti
     const Nicknames = Messages.map((Message) => Message.Nickname);
     const Contents = Messages.map((Message) => {
         // Handle the mentioned users (=> @ID)
-        Message.Content = Message.Content.replaceAll(/@(.*?)\((\d+)\)(?:\s|$)/g, (_Match, _Name, ID) => {
+        Message.Content = Message.Content.replaceAll(/@(.*?)\(\d+\)(?:\s|$)/g, (_Match, ID) => {
             return `@${ID} `;
         });
         // Truncate the message if it's too long

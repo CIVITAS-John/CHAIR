@@ -22,13 +22,15 @@ async function ExportUser(Database: Mongo.Db, ID: Mongo.ObjectId, Nickname?: str
         Nickname: string;
         Verification: string;
     }>;
-    const Statistics = await Database.collection("UserStatistics").findOne({ _id: ID });
+    const Statistics = (await Database.collection("UserStatistics").findOne({ _id: ID })) as MongoDocument<{
+        Registration: Date;
+    }>;
     const Result: User = {
         ID: Users.size.toString(),
         Nickname: Nickname ?? User.Nickname,
         Projects: 0,
         Comments: 0,
-        FirstUse: Statistics?.Registration as Date,
+        FirstUse: Statistics.Registration,
         Titles: [],
     };
     // Sync the verification status at "now" time. - we used Sep 15, 2022 snapshot of Physics Lab's database
