@@ -54,7 +54,7 @@ ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions?.[
             if (Line === "" || Line.startsWith("---")) {
                 continue;
             }
-            let Match = /^(\d+)\./.exec(Line);
+            let Match = /^\d+\./.exec(Line);
             if (Match) {
                 let Category = "";
                 if (I + 1 >= Lines.length || /^\d+\./.exec(Lines[I + 1])) {
@@ -64,7 +64,7 @@ ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions?.[
                     Category = Lines[I + 1].trim().toLowerCase();
                 }
                 // Sometimes, the LLM will return "Code 1 - {category}"
-                Match = /^code (\d+) -/.exec(Category);
+                Match = /^code \d+ -/.exec(Category);
                 if (Match) {
                     Category = Category.substring(Match[0].length).trim();
                 }

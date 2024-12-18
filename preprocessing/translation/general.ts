@@ -150,10 +150,10 @@ async function TranslateChunkedStringsWithLLM(Type: string, Source: string[], Sy
         Tries * 0.2,
     );
     // Split the result
-    let Results = Result.split(/\n *--- *\n/gm);
+    let Results = Result.split(/\n *--- *\n/);
     // Sometimes GPT-4.5-turbo ignores the proceding line break.
     if (Results.length === 1) {
-        Results = Result.split(/\n? *--- *\n/gm);
+        Results = Result.split(/\n? *--- *\n/);
     }
     // Filter empty strings
     Results = Results.filter((Text) => Text.trim() !== "");
@@ -175,7 +175,7 @@ async function TranslateChunkedStringsWithLLM(Type: string, Source: string[], Sy
         if (I === 0 && !Results[I].startsWith("1.")) {
             Results[I] = Results[I].substring(Results[I].indexOf(".") - 1);
         }
-        Results[I] = Results[I].replace(/^(\d+)\.?(\s|\n)/gs, "");
+        Results[I] = Results[I].replace(/^\d+\.?\s/g, "");
         if (Source[I] === Results[I] && Tries === 0) {
             throw new Error(`Translation Error: ${Source[I]} => ${Results[I]}`);
         }

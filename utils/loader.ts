@@ -188,7 +188,7 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
             } = { ID: ID, Codes: [] };
             const Codes = Row.getCell(CodeIndex).value;
             if (Codes && typeof Codes === "string") {
-                Item.Codes = Codes.split(/,|\||;/g)
+                Item.Codes = Codes.split(/[,|;]/)
                     .map((Code) => Code.trim().replace(/\.$/, "").toLowerCase())
                     .filter((Code) => Code !== "");
             }
@@ -243,7 +243,7 @@ async function LoadCodebooksFrom(Source: string): Promise<[Codebook[], string[]]
         Sources = GetFilesRecursively(Source);
     }
     // Remove the in-process codebooks
-    Sources = Sources.filter((Source) => !Source.match(/-(\d)+.xlsx$/g)).sort();
+    Sources = Sources.filter((Source) => !Source.match(/-\d+.xlsx$/g)).sort();
     // Load the codebooks
     const Codebooks: Codebook[] = [];
     let Names: string[] = [];

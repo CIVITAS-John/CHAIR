@@ -10,7 +10,7 @@ export function BuildMessagePrompt(Message: Message, Coded?: CodedItem, TagsName
     // if (Message.Content === undefined) {
     //     return "";
     // }
-    let Content = Message.Content.replaceAll(/@.*?\((\d+)\)([^\w]|$)/g, (_Match, ID: string) => {
+    let Content = Message.Content.replaceAll(/@.*?\((\d+)\)(?:\W|$)/g, (_Match, ID: string) => {
         return `@${ShortenName ? GetSpeakerNameForExample(ID) : GetSpeakerName(ID)} `;
     });
     // Replace the image and checkin tags to avoid confusing the LLM

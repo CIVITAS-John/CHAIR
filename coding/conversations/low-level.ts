@@ -62,7 +62,7 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     // }
                     let Codes = Match[2].trim();
                     // Sometimes, the LLM will return the message content and put the codes in the next line
-                    if (NextLine !== "" && !NextLine.startsWith("Summary:") && !/^(\d+)\. (.*)$/.exec(NextLine)) {
+                    if (NextLine !== "" && !NextLine.startsWith("Summary:") && !/^\d+\. .*$/.exec(NextLine)) {
                         Codes = NextLine.trim();
                         I++;
                     }

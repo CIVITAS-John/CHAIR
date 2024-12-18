@@ -170,5 +170,5 @@ export function CreateOfflineBundle(TargetDirectory: string, BaseDirectories: st
 
 /** HandleScript: Filter a script content to exclude import statements. */
 function HandleScript(Content: string): string {
-    return Content.replaceAll(/^(.*)import(.*?) from ['"]([^/]*?)['"];?$/gm, "").replaceAll(/^\/\/# sourceMappingURL(.*)/gm, "");
+    return Content.replaceAll(/^.*import.*? from ['"][^/]*?['"];?$/gm, "").replaceAll(/^\/\/# sourceMappingURL.*/gm, "");
 }

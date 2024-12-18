@@ -5,6 +5,7 @@ import eslint from "@eslint/js";
 import tsParser from "@typescript-eslint/parser";
 import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginImportX from "eslint-plugin-import-x";
+import * as regexpPlugin from "eslint-plugin-regexp";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
@@ -14,6 +15,7 @@ export default tseslint.config(
     eslintConfigPrettier,
     eslintPluginImportX.flatConfigs.recommended,
     eslintPluginImportX.flatConfigs.typescript,
+    regexpPlugin.configs["flat/recommended"],
     {
         languageOptions: {
             parserOptions: {
@@ -85,6 +87,7 @@ export default tseslint.config(
                     avoidEscape: true,
                 },
             ],
+            "regexp/no-super-linear-backtracking": "warn",
             "require-await": "error",
             "sort-imports": [
                 "error",

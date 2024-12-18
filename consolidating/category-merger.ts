@@ -97,7 +97,7 @@ ${Count}. {2-4 words for category ${Count}}
             if (Line === "" || Line.startsWith("---")) {
                 continue;
             }
-            const Match = /^(\d+)\./.exec(Line);
+            const Match = /^\d+\./.exec(Line);
             if (Match) {
                 const Category = Line.substring(Match[0].length).trim().toLowerCase();
                 Results.push(Category);

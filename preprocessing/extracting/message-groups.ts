@@ -13,7 +13,7 @@ function ReadQQMessages(Path: string, Prefix: string): Message[] {
     const Sources = File.readFileSync(Path, "utf-8").split("\r\n");
     let LastMessage: Message | undefined;
     for (const Source of Sources) {
-        const Match = /(\d{4})-(\d{2})-(\d{2}) ([0-1]?\d):(\d{2}):(\d{2}) (AM|PM) (.*?)(\(\d+\)|<.*?>)/.exec(Source);
+        const Match = /(\d{4})-(\d{2})-(\d{2}) ([01]?\d):(\d{2}):(\d{2}) (AM|PM) ([^(<]*)(\(\d+\)|<.*?>)/.exec(Source);
         if (Match !== null) {
             const Time = new Date(
                 Number(Match[1]),
@@ -95,7 +95,7 @@ for (const Group of Groups) {
         Message.UserID = Participant.ID;
         Message.Nickname = Participant.Nickname;
         // Here, we need to replace all `@...` references with the corresponding ID.
-        Message.Content = Message.Content.replaceAll(/@(.*?)(\s|$)/g, (Match, Name: string) => {
+        Message.Content = Message.Content.replaceAll(/@(.*?)(?:\s|$)/g, (Match, Name: string) => {
             if (NameMappings.has(Name)) {
                 const Metadata = NameMappings.get(Name) ?? ["", ""];
                 Message.Mentions = Message.Mentions ?? [];

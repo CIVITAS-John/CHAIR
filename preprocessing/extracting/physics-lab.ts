@@ -89,7 +89,7 @@ function SyncUser(User: User, Verification: string, Time: Date) {
 /** FindMentions: Find the mentions in the content. */
 async function FindMentions(Database: Mongo.Db, Content: string): Promise<[string, string[] | undefined]> {
     const Mentioned: string[] = [];
-    for (const Match of Content.matchAll(/<user=(.*?)>(.*?)<\/user>/gs)) {
+    for (const Match of Content.matchAll(/<user=([^>]*)>.*?<\/user>/gs)) {
         try {
             await ExportUser(Database, Mongo.ObjectId.createFromHexString(Match[1]));
         } catch {
@@ -97,7 +97,7 @@ async function FindMentions(Database: Mongo.Db, Content: string): Promise<[strin
         }
     }
     return [
-        Content.replaceAll(/<user=(.*?)>(.*?)<\/user>/gs, (Match, ID: string) => {
+        Content.replaceAll(/<user=([^>]*)>.*?<\/user>/gs, (Match, ID: string) => {
             if (Users.has(ID)) {
                 const Metadata = Users.get(ID) ?? ({} as User);
                 Mentioned.push(Metadata.ID);

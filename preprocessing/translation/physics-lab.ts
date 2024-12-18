@@ -26,7 +26,7 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
 
     // Handle the mentioned users (=> @ID)
     const HandleContent = (Content: string) => {
-        return Content.replaceAll(/(回复)?@(.*?)\((\d+)\)(\s|$|:)/g, (_Match, Reply, Name: string, ID: string) => {
+        return Content.replaceAll(/(回复)?@(.*?)\((\d+)\)(?:\s|$|:)/g, (_Match, Reply, Name: string, ID: string) => {
             UserMappings.set(ID, Name);
             Nicknames.add(Name);
             if (Reply) {

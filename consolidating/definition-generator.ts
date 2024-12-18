@@ -27,7 +27,7 @@ export abstract class DefinitionParser extends CodeConsolidator {
             if (Line === "...") {
                 break;
             }
-            const Match = /^(\d+)\./.exec(Line);
+            const Match = /^\d+\./.exec(Line);
             if (Match) {
                 Line = Line.substring(Match[0].length).trim();
                 // Sometimes, the label is merged with the number

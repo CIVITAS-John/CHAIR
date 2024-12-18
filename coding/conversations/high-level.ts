@@ -35,7 +35,7 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                 Position = "";
                 Line = Line.substring(3).trim();
                 // Sometimes, the LLM will return "P{number}" as the name of the code
-                if (/^(P(\d+))($|:)/.exec(Line)) {
+                if (/^P\d+(?:$|:)/.exec(Line)) {
                     throw new Error(`Invalid code name: ${Line}.`);
                 }
                 // Sometimes, the LLM will return "**{code}**" as the name of the code
@@ -43,7 +43,7 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                 // Sometimes, the LLM will return "1. {code}" as the name of the code
                 Line = Line.replace(/^\d+\.*/, "").trim();
                 // Sometimes, the LLM will return "Label: {code}" as the name of the code
-                Line = Line.replace(/^(Label|Code)\s*\d*:/, "").trim();
+                Line = Line.replace(/^(?:Label|Code)\s*\d*:/, "").trim();
                 // Get or create the code
                 Line = Line.toLowerCase();
                 CurrentCode = Analysis.Codes[Line] ?? { Categories: [Category.toLowerCase()], Label: Line };
@@ -70,13 +70,13 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                         Index = ID;
                     }
                     // Sometimes the LLM will return "Example quote 1: quote"
-                    Line = Line.replace(/^(Example quote \d+):/, "").trim();
+                    Line = Line.replace(/^Example quote \d+:/, "").trim();
                     // Sometimes the LLM will return "tag{number}: {codes}"
                     Line = Line.replace(/^tag\d+:/, "").trim();
                     // Sometimes the LLM will return `"quote" (Author)`
                     Line = Line.replace(/^"(.*)"/, "$1").trim();
                     // Sometimes the LLM will return `quote (Author)`
-                    Line = Line.replace(/^(.*)\(.+\)$/, "$1").trim();
+                    Line = Line.replace(/^([^(]*)\(.+\)$/, "$1").trim();
                     // Sometimes the LLM will return `**{quote}**`
                     Line = Line.replace(/^\*\*(.*)\*\*/, "$1").trim();
                     // Sometimes the LLM will return `User/Designer-\d+: {quote}`
