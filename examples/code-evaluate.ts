@@ -1,27 +1,41 @@
 import * as File from "fs";
+
 import { ProcessDataset } from "../analyzer.js";
+import { BuildReferenceAndEvaluateCodebooks } from "../evaluating/codebooks.js";
+import { NetworkEvaluator } from "../evaluating/network-evaluator.js";
+import type { ReferenceBuilder } from "../evaluating/reference-builder.js";
+import { RefiningReferenceBuilder } from "../evaluating/reference-builder.js";
+import { InitializeEmbeddings } from "../utils/embeddings.js";
 import { EnsureFolder, UseLLMs } from "../utils/llms.js";
 import { GetMessagesPath, LoadDataset } from "../utils/loader.js";
-import { BuildReferenceAndEvaluateCodebooks } from "../evaluating/codebooks.js";
-import { InitializeEmbeddings } from "../utils/embeddings.js";
-import { ReferenceBuilder, RefiningReferenceBuilder } from "../evaluating/reference-builder.js";
-import { NetworkEvaluator } from "../evaluating/network-evaluator.js";
 
 // An example configuration
-var Configuration = {
+const Configuration = {
     Dataset: "Coded Dataset 1",
     EmbeddingModel: "gecko-768-similarity",
     Steps: [
         {
             Action: "Code",
             Analyzers: ["low-level-5"],
-            Models: ["o_gemma2_27b-instruct-q5_K_M", "o_mistral-small_22b-instruct-2409-q5_K_M", "o_mistral-nemo_12b-instruct-2407-q8_0", "o_qwen2.5_14b-instruct-q8_0", "gpt-4.5-omni"],
-        }, 
+            Models: [
+                "o_gemma2_27b-instruct-q5_K_M",
+                "o_mistral-small_22b-instruct-2409-q5_K_M",
+                "o_mistral-nemo_12b-instruct-2407-q8_0",
+                "o_qwen2.5_14b-instruct-q8_0",
+                "gpt-4.5-omni",
+            ],
+        },
         {
             Action: "Evaluate",
             Name: "evaluation",
             Analyzers: ["low-level-5"],
-            Models: ["o_gemma2_27b-instruct-q5_K_M", "o_mistral-small_22b-instruct-2409-q5_K_M", "o_mistral-nemo_12b-instruct-2407-q8_0", "o_qwen2.5_14b-instruct-q8_0", "gpt-4.5-omni"],
+            Models: [
+                "o_gemma2_27b-instruct-q5_K_M",
+                "o_mistral-small_22b-instruct-2409-q5_K_M",
+                "o_mistral-nemo_12b-instruct-2407-q8_0",
+                "o_qwen2.5_14b-instruct-q8_0",
+                "gpt-4.5-omni",
+            ],
             Evaluators: ["gpt-4.5-omni"],
         },
     ],
@@ -33,16 +47,22 @@ InitializeEmbeddings(Configuration.EmbeddingModel);
 for (var Step of Configuration.Steps) {
     switch (Step.Action) {
         case "Code":
-            for (var Analyzer of Step.Analyzers!) {
-                await UseLLMs(async () => {
-                    await ProcessDataset(new (await import(`./../coding/conversations/${Analyzer}.js`)).default(), Configuration.Dataset, false);
-                }, ...Step.Models!);
+            for (var Analyzer of Step.Analyzers) {
+                await UseLLMs(
+                    async () => {
+                        await ProcessDataset(new (await import(`./../coding/conversations/${Analyzer}.js`)).default(), Configuration.Dataset, false);
+                    },
+                    ...Step.Models,
+                );
             }
             break;
         case "Evaluate":
-            await UseLLMs(async () => {
-                await Evaluate(Configuration.Dataset, new RefiningReferenceBuilder(), Step.Name ?? "evaluation", Step.Analyzers, Step.Models);
-            }, ...Step.Evaluators!);
+            await UseLLMs(
+                async () => {
+                    await Evaluate(Configuration.Dataset, new RefiningReferenceBuilder(), Step.Name ?? "evaluation", Step.Analyzers, Step.Models);
+                },
+                ...Step.Evaluators!,
+            );
             break;
     }
 }
@@ -50,27 +70,27 @@ for (var Step of Configuration.Steps) {
 /** Evaluate: Evaluate the performance of multiple coding results. */
 async function Evaluate(SourcePath: string, Builder: ReferenceBuilder, Suffix: string, Analyzers: string[], Models: string[]) {
     // Get the dataset
-    var Dataset = await LoadDataset(SourcePath);
-    var Evaluator = new NetworkEvaluator({ Dataset: Dataset });
+    const Dataset = await LoadDataset(SourcePath);
+    const Evaluator = new NetworkEvaluator({ Dataset: Dataset });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
-    var ReferencePath = SourcePath + "/references";
+    const ReferencePath = `${SourcePath}/references`;
     EnsureFolder(ReferencePath);
-    var TargetPath = SourcePath + "/evaluation/" + Suffix;
+    const TargetPath = `${SourcePath}/evaluation/${Suffix}`;
     EnsureFolder(TargetPath);
     // Build the paths
-    var Paths = Analyzers.flatMap((Analyzer) =>
-        Models.flatMap((Model) => Object.keys(Dataset.Data).map((Name) => SourcePath + "/" + Analyzer + "/" + Name + "-" + Model + ".json")),
+    const Paths = Analyzers.flatMap((Analyzer) =>
+        Models.flatMap((Model) => Object.keys(Dataset.Data).map((Name) => `${SourcePath}/${Analyzer}/${Name}-${Model}.json`)),
     );
     // Build the reference and evaluate the codebooks
-    var Results = await BuildReferenceAndEvaluateCodebooks(
+    const Results = await BuildReferenceAndEvaluateCodebooks(
         Paths,
-        ReferencePath + "/" + Analyzers.join("-") + "_" + Models.join("-") + Builder.Suffix,
+        `${ReferencePath}/${Analyzers.join("-")}_${Models.join("-")}${Builder.Suffix}`,
         Builder,
         Evaluator,
         TargetPath,
     );
-    File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
+    File.writeFileSync(`${TargetPath}-${Evaluator.Name}.json`, JSON.stringify(Results, null, 4));
 }
 
 process.exit(0);

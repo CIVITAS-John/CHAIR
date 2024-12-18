@@ -1,5 +1,6 @@
 import { ClusterCodes } from "../utils/embeddings.js";
-import { Codebook, Code } from "../utils/schema.js";
+import type { Code, Codebook } from "../utils/schema.js";
+
 import { MergeCodesByCluster } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
 
@@ -33,21 +34,21 @@ export class SimpleMerger extends CodeConsolidator {
     }
     /** Preprocess: In this case, we do not really use the LLM, so we just merge the codes. */
     public async Preprocess(Codebook: Codebook, Codes: Code[]) {
-        var Length = Object.keys(Codebook).length;
+        const Length = Object.keys(Codebook).length;
         // Categorize the strings
-        var Labels = Codes.map((Code) => {
+        const Labels = Codes.map((Code) => {
             if (this.UseDefinition) {
-                var Text = `Label: ${Code.Label}`;
-                if ((Code.Definitions?.length ?? 0) > 0)
-                    Text += `\nDefinitions:\n${Code.Definitions!.map((Definition) => "- " + Definition).join("\n")}`;
+                let Text = `Label: ${Code.Label}`;
+                if ((Code.Definitions?.length ?? 0) > 0) {
+                    Text += `\nDefinitions:\n${Code.Definitions!.map((Definition) => `- ${Definition}`).join("\n")}`;
+                }
                 return Text.trim();
-            } else {
-                return Code.Label;
             }
+            return Code.Label;
         });
-        var Clusters = await ClusterCodes(Labels, Codes, "consolidator", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString());
+        const Clusters = await ClusterCodes(Labels, Codes, "consolidator", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString());
         // Merge the codes
-        var Result = MergeCodesByCluster(Clusters, Codes);
+        const Result = MergeCodesByCluster(Clusters, Codes);
         // Check if we should stop - when nothing is merged
         this.Stopping = Object.keys(Result).length == Length;
         return Result;

@@ -1,6 +1,7 @@
 import { ResearchQuestion } from "../constants.js";
 import { ClusterCodes } from "../utils/embeddings.js";
-import { Codebook, Code } from "../utils/schema.js";
+import type { Code, Codebook } from "../utils/schema.js";
+
 import { MergeCodesByCluster } from "./codebooks.js";
 import { DefinitionParser } from "./definition-generator.js";
 
@@ -42,24 +43,37 @@ export class RefineMerger extends DefinitionParser {
     }
     /** Preprocess: Preprocess the subunits before filtering and chunking. */
     public async Preprocess(Codebook: Codebook, Codes: Code[]) {
-        var Length = Codes.length;
+        const Length = Codes.length;
         // Cluster codes using text embeddings
         // Only when the code has more than one definition should we merge them
         Codes = Codes.filter((Code) => (this.UseDefinition ? (Code.Definitions?.length ?? 0) > 0 : true));
-        if (Codes.length == 0) return {};
+        if (Codes.length == 0) {
+            return {};
+        }
         // Combine each code into a string for clustering
-        var CodeStrings = Codes.map((Code) => {
+        const CodeStrings = Codes.map((Code) => {
             if (this.UseDefinition) {
-                var Text = `Label: ${Code.Label}`;
-                if ((Code.Definitions?.length ?? 0) > 0) Text += `\nDefinition: ${Code.Definitions![0]}`;
+                let Text = `Label: ${Code.Label}`;
+                if ((Code.Definitions?.length ?? 0) > 0) {
+                    Text += `\nDefinition: ${Code.Definitions![0]}`;
+                }
                 // if ((Code.Alternatives?.length ?? 0) > 0) Text += `\nAlternatives: ${Code.Alternatives!.join(", ")}`;
                 return Text.trim();
-            } else return Code.Label;
+            }
+            return Code.Label;
         });
         // Categorize the strings
-        var Clusters = await ClusterCodes(CodeStrings, Codes, "consolidator", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString());
+        const Clusters = await ClusterCodes(
+            CodeStrings,
+            Codes,
+            "consolidator",
+            "euclidean",
+            "ward",
+            this.Maximum.toString(),
+            this.Minimum.toString(),
+        );
         // Merge the codes
-        var Result = MergeCodesByCluster(Clusters, Codes);
+        const Result = MergeCodesByCluster(Clusters, Codes);
         // Check if we should stop - when nothing is merged
         this.Stopping = Object.keys(Result).length == Length;
         return Result;
@@ -67,8 +81,10 @@ export class RefineMerger extends DefinitionParser {
     /** SubunitFilter: Filter the subunits before chunking. */
     public SubunitFilter(Code: Code): boolean {
         // Only when the code has multiple definitions should we refine them
-        if (this.UseDefinition) return super.SubunitFilter(Code) && (Code.Definitions?.length ?? 0) > 1;
-        else return super.SubunitFilter(Code) && (Code.OldLabels?.length ?? 0) > 0;
+        if (this.UseDefinition) {
+            return super.SubunitFilter(Code) && (Code.Definitions?.length ?? 0) > 1;
+        }
+        return super.SubunitFilter(Code) && (Code.OldLabels?.length ?? 0) > 0;
     }
     /** BuildPrompts: Build the prompts for the code consolidator. */
     // In this case, we do not really use the LLM, so we just merge the codes

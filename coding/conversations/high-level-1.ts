@@ -1,5 +1,6 @@
 import { CodingNotes, ResearchQuestion } from "../../constants.js";
-import { CodedThread, Conversation, Message } from "../../utils/schema.js";
+import type { CodedThread, Conversation, Message } from "../../utils/schema.js";
+
 import { BuildMessagePrompt } from "./conversations.js";
 import { HighLevelAnalyzerBase } from "./high-level.js";
 
@@ -16,9 +17,9 @@ Adapter: John Chen
 */
 export default class HighLevelAnalyzer1 extends HighLevelAnalyzerBase {
     /** Name: The name of the analyzer. */
-    public Name: string = "high-level-1";
+    public Name = "high-level-1";
     /** BaseTemperature: The base temperature for the LLM. */
-    public BaseTemperature: number = 0.5;
+    public BaseTemperature = 0.5;
     /** BuildPrompts: Build the prompts for the LLM. */
     public async BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): Promise<[string, string]> {
         return [

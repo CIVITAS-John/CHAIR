@@ -1,56 +1,59 @@
+import type { Cash } from "cash-dom";
 import d3 from "d3";
-import { Cash } from "cash-dom";
+
 import { Panel } from "../panels/panel.js";
-import { Visualizer } from "../visualizer.js";
-import { EvaluateCodebooks } from "../utils/evaluate.js";
 import { GetConsolidatedSize } from "../utils/dataset.js";
+import { EvaluateCodebooks } from "../utils/evaluate.js";
 import { OwnerFilter } from "../utils/filters.js";
+import type { Visualizer } from "../visualizer.js";
 
 /** CodebookSection: The codebook side panel. */
 export class CodebookSection extends Panel {
     /** Name: The short name of the panel. */
-    public Name: string = "Coders";
+    public Name = "Coders";
     /** Title: The title of the panel. */
-    public override Title: string = "Codebook Overview";
+    public override Title = "Codebook Overview";
     /** Constructor: Constructing the panel. */
     public constructor(Container: Cash, Visualizer: Visualizer) {
         super(Container, Visualizer);
         this.Visualizer = Visualizer;
-        this.Container = $(`<div class="codebook"></div>`).appendTo(Container).hide();
+        this.Container = $('<div class="codebook"></div>').appendTo(Container).hide();
     }
     /** Render: Render the panel. */
     public override Render() {
         this.Container.empty();
         // Some notes
-        $(`<p class="tips"></p>`)
+        $('<p class="tips"></p>')
             .appendTo(this.Container)
             .html(
                 `Note that all metrics are relative (i.e. against the Aggregated Code Space of the following Code Spaces).
                 <a href="javascript:void(0)">Click here</a> to manually verify each codebook's coverage.`,
             )
             .find("a")
-            .on("click", () => this.Visualizer.Dialog.ValidateCoverageByCodes());
+            .on("click", () => {
+                this.Visualizer.Dialog.ValidateCoverageByCodes();
+            });
         // Evaluate the codebooks
-        var Names = this.Dataset.Names;
-        var Codebooks = this.Dataset.Codebooks;
-        var Results = EvaluateCodebooks(this.Visualizer.Dataset, this.Parameters);
-        var Metrics = Object.keys(Results[Names[1]]).slice(0, -2);
-        var Colors: Record<string, d3.ScaleSequential<string, never>> = {};
+        const Names = this.Dataset.Names;
+        const Codebooks = this.Dataset.Codebooks;
+        const Results = EvaluateCodebooks(this.Visualizer.Dataset, this.Parameters);
+        const Metrics = Object.keys(Results[Names[1]]).slice(0, -2);
+        const Colors: Record<string, d3.ScaleSequential<string>> = {};
         // Flatten the dataset
-        var Dataset: { Name: string; Metric: string; Value: number }[] = [];
-        for (var I = 1; I < Names.length; I++) {
-            var Result = Results[Names[I]];
-            for (var J = 0; J < Metrics.length; J++) {
+        const Dataset: { Name: string; Metric: string; Value: number }[] = [];
+        for (let I = 1; I < Names.length; I++) {
+            const Result = Results[Names[I]];
+            for (let J = 0; J < Metrics.length; J++) {
                 Dataset.push({ Name: Names[I], Metric: Metrics[J], Value: Result[Metrics[J]] });
             }
         }
         // Build color scales
         for (var Metric of Metrics) {
-            var Minimum = d3.min(
+            const Minimum = d3.min(
                 Dataset.filter((Evaluation) => Evaluation.Metric == Metric),
                 (Evaluation) => Evaluation.Value,
             )!;
-            var Maximum = d3.max(
+            const Maximum = d3.max(
                 Dataset.filter((Evaluation) => Evaluation.Metric == Metric),
                 (Evaluation) => Evaluation.Value,
             )!;
@@ -64,32 +67,33 @@ export class CodebookSection extends Panel {
         this.BuildTable(
             Object.entries(Results),
             (Row, [Key, Value], Index) => {
-                var Codebook = Codebooks[Index + 1];
+                const Codebook = Codebooks[Index + 1];
                 // Name of the codebook
-                var Summary = $(`<td class="codebook-cell"></td>`)
+                const Summary = $('<td class="codebook-cell"></td>')
                     .attr("id", `codebook-${Index + 1}`)
                     .addClass("actionable")
                     .appendTo(Row);
-                Summary.append($(`<h4></h4>`).text(Key))
-                    .append($(`<p class="tips"></p>`).text(`${Object.keys(Codebook).length} codes`))
-                    .append($(`<p class="tips"></p>`).text(`${GetConsolidatedSize(Codebooks[0], Codebook)} consolidated`))
+                Summary.append($("<h4></h4>").text(Key))
+                    .append($('<p class="tips"></p>').text(`${Object.keys(Codebook).length} codes`))
+                    .append($('<p class="tips"></p>').text(`${GetConsolidatedSize(Codebooks[0], Codebook)} consolidated`))
                     .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1))
                     .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
                     .on("click", (Event) => {
                         if (Event.shiftKey) {
                             this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, true);
                         } else {
-                            if (!this.Visualizer.IsFilterApplied("Owner", Index + 1))
+                            if (!this.Visualizer.IsFilterApplied("Owner", Index + 1)) {
                                 this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey, "Coverage");
+                            }
                             this.Visualizer.SidePanel.ShowPanel("Codes");
                         }
                     })
                     .toggleClass("chosen", this.Visualizer.IsFilterApplied("Owner", Index + 1));
                 // Evaluation results
                 Metrics.forEach((Metric) => {
-                    var MetricValue = Value[Metric];
-                    var Color = Colors[Metric](MetricValue);
-                    var Cell = $(`<td class="metric-cell"></td>`)
+                    const MetricValue = Value[Metric];
+                    const Color = Colors[Metric](MetricValue);
+                    const Cell = $('<td class="metric-cell"></td>')
                         .attr("id", `metric-${Index}-${Metric}`)
                         .text(d3.format(Metric == "Divergence" ? ".1%" : ".1%")(MetricValue))
                         .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1, false, Metric))

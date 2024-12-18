@@ -1,18 +1,22 @@
-import * as http from "http";
 import * as fs from "fs";
+import * as http from "http";
 import * as path from "path";
-import open, { apps } from "open";
-import chalk from "chalk";
-import { EnsureFolder } from "./llms.js";
 import { setTimeout } from "timers/promises";
+
+import chalk from "chalk";
+import open, { apps } from "open";
+
+import { EnsureFolder } from "./llms.js";
 
 /** CreateServer: Create a local server for interactivity. */
 export function CreateServer<T>(Port: number, BaseDirectories: string[], ...DataFiles: string[]): Promise<T | undefined> {
-    var Shutdown: (Data?: T) => void;
+    let Shutdown: (Data?: T) => void;
     // Create the server
     const Server: http.Server = http.createServer((Request: http.IncomingMessage, Response: http.ServerResponse) => {
-        var Url = Request.url ?? "/";
-        if (Url == "/") Url = "/index.html";
+        let Url = Request.url ?? "/";
+        if (Url == "/") {
+            Url = "/index.html";
+        }
         // Handle dynamic requests
         if (Url.startsWith("/api/report/")) {
             // Read the body
@@ -21,7 +25,7 @@ export function CreateServer<T>(Port: number, BaseDirectories: string[], ...Data
                 Body += chunk.toString();
             });
             Request.on("end", () => {
-                let Data = JSON.parse(Body);
+                const Data = JSON.parse(Body);
                 Response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
                 Response.end(JSON.stringify(Data));
                 Shutdown(Data);
@@ -55,8 +59,8 @@ export function CreateServer<T>(Port: number, BaseDirectories: string[], ...Data
                 return;
             }
             // Determine content type by file extension
-            let ext: string = path.extname(FilePath).toLowerCase();
-            let contentType: string = "text/html; charset=utf-8"; // Default content type
+            const ext: string = path.extname(FilePath).toLowerCase();
+            let contentType = "text/html; charset=utf-8"; // Default content type
             switch (ext) {
                 case ".js":
                     contentType = "text/javascript; charset=utf-8";
@@ -141,21 +145,27 @@ export function CreateOfflineBundle(TargetDirectory: string, BaseDirectories: st
                 CopyFiles(filePath, newDestination);
             } else {
                 const name = path.basename(filePath);
-                if (name.endsWith(".ts")) continue; // Skip TypeScript files
+                if (name.endsWith(".ts")) {
+                    continue;
+                } // Skip TypeScript files
                 if (name.endsWith(".js")) {
                     let content = fs.readFileSync(filePath, "utf8");
                     // Remove all import statements
                     content = HandleScript(content);
                     fs.writeFileSync(path.join(Destination, name), content);
-                } else fs.copyFileSync(filePath, path.join(Destination, name));
+                } else {
+                    fs.copyFileSync(filePath, path.join(Destination, name));
+                }
             }
         }
     };
-    for (const BaseDirectory of BaseDirectories) CopyFiles(BaseDirectory, OfflineBundleDirectory);
+    for (const BaseDirectory of BaseDirectories) {
+        CopyFiles(BaseDirectory, OfflineBundleDirectory);
+    }
     console.log(chalk.blue(`Offline bundle created in: ${OfflineBundleDirectory}.`));
 }
 
 /** HandleScript: Filter a script content to exclude import statements. */
 function HandleScript(Content: string): string {
-    return Content.replaceAll(/^(.*)import(.*?) from ['"]([^\/]*?)['"];?$/gm, "").replaceAll(/^\/\/\# sourceMappingURL(.*)/gm, "");
+    return Content.replaceAll(/^(.*)import(.*?) from ['"]([^/]*?)['"];?$/gm, "").replaceAll(/^\/\/# sourceMappingURL(.*)/gm, "");
 }
