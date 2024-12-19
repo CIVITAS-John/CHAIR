@@ -43,7 +43,7 @@ export default tseslint.config(
                 },
             ],
             "@typescript-eslint/restrict-template-expressions": ["error", {}],
-            curly: "error",
+            curly: ["error", "multi-line"],
             "dot-notation": "error",
             eqeqeq: "error",
             "import-x/no-dynamic-require": "warn",
