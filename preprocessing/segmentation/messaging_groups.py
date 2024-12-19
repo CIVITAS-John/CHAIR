@@ -1,5 +1,6 @@
 """
-This script segments the timestamps of messages into groups based on the time difference between each timestamp.
+This script segments the timestamps of messages into groups
+based on the time difference between each timestamp.
 """
 
 import csv
