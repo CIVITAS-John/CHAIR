@@ -18,7 +18,12 @@ import { RefiningReferenceBuilder } from "../reference-builder.js";
 InitializeEmbeddings("gecko-768-similarity");
 
 /** EvaluateInFolder: Evaluate the performance of different codebooks in the same folder with human results. */
-async function EvaluateInFolder(SourcePath: string, Builder: ReferenceBuilder, Suffix: string, ...Folders: string[]) {
+async function EvaluateInFolder(
+    SourcePath: string,
+    Builder: ReferenceBuilder,
+    Suffix: string,
+    ...Folders: string[]
+) {
     // Get the dataset
     const Dataset = await LoadDataset(SourcePath);
     const Evaluator = new NetworkEvaluator({ Dataset, Title: Folders.join("-") + Suffix });
@@ -55,14 +60,23 @@ async function RepeatedlyEvaluateInFolder(
     ...Folders: string[]
 ) {
     // Prepare for the CSV
-    const CSVResults = ["llm,temp,run,codebook,count,consolidated,coverage,density,novelty,divergence"];
+    const CSVResults = [
+        "llm,temp,run,codebook,count,consolidated,coverage,density,novelty,divergence",
+    ];
     // Evaluate the codebooks multiple times
     for (var Temperature of Temperatures) {
         Builder.BaseTemperature = Temperature;
         var Results: Record<string, CodebookEvaluation>[] = [];
         for (var I = 0; I < Times; I++) {
             await UseLLMs(async () => {
-                Results.push(await EvaluateInFolder(SourcePath, Builder, `-${Temperature}-${LLMName}`, ...Folders));
+                Results.push(
+                    await EvaluateInFolder(
+                        SourcePath,
+                        Builder,
+                        `-${Temperature}-${LLMName}`,
+                        ...Folders,
+                    ),
+                );
             }, `${LLM}_${I}`);
         }
         // Write the results to a CSV
@@ -79,7 +93,10 @@ async function RepeatedlyEvaluateInFolder(
     // Write the CSV to a file
     SourcePath = GetMessagesPath(SourcePath);
     if (Times > 1) {
-        File.writeFileSync(`${SourcePath}/cscl-2025/results/${Folders.join("-")}-${LLM}.csv`, CSVResults.join("\n"));
+        File.writeFileSync(
+            `${SourcePath}/cscl-2025/results/${Folders.join("-")}-${LLM}.csv`,
+            CSVResults.join("\n"),
+        );
     }
 }
 
@@ -98,9 +115,24 @@ async function RepeatedlyEvaluateInFolder(
 
 // Task: (Qualitatively) compare coding approaches, but in 2 groups: BERTopic+High-level; Low-level+Humans
 UseLLM("gpt-4.5-omni");
-await EvaluateInFolder("Coded Dataset 1", new RefiningReferenceBuilder(true, true), "", "cscl-high-level");
-await EvaluateInFolder("Coded Dataset 1", new RefiningReferenceBuilder(true, true), "-no-human", "cscl-high-level-no-human");
-await EvaluateInFolder("Coded Dataset 1", new RefiningReferenceBuilder(true, true), "", "cscl-low-level");
+await EvaluateInFolder(
+    "Coded Dataset 1",
+    new RefiningReferenceBuilder(true, true),
+    "",
+    "cscl-high-level",
+);
+await EvaluateInFolder(
+    "Coded Dataset 1",
+    new RefiningReferenceBuilder(true, true),
+    "-no-human",
+    "cscl-high-level-no-human",
+);
+await EvaluateInFolder(
+    "Coded Dataset 1",
+    new RefiningReferenceBuilder(true, true),
+    "",
+    "cscl-low-level",
+);
 
 // Task: Evaluate different models with the same approaches.
 const Approaches = ["low-level-5", "high-level-2"];

@@ -14,7 +14,10 @@ function ReadQQMessages(Path: string, Prefix: string): Message[] {
     const Sources = File.readFileSync(Path, "utf-8").split("\r\n");
     let LastMessage: Message | undefined;
     for (const Source of Sources) {
-        const Match = /(\d{4})-(\d{2})-(\d{2}) ([01]?\d):(\d{2}):(\d{2}) (AM|PM) (.*?)(\(\d+\)|<.*?>)/.exec(Source);
+        const Match =
+            /(\d{4})-(\d{2})-(\d{2}) ([01]?\d):(\d{2}):(\d{2}) (AM|PM) (.*?)(\(\d+\)|<.*?>)/.exec(
+                Source,
+            );
         if (Match !== null) {
             const Time = new Date(
                 Number(Match[1]),
@@ -47,7 +50,10 @@ const Emojis = File.readFileSync("./known/emoji.csv", "utf-8").split("\n");
 const EmojiMap = new Map<string | RegExp, string>();
 for (const Emoji of Emojis) {
     const LastSeperator = Emoji.lastIndexOf(",");
-    let [Source, Translation] = [Emoji.substring(0, LastSeperator), Emoji.substring(LastSeperator + 1)];
+    let [Source, Translation] = [
+        Emoji.substring(0, LastSeperator),
+        Emoji.substring(LastSeperator + 1),
+    ];
     if (Source.includes("{")) {
         EmojiMap.set(new RegExp(Source, "g"), Translation.trim());
     } else {
@@ -60,7 +66,10 @@ for (const Emoji of Emojis) {
 const UnknownEmojis = new Map<string, number>();
 
 // Read messages from the groups, anonymize user ids, and export into JSON and CSV format.
-const Groups = [String.raw`Users of Physics Lab (Group 1)`, String.raw`Users of Physics Lab (Group 2)`];
+const Groups = [
+    String.raw`Users of Physics Lab (Group 1)`,
+    String.raw`Users of Physics Lab (Group 2)`,
+];
 const Participants = new Map<string, Participant>();
 // Many users have multiple nicknames, so we need to map the `@...` references to a single ID.
 const NameMappings = new Map<string, [string, string]>();
@@ -133,7 +142,9 @@ for (const Group of Groups) {
     // Write the messages (metadata) into a CSV file using Unix timestamp. Only length of content is stored.
     File.writeFileSync(
         GetMessagesPath(Group, "Messages.csv"),
-        `Source,ID,Time,Timestamp,First,Length,Mentions\n${Messages.filter((Message) => Message.UserID != "0")
+        `Source,ID,Time,Timestamp,First,Length,Mentions\n${Messages.filter(
+            (Message) => Message.UserID != "0",
+        )
             .map(
                 (Message, Index) =>
                     `${Index},${Message.UserID},${Message.Time.toISOString()},${Message.Time.getTime()},${Message.FirstSeen},${
@@ -152,16 +163,22 @@ for (const Group of Groups) {
 // For Stata: need to + 315619200000
 const ParticipantArray = Array.from(Participants.values());
 // Write all participants into a JSON file.
-File.writeFileSync(GetParticipantsPath("Participants.json"), JSON.stringify(ParticipantArray, null, 4));
+File.writeFileSync(
+    GetParticipantsPath("Participants.json"),
+    JSON.stringify(ParticipantArray, null, 4),
+);
 
 // Write all participants into a CSV file.
 File.writeFileSync(
     GetParticipantsPath("Participants.csv"),
     `ID,Messages,FirstSeen,FirstTimestamp\n${ParticipantArray.map(
-        (Participant) => `${Participant.ID},${Participant.Messages},${Participant.FirstSeen.toISOString()},${Participant.FirstSeen.getTime()}`,
+        (Participant) =>
+            `${Participant.ID},${Participant.Messages},${Participant.FirstSeen.toISOString()},${Participant.FirstSeen.getTime()}`,
     ).join("\n")}`,
 );
 
 // Calculate tokens
-const Tokens = Tokenize(ParticipantArray.map((Participant) => Participant.Nickname).join("\n")).length;
+const Tokens = Tokenize(
+    ParticipantArray.map((Participant) => Participant.Nickname).join("\n"),
+).length;
 console.log(`Exported ${Participants.size} participants, estimated at ${Tokens} tokens.`);

@@ -83,7 +83,9 @@ ${Codes.map((Code, Index) => `${Index + 1}. ${Code.Label}\n${Code.Definitions![0
         }
         // Update the codes
         if (Results.length != Codes.length) {
-            throw new Error(`Invalid response: ${Results.length} results for ${Codes.length} codes.`);
+            throw new Error(
+                `Invalid response: ${Results.length} results for ${Codes.length} codes.`,
+            );
         }
         for (var I = 0; I < Codes.length; I++) {
             Codes[I].Categories = [Results[I]];

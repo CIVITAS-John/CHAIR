@@ -73,10 +73,16 @@ export class InfoPanel extends Panel {
                 if (Owner == 0 && Code.Owners.length > 1) {
                     continue;
                 }
-                this.BuildOwnerLink(Code, FindOriginalCodes(this.Dataset.Codebooks[Owner], Code, Owner), Owner).appendTo(Owners);
+                this.BuildOwnerLink(
+                    Code,
+                    FindOriginalCodes(this.Dataset.Codebooks[Owner], Code, Owner),
+                    Owner,
+                ).appendTo(Owners);
             }
         } else if (Code.Alternatives && Code.Alternatives.length > 0) {
-            Panel.append($(`<p class="alternatives">Consolidated from: ${Code.Alternatives.join(", ")}</p>`));
+            Panel.append(
+                $(`<p class="alternatives">Consolidated from: ${Code.Alternatives.join(", ")}</p>`),
+            );
         }
         if (Code.Definitions && Code.Definitions.length > 0) {
             Panel.append($(`<p class="definition">${Code.Definitions[0]}</p>`));
@@ -135,7 +141,12 @@ export class InfoPanel extends Panel {
                 if (Owner == 0) {
                     continue;
                 }
-                const Sources = FindExampleSources(this.Dataset.Codebooks[Owner], Code, Example, Owner);
+                const Sources = FindExampleSources(
+                    this.Dataset.Codebooks[Owner],
+                    Code,
+                    Example,
+                    Owner,
+                );
                 if (Sources.length == 0) {
                     continue;
                 }

@@ -27,7 +27,10 @@ export class DatasetSection extends Panel {
         this.ShowDatasets();
     }
     /** RatioColorizer: The colorizer for ratios. */
-    private RatioColorizer = d3.scaleSequential().interpolator(d3.interpolateViridis).domain([0, 1]);
+    private RatioColorizer = d3
+        .scaleSequential()
+        .interpolator(d3.interpolateViridis)
+        .domain([0, 1]);
     /** ShowDatasets: Show all datasets. */
     public ShowDatasets() {
         this.SetRefresh(() => {
@@ -54,28 +57,49 @@ export class DatasetSection extends Panel {
                 (Row, [Key, Value]) => {
                     // Interactivity
                     Row.toggleClass("chosen", this.Visualizer.IsFilterApplied("Dataset", Key))
-                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new DatasetFilter(), Key))
-                        .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new DatasetFilter()));
+                        .on("mouseover", (Event) =>
+                            this.Visualizer.SetFilter(true, new DatasetFilter(), Key),
+                        )
+                        .on("mouseout", (Event) =>
+                            this.Visualizer.SetFilter(true, new DatasetFilter()),
+                        );
                     // Show the summary
-                    const Summary = $('<td class="dataset-cell actionable"></td>').attr("id", `dataset-${Key}`).appendTo(Row);
+                    const Summary = $('<td class="dataset-cell actionable"></td>')
+                        .attr("id", `dataset-${Key}`)
+                        .appendTo(Row);
                     Summary.append($("<h4></h4>").text(Key)).on("click", (Event) => {
                         if (Event.shiftKey) {
-                            this.Visualizer.SetFilter(false, new DatasetFilter(), Key, Event.shiftKey);
+                            this.Visualizer.SetFilter(
+                                false,
+                                new DatasetFilter(),
+                                Key,
+                                Event.shiftKey,
+                            );
                         } else {
                             this.ShowDataset(Key, Value);
                         }
                     });
                     // Find the date
                     const Items = GetItemsFromDataset(Value);
-                    const Dates = Items.map((Item) => Item.Time).sort((A, B) => A.getTime() - B.getTime());
+                    const Dates = Items.map((Item) => Item.Time).sort(
+                        (A, B) => A.getTime() - B.getTime(),
+                    );
                     Summary.append($('<p class="tips"></p>').text(`From ${FormatDate(Dates[0])}`));
-                    Summary.append($('<p class="tips"></p>').text(`To ${FormatDate(Dates[Dates.length - 1])}`));
+                    Summary.append(
+                        $('<p class="tips"></p>').text(`To ${FormatDate(Dates[Dates.length - 1])}`),
+                    );
                     // Show the items
                     const IDs = new Set(Items.map((Item) => Item.ID));
-                    const SizeCell = $('<td class="number-cell actionable"></td>').text(`${IDs.size}`).appendTo(Row);
-                    SizeCell.append($('<p class="tips"></p>').text(`${Object.keys(Value).length} Chunks`));
+                    const SizeCell = $('<td class="number-cell actionable"></td>')
+                        .text(`${IDs.size}`)
+                        .appendTo(Row);
+                    SizeCell.append(
+                        $('<p class="tips"></p>').text(`${Object.keys(Value).length} Chunks`),
+                    );
                     // Show the codes
-                    const Codes = Nodes.filter((Node) => FilterNodeByExample(Node, Array.from(IDs)));
+                    const Codes = Nodes.filter((Node) =>
+                        FilterNodeByExample(Node, Array.from(IDs)),
+                    );
                     const Currents = Codes.filter((Node) => !Node.Hidden);
                     const Color = this.RatioColorizer(Currents.length / Codes.length);
                     $('<td class="metric-cell"></td>')
@@ -83,8 +107,13 @@ export class DatasetSection extends Panel {
                         .css("color", d3.lab(Color).l > 70 ? "black" : "white")
                         .appendTo(Row)
                         .text(`${Currents.length}`)
-                        .append($("<p></p>").text(d3.format(".0%")(Currents.length / Codes.length)));
-                    $('<td class="number-cell actionable"></td>').appendTo(Row).text(`${Codes.length}`).append($("<p></p>").text("100%"));
+                        .append(
+                            $("<p></p>").text(d3.format(".0%")(Currents.length / Codes.length)),
+                        );
+                    $('<td class="number-cell actionable"></td>')
+                        .appendTo(Row)
+                        .text(`${Codes.length}`)
+                        .append($("<p></p>").text("100%"));
                     // Generic click event
                     Row.children("td:not(.dataset-cell)").on("click", (Event) =>
                         this.Visualizer.SetFilter(false, new DatasetFilter(), Key, Event.shiftKey),
@@ -121,24 +150,40 @@ export class DatasetSection extends Panel {
                 (Row, [Key, Chunk], Index) => {
                     // Interactivity
                     Row.toggleClass("chosen", this.Visualizer.IsFilterApplied("Chunk", Key))
-                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new ChunkFilter(), Key))
-                        .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new ChunkFilter()));
+                        .on("mouseover", (Event) =>
+                            this.Visualizer.SetFilter(true, new ChunkFilter(), Key),
+                        )
+                        .on("mouseout", (Event) =>
+                            this.Visualizer.SetFilter(true, new ChunkFilter()),
+                        );
                     // Show the summary
-                    const Summary = $('<td class="chunk-cell actionable"></td>').attr("id", `chunk-${Key}`).appendTo(Row);
+                    const Summary = $('<td class="chunk-cell actionable"></td>')
+                        .attr("id", `chunk-${Key}`)
+                        .appendTo(Row);
                     Summary.append($("<h4></h4>").text(`Chunk ${Key}`));
                     // Find the date
                     let Items = Chunk.AllItems ?? [];
-                    Items = Items.filter((Item) => (this.Parameters.UseExtendedChunk ? true : !Item.Chunk || Item.Chunk == Key));
-                    const Dates = Items.map((Item) => Item.Time).sort((A, B) => A.getTime() - B.getTime());
+                    Items = Items.filter((Item) =>
+                        this.Parameters.UseExtendedChunk ? true : !Item.Chunk || Item.Chunk == Key,
+                    );
+                    const Dates = Items.map((Item) => Item.Time).sort(
+                        (A, B) => A.getTime() - B.getTime(),
+                    );
                     Summary.append($('<p class="tips"></p>').text(`From ${FormatDate(Dates[0])}`));
-                    Summary.append($('<p class="tips"></p>').text(`To ${FormatDate(Dates[Dates.length - 1])}`));
+                    Summary.append(
+                        $('<p class="tips"></p>').text(`To ${FormatDate(Dates[Dates.length - 1])}`),
+                    );
                     Summary.on("click", () => {
                         this.Dialog.ShowChunk(Key, Chunk);
                     });
                     // Show the items
-                    $('<td class="number-cell actionable"></td>').text(Items.length.toString()).appendTo(Row);
+                    $('<td class="number-cell actionable"></td>')
+                        .text(Items.length.toString())
+                        .appendTo(Row);
                     // Show the codes
-                    const Codes = Nodes.filter((Node) => FilterNodeByExample(Node, Items.map((Item) => Item.ID) ?? []));
+                    const Codes = Nodes.filter((Node) =>
+                        FilterNodeByExample(Node, Items.map((Item) => Item.ID) ?? []),
+                    );
                     const Currents = Codes.filter((Node) => !Node.Hidden);
                     const Color = this.RatioColorizer(Currents.length / Math.max(1, Codes.length));
                     $('<td class="metric-cell"></td>')
@@ -146,8 +191,13 @@ export class DatasetSection extends Panel {
                         .css("color", d3.lab(Color).l > 70 ? "black" : "white")
                         .appendTo(Row)
                         .text(`${Currents.length}`)
-                        .append($("<p></p>").text(d3.format(".0%")(Currents.length / Codes.length)));
-                    $('<td class="number-cell actionable"></td>').appendTo(Row).text(`${Codes.length}`).append($("<p></p>").text("100%"));
+                        .append(
+                            $("<p></p>").text(d3.format(".0%")(Currents.length / Codes.length)),
+                        );
+                    $('<td class="number-cell actionable"></td>')
+                        .appendTo(Row)
+                        .text(`${Codes.length}`)
+                        .append($("<p></p>").text("100%"));
                     // Generic click event
                     Row.children("td:not(.chunk-cell)").on("click", (Event) =>
                         this.Visualizer.SetFilter(false, new ChunkFilter(), Key, Event.shiftKey),

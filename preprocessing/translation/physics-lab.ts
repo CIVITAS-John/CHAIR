@@ -56,7 +56,9 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
     const NicknameArrays = Array.from(Nicknames);
     const TranslatedNicknames = await TranslateStrings("nickname", NicknameArrays);
     const NameTranslations = new Map<string, string>();
-    TranslatedNicknames.forEach((Translation, Index) => NameTranslations.set(NicknameArrays[Index], Translation));
+    TranslatedNicknames.forEach((Translation, Index) =>
+        NameTranslations.set(NicknameArrays[Index], Translation),
+    );
     // Translate the and contents
     const TranslatedContents = await TranslateStrings("contents", Contents);
     // Assign the translated nicknames and contents
@@ -77,7 +79,11 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
         Projects[I].Title = Content.split("\n")[0].trim();
         Projects[I].Content = Content.substring(Projects[I].Title.length + 1).trim();
         if (Projects[I].AllItems) {
-            Projects[I].AllItems = await TranslateComments(Projects[I].AllItems!, UserMappings, NameTranslations);
+            Projects[I].AllItems = await TranslateComments(
+                Projects[I].AllItems!,
+                UserMappings,
+                NameTranslations,
+            );
         }
     }
     return Projects;

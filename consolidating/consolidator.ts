@@ -33,7 +33,12 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         return this.Consolidators[this.Index].GetChunkSize(Recommended, Remaining, Tries);
     }
     /** Preprocess: Preprocess the subunits before filtering and chunking. */
-    public async Preprocess(Analysis: CodedThreads, Data: TUnit[], Subunits: Code[], Iteration: number): Promise<Code[]> {
+    public async Preprocess(
+        Analysis: CodedThreads,
+        Data: TUnit[],
+        Subunits: Code[],
+        Iteration: number,
+    ): Promise<Code[]> {
         if (this.Index >= this.Consolidators.length) {
             return [];
         }
@@ -50,12 +55,19 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         if (this.Index >= this.Consolidators.length) {
             return [];
         }
-        console.log(chalk.white(chalk.bold(`Iteration ${Iteration}: ${this.Consolidators[this.Index].GetName()}`)));
+        console.log(
+            chalk.white(
+                chalk.bold(`Iteration ${Iteration}: ${this.Consolidators[this.Index].GetName()}`),
+            ),
+        );
         // Preprocess the subunits
         Subunits = Subunits.filter((Code) => Code.Label !== "[Merged]");
         // Reorder the subunits to prevent over-merging
         Subunits = Shuffle(Subunits, 0);
-        const Result = await this.Consolidators[this.Index].Preprocess(Analysis.Codebook!, Subunits);
+        const Result = await this.Consolidators[this.Index].Preprocess(
+            Analysis.Codebook!,
+            Subunits,
+        );
         if (Result instanceof Array) {
             return Result;
         }
@@ -80,7 +92,10 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         if (this.Index >= this.Consolidators.length || this.Consolidators[this.Index].Stopping) {
             return ["", ""];
         }
-        const Prompts = await this.Consolidators[this.Index].BuildPrompts(Analysis.Codebook!, Codes);
+        const Prompts = await this.Consolidators[this.Index].BuildPrompts(
+            Analysis.Codebook!,
+            Codes,
+        );
         if (Prompts instanceof Array) {
             if (Prompts.length == 2) {
                 return Prompts;
@@ -92,11 +107,21 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         return ["", ""];
     }
     /** ParseResponse: Parse the responses from the LLM. */
-    public async ParseResponse(Analysis: CodedThreads, Lines: string[], Codes: Code[], ChunkStart: number, Iteration: number): Promise<number> {
+    public async ParseResponse(
+        Analysis: CodedThreads,
+        Lines: string[],
+        Codes: Code[],
+        ChunkStart: number,
+        Iteration: number,
+    ): Promise<number> {
         if (this.Index >= this.Consolidators.length || this.Consolidators[this.Index].Stopping) {
             return -1;
         }
-        const Result = await this.Consolidators[this.Index].ParseResponse(Analysis.Codebook!, Codes, Lines);
+        const Result = await this.Consolidators[this.Index].ParseResponse(
+            Analysis.Codebook!,
+            Codes,
+            Lines,
+        );
         if (Result instanceof Array) {
             Analysis.Codebook = Result[1];
             return Result[0];
@@ -126,16 +151,25 @@ export abstract class CodeConsolidator {
         return Subunits;
     }
     /** BuildPrompts: Build the prompts for the code consolidator. */
-    public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<Codebook | [string, string] | [string, string, Codebook]> {
+    public async BuildPrompts(
+        Codebook: Codebook,
+        Codes: Code[],
+    ): Promise<Codebook | [string, string] | [string, string, Codebook]> {
         return Codebook;
     }
     /** ParseResponse: Parse the response for the code consolidator. */
-    public async ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]): Promise<number | [number, Codebook]> {
+    public async ParseResponse(
+        Codebook: Codebook,
+        Codes: Code[],
+        Lines: string[],
+    ): Promise<number | [number, Codebook]> {
         return 0;
     }
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // Return value: [Chunk size, Cursor movement]
     public GetChunkSize(Recommended: number, Remaining: number, Tries: number) {
-        return this.Chunkified ? Math.max(Recommended - Tries * Math.ceil(Recommended / 4), 1) : Remaining;
+        return this.Chunkified
+            ? Math.max(Recommended - Tries * Math.ceil(Recommended / 4), 1)
+            : Remaining;
     }
 }

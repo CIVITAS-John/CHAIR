@@ -13,7 +13,11 @@ InitializeEmbeddings("gecko-768-similarity");
 UseLLM("llama3-70b");
 
 /** EvaluateModelsWithSameAnalyzer: Evaluate the performance of different models using the same analyzer. */
-async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: string, Builder: ReferenceBuilder) {
+async function EvaluateModelsWithSameAnalyzer(
+    SourcePath: string,
+    Analyzer: string,
+    Builder: ReferenceBuilder,
+) {
     // Get the dataset
     const Dataset = await LoadDataset(SourcePath);
     const Evaluator = new NetworkEvaluator({ Dataset });
@@ -38,16 +42,56 @@ async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: stri
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-2", new RefiningReferenceBuilder());
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-3", new RefiningReferenceBuilder());
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 2", "pilot-study", new RefiningReferenceBuilder(true, true));
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "pilot-study-5", new RefiningReferenceBuilder(true, true));
+await EvaluateModelsWithSameAnalyzer(
+    "Coded Dataset 1",
+    "pilot-study-5",
+    new RefiningReferenceBuilder(true, true),
+);
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "human", new RefiningReferenceBuilder());
 process.exit(0);
 
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-2-again", new RefiningReferenceBuilder());
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "human-consolidated", new RefiningReferenceBuilder());
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-2-consolidated", new RefiningReferenceBuilder());
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "low-level-3-consolidated", new RefiningReferenceBuilder());
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-2-consolidated", new RefiningReferenceBuilder());
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-1-consolidated", new RefiningReferenceBuilder());
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "lexie-vs-high-level", new RefiningReferenceBuilder());
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "gpt-4-t-vs-o", new RefiningReferenceBuilder());
-await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "claude-3.5-vs-3", new RefiningReferenceBuilder());
+await EvaluateModelsWithSameAnalyzer(
+    "Coded Dataset 1",
+    "high-level-2-again",
+    new RefiningReferenceBuilder(),
+);
+await EvaluateModelsWithSameAnalyzer(
+    "Coded Dataset 1",
+    "human-consolidated",
+    new RefiningReferenceBuilder(),
+);
+await EvaluateModelsWithSameAnalyzer(
+    "Coded Dataset 1",
+    "high-level-2-consolidated",
+    new RefiningReferenceBuilder(),
+);
+await EvaluateModelsWithSameAnalyzer(
+    "Coded Dataset 1",
+    "low-level-3-consolidated",
+    new RefiningReferenceBuilder(),
+);
+await EvaluateModelsWithSameAnalyzer(
+    "Coded Dataset 1",
+    "high-level-2-consolidated",
+    new RefiningReferenceBuilder(),
+);
+await EvaluateModelsWithSameAnalyzer(
+    "Coded Dataset 1",
+    "high-level-1-consolidated",
+    new RefiningReferenceBuilder(),
+);
+await EvaluateModelsWithSameAnalyzer(
+    "Coded Dataset 1",
+    "lexie-vs-high-level",
+    new RefiningReferenceBuilder(),
+);
+await EvaluateModelsWithSameAnalyzer(
+    "Coded Dataset 1",
+    "gpt-4-t-vs-o",
+    new RefiningReferenceBuilder(),
+);
+await EvaluateModelsWithSameAnalyzer(
+    "Coded Dataset 1",
+    "claude-3.5-vs-3",
+    new RefiningReferenceBuilder(),
+);

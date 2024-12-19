@@ -3,7 +3,13 @@ import * as File from "fs";
 
 import { ExportChunksForCoding, ExportProjects, Range } from "../../utils/export.js";
 import { LLMName, UseLLM } from "../../utils/llms.js";
-import { GetMessagesPath, GetProjectsPath, LoadChunksForAnalysis, LoadCodedConversations, LoadItems } from "../../utils/loader.js";
+import {
+    GetMessagesPath,
+    GetProjectsPath,
+    LoadChunksForAnalysis,
+    LoadCodedConversations,
+    LoadItems,
+} from "../../utils/loader.js";
 import type { Project } from "../../utils/schema.js";
 
 import { LoadCache } from "./general.js";
@@ -52,7 +58,13 @@ async function ProjectPlayground(Bilingual = false) {
     // Translate the projects with LLM
     Projects = await TranslateProjects(Projects);
     // Write into JSON file
-    File.writeFileSync(GetProjectsPath(`Projects-Translated-${LLMName}.json`), JSON.stringify(Projects, null, 4));
+    File.writeFileSync(
+        GetProjectsPath(`Projects-Translated-${LLMName}.json`),
+        JSON.stringify(Projects, null, 4),
+    );
     // Write into Markdown file
-    File.writeFileSync(GetProjectsPath(`Projects-Translated-${LLMName}.md`), ExportProjects(Projects, Bilingual ? Originals : undefined));
+    File.writeFileSync(
+        GetProjectsPath(`Projects-Translated-${LLMName}.md`),
+        ExportProjects(Projects, Bilingual ? Originals : undefined),
+    );
 }

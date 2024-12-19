@@ -13,7 +13,13 @@ InitializeEmbeddings("gecko-768-similarity");
 UseLLM("llama3-70b");
 
 /** EvaluateAnalyzers: Evaluate the performance of different analyzers using the same model. */
-async function EvaluateAnalyzers(SourcePath: string, LLM: string, Builder: ReferenceBuilder, Suffix: string, Analyzers: string[]) {
+async function EvaluateAnalyzers(
+    SourcePath: string,
+    LLM: string,
+    Builder: ReferenceBuilder,
+    Suffix: string,
+    Analyzers: string[],
+) {
     // Get the dataset
     const Dataset = await LoadDataset(SourcePath);
     const Evaluator = new NetworkEvaluator({ Dataset });
@@ -24,7 +30,9 @@ async function EvaluateAnalyzers(SourcePath: string, LLM: string, Builder: Refer
     const TargetPath = `${SourcePath}/evaluation/results/${LLM}${Builder.Suffix}`;
     EnsureFolder(TargetPath);
     // Build the paths
-    const Paths = Analyzers.flatMap((Analyzer) => Object.keys(Dataset.Data).map((Name) => `${SourcePath}/${Analyzer}/${Name}-${LLM}.json`));
+    const Paths = Analyzers.flatMap((Analyzer) =>
+        Object.keys(Dataset.Data).map((Name) => `${SourcePath}/${Analyzer}/${Name}-${LLM}.json`),
+    );
     // Build the reference and evaluate the codebooks
     const Results = await BuildReferenceAndEvaluateCodebooks(
         Paths,

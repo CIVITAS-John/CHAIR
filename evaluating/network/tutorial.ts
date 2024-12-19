@@ -67,7 +67,9 @@ export class Tutorial extends Panel {
 <p>Whenever you select a code, it - along with its neighbors - will be highlighted. Hold the <strong>shift</strong> key to select more.</p>`,
                     },
                     onHighlightStarted: () => {
-                        this.Visualizer.FocusOnNode(document.querySelector(".visualization .nodes circle:first-child")!);
+                        this.Visualizer.FocusOnNode(
+                            document.querySelector(".visualization .nodes circle:first-child")!,
+                        );
                         Tutorial.getConfig().stagePadding = 100;
                     },
                 },
@@ -92,7 +94,9 @@ export class Tutorial extends Panel {
 <p>Since <strong>each code is merged from multiple ones</strong>, hover on each codebook to see their original names.</p>`,
                     },
                     onHighlightStarted: () => {
-                        this.Visualizer.FocusOnNode(document.querySelector(".visualization .nodes circle:first-child")!);
+                        this.Visualizer.FocusOnNode(
+                            document.querySelector(".visualization .nodes circle:first-child")!,
+                        );
                     },
                 },
                 {

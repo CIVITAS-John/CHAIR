@@ -90,7 +90,8 @@ export class Visualizer {
         d3.json("network.json").then((Data) => {
             this.Dataset = Data as any;
             // Set the title
-            document.title = this.Dataset.Title + document.title.substring(document.title.indexOf(":"));
+            document.title =
+                this.Dataset.Title + document.title.substring(document.title.indexOf(":"));
             // Parse the date and nicknames as needed
             const Datasets = this.Dataset.Source;
             this.Dataset.UserIDToNicknames = new Map();
@@ -103,7 +104,8 @@ export class Visualizer {
                 }
             }
             // Calculate the weights
-            this.Dataset.Weights = this.Dataset.Weights ?? this.Dataset.Names.map((_, Index) => (Index == 0 ? 0 : 1));
+            this.Dataset.Weights =
+                this.Dataset.Weights ?? this.Dataset.Names.map((_, Index) => (Index == 0 ? 0 : 1));
             this.Dataset.TotalWeight = this.Dataset.Weights.reduce((A, B) => A + B, 0);
             // Build the default graph
             this.SetStatus("Code", BuildSemanticGraph(this.Dataset, this.Parameters));
@@ -183,7 +185,13 @@ export class Visualizer {
     /** PreviewFilter: The previewing filter of the graph. */
     private PreviewFilter?: FilterBase<any, any>;
     /** SetFilter: Try to set a filter for the visualization. */
-    public SetFilter<T>(Previewing: boolean, Filter: FilterBase<any, any>, Parameters: any = undefined, Additive = false, Mode = ""): boolean {
+    public SetFilter<T>(
+        Previewing: boolean,
+        Filter: FilterBase<any, any>,
+        Parameters: any = undefined,
+        Additive = false,
+        Mode = "",
+    ): boolean {
         if (Previewing) {
             if (Parameters == undefined) {
                 delete this.PreviewFilter;
@@ -193,7 +201,10 @@ export class Visualizer {
                 delete this.PreviewFilter;
                 Parameters = undefined;
             } else if (Filter.Name == this.PreviewFilter?.Name) {
-                if (!this.PreviewFilter.ToggleParameters(Parameters, Additive, Mode) && this.PreviewFilter.Parameters.length == 0) {
+                if (
+                    !this.PreviewFilter.ToggleParameters(Parameters, Additive, Mode) &&
+                    this.PreviewFilter.Parameters.length == 0
+                ) {
                     delete this.PreviewFilter;
                     Parameters = undefined;
                 }
@@ -208,7 +219,10 @@ export class Visualizer {
                 this.Filters.delete(Filter.Name);
                 Parameters = undefined;
             } else if (Filter.Name == Incumbent?.Name) {
-                if (!Incumbent.ToggleParameters(Parameters, Additive, Mode) && Incumbent.Parameters.length == 0) {
+                if (
+                    !Incumbent.ToggleParameters(Parameters, Additive, Mode) &&
+                    Incumbent.Parameters.length == 0
+                ) {
                     this.Filters.delete(Filter.Name);
                     Parameters = undefined;
                 }
@@ -300,7 +314,10 @@ export class Visualizer {
     /** OnChosen: The callback for chosen nodes. */
     public ChosenCallbacks = new Map<string, (Node: any, Status: boolean) => void>();
     /** RegisterChosenCallback: Register a callback for a certain data type. */
-    public RegisterChosenCallback<T>(Name: string, Callback: (Node: Node<T>, Status: boolean) => void) {
+    public RegisterChosenCallback<T>(
+        Name: string,
+        Callback: (Node: Node<T>, Status: boolean) => void,
+    ) {
         this.ChosenCallbacks.set(Name, Callback);
     }
     /** TriggerChosenCallback: Trigger a callback for a certain node. */
@@ -365,9 +382,18 @@ export class Visualizer {
     }
     /** ComponentChosen: Handle the click event on a component. */
     public ComponentChosen<T>(Event: Event, Component: Component<T>) {
-        const Status = this.SetFilter(false, new ComponentFilter(), Component, (Event as any)?.shiftKey == true);
+        const Status = this.SetFilter(
+            false,
+            new ComponentFilter(),
+            Component,
+            (Event as any)?.shiftKey == true,
+        );
         if (Status) {
-            this.CenterCamera(d3.mean(Component.Nodes.map((Node) => Node.x!))!, d3.mean(Component.Nodes.map((Node) => Node.y!))!, 3);
+            this.CenterCamera(
+                d3.mean(Component.Nodes.map((Node) => Node.x!))!,
+                d3.mean(Component.Nodes.map((Node) => Node.y!))!,
+                3,
+            );
         }
         SetClassForComponent(Component, "chosen", Status, false);
         this.Container.classed("component-chosen", Status);
@@ -376,7 +402,9 @@ export class Visualizer {
     /** RenderLegends: Render the legends for the visualization. */
     private RenderLegends(Colorizer: Colorizer<any>) {
         // Check if the legends are up-to-date
-        const Hash = JSON.stringify(Colorizer.Examples) + JSON.stringify(Object.values(Colorizer.Results!).map((Values) => Values.length));
+        const Hash =
+            JSON.stringify(Colorizer.Examples) +
+            JSON.stringify(Object.values(Colorizer.Results!).map((Values) => Values.length));
         if (this.LegendContainer.data("hash") == Hash) {
             return;
         }
@@ -457,7 +485,10 @@ export class Visualizer {
                 .classed("hidden", (Node) => Node.Hidden ?? false);
         }
         // Render links
-        const DistanceLerp = d3.scaleSequential().clamp(true).domain([Graph.MaximumDistance, this.Parameters.LinkMinimumDistance]);
+        const DistanceLerp = d3
+            .scaleSequential()
+            .clamp(true)
+            .domain([Graph.MaximumDistance, this.Parameters.LinkMinimumDistance]);
         const DistanceColor = d3
             .scaleSequential()
             .clamp(true)
@@ -503,8 +534,16 @@ export class Visualizer {
                 (Enter) =>
                     Enter.append("path")
                         .attr("id", (Component) => `hull-${Component.ID}`)
-                        .attr("fill", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length))
-                        .attr("stroke", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length))
+                        .attr("fill", (Component) =>
+                            d3.interpolateSinebow(
+                                Components.indexOf(Component) / Components.length,
+                            ),
+                        )
+                        .attr("stroke", (Component) =>
+                            d3.interpolateSinebow(
+                                Components.indexOf(Component) / Components.length,
+                            ),
+                        )
                         .on("mouseover", (Event, Component) => {
                             this.ComponentOver(Event, Component);
                         })
@@ -526,7 +565,11 @@ export class Visualizer {
                         .attr("font-size", 5)
                         .attr("text-anchor", "middle")
                         .attr("dominant-baseline", "middle")
-                        .attr("stroke", (Component) => d3.interpolateSinebow(Components.indexOf(Component) / Components.length)),
+                        .attr("stroke", (Component) =>
+                            d3.interpolateSinebow(
+                                Components.indexOf(Component) / Components.length,
+                            ),
+                        ),
                 (Update) => Update,
             )
                 .text((Component) => {
@@ -537,7 +580,9 @@ export class Visualizer {
                 })
                 .attr("fill", (Component) => {
                     if (Component.CurrentNodes && Filtered) {
-                        return d3.interpolateViridis(Component.CurrentNodes.length / Component.Nodes.length);
+                        return d3.interpolateViridis(
+                            Component.CurrentNodes.length / Component.Nodes.length,
+                        );
                     }
                     return "#ffffff";
                 })
@@ -612,7 +657,12 @@ export class Visualizer {
 }
 
 /** SetClassForComponent: Set a class for a component and its nodes. */
-function SetClassForComponent<T>(Component: Component<T>, Class: string, Status: boolean, ForNodes = true) {
+function SetClassForComponent<T>(
+    Component: Component<T>,
+    Class: string,
+    Status: boolean,
+    ForNodes = true,
+) {
     $(`#component-${Component.ID}`).toggleClass(Class, Status);
     $(`#hull-${Component.ID}`).toggleClass(Class, Status);
     if (ForNodes) {
@@ -630,7 +680,12 @@ function SetClassForNode<T>(ID: string, Class: string, Status: boolean) {
 }
 
 /** SetClassForLinks: Set a class for links and linked nodes of a node. */
-function SetClassForLinks<T>(ID: string, Class: string, Status: boolean, Filter?: (Other: string) => boolean) {
+function SetClassForLinks<T>(
+    ID: string,
+    Class: string,
+    Status: boolean,
+    Filter?: (Other: string) => boolean,
+) {
     let Links = $(`line[sourceid="${ID}"]`);
     Links.each((Index, Element) => {
         const Filtered = Filter?.($(Element).attr("targetid")!) ?? true;

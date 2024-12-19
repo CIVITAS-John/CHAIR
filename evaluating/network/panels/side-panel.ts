@@ -38,7 +38,9 @@ export class SidePanel extends Panel {
         // Add the menu
         const MenuContainer = this.Contents.children(".panel-menu");
         const BuildMenu = (Name: string) => {
-            return $(`<a href="javascript:void(0)" id="menu-${Name}">${this.Subpanels[Name].Name}</a>`).on("click", () => this.ShowPanel(Name));
+            return $(
+                `<a href="javascript:void(0)" id="menu-${Name}">${this.Subpanels[Name].Name}</a>`,
+            ).on("click", () => this.ShowPanel(Name));
         };
         for (const Key in this.Subpanels) {
             MenuContainer.append(BuildMenu(Key));

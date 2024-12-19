@@ -70,7 +70,11 @@ export abstract class Panel {
         Refresh();
     }
     /** BuildTable: Build a table for the panel. */
-    protected BuildTable<T>(Data: T[], Builder: (Row: Cash, Data: T, Index: number) => void, Columns: string[] = []) {
+    protected BuildTable<T>(
+        Data: T[],
+        Builder: (Row: Cash, Data: T, Index: number) => void,
+        Columns: string[] = [],
+    ) {
         const Table = $('<table class="data-table"></table>').appendTo(this.Container);
         if (Columns.length > 0) {
             Table.append($("<tr></tr>").append(...Columns.map((C) => $("<th></th>").text(C))));
@@ -81,7 +85,11 @@ export abstract class Panel {
         return Table;
     }
     /** BuildList: Build a list for the panel. */
-    protected BuildList<T>(Data: T[], Builder: (Item: Cash, Data: T, Index: number) => void, Type: "ul" | "ol" = "ul") {
+    protected BuildList<T>(
+        Data: T[],
+        Builder: (Item: Cash, Data: T, Index: number) => void,
+        Type: "ul" | "ol" = "ul",
+    ) {
         const List = $(`<${Type}></${Type}>`).appendTo(this.Container);
         Data.forEach((Item, Index) => {
             Builder($("<li></li>").appendTo(List), Item, Index);

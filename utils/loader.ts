@@ -10,7 +10,18 @@ import { MergeCodebook, MergeCodebooks } from "../consolidating/codebooks.js";
 import { InitializeDataset } from "../constants.js";
 
 import { GetFilesRecursively, RemoveCommonality } from "./file.js";
-import type { Code, Codebook, CodedItem, CodedThread, CodedThreads, Conversation, DataChunk, DataItem, Dataset, Participant } from "./schema.js";
+import type {
+    Code,
+    Codebook,
+    CodedItem,
+    CodedThread,
+    CodedThreads,
+    Conversation,
+    DataChunk,
+    DataItem,
+    Dataset,
+    Participant,
+} from "./schema.js";
 import { AssembleExample, Message, Project } from "./schema.js";
 
 /** GetDatasetPath: Get the dataset path. */
@@ -51,7 +62,9 @@ export function LoadConversations(Group: string): Conversation[] {
 
 /** LoadDataset: Load a dataset for analysis. */
 export function LoadDataset<T extends DataChunk<DataItem>>(Group: string): Dataset<T> {
-    const Result = eval(`(function() {${File.readFileSync(GetMessagesPath(Group, "configuration.js"), "utf-8")}})()`) as Dataset<T>;
+    const Result = eval(
+        `(function() {${File.readFileSync(GetMessagesPath(Group, "configuration.js"), "utf-8")}})()`,
+    ) as Dataset<T>;
     for (const [Key, Value] of Object.entries(Result.Data)) {
         const Data = LoadChunksForAnalysis<T>(Group, Value as any);
         for (const [_, Chunk] of Object.entries(Data)) {
@@ -66,7 +79,10 @@ export function LoadDataset<T extends DataChunk<DataItem>>(Group: string): Datas
 }
 
 /** LoadChunksForAnalysis: Load the chunks for analysis. */
-export function LoadChunksForAnalysis<T extends DataChunk<DataItem>>(Group: string, Name: string): Record<string, T> {
+export function LoadChunksForAnalysis<T extends DataChunk<DataItem>>(
+    Group: string,
+    Name: string,
+): Record<string, T> {
     return JSON.parse(File.readFileSync(GetMessagesPath(Group, Name), "utf-8"));
 }
 
@@ -165,7 +181,10 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
             switch (ID) {
                 case "-1": // Summary
                     Thread.Summary = Content;
-                    if (Thread.Summary == "" || Thread.Summary.startsWith("(Optional) Your thoughts before coding")) {
+                    if (
+                        Thread.Summary == "" ||
+                        Thread.Summary.startsWith("(Optional) Your thoughts before coding")
+                    ) {
                         Thread.Summary = undefined;
                     }
                     return;
@@ -177,7 +196,10 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
                     return;
                 case "-3": // Reflection
                     Thread.Reflection = Content;
-                    if (Thread.Reflection == "" || Thread.Reflection.startsWith("Your reflections after coding")) {
+                    if (
+                        Thread.Reflection == "" ||
+                        Thread.Reflection.startsWith("Your reflections after coding")
+                    ) {
                         Thread.Reflection = undefined;
                     }
                     return;
@@ -209,7 +231,10 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
 }
 
 /** LoadCodebooks: Load codebooks from a source. */
-export async function LoadCodebooks(Source: string | string[], CreateGroup = false): Promise<[Codebook[], string[]]> {
+export async function LoadCodebooks(
+    Source: string | string[],
+    CreateGroup = false,
+): Promise<[Codebook[], string[]]> {
     if (Array.isArray(Source)) {
         const Codebooks: Codebook[] = [];
         const Names: string[] = [];

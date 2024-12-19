@@ -16,7 +16,15 @@ export class CategoryMerger extends CodeConsolidator {
     /** Minimum: The minimum threshold for merging categories. */
     public Minimum: number;
     /** Constructor: Create a new NameMerger. */
-    constructor({ Maximum = 0.65, Minimum = 0.5, Looping = false }: { Maximum?: number; Minimum?: number; Looping?: boolean }) {
+    constructor({
+        Maximum = 0.65,
+        Minimum = 0.5,
+        Looping = false,
+    }: {
+        Maximum?: number;
+        Minimum?: number;
+        Looping?: boolean;
+    }) {
         super();
         this.Maximum = Maximum;
         this.Minimum = Minimum;
@@ -106,7 +114,9 @@ ${Count}. {2-4 words for category ${Count}}
         }
         // Update the categories
         if (Results.length != Object.keys(this.NewCategories).length) {
-            throw new Error(`Invalid response: ${Results.length} results for ${this.OldCategories.length} categories.`);
+            throw new Error(
+                `Invalid response: ${Results.length} results for ${this.OldCategories.length} categories.`,
+            );
         }
         UpdateCategories(Object.keys(this.NewCategories), Results, Codes);
         // Check if we are done

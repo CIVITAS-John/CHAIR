@@ -28,7 +28,11 @@ export function GetFilesRecursively(Source: string): string[] {
 }
 
 /** ReadOrBuildCache: Read or build a cache based on a hash. */
-export async function ReadOrBuildCache<T>(CachePath: string, Hash: string, Build: () => Promise<T>): Promise<T> {
+export async function ReadOrBuildCache<T>(
+    CachePath: string,
+    Hash: string,
+    Build: () => Promise<T>,
+): Promise<T> {
     // Check if the cache exists
     if (File.existsSync(`${CachePath}.json`) && File.existsSync(`${CachePath}.hash`)) {
         if (Hash == File.readFileSync(`${CachePath}.hash`, "utf8")) {

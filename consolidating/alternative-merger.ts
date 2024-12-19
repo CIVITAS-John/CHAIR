@@ -30,7 +30,9 @@ export class AlternativeMerger extends CodeConsolidator {
                 BestAlternatives.set(Name, Codes[0]);
             } else {
                 // Maybe we should change to distance instead of examples
-                const Best = Alternatives.sort((A, B) => (B.Examples?.length ?? 0) - (A.Examples?.length ?? 0))[0];
+                const Best = Alternatives.sort(
+                    (A, B) => (B.Examples?.length ?? 0) - (A.Examples?.length ?? 0),
+                )[0];
                 BestAlternatives.set(Name, Best);
             }
         });
@@ -44,7 +46,11 @@ export class AlternativeMerger extends CodeConsolidator {
                 MergeCodes(BestAlternatives.get(Code.Label)!, Code);
             }
         });
-        console.log(chalk.green(`Statistics: Codes merged from ${Object.keys(Codebook).length} to ${Object.keys(Result).length}`));
+        console.log(
+            chalk.green(
+                `Statistics: Codes merged from ${Object.keys(Codebook).length} to ${Object.keys(Result).length}`,
+            ),
+        );
         return Result;
     }
 }

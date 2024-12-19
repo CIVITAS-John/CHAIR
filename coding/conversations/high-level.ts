@@ -12,7 +12,12 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
         return Remaining;
     }
     /** ParseResponse: Parse the responses from the LLM. */
-    public async ParseResponse(Analysis: CodedThread, Lines: string[], Messages: Message[], ChunkStart: number): Promise<number> {
+    public async ParseResponse(
+        Analysis: CodedThread,
+        Lines: string[],
+        Messages: Message[],
+        ChunkStart: number,
+    ): Promise<number> {
         let Category = "";
         let Position = "";
         let CurrentCode: Code | undefined;
@@ -47,7 +52,10 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                 Line = Line.replace(/^(Label|Code)\s*\d*:/, "").trim();
                 // Get or create the code
                 Line = Line.toLowerCase();
-                CurrentCode = Analysis.Codes[Line] ?? { Categories: [Category.toLowerCase()], Label: Line };
+                CurrentCode = Analysis.Codes[Line] ?? {
+                    Categories: [Category.toLowerCase()],
+                    Label: Line,
+                };
                 Analysis.Codes[Line] = CurrentCode;
             } else if (Line.startsWith("Definition: ")) {
                 // Add the definition to the current code

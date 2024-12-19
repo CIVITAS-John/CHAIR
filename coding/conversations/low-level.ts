@@ -13,7 +13,12 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
     protected TagsName = "tags";
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // We will fetch at least 10 messages for each batch to keep the context.
-    public GetChunkSize(Recommended: number, Remaining: number, Iteration: number, Tries: number): [number, number, number] {
+    public GetChunkSize(
+        Recommended: number,
+        Remaining: number,
+        Iteration: number,
+        Tries: number,
+    ): [number, number, number] {
         // For weaker models, we will reduce the chunk size (32 => 24 => 16 => 8)
         if (Recommended == MaxItems) {
             return [Recommended - Tries * 8, 0, 0];
@@ -21,7 +26,12 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
         return [Recommended - Tries * 2, Math.max(8 - Recommended - Tries, 0), 0];
     }
     /** ParseResponse: Parse the responses from the LLM. */
-    public async ParseResponse(Analysis: CodedThread, Lines: string[], Messages: Message[], ChunkStart: number): Promise<Record<number, string>> {
+    public async ParseResponse(
+        Analysis: CodedThread,
+        Lines: string[],
+        Messages: Message[],
+        ChunkStart: number,
+    ): Promise<Record<number, string>> {
         const Results: Record<number, string> = {};
         let NextMessage: ((Content: string) => void) | undefined;
         for (let I = 0; I < Lines.length; I++) {
@@ -62,7 +72,11 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     }
                     let Codes = Match[2].trim();
                     // Sometimes, the LLM will return the message content and put the codes in the next line
-                    if (NextLine != "" && !NextLine.startsWith("Summary:") && !/^(\d+)\. (.*)$/.exec(NextLine)) {
+                    if (
+                        NextLine != "" &&
+                        !NextLine.startsWith("Summary:") &&
+                        !/^(\d+)\. (.*)$/.exec(NextLine)
+                    ) {
                         Codes = NextLine.trim();
                         I++;
                     }
@@ -143,7 +157,9 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
             throw new Error("Invalid response: no summary");
         }
         if (Object.keys(Results).length != Messages.length) {
-            throw new Error(`Invalid response: ${Object.keys(Results).length} results for ${Messages.length} messages.`);
+            throw new Error(
+                `Invalid response: ${Object.keys(Results).length} results for ${Messages.length} messages.`,
+            );
         }
         // Check keys
         //for (var I = 0; I < Object.keys(Results).length; I++)

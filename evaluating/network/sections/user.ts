@@ -56,9 +56,15 @@ export class UserSection extends Panel {
                 (Evaluation) => Evaluation.Value,
             )!;
             if (Metric == "Divergence") {
-                Colors[Metric] = d3.scaleSequential().interpolator(d3.interpolateViridis).domain([Maximum, Minimum]);
+                Colors[Metric] = d3
+                    .scaleSequential()
+                    .interpolator(d3.interpolateViridis)
+                    .domain([Maximum, Minimum]);
             } else {
-                Colors[Metric] = d3.scaleSequential().interpolator(d3.interpolateViridis).domain([Minimum, Maximum]);
+                Colors[Metric] = d3
+                    .scaleSequential()
+                    .interpolator(d3.interpolateViridis)
+                    .domain([Minimum, Maximum]);
             }
         }
         // Render the codebooks and evaluation results
@@ -72,14 +78,22 @@ export class UserSection extends Panel {
                     .appendTo(Row);
                 Summary.append($("<h4></h4>").text(this.Dataset.UserIDToNicknames?.get(Key) ?? Key))
                     .append($('<p class="tips"></p>').text(`${Results[Key].Count} items`))
-                    .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new UserFilter(), Key))
+                    .on("mouseover", (Event) =>
+                        this.Visualizer.SetFilter(true, new UserFilter(), Key),
+                    )
                     .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new UserFilter()))
                     .on("click", (Event) => {
                         if (Event.shiftKey) {
                             this.Visualizer.SetFilter(false, new UserFilter(), Key, true);
                         } else {
                             if (!this.Visualizer.IsFilterApplied("User", Key)) {
-                                this.Visualizer.SetFilter(false, new UserFilter(), Key, Event.shiftKey, "Coverage");
+                                this.Visualizer.SetFilter(
+                                    false,
+                                    new UserFilter(),
+                                    Key,
+                                    Event.shiftKey,
+                                    "Coverage",
+                                );
                             }
                             this.Visualizer.Dialog.ShowUser(Key);
                         }
@@ -92,12 +106,27 @@ export class UserSection extends Panel {
                     const Cell = $('<td class="metric-cell"></td>')
                         .attr("id", `metric-${Index}-${Metric}`)
                         .text(d3.format(Metric == "Divergence" ? ".1%" : ".1%")(MetricValue))
-                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new UserFilter(), Key, false, Metric))
-                        .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new UserFilter()))
-                        .on("click", (Event) => this.Visualizer.SetFilter(false, new UserFilter(), Key, Event.shiftKey, Metric))
+                        .on("mouseover", (Event) =>
+                            this.Visualizer.SetFilter(true, new UserFilter(), Key, false, Metric),
+                        )
+                        .on("mouseout", (Event) =>
+                            this.Visualizer.SetFilter(true, new UserFilter()),
+                        )
+                        .on("click", (Event) =>
+                            this.Visualizer.SetFilter(
+                                false,
+                                new UserFilter(),
+                                Key,
+                                Event.shiftKey,
+                                Metric,
+                            ),
+                        )
                         .css("background", Color)
                         .css("color", d3.lab(Color).l > 70 ? "black" : "white")
-                        .toggleClass("chosen", this.Visualizer.IsFilterApplied("User", Key, Metric));
+                        .toggleClass(
+                            "chosen",
+                            this.Visualizer.IsFilterApplied("User", Key, Metric),
+                        );
                     Row.append(Cell);
                 });
             },

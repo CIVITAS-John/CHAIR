@@ -9,47 +9,53 @@ import open, { apps } from "open";
 import { EnsureFolder } from "./llms.js";
 
 /** CreateServer: Create a local server for interactivity. */
-export function CreateServer<T>(Port: number, BaseDirectories: string[], ...DataFiles: string[]): Promise<T | undefined> {
+export function CreateServer<T>(
+    Port: number,
+    BaseDirectories: string[],
+    ...DataFiles: string[]
+): Promise<T | undefined> {
     let Shutdown: (Data?: T) => void;
     // Create the server
-    const Server: http.Server = http.createServer((Request: http.IncomingMessage, Response: http.ServerResponse) => {
-        let Url = Request.url ?? "/";
-        if (Url == "/") {
-            Url = "/index.html";
-        }
-        // Handle dynamic requests
-        if (Url.startsWith("/api/report/")) {
-            // Read the body
-            let Body = "";
-            Request.on("data", (chunk) => {
-                Body += chunk.toString();
-            });
-            Request.on("end", () => {
-                const Data = JSON.parse(Body);
-                Response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
-                Response.end(JSON.stringify(Data));
-                Shutdown(Data);
-            });
-            return;
-        }
-        // Handle requests for data files specifically
-        for (const dataFile of DataFiles) {
-            if (Url === `/${path.basename(dataFile)}`) {
-                SendData(Response, dataFile);
+    const Server: http.Server = http.createServer(
+        (Request: http.IncomingMessage, Response: http.ServerResponse) => {
+            let Url = Request.url ?? "/";
+            if (Url == "/") {
+                Url = "/index.html";
+            }
+            // Handle dynamic requests
+            if (Url.startsWith("/api/report/")) {
+                // Read the body
+                let Body = "";
+                Request.on("data", (chunk) => {
+                    Body += chunk.toString();
+                });
+                Request.on("end", () => {
+                    const Data = JSON.parse(Body);
+                    Response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+                    Response.end(JSON.stringify(Data));
+                    Shutdown(Data);
+                });
                 return;
             }
-        }
-        // Serve files from the BaseDirectory
-        for (const BaseDirectory of BaseDirectories) {
-            if (fs.existsSync(path.join(BaseDirectory, Url))) {
-                SendData(Response, path.join(BaseDirectory, Url));
-                return;
+            // Handle requests for data files specifically
+            for (const dataFile of DataFiles) {
+                if (Url === `/${path.basename(dataFile)}`) {
+                    SendData(Response, dataFile);
+                    return;
+                }
             }
-        }
-        // Handle 404 errors
-        Response.writeHead(404);
-        Response.end(`Error loading ${path.basename(Url)}`);
-    });
+            // Serve files from the BaseDirectory
+            for (const BaseDirectory of BaseDirectories) {
+                if (fs.existsSync(path.join(BaseDirectory, Url))) {
+                    SendData(Response, path.join(BaseDirectory, Url));
+                    return;
+                }
+            }
+            // Handle 404 errors
+            Response.writeHead(404);
+            Response.end(`Error loading ${path.basename(Url)}`);
+        },
+    );
     // Send data to the client
     const SendData = function (Response: http.ServerResponse, FilePath: string) {
         fs.readFile(FilePath, (err: NodeJS.ErrnoException | null, data: Buffer) => {
@@ -124,7 +130,11 @@ export function CreateServer<T>(Port: number, BaseDirectories: string[], ...Data
 }
 
 /** CreateOfflineBundle: Create an offline bundle for the web application. */
-export function CreateOfflineBundle(TargetDirectory: string, BaseDirectories: string[], ...DataFiles: string[]) {
+export function CreateOfflineBundle(
+    TargetDirectory: string,
+    BaseDirectories: string[],
+    ...DataFiles: string[]
+) {
     // Create the offline bundle directory
     const OfflineBundleDirectory = TargetDirectory;
     EnsureFolder(OfflineBundleDirectory);
@@ -167,5 +177,8 @@ export function CreateOfflineBundle(TargetDirectory: string, BaseDirectories: st
 
 /** HandleScript: Filter a script content to exclude import statements. */
 function HandleScript(Content: string): string {
-    return Content.replaceAll(/^(.*)import(.*?) from ['"]([^/]*?)['"];?$/gm, "").replaceAll(/^\/\/# sourceMappingURL(.*)/gm, "");
+    return Content.replaceAll(/^(.*)import(.*?) from ['"]([^/]*?)['"];?$/gm, "").replaceAll(
+        /^\/\/# sourceMappingURL(.*)/gm,
+        "",
+    );
 }

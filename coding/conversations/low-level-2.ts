@@ -13,7 +13,12 @@ export default class LowLevelAnalyzer2 extends LowLevelAnalyzerBase {
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature = 0.5;
     /** BuildPrompts: Build the prompts for the LLM. */
-    public async BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): Promise<[string, string]> {
+    public async BuildPrompts(
+        Analysis: CodedThread,
+        Target: Conversation,
+        Messages: Message[],
+        ChunkStart: number,
+    ): Promise<[string, string]> {
         return [
             `
 You are an expert in thematic analysis. Now, you are working on the open coding.
@@ -28,7 +33,9 @@ Analysis for all ${Messages.length} messages:
 ${Messages.length}. tag4; tag5; tag6; ...
 Summary: {Summary of the entire conversation}
 Notes: {Summary and specific notes about the entire conversation}`.trim(),
-            Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join("\n"),
+            Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join(
+                "\n",
+            ),
         ];
     }
 }

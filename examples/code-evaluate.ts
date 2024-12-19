@@ -50,7 +50,13 @@ for (var Step of Configuration.Steps) {
             for (var Analyzer of Step.Analyzers) {
                 await UseLLMs(
                     async () => {
-                        await ProcessDataset(new (await import(`./../coding/conversations/${Analyzer}.js`)).default(), Configuration.Dataset, false);
+                        await ProcessDataset(
+                            new (
+                                await import(`./../coding/conversations/${Analyzer}.js`)
+                            ).default(),
+                            Configuration.Dataset,
+                            false,
+                        );
                     },
                     ...Step.Models,
                 );
@@ -59,7 +65,13 @@ for (var Step of Configuration.Steps) {
         case "Evaluate":
             await UseLLMs(
                 async () => {
-                    await Evaluate(Configuration.Dataset, new RefiningReferenceBuilder(), Step.Name ?? "evaluation", Step.Analyzers, Step.Models);
+                    await Evaluate(
+                        Configuration.Dataset,
+                        new RefiningReferenceBuilder(),
+                        Step.Name ?? "evaluation",
+                        Step.Analyzers,
+                        Step.Models,
+                    );
                 },
                 ...Step.Evaluators!,
             );
@@ -68,7 +80,13 @@ for (var Step of Configuration.Steps) {
 }
 
 /** Evaluate: Evaluate the performance of multiple coding results. */
-async function Evaluate(SourcePath: string, Builder: ReferenceBuilder, Suffix: string, Analyzers: string[], Models: string[]) {
+async function Evaluate(
+    SourcePath: string,
+    Builder: ReferenceBuilder,
+    Suffix: string,
+    Analyzers: string[],
+    Models: string[],
+) {
     // Get the dataset
     const Dataset = await LoadDataset(SourcePath);
     const Evaluator = new NetworkEvaluator({ Dataset });
@@ -80,7 +98,11 @@ async function Evaluate(SourcePath: string, Builder: ReferenceBuilder, Suffix: s
     EnsureFolder(TargetPath);
     // Build the paths
     const Paths = Analyzers.flatMap((Analyzer) =>
-        Models.flatMap((Model) => Object.keys(Dataset.Data).map((Name) => `${SourcePath}/${Analyzer}/${Name}-${Model}.json`)),
+        Models.flatMap((Model) =>
+            Object.keys(Dataset.Data).map(
+                (Name) => `${SourcePath}/${Analyzer}/${Name}-${Model}.json`,
+            ),
+        ),
     );
     // Build the reference and evaluate the codebooks
     const Results = await BuildReferenceAndEvaluateCodebooks(

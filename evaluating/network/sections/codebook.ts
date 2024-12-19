@@ -58,9 +58,15 @@ export class CodebookSection extends Panel {
                 (Evaluation) => Evaluation.Value,
             )!;
             if (Metric == "Divergence") {
-                Colors[Metric] = d3.scaleSequential().interpolator(d3.interpolateViridis).domain([Maximum, Minimum]);
+                Colors[Metric] = d3
+                    .scaleSequential()
+                    .interpolator(d3.interpolateViridis)
+                    .domain([Maximum, Minimum]);
             } else {
-                Colors[Metric] = d3.scaleSequential().interpolator(d3.interpolateViridis).domain([Minimum, Maximum]);
+                Colors[Metric] = d3
+                    .scaleSequential()
+                    .interpolator(d3.interpolateViridis)
+                    .domain([Minimum, Maximum]);
             }
         }
         // Render the codebooks and evaluation results
@@ -75,15 +81,27 @@ export class CodebookSection extends Panel {
                     .appendTo(Row);
                 Summary.append($("<h4></h4>").text(Key))
                     .append($('<p class="tips"></p>').text(`${Object.keys(Codebook).length} codes`))
-                    .append($('<p class="tips"></p>').text(`${GetConsolidatedSize(Codebooks[0], Codebook)} consolidated`))
-                    .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1))
+                    .append(
+                        $('<p class="tips"></p>').text(
+                            `${GetConsolidatedSize(Codebooks[0], Codebook)} consolidated`,
+                        ),
+                    )
+                    .on("mouseover", (Event) =>
+                        this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1),
+                    )
                     .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
                     .on("click", (Event) => {
                         if (Event.shiftKey) {
                             this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, true);
                         } else {
                             if (!this.Visualizer.IsFilterApplied("Owner", Index + 1)) {
-                                this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey, "Coverage");
+                                this.Visualizer.SetFilter(
+                                    false,
+                                    new OwnerFilter(),
+                                    Index + 1,
+                                    Event.shiftKey,
+                                    "Coverage",
+                                );
                             }
                             this.Visualizer.SidePanel.ShowPanel("Codes");
                         }
@@ -96,12 +114,33 @@ export class CodebookSection extends Panel {
                     const Cell = $('<td class="metric-cell"></td>')
                         .attr("id", `metric-${Index}-${Metric}`)
                         .text(d3.format(Metric == "Divergence" ? ".1%" : ".1%")(MetricValue))
-                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1, false, Metric))
-                        .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
-                        .on("click", (Event) => this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey, Metric))
+                        .on("mouseover", (Event) =>
+                            this.Visualizer.SetFilter(
+                                true,
+                                new OwnerFilter(),
+                                Index + 1,
+                                false,
+                                Metric,
+                            ),
+                        )
+                        .on("mouseout", (Event) =>
+                            this.Visualizer.SetFilter(true, new OwnerFilter()),
+                        )
+                        .on("click", (Event) =>
+                            this.Visualizer.SetFilter(
+                                false,
+                                new OwnerFilter(),
+                                Index + 1,
+                                Event.shiftKey,
+                                Metric,
+                            ),
+                        )
                         .css("background", Color)
                         .css("color", d3.lab(Color).l > 70 ? "black" : "white")
-                        .toggleClass("chosen", this.Visualizer.IsFilterApplied("Owner", Index + 1, Metric));
+                        .toggleClass(
+                            "chosen",
+                            this.Visualizer.IsFilterApplied("Owner", Index + 1, Metric),
+                        );
                     Row.append(Cell);
                 });
             },

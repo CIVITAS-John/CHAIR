@@ -7,7 +7,10 @@ import type { Parameters } from "./utils.js";
 import { CalculateJSD } from "./utils.js";
 
 /** EvaluateCodebooks: Evaluate all codebooks based on the network structure. */
-export function EvaluateCodebooks(Dataset: CodebookComparison<any>, Parameters: Parameters): Record<string, CodebookEvaluation> {
+export function EvaluateCodebooks(
+    Dataset: CodebookComparison<any>,
+    Parameters: Parameters,
+): Record<string, CodebookEvaluation> {
     const Results: Record<string, CodebookEvaluation> = {};
     const Observations: number[][] = [[]];
     // Prepare for the results
@@ -65,7 +68,10 @@ export function EvaluateCodebooks(Dataset: CodebookComparison<any>, Parameters: 
 }
 
 /** EvaluateUsers: Evaluate all users based on the network structure. */
-export function EvaluateUsers(Dataset: CodebookComparison<any>, Parameters: Parameters): Record<string, CodebookEvaluation> {
+export function EvaluateUsers(
+    Dataset: CodebookComparison<any>,
+    Parameters: Parameters,
+): Record<string, CodebookEvaluation> {
     const Results: Record<string, CodebookEvaluation> = {};
     const Observations: number[][] = [[]];
     // Prepare for the results
@@ -149,7 +155,8 @@ export function EvaluatePerCluster(
     Graph: Graph<Code>,
     Parameters: Parameters,
 ): { Component: Component<Code>; Coverages: number[]; Differences: number[] }[] {
-    const Results: { Component: Component<Code>; Coverages: number[]; Differences: number[] }[] = [];
+    const Results: { Component: Component<Code>; Coverages: number[]; Differences: number[] }[] =
+        [];
     // Prepare for the results
     const Codebooks = Dataset.Codebooks;
     let TotalCoverages = Dataset.Names.map(() => 0);
@@ -175,7 +182,9 @@ export function EvaluatePerCluster(
     // Calculate the total coverage and relative difference
     TotalCoverages = TotalCoverages.map((Coverage) => Coverage / TotalCoverages[0]);
     for (const Result of Results) {
-        Result.Differences = Result.Coverages.map((Coverage, I) => Coverage / TotalCoverages[I + 1] - 1);
+        Result.Differences = Result.Coverages.map(
+            (Coverage, I) => Coverage / TotalCoverages[I + 1] - 1,
+        );
     }
     return Results;
 }

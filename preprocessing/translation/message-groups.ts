@@ -2,14 +2,26 @@ import * as File from "fs";
 
 import { ExportChunksForCoding, ExportMessages } from "../../utils/export.js";
 import { EnsureFolder, LLMName, MaxOutput } from "../../utils/llms.js";
-import { GetMessagesPath, GetParticipantsPath, LoadConversations, LoadItems, LoadParticipants } from "../../utils/loader.js";
+import {
+    GetMessagesPath,
+    GetParticipantsPath,
+    LoadConversations,
+    LoadItems,
+    LoadParticipants,
+} from "../../utils/loader.js";
 import type { Conversation, Message, Participant } from "../../utils/schema.js";
 
 import { TranslateStrings } from "./general.js";
 
 /** ProcessConversations: Load, translate, and export certain conversations for qualitative coding. */
-export async function ProcessConversations(Group: string, Targets: number[], Dataset?: string): Promise<void> {
-    const AllItems = LoadItems<Message>(GetMessagesPath(Group)).filter((Message) => Message.UserID != "0");
+export async function ProcessConversations(
+    Group: string,
+    Targets: number[],
+    Dataset?: string,
+): Promise<void> {
+    const AllItems = LoadItems<Message>(GetMessagesPath(Group)).filter(
+        (Message) => Message.UserID != "0",
+    );
     // Before we start, we need to translate all participants
     let Participants = LoadParticipants();
     console.log(`Participants to translate: ${Participants.length}`);
@@ -17,7 +29,10 @@ export async function ProcessConversations(Group: string, Targets: number[], Dat
     // Also, we need to load the conversations
     const Conversations = LoadConversations(Group);
     // Write into JSON file
-    File.writeFileSync(GetParticipantsPath("Participants-Translated.json"), JSON.stringify(Participants, null, 4));
+    File.writeFileSync(
+        GetParticipantsPath("Participants-Translated.json"),
+        JSON.stringify(Participants, null, 4),
+    );
     // Create the Excel workbook
     const IDs = new Set<string>();
     const ResultMessages: Message[] = [];
@@ -25,11 +40,18 @@ export async function ProcessConversations(Group: string, Targets: number[], Dat
     let Minimum = -1,
         Maximum = 0;
     for (const Target of Targets) {
-        const Conversation = Conversations.find((Conversation) => Conversation.ID.endsWith(`-${Target}`));
+        const Conversation = Conversations.find((Conversation) =>
+            Conversation.ID.endsWith(`-${Target}`),
+        );
         if (!Conversation) {
             continue;
         }
-        const Messages = await TranslateConversation(Group, AllItems, Participants, Conversation.ID);
+        const Messages = await TranslateConversation(
+            Group,
+            AllItems,
+            Participants,
+            Conversation.ID,
+        );
         if (Messages.length == 0) {
             continue;
         }
@@ -55,9 +77,15 @@ export async function ProcessConversations(Group: string, Targets: number[], Dat
     const Book = ExportChunksForCoding(Object.values(Results));
     await Book.xlsx.writeFile(GetMessagesPath(Dataset, `${Minimum}~${Maximum}-${LLMName}.xlsx`));
     // Write into Markdown file
-    File.writeFileSync(GetMessagesPath(Dataset, `${Minimum}~${Maximum}-${LLMName}.md`), ExportMessages(ResultMessages));
+    File.writeFileSync(
+        GetMessagesPath(Dataset, `${Minimum}~${Maximum}-${LLMName}.md`),
+        ExportMessages(ResultMessages),
+    );
     // Write into JSON file
-    File.writeFileSync(GetMessagesPath(Dataset, `${Minimum}~${Maximum}-${LLMName}.json`), JSON.stringify(Results, null, 4));
+    File.writeFileSync(
+        GetMessagesPath(Dataset, `${Minimum}~${Maximum}-${LLMName}.json`),
+        JSON.stringify(Results, null, 4),
+    );
 }
 
 /** TranslateConversation: Translate certain messages from a conversation. */
@@ -74,7 +102,10 @@ async function TranslateConversation(
     if (FirstIndex == -1 || LastIndex == -1) {
         return [];
     }
-    let Messages = AllItems.slice(Math.max(0, FirstIndex - 3), Math.min(AllItems.length, LastIndex + 4));
+    let Messages = AllItems.slice(
+        Math.max(0, FirstIndex - 3),
+        Math.min(AllItems.length, LastIndex + 4),
+    );
     // Keep the original messages for bilingual translation
     Messages = JSON.parse(JSON.stringify(Messages)) as Message[];
     const Originals = Bilingual ? (JSON.parse(JSON.stringify(Messages)) as Message[]) : undefined;
@@ -83,7 +114,10 @@ async function TranslateConversation(
     Messages = await TranslateMessages(Messages, Participants);
     // Write into Markdown file
     if (Bilingual) {
-        File.writeFileSync(GetMessagesPath(Group, `${Conversation}-${LLMName}.md`), ExportMessages(Messages, Originals));
+        File.writeFileSync(
+            GetMessagesPath(Group, `${Conversation}-${LLMName}.md`),
+            ExportMessages(Messages, Originals),
+        );
     }
     return Messages;
 }
@@ -99,7 +133,10 @@ export async function TranslateParticipants(Participants: Participant[]): Promis
 }
 
 // TranslateMessages: Translate a bunch of messages.
-export async function TranslateMessages(Messages: Message[], Participants: Participant[]): Promise<Message[]> {
+export async function TranslateMessages(
+    Messages: Message[],
+    Participants: Participant[],
+): Promise<Message[]> {
     // Build a map for the participants
     const ParticipantMap = new Map<string, Participant>();
     Participants.forEach((Participant) => ParticipantMap.set(Participant.ID, Participant));
@@ -107,9 +144,12 @@ export async function TranslateMessages(Messages: Message[], Participants: Parti
     const Nicknames = Messages.map((Message) => Message.Nickname);
     const Contents = Messages.map((Message) => {
         // Handle the mentioned users (=> @ID)
-        Message.Content = Message.Content.replaceAll(/@(.*?)\((\d+)\)(\s|$)/g, (Match, Name, ID) => {
-            return `@${ID} `;
-        });
+        Message.Content = Message.Content.replaceAll(
+            /@(.*?)\((\d+)\)(\s|$)/g,
+            (Match, Name, ID) => {
+                return `@${ID} `;
+            },
+        );
         // Truncate the message if it's too long
         // Here we leave some rooms since the model might need more tokens than the source text to translate
         if (Message.Content.length >= MaxOutput * 0.75) {
