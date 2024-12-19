@@ -183,7 +183,7 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
                     return;
             }
             // Coded item
-            const Item: CodedItem = { ID: ID, Codes: [] };
+            const Item: CodedItem = { ID, Codes: [] };
             const Codes = Row.getCell(CodeIndex).value;
             if (Codes && typeof Codes === "string") {
                 Item.Codes = Codes.split(/[,|;]/)

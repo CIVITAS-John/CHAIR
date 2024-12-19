@@ -181,7 +181,7 @@ export function ExportChunksForCoding<T extends DataItem>(Chunks: DataChunk<T>[]
         Sheet.addRow({});
         // Extra row for notes
         const AddExtraRow = (ID: number, Name: string, Content: string) => {
-            const LastRow = Sheet.addRow({ ID: ID, Nickname: Name, Content: Content });
+            const LastRow = Sheet.addRow({ ID, Nickname: Name, Content });
             LastRow.height = Math.max(30, GetRowHeight(Content, 120));
             LastRow.alignment = { vertical: "middle" };
             LastRow.getCell("Content").alignment = { vertical: "middle", wrapText: true };
@@ -241,8 +241,8 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
             Label: Code.Label,
             Category: Categories,
             Definition: Definitions,
-            Examples: Examples,
-            Alternatives: Alternatives,
+            Examples,
+            Alternatives,
         });
         Row.font = {
             name: "Lato",

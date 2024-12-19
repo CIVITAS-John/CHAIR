@@ -172,7 +172,7 @@ async function ExportProjects(Database: Mongo.Db, Collection: Mongo.Collection):
         // Create the project metadata
         const ID = Project._id.toHexString();
         const Metadata: Project = {
-            ID: ID,
+            ID,
             Category: Project.Category ?? "Experiment",
             UserID: User.ID,
             Nickname: User.Nickname,

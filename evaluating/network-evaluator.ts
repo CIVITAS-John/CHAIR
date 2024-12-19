@@ -83,13 +83,13 @@ export class NetworkEvaluator extends CodebookEvaluator {
             }
             // Return in the format
             const Package: CodebookComparison<any> = {
-                Codebooks: Codebooks,
-                Names: Names,
-                Codes: Codes,
+                Codebooks,
+                Names,
+                Codes,
                 Distances: Result.Distances,
                 Source: this.Dataset,
                 Title: this.Title,
-                Weights: Weights,
+                Weights,
             };
             return Package;
         });

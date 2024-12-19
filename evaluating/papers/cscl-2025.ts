@@ -21,7 +21,7 @@ InitializeEmbeddings("gecko-768-similarity");
 async function EvaluateInFolder(SourcePath: string, Builder: ReferenceBuilder, Suffix: string, ...Folders: string[]) {
     // Get the dataset
     const Dataset = await LoadDataset(SourcePath);
-    const Evaluator = new NetworkEvaluator({ Dataset: Dataset, Title: Folders.join("-") + Suffix });
+    const Evaluator = new NetworkEvaluator({ Dataset, Title: Folders.join("-") + Suffix });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
     const EvaluationName = Folders.join("-") + Suffix;

@@ -49,8 +49,8 @@ async function SeperateMessages(Source: string, Prefix: string) {
             End: EndTime!,
             Items: Indexes[I] - (I == 0 ? 0 : Indexes[I - 1] + 1) + 1,
             Mentions: [...Mentions],
-            Participants: Participants,
-            FirstSeen: FirstSeen,
+            Participants,
+            FirstSeen,
         });
     }
     // Now, try to connect orphan conversations

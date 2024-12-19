@@ -17,7 +17,7 @@ export function BuildSemanticGraph(
     const Nodes: Node<Code>[] = Dataset.Codes.map((Code, Index) => ({
         Type: "Code",
         ID: Index.toString(),
-        Index: Index,
+        Index,
         Data: Code,
         Links: [],
         Owners: OwnerGetter(Code),
@@ -59,9 +59,9 @@ export function BuildSemanticGraph(
                 const Link: Link<Code> = {
                     source: Source,
                     target: Target,
-                    Source: Source,
-                    Target: Target,
-                    Distance: Distance,
+                    Source,
+                    Target,
+                    Distance,
                     VisualizeDistance: InverseLerp(Parameter.LinkMinimumDistance, Parameter.LinkMaximumDistance, Distance),
                 };
                 Link.Weight = (1 - Link.VisualizeDistance!) ** 2;
@@ -104,7 +104,7 @@ export function BuildSemanticGraph(
     }
     // Store it
     const Graph: Graph<Code> = {
-        Nodes: Nodes,
+        Nodes,
         Links: Array.from(Links.values()),
         MaximumDistance: MaxDistance,
         MinimumDistance: MinDistance,

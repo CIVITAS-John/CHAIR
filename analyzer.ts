@@ -120,7 +120,7 @@ export async function AnalyzeChunk<T extends DataItem>(
             if (PreviousAnalysis && PreviousAnalysis != Analysis) {
                 for (const [ID, Item] of Object.entries(PreviousAnalysis.Items)) {
                     if (Chunk.AllItems?.findIndex((Message) => Message.ID == ID) != -1) {
-                        Analysis.Items[ID] = { ID: ID, Codes: Item.Codes };
+                        Analysis.Items[ID] = { ID, Codes: Item.Codes };
                     }
                 }
             }

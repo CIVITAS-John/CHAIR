@@ -16,7 +16,7 @@ UseLLM("llama3-70b");
 async function EvaluateMultipleGroups(SourcePath: string, TaskName: string, ReferenceName: string, Builder: ReferenceBuilder, Sources: string[]) {
     // Get the dataset
     const Dataset = await LoadDataset(SourcePath);
-    const Evaluator = new NetworkEvaluator({ Dataset: Dataset });
+    const Evaluator = new NetworkEvaluator({ Dataset });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
     const ReferencePath = `${SourcePath}/evaluation/references`;

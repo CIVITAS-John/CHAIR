@@ -71,7 +71,7 @@ for (var Step of Configuration.Steps) {
 async function Evaluate(SourcePath: string, Builder: ReferenceBuilder, Suffix: string, Analyzers: string[], Models: string[]) {
     // Get the dataset
     const Dataset = await LoadDataset(SourcePath);
-    const Evaluator = new NetworkEvaluator({ Dataset: Dataset });
+    const Evaluator = new NetworkEvaluator({ Dataset });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
     const ReferencePath = `${SourcePath}/references`;

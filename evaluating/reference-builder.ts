@@ -32,7 +32,7 @@ export class ReferenceBuilder {
     }
     /** RefineCodebook: Further merge the codebook.*/
     protected async RefineCodebook(Codebook: Codebook): Promise<Codebook> {
-        const Threads = { Codebook: Codebook, Threads: {} };
+        const Threads = { Codebook, Threads: {} };
         const Consolidator = new PipelineConsolidator(
             // Merge codes that have been merged
             // new AlternativeMerger(),
@@ -80,7 +80,7 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
     }
     /** RefineCodebook: Further merge the codebook.*/
     protected async RefineCodebook(Codebook: Codebook): Promise<Codebook> {
-        const Threads = { Codebook: Codebook, Threads: {} };
+        const Threads = { Codebook, Threads: {} };
         Object.values(Codebook).forEach((Code) => (Code.Alternatives = []));
         const Consolidator = new PipelineConsolidator(
             // Merge codes that have been merged
