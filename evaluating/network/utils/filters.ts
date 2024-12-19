@@ -3,7 +3,12 @@ import d3 from "d3";
 import type { Code } from "../../../utils/schema.js";
 import type { Visualizer } from "../visualizer.js";
 
-import { FilterItemByUser, FilterNodeByExample, FilterNodeByOwner, FilterNodeByOwners } from "./graph.js";
+import {
+    FilterItemByUser,
+    FilterNodeByExample,
+    FilterNodeByOwner,
+    FilterNodeByOwners,
+} from "./graph.js";
 import type { Component, Node } from "./schema.js";
 
 /** FilterBase: The base class for filters. */
@@ -72,7 +77,9 @@ export class DatasetFilter extends FilterBase<Code, string> {
                 new Set(
                     Object.entries(Sources)
                         .filter(([Key]) => this.Parameters.includes(Key))
-                        .flatMap(([, Value]) => Object.values(Value).flatMap((Item) => Item.AllItems ?? []))
+                        .flatMap(([, Value]) =>
+                            Object.values(Value).flatMap((Item) => Item.AllItems ?? []),
+                        )
                         .map((Example) => Example.ID),
                 ),
             );
@@ -123,12 +130,16 @@ export class UserFilter extends FilterBase<Code, string> {
     private ExampleIDs: string[] = [];
     /** GetParameterNames: Get the names of the parameters. */
     public GetParameterNames(Visualizer: Visualizer): string[] {
-        return this.Parameters.map((Parameter) => Visualizer.Dataset.UserIDToNicknames?.get(Parameter) ?? Parameter);
+        return this.Parameters.map(
+            (Parameter) => Visualizer.Dataset.UserIDToNicknames?.get(Parameter) ?? Parameter,
+        );
     }
     /** Filter: The filter function. */
     public Filter(Visualizer: Visualizer, Node: Node<Code>): boolean {
         if (this.ExampleIDs.length === 0) {
-            this.ExampleIDs = FilterItemByUser(Visualizer.Dataset.Source, this.Parameters).map((Item) => Item.ID);
+            this.ExampleIDs = FilterItemByUser(Visualizer.Dataset.Source, this.Parameters).map(
+                (Item) => Item.ID,
+            );
         }
         return FilterNodeByExample(Node, this.ExampleIDs);
     }
@@ -162,7 +173,11 @@ export class OwnerFilter<T> extends FilterBase<T, number> {
     public Name = "Owner";
     /** Filter: The filter function. */
     public Filter(Visualizer: Visualizer, Node: Node<T>): boolean {
-        return FilterNodeByOwners(Node, this.Parameters, Visualizer.Parameters.UseNearOwners || this.Parameters.length === 1);
+        return FilterNodeByOwners(
+            Node,
+            this.Parameters,
+            Visualizer.Parameters.UseNearOwners || this.Parameters.length === 1,
+        );
     }
     /** GetParameterNames: Get the names of the parameters. */
     public GetParameterNames(Visualizer: Visualizer): string[] {
@@ -172,7 +187,9 @@ export class OwnerFilter<T> extends FilterBase<T, number> {
     public GetColorizer(Visualizer: Visualizer): Colorizer<T> {
         if (this.Parameters.length === 0) {
             return new OwnerColorizer(
-                Visualizer.Dataset.Weights!.map((Weight, Index) => (Weight > 0 ? Index : -1)).filter((Index) => Index >= 0),
+                Visualizer.Dataset.Weights!.map((Weight, Index) =>
+                    Weight > 0 ? Index : -1,
+                ).filter((Index) => Index >= 0),
                 Visualizer,
             );
         } else if (this.Parameters.length === 1) {
@@ -197,7 +214,9 @@ export class CoverageColorizer<T> implements Colorizer<T> {
     }
     /** Colorize: The colorizer function. */
     public Colorize(Node: Node<T>): string {
-        return d3.interpolateCool(Node.Owners.has(this.Owner) ? 1 : Node.NearOwners.has(this.Owner) ? 0.55 : 0.1);
+        return d3.interpolateCool(
+            Node.Owners.has(this.Owner) ? 1 : Node.NearOwners.has(this.Owner) ? 0.55 : 0.1,
+        );
     }
     /** Examples: The examples of the colorizer. */
     public Examples: Record<string, string> = {
@@ -261,9 +280,23 @@ export class ComparisonColorizer<T> implements Colorizer<T> {
     }
     /** Colorize: The colorizer function. */
     public Colorize(Node: Node<T>): string {
-        const NearOwner = FilterNodeByOwner(Node, this.Owner1, this.Visualizer.Parameters.UseNearOwners);
-        const NearOther = FilterNodeByOwner(Node, this.Owner2, this.Visualizer.Parameters.UseNearOwners);
-        return NearOwner && NearOther ? d3.schemeTableau10[5] : NearOwner ? d3.schemeTableau10[2] : NearOther ? d3.schemeTableau10[4] : "#999999";
+        const NearOwner = FilterNodeByOwner(
+            Node,
+            this.Owner1,
+            this.Visualizer.Parameters.UseNearOwners,
+        );
+        const NearOther = FilterNodeByOwner(
+            Node,
+            this.Owner2,
+            this.Visualizer.Parameters.UseNearOwners,
+        );
+        return NearOwner && NearOther
+            ? d3.schemeTableau10[5]
+            : NearOwner
+              ? d3.schemeTableau10[2]
+              : NearOther
+                ? d3.schemeTableau10[4]
+                : "#999999";
     }
     /** Examples: The examples of the colorizer. */
     public Examples: Record<string, string> = {};
@@ -277,15 +310,17 @@ export class OwnerColorizer<T> implements Colorizer<T> {
         public Visualizer: Visualizer,
     ) {
         for (let I = 1; I <= Owners.length; I++) {
-            this.Examples[`In${this.Visualizer.Parameters.UseNearOwners ? " (or near)" : ""} ${I} codebooks`] = d3.interpolateViridis(
-                I / Owners.length,
-            );
+            this.Examples[
+                `In${this.Visualizer.Parameters.UseNearOwners ? " (or near)" : ""} ${I} codebooks`
+            ] = d3.interpolateViridis(I / Owners.length);
         }
         this.Examples["Not covered"] = "#999999";
     }
     /** Colorize: The colorizer function. */
     public Colorize(Node: Node<T>): string {
-        const Count = this.Owners.filter((Owner) => FilterNodeByOwner(Node, Owner, this.Visualizer.Parameters.UseNearOwners)).length;
+        const Count = this.Owners.filter((Owner) =>
+            FilterNodeByOwner(Node, Owner, this.Visualizer.Parameters.UseNearOwners),
+        ).length;
         return Count === 0 ? "#999999" : d3.interpolateViridis(Count / this.Owners.length);
     }
     /** Examples: The examples of the colorizer. */

@@ -12,7 +12,11 @@ type MongoDocument<T> = Mongo.WithId<Mongo.BSON.Document> & T;
 /** Users: Known users in Physics Lab. */
 const Users = new Map<string, User>();
 /** ExportUser: Export a user from the database. */
-async function ExportUser(Database: Mongo.Db, ID: Mongo.ObjectId, Nickname?: string): Promise<User> {
+async function ExportUser(
+    Database: Mongo.Db,
+    ID: Mongo.ObjectId,
+    Nickname?: string,
+): Promise<User> {
     // If the user is already known, return the user.
     if (Users.has(ID.toHexString())) {
         return Users.get(ID.toHexString())!;
@@ -22,7 +26,9 @@ async function ExportUser(Database: Mongo.Db, ID: Mongo.ObjectId, Nickname?: str
         Nickname: string;
         Verification: string;
     }>;
-    const Statistics = (await Database.collection("UserStatistics").findOne({ _id: ID })) as MongoDocument<{
+    const Statistics = (await Database.collection("UserStatistics").findOne({
+        _id: ID,
+    })) as MongoDocument<{
         Registration: Date;
     }>;
     const Result: User = {
@@ -89,7 +95,10 @@ function SyncUser(User: User, Verification: string, Time: Date) {
 }
 
 /** FindMentions: Find the mentions in the content. */
-async function FindMentions(Database: Mongo.Db, Content: string): Promise<[string, string[] | undefined]> {
+async function FindMentions(
+    Database: Mongo.Db,
+    Content: string,
+): Promise<[string, string[] | undefined]> {
     const Mentioned: string[] = [];
     for (const Match of Content.matchAll(/<user=([^>]*)>.*?<\/user>/gs)) {
         try {
@@ -112,7 +121,11 @@ async function FindMentions(Database: Mongo.Db, Content: string): Promise<[strin
 }
 
 /** ExportComments: Export all comments from the database. */
-async function ExportComments(Database: Mongo.Db, Collection: Mongo.Collection, Condition?: Record<string, unknown>): Promise<Comment[] | undefined> {
+async function ExportComments(
+    Database: Mongo.Db,
+    Collection: Mongo.Collection,
+    Condition?: Record<string, unknown>,
+): Promise<Comment[] | undefined> {
     // Add the cutoff date and find all
     const ForUsers = Condition === undefined;
     Condition = Condition ?? {};
@@ -168,7 +181,10 @@ async function ExportComments(Database: Mongo.Db, Collection: Mongo.Collection, 
 /** Tags: Known tags in Physics Lab. */
 const Tags = new Map<string, string>();
 /** ExportProjects: Export all projects from the database. */
-async function ExportProjects(Database: Mongo.Db, Collection: Mongo.Collection): Promise<Project[]> {
+async function ExportProjects(
+    Database: Mongo.Db,
+    Collection: Mongo.Collection,
+): Promise<Project[]> {
     const Projects = (await Collection.find({
         CreationDate: { $lte: CutoffDate.getTime() },
         Visibility: 0,
@@ -203,7 +219,8 @@ async function ExportProjects(Database: Mongo.Db, Collection: Mongo.Collection):
             Category: Project.Category ?? "Experiment",
             UserID: User.ID,
             Nickname: User.Nickname,
-            CurrentNickname: Project.User.Nickname === User.Nickname ? undefined : Project.User.Nickname,
+            CurrentNickname:
+                Project.User.Nickname === User.Nickname ? undefined : Project.User.Nickname,
             Time: new Date(Project.CreationDate),
             Title: Project.Subject,
             Content: Project.Description.join("\n"),
@@ -222,7 +239,11 @@ async function ExportProjects(Database: Mongo.Db, Collection: Mongo.Collection):
         const [Content, Mentioned] = await FindMentions(Database, Metadata.Content);
         Metadata.Content = Content;
         Metadata.Mentions = Mentioned;
-        Metadata.AllItems = await ExportComments(Database, Database.collection("ExperimentComments"), { TargetID: Project._id });
+        Metadata.AllItems = await ExportComments(
+            Database,
+            Database.collection("ExperimentComments"),
+            { TargetID: Project._id },
+        );
         Metadata.Items = Metadata.AllItems?.length ?? 0;
         // Get the comments
         Results.push(Metadata);
@@ -253,7 +274,9 @@ async function ExportAll() {
 
     // Read the projects
     let Projects: Project[] = [];
-    Projects = Projects.concat(await ExportProjects(Database, Database.collection("ExperimentSummaries")));
+    Projects = Projects.concat(
+        await ExportProjects(Database, Database.collection("ExperimentSummaries")),
+    );
     Projects = Projects.concat(await ExportProjects(Database, Database.collection("Discussions")));
 
     // Read personal messages

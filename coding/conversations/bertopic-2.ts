@@ -26,12 +26,21 @@ export default class BertopicAnalyzer2 extends ConversationAnalyzer {
         return Remaining;
     }
     /** BatchPreprocess: Preprocess the conversations in batch. */
-    public async BatchPreprocess(Conversations: Conversation[], _Analyzed: CodedThread[]): Promise<void> {
+    public async BatchPreprocess(
+        Conversations: Conversation[],
+        _Analyzed: CodedThread[],
+    ): Promise<void> {
         // Write the messages into the file.
         const Messages = Conversations.flatMap((Conversation) =>
-            Conversation.AllItems!.filter((Message) => Message.Content.length > 0 && (!Message.Chunk || Message.Chunk === Conversation.ID)),
+            Conversation.AllItems!.filter(
+                (Message) =>
+                    Message.Content.length > 0 &&
+                    (!Message.Chunk || Message.Chunk === Conversation.ID),
+            ),
         );
-        const Content = Messages.map((Message) => BuildMessagePrompt(Message, undefined, undefined, true).replaceAll("\n", " "));
+        const Content = Messages.map((Message) =>
+            BuildMessagePrompt(Message, undefined, undefined, true).replaceAll("\n", " "),
+        );
         File.writeFileSync("./known/bertopic.temp.json", JSON.stringify(Content));
         // Run the Python script
         let Topics: BertopicTopics = {};

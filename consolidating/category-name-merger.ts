@@ -44,7 +44,9 @@ export class CategoryNameMerger extends CodeConsolidator {
         );
         // Update the categories
         MergeCategoriesByCluster(Clusters, Categories, Codes, true);
-        console.log(`Statistics: Categories merged from ${Categories.length} to ${GetCategories(Codebook).size}`);
+        console.log(
+            `Statistics: Categories merged from ${Categories.length} to ${GetCategories(Codebook).size}`,
+        );
         return Codes;
     }
 }

@@ -12,7 +12,13 @@ InitializeEmbeddings("gecko-768-similarity");
 UseLLM("llama3-70b");
 
 /** EvaluateMultipleGroups: Evaluate multiple groups of codebooks but merge each folder into one codebook. */
-async function EvaluateMultipleGroups(SourcePath: string, TaskName: string, ReferenceName: string, Builder: ReferenceBuilder, Sources: string[]) {
+async function EvaluateMultipleGroups(
+    SourcePath: string,
+    TaskName: string,
+    ReferenceName: string,
+    Builder: ReferenceBuilder,
+    Sources: string[],
+) {
     // Get the dataset
     const Dataset = LoadDataset(SourcePath);
     const Evaluator = new NetworkEvaluator({ Dataset });
@@ -43,11 +49,12 @@ async function EvaluateMultipleGroups(SourcePath: string, TaskName: string, Refe
     new RefiningReferenceBuilder(),
     ["human", "high-level-2", "low-level-3"]);*/
 
-await EvaluateMultipleGroups("Coded Dataset 1", "human vs ai verb", "human-ai-verb", new RefiningReferenceBuilder(), [
-    "human",
-    "high-level-3",
-    "low-level-4",
-    "bertopic",
-]);
+await EvaluateMultipleGroups(
+    "Coded Dataset 1",
+    "human vs ai verb",
+    "human-ai-verb",
+    new RefiningReferenceBuilder(),
+    ["human", "high-level-3", "low-level-4", "bertopic"],
+);
 
 process.exit(0);

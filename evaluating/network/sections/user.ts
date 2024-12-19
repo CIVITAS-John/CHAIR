@@ -56,9 +56,15 @@ export class UserSection extends Panel {
                 (Evaluation) => Evaluation.Value,
             )!;
             if (Metric === "Divergence") {
-                Colors[Metric] = d3.scaleSequential().interpolator(d3.interpolateViridis).domain([Maximum, Minimum]);
+                Colors[Metric] = d3
+                    .scaleSequential()
+                    .interpolator(d3.interpolateViridis)
+                    .domain([Maximum, Minimum]);
             } else {
-                Colors[Metric] = d3.scaleSequential().interpolator(d3.interpolateViridis).domain([Minimum, Maximum]);
+                Colors[Metric] = d3
+                    .scaleSequential()
+                    .interpolator(d3.interpolateViridis)
+                    .domain([Minimum, Maximum]);
             }
         }
         // Render the codebooks and evaluation results
@@ -79,7 +85,13 @@ export class UserSection extends Panel {
                             this.Visualizer.SetFilter(false, new UserFilter(), Key, true);
                         } else {
                             if (!this.Visualizer.IsFilterApplied("User", Key)) {
-                                this.Visualizer.SetFilter(false, new UserFilter(), Key, Event.shiftKey, "Coverage");
+                                this.Visualizer.SetFilter(
+                                    false,
+                                    new UserFilter(),
+                                    Key,
+                                    Event.shiftKey,
+                                    "Coverage",
+                                );
                             }
                             this.Visualizer.Dialog.ShowUser(Key);
                         }
@@ -92,12 +104,25 @@ export class UserSection extends Panel {
                     const Cell = $('<td class="metric-cell"></td>')
                         .attr("id", `metric-${Index}-${Metric}`)
                         .text(d3.format(Metric === "Divergence" ? ".1%" : ".1%")(MetricValue))
-                        .on("mouseover", () => this.Visualizer.SetFilter(true, new UserFilter(), Key, false, Metric))
+                        .on("mouseover", () =>
+                            this.Visualizer.SetFilter(true, new UserFilter(), Key, false, Metric),
+                        )
                         .on("mouseout", () => this.Visualizer.SetFilter(true, new UserFilter()))
-                        .on("click", (Event: MouseEvent) => this.Visualizer.SetFilter(false, new UserFilter(), Key, Event.shiftKey, Metric))
+                        .on("click", (Event: MouseEvent) =>
+                            this.Visualizer.SetFilter(
+                                false,
+                                new UserFilter(),
+                                Key,
+                                Event.shiftKey,
+                                Metric,
+                            ),
+                        )
                         .css("background", Color)
                         .css("color", d3.lab(Color).l > 70 ? "black" : "white")
-                        .toggleClass("chosen", this.Visualizer.IsFilterApplied("User", Key, Metric));
+                        .toggleClass(
+                            "chosen",
+                            this.Visualizer.IsFilterApplied("User", Key, Metric),
+                        );
                     Row.append(Cell);
                 });
             },

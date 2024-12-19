@@ -3,7 +3,13 @@ import * as File from "fs";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 import { Preprocess } from "../../utils/glossary.js";
-import { EnsureFolder, LLMName, MaxItems, MaxOutput, RequestLLMWithCache } from "../../utils/llms.js";
+import {
+    EnsureFolder,
+    LLMName,
+    MaxItems,
+    MaxOutput,
+    RequestLLMWithCache,
+} from "../../utils/llms.js";
 import { Tokenize } from "../../utils/tokenizer.js";
 
 // TranslatedCache: A cache for translated strings.
@@ -101,20 +107,28 @@ export async function TranslateStringsWithLLM(Type: string, Source: string[]): P
     for (const Text of Source) {
         let CurrentTokens = Tokenize(Text).length + 16;
         if (Tokens + CurrentTokens > MaxOutput || Requests.length >= MaxItems) {
-            Results = Results.concat(await TranslateChunkedStringsWithLLMRetries(Type, Requests, SystemPrompt));
+            Results = Results.concat(
+                await TranslateChunkedStringsWithLLMRetries(Type, Requests, SystemPrompt),
+            );
             Requests = [];
             CurrentTokens = 0;
         }
         Requests.push(Text);
     }
     if (Requests.length > 0) {
-        Results = Results.concat(await TranslateChunkedStringsWithLLMRetries(Type, Requests, SystemPrompt));
+        Results = Results.concat(
+            await TranslateChunkedStringsWithLLMRetries(Type, Requests, SystemPrompt),
+        );
     }
     return Results;
 }
 
 /** TranslateChunkedStringsWithLLMRetries: Translate a bunch of strings calling LLMs with Retry strategies. */
-async function TranslateChunkedStringsWithLLMRetries(Type: string, Requests: string[], SystemPrompt: string): Promise<string[]> {
+async function TranslateChunkedStringsWithLLMRetries(
+    Type: string,
+    Requests: string[],
+    SystemPrompt: string,
+): Promise<string[]> {
     let Tries = 0;
     while (true) {
         try {
@@ -129,7 +143,12 @@ async function TranslateChunkedStringsWithLLMRetries(Type: string, Requests: str
 }
 
 /** TranslateChunkedStringsWithLLM: Translate a bunch of strings calling LLMs. */
-async function TranslateChunkedStringsWithLLM(Type: string, Source: string[], SystemPrompt: string, Tries: number): Promise<string[]> {
+async function TranslateChunkedStringsWithLLM(
+    Type: string,
+    Source: string[],
+    SystemPrompt: string,
+    Tries: number,
+): Promise<string[]> {
     const Separator = "\n---\n";
     // Call the LLM
     const Result = await RequestLLMWithCache(
@@ -161,7 +180,9 @@ async function TranslateChunkedStringsWithLLM(Type: string, Source: string[], Sy
         Results.shift();
     }
     if (Results.length !== Source.length) {
-        throw new Error(`Translation Error: ${Results.length} results for ${Source.length} sources.`);
+        throw new Error(
+            `Translation Error: ${Results.length} results for ${Source.length} sources.`,
+        );
     }
     // Save the result to cache
     const Cache = TranslatedCache.get(Type)!;

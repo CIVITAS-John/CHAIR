@@ -100,7 +100,10 @@ export function GetRowHeight(Content: string, Width: number): number {
 }
 
 /** ExportChunksForCoding: Export Chunks into an Excel workbook for coding. */
-export function ExportChunksForCoding<T extends DataItem>(Chunks: DataChunk<T>[], Analyses: CodedThreads = { Threads: {} }) {
+export function ExportChunksForCoding<T extends DataItem>(
+    Chunks: DataChunk<T>[],
+    Analyses: CodedThreads = { Threads: {} },
+) {
     const Book = new Workbook();
     // const Consolidated = false;
     const Consolidation = new Map<string, string>();
@@ -108,7 +111,9 @@ export function ExportChunksForCoding<T extends DataItem>(Chunks: DataChunk<T>[]
     if (Analyses.Codebook) {
         for (const Code of Object.values(Analyses.Codebook)) {
             if ((Code.Alternatives?.length ?? 0) > 0) {
-                Code.Alternatives!.forEach((Alternative) => Consolidation.set(Alternative, Code.Label));
+                Code.Alternatives!.forEach((Alternative) =>
+                    Consolidation.set(Alternative, Code.Label),
+                );
             }
         }
         // Consolidated = Consolidation.size > 0;
@@ -155,14 +160,18 @@ export function ExportChunksForCoding<T extends DataItem>(Chunks: DataChunk<T>[]
             const Columns = {
                 ID: Message.ID,
                 CID: Message.Chunk,
-                SID: Number.isNaN(parseInt(Message.UserID)) ? Message.UserID : parseInt(Message.UserID),
+                SID: Number.isNaN(parseInt(Message.UserID))
+                    ? Message.UserID
+                    : parseInt(Message.UserID),
                 Nickname: Message.Nickname,
                 Time: Message.Time,
                 In: Message.Chunk === Chunk.ID ? "Y" : "N",
                 Content: Message.Content,
                 Codes: Item.Codes?.join(", ") ?? "",
                 Memo: Message.Tags?.join(", ") ?? "",
-                Consolidated: [...new Set(Item.Codes?.map((Code) => Consolidation.get(Code) ?? Code) ?? [])].join(", "),
+                Consolidated: [
+                    ...new Set(Item.Codes?.map((Code) => Consolidation.get(Code) ?? Code) ?? []),
+                ].join(", "),
             };
             const Row = Sheet.addRow(Columns);
             Row.font = {
@@ -189,9 +198,17 @@ export function ExportChunksForCoding<T extends DataItem>(Chunks: DataChunk<T>[]
                 size: 12,
             };
         };
-        AddExtraRow(-1, "Thoughts", Analysis.Plan ?? "(Optional) Your thoughts before coding the chunk.");
+        AddExtraRow(
+            -1,
+            "Thoughts",
+            Analysis.Plan ?? "(Optional) Your thoughts before coding the chunk.",
+        );
         AddExtraRow(-2, "Summary", Analysis.Summary ?? "The summary of the chunk.");
-        AddExtraRow(-3, "Reflection", Analysis.Reflection ?? "Your reflections after coding the chunk.");
+        AddExtraRow(
+            -3,
+            "Reflection",
+            Analysis.Reflection ?? "Your reflections after coding the chunk.",
+        );
     }
     // Export the codebook
     ExportCodebook(Book, Analyses);
@@ -199,7 +216,11 @@ export function ExportChunksForCoding<T extends DataItem>(Chunks: DataChunk<T>[]
 }
 
 /** ExportCodebook: Export a codebook into an Excel workbook. */
-export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { Threads: {} }, Name = "Codebook") {
+export function ExportCodebook(
+    Book: Excel.Workbook,
+    Analyses: CodedThreads = { Threads: {} },
+    Name = "Codebook",
+) {
     if (Analyses.Codebook === undefined) {
         return;
     }
@@ -228,12 +249,20 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
     Codes = SortCodes(Codes);
     // Write the codes
     for (const Code of Codes) {
-        const Categories = Code.Categories?.map((Category) => (Code.Categories!.length > 1 ? `* ${Category}` : Category)).join("\n") ?? "";
-        const Definitions = Code.Definitions?.map((Definition) => (Code.Definitions!.length > 1 ? `* ${Definition}` : Definition)).join("\n") ?? "";
+        const Categories =
+            Code.Categories?.map((Category) =>
+                Code.Categories!.length > 1 ? `* ${Category}` : Category,
+            ).join("\n") ?? "";
+        const Definitions =
+            Code.Definitions?.map((Definition) =>
+                Code.Definitions!.length > 1 ? `* ${Definition}` : Definition,
+            ).join("\n") ?? "";
         const Examples =
-            Code.Examples?.map((Example) => (Code.Examples!.length > 1 ? `* ${Example.replace("|||", ": ")}` : Example.replace("|||", ": "))).join(
-                "\n",
-            ) ?? "";
+            Code.Examples?.map((Example) =>
+                Code.Examples!.length > 1
+                    ? `* ${Example.replace("|||", ": ")}`
+                    : Example.replace("|||", ": "),
+            ).join("\n") ?? "";
         const Alternatives = Code.Alternatives?.map((Code) => `* ${Code}`).join("\n") ?? "";
         const Row = Sheet.addRow({
             Label: Code.Label,
@@ -247,7 +276,12 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
             family: 4,
             size: 12,
         };
-        Row.height = Math.max(30, GetRowHeight(Categories, 100), GetRowHeight(Definitions, 100), GetRowHeight(Examples, 100));
+        Row.height = Math.max(
+            30,
+            GetRowHeight(Categories, 100),
+            GetRowHeight(Definitions, 100),
+            GetRowHeight(Examples, 100),
+        );
         Row.alignment = { vertical: "middle" };
         Row.getCell("Category").alignment = { vertical: "middle", wrapText: true };
         Row.getCell("Definition").alignment = { vertical: "middle", wrapText: true };
@@ -259,7 +293,9 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
 /** SortCodes: Sort an array of codes. */
 export function SortCodes(Codes: Code[]) {
     return [...Codes].sort((A, B) => {
-        const Category = (A.Categories?.sort().join("; ") ?? "").localeCompare(B.Categories?.sort().join("; ") ?? "");
+        const Category = (A.Categories?.sort().join("; ") ?? "").localeCompare(
+            B.Categories?.sort().join("; ") ?? "",
+        );
         return Category !== 0 ? Category : A.Label.localeCompare(B.Label);
     });
 }

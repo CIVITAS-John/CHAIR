@@ -12,7 +12,10 @@ await SeperateMessages("Users of Physics Lab (Group 2)", "2");
 /** SeperateMessages: Seperate messages into conversations from a group. */
 async function SeperateMessages(Source: string, Prefix: string) {
     // Call the Python script
-    const Python = spawnAsync("python", ["preprocessing/segmentation/messaging_groups.py", GetMessagesPath(Source, "Messages.csv")]);
+    const Python = spawnAsync("python", [
+        "preprocessing/segmentation/messaging_groups.py",
+        GetMessagesPath(Source, "Messages.csv"),
+    ]);
     Python.child.stdout!.on("data", (data) => {
         console.log(`${data}`);
     });
@@ -21,7 +24,9 @@ async function SeperateMessages(Source: string, Prefix: string) {
     });
     await Python;
     // Load messages
-    const Messages = LoadItems<Message>(GetMessagesPath(Source)).filter((Message) => Message.UserID !== "0");
+    const Messages = LoadItems<Message>(GetMessagesPath(Source)).filter(
+        (Message) => Message.UserID !== "0",
+    );
     // Break up messages based on the indexes
     const Indexes = File.readFileSync(GetMessagesPath(Source, "Messages.Groups.csv"), "utf-8")
         .split("\n")
@@ -71,8 +76,11 @@ async function SeperateMessages(Source: string, Prefix: string) {
             const Previous = Conversations[I - 1];
             // Maybe someone mentioned me in the previous conversation, or if all my participants were there
             if (
-                Previous.Mentions!.findIndex((Mention) => Original.Participants.has(Mention)) !== -1 ||
-                [...Original.Participants.keys()].every((Participant) => Previous.Participants.has(Participant))
+                Previous.Mentions!.findIndex((Mention) => Original.Participants.has(Mention)) !==
+                    -1 ||
+                [...Original.Participants.keys()].every((Participant) =>
+                    Previous.Participants.has(Participant),
+                )
             ) {
                 MergeBefore = Previous.ID;
             }
@@ -82,13 +90,19 @@ async function SeperateMessages(Source: string, Prefix: string) {
             // Maybe I mentioned someone in the next conversation, or if all my participants were there
             if (
                 Original.Mentions!.findIndex((Mention) => Next.Participants.has(Mention)) !== -1 ||
-                [...Original.Participants.keys()].every((Participant) => Next.Participants.has(Participant))
+                [...Original.Participants.keys()].every((Participant) =>
+                    Next.Participants.has(Participant),
+                )
             ) {
                 MergeAfter = Next.ID;
             }
         }
         // If both are possible and long enough, merge with the one that is closer
-        if (MergeBefore !== "" && MergeAfter !== "" && (Conversations[I - 1].Items > 6 || Conversations[I + 1].Items > 6)) {
+        if (
+            MergeBefore !== "" &&
+            MergeAfter !== "" &&
+            (Conversations[I - 1].Items > 6 || Conversations[I + 1].Items > 6)
+        ) {
             const DiffBefore = Current.Start.getTime() - Conversations[I - 1].End.getTime();
             const DiffAfter = Conversations[I + 1].Start.getTime() - Current.End.getTime();
             if (DiffAfter > DiffBefore) {
@@ -105,7 +119,10 @@ async function SeperateMessages(Source: string, Prefix: string) {
             Previous.Mentions = [...new Set([...Previous.Mentions!, ...Current.Mentions!])];
             Previous.FirstSeen += Current.FirstSeen;
             for (const [Participant, Count] of Current.Participants) {
-                Previous.Participants.set(Participant, (Previous.Participants.get(Participant) ?? 0) + Count);
+                Previous.Participants.set(
+                    Participant,
+                    (Previous.Participants.get(Participant) ?? 0) + Count,
+                );
             }
             Current = Previous;
             Conversations.splice(I, 1);
@@ -120,7 +137,10 @@ async function SeperateMessages(Source: string, Prefix: string) {
             Next.Mentions = [...new Set([...Next.Mentions!, ...Current.Mentions!])];
             Next.FirstSeen += Current.FirstSeen;
             for (const [Participant, Count] of Current.Participants) {
-                Next.Participants.set(Participant, (Next.Participants.get(Participant) ?? 0) + Count);
+                Next.Participants.set(
+                    Participant,
+                    (Next.Participants.get(Participant) ?? 0) + Count,
+                );
             }
             Conversations.splice(I, 1);
             I--;

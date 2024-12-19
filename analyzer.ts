@@ -27,7 +27,12 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     // return [1, 1, 1]: each subunit will be its own chunk, and the LLM will receive the previous and next subunits as well;
     // return Remaining: all remaining subunits will be in the same chunk (ideal for coding the entire conversation).
     // For example, for an output of [1, 1, 1], `BuildPrompts` would receive `subunits` 0 (Prefetch), 1, and 2 (Postfetch). `ChunkStart` will be 1 because that's the first message in the chunk.
-    public GetChunkSize(Recommended: number, _Remaining: number, _Iteration: number, _Tries: number): number | [number, number, number] {
+    public GetChunkSize(
+        Recommended: number,
+        _Remaining: number,
+        _Iteration: number,
+        _Tries: number,
+    ): number | [number, number, number] {
         return Recommended;
     }
     /** BatchPreprocess: Preprocess the units at the very beginning. */
@@ -35,7 +40,12 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
         // This method is intentionally left empty
     }
     /** Preprocess: Preprocess the subunits before filtering and chunking. */
-    public async Preprocess(_Analysis: TAnalysis, _Source: TUnit, Subunits: TSubunit[], _Iteration: number): Promise<TSubunit[]> {
+    public async Preprocess(
+        _Analysis: TAnalysis,
+        _Source: TUnit,
+        Subunits: TSubunit[],
+        _Iteration: number,
+    ): Promise<TSubunit[]> {
         return await Promise.resolve(Subunits);
     }
     /** SubunitFilter: Filter the subunits before chunking. */
@@ -69,7 +79,11 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
 }
 
 /** ProcessDataset: Load, analyze, and export a dataset. */
-export async function ProcessDataset<T extends DataItem>(Analyzer: Analyzer<DataChunk<T>, T, CodedThread>, Group: string, FakeRequest = false) {
+export async function ProcessDataset<T extends DataItem>(
+    Analyzer: Analyzer<DataChunk<T>, T, CodedThread>,
+    Group: string,
+    FakeRequest = false,
+) {
     const Dataset = LoadDataset(Group);
     // Analyze the chunks
     for (const [Name, Chunk] of Object.entries(Dataset.Data)) {
@@ -77,12 +91,20 @@ export async function ProcessDataset<T extends DataItem>(Analyzer: Analyzer<Data
         // Write the result into a JSON file
         EnsureFolder(GetMessagesPath(Group, Analyzer.Name));
         File.writeFileSync(
-            GetMessagesPath(Group, `${Analyzer.Name}/${Name.replace(".json", "")}-${LLMName}${Analyzer.Suffix}.json`),
+            GetMessagesPath(
+                Group,
+                `${Analyzer.Name}/${Name.replace(".json", "")}-${LLMName}${Analyzer.Suffix}.json`,
+            ),
             JSON.stringify(Result, null, 4),
         );
         // Write the result into an Excel file
         const Book = ExportChunksForCoding(Object.values(Chunk), Result);
-        await Book.xlsx.writeFile(GetMessagesPath(Group, `${Analyzer.Name}/${Name.replace(".json", "")}-${LLMName}${Analyzer.Suffix}.xlsx`));
+        await Book.xlsx.writeFile(
+            GetMessagesPath(
+                Group,
+                `${Analyzer.Name}/${Name.replace(".json", "")}-${LLMName}${Analyzer.Suffix}.xlsx`,
+            ),
+        );
     }
 }
 
@@ -117,76 +139,88 @@ export async function AnalyzeChunk<T extends DataItem>(
         const Analysis: CodedThread = Analyzed.Threads[Key];
         // Run the messages through chunks (as defined by the analyzer)
         let PreviousAnalysis: CodedThread | undefined;
-        await LoopThroughChunks(Analyzer, Analysis, Chunk, Messages, async (Currents, ChunkStart, IsFirst, Tries, Iteration) => {
-            // Sync from the previous analysis to keep the overlapping codes
-            if (PreviousAnalysis && PreviousAnalysis !== Analysis) {
-                for (const [ID, Item] of Object.entries(PreviousAnalysis.Items)) {
-                    if (Chunk.AllItems?.findIndex((Message) => Message.ID === ID) !== -1) {
-                        Analysis.Items[ID] = { ID, Codes: Item.Codes };
+        await LoopThroughChunks(
+            Analyzer,
+            Analysis,
+            Chunk,
+            Messages,
+            async (Currents, ChunkStart, IsFirst, Tries, Iteration) => {
+                // Sync from the previous analysis to keep the overlapping codes
+                if (PreviousAnalysis && PreviousAnalysis !== Analysis) {
+                    for (const [ID, Item] of Object.entries(PreviousAnalysis.Items)) {
+                        if (Chunk.AllItems?.findIndex((Message) => Message.ID === ID) !== -1) {
+                            Analysis.Items[ID] = { ID, Codes: Item.Codes };
+                        }
                     }
                 }
-            }
-            // Build the prompts
-            const Prompts = await Analyzer.BuildPrompts(Analysis, Chunk, Currents, ChunkStart, Iteration);
-            let Response = "";
-            // Run the prompts
-            if (Prompts[0] !== "" || Prompts[1] !== "") {
-                if (!IsFirst && Analysis.Summary) {
-                    Prompts[1] = `Summary of previous conversation: ${Analysis.Summary}\n${Prompts[1]}`;
-                }
-                Response = await RequestLLMWithCache(
-                    [new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1])],
-                    `messaging-groups/${Analyzer.Name}`,
-                    Tries * 0.2 + Analyzer.BaseTemperature,
-                    FakeRequest,
+                // Build the prompts
+                const Prompts = await Analyzer.BuildPrompts(
+                    Analysis,
+                    Chunk,
+                    Currents,
+                    ChunkStart,
+                    Iteration,
                 );
-                if (Response === "") {
-                    return 0;
-                }
-            }
-            const ItemResults = await Analyzer.ParseResponse(
-                Analysis,
-                Response.split("\n").map((Line) => Line.trim()),
-                Currents,
-                ChunkStart,
-                Iteration,
-            );
-            // Process the results
-            if (typeof ItemResults === "number") {
-                return ItemResults;
-            }
-            for (const [Index, Result] of Object.entries(ItemResults)) {
-                const Message = Currents[parseInt(Index) - 1];
-                const SplitByComma = !(Result.includes(";") || Result.includes("|"));
-                const Codes = Result.toLowerCase()
-                    .split(SplitByComma ? /,/g : /\||;/g)
-                    .map((Code) => Code.trim().replace(/\.$/, "").toLowerCase())
-                    .filter(
-                        (Code) =>
-                            Code.length > 0 &&
-                            Code !== Message.Content.toLowerCase() &&
-                            !Code.endsWith("...") &&
-                            !Code.endsWith("!") &&
-                            !Code.endsWith("?") &&
-                            !Code.endsWith(".") && // To avoid codes using the original content
-                            !Code.endsWith(`p${Message.UserID}`),
-                    );
-                // Record the codes from line-level coding
-                Analysis.Items[Message.ID].Codes = Codes;
-                Codes.forEach((Code) => {
-                    const Current = Analysis.Codes[Code] ?? { Label: Code };
-                    Current.Examples = Current.Examples ?? [];
-                    const Content = AssembleExampleFrom(Message);
-                    if (Message.Content !== "" && !Current.Examples.includes(Content)) {
-                        Current.Examples.push(Content);
+                let Response = "";
+                // Run the prompts
+                if (Prompts[0] !== "" || Prompts[1] !== "") {
+                    if (!IsFirst && Analysis.Summary) {
+                        Prompts[1] = `Summary of previous conversation: ${Analysis.Summary}\n${Prompts[1]}`;
                     }
-                    Analysis.Codes[Code] = Current;
-                });
-            }
-            PreviousAnalysis = Analysis;
-            // Dial back the cursor if necessary
-            return Object.keys(ItemResults).length - Currents.length;
-        });
+                    Response = await RequestLLMWithCache(
+                        [new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1])],
+                        `messaging-groups/${Analyzer.Name}`,
+                        Tries * 0.2 + Analyzer.BaseTemperature,
+                        FakeRequest,
+                    );
+                    if (Response === "") {
+                        return 0;
+                    }
+                }
+                const ItemResults = await Analyzer.ParseResponse(
+                    Analysis,
+                    Response.split("\n").map((Line) => Line.trim()),
+                    Currents,
+                    ChunkStart,
+                    Iteration,
+                );
+                // Process the results
+                if (typeof ItemResults === "number") {
+                    return ItemResults;
+                }
+                for (const [Index, Result] of Object.entries(ItemResults)) {
+                    const Message = Currents[parseInt(Index) - 1];
+                    const SplitByComma = !(Result.includes(";") || Result.includes("|"));
+                    const Codes = Result.toLowerCase()
+                        .split(SplitByComma ? /,/g : /\||;/g)
+                        .map((Code) => Code.trim().replace(/\.$/, "").toLowerCase())
+                        .filter(
+                            (Code) =>
+                                Code.length > 0 &&
+                                Code !== Message.Content.toLowerCase() &&
+                                !Code.endsWith("...") &&
+                                !Code.endsWith("!") &&
+                                !Code.endsWith("?") &&
+                                !Code.endsWith(".") && // To avoid codes using the original content
+                                !Code.endsWith(`p${Message.UserID}`),
+                        );
+                    // Record the codes from line-level coding
+                    Analysis.Items[Message.ID].Codes = Codes;
+                    Codes.forEach((Code) => {
+                        const Current = Analysis.Codes[Code] ?? { Label: Code };
+                        Current.Examples = Current.Examples ?? [];
+                        const Content = AssembleExampleFrom(Message);
+                        if (Message.Content !== "" && !Current.Examples.includes(Content)) {
+                            Current.Examples.push(Content);
+                        }
+                        Analysis.Codes[Code] = Current;
+                    });
+                }
+                PreviousAnalysis = Analysis;
+                // Dial back the cursor if necessary
+                return Object.keys(ItemResults).length - Currents.length;
+            },
+        );
         Analysis.Iteration!++;
     }
     // Consolidate a codebook
@@ -200,7 +234,13 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
     Analysis: TAnalysis,
     Source: TUnit,
     Sources: TSubunit[],
-    Action: (Currents: TSubunit[], ChunkStart: number, IsFirst: boolean, Tries: number, Iteration: number) => Promise<number>,
+    Action: (
+        Currents: TSubunit[],
+        ChunkStart: number,
+        IsFirst: boolean,
+        Tries: number,
+        Iteration: number,
+    ) => Promise<number>,
     Iteration: (Iteration: number) => Promise<void> = async () => {
         // This function is intentionally left empty
     },
@@ -221,10 +261,17 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
             let ChunkSize: ReturnType<typeof Analyzer.GetChunkSize>;
             while (true) {
                 // Get the chunk size
-                ChunkSize = Analyzer.GetChunkSize(Math.min(MaxItems, Filtered.length - Cursor), Filtered.length - Cursor, I, Tries);
+                ChunkSize = Analyzer.GetChunkSize(
+                    Math.min(MaxItems, Filtered.length - Cursor),
+                    Filtered.length - Cursor,
+                    I,
+                    Tries,
+                );
                 if (typeof ChunkSize === "number") {
                     if (ChunkSize < 0) {
-                        console.log("Stopped iterating due to signals sent by the analyzer (<0 chunk size).");
+                        console.log(
+                            "Stopped iterating due to signals sent by the analyzer (<0 chunk size).",
+                        );
                         return;
                     }
                     ChunkSize = [ChunkSize, 0, 0];
@@ -243,7 +290,9 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
                     }
                     CountItems(ChunkSize[0], ChunkSize[0] + CursorRelative);
                     if (CursorRelative !== 0) {
-                        console.log(`Expected ${ChunkSize[0]} subunits, processed ${ChunkSize[0] + CursorRelative} subunits.`);
+                        console.log(
+                            `Expected ${ChunkSize[0]} subunits, processed ${ChunkSize[0] + CursorRelative} subunits.`,
+                        );
                     }
                     break;
                 } catch (Error) {

@@ -9,7 +9,14 @@ import { UseLLMs } from "../../../utils/llms.js";
 // We later found: for weaker models (compared with GPT-4o), it sometimes failed to enforce the rule (using verb phrases).
 // low-level-5 has some minor changes to enforce the rule consistently.
 const AnalyzerNames = ["bertopic-1", "high-level-1", "high-level-2", "low-level-3", "low-level-5"];
-const Models = ["gpt-3.5-turbo", "gpt-4.5-omni", "llama3-70b", "claude3-haiku", "claude3.5-sonnet", "mixtral-8x22b"];
+const Models = [
+    "gpt-3.5-turbo",
+    "gpt-4.5-omni",
+    "llama3-70b",
+    "claude3-haiku",
+    "claude3.5-sonnet",
+    "mixtral-8x22b",
+];
 
 for (const AnalyzerName of AnalyzerNames) {
     const Analyzer = new (

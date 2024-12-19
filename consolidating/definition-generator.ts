@@ -31,7 +31,13 @@ export abstract class DefinitionParser extends CodeConsolidator {
             if (Match) {
                 Line = Line.substring(Match[0].length).trim();
                 // Sometimes, the label is merged with the number
-                CurrentCode = { Label: Line.trim().toLowerCase(), Definitions: [], Categories: [], Examples: [], Alternatives: [] };
+                CurrentCode = {
+                    Label: Line.trim().toLowerCase(),
+                    Definitions: [],
+                    Categories: [],
+                    Examples: [],
+                    Alternatives: [],
+                };
                 Pendings.push(CurrentCode);
                 Status = "";
             }
@@ -87,7 +93,9 @@ export abstract class DefinitionParser extends CodeConsolidator {
             // Sometimes, the order of labels is wrong (! found for gpt-3.5-turbo)
             const Found = Codes.findIndex((Code) => Code.Label === NewCode.Label);
             if (Found !== -1 && Found !== I) {
-                throw new Error(`Invalid response: code ${NewCode.Label}'s mapping order is wrong.`);
+                throw new Error(
+                    `Invalid response: code ${NewCode.Label}'s mapping order is wrong.`,
+                );
             }
         }
         // Update the codes

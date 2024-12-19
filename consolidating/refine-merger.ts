@@ -46,7 +46,9 @@ export class RefineMerger extends DefinitionParser {
         const Length = Codes.length;
         // Cluster codes using text embeddings
         // Only when the code has more than one definition should we merge them
-        Codes = Codes.filter((Code) => (this.UseDefinition ? (Code.Definitions?.length ?? 0) > 0 : true));
+        Codes = Codes.filter((Code) =>
+            this.UseDefinition ? (Code.Definitions?.length ?? 0) > 0 : true,
+        );
         if (Codes.length === 0) {
             return {};
         }

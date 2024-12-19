@@ -1,7 +1,10 @@
 import * as File from "fs";
 
 import { ChatAnthropic } from "@langchain/anthropic";
-import type { BaseChatModel, BaseChatModelCallOptions } from "@langchain/core/language_models/chat_models";
+import type {
+    BaseChatModel,
+    BaseChatModelCallOptions,
+} from "@langchain/core/language_models/chat_models";
 import type { BaseMessage } from "@langchain/core/messages";
 import { HumanMessage } from "@langchain/core/messages";
 import { ChatGroq } from "@langchain/groq";
@@ -340,7 +343,12 @@ export async function UseLLMs(Task: () => Promise<void>, ...LLMs: string[]): Pro
 }
 
 /** RequestLLMWithCache: Call the model to generate text with cache. */
-export async function RequestLLMWithCache(Messages: BaseMessage[], Cache: string, Temperature?: number, FakeRequest = false): Promise<string> {
+export async function RequestLLMWithCache(
+    Messages: BaseMessage[],
+    Cache: string,
+    Temperature?: number,
+    FakeRequest = false,
+): Promise<string> {
     const Input = Messages.map((Message) => Message.content).join("\n~~~\n");
     const CacheFolder = EnsureFolder(`known/${Cache}/${LLMName}`);
     // Check if the cache exists
@@ -364,7 +372,11 @@ export async function RequestLLMWithCache(Messages: BaseMessage[], Cache: string
 }
 
 /** RequestLLM: Call the model to generate text. */
-export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, FakeRequest = false): Promise<string> {
+export async function RequestLLM(
+    Messages: BaseMessage[],
+    Temperature?: number,
+    FakeRequest = false,
+): Promise<string> {
     let Text = "";
     try {
         console.log(
@@ -377,7 +389,11 @@ export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, 
         }
         if (!FakeRequest) {
             await PromiseWithTimeout(
-                (Model(Temperature ?? 0) as BaseChatModel<{ temperature: number } & BaseChatModelCallOptions>)
+                (
+                    Model(Temperature ?? 0) as BaseChatModel<
+                        { temperature: number } & BaseChatModelCallOptions
+                    >
+                )
                     .invoke(Messages, { temperature: Temperature ?? 0 })
                     .then((Result) => {
                         Text = Result.content as string;
@@ -386,7 +402,9 @@ export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, 
             );
             console.log(chalk.cyan(`LLM Result: \n${Text}`));
         }
-        const Input = Messages.map((Message) => Tokenize(Message.content as string).length).reduce((Prev, Curr) => Prev + Curr);
+        const Input = Messages.map((Message) => Tokenize(Message.content as string).length).reduce(
+            (Prev, Curr) => Prev + Curr,
+        );
         const Output = Tokenize(Text).length;
         InputTokens += Input;
         OutputTokens += Output;
@@ -399,7 +417,11 @@ export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, 
 }
 
 /** PromiseWithTimeout: Create a promise with timeout. */
-export function PromiseWithTimeout<T>(promise: Promise<T>, time: number, timeoutError = new Error("Sorry, the AI stopped responding.")): Promise<T> {
+export function PromiseWithTimeout<T>(
+    promise: Promise<T>,
+    time: number,
+    timeoutError = new Error("Sorry, the AI stopped responding."),
+): Promise<T> {
     // create a promise that rejects in milliseconds
     const timeout = new Promise<never>((_, reject) => {
         setTimeout(() => {

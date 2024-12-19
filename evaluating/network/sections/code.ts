@@ -26,7 +26,10 @@ export class CodeSection extends Panel {
         this.ShowComponents();
     }
     /** RatioColorizer: The colorizer for ratios. */
-    private RatioColorizer = d3.scaleSequential().interpolator(d3.interpolateViridis).domain([0, 1]);
+    private RatioColorizer = d3
+        .scaleSequential()
+        .interpolator(d3.interpolateViridis)
+        .domain([0, 1]);
     /** ShowComponents: Show all components. */
     public ShowComponents() {
         this.SetRefresh(() => {
@@ -44,7 +47,9 @@ export class CodeSection extends Panel {
                 });
             // Show the components
             const Components = this.GetGraph<Code>().Components!;
-            this.Container.append($(`<h3>${Components.length} Clusters, ${this.Dataset.Codes.length} Codes</h3>`));
+            this.Container.append(
+                $(`<h3>${Components.length} Clusters, ${this.Dataset.Codes.length} Codes</h3>`),
+            );
             this.BuildTable(
                 Components,
                 (Row, Component, Index) => {
@@ -55,7 +60,10 @@ export class CodeSection extends Panel {
                         .on("mouseout", (Event: Event) => {
                             this.Visualizer.ComponentOut(Event, Component);
                         })
-                        .toggleClass("chosen", this.Visualizer.IsFilterApplied("Component", Component));
+                        .toggleClass(
+                            "chosen",
+                            this.Visualizer.IsFilterApplied("Component", Component),
+                        );
                     // Show the summary
                     const Summary = $('<td class="cluster-cell"></td>')
                         .attr("id", `cluster-${Component.ID}`)
@@ -68,12 +76,26 @@ export class CodeSection extends Panel {
                             }
                         })
                         .appendTo(Row);
-                    Summary.append($("<h4></h4>").text(`#${Index + 1} ${Component.Representative!.Data.Label}`));
+                    Summary.append(
+                        $("<h4></h4>").text(
+                            `#${Index + 1} ${Component.Representative!.Data.Label}`,
+                        ),
+                    );
                     // Calculate the coverage of each codebook
-                    const Codebooks: Map<number, number> = this.Dataset.Names.reduce((Previous, _Name, Index) => {
-                        Previous.set(Index, FilterNodesByOwner(Component.Nodes, Index, this.Parameters.UseNearOwners).length);
-                        return Previous;
-                    }, new Map<number, number>());
+                    const Codebooks: Map<number, number> = this.Dataset.Names.reduce(
+                        (Previous, _Name, Index) => {
+                            Previous.set(
+                                Index,
+                                FilterNodesByOwner(
+                                    Component.Nodes,
+                                    Index,
+                                    this.Parameters.UseNearOwners,
+                                ).length,
+                            );
+                            return Previous;
+                        },
+                        new Map<number, number>(),
+                    );
                     // Show the owners
                     const Owners = $('<p class="owners"></p>').appendTo(Summary);
                     this.Dataset.Names.forEach((_Name, NameIndex) => {
@@ -86,7 +108,10 @@ export class CodeSection extends Panel {
                                 `<a href="javascript:void(0)" style="color: ${GetCodebookColor(NameIndex, this.Dataset.Codebooks.length)}">${
                                     this.Dataset.Names[NameIndex]
                                 }</a>`,
-                            ).attr("title", `${Count} codes (${d3.format(".0%")(Count / Component.Nodes.length)})`),
+                            ).attr(
+                                "title",
+                                `${Count} codes (${d3.format(".0%")(Count / Component.Nodes.length)})`,
+                            ),
                         );
                     });
                     // Show the numbers
@@ -97,7 +122,9 @@ export class CodeSection extends Panel {
                         .css("color", d3.lab(Color).l > 70 ? "black" : "white")
                         .appendTo(Row)
                         .text(`${Filtered}`)
-                        .append($("<p></p>").text(d3.format(".0%")(Filtered / Component.Nodes.length)))
+                        .append(
+                            $("<p></p>").text(d3.format(".0%")(Filtered / Component.Nodes.length)),
+                        )
                         .on("click", (Event: MouseEvent) => {
                             this.Visualizer.ComponentChosen(Event, Component);
                         });
@@ -148,23 +175,36 @@ export class CodeSection extends Panel {
                         .on("mouseout", (Event: Event) => {
                             this.Visualizer.NodeOut(Event, Node);
                         })
-                        .toggleClass("chosen", this.Visualizer.GetStatus().ChosenNodes.includes(Node))
+                        .toggleClass(
+                            "chosen",
+                            this.Visualizer.GetStatus().ChosenNodes.includes(Node),
+                        )
                         .on("click", (Event: MouseEvent) => {
                             if (this.Visualizer.NodeChosen(Event, Node)) {
                                 this.Visualizer.CenterCamera(Node.x!, Node.y!, 3);
                             }
                         });
                     // Show the summary
-                    const Summary = $('<td class="code-cell actionable"></td>').attr("id", `code-${Node.ID}`).appendTo(Row);
+                    const Summary = $('<td class="code-cell actionable"></td>')
+                        .attr("id", `code-${Node.ID}`)
+                        .appendTo(Row);
                     // Calculate source codes
-                    const From = (Node.Data.Alternatives ?? []).concat(Node.Data.Label).filter((Name) => {
-                        return Object.values(this.Dataset.Codebooks).some((Codebook) => Codebook[Name] !== undefined);
-                    }).length;
+                    const From = (Node.Data.Alternatives ?? [])
+                        .concat(Node.Data.Label)
+                        .filter((Name) => {
+                            return Object.values(this.Dataset.Codebooks).some(
+                                (Codebook) => Codebook[Name] !== undefined,
+                            );
+                        }).length;
                     // Colorize the code in the same way as the graph
                     let Color = Node.Hidden ? "#999999" : Colorizer.Colorize(Node);
                     Summary.append(
                         $("<h4></h4>")
-                            .append($(`<svg width="2" height="2" viewbox="0 0 2 2"><circle r="1" cx="1" cy="1" fill="${Color}"></circle></svg>`))
+                            .append(
+                                $(
+                                    `<svg width="2" height="2" viewbox="0 0 2 2"><circle r="1" cx="1" cy="1" fill="${Color}"></circle></svg>`,
+                                ),
+                            )
                             .append($("<span></span>").text(Node.Data.Label)),
                     );
                     Summary.append($('<p class="tips"></p>').text(`From ${From} codes`));
@@ -178,7 +218,11 @@ export class CodeSection extends Panel {
                         .css("background-color", Color.toString())
                         .css("color", d3.lab(Color).l > 70 ? "black" : "white");
                     // Show the examples
-                    Row.append($('<td class="number-cell actionable"></td>').text(`${Node.Data.Examples?.length ?? 0}`));
+                    Row.append(
+                        $('<td class="number-cell actionable"></td>').text(
+                            `${Node.Data.Examples?.length ?? 0}`,
+                        ),
+                    );
                 },
                 ["Code", "Consensus", "Cases"],
             );

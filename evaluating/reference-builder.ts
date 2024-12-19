@@ -22,12 +22,20 @@ export class ReferenceBuilder {
     public async BuildReference(Codebooks: Codebook[]): Promise<Codebook> {
         const Statistics = Codebooks.map((Codebook) => Object.keys(Codebook).length);
         console.log(`Start merging ${Codebooks.length} codebooks into a reference codebook.`);
-        console.log(chalk.green(`Statistics: ${Statistics.reduce((Prev, Curr) => Curr + Prev)} codes found (${Statistics.join(", ")}).`));
+        console.log(
+            chalk.green(
+                `Statistics: ${Statistics.reduce((Prev, Curr) => Curr + Prev)} codes found (${Statistics.join(", ")}).`,
+            ),
+        );
         // Remove alternatives from individual codebooks
         // Codebooks.forEach(Codebook => Object.values(Codebook).forEach(Code => Code.Alternatives = []));
         // Merge into a single codebook
         const Codebook = MergeCodebooks(Codebooks);
-        console.log(chalk.green(`Statistics: ${Object.keys(Codebook).length} codes emerged after merging by name alone.`));
+        console.log(
+            chalk.green(
+                `Statistics: ${Object.keys(Codebook).length} codes emerged after merging by name alone.`,
+            ),
+        );
         return await this.RefineCodebook(Codebook);
     }
     /** RefineCodebook: Further merge the codebook.*/
@@ -42,21 +50,38 @@ export class ReferenceBuilder {
             new DefinitionGenerator(),
         );
         Consolidator.BaseTemperature = this.BaseTemperature;
-        await ConsolidateCodebook<unknown>(Consolidator, [], Threads, (Iteration) => this.SanityCheck(Iteration, Threads.Codebook));
-        console.log(chalk.green(`Statistics: ${Object.keys(Threads.Codebook).length} codes remained after consolidation.`));
+        await ConsolidateCodebook<unknown>(Consolidator, [], Threads, (Iteration) =>
+            this.SanityCheck(Iteration, Threads.Codebook),
+        );
+        console.log(
+            chalk.green(
+                `Statistics: ${Object.keys(Threads.Codebook).length} codes remained after consolidation.`,
+            ),
+        );
         // Return the new codebook
         return Threads.Codebook;
     }
     /** SanityCheck: Check if original codes are still present in the consolidated one. */
     protected SanityCheck(Iteration: number, Codebook: Codebook): Promise<void> {
-        File.writeFileSync(`./known/codebook-${Iteration}.json`, JSON.stringify(Codebook, null, 4), "utf8");
+        File.writeFileSync(
+            `./known/codebook-${Iteration}.json`,
+            JSON.stringify(Codebook, null, 4),
+            "utf8",
+        );
         if (Iteration === 0) {
             this.OriginalCodes = new Set<string>(Object.values(Codebook).map((Code) => Code.Label));
         } else {
-            const NewCodes = new Set<string>(Object.values(Codebook).flatMap((Code) => [Code.Label, ...(Code.Alternatives ?? [])]));
+            const NewCodes = new Set<string>(
+                Object.values(Codebook).flatMap((Code) => [
+                    Code.Label,
+                    ...(Code.Alternatives ?? []),
+                ]),
+            );
             this.OriginalCodes.forEach((Code) => {
                 if (!NewCodes.has(Code)) {
-                    console.log(chalk.red(`Error: Code ${Code} disappeared in iteration ${Iteration}.`));
+                    console.log(
+                        chalk.red(`Error: Code ${Code} disappeared in iteration ${Iteration}.`),
+                    );
                 }
             });
         }
@@ -94,20 +119,40 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
             // Do not use penalty mechanism when the codebooks refer to different data
             // It may create a bias against smaller datasets
             // new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.4, UseDefinition: false, UseVerbPhrases: this.UseVerbPhrases }),
-            new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.4, Looping: true, UseVerbPhrases: this.UseVerbPhrases }),
+            new RefineMerger({
+                Maximum: 0.5,
+                Minimum: !this.SameData ? 0.5 : 0.4,
+                Looping: true,
+                UseVerbPhrases: this.UseVerbPhrases,
+            }),
             // new RefineMerger({ Maximum: 0.6, Minimum: !this.SameData ? 0.6 : 0.4, UseDefinition: false, UseVerbPhrases: this.UseVerbPhrases }),
-            new RefineMerger({ Maximum: 0.6, Minimum: !this.SameData ? 0.6 : 0.4, Looping: true, UseVerbPhrases: this.UseVerbPhrases }),
+            new RefineMerger({
+                Maximum: 0.6,
+                Minimum: !this.SameData ? 0.6 : 0.4,
+                Looping: true,
+                UseVerbPhrases: this.UseVerbPhrases,
+            }),
         );
         Consolidator.BaseTemperature = this.BaseTemperature;
-        await ConsolidateCodebook<unknown>(Consolidator, [], Threads, (Iteration) => this.SanityCheck(Iteration, Threads.Codebook));
-        console.log(chalk.green(`Statistics: ${Object.keys(Threads.Codebook).length} codes remained after consolidation.`));
+        await ConsolidateCodebook<unknown>(Consolidator, [], Threads, (Iteration) =>
+            this.SanityCheck(Iteration, Threads.Codebook),
+        );
+        console.log(
+            chalk.green(
+                `Statistics: ${Object.keys(Threads.Codebook).length} codes remained after consolidation.`,
+            ),
+        );
         // Return the new codebook
         return Threads.Codebook;
     }
 }
 
 /** BuildReference: Build a reference codebook and export it. */
-export async function BuildReferenceAndExport(Builder: ReferenceBuilder, Codebooks: Codebook[], TargetPath: string): Promise<Codebook> {
+export async function BuildReferenceAndExport(
+    Builder: ReferenceBuilder,
+    Codebooks: Codebook[],
+    TargetPath: string,
+): Promise<Codebook> {
     // Build the reference codebook
     const Result = await Builder.BuildReference(Codebooks);
     // Export it to JSON

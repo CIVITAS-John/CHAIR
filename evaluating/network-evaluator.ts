@@ -4,7 +4,15 @@ import { MergeCodebooks } from "../consolidating/codebooks.js";
 import { GetSpeakerName } from "../constants.js";
 import { EvaluateTexts } from "../utils/embeddings.js";
 import { ReadOrBuildCache } from "../utils/file.js";
-import type { Code, Codebook, CodebookComparison, CodebookEvaluation, DataChunk, DataItem, Dataset } from "../utils/schema.js";
+import type {
+    Code,
+    Codebook,
+    CodebookComparison,
+    CodebookEvaluation,
+    DataChunk,
+    DataItem,
+    Dataset,
+} from "../utils/schema.js";
 import { CreateOfflineBundle, CreateServer } from "../utils/server.js";
 
 import { CodebookEvaluator } from "./codebooks.js";
@@ -22,14 +30,26 @@ export class NetworkEvaluator extends CodebookEvaluator {
     /** Title: The title of the evaluator. */
     public Title: string;
     /** constructor: Initialize the evaluator. */
-    public constructor({ Dataset, Anonymize, Title }: { Dataset: Dataset<DataChunk<DataItem>>; Anonymize?: boolean; Title?: string }) {
+    public constructor({
+        Dataset,
+        Anonymize,
+        Title,
+    }: {
+        Dataset: Dataset<DataChunk<DataItem>>;
+        Anonymize?: boolean;
+        Title?: string;
+    }) {
         super();
         this.Dataset = Dataset;
         this.Anonymize = Anonymize ?? true;
         this.Title = Title ?? "Network Evaluator";
     }
     /** Evaluate: Evaluate a number of codebooks. */
-    public async Evaluate(Codebooks: Codebook[], Names: string[], ExportPath?: string): Promise<Record<string, CodebookEvaluation>> {
+    public async Evaluate(
+        Codebooks: Codebook[],
+        Names: string[],
+        ExportPath?: string,
+    ): Promise<Record<string, CodebookEvaluation>> {
         const Hash = md5(JSON.stringify(Codebooks));
         // Weights
         const Weights = Names.map((Name, Index) => {
@@ -54,7 +74,10 @@ export class NetworkEvaluator extends CodebookEvaluator {
             const Labels = Codes.map((Code) => Code.Label);
             const CodeStrings = Labels.map((Label) => GetCodeString(Merged[Label]));
             const CodeOwners = Labels.map((Label) => Merged[Label].Owners!);
-            const Result = await EvaluateTexts<{ Distances: number[][]; Positions: [number, number][] }>(
+            const Result = await EvaluateTexts<{
+                Distances: number[][];
+                Positions: [number, number][];
+            }>(
                 CodeStrings,
                 Labels,
                 CodeOwners,
@@ -94,9 +117,19 @@ export class NetworkEvaluator extends CodebookEvaluator {
             return Package;
         });
         // Run the HTTP server
-        CreateOfflineBundle(`${ExportPath}/network`, ["evaluating/network", "out/evaluating/network"], `${ExportPath}/network.json`);
+        CreateOfflineBundle(
+            `${ExportPath}/network`,
+            ["evaluating/network", "out/evaluating/network"],
+            `${ExportPath}/network.json`,
+        );
         // Return the results from the server
-        return (await CreateServer(8080, ["evaluating/network", "out/evaluating/network"], `${ExportPath}/network.json`)) ?? {};
+        return (
+            (await CreateServer(
+                8080,
+                ["evaluating/network", "out/evaluating/network"],
+                `${ExportPath}/network.json`,
+            )) ?? {}
+        );
     }
 }
 

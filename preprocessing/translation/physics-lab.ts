@@ -26,14 +26,17 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
 
     // Handle the mentioned users (=> @ID)
     const HandleContent = (Content: string) => {
-        return Content.replaceAll(/(回复)?@(.*?)\((\d+)\)(?:\s|$|:)/g, (_Match, Reply, Name: string, ID: string) => {
-            UserMappings.set(ID, Name);
-            Nicknames.add(Name);
-            if (Reply) {
-                return `Reply @${ID}:`;
-            }
-            return `@${ID} `;
-        });
+        return Content.replaceAll(
+            /(回复)?@(.*?)\((\d+)\)(?:\s|$|:)/g,
+            (_Match, Reply, Name: string, ID: string) => {
+                UserMappings.set(ID, Name);
+                Nicknames.add(Name);
+                if (Reply) {
+                    return `Reply @${ID}:`;
+                }
+                return `@${ID} `;
+            },
+        );
     };
     // Get the contents to translate
     const Contents = Projects.map((Project) => {
@@ -56,7 +59,9 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
     const NicknameArrays = Array.from(Nicknames);
     const TranslatedNicknames = await TranslateStrings("nickname", NicknameArrays);
     const NameTranslations = new Map<string, string>();
-    TranslatedNicknames.forEach((Translation, Index) => NameTranslations.set(NicknameArrays[Index], Translation));
+    TranslatedNicknames.forEach((Translation, Index) =>
+        NameTranslations.set(NicknameArrays[Index], Translation),
+    );
     // Translate the and contents
     const TranslatedContents = await TranslateStrings("contents", Contents);
     // Assign the translated nicknames and contents
@@ -77,7 +82,11 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
         Projects[I].Title = Content.split("\n")[0].trim();
         Projects[I].Content = Content.substring(Projects[I].Title.length + 1).trim();
         if (Projects[I].AllItems) {
-            Projects[I].AllItems = await TranslateComments(Projects[I].AllItems!, UserMappings, NameTranslations);
+            Projects[I].AllItems = await TranslateComments(
+                Projects[I].AllItems!,
+                UserMappings,
+                NameTranslations,
+            );
         }
     }
     return Projects;

@@ -23,9 +23,18 @@ export function RenderItem(Visualizer: Visualizer, Item: DataItem, Owners: numbe
 }
 
 /** RenderExamples: Render the examples of a quote. */
-export function RenderExamples(Codes: Node<Code>[], Visualizer: Visualizer, Item: DataItem, Owners: number[] = []): Cash {
+export function RenderExamples(
+    Codes: Node<Code>[],
+    Visualizer: Visualizer,
+    Item: DataItem,
+    Owners: number[] = [],
+): Cash {
     let Examples = Codes.filter((Node) => FilterNodeByExample(Node, [Item.ID]));
-    Examples = Examples.filter((Node) => Owners.length === 0 || FilterNodeByOwners(Node, Owners, Visualizer.Parameters.UseNearOwners));
+    Examples = Examples.filter(
+        (Node) =>
+            Owners.length === 0 ||
+            FilterNodeByOwners(Node, Owners, Visualizer.Parameters.UseNearOwners),
+    );
     if (Owners.length === 1) {
         return $('<p class="codes">Coded as:<span></span></p>')
             .children("span")
@@ -48,7 +57,12 @@ export function RenderExamples(Codes: Node<Code>[], Visualizer: Visualizer, Item
             if (Owner === 0) {
                 continue;
             }
-            const Originals = FindOriginalCodes(Visualizer.Dataset.Codebooks[Owner], Code.Data, Owner, Item.ID);
+            const Originals = FindOriginalCodes(
+                Visualizer.Dataset.Codebooks[Owner],
+                Code.Data,
+                Owner,
+                Item.ID,
+            );
             // Only show the owner if the code is related to THIS quote
             if (Originals.length > 0) {
                 Visualizer.InfoPanel.BuildOwnerLink(Code.Data, Originals, Owner).appendTo(CodeItem);
@@ -62,7 +76,9 @@ export function RenderExamples(Codes: Node<Code>[], Visualizer: Visualizer, Item
         }
     });
     // Sort the codes by the number of owners
-    CodeItems.sort((A, B) => parseInt(B.data("owners") as string) - parseInt(A.data("owners") as string));
+    CodeItems.sort(
+        (A, B) => parseInt(B.data("owners") as string) - parseInt(A.data("owners") as string),
+    );
     CodeItems.forEach((Item) => Item.appendTo(CodeList));
     return CodeList;
 }

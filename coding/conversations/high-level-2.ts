@@ -22,7 +22,12 @@ export default class HighLevelAnalyzer2 extends HighLevelAnalyzerBase {
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature = 0.5;
     /** BuildPrompts: Build the prompts for the LLM. */
-    public BuildPrompts(_Analysis: CodedThread, _Target: Conversation, Messages: Message[], _ChunkStart: number): Promise<[string, string]> {
+    public BuildPrompts(
+        _Analysis: CodedThread,
+        _Target: Conversation,
+        Messages: Message[],
+        _ChunkStart: number,
+    ): Promise<[string, string]> {
         return Promise.resolve([
             `
 Hi ChatGPT, I want to analyze the following interaction in one of Physics Lab's online message groups.
@@ -46,7 +51,9 @@ Definition: A definition of code 1
 ## ...
 # ...
 `.trim(),
-            Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join("\n"),
+            Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join(
+                "\n",
+            ),
         ]);
     }
 }

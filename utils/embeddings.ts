@@ -107,7 +107,11 @@ export async function RequestEmbeddings(Sources: string[], Cache: string): Promi
         const CacheFile = `${CacheFolder}/${md5(Source)}.bytes`;
         if (File.existsSync(CacheFile)) {
             const Buffer = File.readFileSync(CacheFile);
-            const Cached = new Float32Array(Buffer.buffer, Buffer.byteOffset, Buffer.byteLength / 4);
+            const Cached = new Float32Array(
+                Buffer.buffer,
+                Buffer.byteOffset,
+                Buffer.byteLength / 4,
+            );
             Embeddings.set(Cached, Dimensions * I);
         } else {
             Requests.push(I);
@@ -119,7 +123,9 @@ export async function RequestEmbeddings(Sources: string[], Cache: string): Promi
         let Retry = 0;
         while (true) {
             try {
-                const Results = await Model.embedDocuments(Requests.slice(I, I + BatchSize).map((Index) => Sources[Index]));
+                const Results = await Model.embedDocuments(
+                    Requests.slice(I, I + BatchSize).map((Index) => Sources[Index]),
+                );
                 for (let J = 0; J < Results.length; J++) {
                     const Index = Requests[I + J];
                     const Embedding = new Float32Array(Results[J]);
@@ -146,7 +152,10 @@ export async function RequestEmbeddings(Sources: string[], Cache: string): Promi
 }
 
 /** RequestEmbeddingWithCache: Call the model to generate a text embedding with cache. */
-export async function RequestEmbeddingWithCache(Source: string, Cache: string): Promise<Float32Array> {
+export async function RequestEmbeddingWithCache(
+    Source: string,
+    Cache: string,
+): Promise<Float32Array> {
     const CacheFolder = `known/embeddings/${Cache}/${EmbeddingName}`;
     EnsureFolder(CacheFolder);
     // Check if the cache exists
@@ -305,7 +314,14 @@ export async function EvaluateTexts<T>(
 ): Promise<T> {
     console.log(chalk.gray(`Requesting embeddings for: ${Sources.length}`));
     const Embeddings = await RequestEmbeddings(Sources, Cache);
-    return await EvaluateEmbeddings(Embeddings, Labels, Owners, OwnerLabels, Method, ...ExtraOptions);
+    return await EvaluateEmbeddings(
+        Embeddings,
+        Labels,
+        Owners,
+        OwnerLabels,
+        Method,
+        ...ExtraOptions,
+    );
 }
 
 /**
@@ -339,7 +355,12 @@ export async function EvaluateEmbeddings<T>(
     console.log(`Embeddings sent: ${Embeddings.buffer.byteLength} (${Labels.length} embeddings)`);
     // Run the Python script
     await PythonShell.run(`utils/embeddings/evaluation_${Method}.py`, {
-        args: [Dimensions.toString(), Labels.length.toString(), OwnerLabels.length.toString(), ...ExtraOptions],
+        args: [
+            Dimensions.toString(),
+            Labels.length.toString(),
+            OwnerLabels.length.toString(),
+            ...ExtraOptions,
+        ],
         parser: (Message) => {
             if (Message.startsWith("{")) {
                 Results = JSON.parse(Message) as T;

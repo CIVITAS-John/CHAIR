@@ -40,29 +40,39 @@ async function EvaluateConsolidatedResults(
     File.writeFileSync(`${TargetPath}-${Evaluator.Name}.json`, JSON.stringify(Results, null, 4));
 }
 
-await EvaluateConsolidatedResults("Coded Dataset 1", "human vs ai", "human-ai-refined", new RefiningReferenceBuilder(), [
-    "human-refined.json",
-    "high-level-2-refined.json",
-    "low-level-3-refined.json",
-]);
+await EvaluateConsolidatedResults(
+    "Coded Dataset 1",
+    "human vs ai",
+    "human-ai-refined",
+    new RefiningReferenceBuilder(),
+    ["human-refined.json", "high-level-2-refined.json", "low-level-3-refined.json"],
+);
 
 process.exit(0);
 
-await EvaluateConsolidatedResults("Coded Dataset 1", "llamas vs others high", "llama-other", new RefiningReferenceBuilder(), [
-    "high-level-2-again-refined.json",
-    "high-level-2-refined.json",
-]);
+await EvaluateConsolidatedResults(
+    "Coded Dataset 1",
+    "llamas vs others high",
+    "llama-other",
+    new RefiningReferenceBuilder(),
+    ["high-level-2-again-refined.json", "high-level-2-refined.json"],
+);
 
-await EvaluateConsolidatedResults("Coded Dataset 1", "human vs ai again", "human-ai", new RefiningReferenceBuilder(), [
-    "human-refined.json",
-    "high-level-2-again-refined.json",
-    "low-level-3-again-refined.json",
-]);
+await EvaluateConsolidatedResults(
+    "Coded Dataset 1",
+    "human vs ai again",
+    "human-ai",
+    new RefiningReferenceBuilder(),
+    ["human-refined.json", "high-level-2-again-refined.json", "low-level-3-again-refined.json"],
+);
 
-await EvaluateConsolidatedResults("Coded Dataset 1", "high-level 1 vs 2", "high-level-1-2", new RefiningReferenceBuilder(), [
-    "high-level-1-refined.json",
-    "high-level-2-refined.json",
-]);
+await EvaluateConsolidatedResults(
+    "Coded Dataset 1",
+    "high-level 1 vs 2",
+    "high-level-1-2",
+    new RefiningReferenceBuilder(),
+    ["high-level-1-refined.json", "high-level-2-refined.json"],
+);
 
 await EvaluateConsolidatedResults(
     "Coded Dataset 1",
@@ -72,10 +82,13 @@ await EvaluateConsolidatedResults(
     ["human-consolidated-refined.json", "high-level-2-consolidated-refined.json"],
 );
 
-await EvaluateConsolidatedResults("Coded Dataset 1", "high-level vs low-level consolidated", "all-analyzers", new RefiningReferenceBuilder(), [
-    "high-level-2-consolidated-refined.json",
-    "low-level-3-consolidated-refined.json",
-]);
+await EvaluateConsolidatedResults(
+    "Coded Dataset 1",
+    "high-level vs low-level consolidated",
+    "all-analyzers",
+    new RefiningReferenceBuilder(),
+    ["high-level-2-consolidated-refined.json", "low-level-3-consolidated-refined.json"],
+);
 File.copyFileSync(
     GetMessagesPath("Coded Dataset 1", "evaluation/references/all-analyzers-refined.json"),
     GetMessagesPath("Comparisons", "evaluation/references/group-1-refined.json"),

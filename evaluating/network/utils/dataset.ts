@@ -2,7 +2,9 @@ import type { Code, Codebook, DataChunk, DataItem } from "../../../utils/schema.
 
 /** FindConsolidatedCode: Find a consolidated code by name. */
 export function FindConsolidatedCode(Consolidated: Codebook, Name: string) {
-    return Object.values(Consolidated).find((Code) => Code.Label === Name || Code.Alternatives?.includes(Name));
+    return Object.values(Consolidated).find(
+        (Code) => Code.Label === Name || Code.Alternatives?.includes(Name),
+    );
 }
 
 /** GetConsolidatedSize: Get the size of the consolidated codebook. */
@@ -50,24 +52,47 @@ export function ExtractExamples(Examples: string[]): Map<string, string[]> {
 }
 
 /** FindOriginalCodes: Find the original codes from an owner. */
-export function FindOriginalCodes(Codebook: Codebook, Source: Code, _Owner: number, Example?: string): Code[] {
+export function FindOriginalCodes(
+    Codebook: Codebook,
+    Source: Code,
+    _Owner: number,
+    Example?: string,
+): Code[] {
     let Codes = Object.values(Codebook);
-    Codes = Codes.filter((Code) => Source.Label === Code.Label || Source.Alternatives?.includes(Code.Label));
+    Codes = Codes.filter(
+        (Code) => Source.Label === Code.Label || Source.Alternatives?.includes(Code.Label),
+    );
     if (Example) {
-        Codes = Codes.filter((Code) => Code.Examples?.includes(Example) ?? Code.Examples?.some((Current) => Current.startsWith(`${Example}|||`)));
+        Codes = Codes.filter(
+            (Code) =>
+                Code.Examples?.includes(Example) ??
+                Code.Examples?.some((Current) => Current.startsWith(`${Example}|||`)),
+        );
     }
     return Codes;
 }
 
 /** FindExampleSources: Find the original sources of an example from an owner. */
-export function FindExampleSources(Codebook: Codebook, Source: Code, Example: string, Owner: number): Code[] {
+export function FindExampleSources(
+    Codebook: Codebook,
+    Source: Code,
+    Example: string,
+    Owner: number,
+): Code[] {
     const Codes = FindOriginalCodes(Codebook, Source, Owner);
     const SoftMatch = `|||${Example}`;
-    return Codes.filter((Code) => Code.Examples?.findIndex((Current) => Current === Example || Current.endsWith(SoftMatch)) !== -1);
+    return Codes.filter(
+        (Code) =>
+            Code.Examples?.findIndex(
+                (Current) => Current === Example || Current.endsWith(SoftMatch),
+            ) !== -1,
+    );
 }
 
 /** GetChunks: Get the chunks from the sources. */
-export function GetChunks(Sources: Record<string, Record<string, DataChunk<DataItem>>>): DataChunk<DataItem>[] {
+export function GetChunks(
+    Sources: Record<string, Record<string, DataChunk<DataItem>>>,
+): DataChunk<DataItem>[] {
     return Object.values(Sources).flatMap((Source) => Object.values(Source));
 }
 

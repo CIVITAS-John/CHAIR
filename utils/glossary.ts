@@ -19,7 +19,9 @@ for (const Glossary of Glossaries) {
 /** HandleGlossary: Tokenize Chinese text and replace glossary terms.*/
 export function HandleGlossary(Text: string): string {
     const Tokens = Jieba.cut(Text);
-    return Tokens.map((Token) => (GlossaryMap.has(Token) ? GlossaryMap.get(Token) : Token)).join("");
+    return Tokens.map((Token) => (GlossaryMap.has(Token) ? GlossaryMap.get(Token) : Token)).join(
+        "",
+    );
 }
 
 /** Preprocess: Preprocess for translation. */

@@ -46,7 +46,15 @@ export class SimpleMerger extends CodeConsolidator {
             }
             return Code.Label;
         });
-        const Clusters = await ClusterCodes(Labels, Codes, "consolidator", "euclidean", "ward", this.Maximum.toString(), this.Minimum.toString());
+        const Clusters = await ClusterCodes(
+            Labels,
+            Codes,
+            "consolidator",
+            "euclidean",
+            "ward",
+            this.Maximum.toString(),
+            this.Minimum.toString(),
+        );
         // Merge the codes
         const Result = MergeCodesByCluster(Clusters, Codes);
         // Check if we should stop - when nothing is merged

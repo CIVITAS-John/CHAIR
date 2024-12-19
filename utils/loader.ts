@@ -10,7 +10,18 @@ import { MergeCodebook, MergeCodebooks } from "../consolidating/codebooks.js";
 import { InitializeDataset } from "../constants.js";
 
 import { GetFilesRecursively, RemoveCommonality } from "./file.js";
-import type { Code, Codebook, CodedItem, CodedThread, CodedThreads, Conversation, DataChunk, DataItem, Dataset, Participant } from "./schema.js";
+import type {
+    Code,
+    Codebook,
+    CodedItem,
+    CodedThread,
+    CodedThreads,
+    Conversation,
+    DataChunk,
+    DataItem,
+    Dataset,
+    Participant,
+} from "./schema.js";
 import { AssembleExample } from "./schema.js";
 
 /** GetDatasetPath: Get the dataset path. */
@@ -46,12 +57,16 @@ function InitializeItem(Item: DataItem) {
 
 /** LoadConversations: Load the conversations. */
 export function LoadConversations(Group: string) {
-    return JSON.parse(File.readFileSync(GetMessagesPath(Group, "Conversations.json"), "utf-8")) as Conversation[];
+    return JSON.parse(
+        File.readFileSync(GetMessagesPath(Group, "Conversations.json"), "utf-8"),
+    ) as Conversation[];
 }
 
 /** LoadDataset: Load a dataset for analysis. */
 export function LoadDataset<T extends DataChunk<DataItem>>(Group: string): Dataset<T> {
-    const Result = eval(`(function() {${File.readFileSync(GetMessagesPath(Group, "configuration.js"), "utf-8")}})()`) as Dataset<T>;
+    const Result = eval(
+        `(function() {${File.readFileSync(GetMessagesPath(Group, "configuration.js"), "utf-8")}})()`,
+    ) as Dataset<T>;
     for (const [Key, Value] of Object.entries(Result.Data)) {
         const Data = LoadChunksForAnalysis<T>(Group, Value as unknown as string);
         for (const [_, Chunk] of Object.entries(Data)) {
@@ -67,7 +82,10 @@ export function LoadDataset<T extends DataChunk<DataItem>>(Group: string): Datas
 
 /** LoadChunksForAnalysis: Load the chunks for analysis. */
 export function LoadChunksForAnalysis<T extends DataChunk<DataItem>>(Group: string, Name: string) {
-    return JSON.parse(File.readFileSync(GetMessagesPath(Group, Name), "utf-8")) as Record<string, T>;
+    return JSON.parse(File.readFileSync(GetMessagesPath(Group, Name), "utf-8")) as Record<
+        string,
+        T
+    >;
 }
 
 /** LoadAnalyses: Load analyzed threads from either JSON or Excel. */
@@ -92,7 +110,9 @@ export async function LoadAnalyses(Source: string): Promise<CodedThreads> {
 
 /** LoadParticipants: Load the participants. */
 export function LoadParticipants() {
-    return JSON.parse(File.readFileSync(GetParticipantsPath("Participants.json"), "utf-8")) as Participant[];
+    return JSON.parse(
+        File.readFileSync(GetParticipantsPath("Participants.json"), "utf-8"),
+    ) as Participant[];
 }
 
 /** GetProjectsPath: Get the saving path of certain projects. */
@@ -165,7 +185,10 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
             switch (ID) {
                 case "-1": // Summary
                     Thread.Summary = Content;
-                    if (Thread.Summary === "" || Thread.Summary.startsWith("(Optional) Your thoughts before coding")) {
+                    if (
+                        Thread.Summary === "" ||
+                        Thread.Summary.startsWith("(Optional) Your thoughts before coding")
+                    ) {
                         Thread.Summary = undefined;
                     }
                     return;
@@ -177,7 +200,10 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
                     return;
                 case "-3": // Reflection
                     Thread.Reflection = Content;
-                    if (Thread.Reflection === "" || Thread.Reflection.startsWith("Your reflections after coding")) {
+                    if (
+                        Thread.Reflection === "" ||
+                        Thread.Reflection.startsWith("Your reflections after coding")
+                    ) {
                         Thread.Reflection = undefined;
                     }
                     return;
@@ -209,7 +235,10 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
 }
 
 /** LoadCodebooks: Load codebooks from a source. */
-export async function LoadCodebooks(Source: string | string[], CreateGroup = false): Promise<[Codebook[], string[]]> {
+export async function LoadCodebooks(
+    Source: string | string[],
+    CreateGroup = false,
+): Promise<[Codebook[], string[]]> {
     if (Array.isArray(Source)) {
         const Codebooks: Codebook[] = [];
         const Names: string[] = [];
@@ -219,7 +248,9 @@ export async function LoadCodebooks(Source: string | string[], CreateGroup = fal
             Names.push(...CurrentNames);
             // Merge into a group
             if (CreateGroup) {
-                Codebooks.push(MergeCodebooks(JSON.parse(JSON.stringify(CurrentCodebooks)) as Codebook[]));
+                Codebooks.push(
+                    MergeCodebooks(JSON.parse(JSON.stringify(CurrentCodebooks)) as Codebook[]),
+                );
                 Names.push(`group: ${Path.basename(Current)}`);
             }
         }
