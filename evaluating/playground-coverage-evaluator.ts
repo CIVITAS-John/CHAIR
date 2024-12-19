@@ -6,6 +6,6 @@ import { CoverageEvaluator } from "./coverage-evaluator.js";
 
 InitializeEmbeddings("gecko-768-similarity");
 const SourcePath = GetMessagesPath("Coded Dataset 1", "evaluation");
-const Results = await EvaluateCodebooksWithReference([`${SourcePath}/references/low-level-3.json`, `${SourcePath}/arena`], new CoverageEvaluator());
+await EvaluateCodebooksWithReference([`${SourcePath}/references/low-level-3.json`, `${SourcePath}/arena`], new CoverageEvaluator());
 
 process.exit(0);

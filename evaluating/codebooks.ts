@@ -42,9 +42,10 @@ export async function BuildReferenceAndEvaluateCodebooks(
     CreateGroup?: boolean,
 ): Promise<Record<string, CodebookEvaluation>> {
     // Find all the codebooks under the path
-    let [Codebooks, Names] = await LoadCodebooks(Source, CreateGroup);
+    const [Codebooks, _Names] = await LoadCodebooks(Source, CreateGroup);
+    let Names = _Names;
     // Remove commonality from multiple codebooks
-    if (Names.length == 1) {
+    if (Names.length === 1) {
         Names = [Path.basename(Names[0])];
     } else {
         Names = RemoveCommonality(Names);
@@ -53,7 +54,9 @@ export async function BuildReferenceAndEvaluateCodebooks(
     const RealCodebooks = Codebooks.filter((_, I) => !Names[I].startsWith("group: "));
     const Backup = JSON.stringify(RealCodebooks);
     const Hash = md5(Backup);
-    const Reference = await ReadOrBuildCache(ReferencePath, Hash, () => BuildReferenceAndExport(Builder, JSON.parse(Backup), ReferencePath));
+    const Reference = await ReadOrBuildCache(ReferencePath, Hash, () =>
+        BuildReferenceAndExport(Builder, JSON.parse(Backup) as Codebook[], ReferencePath),
+    );
     // Evaluate the codebooks
     const Results = await Evaluator.Evaluate([Reference, ...Codebooks], [ReferencePath, ...Names], ExportPath);
     console.log(chalk.green(JSON.stringify(Results, null, 4)));
@@ -73,7 +76,9 @@ export async function BuildReferenceAndEvaluateCodebooksInGroups(
     const Backup = JSON.stringify(Codebooks);
     const Hash = md5(Backup);
     // Build the reference codebook
-    const Reference = await ReadOrBuildCache(ReferencePath, Hash, () => BuildReferenceAndExport(Builder, JSON.parse(Backup), ReferencePath));
+    const Reference = await ReadOrBuildCache(ReferencePath, Hash, () =>
+        BuildReferenceAndExport(Builder, JSON.parse(Backup) as Codebook[], ReferencePath),
+    );
     // Evaluate the codebooks
     const Results = await Evaluator.Evaluate([Reference, ...Codebooks], [ReferencePath, ...Names], ExportPath);
     console.log(chalk.green(JSON.stringify(Results, null, 4)));

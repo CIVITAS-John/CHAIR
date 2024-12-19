@@ -1,7 +1,6 @@
 import Excel from "exceljs";
 
 import type { Code, CodedThreads, DataChunk, DataItem, Message, Project } from "./schema.js";
-import { CodedThread, Conversation } from "./schema.js";
 
 const { Workbook } = Excel;
 
@@ -18,18 +17,18 @@ export function ExportMessages(Messages: Message[], Originals?: Message[]): stri
     for (let I = 0; I < Messages.length; I++) {
         const Message = Messages[I];
         // Write a separator if the time gap is too long
-        if (Message.Chunk && LastConversation != Message.Chunk) {
+        if (Message.Chunk && LastConversation !== Message.Chunk) {
             Result += `\n=== ${Message.Chunk}\n\n`;
             LastConversation = Message.Chunk;
         }
         // Export the message
         Result += `${Message.ID}. **P${Message.UserID}, ${Message.Nickname}**`;
-        if (Originals !== undefined && Originals[I].Nickname != Message.Nickname) {
+        if (Originals !== undefined && Originals[I].Nickname !== Message.Nickname) {
             Result += ` (${Originals[I].Nickname})`;
         }
         Result += `: ${Message.Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}\n`;
         Result += Message.Content;
-        if (Originals !== undefined && Message.Content != Originals[I].Content) {
+        if (Originals !== undefined && Message.Content !== Originals[I].Content) {
             Result += `\n${Originals[I].Content}`;
         }
         Result += "\n";
@@ -45,12 +44,12 @@ export function ExportProjects(Projects: Project[], Originals?: Project[]): stri
         const Original = Originals ? Originals[I] : undefined;
         // Title
         Result += `## ${Projects[I].Title} (${Projects[I].ID})`;
-        if (Original && Original.Title != Project.Title) {
+        if (Original && Original.Title !== Project.Title) {
             Result += `* Title: ${Original.Title}\n`;
         }
         // Author
         Result += `\n* Author: P${Projects[I].UserID}, ${Projects[I].Nickname}`;
-        if (Original && Original.Nickname != Project.Nickname) {
+        if (Original && Original.Nickname !== Project.Nickname) {
             Result += ` (${Original.Nickname})`;
         }
         // Tags
@@ -58,12 +57,12 @@ export function ExportProjects(Projects: Project[], Originals?: Project[]): stri
         // Time
         Result += `\n* Time: ${Projects[I].Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}`;
         // Visits
-        Result += `\n* Popularity: Visits ${Projects[I].Visits ?? 0}, Stars ${Projects[I].Stars ?? 0}, Supports ${Projects[I].Supports ?? 0}`;
+        Result += `\n* Popularity: Visits ${Projects[I].Visits}, Stars ${Projects[I].Stars}, Supports ${Projects[I].Supports}`;
         // Image
         Result += `\n![Cover](${Projects[I].Cover})`;
         // Content
         Result += `\n\n### Content\n${Projects[I].Content}`;
-        if (Original && Original.Content != Project.Content) {
+        if (Original && Original.Content !== Project.Content) {
             Result += `\n${Original.Content}`;
         }
         // Comments
@@ -74,12 +73,12 @@ export function ExportProjects(Projects: Project[], Originals?: Project[]): stri
                 const Comment = Project.AllItems[N];
                 const OriginalComment = Original ? Original.AllItems![N] : undefined;
                 Result += `\n${N + 1}. **P${Comment.UserID}, ${Comment.Nickname}**`;
-                if (OriginalComment && Comment.Nickname != OriginalComment.Nickname) {
+                if (OriginalComment && Comment.Nickname !== OriginalComment.Nickname) {
                     Result += ` (${OriginalComment.Nickname})`;
                 }
                 Result += `: ${Comment.Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}\n`;
                 Result += Comment.Content;
-                if (OriginalComment && Comment.Content != OriginalComment.Content) {
+                if (OriginalComment && Comment.Content !== OriginalComment.Content) {
                     Result += `\n${OriginalComment.Content}`;
                 }
             }
@@ -103,16 +102,16 @@ export function GetRowHeight(Content: string, Width: number): number {
 /** ExportChunksForCoding: Export Chunks into an Excel workbook for coding. */
 export function ExportChunksForCoding<T extends DataItem>(Chunks: DataChunk<T>[], Analyses: CodedThreads = { Threads: {} }) {
     const Book = new Workbook();
-    let Consolidated = false;
+    // const Consolidated = false;
     const Consolidation = new Map<string, string>();
     // Whether the codebook is consolidated
     if (Analyses.Codebook) {
-        for (var Code of Object.values(Analyses.Codebook)) {
+        for (const Code of Object.values(Analyses.Codebook)) {
             if ((Code.Alternatives?.length ?? 0) > 0) {
                 Code.Alternatives!.forEach((Alternative) => Consolidation.set(Alternative, Code.Label));
             }
         }
-        Consolidated = Consolidation.size > 0;
+        // Consolidated = Consolidation.size > 0;
     }
     // Export the Chunks
     for (const Chunk of Chunks) {
@@ -122,7 +121,7 @@ export function ExportChunksForCoding<T extends DataItem>(Chunks: DataChunk<T>[]
             Analysis = Analyses.Threads[Chunk.ID.substring(2)];
         }
         // Write into Excel worksheet
-        var Sheet = Book.addWorksheet(Chunk.ID, {
+        const Sheet = Book.addWorksheet(Chunk.ID, {
             views: [{ state: "frozen", xSplit: 1, ySplit: 1 }],
         });
         // Set the columns
@@ -147,31 +146,30 @@ export function ExportChunksForCoding<T extends DataItem>(Chunks: DataChunk<T>[]
         };
         Sheet.properties.defaultRowHeight = 18;
         // Write the messages
-        for (let I = 0; I < Messages.length; I++) {
-            const Message = Messages[I];
+        for (const Message of Messages) {
             let Item = Analysis.Items[Message.ID];
             if (!Item) {
                 Item = Analysis.Items[Message.ID.substring(2)];
             }
             Message.Chunk = Message.Chunk ?? Chunk.ID;
-            const Columns: Record<string, any> = {
+            const Columns = {
                 ID: Message.ID,
                 CID: Message.Chunk,
                 SID: Number.isNaN(parseInt(Message.UserID)) ? Message.UserID : parseInt(Message.UserID),
                 Nickname: Message.Nickname,
                 Time: Message.Time,
-                In: Message.Chunk == Chunk.ID ? "Y" : "N",
+                In: Message.Chunk === Chunk.ID ? "Y" : "N",
                 Content: Message.Content,
                 Codes: Item.Codes?.join(", ") ?? "",
                 Memo: Message.Tags?.join(", ") ?? "",
-                Consolidated: [...new Set(Item.Codes?.map((Code) => Consolidation.get(Code) ?? Code) ?? [])].join(", ") ?? "",
+                Consolidated: [...new Set(Item.Codes?.map((Code) => Consolidation.get(Code) ?? Code) ?? [])].join(", "),
             };
             const Row = Sheet.addRow(Columns);
             Row.font = {
                 name: "Lato",
                 family: 4,
                 size: 12,
-                color: { argb: Message.Chunk == Chunk.ID ? "FF000000" : "FF666666" },
+                color: { argb: Message.Chunk === Chunk.ID ? "FF000000" : "FF666666" },
             };
             Row.height = GetRowHeight(Message.Content, 120);
             Row.alignment = { vertical: "middle" };
@@ -181,7 +179,7 @@ export function ExportChunksForCoding<T extends DataItem>(Chunks: DataChunk<T>[]
         Sheet.addRow({});
         // Extra row for notes
         const AddExtraRow = (ID: number, Name: string, Content: string) => {
-            const LastRow = Sheet.addRow({ ID: ID, Nickname: Name, Content: Content });
+            const LastRow = Sheet.addRow({ ID, Nickname: Name, Content });
             LastRow.height = Math.max(30, GetRowHeight(Content, 120));
             LastRow.alignment = { vertical: "middle" };
             LastRow.getCell("Content").alignment = { vertical: "middle", wrapText: true };
@@ -202,7 +200,7 @@ export function ExportChunksForCoding<T extends DataItem>(Chunks: DataChunk<T>[]
 
 /** ExportCodebook: Export a codebook into an Excel workbook. */
 export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { Threads: {} }, Name = "Codebook") {
-    if (Analyses.Codebook == undefined) {
+    if (Analyses.Codebook === undefined) {
         return;
     }
     const Sheet = Book.addWorksheet(Name, {
@@ -229,7 +227,7 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
     // Sort the codes
     Codes = SortCodes(Codes);
     // Write the codes
-    for (var Code of Codes) {
+    for (const Code of Codes) {
         const Categories = Code.Categories?.map((Category) => (Code.Categories!.length > 1 ? `* ${Category}` : Category)).join("\n") ?? "";
         const Definitions = Code.Definitions?.map((Definition) => (Code.Definitions!.length > 1 ? `* ${Definition}` : Definition)).join("\n") ?? "";
         const Examples =
@@ -241,8 +239,8 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
             Label: Code.Label,
             Category: Categories,
             Definition: Definitions,
-            Examples: Examples,
-            Alternatives: Alternatives,
+            Examples,
+            Alternatives,
         });
         Row.font = {
             name: "Lato",
@@ -262,6 +260,6 @@ export function ExportCodebook(Book: Excel.Workbook, Analyses: CodedThreads = { 
 export function SortCodes(Codes: Code[]) {
     return [...Codes].sort((A, B) => {
         const Category = (A.Categories?.sort().join("; ") ?? "").localeCompare(B.Categories?.sort().join("; ") ?? "");
-        return Category != 0 ? Category : A.Label.localeCompare(B.Label);
+        return Category !== 0 ? Category : A.Label.localeCompare(B.Label);
     });
 }

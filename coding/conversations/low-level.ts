@@ -13,15 +13,15 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
     protected TagsName = "tags";
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // We will fetch at least 10 messages for each batch to keep the context.
-    public GetChunkSize(Recommended: number, Remaining: number, Iteration: number, Tries: number): [number, number, number] {
+    public GetChunkSize(Recommended: number, _Remaining: number, _Iteration: number, Tries: number): [number, number, number] {
         // For weaker models, we will reduce the chunk size (32 => 24 => 16 => 8)
-        if (Recommended == MaxItems) {
+        if (Recommended === MaxItems) {
             return [Recommended - Tries * 8, 0, 0];
         }
         return [Recommended - Tries * 2, Math.max(8 - Recommended - Tries, 0), 0];
     }
     /** ParseResponse: Parse the responses from the LLM. */
-    public async ParseResponse(Analysis: CodedThread, Lines: string[], Messages: Message[], ChunkStart: number): Promise<Record<number, string>> {
+    public ParseResponse(Analysis: CodedThread, Lines: string[], Messages: Message[], _ChunkStart: number): Promise<Record<number, string>> {
         const Results: Record<number, string> = {};
         let NextMessage: ((Content: string) => void) | undefined;
         for (let I = 0; I < Lines.length; I++) {
@@ -34,22 +34,22 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
             // Recongnize the parts
             if (Line.startsWith("Thoughts:")) {
                 Analysis.Plan = Line.substring(9).trim();
-                if (Analysis.Plan == "") {
-                    NextMessage = (Content) => (Analysis.Plan += `${Content}\n`);
+                if (Analysis.Plan === "") {
+                    NextMessage = (Content) => (Analysis.Plan = `${Analysis.Plan}${Content}\n`);
                 } else {
                     NextMessage = undefined;
                 }
             } else if (Line.startsWith("Summary:")) {
                 Analysis.Summary = Line.substring(8).trim();
-                if (Analysis.Summary == "") {
-                    NextMessage = (Content) => (Analysis.Summary += `${Content}\n`);
+                if (Analysis.Summary === "") {
+                    NextMessage = (Content) => (Analysis.Summary = `${Analysis.Summary}${Content}\n`);
                 } else {
                     NextMessage = undefined;
                 }
             } else if (Line.startsWith("Notes:")) {
                 Analysis.Reflection = Line.substring(6).trim();
-                if (Analysis.Reflection == "") {
-                    NextMessage = (Content) => (Analysis.Reflection += `${Content}\n`);
+                if (Analysis.Reflection === "") {
+                    NextMessage = (Content) => (Analysis.Reflection = `${Analysis.Reflection}${Content}\n`);
                 } else {
                     NextMessage = undefined;
                 }
@@ -62,20 +62,20 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     }
                     let Codes = Match[2].trim();
                     // Sometimes, the LLM will return the message content and put the codes in the next line
-                    if (NextLine != "" && !NextLine.startsWith("Summary:") && !/^(\d+)\. (.*)$/.exec(NextLine)) {
+                    if (NextLine !== "" && !NextLine.startsWith("Summary:") && !/^\d+\. .*$/.exec(NextLine)) {
                         Codes = NextLine.trim();
                         I++;
                     }
                     // For images, force the tag "Image sharing"
-                    if (Message.Content == "[Image]") {
+                    if (Message.Content === "[Image]") {
                         Codes = "Image Sharing";
                     }
                     // For emoji, force the tag "Emoji"
-                    if (Message.Content == "[Emoji]") {
+                    if (Message.Content === "[Emoji]") {
                         Codes = "Emoji";
                     }
                     // For checkin, force the tag "Checkin"
-                    if (Message.Content == "[Checkin]") {
+                    if (Message.Content === "[Checkin]") {
                         Codes = "Checkin";
                     }
                     // Remove the () part
@@ -83,7 +83,7 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     // Remove the ** part
                     Codes = Codes.replace(/\*(.*?)\*/, "$1").trim();
                     // Sometimes the LLM will return "tag{number}: {codes}"
-                    Codes = Codes.replace(new RegExp(`^${this.TagName}(\d+)\:`), "").trim();
+                    Codes = Codes.replace(new RegExp(`^${this.TagName}(\\d+):`), "").trim();
                     // Sometimes the LLM will return "{codes}, {codes}"
                     Codes = Codes.replace(/\{(.*?)\}/, "$1").trim();
                     // Sometimes the LLM will start with the original content
@@ -125,29 +125,29 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
                     }
                     Results[parseInt(Match[1])] = Codes;
                     NextMessage = undefined;
-                } else if (Line != "" && NextMessage) {
+                } else if (Line !== "" && NextMessage) {
                     NextMessage(Line);
                 }
             }
         }
-        if (Object.values(Results).every((Value) => Value == "")) {
+        if (Object.values(Results).every((Value) => Value === "")) {
             throw new Error("Invalid response: all codes are empty.");
         }
-        if (Analysis.Plan == undefined) {
+        if (Analysis.Plan === undefined) {
             throw new Error("Invalid response: no plans");
         }
-        if (Analysis.Reflection == undefined) {
+        if (Analysis.Reflection === undefined) {
             throw new Error("Invalid response: no reflections");
         }
-        if (Analysis.Summary == undefined) {
+        if (Analysis.Summary === undefined) {
             throw new Error("Invalid response: no summary");
         }
-        if (Object.keys(Results).length != Messages.length) {
+        if (Object.keys(Results).length !== Messages.length) {
             throw new Error(`Invalid response: ${Object.keys(Results).length} results for ${Messages.length} messages.`);
         }
         // Check keys
-        //for (var I = 0; I < Object.keys(Results).length; I++)
+        //for (let I = 0; I < Object.keys(Results).length; I++)
         //    if (!Results[I + 1]) throw new Error(`Invalid response: missing message ${I + 1}`);
-        return Results;
+        return Promise.resolve(Results);
     }
 }

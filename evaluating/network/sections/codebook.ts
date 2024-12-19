@@ -41,23 +41,23 @@ export class CodebookSection extends Panel {
         const Colors: Record<string, d3.ScaleSequential<string>> = {};
         // Flatten the dataset
         const Dataset: { Name: string; Metric: string; Value: number }[] = [];
-        for (let I = 1; I < Names.length; I++) {
-            const Result = Results[Names[I]];
-            for (let J = 0; J < Metrics.length; J++) {
-                Dataset.push({ Name: Names[I], Metric: Metrics[J], Value: Result[Metrics[J]] });
+        for (const Name of Names) {
+            const Result = Results[Name];
+            for (const Metric of Metrics) {
+                Dataset.push({ Name, Metric, Value: Result[Metric] });
             }
         }
         // Build color scales
-        for (var Metric of Metrics) {
+        for (const Metric of Metrics) {
             const Minimum = d3.min(
-                Dataset.filter((Evaluation) => Evaluation.Metric == Metric),
+                Dataset.filter((Evaluation) => Evaluation.Metric === Metric),
                 (Evaluation) => Evaluation.Value,
             )!;
             const Maximum = d3.max(
-                Dataset.filter((Evaluation) => Evaluation.Metric == Metric),
+                Dataset.filter((Evaluation) => Evaluation.Metric === Metric),
                 (Evaluation) => Evaluation.Value,
             )!;
-            if (Metric == "Divergence") {
+            if (Metric === "Divergence") {
                 Colors[Metric] = d3.scaleSequential().interpolator(d3.interpolateViridis).domain([Maximum, Minimum]);
             } else {
                 Colors[Metric] = d3.scaleSequential().interpolator(d3.interpolateViridis).domain([Minimum, Maximum]);
@@ -76,9 +76,9 @@ export class CodebookSection extends Panel {
                 Summary.append($("<h4></h4>").text(Key))
                     .append($('<p class="tips"></p>').text(`${Object.keys(Codebook).length} codes`))
                     .append($('<p class="tips"></p>').text(`${GetConsolidatedSize(Codebooks[0], Codebook)} consolidated`))
-                    .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1))
-                    .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
-                    .on("click", (Event) => {
+                    .on("mouseover", () => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1))
+                    .on("mouseout", () => this.Visualizer.SetFilter(true, new OwnerFilter()))
+                    .on("click", (Event: MouseEvent) => {
                         if (Event.shiftKey) {
                             this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, true);
                         } else {
@@ -95,10 +95,10 @@ export class CodebookSection extends Panel {
                     const Color = Colors[Metric](MetricValue);
                     const Cell = $('<td class="metric-cell"></td>')
                         .attr("id", `metric-${Index}-${Metric}`)
-                        .text(d3.format(Metric == "Divergence" ? ".1%" : ".1%")(MetricValue))
-                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1, false, Metric))
-                        .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new OwnerFilter()))
-                        .on("click", (Event) => this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey, Metric))
+                        .text(d3.format(Metric === "Divergence" ? ".1%" : ".1%")(MetricValue))
+                        .on("mouseover", () => this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1, false, Metric))
+                        .on("mouseout", () => this.Visualizer.SetFilter(true, new OwnerFilter()))
+                        .on("click", (Event: MouseEvent) => this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, Event.shiftKey, Metric))
                         .css("background", Color)
                         .css("color", d3.lab(Color).l > 70 ? "black" : "white")
                         .toggleClass("chosen", this.Visualizer.IsFilterApplied("Owner", Index + 1, Metric));

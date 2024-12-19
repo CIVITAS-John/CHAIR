@@ -26,7 +26,7 @@ export class CategoryNameMerger extends CodeConsolidator {
     }
     /** Preprocess: Preprocess the subunits before chunking. */
     public async Preprocess(Codebook: Codebook, Codes: Code[]): Promise<Code[]> {
-        if (Codes.length == 0) {
+        if (Codes.length === 0) {
             return [];
         }
         // Collect the existing categories from the codebook

@@ -1,7 +1,7 @@
 import * as File from "fs";
 
 import { ChatAnthropic } from "@langchain/anthropic";
-import type { BaseChatModel } from "@langchain/core/language_models/chat_models";
+import type { BaseChatModel, BaseChatModelCallOptions } from "@langchain/core/language_models/chat_models";
 import type { BaseMessage } from "@langchain/core/messages";
 import { HumanMessage } from "@langchain/core/messages";
 import { ChatGroq } from "@langchain/groq";
@@ -15,26 +15,26 @@ import md5 from "md5";
 import { Tokenize } from "./tokenizer.js";
 
 // Model: The chat model to use.
-export var Model: (Temperature: number) => BaseChatModel;
+export let Model: (Temperature: number) => BaseChatModel;
 // LLMName: The name of the current LLM.
-export var LLMName = "";
+export let LLMName = "";
 // MaxInput: The maximum input tokens for each request.
-export var MaxInput = 16000;
+export let MaxInput = 16000;
 // MaxOutput: The maximum output tokens for each request.
-export var MaxOutput = 16000;
+export let MaxOutput = 16000;
 // MaxItems: The maximum input items for each request.
 // Unfortunately, weaker LLMs like GPT-3.5 turbo sometimes cannot remember all bundled tasks.
-export var MaxItems = 64;
+export let MaxItems = 64;
 // InputTokens: The total input tokens for requests so far.
-export var InputTokens = 0;
+export let InputTokens = 0;
 // OutputTokens: The total output tokens for requests so far.
-export var OutputTokens = 0;
+export let OutputTokens = 0;
 // ExpectedItems: The total expected items for requests so far.
-export var ExpectedItems = 0;
+export let ExpectedItems = 0;
 // FinishedItems: The total finished items for requests so far.
-export var FinishedItems = 0;
+export let FinishedItems = 0;
 // SystemMessage: Whether the model supports system messages.
-export var SystemMessage = true;
+export let SystemMessage = true;
 /** CountItems: Count the expected and finished items. */
 export function CountItems(Expected: number, Finished: number) {
     ExpectedItems += Expected;
@@ -162,7 +162,7 @@ export function InitializeLLM(LLM: string) {
             MaxItems = 64;
             SystemMessage = false;
             if (!LocalModel) {
-                Model = (Temp) =>
+                Model = (_Temp) =>
                     new ChatOpenAI({
                         // Does not support temperature
                         modelName: "o1-mini",
@@ -179,7 +179,7 @@ export function InitializeLLM(LLM: string) {
             MaxItems = 64;
             SystemMessage = false;
             if (!LocalModel) {
-                Model = (Temp) =>
+                Model = (_Temp) =>
                     new ChatOpenAI({
                         // Does not support temperature
                         modelName: "o1-mini",
@@ -240,7 +240,7 @@ export function InitializeLLM(LLM: string) {
             MaxOutput = 32000;
             MaxItems = 32;
             if (!LocalModel) {
-                Model = (Temp) =>
+                Model = (_Temp) =>
                     new ChatMistralAI({
                         temperature: 1,
                         modelName: "open-mixtral-8x22b",
@@ -346,9 +346,9 @@ export async function RequestLLMWithCache(Messages: BaseMessage[], Cache: string
     // Check if the cache exists
     const CacheFile = `${CacheFolder}/${md5(Input)}-${Temperature}.txt`;
     if (File.existsSync(CacheFile)) {
-        var Cache = File.readFileSync(CacheFile, "utf-8");
+        const Cache = File.readFileSync(CacheFile, "utf-8");
         const Split = Cache.split("\n===\n");
-        if (Split.length == 2) {
+        if (Split.length === 2) {
             const Content = Split[1].trim();
             if (Content.length > 0) {
                 InputTokens += Tokenize(Input).length;
@@ -369,7 +369,7 @@ export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, 
     try {
         console.log(
             chalk.dim(
-                `LLM Request ${Temperature ?? 0}: \n${Messages.map((Message) => `${Message._getType()}: ${Message.content}`).join("\n---\n")}\n`,
+                `LLM Request ${Temperature ?? 0}: \n${Messages.map((Message) => `${Message.getType()}: ${Message.content as string}`).join("\n---\n")}\n`,
             ),
         );
         if (!SystemMessage) {
@@ -377,8 +377,8 @@ export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, 
         }
         if (!FakeRequest) {
             await PromiseWithTimeout(
-                Model(Temperature ?? 0)
-                    .invoke(Messages, { temperature: Temperature } as any)
+                (Model(Temperature ?? 0) as BaseChatModel<{ temperature: number } & BaseChatModelCallOptions>)
+                    .invoke(Messages, { temperature: Temperature ?? 0 })
                     .then((Result) => {
                         Text = Result.content as string;
                     }),
@@ -391,7 +391,7 @@ export async function RequestLLM(Messages: BaseMessage[], Temperature?: number, 
         InputTokens += Input;
         OutputTokens += Output;
         console.log(chalk.gray(`LLM Tokens: Input ${Input}, Output ${Output}\n`));
-    } catch (Error: any) {
+    } catch (Error) {
         console.log(Error);
         throw Error;
     }

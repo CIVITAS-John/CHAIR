@@ -42,12 +42,12 @@ export class RefineMerger extends DefinitionParser {
         return `${super.GetName()} (Maximum ${this.Maximum}, Minimum ${this.Minimum}, Definition ${this.UseDefinition})`;
     }
     /** Preprocess: Preprocess the subunits before filtering and chunking. */
-    public async Preprocess(Codebook: Codebook, Codes: Code[]) {
+    public async Preprocess(_Codebook: Codebook, Codes: Code[]) {
         const Length = Codes.length;
         // Cluster codes using text embeddings
         // Only when the code has more than one definition should we merge them
         Codes = Codes.filter((Code) => (this.UseDefinition ? (Code.Definitions?.length ?? 0) > 0 : true));
-        if (Codes.length == 0) {
+        if (Codes.length === 0) {
             return {};
         }
         // Combine each code into a string for clustering
@@ -75,7 +75,7 @@ export class RefineMerger extends DefinitionParser {
         // Merge the codes
         const Result = MergeCodesByCluster(Clusters, Codes);
         // Check if we should stop - when nothing is merged
-        this.Stopping = Object.keys(Result).length == Length;
+        this.Stopping = Object.keys(Result).length === Length;
         return Result;
     }
     /** SubunitFilter: Filter the subunits before chunking. */
@@ -88,8 +88,8 @@ export class RefineMerger extends DefinitionParser {
     }
     /** BuildPrompts: Build the prompts for the code consolidator. */
     // In this case, we do not really use the LLM, so we just merge the codes
-    public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
-        return [
+    public BuildPrompts(_Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
+        return Promise.resolve([
             `
 You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
 Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
@@ -115,9 +115,9 @@ ${this.UseVerbPhrases ? "Phrase" : "Label"}: {The most representative ${this.Use
             Codes.map((Code, Index) =>
                 `
 ${Index + 1}.
-Concepts: ${[Code.Label, ...(Code.OldLabels ?? [])].join(", ") ?? ""}
+Concepts: ${[Code.Label, ...(Code.OldLabels ?? [])].join(", ")}
 ${Code.Definitions?.map((Definition) => `- ${Definition}`).join("\n")}`.trim(),
             ).join("\n\n"),
-        ];
+        ]);
     }
 }

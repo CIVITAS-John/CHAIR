@@ -75,11 +75,11 @@ export function FormatDate(Date: Date) {
         minute: "numeric",
         second: "numeric",
         hour12: false,
-    } as any);
+    });
 }
 
 /** PostData: Post data to a URL in the browser context. */
-export function PostData(URL: string, Data: any) {
+export function PostData(URL: string, Data: unknown) {
     return fetch(URL, {
         method: "POST",
         headers: {

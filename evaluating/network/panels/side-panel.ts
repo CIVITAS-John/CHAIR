@@ -51,11 +51,11 @@ export class SidePanel extends Panel {
         );
     }
     /** ShowPanel: Show a side panel. */
-    public ShowPanel<T extends Panel>(Name: string): T {
+    public ShowPanel(Name: string) {
         const Panel = this.Subpanels[Name];
         this.Header.text(Panel.Title);
         for (const Key in this.Subpanels) {
-            if (Key == Name) {
+            if (Key === Name) {
                 this.Subpanels[Key].Show();
             } else {
                 this.Subpanels[Key].Hide();
@@ -64,7 +64,7 @@ export class SidePanel extends Panel {
         $(`#menu-${this.CurrentPanel}`).toggleClass("chosen", false);
         $(`#menu-${Name}`).toggleClass("chosen", true);
         this.CurrentPanel = Name;
-        return Panel as T;
+        return Panel;
     }
     /** CurrentPanel: The current panel being shown. */
     public CurrentPanel = "Datasets";

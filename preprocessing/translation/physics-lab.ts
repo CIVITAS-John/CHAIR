@@ -26,7 +26,7 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
 
     // Handle the mentioned users (=> @ID)
     const HandleContent = (Content: string) => {
-        return Content.replaceAll(/(回复)?@(.*?)\((\d+)\)(\s|$|:)/g, (Match, Reply, Name, ID) => {
+        return Content.replaceAll(/(回复)?@(.*?)\((\d+)\)(?:\s|$|:)/g, (_Match, Reply, Name: string, ID: string) => {
             UserMappings.set(ID, Name);
             Nicknames.add(Name);
             if (Reply) {
@@ -68,7 +68,7 @@ export async function TranslateProjects(Projects: Project[]): Promise<Project[]>
         }
         // Handle the mentioned users (=> @Nickname (ID))
         let Content = TranslatedContents[I];
-        Content = Content.replaceAll(/@(\d+)(\s|$|:)/g, (Match, ID, Ends) => {
+        Content = Content.replaceAll(/@(\d+)(\s|$|:)/g, (_Match, ID: string, Ends) => {
             if (UserMappings.has(ID)) {
                 return `@${NameTranslations.get(UserMappings.get(ID)!)!} (${ID})${Ends}`;
             }
@@ -104,7 +104,7 @@ export async function TranslateComments(
         }
         // Handle the mentioned users (=> @Nickname (ID))
         let Content = TranslatedContents[I];
-        Content = Content.replaceAll(/@(\d+)(\s|$|:)/g, (Match, ID, Ends) => {
+        Content = Content.replaceAll(/@(\d+)(\s|$|:)/g, (_Match, ID: string, Ends) => {
             if (UserMappings.has(ID)) {
                 return `@${NameTranslations.get(UserMappings.get(ID)!)!} (${ID})${Ends}`;
             }

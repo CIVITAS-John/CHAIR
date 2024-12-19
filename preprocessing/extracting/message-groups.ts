@@ -1,8 +1,7 @@
 import * as File from "fs";
 
 import { GetMessagesPath, GetParticipantsPath } from "../../utils/loader.js";
-import type { Message } from "../../utils/schema.js";
-import { Participant } from "../../utils/schema.js";
+import type { Message, Participant } from "../../utils/schema.js";
 import { Tokenize } from "../../utils/tokenizer.js";
 
 // CutoffDate: The cutoff date for the dataset.
@@ -14,7 +13,7 @@ function ReadQQMessages(Path: string, Prefix: string): Message[] {
     const Sources = File.readFileSync(Path, "utf-8").split("\r\n");
     let LastMessage: Message | undefined;
     for (const Source of Sources) {
-        const Match = /(\d{4})-(\d{2})-(\d{2}) ([01]?\d):(\d{2}):(\d{2}) (AM|PM) (.*?)(\(\d+\)|<.*?>)/.exec(Source);
+        const Match = /(\d{4})-(\d{2})-(\d{2}) ([01]?\d):(\d{2}):(\d{2}) (AM|PM) ([^(<]*)(\(\d+\)|<.*?>)/.exec(Source);
         if (Match !== null) {
             const Time = new Date(
                 Number(Match[1]),
@@ -47,12 +46,13 @@ const Emojis = File.readFileSync("./known/emoji.csv", "utf-8").split("\n");
 const EmojiMap = new Map<string | RegExp, string>();
 for (const Emoji of Emojis) {
     const LastSeperator = Emoji.lastIndexOf(",");
-    let [Source, Translation] = [Emoji.substring(0, LastSeperator), Emoji.substring(LastSeperator + 1)];
+    let Source = Emoji.substring(0, LastSeperator);
+    const Translation = Emoji.substring(LastSeperator + 1);
     if (Source.includes("{")) {
         EmojiMap.set(new RegExp(Source, "g"), Translation.trim());
     } else {
         if (!Source.startsWith("[")) {
-            Source = `\/${Source}`;
+            Source = `/${Source}`;
         }
         EmojiMap.set(Source, Translation.trim());
     }
@@ -79,9 +79,9 @@ for (const Group of Groups) {
             Message.FirstSeen = true;
         } else {
             Message.FirstSeen = false;
-            var Participant = Participants.get(Message.UserID)!;
+            const Participant = Participants.get(Message.UserID)!;
             Participant.Messages++;
-            if (Participant.Nickname == "") {
+            if (Participant.Nickname === "") {
                 Participant.Nickname = Message.Nickname;
             }
         }
@@ -89,13 +89,13 @@ for (const Group of Groups) {
     // Second pass: go through the messages
     for (const Message of Messages) {
         // Count the participant
-        var Participant = Participants.get(Message.UserID)!;
+        const Participant = Participants.get(Message.UserID)!;
         NameMappings.set(Message.Nickname, [Participant.ID, Participant.Nickname]);
         // Adapt the message
         Message.UserID = Participant.ID;
         Message.Nickname = Participant.Nickname;
         // Here, we need to replace all `@...` references with the corresponding ID.
-        Message.Content = Message.Content.replaceAll(/@(.*?)(\s|$)/g, (Match, Name) => {
+        Message.Content = Message.Content.replaceAll(/@(.*?)(?:\s|$)/g, (Match, Name: string) => {
             if (NameMappings.has(Name)) {
                 const Metadata = NameMappings.get(Name)!;
                 Message.Mentions = Message.Mentions ?? [];
@@ -133,7 +133,7 @@ for (const Group of Groups) {
     // Write the messages (metadata) into a CSV file using Unix timestamp. Only length of content is stored.
     File.writeFileSync(
         GetMessagesPath(Group, "Messages.csv"),
-        `Source,ID,Time,Timestamp,First,Length,Mentions\n${Messages.filter((Message) => Message.UserID != "0")
+        `Source,ID,Time,Timestamp,First,Length,Mentions\n${Messages.filter((Message) => Message.UserID !== "0")
             .map(
                 (Message, Index) =>
                     `${Index},${Message.UserID},${Message.Time.toISOString()},${Message.Time.getTime()},${Message.FirstSeen},${

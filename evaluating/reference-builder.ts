@@ -32,7 +32,7 @@ export class ReferenceBuilder {
     }
     /** RefineCodebook: Further merge the codebook.*/
     protected async RefineCodebook(Codebook: Codebook): Promise<Codebook> {
-        const Threads = { Codebook: Codebook, Threads: {} };
+        const Threads = { Codebook, Threads: {} };
         const Consolidator = new PipelineConsolidator(
             // Merge codes that have been merged
             // new AlternativeMerger(),
@@ -42,15 +42,15 @@ export class ReferenceBuilder {
             new DefinitionGenerator(),
         );
         Consolidator.BaseTemperature = this.BaseTemperature;
-        await ConsolidateCodebook<void>(Consolidator, [], Threads, (Iteration) => this.SanityCheck(Iteration, Threads.Codebook));
+        await ConsolidateCodebook<unknown>(Consolidator, [], Threads, (Iteration) => this.SanityCheck(Iteration, Threads.Codebook));
         console.log(chalk.green(`Statistics: ${Object.keys(Threads.Codebook).length} codes remained after consolidation.`));
         // Return the new codebook
         return Threads.Codebook;
     }
     /** SanityCheck: Check if original codes are still present in the consolidated one. */
-    protected async SanityCheck(Iteration: number, Codebook: Codebook) {
+    protected SanityCheck(Iteration: number, Codebook: Codebook): Promise<void> {
         File.writeFileSync(`./known/codebook-${Iteration}.json`, JSON.stringify(Codebook, null, 4), "utf8");
-        if (Iteration == 0) {
+        if (Iteration === 0) {
             this.OriginalCodes = new Set<string>(Object.values(Codebook).map((Code) => Code.Label));
         } else {
             const NewCodes = new Set<string>(Object.values(Codebook).flatMap((Code) => [Code.Label, ...(Code.Alternatives ?? [])]));
@@ -60,6 +60,7 @@ export class ReferenceBuilder {
                 }
             });
         }
+        return Promise.resolve();
     }
 }
 
@@ -80,7 +81,7 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
     }
     /** RefineCodebook: Further merge the codebook.*/
     protected async RefineCodebook(Codebook: Codebook): Promise<Codebook> {
-        const Threads = { Codebook: Codebook, Threads: {} };
+        const Threads = { Codebook, Threads: {} };
         Object.values(Codebook).forEach((Code) => (Code.Alternatives = []));
         const Consolidator = new PipelineConsolidator(
             // Merge codes that have been merged
@@ -98,7 +99,7 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
             new RefineMerger({ Maximum: 0.6, Minimum: !this.SameData ? 0.6 : 0.4, Looping: true, UseVerbPhrases: this.UseVerbPhrases }),
         );
         Consolidator.BaseTemperature = this.BaseTemperature;
-        await ConsolidateCodebook<void>(Consolidator, [], Threads, (Iteration) => this.SanityCheck(Iteration, Threads.Codebook));
+        await ConsolidateCodebook<unknown>(Consolidator, [], Threads, (Iteration) => this.SanityCheck(Iteration, Threads.Codebook));
         console.log(chalk.green(`Statistics: ${Object.keys(Threads.Codebook).length} codes remained after consolidation.`));
         // Return the new codebook
         return Threads.Codebook;

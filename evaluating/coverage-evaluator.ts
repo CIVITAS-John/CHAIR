@@ -31,12 +31,12 @@ export class CoverageEvaluator extends CodebookEvaluator {
             ExportPath ?? "./known",
         );
         for (const Key of Object.keys(Result)) {
-            var Index = parseInt(Key);
+            const Index = parseInt(Key);
             Evaluations[Index] = Result[Index];
         }
         // Return in the format
         const Results: Record<string, CodebookEvaluation> = {};
-        for (var [Index, Name] of Names.entries()) {
+        for (const [Index, Name] of Names.entries()) {
             Results[Name] = Evaluations[Index];
         }
         return Results;

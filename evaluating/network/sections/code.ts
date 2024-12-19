@@ -49,10 +49,10 @@ export class CodeSection extends Panel {
                 Components,
                 (Row, Component, Index) => {
                     // Interactivity
-                    Row.on("mouseover", (Event) => {
+                    Row.on("mouseover", (Event: Event) => {
                         this.Visualizer.ComponentOver(Event, Component);
                     })
-                        .on("mouseout", (Event) => {
+                        .on("mouseout", (Event: Event) => {
                             this.Visualizer.ComponentOut(Event, Component);
                         })
                         .toggleClass("chosen", this.Visualizer.IsFilterApplied("Component", Component));
@@ -60,7 +60,7 @@ export class CodeSection extends Panel {
                     const Summary = $('<td class="cluster-cell"></td>')
                         .attr("id", `cluster-${Component.ID}`)
                         .addClass("actionable")
-                        .on("click", (Event) => {
+                        .on("click", (Event: MouseEvent) => {
                             if (Event.shiftKey) {
                                 this.Visualizer.ComponentChosen(Event, Component);
                             } else {
@@ -70,15 +70,15 @@ export class CodeSection extends Panel {
                         .appendTo(Row);
                     Summary.append($("<h4></h4>").text(`#${Index + 1} ${Component.Representative!.Data.Label}`));
                     // Calculate the coverage of each codebook
-                    const Codebooks: Map<number, number> = this.Dataset.Names.reduce((Previous, Name, Index) => {
+                    const Codebooks: Map<number, number> = this.Dataset.Names.reduce((Previous, _Name, Index) => {
                         Previous.set(Index, FilterNodesByOwner(Component.Nodes, Index, this.Parameters.UseNearOwners).length);
                         return Previous;
                     }, new Map<number, number>());
                     // Show the owners
                     const Owners = $('<p class="owners"></p>').appendTo(Summary);
-                    this.Dataset.Names.forEach((Name, NameIndex) => {
+                    this.Dataset.Names.forEach((_Name, NameIndex) => {
                         const Count = Codebooks.get(NameIndex)!;
-                        if (NameIndex == 0 || Count == 0) {
+                        if (NameIndex === 0 || Count === 0) {
                             return;
                         }
                         Owners.append(
@@ -98,14 +98,14 @@ export class CodeSection extends Panel {
                         .appendTo(Row)
                         .text(`${Filtered}`)
                         .append($("<p></p>").text(d3.format(".0%")(Filtered / Component.Nodes.length)))
-                        .on("click", (Event) => {
+                        .on("click", (Event: MouseEvent) => {
                             this.Visualizer.ComponentChosen(Event, Component);
                         });
                     $('<td class="number-cell actionable"></td>')
                         .appendTo(Row)
                         .text(`${Component.Nodes.length}`)
                         .append($("<p></p>").text("100%"))
-                        .on("click", (Event) => {
+                        .on("click", (Event: MouseEvent) => {
                             this.Visualizer.ComponentChosen(Event, Component);
                         });
                 },
@@ -117,7 +117,7 @@ export class CodeSection extends Panel {
     public ShowComponent(Component: Component<Code>) {
         // Switch to the component, if not already
         if (!this.Visualizer.IsFilterApplied("Component", Component)) {
-            this.Visualizer.ComponentChosen(new Event("virtual"), Component);
+            this.Visualizer.ComponentChosen(new MouseEvent("virtual"), Component);
         }
         // Show the component
         this.SetRefresh(() => {
@@ -133,23 +133,23 @@ export class CodeSection extends Panel {
             this.Container.append(
                 $(`<h3>${Component.Nodes.length} Codes</h3>`).prepend(
                     this.BuildReturn(() => {
-                        this.Visualizer.ComponentChosen(new Event("virtual"), Component);
+                        this.Visualizer.ComponentChosen(new MouseEvent("virtual"), Component);
                         this.ShowComponents();
                     }),
                 ),
             );
             this.BuildTable(
                 Component.Nodes,
-                (Row, Node, Index) => {
+                (Row, Node) => {
                     // Interactivity
-                    Row.on("mouseover", (Event) => {
+                    Row.on("mouseover", (Event: Event) => {
                         this.Visualizer.NodeOver(Event, Node);
                     })
-                        .on("mouseout", (Event) => {
+                        .on("mouseout", (Event: Event) => {
                             this.Visualizer.NodeOut(Event, Node);
                         })
                         .toggleClass("chosen", this.Visualizer.GetStatus().ChosenNodes.includes(Node))
-                        .on("click", (Event) => {
+                        .on("click", (Event: MouseEvent) => {
                             if (this.Visualizer.NodeChosen(Event, Node)) {
                                 this.Visualizer.CenterCamera(Node.x!, Node.y!, 3);
                             }
@@ -158,10 +158,10 @@ export class CodeSection extends Panel {
                     const Summary = $('<td class="code-cell actionable"></td>').attr("id", `code-${Node.ID}`).appendTo(Row);
                     // Calculate source codes
                     const From = (Node.Data.Alternatives ?? []).concat(Node.Data.Label).filter((Name) => {
-                        return Object.values(this.Dataset.Codebooks).some((Codebook) => Codebook[Name] != undefined);
+                        return Object.values(this.Dataset.Codebooks).some((Codebook) => Codebook[Name] !== undefined);
                     }).length;
                     // Colorize the code in the same way as the graph
-                    var Color = Node.Hidden ? "#999999" : Colorizer.Colorize(Node);
+                    let Color = Node.Hidden ? "#999999" : Colorizer.Colorize(Node);
                     Summary.append(
                         $("<h4></h4>")
                             .append($(`<svg width="2" height="2" viewbox="0 0 2 2"><circle r="1" cx="1" cy="1" fill="${Color}"></circle></svg>`))
@@ -170,10 +170,10 @@ export class CodeSection extends Panel {
                     Summary.append($('<p class="tips"></p>').text(`From ${From} codes`));
                     // Show the consensus
                     const Owners = $('<td class="metric-cell"></td>').appendTo(Row);
-                    // var OwnerSet = this.Parameters.UseNearOwners ? Node.Owners : Node.NearOwners;
-                    // var Count = [...OwnerSet].filter(Owner => this.Dataset.Weights![Owner] !== 0).length;
+                    // let OwnerSet = this.Parameters.UseNearOwners ? Node.Owners : Node.NearOwners;
+                    // let Count = [...OwnerSet].filter(Owner => this.Dataset.Weights![Owner] !== 0).length;
                     const Ratio = Node.TotalWeight / this.Dataset.TotalWeight!;
-                    var Color = this.RatioColorizer(Ratio);
+                    Color = this.RatioColorizer(Ratio);
                     Owners.text(d3.format(".0%")(Ratio))
                         .css("background-color", Color.toString())
                         .css("color", d3.lab(Color).l > 70 ? "black" : "white");

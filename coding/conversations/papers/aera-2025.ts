@@ -9,7 +9,11 @@ const AnalyzerNames = ["bertopic-1", "high-level-1", "high-level-2", "low-level-
 const Models = ["gpt-4.5-omni"];
 
 for (const AnalyzerName of AnalyzerNames) {
-    var Analyzer = new (await import(`./../${AnalyzerName}.js`)).default();
+    const Analyzer = new (
+        (await import(`./../${AnalyzerName}.js`)) as {
+            default: new () => Parameters<typeof ProcessDataset>[0];
+        }
+    ).default();
     await UseLLMs(
         async () => {
             await ProcessDataset(Analyzer, "Coded Dataset 1", false);

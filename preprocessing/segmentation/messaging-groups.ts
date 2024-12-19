@@ -21,20 +21,20 @@ async function SeperateMessages(Source: string, Prefix: string) {
     });
     await Python;
     // Load messages
-    const Messages = LoadItems<Message>(GetMessagesPath(Source)).filter((Message) => Message.UserID != "0");
+    const Messages = LoadItems<Message>(GetMessagesPath(Source)).filter((Message) => Message.UserID !== "0");
     // Break up messages based on the indexes
     const Indexes = File.readFileSync(GetMessagesPath(Source, "Messages.Groups.csv"), "utf-8")
         .split("\n")
         .map((Index) => Number(Index));
     Indexes[Indexes.length - 1] = Messages.length - 1;
     const Conversations: Conversation[] = [];
-    for (var I = 0; I < Indexes.length; I++) {
+    for (let I = 0; I < Indexes.length; I++) {
         const Participants = new Map<string, number>();
-        var Mentions = new Set<string>();
-        var EndTime: Date;
+        const Mentions = new Set<string>();
+        let EndTime: Date;
         let FirstSeen = 0;
         // Count the messages and participants
-        for (let J = I == 0 ? 0 : Indexes[I - 1] + 1; J <= Indexes[I]; J++) {
+        for (let J = I === 0 ? 0 : Indexes[I - 1] + 1; J <= Indexes[I]; J++) {
             EndTime = Messages[J].Time;
             Messages[J].Mentions?.forEach((Mention) => Mentions.add(Mention));
             if (Messages[J].FirstSeen) {
@@ -47,19 +47,19 @@ async function SeperateMessages(Source: string, Prefix: string) {
             ID: `${Prefix}-${Conversations.length.toString()}`,
             Start: Messages[Indexes[I]].Time,
             End: EndTime!,
-            Items: Indexes[I] - (I == 0 ? 0 : Indexes[I - 1] + 1) + 1,
+            Items: Indexes[I] - (I === 0 ? 0 : Indexes[I - 1] + 1) + 1,
             Mentions: [...Mentions],
-            Participants: Participants,
-            FirstSeen: FirstSeen,
+            Participants,
+            FirstSeen,
         });
     }
     // Now, try to connect orphan conversations
     // Criteria: messages <= 6 (50% pct)
     let Orphans = 0,
         Merged = 0;
-    for (var I = 0; I < Conversations.length; I++) {
+    for (let I = 0; I < Conversations.length; I++) {
         let Current = Conversations[I];
-        var Original = Current;
+        const Original = Current;
         if (Current.Items > 6) {
             continue;
         }
@@ -68,27 +68,27 @@ async function SeperateMessages(Source: string, Prefix: string) {
         let MergeBefore = "";
         let MergeAfter = "";
         if (I > 0) {
-            var Previous = Conversations[I - 1];
+            const Previous = Conversations[I - 1];
             // Maybe someone mentioned me in the previous conversation, or if all my participants were there
             if (
-                Previous.Mentions!.findIndex((Mention) => Original.Participants.has(Mention)) != -1 ||
+                Previous.Mentions!.findIndex((Mention) => Original.Participants.has(Mention)) !== -1 ||
                 [...Original.Participants.keys()].every((Participant) => Previous.Participants.has(Participant))
             ) {
                 MergeBefore = Previous.ID;
             }
         }
         if (I < Conversations.length - 1) {
-            var Next = Conversations[I + 1];
+            const Next = Conversations[I + 1];
             // Maybe I mentioned someone in the next conversation, or if all my participants were there
             if (
-                Original.Mentions!.findIndex((Mention) => Next.Participants.has(Mention)) != -1 ||
+                Original.Mentions!.findIndex((Mention) => Next.Participants.has(Mention)) !== -1 ||
                 [...Original.Participants.keys()].every((Participant) => Next.Participants.has(Participant))
             ) {
                 MergeAfter = Next.ID;
             }
         }
         // If both are possible and long enough, merge with the one that is closer
-        if (MergeBefore != "" && MergeAfter != "" && (Conversations[I - 1].Items > 6 || Conversations[I + 1].Items > 6)) {
+        if (MergeBefore !== "" && MergeAfter !== "" && (Conversations[I - 1].Items > 6 || Conversations[I + 1].Items > 6)) {
             const DiffBefore = Current.Start.getTime() - Conversations[I - 1].End.getTime();
             const DiffAfter = Conversations[I + 1].Start.getTime() - Current.End.getTime();
             if (DiffAfter > DiffBefore) {
@@ -98,13 +98,13 @@ async function SeperateMessages(Source: string, Prefix: string) {
                 MergeBefore = "";
             }
         }
-        if (MergeBefore != "") {
-            var Previous = Conversations[I - 1];
+        if (MergeBefore !== "") {
+            const Previous = Conversations[I - 1];
             Previous.End = Current.End;
             Previous.Items += Current.Items;
             Previous.Mentions = [...new Set([...Previous.Mentions!, ...Current.Mentions!])];
             Previous.FirstSeen += Current.FirstSeen;
-            for (var [Participant, Count] of Current.Participants) {
+            for (const [Participant, Count] of Current.Participants) {
                 Previous.Participants.set(Participant, (Previous.Participants.get(Participant) ?? 0) + Count);
             }
             Current = Previous;
@@ -112,14 +112,14 @@ async function SeperateMessages(Source: string, Prefix: string) {
             I--;
             Merged++;
         }
-        if (MergeAfter != "") {
-            var Next = Conversations[I + 1];
+        if (MergeAfter !== "") {
+            const Next = Conversations[I + 1];
             Next.ID = Current.ID;
             Next.Start = Current.Start;
             Next.Items += Current.Items;
             Next.Mentions = [...new Set([...Next.Mentions!, ...Current.Mentions!])];
             Next.FirstSeen += Current.FirstSeen;
-            for (var [Participant, Count] of Current.Participants) {
+            for (const [Participant, Count] of Current.Participants) {
                 Next.Participants.set(Participant, (Next.Participants.get(Participant) ?? 0) + Count);
             }
             Conversations.splice(I, 1);
@@ -131,8 +131,7 @@ async function SeperateMessages(Source: string, Prefix: string) {
     // Assign conversation IDs to messages
     let ConversationIndex = 0;
     let CurrentConversation = Conversations[ConversationIndex];
-    for (var I = 0; I < Messages.length; I++) {
-        const Message = Messages[I];
+    for (const Message of Messages) {
         if (Message.Time > CurrentConversation.End) {
             CurrentConversation = Conversations[++ConversationIndex];
         }
@@ -147,8 +146,17 @@ async function SeperateMessages(Source: string, Prefix: string) {
     });
     File.writeFileSync(GetMessagesPath(Source, "Conversations.csv"), CSV);
     // Write the conversation info into a JSON file
-    Conversations.forEach((Conversation) => (Conversation.Participants = Object.fromEntries(Conversation.Participants) as any));
-    File.writeFileSync(GetMessagesPath(Source, "Conversations.json"), JSON.stringify(Conversations, null, 4));
+    File.writeFileSync(
+        GetMessagesPath(Source, "Conversations.json"),
+        JSON.stringify(
+            Conversations.map((Conversation) => ({
+                ...Conversation,
+                Participants: Object.fromEntries(Conversation.Participants),
+            })),
+            null,
+            4,
+        ),
+    );
     // Write into JSON and Markdown file
     Messages.forEach((Message, Index) => (Message.ID = `${Prefix}-${Index}`));
     File.writeFileSync(GetMessagesPath(Source, "Messages.json"), JSON.stringify(Messages, null, 4));

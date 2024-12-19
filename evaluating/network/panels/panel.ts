@@ -63,7 +63,9 @@ export abstract class Panel {
         this.Refresh();
     }
     /** Refresh: The current program that actually renders the panel. Optional. */
-    protected Refresh: () => void = () => {};
+    protected Refresh: () => void = () => {
+        // This method is intentionally left empty
+    };
     /** SetRefresh: Set the refresh function for the panel. */
     protected SetRefresh(Refresh: () => void) {
         this.Refresh = Refresh;

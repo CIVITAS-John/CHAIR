@@ -22,8 +22,8 @@ export default class HighLevelAnalyzer3 extends HighLevelAnalyzerBase {
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature = 0.5;
     /** BuildPrompts: Build the prompts for the LLM. */
-    public async BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): Promise<[string, string]> {
-        return [
+    public BuildPrompts(_Analysis: CodedThread, _Target: Conversation, Messages: Message[], _ChunkStart: number): Promise<[string, string]> {
+        return Promise.resolve([
             `
 You are an expert in thematic analysis with grounded theory, working on open coding.
 Please give me a codebook to analyze factors within this interaction that could contribute to the research.
@@ -47,6 +47,6 @@ Definition: A definition of phrase 1
 # ...
 `.trim(),
             Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join("\n"),
-        ];
+        ]);
     }
 }

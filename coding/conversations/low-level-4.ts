@@ -20,16 +20,16 @@ export default class LowLevelAnalyzer4 extends LowLevelAnalyzerBase {
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // We will fetch at least 10 messages for each batch to keep the context.
     // We will further fetch 3 messages from the previous batch to make codes consistent.
-    public GetChunkSize(Recommended: number, Remaining: number, Iteration: number, Tries: number): [number, number, number] {
+    public GetChunkSize(Recommended: number, _Remaining: number, _Iteration: number, Tries: number): [number, number, number] {
         // For weaker models, we will reduce the chunk size (32 => 24 => 16 => 8)
-        if (Recommended == MaxItems) {
+        if (Recommended === MaxItems) {
             return [Recommended - Tries * 8, 3, 0];
         }
         return [Recommended - Tries * 2, Math.max(8 - Recommended - Tries, 3), 0];
     }
     /** BuildPrompts: Build the prompts for the LLM. */
-    public async BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): Promise<[string, string]> {
-        return [
+    public BuildPrompts(Analysis: CodedThread, _Target: Conversation, Messages: Message[], _ChunkStart: number): Promise<[string, string]> {
+        return Promise.resolve([
             `
 You are an expert in thematic analysis with grounded theory, working on open coding.
 This is the first round of coding. Your goal is to describe each messages with phrases.
@@ -47,6 +47,6 @@ ${Messages.length}. {phrase 1}; {phrase 2}; ...
 Summary: {A somehow detailed summary of the conversation, including previous ones}
 Notes: {Notes and hypotheses about the conversation until now}`.trim(),
             Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message, Analysis.Items[Message.ID], this.TagsName)}`).join("\n"),
-        ];
+        ]);
     }
 }

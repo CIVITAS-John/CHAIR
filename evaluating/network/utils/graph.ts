@@ -1,14 +1,22 @@
 import * as graphology from "graphology";
+import type louvain from "graphology-communities-louvain";
 import * as graphologyLibrary from "graphology-library";
+import type seedrandom from "seedrandom";
 
 import type { Code, CodebookComparison, DataChunk, DataItem, Dataset } from "../../../utils/schema.js";
 
 import type { Component, Graph, Link, Node } from "./schema.js";
 import { InverseLerp, Parameters } from "./utils.js";
 
+declare global {
+    interface Math {
+        seedrandom: new (seed: string) => seedrandom.PRNG;
+    }
+}
+
 /** BuildSemanticGraph: Build a semantic code graph from the dataset. */
 export function BuildSemanticGraph(
-    Dataset: CodebookComparison<any>,
+    Dataset: CodebookComparison<DataChunk<DataItem>>,
     Parameter: Parameters = new Parameters(),
     AllOwners = Dataset.Codebooks.length,
     OwnerGetter = (Code: Code) => new Set(Code.Owners),
@@ -17,7 +25,7 @@ export function BuildSemanticGraph(
     const Nodes: Node<Code>[] = Dataset.Codes.map((Code, Index) => ({
         Type: "Code",
         ID: Index.toString(),
-        Index: Index,
+        Index,
         Data: Code,
         Links: [],
         Owners: OwnerGetter(Code),
@@ -34,22 +42,22 @@ export function BuildSemanticGraph(
     let MinDistance = Number.MAX_VALUE;
     const GetWeight = (ID: number) => OwnerWeights[ID];
     // Create the links
-    for (var I = 0; I < Nodes.length; I++) {
-        var Source = Nodes[I];
+    for (let I = 0; I < Nodes.length; I++) {
+        const Source = Nodes[I];
         // Find potential links
-        var Potentials = new Set<number>();
+        const Potentials = new Set<number>();
         FindMinimumIndexes(Dataset.Distances[I], Parameter.ClosestNeighbors + 1).forEach((Index) => Potentials.add(Index));
-        for (var J = I + 1; J < Nodes.length; J++) {
+        for (let J = I + 1; J < Nodes.length; J++) {
             if (Dataset.Distances[I][J] <= Parameter.LinkMinimumDistance) {
                 Potentials.add(J);
             }
         }
         // Create the links
-        for (var J of Potentials) {
-            if (I == J) {
+        for (const J of Potentials) {
+            if (I === J) {
                 continue;
             }
-            var Target = Nodes[J];
+            const Target = Nodes[J];
             const LinkID = [Source.ID, Target.ID].sort().join("-");
             const Distance = Dataset.Distances[I][J];
             if (Distance > Parameter.LinkMaximumDistance) {
@@ -59,9 +67,9 @@ export function BuildSemanticGraph(
                 const Link: Link<Code> = {
                     source: Source,
                     target: Target,
-                    Source: Source,
-                    Target: Target,
-                    Distance: Distance,
+                    Source,
+                    Target,
+                    Distance,
                     VisualizeDistance: InverseLerp(Parameter.LinkMinimumDistance, Parameter.LinkMaximumDistance, Distance),
                 };
                 Link.Weight = (1 - Link.VisualizeDistance!) ** 2;
@@ -87,30 +95,29 @@ export function BuildSemanticGraph(
         }
     }
     // Calculate the weights
-    for (var I = 0; I < Nodes.length; I++) {
-        var Source = Nodes[I];
-        for (var Owner = 0; Owner < AllOwners; Owner++) {
+    for (const Source of Nodes) {
+        for (let Owner = 0; Owner < AllOwners; Owner++) {
             Source.Weights[Owner] = Math.min(Math.max(Source.Weights[Owner] / Math.max(Source.Neighbors, 1), 0), 1);
         }
         let RealOwners = 0;
-        for (var Owner of Source.Owners) {
+        for (const Owner of Source.Owners) {
             if (GetWeight(Owner) > 0) {
                 RealOwners++;
             }
             Source.Weights[Owner] = 1;
         }
-        Source.Novel = RealOwners == 1;
-        Source.TotalWeight = Source.Weights.reduce((A, B, I) => (I == 0 ? A : A + B * GetWeight(I)), 0);
+        Source.Novel = RealOwners === 1;
+        Source.TotalWeight = Source.Weights.reduce((A, B, I) => (I === 0 ? A : A + B * GetWeight(I)), 0);
     }
     // Store it
     const Graph: Graph<Code> = {
-        Nodes: Nodes,
+        Nodes,
         Links: Array.from(Links.values()),
         MaximumDistance: MaxDistance,
         MinimumDistance: MinDistance,
     };
     // Identify the components
-    Graph.Components = FindCommunities(Graph.Nodes, Graph.Links, (Node, Links) => {
+    Graph.Components = FindCommunities(Graph.Nodes, Graph.Links, (Node) => {
         // Only to solve ties
         return Math.sqrt(Node.Data.Examples?.length ?? 0) * 0.001;
     });
@@ -118,7 +125,7 @@ export function BuildSemanticGraph(
     // Thus, we will have a more close spatial arrangement of the components
     const EffectiveNodes = Math.max(100, Graph.Nodes.length);
     Graph.Links.forEach((Link) => {
-        if (Link.Source.Component == Link.Target.Component) {
+        if (Link.Source.Component === Link.Target.Component) {
             Link.VisualizeWeight = Link.VisualizeWeight!;
         } else {
             if (Link.Source.Links.length <= 1 || Link.Target.Links.length <= 1) {
@@ -139,8 +146,8 @@ export function BuildSemanticGraph(
     }
     Graph.Nodes.forEach((Node) => {
         const Ratio = Ratios[(Node.Component?.ID ?? -1) + 1];
-        (Node.x = (Math.cos(Ratio * 2 * Math.PI) - 0.5 + Math.random() * 0.15) * (EffectiveNodes + 50)),
-            (Node.y = (Math.sin(Ratio * 2 * Math.PI) - 0.5 + Math.random() * 0.15) * (EffectiveNodes + 50));
+        Node.x = (Math.cos(Ratio * 2 * Math.PI) - 0.5 + Math.random() * 0.15) * (EffectiveNodes + 50);
+        Node.y = (Math.sin(Ratio * 2 * Math.PI) - 0.5 + Math.random() * 0.15) * (EffectiveNodes + 50);
     });
     return Graph;
 }
@@ -167,13 +174,13 @@ export function FindCommunities<T>(
         }
     });
     // Find the communities
-    const Communities = (graphologyLibrary.communitiesLouvain as any)(Graph, {
-        getEdgeWeight: (Edge: any) => Weights.get(Edge)!,
+    const Communities = (graphologyLibrary.communitiesLouvain as typeof louvain)(Graph, {
+        getEdgeWeight: (Edge) => Weights.get(Edge)!,
         resolution: 1.5,
-        rng: new (Math as any).seedrandom("deterministic"),
+        rng: new Math.seedrandom("deterministic"),
     }) as Record<string, number>;
     // Create the components
-    var Components: Component<T>[] = new Array(Object.values(Communities).reduce((a, b) => Math.max(a, b), 0) + 1);
+    let Components = new Array<Component<T>>(Object.values(Communities).reduce((a, b) => Math.max(a, b), 0) + 1);
     for (let I = 0; I < Components.length; I++) {
         Components[I] = { ID: -1, Nodes: [] };
     }
@@ -187,7 +194,7 @@ export function FindCommunities<T>(
         Component.Representative = Component.Nodes[0];
     }
     // Filter the components
-    var Components = Components.filter((Component) => Component.Nodes.length >= MinimumNodes);
+    Components = Components.filter((Component) => Component.Nodes.length >= MinimumNodes);
     Components.forEach((Component, Index) => {
         Component.ID = Index;
         Component.Nodes.forEach((Node) => (Node.Component = Component));
@@ -216,8 +223,9 @@ export function SortNodesByCentrality<T>(
         }
     });
     // Find the central node
+    // eslint-disable-next-line import-x/namespace
     const Result = graphologyLibrary.metrics.centrality.pagerank(Graph, {
-        getEdgeWeight: (Edge: any) => Weights.get(Edge)!,
+        getEdgeWeight: (Edge) => Weights.get(Edge)!,
     });
     // Translate the result
     for (const Node of Nodes) {
@@ -247,10 +255,10 @@ export function FilterNodeByExample<T extends Code>(Node: Node<T>, IDs: string[]
 }
 
 /** FilterCodeByExample: Filter a code by presence of any examples. */
-export function FilterCodeByExample<T extends Code>(Code: T, IDs: string[]): boolean {
+export function FilterCodeByExample(Code: Code, IDs: string[]): boolean {
     return (
         Code.Examples?.some((Example) => {
-            return IDs.some((ID) => Example == ID || Example.startsWith(`${ID}|||`));
+            return IDs.some((ID) => Example === ID || Example.startsWith(`${ID}|||`));
         }) ?? false
     );
 }
@@ -261,7 +269,7 @@ export function FilterItemByUser(Dataset: Dataset<DataChunk<DataItem>>, Paramete
         new Set(
             Object.values(Dataset.Data)
                 .flatMap((Chunk) => Object.entries(Chunk))
-                .flatMap(([Key, Value]) => Value.AllItems ?? [])
+                .flatMap(([, Value]) => Value.AllItems ?? [])
                 .filter((Item) => Parameters.includes(Item.UserID)),
         ),
     );
@@ -270,7 +278,7 @@ export function FilterItemByUser(Dataset: Dataset<DataChunk<DataItem>>, Paramete
 /** FindMinimumIndexes: Find the indices of the minimum k elements in an array. */
 function FindMinimumIndexes(arr: number[], k: number): number[] {
     // Create an array of indices [0, 1, 2, ..., arr.length - 1].
-    const indices = arr.map((value, index) => index);
+    const indices = arr.map((_value, index) => index);
     // Sort the indices array based on the values at these indices in the original array.
     indices.sort((a, b) => arr[a] - arr[b]);
     // Return the first k indices.

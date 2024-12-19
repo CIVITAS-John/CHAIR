@@ -4,7 +4,6 @@ import { InitializeEmbeddings } from "../../utils/embeddings.js";
 import { EnsureFolder, UseLLM } from "../../utils/llms.js";
 import { GetMessagesPath, LoadDataset } from "../../utils/loader.js";
 import { BuildReferenceAndEvaluateCodebooks } from "../codebooks.js";
-import { CoverageEvaluator } from "../coverage-evaluator.js";
 import { NetworkEvaluator } from "../network-evaluator.js";
 import type { ReferenceBuilder } from "../reference-builder.js";
 import { RefiningReferenceBuilder } from "../reference-builder.js";
@@ -15,8 +14,8 @@ UseLLM("llama3-70b");
 /** EvaluateAnalyzers: Evaluate the performance of different analyzers using the same model. */
 async function EvaluateAnalyzers(SourcePath: string, LLM: string, Builder: ReferenceBuilder, Suffix: string, Analyzers: string[]) {
     // Get the dataset
-    const Dataset = await LoadDataset(SourcePath);
-    const Evaluator = new NetworkEvaluator({ Dataset: Dataset });
+    const Dataset = LoadDataset(SourcePath);
+    const Evaluator = new NetworkEvaluator({ Dataset });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
     const ReferencePath = `${SourcePath}/evaluation/references`;

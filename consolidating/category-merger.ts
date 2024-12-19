@@ -59,15 +59,15 @@ ${Codes.filter((Code) => Code.Categories?.includes(Category))
         this.OldCategories = Categories;
         this.NewCategories = MergeCategoriesByCluster(Clusters, Categories, Codes);
         // Check if we should stop - when nothing is merged
-        this.Stopping = Object.keys(this.NewCategories).length == 0;
+        this.Stopping = Object.keys(this.NewCategories).length === 0;
         return Codes;
     }
     /** BuildPrompts: Build the prompts for the code consolidator. */
     // In this case, we do not really use the LLM, so we just merge the codes
-    public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
+    public BuildPrompts(_Codebook: Codebook, _Codes: Code[]): Promise<[string, string]> {
         const Count = Object.keys(this.NewCategories).length;
         // Ask LLMs to write new names for each category
-        return [
+        return Promise.resolve([
             `
 You are an expert in thematic analysis. You are assigning names for categories based on the merging results.
 Make sure those merged names are concise, accurate, and related to the research question. Use 2-4 words and avoid over-generalization.
@@ -87,35 +87,34 @@ ${Count}. {2-4 words for category ${Count}}
                             .join("\n")}`,
                 )
                 .join("\n\n")}`,
-        ];
+        ]);
     }
     /** ParseResponse: Parse the response for the code consolidator. */
-    public async ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]) {
+    public ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]): Promise<number> {
         const Results: string[] = [];
         // Parse the categories
-        for (let I = 0; I < Lines.length; I++) {
-            const Line = Lines[I];
-            if (Line == "" || Line.startsWith("---")) {
+        for (const Line of Lines) {
+            if (Line === "" || Line.startsWith("---")) {
                 continue;
             }
-            const Match = /^(\d+)\./.exec(Line);
+            const Match = /^\d+\./.exec(Line);
             if (Match) {
                 const Category = Line.substring(Match[0].length).trim().toLowerCase();
                 Results.push(Category);
             }
         }
         // Update the categories
-        if (Results.length != Object.keys(this.NewCategories).length) {
+        if (Results.length !== Object.keys(this.NewCategories).length) {
             throw new Error(`Invalid response: ${Results.length} results for ${this.OldCategories.length} categories.`);
         }
         UpdateCategories(Object.keys(this.NewCategories), Results, Codes);
         // Check if we are done
         const OldLength = this.OldCategories.length;
         const NewLength = GetCategories(Codebook).size;
-        if (OldLength == NewLength) {
+        if (OldLength === NewLength) {
             this.Stopping = true;
         }
         console.log(chalk.green(`Statistics: Categories merged from ${OldLength} to ${NewLength}`));
-        return 0;
+        return Promise.resolve(0);
     }
 }

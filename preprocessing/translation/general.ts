@@ -15,7 +15,7 @@ export function LoadCache(): void {
     let Translations = 0;
     for (const Type of File.readdirSync(`./known/translation/${LLMName}`)) {
         const Data = File.readFileSync(`./known/translation/${LLMName}/${Type}`, "utf-8");
-        const Cache = new Map<string, string>(JSON.parse(Data));
+        const Cache = new Map<string, string>(JSON.parse(Data) as [string, string][]);
         for (const [Key, Value] of Cache) {
             Cache.set(Key.trim(), Value.trim());
         }
@@ -71,11 +71,11 @@ export async function TranslateStrings(Type: string, Source: string[]): Promise<
             }
             SaveCache();
             return Result;
-        } catch (Error: any) {
+        } catch (Error) {
             // Remove the cache if failed
-            for (let I = 0; I < ToTranslate.length; I++) {
-                if (Cache.get(ToTranslate[I]) === ToTranslate[I]) {
-                    Cache.delete(ToTranslate[I]);
+            for (const Item of ToTranslate) {
+                if (Cache.get(Item) === Item) {
+                    Cache.delete(Item);
                 }
             }
             SaveCache();
@@ -119,11 +119,11 @@ async function TranslateChunkedStringsWithLLMRetries(Type: string, Requests: str
     while (true) {
         try {
             return await TranslateChunkedStringsWithLLM(Type, Requests, SystemPrompt, Tries);
-        } catch (Error: any) {
+        } catch (Error) {
             if (++Tries > 2) {
                 throw Error;
             }
-            console.log(`Translation error ${Error.message}, retrying ${Tries} times.`);
+            console.log(`Translation error ${(Error as Error).message}, retrying ${Tries} times.`);
         }
     }
 }
@@ -151,13 +151,13 @@ async function TranslateChunkedStringsWithLLM(Type: string, Source: string[], Sy
     // Split the result
     let Results = Result.split(/\n *--- *\n/);
     // Sometimes GPT-4.5-turbo ignores the proceding line break.
-    if (Results.length == 1) {
+    if (Results.length === 1) {
         Results = Result.split(/\n? *--- *\n/);
     }
     // Filter empty strings
     Results = Results.filter((Text) => Text.trim() !== "");
     // Claude loves to add a sentence at the beginning.
-    if (!Results[0].startsWith("1.") && Results.length == Source.length + 1) {
+    if (!Results[0].startsWith("1.") && Results.length === Source.length + 1) {
         Results.shift();
     }
     if (Results.length !== Source.length) {
@@ -171,11 +171,11 @@ async function TranslateChunkedStringsWithLLM(Type: string, Source: string[], Sy
             Results[I] = Results[I].substring(0, Results[I].length - 3).trim();
         }
         // Sometimes, some LLM inevitably includes a proceding text
-        if (I == 0 && !Results[I].startsWith("1.")) {
+        if (I === 0 && !Results[I].startsWith("1.")) {
             Results[I] = Results[I].substring(Results[I].indexOf(".") - 1);
         }
-        Results[I] = Results[I].replace(/^(\d+)\.?(\s)/g, "");
-        if (Source[I] == Results[I] && Tries == 0) {
+        Results[I] = Results[I].replace(/^\d+\.?\s/g, "");
+        if (Source[I] === Results[I] && Tries === 0) {
             throw new Error(`Translation Error: ${Source[I]} => ${Results[I]}`);
         }
         Cache.set(Source[I], Results[I]);

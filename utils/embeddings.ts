@@ -14,24 +14,27 @@ import { EnsureFolder } from "./llms.js";
 import type { Code } from "./schema.js";
 
 // Model: The embedding model to use.
-export var Model: Embeddings;
+export let Model: Embeddings;
 // EmbeddingName: The name of the embedding model.
-export var EmbeddingName: string;
+export let EmbeddingName: string;
 // Dimensions: The number of dimensions in the embedding model.
-export var Dimensions: number;
+export let Dimensions: number;
+
+/** sleep: Wait for a number of milliseconds. */
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /** InitializeEmbeddings: Initialize the embeddings with the given name. */
 export function InitializeEmbeddings(Embedding: string) {
     dotenv.config();
     // ollama Support
-    let LocalModel = false;
+    // let LocalModel = false;
     if (Embedding.startsWith("o_")) {
         Embedding = Embedding.substring(2);
         Model = new OllamaEmbeddings({
             model: Embedding,
             baseUrl: process.env.OLLAMA_URL ?? "https://127.0.0.1:11434",
         });
-        LocalModel = true;
+        // LocalModel = true;
     }
     switch (Embedding) {
         case "openai-small-512":
@@ -99,9 +102,9 @@ export async function RequestEmbeddings(Sources: string[], Cache: string): Promi
     // Check if the cache exists
     const Embeddings = new Float32Array(Dimensions * Sources.length);
     const Requests: number[] = [];
-    for (var I = 0; I < Sources.length; I++) {
+    for (let I = 0; I < Sources.length; I++) {
         const Source = Sources[I];
-        var CacheFile = `${CacheFolder}/${md5(Source)}.bytes`;
+        const CacheFile = `${CacheFolder}/${md5(Source)}.bytes`;
         if (File.existsSync(CacheFile)) {
             const Buffer = File.readFileSync(CacheFile);
             const Cached = new Float32Array(Buffer.buffer, Buffer.byteOffset, Buffer.byteLength / 4);
@@ -112,8 +115,8 @@ export async function RequestEmbeddings(Sources: string[], Cache: string): Promi
     }
     // Request the online embeddings
     const BatchSize = 50;
-    for (var I = 0; I < Requests.length; I += BatchSize) {
-        var Retry = 0;
+    for (let I = 0; I < Requests.length; I += BatchSize) {
+        let Retry = 0;
         while (true) {
             try {
                 const Results = await Model.embedDocuments(Requests.slice(I, I + BatchSize).map((Index) => Sources[Index]));
@@ -121,11 +124,11 @@ export async function RequestEmbeddings(Sources: string[], Cache: string): Promi
                     const Index = Requests[I + J];
                     const Embedding = new Float32Array(Results[J]);
                     // Check if all elements are 0
-                    if (Embedding.every((Value) => Value == 0)) {
+                    if (Embedding.every((Value) => Value === 0)) {
                         throw new Error(`Invalid embedding for: ${Sources[Index]}`);
                     }
                     Embeddings.set(Embedding, Dimensions * Index);
-                    var CacheFile = `${CacheFolder}/${md5(Sources[Index])}.bytes`;
+                    const CacheFile = `${CacheFolder}/${md5(Sources[Index])}.bytes`;
                     File.writeFileSync(CacheFile, Embedding);
                 }
                 break;
@@ -134,8 +137,7 @@ export async function RequestEmbeddings(Sources: string[], Cache: string): Promi
                     throw Error;
                 }
                 console.error(Error);
-                // Wait for 6-60 seconds
-                await new Promise((Resolve) => setTimeout(Resolve, (Retry + 1) * 6000));
+                await sleep((Retry + 1) * 6000);
                 Retry++;
             }
         }
@@ -185,7 +187,7 @@ export async function ClusterCodes(
             Label: Code.Label,
             Examples: Code.Examples?.map((Example) => {
                 const Index = Example.indexOf("|||");
-                if (Index == -1) {
+                if (Index === -1) {
                     return Example;
                 }
                 return Example.substring(0, Index);
@@ -228,7 +230,7 @@ export async function ClusterTexts(
     ...ExtraOptions: string[]
 ): Promise<Record<number, ClusterItem[]>> {
     console.log(chalk.gray(`Requesting embeddings for: ${Sources.length}`));
-    if (Sources.length == 0) {
+    if (Sources.length === 0) {
         return {};
     }
     const Embeddings = await RequestEmbeddings(Sources, Cache);
@@ -268,9 +270,9 @@ export async function ClusterEmbeddings(
                 for (const Cluster of UniqueClusters) {
                     Results[Cluster] = [];
                     for (let J = 0; J < Clusters.length; J++) {
-                        if (Clusters[J] == Cluster) {
+                        if (Clusters[J] === Cluster) {
                             Results[Cluster].push({ ID: J, Probability: Probabilities[J] });
-                            if (Cluster == -1) {
+                            if (Cluster === -1) {
                                 NoCluster++;
                             }
                         }
@@ -321,7 +323,7 @@ export async function EvaluateEmbeddings<T>(
     let Results: T | undefined;
     // Write it into ./known/temp.bytes
     File.writeFileSync("./known/temp.bytes", Buffer.from(Embeddings.buffer));
-    // var TextData = Labels.map((Label, Index) => `${Owners[Index].join(",")}|${Label}`);
+    // let TextData = Labels.map((Label, Index) => `${Owners[Index].join(",")}|${Label}`);
     const TextData = Labels.map((Label, Index) => ({
         Label,
         Owners: Owners[Index],

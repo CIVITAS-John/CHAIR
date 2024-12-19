@@ -5,7 +5,7 @@ import type { Code, DataChunk, DataItem } from "../../../utils/schema.js";
 import type { CodeSection } from "../sections/code.js";
 import { FindOriginalCodes, GetChunks } from "../utils/dataset.js";
 import { EvaluatePerCluster } from "../utils/evaluate.js";
-import { OwnerFilter, UserFilter } from "../utils/filters.js";
+import { OwnerFilter } from "../utils/filters.js";
 import { FilterItemByUser } from "../utils/graph.js";
 import { Shuffle } from "../utils/math.js";
 import { RenderExamples, RenderItem } from "../utils/render.js";
@@ -44,8 +44,8 @@ export class Dialog extends Panel {
             this.ShowCode(Owner, Original, ...Codes);
         });
         // Check if it's the baseline
-        const IsBaseline = Owner == 0;
-        if (Codes.length == 0) {
+        const IsBaseline = Owner === 0;
+        if (Codes.length === 0) {
             Codes.push(Original);
         }
         // Build the panel
@@ -90,7 +90,7 @@ export class Dialog extends Panel {
         Items.forEach((Item) => {
             // Show the item
             const Current = RenderItem(this.Visualizer, Item, Owners).appendTo(List);
-            if (Item.ID == ScrollTo) {
+            if (Item.ID === ScrollTo) {
                 TargetElement = Current;
                 Current.addClass("highlighted");
             }
@@ -121,14 +121,14 @@ export class Dialog extends Panel {
         // Show the items
         const List = $('<ol class="quote"></ol>').appendTo(Panel);
         const Items = Chunk.AllItems ?? [];
-        let Orthodox = Items[0].Chunk == Name;
+        let Orthodox = Items[0].Chunk === Name;
         if (Orthodox) {
             $('<li class="split">Items inside the chunk:</li>').prependTo(List);
         }
         let TargetElement: Cash | undefined;
         Items.forEach((Item) => {
             // Show divisors when needed
-            if ((Item.Chunk == Name) != Orthodox) {
+            if ((Item.Chunk === Name) !== Orthodox) {
                 $("<hr>").appendTo(List);
                 if (!Orthodox) {
                     $('<li class="split">Items before the chunk:</li>').prependTo(List);
@@ -140,7 +140,7 @@ export class Dialog extends Panel {
             }
             // Show the item
             const Current = RenderItem(this.Visualizer, Item, Owners).appendTo(List);
-            if (Item.ID == ScrollTo) {
+            if (Item.ID === ScrollTo) {
                 TargetElement = Current;
                 Current.addClass("highlighted");
             }
@@ -160,7 +160,7 @@ export class Dialog extends Panel {
     /** ShowChunkOf: Show a dialog for a chunk based on the content ID. */
     public ShowChunkOf(ID: string) {
         const Chunks = GetChunks(this.Dataset.Source.Data);
-        const Chunk = Chunks.find((Chunk) => Chunk.AllItems?.find((Item) => Item.ID == ID && (!Item.Chunk || Item.Chunk == Chunk.ID)));
+        const Chunk = Chunks.find((Chunk) => Chunk.AllItems?.find((Item) => Item.ID === ID && (!Item.Chunk || Item.Chunk === Chunk.ID)));
         if (Chunk) {
             this.ShowChunk(Chunk.ID, Chunk, undefined, ID);
         }
@@ -189,7 +189,7 @@ export class Dialog extends Panel {
                             Component.Nodes.length
                         } codes</p></td>`,
                     ).on("click", () => {
-                        this.SidePanel.ShowPanel<CodeSection>("Codes").ShowComponent(Component);
+                        (this.SidePanel.ShowPanel("Codes") as CodeSection).ShowComponent(Component);
                     }),
                 );
                 Coverages.forEach((Coverage, I) => {
@@ -201,7 +201,7 @@ export class Dialog extends Panel {
                         .css("color", d3.lab(Color).l > 70 ? "black" : "white")
                         .on("click", () => {
                             this.Visualizer.SetFilter(false, new OwnerFilter(), I + 1, false);
-                            this.SidePanel.ShowPanel<CodeSection>("Codes").ShowComponent(Component);
+                            (this.SidePanel.ShowPanel("Codes") as CodeSection).ShowComponent(Component);
                         })
                         .append($("<p></p>").text(d3.format(".1%")(Coverage)));
                     Row.append(Cell);
@@ -213,14 +213,14 @@ export class Dialog extends Panel {
         Title.append(
             $('<span><a href="javascript:void(0)" class="copy">Copy to Clipboard</a></span>').on("click", () => {
                 const Table = [`ID\tCluster (Representative Code)\tCodes\t${this.Dataset.Names.slice(1).join("\t")}`];
-                Results.forEach(({ Component, Coverages, Differences }, Index) => {
+                Results.forEach(({ Component, Differences }, Index) => {
                     Table.push(
                         `${Index + 1}.\t${Component.Representative!.Data.Label}\t${Component.Nodes.length}\t${Differences.map((Difference) =>
                             d3.format(".1%")(Difference).replace("−", "-"),
                         ).join("\t")}`,
                     );
                 });
-                navigator.clipboard.writeText(Table.join("\n"));
+                void navigator.clipboard.writeText(Table.join("\n"));
             }),
         );
         // Show the dialog
@@ -241,7 +241,7 @@ export class Dialog extends Panel {
         Panel.append($("<hr/>"));
         // Get the codebooks
         const Indexes =
-            this.Visualizer.GetFilter("Owner")?.Parameters ??
+            this.Visualizer.GetFilter<unknown, number>("Owner")?.Parameters ??
             this.Visualizer.Dataset.Weights!.map((Weight, Index) => (Weight > 0 ? Index : -1)).filter((Index) => Index >= 0);
         const Names = Indexes.map((Index) => this.Dataset.Names[Index]);
         // Get the codes
@@ -262,7 +262,7 @@ export class Dialog extends Panel {
         this.BuildTable(
             Codes,
             (Row, Node, Index) => {
-                if (Node.Data.Label == ScrollTo) {
+                if (Node.Data.Label === ScrollTo) {
                     TargetElement = Row;
                 }
                 // Show the label
@@ -301,7 +301,7 @@ export class Dialog extends Panel {
                             const Owned = Codes.filter((Code) => Code.Owners.has(Index));
                             // Same logic as the links: if there are "similar" codes, use them all; otherwise, show the closest one
                             let Nearest = Owned.filter((Code) => Distances[Node.Index][Code.Index] <= Graph.MinimumDistance);
-                            if (Nearest.length == 0) {
+                            if (Nearest.length === 0) {
                                 Nearest = Owned.filter((Code) => Distances[Node.Index][Code.Index] <= Graph.MaximumDistance).sort(
                                     (A, B) => Distances[A.Index][Node.Index] - Distances[B.Index][Node.Index],
                                 );
@@ -340,7 +340,7 @@ export class Dialog extends Panel {
                     const Owners = this.VerifiedOwnerships.get(Node.ID)!;
                     Table.push(`${Node.Data.Label}\t${Indexes.map((Index) => Owners.get(Index)).join("\t")}`);
                 });
-                navigator.clipboard.writeText(Table.join("\n"));
+                void navigator.clipboard.writeText(Table.join("\n"));
             }),
         );
         // Load from clipboard
@@ -349,7 +349,7 @@ export class Dialog extends Panel {
                 if (!confirm("Are you sure you want to load ownerships from the clipboard?")) {
                     return;
                 }
-                navigator.clipboard.readText().then((Text) => {
+                void navigator.clipboard.readText().then((Text) => {
                     const Table = Text.split("\n").map((Line) => {
                         if (Line.endsWith("\r")) {
                             Line = Line.slice(0, -1);
@@ -359,7 +359,7 @@ export class Dialog extends Panel {
                     const Header = Table[0];
                     const Indexes = Header.slice(1).map((Name) => this.Dataset.Names.indexOf(Name));
                     Table.slice(1).forEach(([Label, ...Owners]) => {
-                        const Node = Codes.find((Node) => Node.Data.Label == Label);
+                        const Node = Codes.find((Node) => Node.Data.Label === Label);
                         if (!Node) {
                             return;
                         }

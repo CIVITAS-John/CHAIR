@@ -3,7 +3,7 @@ import d3 from "d3";
 
 import type { Code, DataChunk, DataItem } from "../../../utils/schema.js";
 import { Panel } from "../panels/panel.js";
-import { GetItems, GetItemsFromDataset } from "../utils/dataset.js";
+import { GetItemsFromDataset } from "../utils/dataset.js";
 import { ChunkFilter, DatasetFilter } from "../utils/filters.js";
 import { FilterNodeByExample } from "../utils/graph.js";
 import { FormatDate } from "../utils/utils.js";
@@ -54,11 +54,11 @@ export class DatasetSection extends Panel {
                 (Row, [Key, Value]) => {
                     // Interactivity
                     Row.toggleClass("chosen", this.Visualizer.IsFilterApplied("Dataset", Key))
-                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new DatasetFilter(), Key))
-                        .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new DatasetFilter()));
+                        .on("mouseover", () => this.Visualizer.SetFilter(true, new DatasetFilter(), Key))
+                        .on("mouseout", () => this.Visualizer.SetFilter(true, new DatasetFilter()));
                     // Show the summary
                     const Summary = $('<td class="dataset-cell actionable"></td>').attr("id", `dataset-${Key}`).appendTo(Row);
-                    Summary.append($("<h4></h4>").text(Key)).on("click", (Event) => {
+                    Summary.append($("<h4></h4>").text(Key)).on("click", (Event: MouseEvent) => {
                         if (Event.shiftKey) {
                             this.Visualizer.SetFilter(false, new DatasetFilter(), Key, Event.shiftKey);
                         } else {
@@ -86,7 +86,7 @@ export class DatasetSection extends Panel {
                         .append($("<p></p>").text(d3.format(".0%")(Currents.length / Codes.length)));
                     $('<td class="number-cell actionable"></td>').appendTo(Row).text(`${Codes.length}`).append($("<p></p>").text("100%"));
                     // Generic click event
-                    Row.children("td:not(.dataset-cell)").on("click", (Event) =>
+                    Row.children("td:not(.dataset-cell)").on("click", (Event: MouseEvent) =>
                         this.Visualizer.SetFilter(false, new DatasetFilter(), Key, Event.shiftKey),
                     );
                 },
@@ -118,17 +118,17 @@ export class DatasetSection extends Panel {
             const Nodes = this.GetGraph<Code>().Nodes;
             this.BuildTable(
                 Object.entries(Dataset),
-                (Row, [Key, Chunk], Index) => {
+                (Row, [Key, Chunk]) => {
                     // Interactivity
                     Row.toggleClass("chosen", this.Visualizer.IsFilterApplied("Chunk", Key))
-                        .on("mouseover", (Event) => this.Visualizer.SetFilter(true, new ChunkFilter(), Key))
-                        .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new ChunkFilter()));
+                        .on("mouseover", () => this.Visualizer.SetFilter(true, new ChunkFilter(), Key))
+                        .on("mouseout", () => this.Visualizer.SetFilter(true, new ChunkFilter()));
                     // Show the summary
                     const Summary = $('<td class="chunk-cell actionable"></td>').attr("id", `chunk-${Key}`).appendTo(Row);
                     Summary.append($("<h4></h4>").text(`Chunk ${Key}`));
                     // Find the date
                     let Items = Chunk.AllItems ?? [];
-                    Items = Items.filter((Item) => (this.Parameters.UseExtendedChunk ? true : !Item.Chunk || Item.Chunk == Key));
+                    Items = Items.filter((Item) => (this.Parameters.UseExtendedChunk ? true : !Item.Chunk || Item.Chunk === Key));
                     const Dates = Items.map((Item) => Item.Time).sort((A, B) => A.getTime() - B.getTime());
                     Summary.append($('<p class="tips"></p>').text(`From ${FormatDate(Dates[0])}`));
                     Summary.append($('<p class="tips"></p>').text(`To ${FormatDate(Dates[Dates.length - 1])}`));
@@ -138,7 +138,12 @@ export class DatasetSection extends Panel {
                     // Show the items
                     $('<td class="number-cell actionable"></td>').text(Items.length.toString()).appendTo(Row);
                     // Show the codes
-                    const Codes = Nodes.filter((Node) => FilterNodeByExample(Node, Items.map((Item) => Item.ID) ?? []));
+                    const Codes = Nodes.filter((Node) =>
+                        FilterNodeByExample(
+                            Node,
+                            Items.map((Item) => Item.ID),
+                        ),
+                    );
                     const Currents = Codes.filter((Node) => !Node.Hidden);
                     const Color = this.RatioColorizer(Currents.length / Math.max(1, Codes.length));
                     $('<td class="metric-cell"></td>')
@@ -149,7 +154,7 @@ export class DatasetSection extends Panel {
                         .append($("<p></p>").text(d3.format(".0%")(Currents.length / Codes.length)));
                     $('<td class="number-cell actionable"></td>').appendTo(Row).text(`${Codes.length}`).append($("<p></p>").text("100%"));
                     // Generic click event
-                    Row.children("td:not(.chunk-cell)").on("click", (Event) =>
+                    Row.children("td:not(.chunk-cell)").on("click", (Event: MouseEvent) =>
                         this.Visualizer.SetFilter(false, new ChunkFilter(), Key, Event.shiftKey),
                     );
                 },

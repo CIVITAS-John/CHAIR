@@ -1,8 +1,19 @@
 import type { Cash } from "cash-dom";
-import { driver, DriveStep } from "driver.js";
+import { driver as driverJS } from "driver.js";
 
 import { Panel } from "./panels/panel.js";
 import type { Visualizer } from "./visualizer.js";
+
+let driver: typeof driverJS;
+declare global {
+    interface Window {
+        driver?: {
+            js: {
+                driver: typeof driverJS;
+            };
+        };
+    }
+}
 
 /** Tutorial: The interactive tutorial for the visualizer. */
 export class Tutorial extends Panel {
@@ -10,12 +21,12 @@ export class Tutorial extends Panel {
     public constructor(Container: Cash, Visualizer: Visualizer) {
         super(Container, Visualizer);
         Container.show();
-        (driver as any) = (window as any).driver.js.driver || driver;
+        driver = window.driver?.js.driver ?? driverJS;
     }
     /** ShowTutorial: Show the tutorial. */
     public ShowTutorial(Restart = false) {
         // Create the tutorial
-        var Tutorial = driver({
+        const Tutorial = driver({
             showProgress: true,
             stagePadding: 0,
             steps: [
@@ -152,7 +163,7 @@ export class Tutorial extends Panel {
                     },
                 },
             ],
-            onHighlighted: (Element, Step) => {
+            onHighlighted: () => {
                 window.localStorage.setItem("tutorial-step", Tutorial.getActiveIndex()!.toString());
                 console.log("Tutorial step", Tutorial.getActiveIndex());
             },
@@ -161,7 +172,7 @@ export class Tutorial extends Panel {
         const Step = window.localStorage.getItem("tutorial-step");
         if (Restart) {
             Tutorial.drive();
-        } else if (Step == "-1") {
+        } else if (Step === "-1") {
             return;
         } else if (Step) {
             Tutorial.drive(parseInt(Step));

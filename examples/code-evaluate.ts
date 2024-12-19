@@ -44,13 +44,21 @@ const Configuration = {
 InitializeEmbeddings(Configuration.EmbeddingModel);
 
 // Follow the configuration
-for (var Step of Configuration.Steps) {
+for (const Step of Configuration.Steps) {
     switch (Step.Action) {
         case "Code":
-            for (var Analyzer of Step.Analyzers) {
+            for (const Analyzer of Step.Analyzers) {
                 await UseLLMs(
                     async () => {
-                        await ProcessDataset(new (await import(`./../coding/conversations/${Analyzer}.js`)).default(), Configuration.Dataset, false);
+                        await ProcessDataset(
+                            new (
+                                (await import(`./../coding/conversations/${Analyzer}.js`)) as {
+                                    default: new () => Parameters<typeof ProcessDataset>[0];
+                                }
+                            ).default(),
+                            Configuration.Dataset,
+                            false,
+                        );
                     },
                     ...Step.Models,
                 );
@@ -61,7 +69,7 @@ for (var Step of Configuration.Steps) {
                 async () => {
                     await Evaluate(Configuration.Dataset, new RefiningReferenceBuilder(), Step.Name ?? "evaluation", Step.Analyzers, Step.Models);
                 },
-                ...Step.Evaluators!,
+                ...(Step.Evaluators ?? []),
             );
             break;
     }
@@ -70,8 +78,8 @@ for (var Step of Configuration.Steps) {
 /** Evaluate: Evaluate the performance of multiple coding results. */
 async function Evaluate(SourcePath: string, Builder: ReferenceBuilder, Suffix: string, Analyzers: string[], Models: string[]) {
     // Get the dataset
-    const Dataset = await LoadDataset(SourcePath);
-    const Evaluator = new NetworkEvaluator({ Dataset: Dataset });
+    const Dataset = LoadDataset(SourcePath);
+    const Evaluator = new NetworkEvaluator({ Dataset });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
     const ReferencePath = `${SourcePath}/references`;

@@ -70,7 +70,7 @@ export class InfoPanel extends Panel {
         if (Code.Owners && Code.Owners.length > 0) {
             const Owners = $('<p class="owners">By: </p>').appendTo(Panel);
             for (const Owner of Code.Owners) {
-                if (Owner == 0 && Code.Owners.length > 1) {
+                if (Owner === 0 && Code.Owners.length > 1) {
                     continue;
                 }
                 this.BuildOwnerLink(Code, FindOriginalCodes(this.Dataset.Codebooks[Owner], Code, Owner), Owner).appendTo(Owners);
@@ -132,11 +132,11 @@ export class InfoPanel extends Panel {
         if (Code.Owners && Code.Owners.length > 0) {
             const Owners = $('<p class="owners">By: </p>');
             for (const Owner of Code.Owners) {
-                if (Owner == 0) {
+                if (Owner === 0) {
                     continue;
                 }
                 const Sources = FindExampleSources(this.Dataset.Codebooks[Owner], Code, Example, Owner);
-                if (Sources.length == 0) {
+                if (Sources.length === 0) {
                     continue;
                 }
                 this.BuildOwnerLink(Code, Sources, Owner).appendTo(Owners);

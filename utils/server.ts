@@ -14,18 +14,18 @@ export function CreateServer<T>(Port: number, BaseDirectories: string[], ...Data
     // Create the server
     const Server: http.Server = http.createServer((Request: http.IncomingMessage, Response: http.ServerResponse) => {
         let Url = Request.url ?? "/";
-        if (Url == "/") {
+        if (Url === "/") {
             Url = "/index.html";
         }
         // Handle dynamic requests
         if (Url.startsWith("/api/report/")) {
             // Read the body
             let Body = "";
-            Request.on("data", (chunk) => {
+            Request.on("data", (chunk: Buffer) => {
                 Body += chunk.toString();
             });
             Request.on("end", () => {
-                const Data = JSON.parse(Body);
+                const Data = JSON.parse(Body) as T;
                 Response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
                 Response.end(JSON.stringify(Data));
                 Shutdown(Data);
@@ -61,10 +61,11 @@ export function CreateServer<T>(Port: number, BaseDirectories: string[], ...Data
             // Determine content type by file extension
             const ext: string = path.extname(FilePath).toLowerCase();
             let contentType = "text/html; charset=utf-8"; // Default content type
+            let content = "";
             switch (ext) {
                 case ".js":
                     contentType = "text/javascript; charset=utf-8";
-                    let content = data.toString();
+                    content = data.toString();
                     // Remove all import statements
                     content = HandleScript(content);
                     data = Buffer.from(content);
@@ -92,19 +93,23 @@ export function CreateServer<T>(Port: number, BaseDirectories: string[], ...Data
     };
     // Start the server
     return new Promise<T | undefined>((Resolve, Reject) => {
-        Server.listen(Port, async () => {
-            console.log(`Server running at http://localhost:${Port}/`);
-            console.log("Press Ctrl+C to shut down the server.");
-            // Automatically open the browser when the server starts
-            // Wait for 5 seconds or the browser tab to close
-            // On Windows, the browser tab may close prematurely, so we delay the shutdown
-            await Promise.all([
-                open(`http://localhost:${Port}/`, { wait: true, app: { name: apps.chrome } }),
-                setTimeout(process.platform == "win32" ? 6000000 : 5000),
-            ]);
-            console.log("The browser tab has closed, shutting down the server.");
-            Shutdown();
-        });
+        Server.listen(
+            Port,
+            () =>
+                void (async () => {
+                    console.log(`Server running at http://localhost:${Port}/`);
+                    console.log("Press Ctrl+C to shut down the server.");
+                    // Automatically open the browser when the server starts
+                    // Wait for 5 seconds or the browser tab to close
+                    // On Windows, the browser tab may close prematurely, so we delay the shutdown
+                    await Promise.all([
+                        open(`http://localhost:${Port}/`, { wait: true, app: { name: apps.chrome } }),
+                        setTimeout(process.platform === "win32" ? 6000000 : 5000),
+                    ]);
+                    console.log("The browser tab has closed, shutting down the server.");
+                    Shutdown();
+                }),
+        );
         // Handle server shutdown
         Shutdown = (Data) => {
             Server.close((Error) => {
@@ -167,5 +172,5 @@ export function CreateOfflineBundle(TargetDirectory: string, BaseDirectories: st
 
 /** HandleScript: Filter a script content to exclude import statements. */
 function HandleScript(Content: string): string {
-    return Content.replaceAll(/^(.*)import(.*?) from ['"]([^/]*?)['"];?$/gm, "").replaceAll(/^\/\/# sourceMappingURL(.*)/gm, "");
+    return Content.replaceAll(/^.*import.*? from ['"][^/]*?['"];?$/gm, "").replaceAll(/^\/\/# sourceMappingURL.*/gm, "");
 }
