@@ -7,6 +7,11 @@
         "Frank Zhang <fzhang@u.northwestern.edu>"
     ],
     "type": "module",
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "lint": "eslint --cache . && prettier --check --cache .",
+        "format": "eslint --fix --cache . && prettier --write --cache ."
+    },
     "dependencies": {
         "@dqbd/tiktoken": "^1.0.17",
         "@expo/spawn-async": "^1.7.2",
@@ -38,11 +43,24 @@
         "python-shell": "^5.0.0"
     },
     "devDependencies": {
+        "@eslint/compat": "^1.2.3",
+        "@eslint/js": "^9.15.0",
         "@types/d3": "^7.4.3",
         "@types/md5": "^2.3.5",
         "@types/node": "^20.16.11",
+        "@types/seedrandom": "^3.0.8",
+        "eslint": "^9.15.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-import-resolver-typescript": "^3.7.0",
+        "eslint-plugin-import-x": "^4.5.0",
+        "eslint-plugin-regexp": "^2.7.0",
+        "eslint-plugin-tsdoc": "^0.4.0",
+        "graphology-communities-louvain": "^2.0.1",
+        "prettier": "^3.3.3",
         "tsx": "^4.19.1",
-        "typescript": "^5.6.3"
+        "typedoc": "^0.26.11",
+        "typescript": "^5.6.3",
+        "typescript-eslint": "^8.16.0"
     },
-    "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387"
+    "packageManager": "pnpm@9.15.0+sha512.76e2379760a4328ec4415815bcd6628dee727af3779aaa4c914e3944156c4299921a89f976381ee107d41f12cfa4b66681ca9c718f0668fa0831ed4c6d8ba56c"
 }

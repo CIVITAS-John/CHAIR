@@ -1,11 +1,13 @@
 import * as File from "fs";
-import { GetMessagesPath, LoadDataset } from "../../utils/loader.js";
-import { CoverageEvaluator } from "../coverage-evaluator.js";
-import { NetworkEvaluator } from "../network-evaluator.js";
-import { BuildReferenceAndEvaluateCodebooks } from "../codebooks.js";
+
 import { InitializeEmbeddings } from "../../utils/embeddings.js";
 import { EnsureFolder, UseLLM } from "../../utils/llms.js";
-import { ReferenceBuilder, RefiningReferenceBuilder } from "../reference-builder.js";
+import { GetMessagesPath, LoadDataset } from "../../utils/loader.js";
+import { BuildReferenceAndEvaluateCodebooks } from "../codebooks.js";
+import { CoverageEvaluator } from "../coverage-evaluator.js";
+import { NetworkEvaluator } from "../network-evaluator.js";
+import type { ReferenceBuilder } from "../reference-builder.js";
+import { RefiningReferenceBuilder } from "../reference-builder.js";
 
 InitializeEmbeddings("gecko-768-similarity");
 UseLLM("llama3-70b");
@@ -13,23 +15,23 @@ UseLLM("llama3-70b");
 /** EvaluateModelsWithSameAnalyzer: Evaluate the performance of different models using the same analyzer. */
 async function EvaluateModelsWithSameAnalyzer(SourcePath: string, Analyzer: string, Builder: ReferenceBuilder) {
     // Get the dataset
-    var Dataset = await LoadDataset(SourcePath);
-    var Evaluator = new NetworkEvaluator({ Dataset: Dataset });
+    const Dataset = await LoadDataset(SourcePath);
+    const Evaluator = new NetworkEvaluator({ Dataset: Dataset });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders
-    var ReferencePath = SourcePath + "/evaluation/references";
+    const ReferencePath = `${SourcePath}/evaluation/references`;
     EnsureFolder(ReferencePath);
-    var TargetPath = SourcePath + "/evaluation/results/" + Analyzer + Builder.Suffix;
+    const TargetPath = `${SourcePath}/evaluation/results/${Analyzer}${Builder.Suffix}`;
     EnsureFolder(TargetPath);
     // Build the reference and evaluate the codebooks
-    var Results = await BuildReferenceAndEvaluateCodebooks(
-        [SourcePath + "/" + Analyzer],
-        ReferencePath + "/" + Analyzer + Builder.Suffix,
+    const Results = await BuildReferenceAndEvaluateCodebooks(
+        [`${SourcePath}/${Analyzer}`],
+        `${ReferencePath}/${Analyzer}${Builder.Suffix}`,
         Builder,
         Evaluator,
         TargetPath,
     );
-    File.writeFileSync(TargetPath + "-" + Evaluator.Name + ".json", JSON.stringify(Results, null, 4));
+    File.writeFileSync(`${TargetPath}-${Evaluator.Name}.json`, JSON.stringify(Results, null, 4));
 }
 
 // await EvaluateModelsWithSameAnalyzer("Coded Dataset 1", "high-level-1", new RefiningReferenceBuilder());

@@ -1,7 +1,7 @@
 /** Shuffle: Shuffle an array using a seed. */
 // Source: https://stackoverflow.com/questions/16801687/javascript-random-ordering-with-seed
 export function Shuffle<T>(Array: T[], Seed: number) {
-    var m = Array.length,
+    let m = Array.length,
         t,
         i;
     // While there remain elements to shuffle…
@@ -19,6 +19,6 @@ export function Shuffle<T>(Array: T[], Seed: number) {
 
 /** SimpleSeededRandom: Generate a seeded random number. */
 export function SimpleSeededRandom(Seed: number) {
-    var x = Math.sin(Seed++) * 10000;
+    const x = Math.sin(Seed++) * 10000;
     return x - Math.floor(x);
 }

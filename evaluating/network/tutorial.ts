@@ -1,7 +1,8 @@
-import { Cash } from "cash-dom";
+import type { Cash } from "cash-dom";
+import { driver, DriveStep } from "driver.js";
+
 import { Panel } from "./panels/panel.js";
-import { Visualizer } from "./visualizer.js";
-import { DriveStep, driver } from "driver.js";
+import type { Visualizer } from "./visualizer.js";
 
 /** Tutorial: The interactive tutorial for the visualizer. */
 export class Tutorial extends Panel {
@@ -12,7 +13,7 @@ export class Tutorial extends Panel {
         (driver as any) = (window as any).driver.js.driver || driver;
     }
     /** ShowTutorial: Show the tutorial. */
-    public ShowTutorial(Restart: boolean = false) {
+    public ShowTutorial(Restart = false) {
         // Create the tutorial
         var Tutorial = driver({
             showProgress: true,
@@ -66,7 +67,7 @@ export class Tutorial extends Panel {
 <p>Whenever you select a code, it - along with its neighbors - will be highlighted. Hold the <strong>shift</strong> key to select more.</p>`,
                     },
                     onHighlightStarted: () => {
-                        this.Visualizer.FocusOnNode(document.querySelector(".visualization .nodes circle:first-child") as SVGElement);
+                        this.Visualizer.FocusOnNode(document.querySelector(".visualization .nodes circle:first-child")!);
                         Tutorial.getConfig().stagePadding = 100;
                     },
                 },
@@ -91,7 +92,7 @@ export class Tutorial extends Panel {
 <p>Since <strong>each code is merged from multiple ones</strong>, hover on each codebook to see their original names.</p>`,
                     },
                     onHighlightStarted: () => {
-                        this.Visualizer.FocusOnNode(document.querySelector(".visualization .nodes circle:first-child") as SVGElement);
+                        this.Visualizer.FocusOnNode(document.querySelector(".visualization .nodes circle:first-child")!);
                     },
                 },
                 {
@@ -146,7 +147,9 @@ export class Tutorial extends Panel {
 <p class="tips">By: <a href="https://civitas-john.github.io/">John Chen</a>, Lexie Zhao, & Alex Lostos (Northwestern University)</p>
 <p class="tips">Collaborators: Michael Horn, Bruce Sherin, Jessica Hullman, & Uri Wilensky</p>`,
                     },
-                    onHighlighted: () => window.localStorage.setItem("tutorial-step", "-1"),
+                    onHighlighted: () => {
+                        window.localStorage.setItem("tutorial-step", "-1");
+                    },
                 },
             ],
             onHighlighted: (Element, Step) => {
@@ -155,10 +158,15 @@ export class Tutorial extends Panel {
             },
         });
         // Show the tutorial
-        var Step = window.localStorage.getItem("tutorial-step");
-        if (Restart) Tutorial.drive();
-        else if (Step == "-1") return;
-        else if (Step) Tutorial.drive(parseInt(Step));
-        else Tutorial.drive();
+        const Step = window.localStorage.getItem("tutorial-step");
+        if (Restart) {
+            Tutorial.drive();
+        } else if (Step == "-1") {
+            return;
+        } else if (Step) {
+            Tutorial.drive(parseInt(Step));
+        } else {
+            Tutorial.drive();
+        }
     }
 }

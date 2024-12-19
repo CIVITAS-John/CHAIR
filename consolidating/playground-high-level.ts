@@ -1,14 +1,15 @@
-import { UseLLMs, LLMName } from "../utils/llms.js";
-import { ConsolidateChunks } from "./codebooks.js";
 import { InitializeEmbeddings, Model } from "../utils/embeddings.js";
+import { LLMName, UseLLMs } from "../utils/llms.js";
+
+import { CategoryAssigner } from "./category-assigner.js";
+import { CategoryMerger } from "./category-merger.js";
+import { CategoryNameMerger } from "./category-name-merger.js";
+import { CategoryRefiner } from "./category-refiner.js";
+import { ConsolidateChunks } from "./codebooks.js";
 import { PipelineConsolidator } from "./consolidator.js";
 import { DefinitionGenerator } from "./definition-generator.js";
 import { RefineMerger } from "./refine-merger.js";
-import { CategoryMerger } from "./category-merger.js";
-import { CategoryNameMerger } from "./category-name-merger.js";
 import { SimpleMerger } from "./simple-merger.js";
-import { CategoryRefiner } from "./category-refiner.js";
-import { CategoryAssigner } from "./category-assigner.js";
 
 await UseLLMs(
     async () => {

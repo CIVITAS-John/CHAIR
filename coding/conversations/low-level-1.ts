@@ -1,5 +1,6 @@
 import { ResearchQuestion } from "../../constants.js";
-import { CodedThread, Conversation, Message } from "../../utils/schema.js";
+import type { CodedThread, Conversation, Message } from "../../utils/schema.js";
+
 import { BuildMessagePrompt } from "./conversations.js";
 import { LowLevelAnalyzerBase } from "./low-level.js";
 
@@ -7,9 +8,9 @@ import { LowLevelAnalyzerBase } from "./low-level.js";
 // Authored by John Chen.
 export default class LowLevelAnalyzer1 extends LowLevelAnalyzerBase {
     /** Name: The name of the analyzer. */
-    public Name: string = "low-level-1";
+    public Name = "low-level-1";
     /** BaseTemperature: The base temperature for the LLM. */
-    public BaseTemperature: number = 0;
+    public BaseTemperature = 0;
     /** BuildPrompts: Build the prompts for the LLM. */
     public async BuildPrompts(Analysis: CodedThread, Target: Conversation, Messages: Message[], ChunkStart: number): Promise<[string, string]> {
         return [
