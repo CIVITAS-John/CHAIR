@@ -77,6 +77,7 @@ export default tseslint.config(
             "no-template-curly-in-string": "error",
             "no-unreachable": "error",
             "no-useless-constructor": "error",
+            "object-shorthand": "error",
             "prefer-arrow-callback": "error",
             "prefer-exponentiation-operator": "error",
             "prefer-template": "error",
