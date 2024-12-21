@@ -8,30 +8,29 @@ import { ConversationAnalyzer, RevertMessageFormat } from "./conversations.js";
 export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // Return value: [Chunk size, Cursor movement]
-    public GetChunkSize(Recommended: number, Remaining: number) {
+    public GetChunkSize(_Recommended: number, Remaining: number) {
         return Remaining;
     }
     /** ParseResponse: Parse the responses from the LLM. */
-    public async ParseResponse(
+    public ParseResponse(
         Analysis: CodedThread,
         Lines: string[],
         Messages: Message[],
-        ChunkStart: number,
+        _ChunkStart: number,
     ): Promise<number> {
         let Category = "";
         let Position = "";
         let CurrentCode: Code | undefined;
         // Parse the response
-        for (let I = 0; I < Lines.length; I++) {
-            var Line = Lines[I];
+        for (let Line of Lines) {
             if (Line.startsWith("* Summary")) {
                 Analysis.Summary = Line.substring(9).trim();
-                if (Analysis.Summary == "") {
+                if (Analysis.Summary === "") {
                     Position = "Summary";
                 }
             } else if (Line.startsWith("* Plan")) {
                 Analysis.Plan = Line.substring(8).trim();
-                if (Analysis.Plan == "") {
+                if (Analysis.Plan === "") {
                     Position = "Plan";
                 }
             } else if (Line.startsWith("# ")) {
@@ -41,7 +40,7 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                 Position = "";
                 Line = Line.substring(3).trim();
                 // Sometimes, the LLM will return "P{number}" as the name of the code
-                if (/^(P(\d+))($|:)/.exec(Line)) {
+                if (/^P\d+(?:$|:)/.exec(Line)) {
                     throw new Error(`Invalid code name: ${Line}.`);
                 }
                 // Sometimes, the LLM will return "**{code}**" as the name of the code
@@ -49,7 +48,7 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                 // Sometimes, the LLM will return "1. {code}" as the name of the code
                 Line = Line.replace(/^\d+\.*/, "").trim();
                 // Sometimes, the LLM will return "Label: {code}" as the name of the code
-                Line = Line.replace(/^(Label|Code)\s*\d*:/, "").trim();
+                Line = Line.replace(/^(?:Label|Code)\s*\d*:/, "").trim();
                 // Get or create the code
                 Line = Line.toLowerCase();
                 CurrentCode = Analysis.Codes[Line] ?? {
@@ -63,43 +62,43 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                     Line = Line.substring(12).trim();
                     CurrentCode.Definitions = [Line];
                 }
-            } else if (Position == "Summary") {
+            } else if (Position === "Summary") {
                 Analysis.Summary = `${Analysis.Summary}\n${Line.trim()}`.trim();
-            } else if (Position == "Plan") {
+            } else if (Position === "Plan") {
                 Analysis.Plan = `${Analysis.Plan}\n${Line.trim()}`.trim();
             } else if (Line.startsWith("- ")) {
                 // Add examples to the current code
                 if (CurrentCode) {
                     Line = Line.substring(2).trim();
                     // Find the format (ID: 123)
-                    var Index = Line.lastIndexOf("(ID:");
-                    if (Index != -1) {
+                    let Index = Line.lastIndexOf("(ID:");
+                    if (Index !== -1) {
                         const ID = parseInt(Line.substring(Index + 4, Line.length - 1));
                         Line = Line.substring(0, Index).trim();
                         Index = ID;
                     }
                     // Sometimes the LLM will return "Example quote 1: quote"
-                    Line = Line.replace(/^(Example quote \d+):/, "").trim();
+                    Line = Line.replace(/^Example quote \d+:/, "").trim();
                     // Sometimes the LLM will return "tag{number}: {codes}"
-                    Line = Line.replace(/^tag(\d+):/, "").trim();
+                    Line = Line.replace(/^tag\d+:/, "").trim();
                     // Sometimes the LLM will return `"quote" (Author)`
                     Line = Line.replace(/^"(.*)"/, "$1").trim();
                     // Sometimes the LLM will return `quote (Author)`
-                    Line = Line.replace(/^(.*)\(.+\)$/, "$1").trim();
+                    Line = Line.replace(/^([^(]*)\(.+\)$/, "$1").trim();
                     // Sometimes the LLM will return `**{quote}**`
                     Line = Line.replace(/^\*\*(.*)\*\*/, "$1").trim();
                     // Sometimes the LLM will return `User/Designer-\d+: {quote}`
-                    Line = Line.replace(/^(User|Designer)-\d+:/, "").trim();
+                    Line = Line.replace(/^(?:User|Designer)-\d+:/, "").trim();
                     // Revert the image and checkin tags
                     Line = RevertMessageFormat(Line);
                     // Add the example if it is not already in the list
                     CurrentCode.Examples = CurrentCode.Examples ?? [];
-                    let Message = Messages.find((Message) => Message.Content == Line);
+                    let Message = Messages.find((Message) => Message.Content === Line);
                     if (!Message) {
-                        var LowerLine = Line.toLowerCase();
+                        let LowerLine = Line.toLowerCase();
                         // Remove everything after "..."
-                        var Index = LowerLine.indexOf("...");
-                        if (Index != -1) {
+                        const Index = LowerLine.indexOf("...");
+                        if (Index !== -1) {
                             LowerLine = LowerLine.substring(0, Index).trim();
                         }
                         if (LowerLine.endsWith(".")) {
@@ -123,6 +122,6 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
         // Remove the "..." code
         delete Analysis.Codes["..."];
         // This analyzer does not conduct item-level coding.
-        return 0;
+        return Promise.resolve(0);
     }
 }

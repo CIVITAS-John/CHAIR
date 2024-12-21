@@ -78,14 +78,14 @@ export interface CodebookComparison<T extends DataChunk<DataItem>> {
 }
 
 /** Codebook: A codebook for the qualitative codes. */
-export interface Codebook extends Record<string, Code> {}
+export type Codebook = Record<string, Code>;
 
 /** GetCategories: Get the categories from the codebook. */
 export function GetCategories(Codebook: Codebook): Map<string, string[]> {
     const Categories = new Map<string, string[]>();
     for (const Code of Object.values(Codebook)) {
         for (const Category of Code.Categories ?? []) {
-            if (Category == "") {
+            if (Category === "") {
                 continue;
             }
             if (!Categories.has(Category)) {
@@ -100,7 +100,7 @@ export function GetCategories(Codebook: Codebook): Map<string, string[]> {
 }
 
 /** CodebookEvaluation: Evaluation of a codebook. */
-export interface CodebookEvaluation extends Record<string, number> {}
+export type CodebookEvaluation = Record<string, number>;
 
 /** Code: A qualitative code. */
 export interface Code {
@@ -249,3 +249,12 @@ export interface User {
     /** Messages: Messages on the profile. */
     Messages?: Comment[];
 }
+
+export type BertopicTopics = Record<
+    number,
+    {
+        IDs: number[];
+        Probabilities: number[];
+        Keywords: string[];
+    }
+>;

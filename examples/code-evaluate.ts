@@ -44,15 +44,17 @@ const Configuration = {
 InitializeEmbeddings(Configuration.EmbeddingModel);
 
 // Follow the configuration
-for (var Step of Configuration.Steps) {
+for (const Step of Configuration.Steps) {
     switch (Step.Action) {
         case "Code":
-            for (var Analyzer of Step.Analyzers) {
+            for (const Analyzer of Step.Analyzers) {
                 await UseLLMs(
                     async () => {
                         await ProcessDataset(
                             new (
-                                await import(`./../coding/conversations/${Analyzer}.js`)
+                                (await import(`./../coding/conversations/${Analyzer}.js`)) as {
+                                    default: new () => Parameters<typeof ProcessDataset>[0];
+                                }
                             ).default(),
                             Configuration.Dataset,
                             false,
@@ -73,7 +75,7 @@ for (var Step of Configuration.Steps) {
                         Step.Models,
                     );
                 },
-                ...Step.Evaluators!,
+                ...(Step.Evaluators ?? []),
             );
             break;
     }
@@ -88,7 +90,7 @@ async function Evaluate(
     Models: string[],
 ) {
     // Get the dataset
-    const Dataset = await LoadDataset(SourcePath);
+    const Dataset = LoadDataset(SourcePath);
     const Evaluator = new NetworkEvaluator({ Dataset });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders

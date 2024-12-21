@@ -58,7 +58,7 @@ export class SimpleMerger extends CodeConsolidator {
         // Merge the codes
         const Result = MergeCodesByCluster(Clusters, Codes);
         // Check if we should stop - when nothing is merged
-        this.Stopping = Object.keys(Result).length == Length;
+        this.Stopping = Object.keys(Result).length === Length;
         return Result;
     }
 }

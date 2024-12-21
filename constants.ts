@@ -1,10 +1,10 @@
 import type { DataChunk, DataItem, Dataset } from "./utils/schema.js";
 
 // ResearchQuestion: The research question.
-export var ResearchQuestion = "(Unset)";
+export let ResearchQuestion = "(Unset)";
 
 // CodingNotes: The notes for qualitative coding.
-export var CodingNotes = "(Unset)";
+export let CodingNotes = "(Unset)";
 
 let getSpeakerName: (ID: string) => string;
 /** GetSpeakerName: Get the name (used in prompts) in place of a speaker. */

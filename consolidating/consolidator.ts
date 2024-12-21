@@ -5,6 +5,9 @@ import { Shuffle } from "../utils/math.js";
 import type { Code, Codebook, CodedThreads } from "../utils/schema.js";
 
 /** CodebookConsolidator: The definition of an abstract codebook consolidator. */
+// ESLint does not recognize type parameters in array
+// See https://typescript-eslint.io/rules/no-unnecessary-type-parameters/#limitations
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export abstract class CodebookConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedThreads> {}
 
 /** PipelineConsolidator: A pipeline consolidator that runs through multiple CodeConsolidator. */
@@ -26,7 +29,7 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
     }
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // Return value: [Chunk size, Cursor movement]
-    public GetChunkSize(Recommended: number, Remaining: number, Iteration: number, Tries: number) {
+    public GetChunkSize(Recommended: number, Remaining: number, _Iteration: number, Tries: number) {
         if (this.Index >= this.Consolidators.length) {
             return -1;
         }
@@ -35,7 +38,7 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
     /** Preprocess: Preprocess the subunits before filtering and chunking. */
     public async Preprocess(
         Analysis: CodedThreads,
-        Data: TUnit[],
+        _Data: TUnit[],
         Subunits: Code[],
         Iteration: number,
     ): Promise<Code[]> {
@@ -44,7 +47,7 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         }
         if (this.Index > -1 && this.Consolidators[this.Index].Looping) {
             // If the previous consolidator is looping, check if it's stopping
-            if (this.Consolidators[this.Index].Stopping || Subunits.length == 0) {
+            if (this.Consolidators[this.Index].Stopping || Subunits.length === 0) {
                 this.Consolidators[this.Index].Stopping = false;
                 this.Index++;
             }
@@ -75,7 +78,7 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         return Object.values(Result);
     }
     /** SubunitFilter: Filter the subunits before chunking. */
-    public SubunitFilter(Code: Code, Iteration: number): boolean {
+    public SubunitFilter(Code: Code, _Iteration: number): boolean {
         if (this.Index >= this.Consolidators.length) {
             return false;
         }
@@ -84,10 +87,10 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
     /** BuildPrompts: Build the prompts for the LLM. */
     public async BuildPrompts(
         Analysis: CodedThreads,
-        Data: TUnit[],
+        _Data: TUnit[],
         Codes: Code[],
-        ChunkStart: number,
-        Iteration: number,
+        _ChunkStart: number,
+        _Iteration: number,
     ): Promise<[string, string]> {
         if (this.Index >= this.Consolidators.length || this.Consolidators[this.Index].Stopping) {
             return ["", ""];
@@ -97,7 +100,7 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
             Codes,
         );
         if (Prompts instanceof Array) {
-            if (Prompts.length == 2) {
+            if (Prompts.length === 2) {
                 return Prompts;
             }
             Analysis.Codebook = Prompts[2];
@@ -111,8 +114,8 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         Analysis: CodedThreads,
         Lines: string[],
         Codes: Code[],
-        ChunkStart: number,
-        Iteration: number,
+        _ChunkStart: number,
+        _Iteration: number,
     ): Promise<number> {
         if (this.Index >= this.Consolidators.length || this.Consolidators[this.Index].Stopping) {
             return -1;
@@ -143,27 +146,27 @@ export abstract class CodeConsolidator {
         return this.constructor.name;
     }
     /** SubunitFilter: Filter the subunits before chunking. */
-    public SubunitFilter(Code: Code): boolean {
+    public SubunitFilter(_Code: Code): boolean {
         return true;
     }
     /** Preprocess: Preprocess the subunits after filtering, before chunking. */
-    public async Preprocess(Codebook: Codebook, Subunits: Code[]): Promise<Code[] | Codebook> {
-        return Subunits;
+    public Preprocess(_Codebook: Codebook, Subunits: Code[]): Promise<Code[] | Codebook> {
+        return Promise.resolve(Subunits);
     }
     /** BuildPrompts: Build the prompts for the code consolidator. */
-    public async BuildPrompts(
+    public BuildPrompts(
         Codebook: Codebook,
-        Codes: Code[],
+        _Codes: Code[],
     ): Promise<Codebook | [string, string] | [string, string, Codebook]> {
-        return Codebook;
+        return Promise.resolve(Codebook);
     }
     /** ParseResponse: Parse the response for the code consolidator. */
-    public async ParseResponse(
-        Codebook: Codebook,
-        Codes: Code[],
-        Lines: string[],
+    public ParseResponse(
+        _Codebook: Codebook,
+        _Codes: Code[],
+        _Lines: string[],
     ): Promise<number | [number, Codebook]> {
-        return 0;
+        return Promise.resolve(0);
     }
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // Return value: [Chunk size, Cursor movement]

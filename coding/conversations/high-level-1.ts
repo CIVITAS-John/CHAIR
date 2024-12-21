@@ -21,13 +21,13 @@ export default class HighLevelAnalyzer1 extends HighLevelAnalyzerBase {
     /** BaseTemperature: The base temperature for the LLM. */
     public BaseTemperature = 0.5;
     /** BuildPrompts: Build the prompts for the LLM. */
-    public async BuildPrompts(
-        Analysis: CodedThread,
-        Target: Conversation,
+    public BuildPrompts(
+        _Analysis: CodedThread,
+        _Target: Conversation,
         Messages: Message[],
-        ChunkStart: number,
+        _ChunkStart: number,
     ): Promise<[string, string]> {
-        return [
+        return Promise.resolve([
             `
 Hi ChatGPT, I want to analyze the following interaction in one of Physics Lab's online message groups.
 Please give me a codebook to analyze factors within this interaction that could contribute to the research.
@@ -45,6 +45,6 @@ Definition: A definition of code 1
             Messages.map((Message, Index) => `${Index + 1}. ${BuildMessagePrompt(Message)}`).join(
                 "\n",
             ),
-        ];
+        ]);
     }
 }

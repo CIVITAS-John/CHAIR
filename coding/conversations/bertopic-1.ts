@@ -6,7 +6,7 @@ import { PythonShell } from "python-shell";
 
 import { CodingNotes, ResearchQuestion } from "../../constants.js";
 import { RequestLLMWithCache } from "../../utils/llms.js";
-import type { CodedThread, Conversation, Message } from "../../utils/schema.js";
+import type { BertopicTopics, CodedThread, Conversation, Message } from "../../utils/schema.js";
 
 import { BuildMessagePrompt, ConversationAnalyzer } from "./conversations.js";
 
@@ -21,20 +21,20 @@ export default class BertopicAnalyzer1 extends ConversationAnalyzer {
     private Codes: Record<string, string> = {};
     /** GetChunkSize: Get the chunk size and cursor movement for the LLM. */
     // Return value: [Chunk size, Cursor movement]
-    public GetChunkSize(Recommended: number, Remaining: number) {
+    public GetChunkSize(_Recommended: number, Remaining: number) {
         return Remaining;
     }
     /** BatchPreprocess: Preprocess the conversations in batch. */
     public async BatchPreprocess(
         Conversations: Conversation[],
-        Analyzed: CodedThread[],
+        _Analyzed: CodedThread[],
     ): Promise<void> {
         // Write the messages into the file.
         const Messages = Conversations.flatMap((Conversation) =>
             Conversation.AllItems!.filter(
                 (Message) =>
                     Message.Content.length > 0 &&
-                    (!Message.Chunk || Message.Chunk == Conversation.ID),
+                    (!Message.Chunk || Message.Chunk === Conversation.ID),
             ),
         );
         const Content = Messages.map((Message) =>
@@ -42,22 +42,20 @@ export default class BertopicAnalyzer1 extends ConversationAnalyzer {
         );
         File.writeFileSync("./known/bertopic.temp.json", JSON.stringify(Content));
         // Run the Python script
-        let Topics: Record<number, { IDs: number[]; Probabilities: number[]; Keywords: string[] }> =
-            {};
+        let Topics: BertopicTopics = {};
         await PythonShell.run("coding/conversations/bertopic_impl.py", {
             args: [Messages.length.toString()],
             parser: (Message) => {
                 if (Message.startsWith("{")) {
                     console.log(chalk.blue(Message));
-                    Topics = JSON.parse(Message);
+                    Topics = JSON.parse(Message) as BertopicTopics;
                 } else {
                     console.log(chalk.gray(Message));
                 }
             },
         });
         // Generate a label and definition for each topic
-        for (const Index in Topics) {
-            var Topic = Topics[Index];
+        for (const Topic of Object.values(Topics)) {
             const IDs = Topic.IDs.sort((A, B) => Topic.Probabilities[B] - Topic.Probabilities[A]);
             // Maximum 5 examples sorted by probabilities
             const Examples = IDs.slice(0, 5).map((ID) => Messages[ID]);
@@ -92,8 +90,8 @@ Keywords: ${Keywords.join(", ")}`.trim(),
             // Parse the response
             let Phrase = "";
             const Lines = Response.split("\n");
-            for (let I = 0; I < Lines.length; I++) {
-                const Line = Lines[I].trim();
+            for (const _Line of Lines) {
+                const Line = _Line.trim();
                 if (Line.startsWith("Label:")) {
                     Phrase = Line.slice(6).trim().toLowerCase();
                     if (Phrase.endsWith(".")) {
@@ -108,12 +106,12 @@ Keywords: ${Keywords.join(", ")}`.trim(),
         }
     }
     /** ParseResponse: Parse the response from the LLM. */
-    public async ParseResponse(
-        Analysis: CodedThread,
-        Lines: string[],
+    public ParseResponse(
+        _Analysis: CodedThread,
+        _Lines: string[],
         Subunits: Message[],
-        ChunkStart: number,
-        Iteration: number,
+        _ChunkStart: number,
+        _Iteration: number,
     ): Promise<Record<number, string>> {
         const Results: Record<number, string> = {};
         for (let I = 0; I < Subunits.length; I++) {
@@ -128,6 +126,6 @@ Keywords: ${Keywords.join(", ")}`.trim(),
             }
             Results[I + 1] = Code;
         }
-        return Results;
+        return Promise.resolve(Results);
     }
 }

@@ -3,7 +3,7 @@ import type { Code, Codebook, DataChunk, DataItem } from "../../../utils/schema.
 /** FindConsolidatedCode: Find a consolidated code by name. */
 export function FindConsolidatedCode(Consolidated: Codebook, Name: string) {
     return Object.values(Consolidated).find(
-        (Code) => Code.Label == Name || Code.Alternatives?.includes(Name),
+        (Code) => Code.Label === Name || Code.Alternatives?.includes(Name),
     );
 }
 
@@ -23,8 +23,8 @@ export function ExtractExamples(Examples: string[]): Map<string, string[]> {
     // Extract the examples
     for (const Example of Examples) {
         const Index = Example.indexOf("|||");
-        if (Index != -1) {
-            var Quote = Example.substring(Index + 3);
+        if (Index !== -1) {
+            const Quote = Example.substring(Index + 3);
             const ID = Example.substring(0, Index);
             if (!Results.has(Quote)) {
                 Results.set(Quote, []);
@@ -38,7 +38,7 @@ export function ExtractExamples(Examples: string[]): Map<string, string[]> {
         }
     }
     // Calculate the score
-    for (var [Quote, IDs] of Results) {
+    for (const [Quote, IDs] of Results) {
         Scores.set(Quote, Quote.length * IDs.length);
     }
     // Sort by the score
@@ -55,17 +55,17 @@ export function ExtractExamples(Examples: string[]): Map<string, string[]> {
 export function FindOriginalCodes(
     Codebook: Codebook,
     Source: Code,
-    Owner: number,
+    _Owner: number,
     Example?: string,
 ): Code[] {
     let Codes = Object.values(Codebook);
     Codes = Codes.filter(
-        (Code) => Source.Label == Code.Label || Source.Alternatives?.includes(Code.Label),
+        (Code) => Source.Label === Code.Label || Source.Alternatives?.includes(Code.Label),
     );
     if (Example) {
         Codes = Codes.filter(
             (Code) =>
-                Code.Examples?.includes(Example) ||
+                Code.Examples?.includes(Example) ??
                 Code.Examples?.some((Current) => Current.startsWith(`${Example}|||`)),
         );
     }
@@ -84,8 +84,8 @@ export function FindExampleSources(
     return Codes.filter(
         (Code) =>
             Code.Examples?.findIndex(
-                (Current) => Current == Example || Current.endsWith(SoftMatch),
-            ) != -1,
+                (Current) => Current === Example || Current.endsWith(SoftMatch),
+            ) !== -1,
     );
 }
 

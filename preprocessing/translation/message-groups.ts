@@ -20,7 +20,7 @@ export async function ProcessConversations(
     Dataset?: string,
 ): Promise<void> {
     const AllItems = LoadItems<Message>(GetMessagesPath(Group)).filter(
-        (Message) => Message.UserID != "0",
+        (Message) => Message.UserID !== "0",
     );
     // Before we start, we need to translate all participants
     let Participants = LoadParticipants();
@@ -52,11 +52,11 @@ export async function ProcessConversations(
             Participants,
             Conversation.ID,
         );
-        if (Messages.length == 0) {
+        if (Messages.length === 0) {
             continue;
         }
         // Get and count conversations
-        if (Minimum == -1) {
+        if (Minimum === -1) {
             Minimum = Target;
         }
         Maximum = Target;
@@ -97,9 +97,9 @@ async function TranslateConversation(
     Bilingual = false,
 ): Promise<Message[]> {
     // Get the messages we want: 3 messages before and after the conversation
-    const FirstIndex = AllItems.findIndex((Message) => Message.Chunk == Conversation);
-    const LastIndex = AllItems.findLastIndex((Message) => Message.Chunk == Conversation);
-    if (FirstIndex == -1 || LastIndex == -1) {
+    const FirstIndex = AllItems.findIndex((Message) => Message.Chunk === Conversation);
+    const LastIndex = AllItems.findLastIndex((Message) => Message.Chunk === Conversation);
+    if (FirstIndex === -1 || LastIndex === -1) {
         return [];
     }
     let Messages = AllItems.slice(
@@ -144,12 +144,9 @@ export async function TranslateMessages(
     const Nicknames = Messages.map((Message) => Message.Nickname);
     const Contents = Messages.map((Message) => {
         // Handle the mentioned users (=> @ID)
-        Message.Content = Message.Content.replaceAll(
-            /@(.*?)\((\d+)\)(\s|$)/g,
-            (Match, Name, ID) => {
-                return `@${ID} `;
-            },
-        );
+        Message.Content = Message.Content.replaceAll(/@.*?\((\d+)\)(?:\s|$)/g, (_Match, ID) => {
+            return `@${ID} `;
+        });
         // Truncate the message if it's too long
         // Here we leave some rooms since the model might need more tokens than the source text to translate
         if (Message.Content.length >= MaxOutput * 0.75) {
@@ -165,7 +162,7 @@ export async function TranslateMessages(
         Messages[I].Nickname = TranslatedNicknames[I];
         // Handle the mentioned users (=> @Nickname (ID))
         let Content = TranslatedContents[I];
-        Content = Content.replaceAll(/@(\d+)(\W|$)/g, (Match, ID, Punc) => {
+        Content = Content.replaceAll(/@(\d+)(\W|$)/g, (_Match, ID: string, Punc) => {
             if (ParticipantMap.has(ID)) {
                 const Participant = ParticipantMap.get(ID)!;
                 return `@${Participant.Nickname} (${ID})${Punc}`;

@@ -12,23 +12,22 @@ export abstract class DefinitionParser extends CodeConsolidator {
         this.Chunkified = true;
     }
     /** ParseResponse: Parse the response for the code consolidator. */
-    public async ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]) {
+    public ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]): Promise<number> {
         const Pendings: Code[] = [];
         let CurrentCode: Code | undefined;
         let Status = "";
         // Parse the definitions
-        for (var I = 0; I < Lines.length; I++) {
-            let Line = Lines[I];
-            if (Line == "" || Line.startsWith("---")) {
+        for (let Line of Lines) {
+            if (Line === "" || Line.startsWith("---")) {
                 continue;
             }
             // Sometimes, LLMs will do **(...)** for anything. We need to remove that.
             Line = Line.replace(/\*\*/g, "");
             // If we see "...", that means later codes are not processed and should be truncated
-            if (Line == "...") {
+            if (Line === "...") {
                 break;
             }
-            const Match = /^(\d+)\./.exec(Line);
+            const Match = /^\d+\./.exec(Line);
             if (Match) {
                 Line = Line.substring(Match[0].length).trim();
                 // Sometimes, the label is merged with the number
@@ -60,11 +59,11 @@ export abstract class DefinitionParser extends CodeConsolidator {
                     CurrentCode.Categories = [Category.toLowerCase()];
                 }
                 Status = "Category";
-            } else if (Status == "Label") {
+            } else if (Status === "Label") {
                 CurrentCode!.Label = `${CurrentCode!.Label}\n${Line}`.trim();
-            } else if (Status == "Criteria") {
+            } else if (Status === "Criteria") {
                 CurrentCode!.Definitions!.push(Line.trim());
-            } else if (Status == "Theme") {
+            } else if (Status === "Theme") {
                 // Sometimes, the theme ends with a "."
                 if (Line.endsWith(".")) {
                     Line = Line.substring(0, Line.length - 1).trim();
@@ -73,8 +72,8 @@ export abstract class DefinitionParser extends CodeConsolidator {
             }
         }
         // Check if we have all the codes and avoid mismatches
-        for (var I = 0; I < Pendings.length; I++) {
-            var NewCode = Pendings[I];
+        for (let I = 0; I < Pendings.length; I++) {
+            const NewCode = Pendings[I];
             // Sometimes, the new label starts with "label:"
             if (NewCode.Label.startsWith("label:")) {
                 NewCode.Label = NewCode.Label.substring(6).trim();
@@ -92,8 +91,8 @@ export abstract class DefinitionParser extends CodeConsolidator {
                 NewCode.Label = NewCode.Label.substring(0, NewCode.Label.length - 1).trim();
             }
             // Sometimes, the order of labels is wrong (! found for gpt-3.5-turbo)
-            const Found = Codes.findIndex((Code) => Code.Label == NewCode.Label);
-            if (Found != -1 && Found !== I) {
+            const Found = Codes.findIndex((Code) => Code.Label === NewCode.Label);
+            if (Found !== -1 && Found !== I) {
                 throw new Error(
                     `Invalid response: code ${NewCode.Label}'s mapping order is wrong.`,
                 );
@@ -104,7 +103,7 @@ export abstract class DefinitionParser extends CodeConsolidator {
         // Remove temp labels
         Codes.forEach((Code) => delete Code.OldLabels);
         // Return the cursor movement
-        return Object.keys(Pendings).length - Codes.length;
+        return Promise.resolve(Object.keys(Pendings).length - Codes.length);
     }
 }
 
@@ -113,12 +112,12 @@ export class DefinitionGenerator extends DefinitionParser {
     /** SubunitFilter: Filter the subunits before chunking. */
     public SubunitFilter(Code: Code): boolean {
         // Only when the code has no definitions should we generate them
-        return super.SubunitFilter(Code) && (Code.Definitions?.length ?? 0) == 0;
+        return super.SubunitFilter(Code) && (Code.Definitions?.length ?? 0) === 0;
     }
     /** BuildPrompts: Build the prompts for the code consolidator. */
-    public async BuildPrompts(Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
+    public BuildPrompts(_Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
         // Generate definitions for codes
-        return [
+        return Promise.resolve([
             `
 You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
 Consider provided quotes, and note that each quote is independent of others.
@@ -145,7 +144,7 @@ ${TakeExamples(Code.Examples ?? [], 5)
     .map((Example) => `- ${Example}`)
     .join("\n")}`.trim(),
             ).join("\n\n"),
-        ];
+        ]);
     }
 }
 
@@ -153,9 +152,9 @@ ${TakeExamples(Code.Examples ?? [], 5)
 // Here, best is defined as the longest * most frequent unique quotes.
 export function TakeExamples(Examples: string[], Take = 1000000): string[] {
     const ExampleMap = new Map<string, number>();
-    for (var Example of Examples) {
+    for (let Example of Examples) {
         const Index = Example.indexOf("|||");
-        if (Index != -1) {
+        if (Index !== -1) {
             Example = Example.substring(Index + 3);
         }
         if (!ExampleMap.has(Example)) {
@@ -163,7 +162,7 @@ export function TakeExamples(Examples: string[], Take = 1000000): string[] {
         }
         ExampleMap.set(Example, ExampleMap.get(Example)! + 1);
     }
-    for (var [Example, Count] of ExampleMap) {
+    for (const [Example, Count] of ExampleMap) {
         ExampleMap.set(Example, Count * Example.length);
     }
     return Array.from(ExampleMap.keys())

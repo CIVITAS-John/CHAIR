@@ -34,28 +34,28 @@ export class UserSection extends Panel {
         const Colors: Record<string, d3.ScaleSequential<string>> = {};
         // Flatten the dataset
         const Dataset: { ID: string; Name: string; Metric: string; Value: number }[] = [];
-        for (let I = 0; I < Users.length; I++) {
-            const Result = Results[Users[I]];
-            for (let J = 0; J < Metrics.length; J++) {
+        for (const User of Users) {
+            const Result = Results[User];
+            for (const Metric of Metrics) {
                 Dataset.push({
-                    ID: Users[I],
-                    Name: this.Dataset.UserIDToNicknames?.get(Users[I]) ?? "",
-                    Metric: Metrics[J],
-                    Value: Result[Metrics[J]],
+                    ID: User,
+                    Name: this.Dataset.UserIDToNicknames?.get(User) ?? "",
+                    Metric,
+                    Value: Result[Metric],
                 });
             }
         }
         // Build color scales
-        for (var Metric of Metrics) {
+        for (const Metric of Metrics) {
             const Minimum = d3.min(
-                Dataset.filter((Evaluation) => Evaluation.Metric == Metric),
+                Dataset.filter((Evaluation) => Evaluation.Metric === Metric),
                 (Evaluation) => Evaluation.Value,
             )!;
             const Maximum = d3.max(
-                Dataset.filter((Evaluation) => Evaluation.Metric == Metric),
+                Dataset.filter((Evaluation) => Evaluation.Metric === Metric),
                 (Evaluation) => Evaluation.Value,
             )!;
-            if (Metric == "Divergence") {
+            if (Metric === "Divergence") {
                 Colors[Metric] = d3
                     .scaleSequential()
                     .interpolator(d3.interpolateViridis)
@@ -78,11 +78,9 @@ export class UserSection extends Panel {
                     .appendTo(Row);
                 Summary.append($("<h4></h4>").text(this.Dataset.UserIDToNicknames?.get(Key) ?? Key))
                     .append($('<p class="tips"></p>').text(`${Results[Key].Count} items`))
-                    .on("mouseover", (Event) =>
-                        this.Visualizer.SetFilter(true, new UserFilter(), Key),
-                    )
-                    .on("mouseout", (Event) => this.Visualizer.SetFilter(true, new UserFilter()))
-                    .on("click", (Event) => {
+                    .on("mouseover", () => this.Visualizer.SetFilter(true, new UserFilter(), Key))
+                    .on("mouseout", () => this.Visualizer.SetFilter(true, new UserFilter()))
+                    .on("click", (Event: MouseEvent) => {
                         if (Event.shiftKey) {
                             this.Visualizer.SetFilter(false, new UserFilter(), Key, true);
                         } else {
@@ -105,14 +103,12 @@ export class UserSection extends Panel {
                     const Color = Colors[Metric](MetricValue);
                     const Cell = $('<td class="metric-cell"></td>')
                         .attr("id", `metric-${Index}-${Metric}`)
-                        .text(d3.format(Metric == "Divergence" ? ".1%" : ".1%")(MetricValue))
-                        .on("mouseover", (Event) =>
+                        .text(d3.format(Metric === "Divergence" ? ".1%" : ".1%")(MetricValue))
+                        .on("mouseover", () =>
                             this.Visualizer.SetFilter(true, new UserFilter(), Key, false, Metric),
                         )
-                        .on("mouseout", (Event) =>
-                            this.Visualizer.SetFilter(true, new UserFilter()),
-                        )
-                        .on("click", (Event) =>
+                        .on("mouseout", () => this.Visualizer.SetFilter(true, new UserFilter()))
+                        .on("click", (Event: MouseEvent) =>
                             this.Visualizer.SetFilter(
                                 false,
                                 new UserFilter(),

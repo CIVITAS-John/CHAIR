@@ -1,4 +1,10 @@
-import type { Code, CodebookComparison, CodebookEvaluation } from "../../../utils/schema.js";
+import type {
+    Code,
+    CodebookComparison,
+    CodebookEvaluation,
+    DataChunk,
+    DataItem,
+} from "../../../utils/schema.js";
 
 import { GetConsolidatedSize } from "./dataset.js";
 import { BuildSemanticGraph } from "./graph.js";
@@ -8,7 +14,7 @@ import { CalculateJSD } from "./utils.js";
 
 /** EvaluateCodebooks: Evaluate all codebooks based on the network structure. */
 export function EvaluateCodebooks(
-    Dataset: CodebookComparison<any>,
+    Dataset: CodebookComparison<DataChunk<DataItem>>,
     Parameters: Parameters,
 ): Record<string, CodebookEvaluation> {
     const Results: Record<string, CodebookEvaluation> = {};
@@ -16,7 +22,7 @@ export function EvaluateCodebooks(
     // Prepare for the results
     const Codebooks = Dataset.Codebooks;
     const Names = Dataset.Names;
-    for (var I = 1; I < Codebooks.length; I++) {
+    for (let I = 1; I < Codebooks.length; I++) {
         Results[Names[I]] = { Coverage: 0, Density: 0, Novelty: 0, Divergence: 0 };
         Observations.push([]);
     }
@@ -24,30 +30,30 @@ export function EvaluateCodebooks(
     const Graph = BuildSemanticGraph(Dataset, Parameters);
     const NodeWeights: Map<string, number> = new Map<string, number>();
     let TotalWeight = 0;
-    for (var Node of Graph.Nodes) {
-        var Weight = Node.TotalWeight / Dataset.TotalWeight!;
+    for (const Node of Graph.Nodes) {
+        const Weight = Node.TotalWeight / Dataset.TotalWeight!;
         Observations[0].push(Weight);
         NodeWeights.set(Node.ID, Weight);
         TotalWeight += Weight;
     }
     // The expectations are made based on (consolidate codes in each codebook) / (codes in the baseline)
     const Consolidated = Codebooks.map((Codebook, I) => {
-        if (I == 0) {
+        if (I === 0) {
             return Object.keys(Codebooks[0]).length;
         }
         return GetConsolidatedSize(Codebooks[0], Codebook);
     });
     // Check if each node is covered by the codebooks
     let TotalNovelty = 0;
-    for (var Node of Graph.Nodes) {
-        var Weight = NodeWeights.get(Node.ID)!;
+    for (const Node of Graph.Nodes) {
+        const Weight = NodeWeights.get(Node.ID)!;
         // Check novelty
         if (Node.Novel) {
             TotalNovelty += Weight;
         }
         // Calculate on each codebook
-        for (var I = 1; I < Codebooks.length; I++) {
-            var Result = Results[Names[I]];
+        for (let I = 1; I < Codebooks.length; I++) {
+            const Result = Results[Names[I]];
             const Observed = Node.Weights[I];
             Result.Coverage += Weight * Observed;
             Result.Novelty += Weight * Observed * (Node.Novel ? 1 : 0);
@@ -55,8 +61,8 @@ export function EvaluateCodebooks(
         }
     }
     // Finalize the results
-    for (var I = 1; I < Codebooks.length; I++) {
-        var Result = Results[Names[I]];
+    for (let I = 1; I < Codebooks.length; I++) {
+        const Result = Results[Names[I]];
         Result.Coverage = Result.Coverage / TotalWeight;
         Result.Density = Consolidated[I] / Consolidated[0] / Result.Coverage;
         Result.Novelty = Result.Novelty / TotalNovelty;
@@ -69,7 +75,7 @@ export function EvaluateCodebooks(
 
 /** EvaluateUsers: Evaluate all users based on the network structure. */
 export function EvaluateUsers(
-    Dataset: CodebookComparison<any>,
+    Dataset: CodebookComparison<DataChunk<DataItem>>,
     Parameters: Parameters,
 ): Record<string, CodebookEvaluation> {
     const Results: Record<string, CodebookEvaluation> = {};
@@ -77,7 +83,7 @@ export function EvaluateUsers(
     // Prepare for the results
     const Users = Array.from(Dataset.UserIDToNicknames?.keys() ?? []);
     Users.unshift("# Everyone");
-    for (var I = 1; I < Users.length; I++) {
+    for (let I = 1; I < Users.length; I++) {
         Results[Users[I]] = { Coverage: 0, Novelty: 0, Divergence: 0, Count: 0 };
         Observations.push([]);
     }
@@ -85,13 +91,13 @@ export function EvaluateUsers(
     const Examples: Map<string, number> = new Map<string, number>();
     Object.values(Dataset.Source.Data)
         .flatMap((Chunk) => Object.entries(Chunk))
-        .flatMap(([Key, Value]) => Value.AllItems ?? [])
+        .flatMap(([, Value]) => Value.AllItems ?? [])
         .forEach((Item) => {
             Examples.set(Item.ID, Users.indexOf(Item.UserID));
             Results[Item.UserID].Count += 1;
         });
     // Calculate weights per user
-    const Weights = new Array(Users.length).fill(1);
+    const Weights = new Array<number>(Users.length).fill(1);
     Weights[0] = 0;
     // Calculate weights per node
     const Graph = BuildSemanticGraph(
@@ -116,23 +122,23 @@ export function EvaluateUsers(
     );
     const NodeWeights: Map<string, number> = new Map<string, number>();
     let TotalWeight = 0;
-    for (var Node of Graph.Nodes) {
-        var Weight = Node.TotalWeight / (Users.length - 1);
+    for (const Node of Graph.Nodes) {
+        const Weight = Node.TotalWeight / (Users.length - 1);
         Observations[0].push(Weight);
         NodeWeights.set(Node.ID, Weight);
         TotalWeight += Weight;
     }
     // Check if each node is covered by the codebooks
     let TotalNovelty = 0;
-    for (var Node of Graph.Nodes) {
-        var Weight = NodeWeights.get(Node.ID)!;
+    for (const Node of Graph.Nodes) {
+        const Weight = NodeWeights.get(Node.ID)!;
         // Check novelty
         if (Node.Novel) {
             TotalNovelty += Weight;
         }
         // Calculate on each user
-        for (var I = 1; I < Users.length; I++) {
-            var Result = Results[Users[I]];
+        for (let I = 1; I < Users.length; I++) {
+            const Result = Results[Users[I]];
             const Observed = Node.Weights[I];
             Result.Coverage += Weight * Observed;
             Result.Novelty += Weight * Observed * (Node.Novel ? 1 : 0);
@@ -140,8 +146,8 @@ export function EvaluateUsers(
         }
     }
     // Finalize the results
-    for (var I = 1; I < Users.length; I++) {
-        var Result = Results[Users[I]];
+    for (let I = 1; I < Users.length; I++) {
+        const Result = Results[Users[I]];
         Result.Coverage = Result.Coverage / TotalWeight;
         Result.Novelty = Result.Novelty / TotalNovelty;
         Result.Divergence = Math.sqrt(CalculateJSD(Observations[0], Observations[I]));
@@ -151,9 +157,9 @@ export function EvaluateUsers(
 
 /** Evaluate: Evaluate all codebooks per cluster, based on the network structure. */
 export function EvaluatePerCluster(
-    Dataset: CodebookComparison<any>,
+    Dataset: CodebookComparison<DataChunk<DataItem>>,
     Graph: Graph<Code>,
-    Parameters: Parameters,
+    _Parameters: Parameters,
 ): { Component: Component<Code>; Coverages: number[]; Differences: number[] }[] {
     const Results: { Component: Component<Code>; Coverages: number[]; Differences: number[] }[] =
         [];
@@ -162,7 +168,7 @@ export function EvaluatePerCluster(
     let TotalCoverages = Dataset.Names.map(() => 0);
     // Calculate weights per cluster
     for (const Cluster of Graph.Components!) {
-        var TotalWeight = 0;
+        let TotalWeight = 0;
         let Coverages = Dataset.Names.map(() => 0);
         // Check if each node is covered by the codebooks
         for (const Node of Cluster.Nodes) {

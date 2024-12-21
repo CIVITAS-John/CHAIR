@@ -10,8 +10,8 @@ import { CodeConsolidator } from "./consolidator.js";
 // Not used: while this reduces the number of codes, it also introduce errors.
 export class AlternativeMerger extends CodeConsolidator {
     /** Preprocess: In this case, we do not really use the LLM, so we just merge the codes. */
-    public async Preprocess(Codebook: Codebook, Codes: Code[]) {
-        const Result: Record<string, Code> = {};
+    public Preprocess(Codebook: Codebook, Codes: Code[]): Promise<Codebook> {
+        const Result: Codebook = {};
         const Alternatives = new Map<string, Code[]>();
         // Record the alternatives
         Codes.forEach((Code) => {
@@ -26,7 +26,7 @@ export class AlternativeMerger extends CodeConsolidator {
         const BestAlternatives = new Map<string, Code>();
         Alternatives.forEach((Alternatives, Name) => {
             const Length = Alternatives.length;
-            if (Length == 1) {
+            if (Length === 1) {
                 BestAlternatives.set(Name, Codes[0]);
             } else {
                 // Maybe we should change to distance instead of examples
@@ -51,6 +51,6 @@ export class AlternativeMerger extends CodeConsolidator {
                 `Statistics: Codes merged from ${Object.keys(Codebook).length} to ${Object.keys(Result).length}`,
             ),
         );
-        return Result;
+        return Promise.resolve(Result);
     }
 }

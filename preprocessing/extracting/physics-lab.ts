@@ -7,6 +7,8 @@ import type { Comment, Project, User } from "../../utils/schema.js";
 
 import { CutoffDate } from "./message-groups.js";
 
+type MongoDocument<T> = Mongo.WithId<Mongo.BSON.Document> & T;
+
 /** Users: Known users in Physics Lab. */
 const Users = new Map<string, User>();
 /** ExportUser: Export a user from the database. */
@@ -20,8 +22,15 @@ async function ExportUser(
         return Users.get(ID.toHexString())!;
     }
     // Otherwise, read the user from the database.
-    const User = (await Database.collection("Users").findOne({ _id: ID }))!;
-    const Statistics = (await Database.collection("UserStatistics").findOne({ _id: ID }))!;
+    const User = (await Database.collection("Users").findOne({ _id: ID })) as MongoDocument<{
+        Nickname: string;
+        Verification: string;
+    }>;
+    const Statistics = (await Database.collection("UserStatistics").findOne({
+        _id: ID,
+    })) as MongoDocument<{
+        Registration: Date;
+    }>;
     const Result: User = {
         ID: Users.size.toString(),
         Nickname: Nickname ?? User.Nickname,
@@ -37,8 +46,8 @@ async function ExportUser(
 }
 
 /** SyncUser: Synchronize the user with the verification status. */
-async function SyncUser(User: User, Verification: string, Time: Date) {
-    if (Verification == undefined) {
+function SyncUser(User: User, Verification: string, Time: Date) {
+    if (Verification === undefined) {
         return;
     }
     // If the user is banned, old-timer, or moderator, update the user.
@@ -61,14 +70,14 @@ async function SyncUser(User: User, Verification: string, Time: Date) {
     Time.setUTCHours(0);
     // Insert the title based on the time.
     for (let Index = 0; Index < User.Titles.length; Index++) {
-        if (User.Titles[Index][0].getTime() == Time.getTime()) {
+        if (User.Titles[Index][0].getTime() === Time.getTime()) {
             User.Titles[Index][1] = Verification;
             return;
         }
         if (User.Titles[Index][0].getTime() > Time.getTime()) {
             // Consider the previous title.
-            if (Index == 0 || User.Titles[Index - 1][1] != Verification) {
-                if (User.Titles[Index][1] == Verification) {
+            if (Index === 0 || User.Titles[Index - 1][1] !== Verification) {
+                if (User.Titles[Index][1] === Verification) {
                     // Move the title's time earlier if the title is the same.
                     User.Titles[Index][0] = Time;
                 } else {
@@ -80,7 +89,7 @@ async function SyncUser(User: User, Verification: string, Time: Date) {
         }
     }
     // If the title is the latest, add it to the end.
-    if (User.Titles.length == 0 || User.Titles[User.Titles.length - 1][1] != Verification) {
+    if (User.Titles.length === 0 || User.Titles[User.Titles.length - 1][1] !== Verification) {
         User.Titles.push([Time, Verification]);
     }
 }
@@ -91,7 +100,7 @@ async function FindMentions(
     Content: string,
 ): Promise<[string, string[] | undefined]> {
     const Mentioned: string[] = [];
-    for (const Match of Content.matchAll(/<user=(.*?)>(.*?)<\/user>/gs)) {
+    for (const Match of Content.matchAll(/<user=([^>]*)>.*?<\/user>/gs)) {
         try {
             await ExportUser(Database, Mongo.ObjectId.createFromHexString(Match[1]));
         } catch {
@@ -99,7 +108,7 @@ async function FindMentions(
         }
     }
     return [
-        Content.replaceAll(/<user=(.*?)>(.*?)<\/user>/gs, (Match, ID) => {
+        Content.replaceAll(/<user=([^>]*)>.*?<\/user>/gs, (Match, ID: string) => {
             if (Users.has(ID)) {
                 const Metadata = Users.get(ID)!;
                 Mentioned.push(Metadata.ID);
@@ -107,7 +116,7 @@ async function FindMentions(
             }
             return Match;
         }),
-        Mentioned.length == 0 ? undefined : Mentioned,
+        Mentioned.length === 0 ? undefined : Mentioned,
     ];
 }
 
@@ -115,15 +124,22 @@ async function FindMentions(
 async function ExportComments(
     Database: Mongo.Db,
     Collection: Mongo.Collection,
-    Condition?: Record<string, any>,
+    Condition?: Record<string, unknown>,
 ): Promise<Comment[] | undefined> {
     // Add the cutoff date and find all
-    const ForUsers = Condition == undefined;
+    const ForUsers = Condition === undefined;
     Condition = Condition ?? {};
     Condition.Timestamp = { $lte: CutoffDate.getTime() };
     Condition.Hidden = { $ne: true };
-    const Comments = await Collection.find(Condition).toArray();
-    if (Comments.length == 0) {
+    const Comments = (await Collection.find(Condition).toArray()) as MongoDocument<{
+        UserID: Mongo.ObjectId;
+        Nickname: string;
+        Verification: string;
+        Timestamp: string;
+        Content: string;
+        TargetID: Mongo.ObjectId;
+    }>[];
+    if (Comments.length === 0) {
         return undefined;
     }
     // Process the comments
@@ -133,7 +149,7 @@ async function ExportComments(
         const User = await ExportUser(Database, Comment.UserID, Comment.Nickname);
         User.Comments++;
         SyncUser(User, Comment.Verification, new Date(Comment.Timestamp));
-        if (User.FirstComment == undefined) {
+        if (User.FirstComment === undefined) {
             User.FirstComment = new Date(Comment.Timestamp);
         }
         // Create the comment metadata
@@ -141,7 +157,7 @@ async function ExportComments(
             ID: Comment._id.toHexString(),
             UserID: User.ID,
             Nickname: User.Nickname,
-            CurrentNickname: Comment.Nickname == User.Nickname ? undefined : Comment.Nickname,
+            CurrentNickname: Comment.Nickname === User.Nickname ? undefined : Comment.Nickname,
             Time: new Date(Comment.Timestamp),
             Content: Comment.Content,
         };
@@ -169,10 +185,23 @@ async function ExportProjects(
     Database: Mongo.Db,
     Collection: Mongo.Collection,
 ): Promise<Project[]> {
-    const Projects = await Collection.find({
+    const Projects = (await Collection.find({
         CreationDate: { $lte: CutoffDate.getTime() },
         Visibility: 0,
-    }).toArray();
+    }).toArray()) as MongoDocument<
+        Pick<Project, "Visits" | "Stars" | "Supports" | "Remixes" | "Tags"> & {
+            User: MongoDocument<{
+                Nickname: string;
+                Verification: string;
+            }>;
+            Nickname: string;
+            Category?: string;
+            CreationDate: string;
+            UpdateDate: string;
+            Subject: string;
+            Description: string[];
+        }
+    >[];
     const Results: Project[] = [];
     // Go through each project.
     for (const Project of Projects) {
@@ -180,7 +209,7 @@ async function ExportProjects(
         const User = await ExportUser(Database, Project.User._id, Project.Nickname);
         User.Projects++;
         SyncUser(User, Project.User.Verification, new Date(Project.UpdateDate));
-        if (User.FirstProject == undefined) {
+        if (User.FirstProject === undefined) {
             User.FirstProject = new Date(Project.CreationDate);
         }
         // Create the project metadata
@@ -191,7 +220,7 @@ async function ExportProjects(
             UserID: User.ID,
             Nickname: User.Nickname,
             CurrentNickname:
-                Project.User.Nickname == User.Nickname ? undefined : Project.User.Nickname,
+                Project.User.Nickname === User.Nickname ? undefined : Project.User.Nickname,
             Time: new Date(Project.CreationDate),
             Title: Project.Subject,
             Content: Project.Description.join("\n"),
@@ -234,9 +263,14 @@ async function ExportAll() {
     console.log("Connected to the server!");
 
     // Read the tags
-    (await Database.collection("ContentTags").find().toArray()).forEach((Tag) =>
-        Tags.set(Tag.Identifier, Tag.Subject.English),
-    );
+    (
+        (await Database.collection("ContentTags").find().toArray()) as MongoDocument<{
+            Identifier: string;
+            Subject: {
+                English: string;
+            };
+        }>[]
+    ).forEach((Tag) => Tags.set(Tag.Identifier, Tag.Subject.English));
 
     // Read the projects
     let Projects: Project[] = [];
@@ -246,13 +280,9 @@ async function ExportAll() {
     Projects = Projects.concat(await ExportProjects(Database, Database.collection("Discussions")));
 
     // Read personal messages
-    let Messages: Comment[] = [];
-    Messages = Messages.concat(
-        (await ExportComments(Database, Database.collection("PersonalComments")))!,
-    );
-    Messages = Messages.concat(
-        (await ExportComments(Database, Database.collection("UserComments")))!,
-    );
+    // let Messages: Comment[] = [];
+    // Messages = Messages.concat((await ExportComments(Database, Database.collection("PersonalComments")))!);
+    // Messages = Messages.concat((await ExportComments(Database, Database.collection("UserComments")))!);
 
     // Write all projects into a JSON file.
     File.writeFileSync(`${RootPath}\\Projects.json`, JSON.stringify(Projects, null, 4));
@@ -263,7 +293,7 @@ async function ExportAll() {
 
     console.log(
         `Exported ${Users.size} users, their ${Projects.length} projects, ${Projects.reduce(
-            (Sum, Project) => Sum + (Project.Items ?? 0),
+            (Sum, Project) => Sum + Project.Items,
             0,
         )} comments on projects, and ${UserArray.reduce((Sum, User) => Sum + (User.Messages?.length ?? 0), 0)} personal comments.`,
     );
@@ -303,4 +333,4 @@ async function ExportAll() {
     // 1 character ~= 1 token
 }
 
-ExportAll().then(() => process.exit(0));
+void ExportAll().then(() => process.exit(0));

@@ -22,7 +22,7 @@ import type {
     Dataset,
     Participant,
 } from "./schema.js";
-import { AssembleExample, Message, Project } from "./schema.js";
+import { AssembleExample } from "./schema.js";
 
 /** GetDatasetPath: Get the dataset path. */
 export function GetDatasetPath(): string {
@@ -32,14 +32,14 @@ export function GetDatasetPath(): string {
 
 /** LoadItems: Load a number of data items. */
 export function LoadItems<T extends DataItem>(Target: string): T[] {
-    const Items: T[] = JSON.parse(File.readFileSync(Target, "utf-8"));
+    const Items = JSON.parse(File.readFileSync(Target, "utf-8")) as T[];
     Items.forEach(InitializeItem);
     return Items;
 }
 
 /** InitializeItem: Initialize an item. */
 function InitializeItem(Item: DataItem) {
-    let TimeString = Item.Time as any as string;
+    let TimeString = Item.Time as unknown as string;
     // If it is only date
     if (/^\d{2}:\d{2}:\d{2}$/.exec(TimeString)) {
         TimeString = `1970-01-01T${TimeString}`;
@@ -47,7 +47,7 @@ function InitializeItem(Item: DataItem) {
     // Parse it
     Item.Time = new Date(Date.parse(TimeString));
     // Loop through potential subchunks
-    const AsChunk = Item as any as DataChunk<DataItem>;
+    const AsChunk = Item as unknown as DataChunk<DataItem>;
     if (AsChunk.AllItems) {
         AsChunk.AllItems.forEach((Item) => {
             InitializeItem(Item);
@@ -56,8 +56,10 @@ function InitializeItem(Item: DataItem) {
 }
 
 /** LoadConversations: Load the conversations. */
-export function LoadConversations(Group: string): Conversation[] {
-    return JSON.parse(File.readFileSync(GetMessagesPath(Group, "Conversations.json"), "utf-8"));
+export function LoadConversations(Group: string) {
+    return JSON.parse(
+        File.readFileSync(GetMessagesPath(Group, "Conversations.json"), "utf-8"),
+    ) as Conversation[];
 }
 
 /** LoadDataset: Load a dataset for analysis. */
@@ -66,7 +68,7 @@ export function LoadDataset<T extends DataChunk<DataItem>>(Group: string): Datas
         `(function() {${File.readFileSync(GetMessagesPath(Group, "configuration.js"), "utf-8")}})()`,
     ) as Dataset<T>;
     for (const [Key, Value] of Object.entries(Result.Data)) {
-        const Data = LoadChunksForAnalysis<T>(Group, Value as any);
+        const Data = LoadChunksForAnalysis<T>(Group, Value as unknown as string);
         for (const [_, Chunk] of Object.entries(Data)) {
             Chunk.AllItems = Chunk.AllItems ?? [];
             Chunk.AllItems.forEach(InitializeItem);
@@ -79,11 +81,11 @@ export function LoadDataset<T extends DataChunk<DataItem>>(Group: string): Datas
 }
 
 /** LoadChunksForAnalysis: Load the chunks for analysis. */
-export function LoadChunksForAnalysis<T extends DataChunk<DataItem>>(
-    Group: string,
-    Name: string,
-): Record<string, T> {
-    return JSON.parse(File.readFileSync(GetMessagesPath(Group, Name), "utf-8"));
+export function LoadChunksForAnalysis<T extends DataChunk<DataItem>>(Group: string, Name: string) {
+    return JSON.parse(File.readFileSync(GetMessagesPath(Group, Name), "utf-8")) as Record<
+        string,
+        T
+    >;
 }
 
 /** LoadAnalyses: Load analyzed threads from either JSON or Excel. */
@@ -98,7 +100,7 @@ export async function LoadAnalyses(Source: string): Promise<CodedThreads> {
         }
     }
     if (Source.endsWith(".json")) {
-        return JSON.parse(File.readFileSync(Source, "utf-8"));
+        return JSON.parse(File.readFileSync(Source, "utf-8")) as CodedThreads;
     }
     if (Source.endsWith(".xlsx")) {
         return await LoadCodedConversations(Source);
@@ -107,8 +109,10 @@ export async function LoadAnalyses(Source: string): Promise<CodedThreads> {
 }
 
 /** LoadParticipants: Load the participants. */
-export function LoadParticipants(): Participant[] {
-    return JSON.parse(File.readFileSync(GetParticipantsPath("Participants.json"), "utf-8"));
+export function LoadParticipants() {
+    return JSON.parse(
+        File.readFileSync(GetParticipantsPath("Participants.json"), "utf-8"),
+    ) as Participant[];
 }
 
 /** GetProjectsPath: Get the saving path of certain projects. */
@@ -138,37 +142,37 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
     const Threads: CodedThreads = { Threads: {}, Codebook: {} };
     // Iterate through the worksheets
     for (const Sheet of Spreadsheet.worksheets) {
-        var Thread: CodedThread = {
+        const Thread: CodedThread = {
             ID: Sheet.name,
             Codes: {},
             Items: {},
         };
-        var IDIndex = -1,
+        let IDIndex = -1,
             SpeakerIndex = -1,
             ContentIndex = -1,
             CodeIndex = -1;
         // Iterate through the rows
-        Sheet.eachRow((Row, RowNumber) => {
-            if (Row.number == 1) {
+        Sheet.eachRow((Row) => {
+            if (Row.number === 1) {
                 Row.eachCell((Cell, ColumnNumber) => {
                     const Value = Cell.value;
-                    if (Value == "ID") {
+                    if (Value === "ID") {
                         IDIndex = ColumnNumber;
                     }
-                    if (Value == "Content") {
+                    if (Value === "Content") {
                         ContentIndex = ColumnNumber;
                     }
-                    if (Value == "SID") {
+                    if (Value === "SID") {
                         SpeakerIndex = ColumnNumber;
                     }
-                    if (Value == "Codes") {
+                    if (Value === "Codes") {
                         CodeIndex = ColumnNumber;
                     }
                 });
                 return;
             }
             // Get the ID
-            if (IDIndex == -1) {
+            if (IDIndex === -1) {
                 return;
             }
             let ID = Row.getCell(IDIndex).value;
@@ -182,7 +186,7 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
                 case "-1": // Summary
                     Thread.Summary = Content;
                     if (
-                        Thread.Summary == "" ||
+                        Thread.Summary === "" ||
                         Thread.Summary.startsWith("(Optional) Your thoughts before coding")
                     ) {
                         Thread.Summary = undefined;
@@ -190,14 +194,14 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
                     return;
                 case "-2": // Plan
                     Thread.Plan = Content;
-                    if (Thread.Plan == "" || Thread.Plan.startsWith("The summary of")) {
+                    if (Thread.Plan === "" || Thread.Plan.startsWith("The summary of")) {
                         Thread.Plan = undefined;
                     }
                     return;
                 case "-3": // Reflection
                     Thread.Reflection = Content;
                     if (
-                        Thread.Reflection == "" ||
+                        Thread.Reflection === "" ||
                         Thread.Reflection.startsWith("Your reflections after coding")
                     ) {
                         Thread.Reflection = undefined;
@@ -244,7 +248,9 @@ export async function LoadCodebooks(
             Names.push(...CurrentNames);
             // Merge into a group
             if (CreateGroup) {
-                Codebooks.push(MergeCodebooks(JSON.parse(JSON.stringify(CurrentCodebooks))));
+                Codebooks.push(
+                    MergeCodebooks(JSON.parse(JSON.stringify(CurrentCodebooks)) as Codebook[]),
+                );
                 Names.push(`group: ${Path.basename(Current)}`);
             }
         }
@@ -266,7 +272,7 @@ async function LoadCodebooksFrom(Source: string): Promise<[Codebook[], string[]]
         Sources = GetFilesRecursively(Source);
     }
     // Remove the in-process codebooks
-    Sources = Sources.filter((Source) => !Source.match(/-(\d)+.xlsx$/g)).sort();
+    Sources = Sources.filter((Source) => !Source.match(/-\d+.xlsx$/g)).sort();
     // Load the codebooks
     const Codebooks: Codebook[] = [];
     let Names: string[] = [];
@@ -292,7 +298,7 @@ export async function LoadCodebooksInGroups(Paths: string[]): Promise<[Codebook[
     const Codebooks: Codebook[] = [];
     // Load the codebooks
     for (const Path of Paths) {
-        const [CurrentCodebooks, CurrentNames] = await LoadCodebooks(Path);
+        const [CurrentCodebooks] = await LoadCodebooks(Path);
         Codebooks.push(MergeCodebooks(CurrentCodebooks));
     }
     // Remove commonality
@@ -304,13 +310,13 @@ export async function LoadCodebooksInGroups(Paths: string[]): Promise<[Codebook[
 export async function LoadCodebook(Current: string): Promise<Codebook | undefined> {
     if (Current.endsWith(".json")) {
         const Content = File.readFileSync(Current, "utf8");
-        const Parsed = JSON.parse(Content);
+        const Parsed = JSON.parse(Content) as Codebook | CodedThreads | Record<string, unknown>;
         if (Parsed.Codebook) {
             console.log(`Loading ${Current} as coded threads.`);
-            return Parsed.Codebook;
+            return (Parsed as CodedThreads).Codebook;
         } else if (!Parsed.Threads) {
             console.log(`Loading ${Current} as a codebook.`);
-            return Parsed;
+            return Parsed as Codebook;
         }
         console.log(`Skipping ${Current} because it is not a codebook.`);
     } else if (Current.endsWith(".xlsx")) {
@@ -318,6 +324,6 @@ export async function LoadCodebook(Current: string): Promise<Codebook | undefine
             return;
         }
         console.log(`Loading ${Current} as an Excel workbook.`);
-        return (await LoadCodedConversations(Current)).Codebook!;
+        return (await LoadCodedConversations(Current)).Codebook;
     }
 }

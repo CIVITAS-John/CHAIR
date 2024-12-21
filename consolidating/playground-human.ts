@@ -1,5 +1,5 @@
 import { InitializeEmbeddings } from "../utils/embeddings.js";
-import { LLMName, UseLLMs } from "../utils/llms.js";
+import { UseLLMs } from "../utils/llms.js";
 
 import { ConsolidateChunks } from "./codebooks.js";
 import { PipelineConsolidator } from "./consolidator.js";

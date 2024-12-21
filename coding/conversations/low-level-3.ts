@@ -18,24 +18,24 @@ export default class LowLevelAnalyzer3 extends LowLevelAnalyzerBase {
     // We will further fetch 3 messages from the previous batch to make codes consistent.
     public GetChunkSize(
         Recommended: number,
-        Remaining: number,
-        Iteration: number,
+        _Remaining: number,
+        _Iteration: number,
         Tries: number,
     ): [number, number, number] {
         // For weaker models, we will reduce the chunk size (32 => 24 => 16 => 8)
-        if (Recommended == MaxItems) {
+        if (Recommended === MaxItems) {
             return [Recommended - Tries * 8, 3, 0];
         }
         return [Recommended - Tries * 2, Math.max(8 - Recommended - Tries, 3), 0];
     }
     /** BuildPrompts: Build the prompts for the LLM. */
-    public async BuildPrompts(
+    public BuildPrompts(
         Analysis: CodedThread,
-        Target: Conversation,
+        _Target: Conversation,
         Messages: Message[],
-        ChunkStart: number,
+        _ChunkStart: number,
     ): Promise<[string, string]> {
-        return [
+        return Promise.resolve([
             `
 You are an expert in thematic analysis with grounded theory, working on open coding.
 Your goal is to identify multiple low-level tags for each message.
@@ -56,6 +56,6 @@ Notes: {Notes and hypotheses about the conversation until now}`.trim(),
                 (Message, Index) =>
                     `${Index + 1}. ${BuildMessagePrompt(Message, Analysis.Items[Message.ID])}`,
             ).join("\n"),
-        ];
+        ]);
     }
 }

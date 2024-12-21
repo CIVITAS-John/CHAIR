@@ -35,9 +35,9 @@ export async function ReadOrBuildCache<T>(
 ): Promise<T> {
     // Check if the cache exists
     if (File.existsSync(`${CachePath}.json`) && File.existsSync(`${CachePath}.hash`)) {
-        if (Hash == File.readFileSync(`${CachePath}.hash`, "utf8")) {
+        if (Hash === File.readFileSync(`${CachePath}.hash`, "utf8")) {
             console.log(`Reading cache from ${CachePath}.json.`);
-            return JSON.parse(File.readFileSync(`${CachePath}.json`, "utf8"));
+            return JSON.parse(File.readFileSync(`${CachePath}.json`, "utf8")) as T;
         }
     }
     // Build and write the cache
@@ -64,7 +64,7 @@ export function RemoveCommonality(Names: string[]): string[] {
         ),
     );
     Names = Names.map((Name) => Name.substring(0, Name.length - Suffix.length));
-    Names = Names.map((Name) => (Name == "" ? "root" : Name));
+    Names = Names.map((Name) => (Name === "" ? "root" : Name));
     return Names;
 }
 

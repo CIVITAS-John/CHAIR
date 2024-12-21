@@ -11,7 +11,11 @@ const Temperatures = [0, 0.25, 0.5, 0.75, 1]; // 0.5 is already done as the base
 
 for (const AnalyzerName of AnalyzerNames) {
     for (const Temperature of Temperatures) {
-        var Analyzer = new (await import(`./../${AnalyzerName}.js`)).default();
+        const Analyzer = new (
+            (await import(`./../${AnalyzerName}.js`)) as {
+                default: new () => Parameters<typeof ProcessDataset>[0];
+            }
+        ).default();
         Analyzer.Suffix += `-${Temperature}~0.2`; // 0.2 is the weight
         Analyzer.BaseTemperature = Temperature;
         await UseLLMs(

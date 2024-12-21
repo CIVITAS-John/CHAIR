@@ -29,50 +29,52 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     // For example, for an output of [1, 1, 1], `BuildPrompts` would receive `subunits` 0 (Prefetch), 1, and 2 (Postfetch). `ChunkStart` will be 1 because that's the first message in the chunk.
     public GetChunkSize(
         Recommended: number,
-        Remaining: number,
-        Iteration: number,
-        Tries: number,
+        _Remaining: number,
+        _Iteration: number,
+        _Tries: number,
     ): number | [number, number, number] {
         return Recommended;
     }
     /** BatchPreprocess: Preprocess the units at the very beginning. */
-    public async BatchPreprocess(Units: TUnit[], Analyzed: TAnalysis[]): Promise<void> {}
+    public async BatchPreprocess(_Units: TUnit[], _Analyzed: TAnalysis[]): Promise<void> {
+        // This method is intentionally left empty
+    }
     /** Preprocess: Preprocess the subunits before filtering and chunking. */
     public async Preprocess(
-        Analysis: TAnalysis,
-        Source: TUnit,
+        _Analysis: TAnalysis,
+        _Source: TUnit,
         Subunits: TSubunit[],
-        Iteration: number,
+        _Iteration: number,
     ): Promise<TSubunit[]> {
-        return Subunits;
+        return await Promise.resolve(Subunits);
     }
     /** SubunitFilter: Filter the subunits before chunking. */
-    public SubunitFilter(Subunit: TSubunit, Iteration: number): boolean {
+    public SubunitFilter(_Subunit: TSubunit, _Iteration: number): boolean {
         return true;
     }
     /** BuildPrompts: Build the prompts for the LLM. */
     // Note that the `ChunkStart` index starts from 0, which could be confusing because in our example, the first message in the prompt is 1 (with index=0).
     // `ChunkStart` is particularly useful if you want to code just 1 message but also include the context of the previous and next subunits.
     public async BuildPrompts(
-        Analysis: TAnalysis,
-        Source: TUnit,
-        Subunits: TSubunit[],
-        ChunkStart: number,
-        Iteration: number,
+        _Analysis: TAnalysis,
+        _Source: TUnit,
+        _Subunits: TSubunit[],
+        _ChunkStart: number,
+        _Iteration: number,
     ): Promise<[string, string]> {
-        return ["", ""];
+        return await Promise.resolve(["", ""]);
     }
     /** ParseResponse: Parse the responses from the LLM. */
     // The return value is only for item-based coding, where each item has its own response. Otherwise, return {}.
     // Alternatively, it can return a number to indicate the relative cursor movement. (Actual units - Expected units, often negative.)
     public async ParseResponse(
-        Analysis: TAnalysis,
-        Lines: string[],
-        Subunits: TSubunit[],
-        ChunkStart: number,
-        Iteration: number,
+        _Analysis: TAnalysis,
+        _Lines: string[],
+        _Subunits: TSubunit[],
+        _ChunkStart: number,
+        _Iteration: number,
     ): Promise<Record<number, string> | number> {
-        return {};
+        return await Promise.resolve({});
     }
 }
 
@@ -116,8 +118,8 @@ export async function AnalyzeChunk<T extends DataItem>(
     const Keys = Object.keys(Chunks);
     // Initialize the analysis
     for (const [Key, Chunk] of Object.entries(Chunks)) {
-        var Messages = Chunk.AllItems!.filter((Message) => Message.Content != "");
-        var Analysis: CodedThread = Analyzed.Threads[Key];
+        const Messages = Chunk.AllItems!.filter((Message) => Message.Content !== "");
+        let Analysis: CodedThread = Analyzed.Threads[Key];
         if (!Analysis) {
             Analysis = { ID: Key, Items: {}, Iteration: 0, Codes: {} };
             Messages.forEach((Message) => (Analysis.Items[Message.ID] = { ID: Message.ID }));
@@ -131,12 +133,12 @@ export async function AnalyzeChunk<T extends DataItem>(
     // Run the prompt over each conversation
     for (const [Key, Chunk] of Object.entries(Chunks)) {
         // Get the messages
-        var Messages = Chunk.AllItems!.filter((Message) => Message.Content != "");
+        const Messages = Chunk.AllItems!.filter((Message) => Message.Content !== "");
         console.log(`Chunk ${Key}: ${Messages.length} items`);
         // Initialize the analysis
-        var Analysis: CodedThread = Analyzed.Threads[Key];
+        const Analysis: CodedThread = Analyzed.Threads[Key];
         // Run the messages through chunks (as defined by the analyzer)
-        var PreviousAnalysis: CodedThread | undefined;
+        let PreviousAnalysis: CodedThread | undefined;
         await LoopThroughChunks(
             Analyzer,
             Analysis,
@@ -144,9 +146,9 @@ export async function AnalyzeChunk<T extends DataItem>(
             Messages,
             async (Currents, ChunkStart, IsFirst, Tries, Iteration) => {
                 // Sync from the previous analysis to keep the overlapping codes
-                if (PreviousAnalysis && PreviousAnalysis != Analysis) {
+                if (PreviousAnalysis && PreviousAnalysis !== Analysis) {
                     for (const [ID, Item] of Object.entries(PreviousAnalysis.Items)) {
-                        if (Chunk.AllItems?.findIndex((Message) => Message.ID == ID) != -1) {
+                        if (Chunk.AllItems?.findIndex((Message) => Message.ID === ID) !== -1) {
                             Analysis.Items[ID] = { ID, Codes: Item.Codes };
                         }
                     }
@@ -159,19 +161,19 @@ export async function AnalyzeChunk<T extends DataItem>(
                     ChunkStart,
                     Iteration,
                 );
-                var Response = "";
+                let Response = "";
                 // Run the prompts
-                if (Prompts[0] != "" || Prompts[1] != "") {
+                if (Prompts[0] !== "" || Prompts[1] !== "") {
                     if (!IsFirst && Analysis.Summary) {
                         Prompts[1] = `Summary of previous conversation: ${Analysis.Summary}\n${Prompts[1]}`;
                     }
-                    var Response = await RequestLLMWithCache(
+                    Response = await RequestLLMWithCache(
                         [new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1])],
                         `messaging-groups/${Analyzer.Name}`,
                         Tries * 0.2 + Analyzer.BaseTemperature,
                         FakeRequest,
                     );
-                    if (Response == "") {
+                    if (Response === "") {
                         return 0;
                     }
                 }
@@ -187,7 +189,7 @@ export async function AnalyzeChunk<T extends DataItem>(
                     return ItemResults;
                 }
                 for (const [Index, Result] of Object.entries(ItemResults)) {
-                    var Message = Currents[parseInt(Index) - 1];
+                    const Message = Currents[parseInt(Index) - 1];
                     const SplitByComma = !(Result.includes(";") || Result.includes("|"));
                     const Codes = Result.toLowerCase()
                         .split(SplitByComma ? /,/g : /\||;/g)
@@ -195,7 +197,7 @@ export async function AnalyzeChunk<T extends DataItem>(
                         .filter(
                             (Code) =>
                                 Code.length > 0 &&
-                                Code != Message.Content.toLowerCase() &&
+                                Code !== Message.Content.toLowerCase() &&
                                 !Code.endsWith("...") &&
                                 !Code.endsWith("!") &&
                                 !Code.endsWith("?") &&
@@ -239,14 +241,16 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
         Tries: number,
         Iteration: number,
     ) => Promise<number>,
-    Iteration: (Iteration: number) => Promise<void> = async () => {},
+    Iteration: (Iteration: number) => Promise<void> = async () => {
+        // This function is intentionally left empty
+    },
 ) {
     // Split units into smaller chunks based on the maximum items
-    for (var I = 0; I < Analyzer.MaxIterations; I++) {
+    for (let I = 0; I < Analyzer.MaxIterations; I++) {
         let Cursor = 0;
         // Preprocess and filter the subunits
         Sources = await Analyzer.Preprocess(Analysis, Source, Sources, I);
-        if (Sources.length == 0) {
+        if (Sources.length === 0) {
             continue;
         }
         const Filtered = Sources.filter((Subunit) => Analyzer.SubunitFilter(Subunit, I));
@@ -254,9 +258,10 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
         while (Cursor < Filtered.length) {
             let Tries = 0;
             let CursorRelative = 0;
+            let ChunkSize: ReturnType<typeof Analyzer.GetChunkSize>;
             while (true) {
                 // Get the chunk size
-                var ChunkSize = Analyzer.GetChunkSize(
+                ChunkSize = Analyzer.GetChunkSize(
                     Math.min(MaxItems, Filtered.length - Cursor),
                     Filtered.length - Cursor,
                     I,
@@ -275,7 +280,7 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
                 const Start = Math.max(Cursor - ChunkSize[1], 0);
                 const End = Math.min(Cursor + ChunkSize[0] + ChunkSize[2], Filtered.length);
                 const Currents = Filtered.slice(Start, End);
-                const IsFirst = Cursor == 0;
+                const IsFirst = Cursor === 0;
                 // Run the prompts
                 try {
                     CursorRelative = await Action(Currents, Cursor - Start, IsFirst, Tries, I);
@@ -284,19 +289,19 @@ export async function LoopThroughChunks<TUnit, TSubunit, TAnalysis>(
                         throw new Error("Failed to process any subunits.");
                     }
                     CountItems(ChunkSize[0], ChunkSize[0] + CursorRelative);
-                    if (CursorRelative != 0) {
+                    if (CursorRelative !== 0) {
                         console.log(
                             `Expected ${ChunkSize[0]} subunits, processed ${ChunkSize[0] + CursorRelative} subunits.`,
                         );
                     }
                     break;
-                } catch (Error: any) {
+                } catch (Error) {
                     if (++Tries > 4) {
                         throw Error;
                     }
                     CountItems(ChunkSize[0], 0);
                     console.log(chalk.red(`Analysis error, retrying ${Tries} times:`));
-                    console.log(`${Error.stack}`);
+                    console.log(`${(Error as Error).stack}`);
                 }
             }
             // Move the cursor

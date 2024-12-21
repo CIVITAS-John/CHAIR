@@ -4,7 +4,6 @@ import { InitializeEmbeddings } from "../../utils/embeddings.js";
 import { EnsureFolder, UseLLM } from "../../utils/llms.js";
 import { GetMessagesPath, LoadDataset } from "../../utils/loader.js";
 import { BuildReferenceAndEvaluateCodebooks } from "../codebooks.js";
-import { CoverageEvaluator } from "../coverage-evaluator.js";
 import { NetworkEvaluator } from "../network-evaluator.js";
 import type { ReferenceBuilder } from "../reference-builder.js";
 import { RefiningReferenceBuilder } from "../reference-builder.js";
@@ -19,7 +18,7 @@ async function EvaluateModelsWithSameAnalyzer(
     Builder: ReferenceBuilder,
 ) {
     // Get the dataset
-    const Dataset = await LoadDataset(SourcePath);
+    const Dataset = LoadDataset(SourcePath);
     const Evaluator = new NetworkEvaluator({ Dataset });
     SourcePath = GetMessagesPath(SourcePath);
     // Ensure the folders

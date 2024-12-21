@@ -53,7 +53,7 @@ export class NetworkEvaluator extends CodebookEvaluator {
         const Hash = md5(JSON.stringify(Codebooks));
         // Weights
         const Weights = Names.map((Name, Index) => {
-            if (Index == 0 || Name.startsWith("group:")) {
+            if (Index === 0 || Name.startsWith("group:")) {
                 return 0;
             }
             const Fields = Name.split("~");
@@ -65,7 +65,7 @@ export class NetworkEvaluator extends CodebookEvaluator {
             return Value;
         });
         // Build the network information
-        const Package = await ReadOrBuildCache(`${ExportPath}/network`, Hash, async () => {
+        await ReadOrBuildCache(`${ExportPath}/network`, Hash, async () => {
             // We treat the first input as the reference codebook
             Names[0] = "baseline";
             const Merged = MergeCodebooks(Codebooks, true);
@@ -97,15 +97,15 @@ export class NetworkEvaluator extends CodebookEvaluator {
                     for (const Chunk of Object.values(Dataset)) {
                         for (const Item of Chunk.AllItems ?? []) {
                             Item.Nickname = GetSpeakerName(Item.UserID);
-                            if ((Item as any).CurrentNickname) {
-                                delete (Item as any).CurrentNickname;
+                            if ((Item as unknown as Record<string, unknown>).CurrentNickname) {
+                                delete (Item as unknown as Record<string, unknown>).CurrentNickname;
                             }
                         }
                     }
                 }
             }
             // Return in the format
-            const Package: CodebookComparison<any> = {
+            const Package: CodebookComparison<DataChunk<DataItem>> = {
                 Codebooks,
                 Names,
                 Codes,
