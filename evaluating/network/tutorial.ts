@@ -128,7 +128,7 @@ export class Tutorial extends Panel {
 <p>Before we finish this short tour, let's go back to the side panel.</p>
 <p>The <strong>Codebooks</strong> view provides an overall, quantitative comparison of the codebooks.</p>`,
                     },
-                    onHighlightStarted: () => this.Visualizer.SidePanel.ShowPanel("Codebooks"),
+                    onHighlightStarted: () => this.Visualizer.SidePanel.ShowPanel("Coders"),
                 },
                 {
                     element: ".side-panel .content .codebook table",
