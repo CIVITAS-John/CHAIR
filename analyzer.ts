@@ -119,7 +119,7 @@ export async function AnalyzeChunk<T extends DataItem>(
     // Initialize the analysis
     for (const [Key, Chunk] of Object.entries(Chunks)) {
         const Messages = Chunk.AllItems!.filter((Message) => Message.Content !== "");
-        let Analysis: CodedThread = Analyzed.Threads[Key];
+        let Analysis = Analyzed.Threads[Key];
         if (!Analysis) {
             Analysis = { ID: Key, Items: {}, Iteration: 0, Codes: {} };
             Messages.forEach((Message) => (Analysis.Items[Message.ID] = { ID: Message.ID }));
