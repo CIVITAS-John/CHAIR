@@ -158,8 +158,8 @@ export function InitializeLLM(LLM: string) {
                     });
             }
             break;
-        case "o1-mini":
-            // 3$ / 12$
+        case "o3-mini":
+            // 1.1$ / 4.4$
             MaxInput = 16385;
             MaxOutput = 4096;
             MaxItems = 64;
@@ -168,14 +168,14 @@ export function InitializeLLM(LLM: string) {
                 Model = (_Temp) =>
                     new ChatOpenAI({
                         // Does not support temperature
-                        modelName: "o1-mini",
+                        modelName: "o3-mini",
                         streaming: false,
                         // maxCompletionTokens: MaxOutput,
                         // need to update the package, it seems
                     });
             }
             break;
-        case "o1-preview":
+        case "o1":
             // 15$ / 60$
             MaxInput = 16385;
             MaxOutput = 4096;
@@ -185,7 +185,7 @@ export function InitializeLLM(LLM: string) {
                 Model = (_Temp) =>
                     new ChatOpenAI({
                         // Does not support temperature
-                        modelName: "o1-mini",
+                        modelName: "o1",
                         streaming: false,
                         // maxCompletionTokens: MaxOutput,
                         // need to update the package, it seems

@@ -43,6 +43,7 @@ export class CodebookSection extends Panel {
         const Dataset: { Name: string; Metric: string; Value: number }[] = [];
         for (const Name of Names) {
             const Result = Results[Name];
+            if (!Result) continue;
             for (const Metric of Metrics) {
                 Dataset.push({ Name, Metric, Value: Result[Metric] });
             }
