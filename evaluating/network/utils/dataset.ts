@@ -65,7 +65,7 @@ export function FindOriginalCodes(
     if (Example) {
         Codes = Codes.filter(
             (Code) =>
-                Code.Examples?.includes(Example) ??
+                Code.Examples?.includes(Example) ||
                 Code.Examples?.some((Current) => Current.startsWith(`${Example}|||`)),
         );
     }
