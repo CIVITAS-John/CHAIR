@@ -165,6 +165,9 @@ export function ImportCodedConversations(Spreadsheet: Excel.Workbook): CodedThre
                     if (Value === "SID") {
                         SpeakerIndex = ColumnNumber;
                     }
+                    if (Value === "Nickname" && SpeakerIndex === -1) {
+                        SpeakerIndex = ColumnNumber;
+                    }
                     if (Value === "Codes") {
                         CodeIndex = ColumnNumber;
                     }

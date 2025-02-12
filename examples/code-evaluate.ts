@@ -102,7 +102,7 @@ async function Evaluate(
     const Paths = Analyzers.flatMap((Analyzer) =>
         Models.flatMap((Model) =>
             Object.keys(Dataset.Data).map(
-                (Name) => `${SourcePath}/${Analyzer}/${Name}-${Model}.json`,
+                (Name) => `${SourcePath}/${Analyzer}/${Name}-${Model}.xlsx`,
             ),
         ),
     );
