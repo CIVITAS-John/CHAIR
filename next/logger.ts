@@ -27,13 +27,15 @@ class Logger {
         this.verbosity = verbosity ?? LogLevel.INFO;
     }
 
-    error(message: string, error?: unknown, recoverable = false, name?: string) {
+    error(error?: unknown, recoverable = false, name?: string) {
+        const message =
+            error instanceof Error
+                ? error.message
+                : typeof error === "string"
+                  ? error
+                  : JSON.stringify(error);
         const formatted = format(message, LogLevel.ERROR, name);
-        const tb = error
-            ? error instanceof Error
-                ? `${error.message}: ${error.stack}`
-                : JSON.stringify(error)
-            : undefined;
+        const tb = error instanceof Error ? error.stack : undefined;
 
         console.error(chalk.red(formatted));
         if (tb) {

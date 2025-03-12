@@ -8,7 +8,7 @@ import type {
     RawDataItem,
     RawDataset,
 } from "../schema";
-import { readJSONFile } from "../utils";
+import { importDefault, readJSONFile } from "../utils";
 
 import { BaseStep } from "./base-step";
 
@@ -59,8 +59,8 @@ export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> exten
         }
 
         logger.info(`Loading dataset from ${this.config.path}`, `LoadStep${this._id}#execute`);
-        const dataset = (await import(
-            GetMessagesPath(this.config.path, "configuration.js")
+        const dataset = (await importDefault(
+            GetMessagesPath(this.config.path, "configuration.js"),
         )) as RawDataset;
         logger.info(
             `Loaded dataset "${dataset.title}" with ${Object.keys(dataset.data).length} chunk groups`,

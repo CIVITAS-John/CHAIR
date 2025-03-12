@@ -7,6 +7,17 @@ import type { Codebook, DataItem } from "./schema";
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export const readJSONFile = <T>(path: string) => JSON.parse(readFileSync(path, "utf-8")) as T;
 
+export const importDefault = async (path: string) => {
+    const module = (await import(path)) as unknown;
+    if (typeof module !== "object" || module === null) {
+        throw new TypeError(`${path} is not a valid module`);
+    }
+    if (!("default" in module)) {
+        throw new TypeError(`Module ${path} does not have a default export`);
+    }
+    return module.default;
+};
+
 /** GetCategories: Get the categories from the codebook. */
 export function GetCategories(Codebook: Codebook): Map<string, string[]> {
     const Categories = new Map<string, string[]>();
