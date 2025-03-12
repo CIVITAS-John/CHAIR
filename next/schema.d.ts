@@ -3,7 +3,7 @@ export interface DataItem {
     /** The ID of the item. */
     id: string;
     /** The sender ID of the item. */
-    userID: string;
+    uid: string;
     /** The nickname of the sender. */
     nickname: string;
     /** The time the item was sent. */
@@ -27,6 +27,10 @@ export interface RawDataItem extends DataItem {
 export interface DataChunk<T extends DataItem> {
     /** The ID of the chunk. */
     id: string;
+    /** The beginning time of the chunk. */
+    start: Date;
+    /** The ending time of the chunk. */
+    end: Date;
     /** Data items in the chunk. */
     items?: (T | DataChunk<T>)[];
     /** The participants that this chunk mentioned. */
@@ -35,6 +39,8 @@ export interface DataChunk<T extends DataItem> {
 
 /** An unloaded JSON representation of a data chunk. */
 export interface RawDataChunk extends DataChunk<RawDataItem> {
+    start: string;
+    end: string;
     items: (RawDataItem | RawDataChunk)[];
 }
 
@@ -51,9 +57,9 @@ export interface Dataset<T extends DataChunk> {
     /** The data chunks in the dataset. */
     data: Record<string, Record<string, T>>;
     /** Get the speaker name from the user ID. */
-    getSpeakerName?: (userID: string) => string;
+    getSpeakerName?: (uid: string) => string;
     /** Get the speaker name (in example only) from the user ID. */
-    getSpeakerNameForExample?: (userID: string) => string;
+    getSpeakerNameForExample?: (uid: string) => string;
 }
 
 /** An unloaded JSON representation of a dataset. */

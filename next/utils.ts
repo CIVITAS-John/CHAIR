@@ -1,4 +1,5 @@
 import { readFileSync } from "fs";
+import { resolve } from "path";
 
 import { GetSpeakerNameForExample } from "../constants";
 
@@ -8,7 +9,7 @@ import type { Codebook, DataItem } from "./schema";
 export const readJSONFile = <T>(path: string) => JSON.parse(readFileSync(path, "utf-8")) as T;
 
 export const importDefault = async (path: string) => {
-    const module = (await import(path)) as unknown;
+    const module = (await import(`file://${resolve(path)}`)) as unknown;
     if (typeof module !== "object" || module === null) {
         throw new TypeError(`${path} is not a valid module`);
     }
@@ -16,6 +17,18 @@ export const importDefault = async (path: string) => {
         throw new TypeError(`Module ${path} does not have a default export`);
     }
     return module.default;
+};
+
+export const parseDateTime = (datetime: string) => {
+    // If it is only a time, add a date
+    if (/^\d{2}:\d{2}:\d{2}$/.exec(datetime)) {
+        datetime = `1970-01-01T${datetime}`;
+    }
+    const date = new Date(datetime);
+    if (isNaN(date.getTime())) {
+        throw new Error(`Invalid datetime: ${datetime}`);
+    }
+    return date;
 };
 
 /** GetCategories: Get the categories from the codebook. */
@@ -44,5 +57,5 @@ export function AssembleExample(ID: string, UserID: string, Content: string) {
 
 /** AssembleExampleFrom: Assemble an example from a data item. */
 export function AssembleExampleFrom(Item: DataItem) {
-    return AssembleExample(Item.id, Item.userID, Item.content);
+    return AssembleExample(Item.id, Item.uid, Item.content);
 }
