@@ -2,7 +2,6 @@
 
 import { includeIgnoreFile } from "@eslint/compat";
 import eslint from "@eslint/js";
-import tsParser from "@typescript-eslint/parser";
 import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginImportX from "eslint-plugin-import-x";
 import * as regexpPlugin from "eslint-plugin-regexp";
@@ -19,7 +18,6 @@ export default tseslint.config(
     {
         languageOptions: {
             parserOptions: {
-                parser: tsParser,
                 ecmaVersion: "latest",
                 sourceType: "module",
                 projectService: {
@@ -42,6 +40,7 @@ export default tseslint.config(
                     varsIgnorePattern: "^_",
                 },
             ],
+            "@typescript-eslint/no-useless-constructor": "error",
             "@typescript-eslint/restrict-template-expressions": ["error", {}],
             curly: ["error", "multi-line"],
             "dot-notation": "error",
@@ -76,7 +75,6 @@ export default tseslint.config(
             "no-redeclare": "error",
             "no-template-curly-in-string": "error",
             "no-unreachable": "error",
-            "no-useless-constructor": "error",
             "object-shorthand": "error",
             "prefer-arrow-callback": "error",
             "prefer-exponentiation-operator": "error",
