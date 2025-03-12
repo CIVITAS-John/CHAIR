@@ -1,4 +1,4 @@
-export default {
+export default /** @type {import("../../schema").RawDataset} */ ({
     title: "Example Dataset",
     data: {
         "data-example": "data-example.json",
@@ -9,4 +9,4 @@ export default {
         "How was the interview process flowing between the interviewer and the interviewee?",
     codingNotes:
         "Please analyze, in detail, the emotional flow and power dynamics of the interview process.",
-};
+});
