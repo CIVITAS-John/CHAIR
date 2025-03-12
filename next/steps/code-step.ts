@@ -26,7 +26,7 @@ export class CodeStep extends BaseStep {
         super();
     }
 
-    async Execute() {
+    async execute() {
         // Call some functions to code the data
     }
 }

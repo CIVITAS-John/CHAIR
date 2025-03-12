@@ -43,5 +43,7 @@ export interface AIParameters extends Record<string, unknown> {
 
 export abstract class BaseStep {
     abstract _type: string;
-    abstract Execute(): Promise<void>;
+    _id = "";
+
+    abstract execute(): Promise<void>;
 }

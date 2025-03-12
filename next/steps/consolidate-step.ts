@@ -15,7 +15,7 @@ export class ConsolidateStep extends BaseStep {
         super();
     }
 
-    async Execute() {
+    async execute() {
         // Call some functions to consolidate the data
     }
 }
