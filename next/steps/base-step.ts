@@ -43,7 +43,23 @@ export interface AIParameters extends Record<string, unknown> {
 
 export abstract class BaseStep {
     abstract _type: string;
+
     _id = "";
+    protected _source(mtd?: string) {
+        return `${this._id ? `${this._id} ` : ""}${this._type}Step${mtd ? `#${mtd}` : ""}`;
+    }
+
+    static Error = class extends Error {
+        constructor(source: string, message: string) {
+            super(`${source}: ${message}`);
+        }
+    };
+
+    static UnexecutedError = class extends BaseStep.Error {
+        constructor(source: string) {
+            super(source, "Step has not been executed yet");
+        }
+    };
 
     abstract execute(): Promise<void>;
 }

@@ -11,8 +11,8 @@ export enum LogLevel {
 }
 
 const logPath = `logs/${new Date().toISOString().replace(/:/g, "-")}.log`;
-const format = (message: string, level: string, name = "") =>
-    `${level ? `[${level}] ` : ""}${name ? `${name}: ` : ""}${message}`;
+const format = (message: string, level: string, source = "") =>
+    `${level ? `[${level}] ` : ""}${source ? `${source}: ` : ""}${message}`;
 
 class Logger {
     private readonly file: string;
@@ -27,14 +27,14 @@ class Logger {
         writeFileSync(this.file, `${new Date().toISOString()} ${message}\n`, { flag: "a+" });
     }
 
-    error(error?: unknown, recoverable = false, name?: string) {
+    error(error?: unknown, recoverable = false, source?: string) {
         const message =
             error instanceof Error
                 ? error.message
                 : typeof error === "string"
                   ? error
                   : JSON.stringify(error);
-        const formatted = format(message, "ERROR", name);
+        const formatted = format(message, "ERROR", source);
         const tb = error instanceof Error ? error.stack : undefined;
 
         console.error(chalk.red(formatted));
@@ -55,24 +55,24 @@ class Logger {
         }
     }
 
-    warn(message: string, name?: string) {
-        const formatted = format(message, "WARN", name);
+    warn(message: string, source?: string) {
+        const formatted = format(message, "WARN", source);
         if (this.verbosity >= LogLevel.WARN) {
             console.warn(chalk.yellow(formatted));
         }
         this.logFile(formatted);
     }
 
-    info(message: string, name?: string) {
-        const formatted = format(message, "INFO", name);
+    info(message: string, source?: string) {
+        const formatted = format(message, "INFO", source);
         if (this.verbosity >= LogLevel.INFO) {
             console.info(chalk.blue(formatted));
         }
         this.logFile(formatted);
     }
 
-    debug(message: string, name?: string) {
-        const formatted = format(message, "DEBUG", name);
+    debug(message: string, source?: string) {
+        const formatted = format(message, "DEBUG", source);
         if (this.verbosity >= LogLevel.DEBUG) {
             console.debug(chalk.gray(formatted));
         }
