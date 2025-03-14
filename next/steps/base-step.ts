@@ -41,19 +41,23 @@ export interface AIParameters extends Record<string, unknown> {
     CustomPrompt?: string;
 }
 
+abstract class StepError extends Error {
+    constructor(source: string, message: string) {
+        super(`${source}: ${message}`);
+        this.name = "BaseStep.Error";
+    }
+}
+
 export abstract class BaseStep {
     abstract _type: string;
 
     _id = "";
-    protected _source(mtd?: string) {
+    protected _idStr(mtd?: string) {
         return `${this._id ? `${this._id} ` : ""}${this._type}Step${mtd ? `#${mtd}` : ""}`;
     }
 
-    static Error = class extends Error {
-        constructor(source: string, message: string) {
-            super(`${source}: ${message}`);
-        }
-    };
+    static Error = StepError;
+    static InternalError = class extends BaseStep.Error {};
 
     static UnexecutedError = class extends BaseStep.Error {
         constructor(source: string) {
@@ -61,5 +65,20 @@ export abstract class BaseStep {
         }
     };
 
-    abstract execute(): Promise<void>;
+    static ConfigError = class extends BaseStep.Error {};
+    static DependencyError = class extends BaseStep.ConfigError {
+        constructor(source: string, dependency: BaseStep) {
+            super(
+                source,
+                `Dependency ${dependency._idStr()} has not been executed yet, please check the order of steps in the job config`,
+            );
+        }
+    };
+
+    execute() {
+        if (!this._id) {
+            throw new BaseStep.InternalError(this._idStr("execute"), "Step ID is not set");
+        }
+        return Promise.resolve();
+    }
 }

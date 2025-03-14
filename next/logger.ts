@@ -15,16 +15,17 @@ const format = (message: string, level: string, source = "") =>
     `${level ? `[${level}] ` : ""}${source ? `${source}: ` : ""}${message}`;
 
 class Logger {
-    private readonly file: string;
-    private readonly verbosity: LogLevel;
+    readonly #file: string;
+    readonly #verbosity: LogLevel;
+
     constructor(file?: string, verbosity?: LogLevel) {
-        this.file = file ?? logPath;
-        mkdirSync(dirname(this.file), { recursive: true });
-        this.verbosity = verbosity ?? LogLevel.INFO;
+        this.#file = file ?? logPath;
+        mkdirSync(dirname(this.#file), { recursive: true });
+        this.#verbosity = verbosity ?? LogLevel.INFO;
     }
 
-    private logFile(message: string) {
-        writeFileSync(this.file, `${new Date().toISOString()} ${message}\n`, { flag: "a+" });
+    #logFile(message: string) {
+        writeFileSync(this.#file, `${new Date().toISOString()} ${message}\n`, { flag: "a+" });
     }
 
     error(error?: unknown, recoverable = false, source?: string) {
@@ -41,9 +42,9 @@ class Logger {
         if (tb) {
             console.error(chalk.red(tb));
         }
-        this.logFile(formatted);
+        this.#logFile(formatted);
         if (tb) {
-            this.logFile(tb);
+            this.#logFile(tb);
         }
 
         if (!recoverable) {
@@ -57,26 +58,26 @@ class Logger {
 
     warn(message: string, source?: string) {
         const formatted = format(message, "WARN", source);
-        if (this.verbosity >= LogLevel.WARN) {
+        if (this.#verbosity >= LogLevel.WARN) {
             console.warn(chalk.yellow(formatted));
         }
-        this.logFile(formatted);
+        this.#logFile(formatted);
     }
 
     info(message: string, source?: string) {
         const formatted = format(message, "INFO", source);
-        if (this.verbosity >= LogLevel.INFO) {
+        if (this.#verbosity >= LogLevel.INFO) {
             console.info(chalk.blue(formatted));
         }
-        this.logFile(formatted);
+        this.#logFile(formatted);
     }
 
     debug(message: string, source?: string) {
         const formatted = format(message, "DEBUG", source);
-        if (this.verbosity >= LogLevel.DEBUG) {
+        if (this.#verbosity >= LogLevel.DEBUG) {
             console.debug(chalk.gray(formatted));
         }
-        this.logFile(formatted);
+        this.#logFile(formatted);
     }
 }
 
