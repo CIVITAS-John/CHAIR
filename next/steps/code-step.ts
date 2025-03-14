@@ -276,31 +276,26 @@ const analyzeChunk = async <T extends DataItem>(
     return analyzed;
 };
 
-export class CodeStep<T extends DataItem> extends BaseStep {
+export class CodeStep<T extends DataItem = DataItem> extends BaseStep {
     _type = "Code";
+    dependsOn: LoadStep[];
 
     constructor(private readonly config: CodeStepConfig<T>) {
         super();
-    }
-
-    #ensureDatasets() {
-        const _id = this._idStr("ensureDatasets");
-        if (!this.config.dataset) {
-            throw new CodeStep.ConfigError("config.dataset is not provided", _id);
-        }
-
-        logger.debug("Ensuring dataset is loaded", _id);
-        if (!Array.isArray(this.config.dataset)) {
-            this.config.dataset = [this.config.dataset];
-        }
-        return this.config.dataset.map((step) => step.dataset);
+        // If config.dataset is not provided, we will code all datasets loaded
+        this.dependsOn = config.dataset
+            ? Array.isArray(config.dataset)
+                ? config.dataset
+                : [config.dataset]
+            : [];
     }
 
     async execute() {
         void super.execute();
-        const datasets = this.#ensureDatasets();
-
         const _id = this._idStr("execute");
+
+        const datasets = this.dependsOn.map((step) => step.dataset);
+        logger.info(`Coding ${datasets.length} datasets`, _id);
 
         if (!("parameters" in this.config)) {
             throw new CodeStep.ConfigError(_id, "Human coding is not yet supported");
@@ -366,6 +361,6 @@ export class CodeStep<T extends DataItem> extends BaseStep {
             }
         }
 
-        await Promise.resolve();
+        this.executed = true;
     }
 }

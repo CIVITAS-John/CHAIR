@@ -41,10 +41,12 @@ const initializeChunk = (chunk: RawDataChunk): DataChunk<DataItem> => ({
 
 export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> extends BaseStep {
     _type = "Load";
+    dependsOn = undefined;
 
     #dataset?: Dataset<T>;
     get dataset() {
-        if (!this.#dataset) {
+        // Sanity check
+        if (!this.executed || !this.#dataset) {
             throw new LoadStep.UnexecutedError(this._idStr("dataset"));
         }
         return this.#dataset;
@@ -113,5 +115,7 @@ export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> exten
             getSpeakerNameForExample: dataset.getSpeakerNameForExample ?? getSpeakerName,
         };
         logger.info(`Loaded dataset "${dataset.title}"`, _id);
+
+        this.executed = true;
     }
 }

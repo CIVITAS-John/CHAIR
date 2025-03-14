@@ -22,6 +22,8 @@ export type IDStrFunc = (mtd?: string) => string;
 
 export abstract class BaseStep {
     abstract _type: string;
+    abstract dependsOn?: BaseStep[];
+    executed = false;
 
     _id = "";
     protected _idStr: IDStrFunc = (mtd?: string) =>
@@ -39,9 +41,18 @@ export abstract class BaseStep {
     static ConfigError = class extends BaseStep.Error {};
 
     execute() {
+        const _id = this._idStr("execute");
+
         if (!this._id) {
-            throw new BaseStep.InternalError("Step ID is not set", this._idStr("execute"));
+            throw new BaseStep.InternalError("Step ID is not set", _id);
         }
+        if (this.executed) {
+            throw new BaseStep.ConfigError(
+                "Step has already been executed, please check job configuration",
+                _id,
+            );
+        }
+
         return Promise.resolve();
     }
 }
