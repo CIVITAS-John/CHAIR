@@ -1,7 +1,9 @@
-import { mkdirSync, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
 import { dirname } from "path";
 
 import chalk from "chalk";
+
+import { ensureFolder } from "./misc";
 
 export enum LogLevel {
     ERROR,
@@ -20,7 +22,7 @@ class Logger {
 
     constructor(file?: string, verbosity?: LogLevel) {
         this.#file = file ?? logPath;
-        mkdirSync(dirname(this.#file), { recursive: true });
+        ensureFolder(dirname(this.#file));
         this.#verbosity = verbosity ?? LogLevel.INFO;
     }
 
@@ -37,14 +39,18 @@ class Logger {
                   : JSON.stringify(error);
         const formatted = format(message, "ERROR", source);
         const tb = error instanceof Error ? error.stack : undefined;
+        const cause = error instanceof Error ? error.cause : undefined;
 
         console.error(chalk.red(formatted));
-        if (tb) {
-            console.error(chalk.red(tb));
-        }
         this.#logFile(formatted);
         if (tb) {
+            console.error(chalk.red(tb));
             this.#logFile(tb);
+        }
+        if (cause) {
+            console.error(chalk.red("cause:"));
+            this.#logFile("cause:");
+            this.error(cause, recoverable, source);
         }
 
         if (!recoverable) {

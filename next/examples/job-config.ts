@@ -1,6 +1,6 @@
 import { QAJob, type QAJobConfig } from "../job";
-import { logger } from "../logger";
 import { LoadStep } from "../steps/load-step";
+import { logger } from "../utils/logger";
 
 const load = new LoadStep({
     path: "./next/examples/data",

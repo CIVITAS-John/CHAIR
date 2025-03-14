@@ -1,5 +1,5 @@
-import { logger } from "./logger";
 import type { BaseStep } from "./steps/base-step";
+import { logger } from "./utils/logger";
 
 export interface QAJobConfig {
     embeddingModel: string;
@@ -19,7 +19,6 @@ const validateStep = (step: BaseStep) => {
             throw new QAJob.ConfigError(`Unknown step type: ${step._type}`);
     }
 };
-const validateSteps = (steps: BaseStep[]) => steps.map(validateStep);
 
 export class QAJob {
     /**
@@ -43,13 +42,13 @@ export class QAJob {
     }
 
     constructor(private readonly config: QAJobConfig) {
-        const source = "QAJob#constructor";
-        logger.info("Creating job", source);
+        const _id = "QAJob#constructor";
+        logger.info("Creating job", _id);
 
         if (!Array.isArray(config.steps[0])) {
             // Config.Steps is a flattened 1D array
             const stepsFlat = config.steps as BaseStep[];
-            logger.debug(`Received ${stepsFlat.length} steps in a flat array`, source);
+            logger.debug(`Received ${stepsFlat.length} steps in a flat array`, _id);
 
             if (config.parallel) {
                 // We group the steps by type - load, code, then consolidate
@@ -58,7 +57,7 @@ export class QAJob {
                 stepsFlat.forEach((Step) => this.steps[validateStep(Step)].push(Step));
                 logger.debug(
                     `Grouped steps: ${this.steps.map((group) => group.length).join(", ")}`,
-                    source,
+                    _id,
                 );
             } else {
                 // We just have one group of steps in sequence
@@ -66,11 +65,11 @@ export class QAJob {
             }
 
             this.#assignID();
-            logger.info(`Created job with ${stepsFlat.length} steps`, source);
+            logger.info(`Created job with ${stepsFlat.length} steps`, _id);
             return;
         }
         // Config.Steps is a 2D array
-        logger.debug(`Received ${config.steps.length} dependency groups`, source);
+        logger.debug(`Received ${config.steps.length} dependency groups`, _id);
 
         // Validate each dependency group and each step
         config.steps.forEach((steps) => {
@@ -78,7 +77,7 @@ export class QAJob {
                 // The dependency group is not an array
                 throw new QAJob.ConfigError(`Invalid dependency group: ${JSON.stringify(steps)}`);
             }
-            validateSteps(steps);
+            steps.forEach(validateStep);
         });
 
         // Assign the provided steps
@@ -87,7 +86,7 @@ export class QAJob {
         this.#assignID();
         logger.info(
             `Created job with ${this.steps.length} dependency groups (${this.steps.map((group) => group.length).join(", ")} steps)`,
-            source,
+            _id,
         );
     }
 

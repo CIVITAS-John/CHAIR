@@ -1,6 +1,5 @@
 import { join, resolve } from "path";
 
-import { logger } from "../logger";
 import type {
     DataChunk,
     DataItem,
@@ -9,7 +8,8 @@ import type {
     RawDataItem,
     RawDataset,
 } from "../schema";
-import { importDefault, parseDateTime, readJSONFile } from "../utils";
+import { logger } from "../utils/logger";
+import { getMessagesPath, importDefault, parseDateTime, readJSONFile } from "../utils/misc";
 
 import { BaseStep } from "./base-step";
 
@@ -20,7 +20,7 @@ export interface LoadStepConfig {
 }
 
 const loadChunkGroup = (datasetPath: string, name: string) =>
-    readJSONFile<Record<string, RawDataChunk>>(join(resolve(datasetPath), name));
+    readJSONFile<Record<string, RawDataChunk>>(getMessagesPath(datasetPath, name));
 
 const initializeItem = (item: RawDataItem): DataItem => ({
     ...item,
@@ -56,34 +56,35 @@ export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> exten
 
     async execute() {
         void super.execute();
-        const source = this._idStr("execute");
+        const _id = this._idStr("execute");
 
         if (!this.config.path) {
             // TODO: Set some default path
             throw new Error("Path is required for LoadStep.");
         }
 
-        logger.info(`Loading dataset from ${this.config.path}`, source);
+        logger.info(`Loading dataset from ${this.config.path}`, _id);
         const dataset = (await importDefault(
             join(this.config.path, "configuration.js"),
         )) as RawDataset;
         logger.info(
             `Loaded dataset "${dataset.title}" with ${Object.keys(dataset.data).length} chunk groups`,
-            source,
+            _id,
         );
 
+        this.config.path = resolve(this.config.path);
         const parsedData: Record<string, Record<string, T>> = {};
         for (const [gk, gv] of Object.entries(dataset.data)) {
-            logger.info(`[${dataset.title}] Loading chunk group "${gk}" from ${gv}`, source);
+            logger.info(`[${dataset.title}] Loading chunk group "${gk}" from ${gv}`, _id);
             let rawChunks = loadChunkGroup(this.config.path, gv);
 
             if (this.config.filter) {
-                logger.debug(`[${dataset.title}] Filtering chunk group "${gk}"`, source);
+                logger.debug(`[${dataset.title}] Filtering chunk group "${gk}"`, _id);
                 rawChunks = this.config.filter(rawChunks);
             }
 
             if (!Object.keys(rawChunks).length) {
-                logger.warn(`[${dataset.title}] Chunk group "${gk}" is empty, skipping...`, source);
+                logger.warn(`[${dataset.title}] Chunk group "${gk}" is empty, skipping...`, _id);
                 continue;
             }
 
@@ -91,7 +92,7 @@ export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> exten
             for (const [ck, cv] of Object.entries(rawChunks)) {
                 logger.debug(
                     `[${dataset.title}] Initializing chunk "${ck}" of chunk group "${gk}"`,
-                    source,
+                    _id,
                 );
                 parsedChunks[ck] = initializeChunk(cv) as T;
             }
@@ -99,14 +100,18 @@ export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> exten
 
             logger.info(
                 `[${dataset.title}] Loaded chunk group "${gk}" with ${Object.keys(parsedChunks).length} chunks`,
-                source,
+                _id,
             );
         }
 
+        const getSpeakerName = dataset.getSpeakerName ?? ((id: string) => id);
         this.#dataset = {
             ...dataset,
+            path: this.config.path,
             data: parsedData,
+            getSpeakerName,
+            getSpeakerNameForExample: dataset.getSpeakerNameForExample ?? getSpeakerName,
         };
-        logger.info(`Loaded dataset "${dataset.title}"`, source);
+        logger.info(`Loaded dataset "${dataset.title}"`, _id);
     }
 }

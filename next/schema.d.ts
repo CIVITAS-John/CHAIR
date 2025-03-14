@@ -32,7 +32,7 @@ export interface DataChunk<T extends DataItem> {
     /** The ending time of the chunk. */
     end: Date;
     /** Data items in the chunk. */
-    items?: (T | DataChunk<T>)[];
+    items: (T | DataChunk<T>)[];
     /** The participants that this chunk mentioned. */
     mentions?: string[];
 }
@@ -46,6 +46,8 @@ export interface RawDataChunk extends DataChunk<RawDataItem> {
 
 /** A dataset for qualitative analysis. */
 export interface Dataset<T extends DataChunk> {
+    /** The path to the dataset. */
+    path: string;
     /** The title of the dataset. */
     title: string;
     /** The description of the dataset. */
@@ -57,50 +59,79 @@ export interface Dataset<T extends DataChunk> {
     /** The data chunks in the dataset. */
     data: Record<string, Record<string, T>>;
     /** Get the speaker name from the user ID. */
-    getSpeakerName?: (uid: string) => string;
+    getSpeakerName: (uid: string) => string;
     /** Get the speaker name (in example only) from the user ID. */
-    getSpeakerNameForExample?: (uid: string) => string;
+    getSpeakerNameForExample: (uid: string) => string;
 }
 
 /** An unloaded JSON representation of a dataset. */
-export interface RawDataset extends Dataset<RawDataChunk> {
+export interface RawDataset extends Omit<Dataset<RawDataChunk>, "path"> {
     data: Record<string, string>;
+    getSpeakerName?: (uid: string) => string;
+    getSpeakerNameForExample?: (uid: string) => string;
+}
+
+/** A qualitative code. */
+export interface Code {
+    /** The label of the code. */
+    label: string;
+    /** Categories of the code. */
+    categories?: string[];
+    /** Definitions of the code. */
+    definitions?: string[];
+    /** Examples of the code. */
+    examples?: string[];
+    /** Alternative labels of the code. */
+    alternatives?: string[];
+    /** Temporary, old labels of the code. Only used in consolidation. */
+    oldLabels?: string[];
+    /** Owner codebooks of the code. Only used in evaluation. */
+    owners?: number[];
+    /** Visual position of the code. Only used in evaluation. */
+    position?: [number, number];
+}
+
+/** Codebook: A codebook for the qualitative codes. */
+export type Codebook = Record<string, Code>;
+
+/**
+ * A qualitatively coded item (e.g. a comment, a message).
+ * Depending on the context, each prompt/ways of coding may use some or all of the following fields.
+ */
+export interface CodedItem {
+    /** The ID of the item. */
+    id: string;
+    /** Qualitative codes on the item. */
+    codes?: string[];
+}
+
+/**
+ * A qualitatively coded thread (e.g. a project, a conversation).
+ * Depending on the context, each prompt/ways of coding may use some or all of the following fields.
+ */
+export interface CodedThread {
+    /** The ID of the item. */
+    id: string;
+    /** Summary of the thread. */
+    summary?: string;
+    /** Plans before the coding. */
+    plan?: string;
+    /** Reflections after the coding. */
+    reflection?: string;
+    /** The codes used in the coding. */
+    codes: Codebook;
+    /** Coded items in the thread. */
+    items: Record<string, CodedItem>;
+    /** The iteration of the coding. */
+    iteration: number;
 }
 
 /** A collection of qualitatively coded threads. */
 export interface CodedThreads {
     /** The qualitatively coded threads. */
-    Threads: Record<string, CodedThread>;
+    threads: Record<string, CodedThread>;
     /** The summarized codebook. */
-    Codebook?: Codebook;
-}
-
-/** CodedThread: A qualitatively coded thread (e.g. a project, a conversation). */
-// Depending on the context, each prompt/ways of coding may use some or all of the following fields.
-export interface CodedThread {
-    /** ID: The ID of the item. */
-    ID: string;
-    /** Summary: Summary of the thread. */
-    Summary?: string;
-    /** Plan: Plans before the coding. */
-    Plan?: string;
-    /** Reflection: Reflections after the coding. */
-    Reflection?: string;
-    /** Codes: The codes used in the coding. */
-    Codes: Codebook;
-    /** Items: Coded items in the thread. */
-    Items: Record<string, CodedItem>;
-    /** Iteration: The iteration of the coding. */
-    Iteration?: number;
-}
-
-/** CodedItem: A qualitatively coded item (e.g. a comment, a message). */
-// Depending on the context, each prompt/ways of coding may use some or all of the following fields.
-export interface CodedItem {
-    /** ID: The ID of the item. */
-    ID: string;
-    /** Codes: Qualitative codes on the item. */
-    Codes?: string[];
+    codebook?: Codebook;
 }
 
 /** CodebookComparison: A package for comparing codebooks. */
@@ -125,31 +156,8 @@ export interface CodebookComparison<T extends DataChunk<DataItem>> {
     Distances: number[][];
 }
 
-/** Codebook: A codebook for the qualitative codes. */
-export type Codebook = Record<string, Code>;
-
 /** CodebookEvaluation: Evaluation of a codebook. */
 export type CodebookEvaluation = Record<string, number>;
-
-/** Code: A qualitative code. */
-export interface Code {
-    /** Label: The label of the code. */
-    Label: string;
-    /** Categories: Categories of the code. */
-    Categories?: string[];
-    /** Definitions: Definitions of the code. */
-    Definitions?: string[];
-    /** Examples: Examples of the code. */
-    Examples?: string[];
-    /** Alternatives: Alternative labels of the code. */
-    Alternatives?: string[];
-    /** OldLabels: Temporary, old labels of the code. Only used in consolidation. */
-    OldLabels?: string[];
-    /** Owners: Owner codebooks of the code. Only used in evaluation. */
-    Owners?: number[];
-    /** Position: Visual position of the code. Only used in evaluation. */
-    Position?: [number, number];
-}
 
 /** Conversation: A segment of the group chat. */
 export interface Conversation extends DataChunk<Message> {

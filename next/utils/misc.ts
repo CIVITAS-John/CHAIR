@@ -1,9 +1,7 @@
-import { readFileSync } from "fs";
-import { resolve } from "path";
+import { mkdirSync, readFileSync } from "fs";
+import { join, resolve } from "path";
 
-import { GetSpeakerNameForExample } from "../constants";
-
-import type { Codebook, DataItem } from "./schema";
+import type { Codebook, DataItem } from "../schema";
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export const readJSONFile = <T>(path: string) => JSON.parse(readFileSync(path, "utf-8")) as T;
@@ -19,6 +17,28 @@ export const importDefault = async (path: string) => {
     return module.default;
 };
 
+/** Ensure that a folder exists. */
+export const ensureFolder = (path: string) => {
+    mkdirSync(path, { recursive: true });
+    return path;
+};
+
+/** Create a promise with timeout. */
+export function promiseWithTimeout<T>(
+    promise: Promise<T>,
+    time: number,
+    timeoutError = new Error("Sorry, the AI stopped responding."),
+): Promise<T> {
+    // Create a promise that rejects in milliseconds
+    const timeout = new Promise<never>((_, reject) => {
+        setTimeout(() => {
+            reject(timeoutError);
+        }, time);
+    });
+    // Returns a race between timeout and the passed promise
+    return Promise.race<T>([promise, timeout]);
+}
+
 export const parseDateTime = (datetime: string) => {
     // If it is only a time, add a date
     if (/^\d{2}:\d{2}:\d{2}$/.exec(datetime)) {
@@ -31,19 +51,21 @@ export const parseDateTime = (datetime: string) => {
     return date;
 };
 
+export const getMessagesPath = (datasetPath: string, name: string) => join(datasetPath, name);
+
 /** GetCategories: Get the categories from the codebook. */
 export function GetCategories(Codebook: Codebook): Map<string, string[]> {
     const Categories = new Map<string, string[]>();
     for (const Code of Object.values(Codebook)) {
-        for (const Category of Code.Categories ?? []) {
+        for (const Category of Code.categories ?? []) {
             if (Category === "") {
                 continue;
             }
             if (!Categories.has(Category)) {
                 Categories.set(Category, []);
             }
-            if (!Categories.get(Category)!.includes(Code.Label)) {
-                Categories.get(Category)!.push(Code.Label);
+            if (!Categories.get(Category)!.includes(Code.label)) {
+                Categories.get(Category)!.push(Code.label);
             }
         }
     }
@@ -51,11 +73,19 @@ export function GetCategories(Codebook: Codebook): Map<string, string[]> {
 }
 
 /** AssembleExample: Assemble an example. */
-export function AssembleExample(ID: string, UserID: string, Content: string) {
-    return `${ID}|||${GetSpeakerNameForExample(UserID)}: ${Content}`;
-}
+export const assembleExample = (
+    getSpeakerNameForExample: (uid: string) => string,
+    id: string,
+    uid: string,
+    content: string,
+) => {
+    return `${id}|||${getSpeakerNameForExample(uid)}: ${content}`;
+};
 
 /** AssembleExampleFrom: Assemble an example from a data item. */
-export function AssembleExampleFrom(Item: DataItem) {
-    return AssembleExample(Item.id, Item.uid, Item.content);
+export function assembleExampleFrom(
+    getSpeakerNameForExample: (uid: string) => string,
+    item: DataItem,
+) {
+    return assembleExample(getSpeakerNameForExample, item.id, item.uid, item.content);
 }

@@ -1,17 +1,20 @@
-import type { AIParameters, ConsolidateStrategy, LLMModel } from "./base-step";
+import type { DataItem } from "../schema";
+import type { LLMModel } from "../utils/llms";
+
+import type { AIParameters, ConsolidateStrategy } from "./base-step";
 import { BaseStep } from "./base-step";
 import type { CodeStep } from "./code-step";
 
-export interface ConsolidateStepConfig {
-    Coder?: CodeStep | CodeStep[]; // Defaults to all coders
+export interface ConsolidateStepConfig<T extends DataItem> {
+    Coder?: CodeStep<T> | CodeStep<T>[]; // Defaults to all coders
     Strategy: ConsolidateStrategy;
     Model: LLMModel | LLMModel[];
     Parameters?: AIParameters;
 }
 
-export class ConsolidateStep extends BaseStep {
+export class ConsolidateStep<T extends DataItem> extends BaseStep {
     _type = "Consolidate";
-    constructor(private readonly Config: ConsolidateStepConfig) {
+    constructor(private readonly Config: ConsolidateStepConfig<T>) {
         super();
     }
 

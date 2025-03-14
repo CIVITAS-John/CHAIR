@@ -1,7 +1,7 @@
 import type { QAJobConfig } from "./job";
 import { QAJob } from "./job";
-import { logger } from "./logger";
-import { importDefault } from "./utils";
+import { logger } from "./utils/logger";
+import { importDefault } from "./utils/misc";
 
 const args = process.argv.slice(2);
 
