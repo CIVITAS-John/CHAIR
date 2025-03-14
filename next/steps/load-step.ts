@@ -40,8 +40,8 @@ const initializeChunk = (chunk: RawDataChunk): DataChunk<DataItem> => ({
 });
 
 export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> extends BaseStep {
-    _type = "Load";
-    dependsOn = undefined;
+    override _type = "Load";
+    override dependsOn = undefined;
 
     #dataset?: Dataset<T>;
     get dataset() {
@@ -56,7 +56,7 @@ export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> exten
         super();
     }
 
-    async execute() {
+    override async execute() {
         void super.execute();
         const _id = this._idStr("execute");
 
@@ -111,6 +111,7 @@ export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> exten
             ...dataset,
             path: this.config.path,
             data: parsedData,
+            researchQuestion: `The research question is: ${dataset.researchQuestion}`,
             getSpeakerName,
             getSpeakerNameForExample: dataset.getSpeakerNameForExample ?? getSpeakerName,
         };

@@ -134,6 +134,24 @@ export interface CodedThreads {
     codebook?: Codebook;
 }
 
+/** A message in a group chat. */
+export interface Message extends DataItem {
+    /** firstSeen: Whether the sender is first seen in the group. */
+    firstSeen?: boolean;
+}
+
+/** A segment of the group chat. */
+export interface Conversation extends DataChunk<Message> {
+    /** The time the conversation started. */
+    start: Date;
+    /** The time the conversation ended. */
+    end: Date;
+    /** The participants in the conversation. */
+    participants: Map<string, number>;
+    /** The number of first-time participants. */
+    firstSeen: number;
+}
+
 /** CodebookComparison: A package for comparing codebooks. */
 export interface CodebookComparison<T extends DataChunk<DataItem>> {
     /** Title: The title of the comparison. */
@@ -158,24 +176,6 @@ export interface CodebookComparison<T extends DataChunk<DataItem>> {
 
 /** CodebookEvaluation: Evaluation of a codebook. */
 export type CodebookEvaluation = Record<string, number>;
-
-/** Conversation: A segment of the group chat. */
-export interface Conversation extends DataChunk<Message> {
-    /** Start: The time the conversation started. */
-    Start: Date;
-    /** End: The time the conversation ended. */
-    End: Date;
-    /** Participants: The participants in the conversation. */
-    Participants: Map<string, number>;
-    /** FirstSeen: The number of first-time participants. */
-    FirstSeen: number;
-}
-
-/** Message: A message in a group chat. */
-export interface Message extends DataItem {
-    /** FirstSeen: Whether the sender is first seen in the group. */
-    FirstSeen?: boolean;
-}
 
 /** Participant: A participant in a group chat. */
 export interface Participant {

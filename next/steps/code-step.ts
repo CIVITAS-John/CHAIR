@@ -2,7 +2,7 @@ import { writeFileSync } from "fs";
 
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
-import type { Analyzer } from "../../analyzer";
+import type { Analyzer } from "../analyzer";
 import type { CodedThread, CodedThreads, DataChunk, DataItem } from "../schema";
 import { exportChunksForCoding } from "../utils/export";
 import type { LLMModel, LLMSession } from "../utils/llms";
@@ -14,10 +14,17 @@ import type { AIParameters, IDStrFunc } from "./base-step";
 import { BaseStep } from "./base-step";
 import type { LoadStep } from "./load-step";
 
-export type CodeStepConfig<T extends DataItem> = {
+type AnalyzerConstructor<TUnit, TSubunit, TAnalysis> = new (
+    ...args: ConstructorParameters<typeof Analyzer<TUnit, TSubunit, TAnalysis>>
+) => Analyzer<TUnit, TSubunit, TAnalysis>;
+
+export type CodeStepConfig<
+    TUnit extends DataChunk<TSubunit>,
+    TSubunit extends DataItem = DataItem,
+> = {
     // To avoid confusion for AI "output" vs human "input", this is just the path to store the coded data
     path?: string; // Defaults to?
-    dataset?: LoadStep | LoadStep[]; // Defaults to all datasets loaded
+    dataset?: LoadStep<TUnit> | LoadStep<TUnit>[]; // Defaults to all datasets loaded
 } & (
     | {
           agent: "Human";
@@ -27,14 +34,14 @@ export type CodeStepConfig<T extends DataItem> = {
           agent: "AI";
           // Renaming "Analyzer" to "Strategy" to avoid confusion with "the LLM that analyzes the data"
           strategy:
-              | Analyzer<DataChunk<T>, T, CodedThread>
-              | Analyzer<DataChunk<T>, T, CodedThread>[];
+              | AnalyzerConstructor<TUnit, TSubunit, CodedThread>
+              | AnalyzerConstructor<TUnit, TSubunit, CodedThread>[];
           model: LLMModel | LLMModel[];
           parameters?: AIParameters;
       }
 );
 
-async function loopThroughChunks<TUnit, TSubunit, TAnalysis>(
+const loopThroughChunks = async <TUnit, TSubunit, TAnalysis>(
     idStr: IDStrFunc,
     session: LLMSession,
     analyzer: Analyzer<TUnit, TSubunit, TAnalysis>,
@@ -49,18 +56,18 @@ async function loopThroughChunks<TUnit, TSubunit, TAnalysis>(
         iteration: number,
     ) => Promise<number>,
     iteration?: (iteration: number) => Promise<void>,
-) {
+) => {
     const _id = idStr("loopThroughChunks");
 
     // Split units into smaller chunks based on the maximum items
-    for (let i = 0; i < analyzer.MaxIterations; i++) {
+    for (let i = 0; i < analyzer.maxIterations; i++) {
         let cursor = 0;
         // Preprocess and filter the subunits
-        sources = await analyzer.Preprocess(analysis, source, sources, i);
+        sources = await analyzer.preprocess(analysis, source, sources, i);
         if (sources.length === 0) {
             continue;
         }
-        const filtered = sources.filter((subunit) => analyzer.SubunitFilter(subunit, i));
+        const filtered = sources.filter((subunit) => analyzer.subunitFilter(subunit, i));
         // Loop through the subunits
         while (cursor < filtered.length) {
             let retries = 0;
@@ -68,7 +75,7 @@ async function loopThroughChunks<TUnit, TSubunit, TAnalysis>(
             let chunkSize = [0, 0, 0];
             while (retries <= 4) {
                 // Get the chunk size
-                const _chunkSize = analyzer.GetChunkSize(
+                const _chunkSize = analyzer.getChunkSize(
                     Math.min(session.llm.maxItems, filtered.length - cursor),
                     filtered.length - cursor,
                     i,
@@ -129,7 +136,7 @@ async function loopThroughChunks<TUnit, TSubunit, TAnalysis>(
         // Run the iteration function
         await iteration?.(i);
     }
-}
+};
 
 const analyzeChunk = async <T extends DataItem>(
     idStr: IDStrFunc,
@@ -139,7 +146,7 @@ const analyzeChunk = async <T extends DataItem>(
     chunks: Record<string, DataChunk<T>>,
     analyzed: CodedThreads = { threads: {} },
     fakeRequest = false,
-): Promise<CodedThreads> => {
+) => {
     const _id = idStr("analyzeChunk");
 
     const keys = Object.keys(chunks);
@@ -162,7 +169,7 @@ const analyzeChunk = async <T extends DataItem>(
         };
     }
 
-    await analyzer.BatchPreprocess(
+    await analyzer.batchPreprocess(
         keys.map((k) => chunks[k]),
         keys.map((k) => analyzed.threads[k]),
     );
@@ -181,7 +188,7 @@ const analyzeChunk = async <T extends DataItem>(
         logger.info(`Chunk ${key}: ${messages.length} items`, _id);
 
         // Initialize the analysis
-        const analysis: CodedThread = analyzed.threads[key];
+        const analysis = analyzed.threads[key];
         // Run the messages through chunks (as defined by the analyzer)
         let prevAnalysis: CodedThread | undefined;
         await loopThroughChunks(
@@ -201,7 +208,7 @@ const analyzeChunk = async <T extends DataItem>(
                     }
                 }
                 // Build the prompts
-                const prompts = await analyzer.BuildPrompts(
+                const prompts = await analyzer.buildPrompts(
                     analysis,
                     chunk,
                     currents,
@@ -218,15 +225,15 @@ const analyzeChunk = async <T extends DataItem>(
                         idStr,
                         session,
                         [new SystemMessage(prompts[0]), new HumanMessage(prompts[1])],
-                        `messaging-groups/${analyzer.Name}`,
-                        tries * 0.2 + analyzer.BaseTemperature,
+                        `messaging-groups/${analyzer.name}`,
+                        tries * 0.2 + analyzer.baseTemperature,
                         fakeRequest,
                     );
                     if (response === "") {
                         return 0;
                     }
                 }
-                const itemRes = await analyzer.ParseResponse(
+                const itemRes = await analyzer.parseResponse(
                     analysis,
                     response.split("\n").map((Line) => Line.trim()),
                     currents,
@@ -276,11 +283,14 @@ const analyzeChunk = async <T extends DataItem>(
     return analyzed;
 };
 
-export class CodeStep<T extends DataItem = DataItem> extends BaseStep {
-    _type = "Code";
-    dependsOn: LoadStep[];
+export class CodeStep<
+    TUnit extends DataChunk<TSubunit>,
+    TSubunit extends DataItem = DataItem,
+> extends BaseStep {
+    override _type = "Code";
+    override dependsOn: LoadStep<TUnit>[];
 
-    constructor(private readonly config: CodeStepConfig<T>) {
+    constructor(private readonly config: CodeStepConfig<TUnit, TSubunit>) {
         super();
         // If config.dataset is not provided, we will code all datasets loaded
         this.dependsOn = config.dataset
@@ -290,15 +300,15 @@ export class CodeStep<T extends DataItem = DataItem> extends BaseStep {
             : [];
     }
 
-    async execute() {
+    override async execute() {
         void super.execute();
         const _id = this._idStr("execute");
 
         const datasets = this.dependsOn.map((step) => step.dataset);
         logger.info(`Coding ${datasets.length} datasets`, _id);
 
-        if (!("parameters" in this.config)) {
-            throw new CodeStep.ConfigError(_id, "Human coding is not yet supported");
+        if (this.config.agent === "Human") {
+            throw new CodeStep.ConfigError("Human coding is not yet supported", _id);
         }
 
         const strategies = Array.isArray(this.config.strategy)
@@ -308,23 +318,17 @@ export class CodeStep<T extends DataItem = DataItem> extends BaseStep {
 
         for (const dataset of datasets) {
             logger.info(`Coding dataset "${dataset.title}"`, _id);
-            for (const analyzer of strategies) {
+            for (const AnalyzerClass of strategies) {
                 await useLLMs(
                     this._idStr,
-                    async (llm) => {
-                        const session: LLMSession = {
-                            llm,
-                            inputTokens: 0,
-                            outputTokens: 0,
-                            expectedItems: 0,
-                            finishedItems: 0,
-                        };
+                    async (session) => {
+                        const analyzer = new AnalyzerClass(dataset, session);
                         // Analyze the chunks
                         for (const [name, chunks] of Object.entries(dataset.data)) {
-                            if (!("parameters" in this.config)) {
+                            if (this.config.agent === "Human") {
                                 throw new CodeStep.ConfigError(
-                                    _id,
                                     "Human coding is not yet supported",
+                                    _id,
                                 );
                             }
                             const result = await analyzeChunk(
@@ -337,24 +341,27 @@ export class CodeStep<T extends DataItem = DataItem> extends BaseStep {
                                 this.config.parameters?.fakeRequest ?? false,
                             );
                             // Write the result into a JSON file
-                            ensureFolder(getMessagesPath(dataset.path, analyzer.Name));
+                            ensureFolder(getMessagesPath(dataset.path, analyzer.name));
                             writeFileSync(
                                 getMessagesPath(
                                     dataset.path,
-                                    `${analyzer.Name}/${name.replace(".json", "")}-${llm.name}${analyzer.Suffix}.json`,
+                                    `${analyzer.name}/${name.replace(".json", "")}-${session.llm.name}${analyzer.suffix}.json`,
                                 ),
                                 JSON.stringify(result, null, 4),
                             );
                             // Write the result into an Excel file
-                            const book = exportChunksForCoding(Object.values(chunks), result);
+                            const book = exportChunksForCoding(
+                                this._idStr,
+                                Object.values(chunks),
+                                result,
+                            );
                             await book.xlsx.writeFile(
                                 getMessagesPath(
                                     dataset.path,
-                                    `${analyzer.Name}/${name.replace(".json", "")}-${llm.name}${analyzer.Suffix}.xlsx`,
+                                    `${analyzer.name}/${name.replace(".json", "")}-${session.llm.name}${analyzer.suffix}.xlsx`,
                                 ),
                             );
                         }
-                        return session;
                     },
                     models,
                 );

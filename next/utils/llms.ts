@@ -302,16 +302,21 @@ export const initLLM = (LLM: string): LLMObject => {
 /** UseLLMs: Use specific LLMs one by one. Call it before start translating. */
 export const useLLMs = async (
     idStr: IDStrFunc,
-    task: (llm: LLMObject) => Promise<LLMSession>,
+    task: (session: LLMSession) => Promise<void>,
     LLMs: LLMModel[],
 ) => {
     for (const llm of LLMs) {
-        const { inputTokens, outputTokens, finishedItems, expectedItems } = await task(
-            typeof llm === "string" ? initLLM(llm) : llm,
-        );
+        const session: LLMSession = {
+            llm: typeof llm === "string" ? initLLM(llm) : llm,
+            inputTokens: 0,
+            outputTokens: 0,
+            expectedItems: 0,
+            finishedItems: 0,
+        };
+        await task(session);
         logger.info(
-            `LLM ${typeof llm === "string" ? llm : llm.name} done. Input tokens: ${inputTokens}; output tokens: ${outputTokens}; finish rate: ${Math.round(
-                (finishedItems / Math.max(1, expectedItems)) * 100,
+            `LLM ${typeof llm === "string" ? llm : llm.name} done. Input tokens: ${session.inputTokens}; output tokens: ${session.outputTokens}; finish rate: ${Math.round(
+                (session.finishedItems / Math.max(1, session.expectedItems)) * 100,
             )}%`,
             idStr("useLLMs"),
         );

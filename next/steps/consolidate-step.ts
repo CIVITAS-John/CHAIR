@@ -13,8 +13,8 @@ export interface ConsolidateStepConfig<T extends DataItem> {
 }
 
 export class ConsolidateStep<T extends DataItem = DataItem> extends BaseStep {
-    _type = "Consolidate";
-    dependsOn: CodeStep<T>[];
+    override _type = "Consolidate";
+    override dependsOn: CodeStep<T>[];
 
     constructor(private readonly config: ConsolidateStepConfig<T>) {
         super();
@@ -27,7 +27,7 @@ export class ConsolidateStep<T extends DataItem = DataItem> extends BaseStep {
             : [];
     }
 
-    async execute() {
+    override async execute() {
         await super.execute();
 
         this.executed = true;

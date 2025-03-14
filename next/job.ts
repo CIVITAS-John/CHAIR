@@ -27,7 +27,9 @@ export class QAJob {
      */
     steps: BaseStep[][];
 
-    static ConfigError = class extends Error {};
+    static ConfigError = class extends Error {
+        name = "QAJob.ConfigError";
+    };
 
     #assignID() {
         if (!this.steps.length) {
@@ -36,7 +38,7 @@ export class QAJob {
         }
         this.steps.forEach((steps, i) => {
             steps.forEach((step, j) => {
-                step._id = `${i}.${j}`;
+                step._id = `${i + 1}.${j + 1}`;
             });
         });
     }
@@ -54,7 +56,7 @@ export class QAJob {
             const stepSet = new Set<BaseStep>();
             stepsFlat.forEach((step, si) => {
                 if (stepSet.has(step)) {
-                    throw new QAJob.ConfigError(`Step ${si} is a duplicate`);
+                    throw new QAJob.ConfigError(`Step ${si + 1} is a duplicate`);
                 }
                 stepSet.add(step);
             });
@@ -64,6 +66,17 @@ export class QAJob {
                 this.steps = [[], [], []];
                 // Classify each step
                 stepsFlat.forEach((Step) => this.steps[validateStep(Step)].push(Step));
+                // Set the dependencies of Code and Consolidate steps if not provided
+                this.steps[1].forEach((codeStep) => {
+                    if (!codeStep.dependsOn?.length) {
+                        codeStep.dependsOn = this.steps[0];
+                    }
+                });
+                this.steps[2].forEach((consolidateStep) => {
+                    if (!consolidateStep.dependsOn?.length) {
+                        consolidateStep.dependsOn = this.steps[1];
+                    }
+                });
                 logger.debug(
                     `Grouped steps: ${this.steps.map((group) => group.length).join(", ")}`,
                     _id,
@@ -85,17 +98,29 @@ export class QAJob {
         config.steps.forEach((steps, gi) => {
             if (!Array.isArray(steps)) {
                 // The dependency group is not an array
-                throw new QAJob.ConfigError(`Invalid dependency group: ${JSON.stringify(steps)}`);
+                throw new QAJob.ConfigError(
+                    `Invalid dependency group ${gi + 1}: ${JSON.stringify(steps)}`,
+                );
             }
             steps.forEach((step, si) => {
                 validateStep(step);
                 // Check for duplicates
                 if (prevSteps.has(step)) {
-                    throw new QAJob.ConfigError(`Step ${gi}.${si} is a duplicate`);
+                    throw new QAJob.ConfigError(`Step ${gi + 1}.${si + 1} is a duplicate`);
                 }
-                // Check for unresolved dependencies
-                if (step.dependsOn?.some((dep) => !prevSteps.has(dep))) {
-                    throw new QAJob.ConfigError(`Step ${gi}.${si} has unresolved dependencies`);
+                if (step.dependsOn) {
+                    // It's a Code or Consolidate step with dependencies
+                    if (!step.dependsOn.length) {
+                        // Set the dependencies to all previous steps
+                        step.dependsOn = [...prevSteps].filter(
+                            (prevStep) =>
+                                prevStep._type === (step._type === "Code" ? "Load" : "Code"),
+                        );
+                    } else if (step.dependsOn.some((dep) => !prevSteps.has(dep))) {
+                        throw new QAJob.ConfigError(
+                            `Step ${gi + 1}.${si + 1} has unresolved dependencies`,
+                        );
+                    }
                 }
             });
             // Only add the steps at the end to prevent dependencies within the same group
@@ -132,5 +157,7 @@ export class QAJob {
             }
             logger.info(`Executed dependency group ${i + 1}`, _id);
         }
+
+        logger.info("Job successfully executed", _id);
     }
 }

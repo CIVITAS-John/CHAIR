@@ -12,9 +12,9 @@ export interface AIParameters extends Record<string, unknown> {
 }
 
 abstract class StepError extends Error {
+    name = "BaseStep.Error";
     constructor(message: string, source: string) {
         super(`${source}: ${message}`);
-        this.name = "BaseStep.Error";
     }
 }
 
@@ -30,15 +30,20 @@ export abstract class BaseStep {
         `${this._id ? `${this._id} ` : ""}${this._type}Step${mtd ? `#${mtd}` : ""}`;
 
     static Error = StepError;
-    static InternalError = class extends BaseStep.Error {};
+    static InternalError = class extends BaseStep.Error {
+        name = "BaseStep.InternalError";
+    };
 
     static UnexecutedError = class extends BaseStep.Error {
+        name = "BaseStep.UnexecutedError";
         constructor(source: string) {
             super("Step has not been executed yet", source);
         }
     };
 
-    static ConfigError = class extends BaseStep.Error {};
+    static ConfigError = class extends BaseStep.Error {
+        name = "BaseStep.ConfigError";
+    };
 
     execute() {
         const _id = this._idStr("execute");

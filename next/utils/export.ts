@@ -1,6 +1,7 @@
 import Excel from "exceljs";
 
 import type { Code, CodedThreads, DataChunk, DataItem, Message, Project } from "../schema";
+import type { IDStrFunc } from "../steps/base-step";
 
 import { logger } from "./logger";
 
@@ -102,10 +103,11 @@ export function GetRowHeight(Content: string, Width: number): number {
 }
 
 /** Export Chunks into an Excel workbook for coding. */
-export function exportChunksForCoding<T extends DataItem>(
+export const exportChunksForCoding = <T extends DataItem>(
+    idStr: IDStrFunc,
     chunks: DataChunk<T>[],
     analyses: CodedThreads = { threads: {} },
-) {
+) => {
     const book = new Workbook();
     // const Consolidated = false;
     const consolidation = new Map<string, string>();
@@ -153,8 +155,11 @@ export function exportChunksForCoding<T extends DataItem>(
         for (const message of messages) {
             const item = analysis.items[message.id] ?? analysis.items[message.id.substring(2)];
             // TODO: Support subchunks
-            if (!("chunk" in message)) {
-                logger.warn("Subchunks are not yet supported, skipping", "exportChunksForCoding");
+            if ("items" in message) {
+                logger.warn(
+                    "Subchunks are not yet supported, skipping",
+                    idStr("exportChunksForCoding"),
+                );
                 continue;
             }
             message.chunk = message.chunk ?? chunk.id;
@@ -212,7 +217,7 @@ export function exportChunksForCoding<T extends DataItem>(
     // Export the codebook
     ExportCodebook(book, analyses);
     return book;
-}
+};
 
 /** ExportCodebook: Export a codebook into an Excel workbook. */
 export function ExportCodebook(
