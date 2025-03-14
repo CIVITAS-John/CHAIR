@@ -8,6 +8,7 @@ import { ensureFolder } from "./misc";
 export enum LogLevel {
     ERROR,
     WARN,
+    SUCCESS,
     INFO,
     DEBUG,
 }
@@ -66,6 +67,14 @@ class Logger {
         const formatted = format(message, "WARN", source);
         if (this.#verbosity >= LogLevel.WARN) {
             console.warn(chalk.yellow(formatted));
+        }
+        this.#logFile(formatted);
+    }
+
+    success(message: string, source?: string) {
+        const formatted = format(message, "SUCCESS", source);
+        if (this.#verbosity >= LogLevel.SUCCESS) {
+            console.log(chalk.green(formatted));
         }
         this.#logFile(formatted);
     }
