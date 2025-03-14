@@ -230,7 +230,7 @@ export const exportChunksForCoding = <T extends DataItem>(
     }
     // Export the codebook
     exportCodebook(idStr, book, analyses);
-    logger.success(`Exported ${chunks.length} chunks to Excel`, _id);
+    logger.info(`Exported ${chunks.length} chunks to Excel`, _id);
     return book;
 };
 
@@ -321,5 +321,5 @@ export const exportCodebook = (
         Row.getCell("Alternatives").alignment = { vertical: "middle", wrapText: true };
         logger.debug(`Exported code ${code.label}`, _id);
     }
-    logger.success("Exported codebook to Excel", _id);
+    logger.info("Exported codebook to Excel", _id);
 };

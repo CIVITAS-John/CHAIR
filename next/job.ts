@@ -89,7 +89,7 @@ export class QAJob {
             }
 
             this.#assignID();
-            logger.success(`Created job with ${stepsFlat.length} steps`, _id);
+            logger.info(`Created job with ${stepsFlat.length} steps`, _id);
             return;
         }
         // config.steps is a 2D array
@@ -135,7 +135,7 @@ export class QAJob {
         this.steps = this.steps.filter((group) => group.length);
 
         this.#assignID();
-        logger.success(
+        logger.info(
             `Created job with ${this.steps.length} dependency groups (${this.steps.map((group) => group.length).join(", ")} steps)`,
             _id,
         );
@@ -156,7 +156,7 @@ export class QAJob {
                 for (const [j, step] of steps.entries()) {
                     logger.info(`Executing step ${j + 1}`, _id);
                     await step.execute();
-                    logger.success(`Executed step ${j + 1}`, _id);
+                    logger.info(`Executed step ${j + 1}`, _id);
                 }
             }
             logger.success(`Executed dependency group ${i + 1}`, _id);

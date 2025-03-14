@@ -319,7 +319,7 @@ export const useLLMs = async (
         };
         logger.debug("Executing task", idStr("useLLMs"));
         await task(session);
-        logger.success(
+        logger.info(
             `LLM ${typeof llm === "string" ? llm : llm.name} completed (input tokens: ${session.inputTokens}, output tokens: ${session.outputTokens}, finish rate: ${Math.round(
                 (session.finishedItems / Math.max(1, session.expectedItems)) * 100,
             )}%)`,
@@ -360,7 +360,7 @@ export const requestLLM = async (
                     outputTokens = tokenize(content).length;
                 session.inputTokens += inputTokens;
                 session.outputTokens += outputTokens;
-                logger.success(
+                logger.info(
                     `[${session.llm.name}] Cache hit (input tokens: ${inputTokens}, output tokens: ${outputTokens})`,
                     _id,
                 );
@@ -414,7 +414,7 @@ export const requestLLMWithoutCache = async (
     session.inputTokens += input;
     session.outputTokens += output;
 
-    logger.success(
+    logger.info(
         `[${llm.name}] LLM request completed (input tokens: ${input}, output tokens: ${output})`,
         _id,
     );

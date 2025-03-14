@@ -137,7 +137,7 @@ const loopThroughChunks = async <TUnit, TSubunit, TAnalysis>(
                     ++retries;
                     const error = new CodeStep.InternalError(
                         `Analysis error, try ${retries}/5`,
-                        idStr("loopThroughChunks"),
+                        _id,
                     );
                     error.cause = e;
                     if (retries > 4) {
@@ -145,7 +145,7 @@ const loopThroughChunks = async <TUnit, TSubunit, TAnalysis>(
                     }
                     session.expectedItems += chunkSize[0];
                     session.finishedItems += chunkSize[0];
-                    logger.error(error, true, idStr("loopThroughChunks"));
+                    logger.error(error, true, _id);
                 }
             }
             // Move the cursor
@@ -154,7 +154,7 @@ const loopThroughChunks = async <TUnit, TSubunit, TAnalysis>(
         // Run the iteration function
         await iteration?.(i);
 
-        logger.success(
+        logger.info(
             `[${dataset.name}/${key}] Iteration ${i + 1}/${analyzer.maxIterations} completed`,
             _id,
         );
@@ -334,7 +334,7 @@ const analyzeChunk = async <T extends DataItem>(
             },
         );
         analysis.iteration++;
-        logger.success(
+        logger.info(
             `[${dataset.name}] Analyzed chunk ${key}, iteration ${analysis.iteration}`,
             _id,
         );
@@ -404,7 +404,7 @@ export class CodeStep<
                                 this.config.parameters?.fakeRequest ?? false,
                             );
                             logger.success(
-                                `[${dataset.name}] Coded ${Object.keys(result.threads).length} threads for ${key}`,
+                                `[${dataset.name}/${AnalyzerClass.name}/${session.llm.name}] Coded ${Object.keys(result.threads).length} threads for ${key}`,
                                 _id,
                             );
                             // Write the result into a JSON file
