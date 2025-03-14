@@ -48,6 +48,8 @@ export interface RawDataChunk extends DataChunk<RawDataItem> {
 export interface Dataset<T extends DataChunk> {
     /** The path to the dataset. */
     path: string;
+    /** The name of the dataset (path-friendly). */
+    name: string;
     /** The title of the dataset. */
     title: string;
     /** The description of the dataset. */
