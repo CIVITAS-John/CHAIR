@@ -12,6 +12,24 @@ export function Range(startAt: number, endAt: number): number[] {
     return [...Array(endAt - startAt + 1).keys()].map((i) => i + startAt);
 }
 
+/** Get the row height for the given content. */
+export const getRowHeight = (content: string, width: number) =>
+    content
+        .split("\n")
+        .map((text) => Math.max(1, Math.ceil(text.length / width)))
+        .reduce((acc, cur) => acc + cur) *
+        15 +
+    3;
+
+/** Sort an array of codes. */
+export const sortCodes = (codes: Code[]) =>
+    [...codes].sort((A, B) => {
+        const category = (A.categories?.sort().join("; ") ?? "").localeCompare(
+            B.categories?.sort().join("; ") ?? "",
+        );
+        return category !== 0 ? category : A.label.localeCompare(B.label);
+    });
+
 // Export: Export the JSON data into human-readable formats.
 // ExportMessages: Export messages into markdown.
 export function ExportMessages(Messages: Message[], Originals?: Message[]): string {
@@ -91,23 +109,15 @@ export function ExportProjects(Projects: Project[], Originals?: Project[]): stri
     return Result;
 }
 
-/** GetRowHeight: Get the row height for a given content. */
-export function GetRowHeight(Content: string, Width: number): number {
-    return (
-        Content.split("\n")
-            .map((Text) => Math.max(1, Math.ceil(Text.length / Width)))
-            .reduce((Prev, Curr) => Prev + Curr) *
-            15 +
-        3
-    );
-}
-
 /** Export Chunks into an Excel workbook for coding. */
 export const exportChunksForCoding = <T extends DataItem>(
     idStr: IDStrFunc,
     chunks: DataChunk<T>[],
     analyses: CodedThreads = { threads: {} },
 ) => {
+    const _id = idStr("exportChunksForCoding");
+
+    logger.info(`Exporting ${chunks.length} chunks to Excel`, _id);
     const book = new Workbook();
     // const Consolidated = false;
     const consolidation = new Map<string, string>();
@@ -124,6 +134,7 @@ export const exportChunksForCoding = <T extends DataItem>(
     }
     // Export the Chunks
     for (const chunk of chunks) {
+        logger.debug(`Exporting chunk ${chunk.id}`, _id);
         const messages = chunk.items;
         const analysis = analyses.threads[chunk.id] ?? analyses.threads[chunk.id.substring(2)];
         // Write into Excel worksheet
@@ -153,6 +164,7 @@ export const exportChunksForCoding = <T extends DataItem>(
         sheet.properties.defaultRowHeight = 18;
         // Write the messages
         for (const message of messages) {
+            logger.debug(`Exporting message ${message.id}`, _id);
             const item = analysis.items[message.id] ?? analysis.items[message.id.substring(2)];
             // TODO: Support subchunks
             if ("items" in message) {
@@ -184,96 +196,112 @@ export const exportChunksForCoding = <T extends DataItem>(
                 size: 12,
                 color: { argb: message.chunk === chunk.id ? "FF000000" : "FF666666" },
             };
-            Row.height = GetRowHeight(message.content, 120);
+            Row.height = getRowHeight(message.content, 120);
             Row.alignment = { vertical: "middle" };
             Row.getCell("Content").alignment = { vertical: "middle", wrapText: true };
             Row.getCell("Memo").alignment = { vertical: "middle", wrapText: true };
         }
         sheet.addRow({});
+        logger.debug(`Exported ${messages.length} messages`, _id);
         // Extra row for notes
-        const AddExtraRow = (ID: number, Name: string, Content: string) => {
-            const LastRow = sheet.addRow({ ID, Nickname: Name, Content });
-            LastRow.height = Math.max(30, GetRowHeight(Content, 120));
-            LastRow.alignment = { vertical: "middle" };
-            LastRow.getCell("Content").alignment = { vertical: "middle", wrapText: true };
-            LastRow.font = {
+        const addExtraRow = (id: number, name: string, content: string) => {
+            const lastRow = sheet.addRow({ ID: id, Nickname: name, Content: content });
+            lastRow.height = Math.max(30, getRowHeight(content, 120));
+            lastRow.alignment = { vertical: "middle" };
+            lastRow.getCell("Content").alignment = { vertical: "middle", wrapText: true };
+            lastRow.font = {
                 name: "Lato",
                 family: 4,
                 size: 12,
             };
         };
-        AddExtraRow(
+        addExtraRow(
             -1,
             "Thoughts",
             analysis.plan ?? "(Optional) Your thoughts before coding the chunk.",
         );
-        AddExtraRow(-2, "Summary", analysis.summary ?? "The summary of the chunk.");
-        AddExtraRow(
+        addExtraRow(-2, "Summary", analysis.summary ?? "The summary of the chunk.");
+        addExtraRow(
             -3,
             "Reflection",
             analysis.reflection ?? "Your reflections after coding the chunk.",
         );
+        logger.debug("Finished exporting chunk", _id);
     }
     // Export the codebook
-    ExportCodebook(book, analyses);
+    exportCodebook(idStr, book, analyses);
+    logger.success(`Exported ${chunks.length} chunks to Excel`, _id);
     return book;
 };
 
-/** ExportCodebook: Export a codebook into an Excel workbook. */
-export function ExportCodebook(
-    Book: Excel.Workbook,
-    Analyses: CodedThreads = { Threads: {} },
-    Name = "Codebook",
-) {
-    if (Analyses.Codebook === undefined) {
+/** Export a codebook into an Excel workbook. */
+export const exportCodebook = (
+    idStr: IDStrFunc,
+    book: Excel.Workbook,
+    analyses: CodedThreads = { threads: {} },
+    name = "Codebook",
+) => {
+    const _id = idStr("exportCodebook");
+
+    if (analyses.codebook === undefined) {
+        logger.warn("No codebook to export", _id);
         return;
     }
-    const Sheet = Book.addWorksheet(Name, {
+
+    logger.info("Exporting codebook to Excel", _id);
+    const sheet = book.addWorksheet(name, {
         views: [{ state: "frozen", xSplit: 1, ySplit: 1 }],
     });
     // Set the columns
-    Sheet.columns = [
+    sheet.columns = [
         { header: "Label", key: "Label", width: 30 },
         { header: "Category", key: "Category", width: 30 },
         { header: "Definition", key: "Definition", width: 80 },
         { header: "Examples", key: "Examples", width: 120 },
         { header: "Alternatives", key: "Alternatives", width: 40 },
     ];
-    Sheet.getRow(1).alignment = { vertical: "middle", wrapText: true };
-    Sheet.getRow(1).font = {
+    sheet.getRow(1).alignment = { vertical: "middle", wrapText: true };
+    sheet.getRow(1).font = {
         name: "Lato",
         family: 4,
         size: 12,
         bold: true,
     };
-    Sheet.properties.defaultRowHeight = 18;
+    sheet.properties.defaultRowHeight = 18;
     // Write the codebook
-    let Codes = Object.values(Analyses.Codebook);
+    let codes = Object.values(analyses.codebook);
     // Sort the codes
-    Codes = SortCodes(Codes);
+    codes = sortCodes(codes);
     // Write the codes
-    for (const Code of Codes) {
-        const Categories =
-            Code.Categories?.map((Category) =>
-                Code.Categories!.length > 1 ? `* ${Category}` : Category,
-            ).join("\n") ?? "";
-        const Definitions =
-            Code.Definitions?.map((Definition) =>
-                Code.Definitions!.length > 1 ? `* ${Definition}` : Definition,
-            ).join("\n") ?? "";
-        const Examples =
-            Code.Examples?.map((Example) =>
-                Code.Examples!.length > 1
-                    ? `* ${Example.replace("|||", ": ")}`
-                    : Example.replace("|||", ": "),
-            ).join("\n") ?? "";
-        const Alternatives = Code.Alternatives?.map((Code) => `* ${Code}`).join("\n") ?? "";
-        const Row = Sheet.addRow({
-            Label: Code.Label,
-            Category: Categories,
-            Definition: Definitions,
-            Examples,
-            Alternatives,
+    for (const code of codes) {
+        logger.debug(`Exporting code ${code.label}`, _id);
+        const categories =
+            code.categories
+                ?.map((category) =>
+                    (code.categories ?? []).length > 1 ? `* ${category}` : category,
+                )
+                .join("\n") ?? "";
+        const definitions =
+            code.definitions
+                ?.map((Definition) =>
+                    (code.definitions ?? []).length > 1 ? `* ${Definition}` : Definition,
+                )
+                .join("\n") ?? "";
+        const examples =
+            code.examples
+                ?.map((Example) =>
+                    (code.examples ?? []).length > 1
+                        ? `* ${Example.replace("|||", ": ")}`
+                        : Example.replace("|||", ": "),
+                )
+                .join("\n") ?? "";
+        const alternatives = code.alternatives?.map((Code) => `* ${Code}`).join("\n") ?? "";
+        const Row = sheet.addRow({
+            Label: code.label,
+            Category: categories,
+            Definition: definitions,
+            Examples: examples,
+            Alternatives: alternatives,
         });
         Row.font = {
             name: "Lato",
@@ -282,24 +310,16 @@ export function ExportCodebook(
         };
         Row.height = Math.max(
             30,
-            GetRowHeight(Categories, 100),
-            GetRowHeight(Definitions, 100),
-            GetRowHeight(Examples, 100),
+            getRowHeight(categories, 100),
+            getRowHeight(definitions, 100),
+            getRowHeight(examples, 100),
         );
         Row.alignment = { vertical: "middle" };
         Row.getCell("Category").alignment = { vertical: "middle", wrapText: true };
         Row.getCell("Definition").alignment = { vertical: "middle", wrapText: true };
         Row.getCell("Examples").alignment = { vertical: "middle", wrapText: true };
         Row.getCell("Alternatives").alignment = { vertical: "middle", wrapText: true };
+        logger.debug(`Exported code ${code.label}`, _id);
     }
-}
-
-/** SortCodes: Sort an array of codes. */
-export function SortCodes(Codes: Code[]) {
-    return [...Codes].sort((A, B) => {
-        const Category = (A.Categories?.sort().join("; ") ?? "").localeCompare(
-            B.Categories?.sort().join("; ") ?? "",
-        );
-        return Category !== 0 ? Category : A.Label.localeCompare(B.Label);
-    });
-}
+    logger.success("Exported codebook to Excel", _id);
+};
