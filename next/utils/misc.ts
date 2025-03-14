@@ -24,20 +24,25 @@ export const ensureFolder = (path: string) => {
 };
 
 /** Create a promise with timeout. */
-export function promiseWithTimeout<T>(
+export const promiseWithTimeout = async <T>(
     promise: Promise<T>,
     time: number,
     timeoutError = new Error("Sorry, the AI stopped responding."),
-): Promise<T> {
+) => {
+    let pid: NodeJS.Timeout | undefined;
     // Create a promise that rejects in milliseconds
     const timeout = new Promise<never>((_, reject) => {
-        setTimeout(() => {
+        pid = setTimeout(() => {
             reject(timeoutError);
         }, time);
     });
     // Returns a race between timeout and the passed promise
-    return Promise.race<T>([promise, timeout]);
-}
+    try {
+        return await Promise.race<T>([promise, timeout]);
+    } finally {
+        clearTimeout(pid);
+    }
+};
 
 export const parseDateTime = (datetime: string) => {
     // If it is only a time, add a date
