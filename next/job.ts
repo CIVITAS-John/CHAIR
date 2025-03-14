@@ -77,6 +77,8 @@ export class QAJob {
                         consolidateStep.dependsOn = this.steps[1];
                     }
                 });
+                // Remove empty groups
+                this.steps = this.steps.filter((group) => group.length);
                 logger.debug(
                     `Grouped steps: ${this.steps.map((group) => group.length).join(", ")}`,
                     _id,
@@ -87,7 +89,7 @@ export class QAJob {
             }
 
             this.#assignID();
-            logger.info(`Created job with ${stepsFlat.length} steps`, _id);
+            logger.success(`Created job with ${stepsFlat.length} steps`, _id);
             return;
         }
         // config.steps is a 2D array
@@ -129,9 +131,11 @@ export class QAJob {
 
         // Assign the provided steps
         this.steps = config.steps as BaseStep[][];
+        // Remove empty groups
+        this.steps = this.steps.filter((group) => group.length);
 
         this.#assignID();
-        logger.info(
+        logger.success(
             `Created job with ${this.steps.length} dependency groups (${this.steps.map((group) => group.length).join(", ")} steps)`,
             _id,
         );
@@ -152,12 +156,12 @@ export class QAJob {
                 for (const [j, step] of steps.entries()) {
                     logger.info(`Executing step ${j + 1}`, _id);
                     await step.execute();
-                    logger.info(`Executed step ${j + 1}`, _id);
+                    logger.success(`Executed step ${j + 1}`, _id);
                 }
             }
-            logger.info(`Executed dependency group ${i + 1}`, _id);
+            logger.success(`Executed dependency group ${i + 1}`, _id);
         }
 
-        logger.info("Job successfully executed", _id);
+        logger.success("Job successfully executed", _id);
     }
 }

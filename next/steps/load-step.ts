@@ -70,30 +70,30 @@ export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> exten
             join(this.config.path, "configuration.js"),
         )) as RawDataset;
         logger.info(
-            `Loaded dataset "${dataset.title}" with ${Object.keys(dataset.data).length} chunk groups`,
+            `Found dataset ${dataset.name} (${dataset.title}) with ${Object.keys(dataset.data).length} chunk groups`,
             _id,
         );
 
         this.config.path = resolve(this.config.path);
         const parsedData: Record<string, Record<string, T>> = {};
         for (const [gk, gv] of Object.entries(dataset.data)) {
-            logger.info(`[${dataset.title}] Loading chunk group "${gk}" from ${gv}`, _id);
+            logger.info(`[${dataset.name}] Loading chunk group "${gk}" from ${gv}`, _id);
             let rawChunks = loadChunkGroup(this.config.path, gv);
 
             if (this.config.filter) {
-                logger.debug(`[${dataset.title}] Filtering chunk group "${gk}"`, _id);
+                logger.debug(`[${dataset.name}] Filtering chunk group "${gk}"`, _id);
                 rawChunks = this.config.filter(rawChunks);
             }
 
             if (!Object.keys(rawChunks).length) {
-                logger.warn(`[${dataset.title}] Chunk group "${gk}" is empty, skipping...`, _id);
+                logger.warn(`[${dataset.name}] Chunk group "${gk}" is empty, skipping...`, _id);
                 continue;
             }
 
             const parsedChunks: Record<string, T> = {};
             for (const [ck, cv] of Object.entries(rawChunks)) {
                 logger.debug(
-                    `[${dataset.title}] Initializing chunk "${ck}" of chunk group "${gk}"`,
+                    `[${dataset.name}] Initializing chunk "${ck}" of chunk group "${gk}"`,
                     _id,
                 );
                 parsedChunks[ck] = initializeChunk(cv) as T;
@@ -101,7 +101,7 @@ export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> exten
             parsedData[gk] = parsedChunks;
 
             logger.info(
-                `[${dataset.title}] Loaded chunk group "${gk}" with ${Object.keys(parsedChunks).length} chunks`,
+                `[${dataset.name}] Loaded chunk group "${gk}" with ${Object.keys(parsedChunks).length} chunks`,
                 _id,
             );
         }
@@ -115,7 +115,7 @@ export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> exten
             getSpeakerName,
             getSpeakerNameForExample: dataset.getSpeakerNameForExample ?? getSpeakerName,
         };
-        logger.info(`Loaded dataset "${dataset.title}"`, _id);
+        logger.success(`Loaded dataset ${dataset.name}`, _id);
 
         this.executed = true;
     }

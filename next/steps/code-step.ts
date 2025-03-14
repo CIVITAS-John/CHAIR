@@ -1,9 +1,10 @@
 import { writeFileSync } from "fs";
+import { basename } from "path";
 
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 import type { Analyzer } from "../analyzer";
-import type { CodedThread, CodedThreads, DataChunk, DataItem } from "../schema";
+import type { CodedThread, CodedThreads, DataChunk, DataItem, Dataset } from "../schema";
 import { exportChunksForCoding } from "../utils/export";
 import type { LLMModel, LLMSession } from "../utils/llms";
 import { requestLLM, useLLMs } from "../utils/llms";
@@ -43,8 +44,10 @@ export type CodeStepConfig<
 
 const loopThroughChunks = async <TUnit, TSubunit, TAnalysis>(
     idStr: IDStrFunc,
+    dataset: Dataset<TUnit>,
     session: LLMSession,
     analyzer: Analyzer<TUnit, TSubunit, TAnalysis>,
+    key: string,
     analysis: TAnalysis,
     source: TUnit,
     sources: TSubunit[],
@@ -61,6 +64,7 @@ const loopThroughChunks = async <TUnit, TSubunit, TAnalysis>(
 
     // Split units into smaller chunks based on the maximum items
     for (let i = 0; i < analyzer.maxIterations; i++) {
+        logger.info(`[${dataset.name}/${key}] Iteration ${i + 1}/${analyzer.maxIterations}`, _id);
         let cursor = 0;
         // Preprocess and filter the subunits
         sources = await analyzer.preprocess(analysis, source, sources, i);
@@ -68,8 +72,10 @@ const loopThroughChunks = async <TUnit, TSubunit, TAnalysis>(
             continue;
         }
         const filtered = sources.filter((subunit) => analyzer.subunitFilter(subunit, i));
+        logger.debug(`[${dataset.name}/${key}] ${filtered.length} subunits filtered`, _id);
         // Loop through the subunits
         while (cursor < filtered.length) {
+            logger.debug(`[${dataset.name}/${key}] Cursor at ${cursor}/${filtered.length}`, _id);
             let retries = 0;
             let cursorRelative = 0;
             let chunkSize = [0, 0, 0];
@@ -81,10 +87,14 @@ const loopThroughChunks = async <TUnit, TSubunit, TAnalysis>(
                     i,
                     retries,
                 );
+                logger.debug(
+                    `[${dataset.name}/${key}] Chunk size: ${JSON.stringify(_chunkSize)}`,
+                    _id,
+                );
                 if (typeof _chunkSize === "number") {
                     if (_chunkSize < 0) {
                         logger.warn(
-                            "Stopped iterating due to signals sent by the analyzer (<0 chunk size)",
+                            `[${dataset.name}/${key}] Stopped iteration due to signals sent by the analyzer (<0 chunk size)`,
                             _id,
                         );
                         return;
@@ -99,9 +109,17 @@ const loopThroughChunks = async <TUnit, TSubunit, TAnalysis>(
                 const end = Math.min(cursor + chunkSize[0] + chunkSize[2], filtered.length);
                 const currents = filtered.slice(start, end);
                 const isFirst = cursor === 0;
+                logger.debug(
+                    `[${dataset.name}/${key}] Processing block ${start}-${end} (${currents.length} subunits)`,
+                    _id,
+                );
                 // Run the prompts
                 try {
                     cursorRelative = await action(currents, cursor - start, isFirst, retries, i);
+                    logger.debug(
+                        `[${dataset.name}/${key}] Cursor relative movement: ${cursorRelative}`,
+                        _id,
+                    );
                     // Sometimes, the action may return a relative cursor movement
                     if (chunkSize[0] + cursorRelative <= 0) {
                         throw new CodeStep.InternalError("Failed to process any subunits", _id);
@@ -110,7 +128,7 @@ const loopThroughChunks = async <TUnit, TSubunit, TAnalysis>(
                     session.finishedItems += chunkSize[0] + cursorRelative;
                     if (cursorRelative !== 0) {
                         logger.debug(
-                            `Expected ${chunkSize[0]} subunits, processed ${chunkSize[0] + cursorRelative} subunits`,
+                            `[${dataset.name}/${key}}] Expected ${chunkSize[0]} subunits, processed ${chunkSize[0] + cursorRelative} subunits`,
                             _id,
                         );
                     }
@@ -135,13 +153,19 @@ const loopThroughChunks = async <TUnit, TSubunit, TAnalysis>(
         }
         // Run the iteration function
         await iteration?.(i);
+
+        logger.success(
+            `[${dataset.name}/${key}] Iteration ${i + 1}/${analyzer.maxIterations} completed`,
+            _id,
+        );
     }
 };
 
+/** Analyze a chunk of data items. */
 const analyzeChunk = async <T extends DataItem>(
     idStr: IDStrFunc,
+    dataset: Dataset<DataChunk<T>>,
     session: LLMSession,
-    getSpeakerNameForExample: (uid: string) => string,
     analyzer: Analyzer<DataChunk<T>, T, CodedThread>,
     chunks: Record<string, DataChunk<T>>,
     analyzed: CodedThreads = { threads: {} },
@@ -150,12 +174,14 @@ const analyzeChunk = async <T extends DataItem>(
     const _id = idStr("analyzeChunk");
 
     const keys = Object.keys(chunks);
+    logger.info(`[${dataset.name}] Analyzing ${keys.length} chunks`, _id);
+
     // Initialize the analysis
     for (const [key, chunk] of Object.entries(chunks)) {
         // TODO: Support subchunks
         const messages = chunk.items.filter((m) => {
             if (!("content" in m)) {
-                logger.warn("Subchunks are not yet supported, skipping", "analyzeChunk");
+                logger.warn("Subchunks are not yet supported, skipping", _id);
                 return false;
             }
             return m.content !== "";
@@ -169,12 +195,13 @@ const analyzeChunk = async <T extends DataItem>(
         };
     }
 
+    // Batch preprocess the chunks
     await analyzer.batchPreprocess(
         keys.map((k) => chunks[k]),
         keys.map((k) => analyzed.threads[k]),
     );
 
-    // Run the prompt over each conversation
+    // Run the prompt over each chunk
     for (const [key, chunk] of Object.entries(chunks)) {
         // Get the messages
         // TODO: Support subchunks
@@ -185,7 +212,7 @@ const analyzeChunk = async <T extends DataItem>(
             }
             return m.content !== "";
         }) as T[];
-        logger.info(`Chunk ${key}: ${messages.length} items`, _id);
+        logger.info(`[${dataset.name}] Analyzing chunk ${key} with ${messages.length} items`, _id);
 
         // Initialize the analysis
         const analysis = analyzed.threads[key];
@@ -193,8 +220,10 @@ const analyzeChunk = async <T extends DataItem>(
         let prevAnalysis: CodedThread | undefined;
         await loopThroughChunks(
             idStr,
+            dataset,
             session,
             analyzer,
+            key,
             analysis,
             chunk,
             messages,
@@ -221,13 +250,21 @@ const analyzeChunk = async <T extends DataItem>(
                     if (!isFirst && analysis.summary) {
                         prompts[1] = `Summary of previous conversation: ${analysis.summary}\n${prompts[1]}`;
                     }
+                    logger.debug(
+                        `[${dataset.name}/${key}] Requesting LLM, iteration ${iteration}`,
+                        _id,
+                    );
                     response = await requestLLM(
                         idStr,
                         session,
                         [new SystemMessage(prompts[0]), new HumanMessage(prompts[1])],
-                        `messaging-groups/${analyzer.name}`,
+                        `${basename(dataset.path)}/${analyzer.name}`,
                         tries * 0.2 + analyzer.baseTemperature,
                         fakeRequest,
+                    );
+                    logger.debug(
+                        `[${dataset.name}/${key}] Received response, iteration ${iteration}`,
+                        _id,
                     );
                     if (response === "") {
                         return 0;
@@ -242,8 +279,13 @@ const analyzeChunk = async <T extends DataItem>(
                 );
                 // Process the results
                 if (typeof itemRes === "number") {
+                    logger.debug(
+                        `[${dataset.name}/${key}] Relative cursor movement: ${itemRes}`,
+                        _id,
+                    );
                     return itemRes;
                 }
+                // Item-based coding
                 for (const [idx, res] of Object.entries(itemRes)) {
                     const message = currents[parseInt(idx) - 1];
                     const isCommaDelim = !(res.includes(";") || res.includes("|"));
@@ -261,24 +303,41 @@ const analyzeChunk = async <T extends DataItem>(
                                 !c.endsWith(".") && // To avoid codes using the original content
                                 !c.endsWith(`p${message.uid}`),
                         );
+                    logger.debug(
+                        `[${dataset.name}/${key}] Received ${codes.length} codes for message ${message.id}: ${codes.join(", ")}`,
+                        _id,
+                    );
                     // Record the codes from line-level coding
                     analysis.items[message.id].codes = codes;
                     codes.forEach((code) => {
                         const cur = analysis.codes[code] ?? { label: code };
                         cur.examples = cur.examples ?? [];
-                        const content = assembleExampleFrom(getSpeakerNameForExample, message);
+                        const content = assembleExampleFrom(
+                            dataset.getSpeakerNameForExample,
+                            message,
+                        );
                         if (message.content !== "" && !cur.examples.includes(content)) {
                             cur.examples.push(content);
+                            logger.debug(
+                                `[${dataset.name}/${key}] Added example for code ${code}: ${content}`,
+                                _id,
+                            );
                         }
                         analysis.codes[code] = cur;
                     });
                 }
                 prevAnalysis = analysis;
                 // Dial back the cursor if necessary
-                return Object.keys(itemRes).length - currents.length;
+                const movement = Object.keys(itemRes).length - currents.length;
+                logger.debug(`[${dataset.name}/${key}] Cursor movement: ${movement}`, _id);
+                return movement;
             },
         );
         analysis.iteration++;
+        logger.success(
+            `[${dataset.name}] Analyzed chunk ${key}, iteration ${analysis.iteration}`,
+            _id,
+        );
     }
     return analyzed;
 };
@@ -307,6 +366,7 @@ export class CodeStep<
         const datasets = this.dependsOn.map((step) => step.dataset);
         logger.info(`Coding ${datasets.length} datasets`, _id);
 
+        // TODO: Support human coding
         if (this.config.agent === "Human") {
             throw new CodeStep.ConfigError("Human coding is not yet supported", _id);
         }
@@ -317,15 +377,18 @@ export class CodeStep<
         const models = Array.isArray(this.config.model) ? this.config.model : [this.config.model];
 
         for (const dataset of datasets) {
-            logger.info(`Coding dataset "${dataset.title}"`, _id);
+            logger.info(`Coding dataset ${dataset.name}`, _id);
             for (const AnalyzerClass of strategies) {
+                logger.info(`[${dataset.name}] Using strategy ${AnalyzerClass.name}`, _id);
                 await useLLMs(
                     this._idStr,
                     async (session) => {
+                        logger.info(`[${dataset.name}] Using model ${session.llm.name}`, _id);
                         const analyzer = new AnalyzerClass(dataset, session);
                         // Analyze the chunks
-                        for (const [name, chunks] of Object.entries(dataset.data)) {
+                        for (const [key, chunks] of Object.entries(dataset.data)) {
                             if (this.config.agent === "Human") {
+                                // TODO: Support human coding
                                 throw new CodeStep.ConfigError(
                                     "Human coding is not yet supported",
                                     _id,
@@ -333,34 +396,43 @@ export class CodeStep<
                             }
                             const result = await analyzeChunk(
                                 this._idStr,
+                                dataset,
                                 session,
-                                dataset.getSpeakerNameForExample,
                                 analyzer,
                                 chunks,
                                 { threads: {} },
                                 this.config.parameters?.fakeRequest ?? false,
                             );
+                            logger.success(
+                                `[${dataset.name}] Coded ${Object.keys(result.threads).length} threads for ${key}`,
+                                _id,
+                            );
                             // Write the result into a JSON file
                             ensureFolder(getMessagesPath(dataset.path, analyzer.name));
-                            writeFileSync(
-                                getMessagesPath(
-                                    dataset.path,
-                                    `${analyzer.name}/${name.replace(".json", "")}-${session.llm.name}${analyzer.suffix}.json`,
-                                ),
-                                JSON.stringify(result, null, 4),
+                            const jsonPath = getMessagesPath(
+                                dataset.path,
+                                `${analyzer.name}/${key.replace(".json", "")}-${session.llm.name}${analyzer.suffix}.json`,
                             );
+                            logger.info(
+                                `[${dataset.name}] Writing JSON result to ${jsonPath}`,
+                                _id,
+                            );
+                            writeFileSync(jsonPath, JSON.stringify(result, null, 4));
                             // Write the result into an Excel file
                             const book = exportChunksForCoding(
                                 this._idStr,
                                 Object.values(chunks),
                                 result,
                             );
-                            await book.xlsx.writeFile(
-                                getMessagesPath(
-                                    dataset.path,
-                                    `${analyzer.name}/${name.replace(".json", "")}-${session.llm.name}${analyzer.suffix}.xlsx`,
-                                ),
+                            const excelPath = getMessagesPath(
+                                dataset.path,
+                                `${analyzer.name}/${key.replace(".json", "")}-${session.llm.name}${analyzer.suffix}.xlsx`,
                             );
+                            logger.info(
+                                `[${dataset.name}] Writing Excel result to ${excelPath}`,
+                                _id,
+                            );
+                            await book.xlsx.writeFile(excelPath);
                         }
                     },
                     models,
