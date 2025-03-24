@@ -15,6 +15,8 @@ const validateStep = (step: BaseStep) => {
             return 1;
         case "Consolidate":
             return 2;
+        case "Evaluate":
+            return 3;
         default:
             throw new QAJob.ConfigError(`Unknown step type: ${step._type}`);
     }
@@ -63,7 +65,7 @@ export class QAJob {
 
             if (config.parallel) {
                 // We group the steps by type - load, code, then consolidate
-                this.steps = [[], [], []];
+                this.steps = [[], [], [], []];
                 // Classify each step
                 stepsFlat.forEach((Step) => this.steps[validateStep(Step)].push(Step));
                 // Set the dependencies of Code and Consolidate steps if not provided
@@ -75,6 +77,11 @@ export class QAJob {
                 this.steps[2].forEach((consolidateStep) => {
                     if (!consolidateStep.dependsOn?.length) {
                         consolidateStep.dependsOn = this.steps[1];
+                    }
+                });
+                this.steps[3].forEach((evaluateStep) => {
+                    if (!evaluateStep.dependsOn?.length) {
+                        evaluateStep.dependsOn = this.steps[2];
                     }
                 });
                 // Remove empty groups
@@ -116,7 +123,12 @@ export class QAJob {
                         // Set the dependencies to all previous steps
                         step.dependsOn = [...prevSteps].filter(
                             (prevStep) =>
-                                prevStep._type === (step._type === "Code" ? "Load" : "Code"),
+                                prevStep._type ===
+                                (step._type === "Code"
+                                    ? "Load"
+                                    : step._type === "Consolidate"
+                                      ? "Code"
+                                      : "Consolidate"),
                         );
                     } else if (step.dependsOn.some((dep) => !prevSteps.has(dep))) {
                         throw new QAJob.ConfigError(
