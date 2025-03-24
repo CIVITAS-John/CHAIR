@@ -14,7 +14,7 @@ import { getMessagesPath, importDefault, parseDateTime, readJSONFile } from "../
 import { BaseStep } from "./base-step";
 
 export interface LoadStepConfig {
-    path?: string; // Defaults to?
+    path: string; // Defaults to?
     // Passes the entire chunk group to the filter in case only certain messages are needed
     filter?: (data: Record<string, RawDataChunk>) => Record<string, RawDataChunk>;
 }
@@ -61,8 +61,7 @@ export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> exten
         const _id = this._idStr("execute");
 
         if (!this.config.path) {
-            // TODO: Set some default path
-            throw new Error("Path is required for LoadStep.");
+            throw new LoadStep.ConfigError("config.path is required", _id);
         }
 
         logger.info(`Loading dataset from ${this.config.path}`, _id);
