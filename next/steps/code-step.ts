@@ -349,6 +349,16 @@ export class CodeStep<
     override _type = "Code";
     override dependsOn: LoadStep<TUnit>[];
 
+    // results[dataset][analyzer][ident] = CodedThreads
+    #results: Record<string, Record<string, Record<string, CodedThreads>>> = {};
+    get results() {
+        // Sanity check
+        if (!this.executed || !Object.keys(this.#results).length) {
+            throw new CodeStep.UnexecutedError(this._idStr("results"));
+        }
+        return this.#results;
+    }
+
     constructor(private readonly config: CodeStepConfig<TUnit, TSubunit>) {
         super();
         // If config.dataset is not provided, we will code all datasets loaded
@@ -367,6 +377,10 @@ export class CodeStep<
         logger.info(`Coding ${datasets.length} datasets`, _id);
 
         // TODO: Support human coding
+        // See if file already exists (xlsx or json), if so, skip, if not, we create template xlsx file for human to code
+        // Interactively select what to do when file does not exist/is completely empty
+        // 1. Skip
+        // 2. Wait for human to code
         if (this.config.agent === "Human") {
             throw new CodeStep.ConfigError("Human coding is not yet supported", _id);
         }
@@ -394,6 +408,7 @@ export class CodeStep<
                                     _id,
                                 );
                             }
+
                             const result = await analyzeChunk(
                                 this._idStr,
                                 dataset,
@@ -403,15 +418,16 @@ export class CodeStep<
                                 { threads: {} },
                                 this.config.parameters?.fakeRequest ?? false,
                             );
+                            const ident = `${key.replace(".json", "")}-${session.llm.name}${analyzer.suffix}`;
                             logger.success(
-                                `[${dataset.name}/${AnalyzerClass.name}/${session.llm.name}] Coded ${Object.keys(result.threads).length} threads for ${key}`,
+                                `[${dataset.name}/${analyzer.name}/${ident}] Coded ${Object.keys(result.threads).length} threads`,
                                 _id,
                             );
                             // Write the result into a JSON file
                             ensureFolder(getMessagesPath(dataset.path, analyzer.name));
                             const jsonPath = getMessagesPath(
                                 dataset.path,
-                                `${analyzer.name}/${key.replace(".json", "")}-${session.llm.name}${analyzer.suffix}.json`,
+                                `${analyzer.name}/${ident}.json`,
                             );
                             logger.info(
                                 `[${dataset.name}] Writing JSON result to ${jsonPath}`,
@@ -426,13 +442,22 @@ export class CodeStep<
                             );
                             const excelPath = getMessagesPath(
                                 dataset.path,
-                                `${analyzer.name}/${key.replace(".json", "")}-${session.llm.name}${analyzer.suffix}.xlsx`,
+                                `${analyzer.name}/${ident}.xlsx`,
                             );
                             logger.info(
                                 `[${dataset.name}] Writing Excel result to ${excelPath}`,
                                 _id,
                             );
                             await book.xlsx.writeFile(excelPath);
+
+                            // Store the result
+                            this.#results[dataset.name] = {
+                                ...(this.#results[dataset.name] ?? {}),
+                                [analyzer.name]: {
+                                    ...(this.#results[dataset.name][analyzer.name] ?? {}),
+                                    [ident]: result,
+                                },
+                            };
                         }
                     },
                     models,
