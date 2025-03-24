@@ -1,9 +1,3 @@
-export type ConsolidateStrategy =
-    | "alternative-merger"
-    | "category-assigner"
-    // ...
-    | (string & {});
-
 export interface AIParameters extends Record<string, unknown> {
     retries?: number;
     temperature?: number;
