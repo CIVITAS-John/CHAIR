@@ -258,7 +258,7 @@ export class CodeStep<
         const _id = this._idStr("getResult");
 
         // Sanity check
-        if (!this.executed || !Object.keys(this.#results).length) {
+        if (!this.executed || !this.#results.size) {
             throw new CodeStep.UnexecutedError(_id);
         }
         if (!this.#results.has(dataset)) {
@@ -385,11 +385,6 @@ export class CodeStep<
             throw new CodeStep.InternalError(`Invalid agent ${this.config.agent}`, _id);
         }
 
-        // See if file already exists (xlsx or json), if so, skip, if not, we create template xlsx file for human to code
-        // Interactively select what to do when file does not exist/is completely empty
-        // 1. Skip
-        // 2. Wait for human to code
-
         logger.info(`Coding ${this.#datasets.length} datasets with human`, _id);
 
         for (const dataset of this.#datasets) {
@@ -511,6 +506,7 @@ export class CodeStep<
                     _id,
                 );
             }
+
             // Store the result
             this.#results.set(dataset.name, {
                 human: codes,

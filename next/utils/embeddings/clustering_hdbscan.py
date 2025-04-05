@@ -10,47 +10,47 @@ import hdbscan
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-from embedding import Dimensions, cpus, embeddings, load_temp_json
+from embedding import cpus, dims, embeddings, load_temp_json
 from numpy.typing import NDArray
 from sklearn.metrics.pairwise import pairwise_distances
 from umap import UMAP
 
-labels = [source["Label"] for source in load_temp_json("clustering")]
+labels = [source["label"] for source in load_temp_json("clustering")]
 
 # Get the arguments
-Metrics = sys.argv[3] if len(sys.argv) > 3 else "cosine"
-Method = sys.argv[4] if len(sys.argv) > 4 else "leaf"
-MinCluster = int(sys.argv[5]) if len(sys.argv) > 5 else 2
-MinSamples = int(sys.argv[6]) if len(sys.argv) > 6 else 1
-TargetDimensions = int(sys.argv[7]) if len(sys.argv) > 7 else Dimensions
-Plotting = bool(sys.argv[8]) if len(sys.argv) > 8 else True
+metrics = sys.argv[3] if len(sys.argv) > 3 else "cosine"
+method = sys.argv[4] if len(sys.argv) > 4 else "leaf"
+min_cluster = int(sys.argv[5]) if len(sys.argv) > 5 else 2
+min_samples = int(sys.argv[6]) if len(sys.argv) > 6 else 1
+tar_dims = int(sys.argv[7]) if len(sys.argv) > 7 else dims
+plotting = bool(sys.argv[8]) if len(sys.argv) > 8 else True
 print(
     "Method:",
-    Method,
+    method,
     ", MinCluster:",
-    MinCluster,
+    min_cluster,
     ", MinSamples:",
-    MinSamples,
+    min_samples,
     ", Metrics:",
-    Metrics,
+    metrics,
     ", Target Dimensions:",
-    TargetDimensions,
+    tar_dims,
 )
 
 # Use UMap to reduce the dimensions
-if TargetDimensions < Dimensions:
-    umap = UMAP(n_components=TargetDimensions)
+if tar_dims < dims:
+    umap = UMAP(n_components=tar_dims)
     embeddings = cast(NDArray[np.float32], umap.fit_transform(embeddings))
     print("Embeddings reduced:", embeddings.shape)
 
 # Calculate distances
-distances = pairwise_distances(embeddings, embeddings, metric=Metrics, n_jobs=cpus)
+distances = pairwise_distances(embeddings, embeddings, metric=metrics, n_jobs=cpus)
 
 # Send into HDBScan
 hdb = hdbscan.HDBSCAN(
-    min_cluster_size=MinCluster,
-    min_samples=MinSamples,
-    cluster_selection_method=Method,
+    min_cluster_size=min_cluster,
+    min_samples=min_samples,
+    cluster_selection_method=method,
     core_dist_n_jobs=cpus,
     metric="precomputed",
 )  # , prediction_data = True
@@ -61,9 +61,9 @@ linkage = hdb.single_linkage_tree_._linkage  # pylint: disable=protected-access
 print(json.dumps([hdb.labels_.tolist(), hdb.probabilities_.tolist()]))
 
 # Plot the clusters
-if Plotting:
+if plotting:
     # Transform the embeddings to 2D
-    if TargetDimensions < 2:
+    if tar_dims < 2:
         umap = UMAP(n_components=2)
         embeddings = cast(NDArray[np.float32], umap.fit_transform(embeddings))
     # Get the colors

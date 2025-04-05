@@ -5,18 +5,18 @@ import { LowLevelAnalyzerBase } from "./low-level";
 
 /**
  * Conduct the first-round low-level coding of the conversations.
- * Change from LowLevelAnalyzer4: We added a few instructions to enforce verb phrases for weaker LLMs.
+ * Change from LowLevelAnalyzer3: We ask LLMs to produce description of the event.
  * @author John Chen
  */
-export default class LowLevelAnalyzer5 extends LowLevelAnalyzerBase {
+export default class LowLevelAnalyzer4 extends LowLevelAnalyzerBase {
     /** The name of the analyzer. */
-    override name = "low-level-5";
+    override name = "low-level-4";
     /** The base temperature for the LLM. */
     override baseTemperature = 0.5;
 
-    /** How we call a tag in the prompt */
+    /** How do we call a tag in the prompt. */
     protected override tagName = "phrase";
-    /** How we call tags in the prompt */
+    /** How do we call tags in the prompt. */
     protected override tagsName = "phrases";
 
     /**
@@ -42,22 +42,23 @@ export default class LowLevelAnalyzer5 extends LowLevelAnalyzerBase {
         analysis: CodedThread,
         _target: Conversation,
         messages: Message[],
+        _chunkStart: number,
     ): Promise<[string, string]> {
         return Promise.resolve([
             `
 You are an expert in thematic analysis with grounded theory, working on open coding.
-This is the first round of coding. Your goal is to describe each item with verb phrases.
-Try your best to interpret events, contexts, and intents. Always use ";" to separate verb phrases.
+This is the first round of coding. Your goal is to describe each messages with phrases.
+Try your best to interpret events, contexts, and intents. Always use verb phrases.
 ${this.dataset.researchQuestion}
 ${this.dataset.codingNotes}
 
 Always follow the output format:
 ---
 Thoughts: {A paragraph of plans and guiding questions about analyzing the conversation from multiple theoretical angles}
-Interpretation phrases for each item (${messages.length} in total):
-1. {phrase 1}; {phrase 2}; {phrase 3}; ...
+Interpretations for each message (${messages.length} in total):
+1. {phrase 1}; {phrase 2}; ...
 ...
-${messages.length}. {phrase 1}; {phrase 2}; {phrase 3}; ...
+${messages.length}. {phrase 1}; {phrase 2}; ...
 Summary: {A somehow detailed summary of the conversation, including previous ones}
 Notes: {Notes and hypotheses about the conversation until now}`.trim(),
             messages

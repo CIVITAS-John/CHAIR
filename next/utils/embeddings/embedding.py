@@ -13,32 +13,30 @@ import numpy as np
 cpus = multiprocessing.cpu_count()
 
 # Get the arguments
-Dimensions = int(sys.argv[1])
-Items = int(sys.argv[2])
+dims = int(sys.argv[1])
+items = int(sys.argv[2])
 
 # Read from `./known/temp.bytes`
 with open("./known/temp.bytes", "rb") as file:
     # Calculate the number of embeddings if not provided
-    Items = (
-        int(os.stat("./known/temp.bytes").st_size / (Dimensions * 4))
-        if Items == 0
-        else Items
+    items = (
+        int(os.stat("./known/temp.bytes").st_size / (dims * 4)) if items == 0 else items
     )
     # Read the bytes
-    float_bytes = file.read(Dimensions * Items * 4)  # 4 bytes per float
+    float_bytes = file.read(dims * items * 4)  # 4 bytes per float
     # Convert the bytes to floats
     embeddings = np.frombuffer(float_bytes, dtype=np.float32)
     # print("Embeddings received:", len(embeddings), ", expected:", Dimensions * Embeddings)
 
 # Reshape the embeddings
-embeddings = embeddings.reshape((Items, Dimensions))
+embeddings = embeddings.reshape((items, dims))
 
 # Type for clustering.temp.json
 Source = TypedDict(
     "Source",
     {
-        "Label": str,
-        "Examples": List[str],
+        "label": str,
+        "examples": List[str],
     },
 )
 
@@ -46,15 +44,15 @@ Source = TypedDict(
 Label = TypedDict(
     "Label",
     {
-        "Label": str,
-        "Owners": List[int],
+        "label": str,
+        "owners": List[int],
     },
 )
 LabelsMeta = TypedDict(
     "LabelsMeta",
     {
-        "OwnerLabels": List[str],
-        "Labels": List[Label],
+        "ownerLabels": List[str],
+        "labels": List[Label],
     },
 )
 

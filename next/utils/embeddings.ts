@@ -1,4 +1,5 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
+import { resolve } from "path";
 
 import { TaskType } from "@google/generative-ai";
 import type { Embeddings } from "@langchain/core/embeddings";
@@ -165,13 +166,13 @@ export const requestEmbeddings = async (
         while (retry < 10) {
             try {
                 const res = await embedder.model.embedDocuments(
-                    requests.slice(i, i + batchSize).map((Index) => sources[Index]),
+                    requests.slice(i, i + batchSize).map((idx) => sources[idx]),
                 );
                 for (let j = 0; j < res.length; j++) {
                     const idx = requests[i + j];
                     const embedding = new Float32Array(res[j]);
                     // Check if all elements are 0
-                    if (embedding.every((Value) => Value === 0)) {
+                    if (embedding.every((v) => v === 0)) {
                         throw new Error(`Invalid embedding for: ${sources[idx]}`);
                     }
                     embeddings.set(embedding, embedder.dimensions * idx);
@@ -327,7 +328,7 @@ export const clusterEmbeddings = async (
     writeFileSync("./known/clustering.temp.json", JSON.stringify(names));
     // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
     // Run the Python script
-    await PythonShell.run(`utils/embeddings/clustering_${method}.py`, {
+    await PythonShell.run(resolve(import.meta.dirname, `embeddings/clustering_${method}.py`), {
         args: [embedder.dimensions.toString(), names.length.toString(), ...options],
         parser: (msg) => {
             if (msg.startsWith("[")) {
@@ -338,9 +339,9 @@ export const clusterEmbeddings = async (
                 let noCluster = 0;
                 for (const cluster of clusters) {
                     res[cluster] = [];
-                    for (let J = 0; J < clusters.length; J++) {
-                        if (clusters[J] === cluster) {
-                            res[cluster].push({ id: J, probability: probs[J] });
+                    for (let j = 0; j < clusters.length; j++) {
+                        if (clusters[j] === cluster) {
+                            res[cluster].push({ id: j, probability: probs[j] });
                             if (cluster === -1) {
                                 noCluster++;
                             }
@@ -423,7 +424,7 @@ export const evaluateEmbeddings = async <T>(
         _id,
     );
     // Run the Python script
-    await PythonShell.run(`utils/embeddings/evaluation_${method}.py`, {
+    await PythonShell.run(resolve(import.meta.dirname, `embeddings/evaluation_${method}.py`), {
         args: [
             embedder.dimensions.toString(),
             labels.length.toString(),

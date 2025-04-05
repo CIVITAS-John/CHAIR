@@ -8,45 +8,45 @@ from typing import Literal, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
-from embedding import Dimensions, Items, cpus, embeddings, load_temp_json
+from embedding import cpus, dims, embeddings, items, load_temp_json
 from numpy.typing import NDArray
 from scipy.cluster.hierarchy import dendrogram
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.metrics.pairwise import pairwise_distances
 from umap import UMAP
 
-labels = [source["Label"] for source in load_temp_json("clustering")]
+labels = [source["label"] for source in load_temp_json("clustering")]
 
 # Get the arguments
-Metrics = sys.argv[3] if len(sys.argv) > 3 else "cosine"
-Linkage = cast(
+metrics = sys.argv[3] if len(sys.argv) > 3 else "cosine"
+linkage_mtd = cast(
     Literal["ward", "complete", "average", "single"],
     sys.argv[4] if len(sys.argv) > 4 else "average",
 )
-MaxDistance = float(sys.argv[5]) if len(sys.argv) > 5 else 0.25
-TargetDimensions = int(sys.argv[6]) if len(sys.argv) > 6 else Dimensions
-Plotting = bool(sys.argv[7]) if len(sys.argv) > 7 else True
+max_dist = float(sys.argv[5]) if len(sys.argv) > 5 else 0.25
+tar_dims = int(sys.argv[6]) if len(sys.argv) > 6 else dims
+plotting = bool(sys.argv[7]) if len(sys.argv) > 7 else True
 print(
     "Linkage:",
-    Linkage,
+    linkage_mtd,
     ", MaxDistance:",
-    MaxDistance,
+    max_dist,
     ", Metrics:",
-    Metrics,
+    metrics,
     ", Target Dimensions:",
-    TargetDimensions,
+    tar_dims,
 )
 
 # Use UMap to reduce the dimensions
-if TargetDimensions < Dimensions:
-    umap = UMAP(n_components=TargetDimensions)
+if tar_dims < dims:
+    umap = UMAP(n_components=tar_dims)
     embeddings = cast(NDArray[np.float32], umap.fit_transform(embeddings))
     # from sklearn.preprocessing import normalize
     # embeddings = normalize(embeddings, norm='l2')
     print("Embeddings reduced:", embeddings.shape)
 
 # Calculate distances
-distances = pairwise_distances(embeddings, embeddings, metric=Metrics, n_jobs=cpus)
+distances = pairwise_distances(embeddings, embeddings, metric=metrics, n_jobs=cpus)
 
 # Plot the clusters
 
@@ -82,14 +82,14 @@ def plot_dendrogram(model, **kwargs):
 # Send into Clustering
 db = AgglomerativeClustering(
     n_clusters=None,
-    distance_threshold=MaxDistance,
+    distance_threshold=max_dist,
     metric="precomputed",
-    linkage=Linkage,
+    linkage=linkage_mtd,
 )
 db.fit(distances)
 
 # Plot the distances
-if Plotting:
+if plotting:
     # Do a dendrogram
     plot_dendrogram(db, truncate_mode=None, labels=labels)
 
@@ -106,4 +106,4 @@ if Plotting:
     plt.show()
 
 # Send the results
-print(json.dumps([db.labels_.tolist(), np.ones(Items).tolist()]))
+print(json.dumps([db.labels_.tolist(), np.ones(items).tolist()]))

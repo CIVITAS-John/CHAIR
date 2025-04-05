@@ -23,17 +23,17 @@ labels_meta = load_temp_json("evaluation")
 
 # Get the arguments
 # Owners = int(sys.argv[3]) if len(sys.argv) > 3 else 2
-Owners = len(labels_meta["OwnerLabels"])
-Visualize = sys.argv[4].lower() == "true" if len(sys.argv) > 4 else False
-OutputPath = sys.argv[5] if len(sys.argv) > 5 else "./known"
-print("Owners:", Owners, ", Visualize:", Visualize)
+owners_cnt = len(labels_meta["ownerLabels"])
+visualize = sys.argv[4].lower() == "true" if len(sys.argv) > 4 else False
+output_path = sys.argv[5] if len(sys.argv) > 5 else "./known"
+print("Owners:", owners_cnt, ", Visualize:", visualize)
 
 # Seperate owners' names from labels (the first few items)
 # groups = labels[:Owners]
-groups = labels_meta["OwnerLabels"]
-group_ids = list(range(Owners))
+groups = labels_meta["ownerLabels"]
+group_ids = list(range(owners_cnt))
 # labels = labels[Owners:]
-labels_objs = labels_meta["Labels"]
+labels_objs = labels_meta["labels"]
 
 # Separate the owners from labels (format: owner1,owner2,owner3|label)
 # if labels[0].count("|") > 0:
@@ -44,8 +44,8 @@ labels_objs = labels_meta["Labels"]
 #     owners = [{0}] * len(labels)
 
 # Separate the owners from labels (format: {"Label": str, "Owners": List[int]} )
-owners = [set(label["Owners"]) for label in labels_objs]
-labels = [label["Label"] for label in labels_objs]
+owners = [set(label["owners"]) for label in labels_objs]
+labels = [label["label"] for label in labels_objs]
 
 # Calculate the distance matrix
 embeddings = normalize(embeddings, norm="l2")
@@ -304,14 +304,14 @@ def plot_comparison(codebooks, distribution, type="heatmap"):
     cbar.set_label("Density")
 
     # Save the plot
-    path = OutputPath + "/coverage-" + "-".join(names)
+    path = output_path + "/coverage-" + "-".join(names)
     if type != "heatmap":
         path += "-" + type
     plt.savefig(path + ".png", dpi=160, bbox_inches="tight")
     print("Coverage plot saved to", path)
 
     # Show the plot
-    if Visualize:
+    if visualize:
         wm = plt.get_current_fig_manager()
         if wm is not None:
             wm.window.state("zoomed")  # type: ignore
@@ -322,7 +322,7 @@ def plot_comparison(codebooks, distribution, type="heatmap"):
 plot_comparison(group_ids[1:], reference_distribution, "heatmap")
 
 # Plot the overlapping heatmap
-if Owners > 2:
+if owners_cnt > 2:
     plot_comparison(group_ids[1:], reference_distribution, "overlap")
 
 # Here, conformity is defined as the ratio of the spread to the overlapping area
