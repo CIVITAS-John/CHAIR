@@ -1,6 +1,7 @@
 import LowLevelAnalyzer5 from "../coding/low-level-5";
 import { QAJob, type QAJobConfig } from "../job";
 import { CodeStep } from "../steps/code-step";
+import { ConsolidateStep } from "../steps/consolidate-step";
 import { LoadStep } from "../steps/load-step";
 import { logger } from "../utils/logger";
 
@@ -14,9 +15,15 @@ const code = new CodeStep({
     model: ["gpt-3.5-turbo", "gpt-4.5-turbo"],
 });
 
+const consolidate = new ConsolidateStep({
+    coder: code,
+    model: ["gpt-3.5-turbo", "gpt-4.5-turbo"],
+    embedder: "gecko-768-similarity",
+});
+
 const config: QAJobConfig = {
     embeddingModel: "",
-    steps: [load, code],
+    steps: [load, code, consolidate],
     parallel: true,
 };
 

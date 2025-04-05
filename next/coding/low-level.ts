@@ -11,6 +11,7 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
     protected tagName = "tag";
     /** How we call tags in the prompt. */
     protected tagsName = "tags";
+
     /**
      * Get the chunk size and cursor movement for the LLM.
      * We will fetch at least 10 messages for each batch to keep the context.
@@ -27,8 +28,9 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
         }
         return [recommended - tries * 2, Math.max(8 - recommended - tries, 0), 0];
     }
+
     /** ParseResponse: Parse the responses from the LLM. */
-    public parseResponse(
+    override parseResponse(
         analysis: CodedThread,
         lines: string[],
         messages: Message[],

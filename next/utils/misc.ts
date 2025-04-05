@@ -1,27 +1,10 @@
-import { mkdirSync, readFileSync } from "fs";
-import { join, resolve } from "path";
-
 import type { Codebook, DataItem } from "../schema";
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-export const readJSONFile = <T>(path: string) => JSON.parse(readFileSync(path, "utf-8")) as T;
+/** Reverse a string. */
+export const reverse = (s: string) => s.split("").reverse().join("");
 
-export const importDefault = async (path: string) => {
-    const module = (await import(`file://${resolve(path)}`)) as unknown;
-    if (typeof module !== "object" || module === null) {
-        throw new TypeError(`${path} is not a valid module`);
-    }
-    if (!("default" in module)) {
-        throw new TypeError(`Module ${path} does not have a default export`);
-    }
-    return module.default;
-};
-
-/** Ensure that a folder exists. */
-export const ensureFolder = (path: string) => {
-    mkdirSync(path, { recursive: true });
-    return path;
-};
+/** Wait for a number of milliseconds. */
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /** Create a promise with timeout. */
 export const promiseWithTimeout = async <T>(
@@ -56,7 +39,32 @@ export const parseDateTime = (datetime: string) => {
     return date;
 };
 
-export const getMessagesPath = (datasetPath: string, name: string) => join(datasetPath, name);
+/** Generate a seeded random number. */
+const seededRand = (seed: number) => {
+    const x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+};
+
+/**
+ * Shuffle an array using a seed.
+ * @see https://stackoverflow.com/questions/16801687/javascript-random-ordering-with-seed
+ */
+export const seededShuffle = <T>(array: T[], seed: number) => {
+    let m = array.length,
+        t,
+        i;
+    // While there remain elements to shuffle...
+    while (m) {
+        // Pick a remaining element...
+        i = Math.floor(seededRand(seed) * m--);
+        // And swap it with the current element.
+        t = array[m];
+        array[m] = array[i];
+        array[i] = t;
+        ++seed;
+    }
+    return array;
+};
 
 /** GetCategories: Get the categories from the codebook. */
 export function GetCategories(Codebook: Codebook): Map<string, string[]> {

@@ -8,14 +8,16 @@ import { LowLevelAnalyzerBase } from "./low-level";
  * @author John Chen
  */
 export default class LowLevelAnalyzer5 extends LowLevelAnalyzerBase {
-    /** How we call a tag in the prompt */
-    protected tagName = "phrase";
-    /** How we call tags in the prompt */
-    protected tagsName = "phrases";
     /** The name of the analyzer. */
     override name = "low-level-5";
     /** The base temperature for the LLM. */
     override baseTemperature = 0.5;
+
+    /** How we call a tag in the prompt */
+    protected override tagName = "phrase";
+    /** How we call tags in the prompt */
+    protected override tagsName = "phrases";
+
     /**
      * Get the chunk size and cursor movement for the LLM.
      * We will fetch at least 10 messages for each batch to keep the context.
@@ -33,6 +35,7 @@ export default class LowLevelAnalyzer5 extends LowLevelAnalyzerBase {
         }
         return [recommended - tries * 2, Math.max(8 - recommended - tries, 3), 0];
     }
+
     /** Build the prompts for the LLM. */
     override buildPrompts(
         analysis: CodedThread,

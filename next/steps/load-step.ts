@@ -8,8 +8,9 @@ import type {
     RawDataItem,
     RawDataset,
 } from "../schema";
+import { importDefault, readJSONFile } from "../utils/file";
 import { logger } from "../utils/logger";
-import { getMessagesPath, importDefault, parseDateTime, readJSONFile } from "../utils/misc";
+import { parseDateTime } from "../utils/misc";
 
 import { BaseStep } from "./base-step";
 
@@ -20,7 +21,7 @@ export interface LoadStepConfig {
 }
 
 const loadChunkGroup = (datasetPath: string, name: string) =>
-    readJSONFile<Record<string, RawDataChunk>>(getMessagesPath(datasetPath, name));
+    readJSONFile<Record<string, RawDataChunk>>(join(datasetPath, name));
 
 const initializeItem = (item: RawDataItem): DataItem => ({
     ...item,

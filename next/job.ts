@@ -67,23 +67,15 @@ export class QAJob {
                 // We group the steps by type - load, code, then consolidate
                 this.steps = [[], [], [], []];
                 // Classify each step
-                stepsFlat.forEach((Step) => this.steps[validateStep(Step)].push(Step));
-                // Set the dependencies of Code and Consolidate steps if not provided
-                this.steps[1].forEach((codeStep) => {
-                    if (!codeStep.dependsOn?.length) {
-                        codeStep.dependsOn = this.steps[0];
-                    }
-                });
-                this.steps[2].forEach((consolidateStep) => {
-                    if (!consolidateStep.dependsOn?.length) {
-                        consolidateStep.dependsOn = this.steps[1];
-                    }
-                });
-                this.steps[3].forEach((evaluateStep) => {
-                    if (!evaluateStep.dependsOn?.length) {
-                        evaluateStep.dependsOn = this.steps[2];
-                    }
-                });
+                stepsFlat.forEach((step) => this.steps[validateStep(step)].push(step));
+                // Set the dependencies of unspecified steps
+                for (let i = 1; i < 4; i++) {
+                    this.steps[i].forEach((step) => {
+                        if (!step.dependsOn?.length) {
+                            step.dependsOn = this.steps[i - 1];
+                        }
+                    });
+                }
                 // Remove empty groups
                 this.steps = this.steps.filter((group) => group.length);
                 logger.debug(

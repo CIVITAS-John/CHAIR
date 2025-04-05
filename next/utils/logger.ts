@@ -3,7 +3,7 @@ import { dirname } from "path";
 
 import chalk from "chalk";
 
-import { ensureFolder } from "./misc";
+import { ensureFolder } from "./file";
 
 export enum LogLevel {
     ERROR,

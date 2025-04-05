@@ -14,11 +14,12 @@ import { ChatOpenAI } from "@langchain/openai";
 import * as dotenv from "dotenv";
 import md5 from "md5";
 
-import type { IDStrFunc } from "../steps/base-step.js";
+import type { IDStrFunc } from "../steps/base-step";
 
-import { logger } from "./logger.js";
-import { ensureFolder, promiseWithTimeout } from "./misc.js";
-import { tokenize } from "./tokenizer.js";
+import { ensureFolder } from "./file";
+import { logger } from "./logger";
+import { promiseWithTimeout } from "./misc";
+import { tokenize } from "./tokenizer";
 
 const MODELS = {
     "gpt-3.5-turbo": {
@@ -222,7 +223,6 @@ const MODELS = {
 } satisfies Record<string, Omit<LLMObject, "name" | "model"> & Partial<Pick<LLMObject, "model">>>;
 
 export type LLMName = keyof typeof MODELS;
-
 export interface LLMObject {
     model: (temperature: number) => BaseChatModel;
     name: string;
@@ -231,7 +231,6 @@ export interface LLMObject {
     maxItems: number;
     systemMessage?: boolean;
 }
-
 export type LLMModel = LLMName | LLMObject;
 
 export interface LLMSession {
@@ -261,7 +260,7 @@ export const initLLM = (LLM: string): LLMObject => {
         }
 
         if (!(realLLM in MODELS)) {
-            throw new Error(`LLM ${realLLM} not supported.`);
+            throw new Error(`LLM ${realLLM} not supported`);
         }
 
         return {

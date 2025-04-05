@@ -136,6 +136,12 @@ export interface CodedThreads {
     codebook?: Codebook;
 }
 
+/** A collection of qualitatively coded threads, with a codebook. */
+export interface CodedThreadsWithCodebook extends CodedThreads {
+    /** The summarized codebook. */
+    codebook: Codebook;
+}
+
 /** A message in a group chat. */
 export interface Message extends DataItem {
     /** firstSeen: Whether the sender is first seen in the group. */
