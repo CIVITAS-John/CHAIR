@@ -446,6 +446,7 @@ export class CodeStep<
 
             const codes: Record<string, CodedThreads> = {};
             for (const coder of coders) {
+                logger.info(`[${dataset.name}] Loading codes for coder "${coder}"`, _id);
                 const excelPath = join(basePath, `${coder}.xlsx`);
                 let analyses =
                     (await loadExcel(excelPath, this.config.codebookSheet)) ??
@@ -487,35 +488,13 @@ export class CodeStep<
                     }
 
                     while (!analyses || !Object.keys(analyses.threads).length) {
-                        try {
-                            logger.lock();
-                            openFile(excelPath);
-                            await input({
-                                message: `Waiting for coder "${coder}" to fill in ${excelPath}.\nPress enter when done...`,
-                            });
-                            logger.unlock();
-                            analyses = await loadExcel(excelPath, this.config.codebookSheet);
-                        } catch (error) {
-                            logger.unlock();
-                            if (error instanceof Error && error.name === "ExitPromptError") {
-                                logger.warn(`[${dataset.name}] Coder "${coder}" interrupted`, _id);
-                            } else {
-                                const e = new CodeStep.InternalError(
-                                    `[${dataset.name}] Failed to load codes from ${excelPath}`,
-                                    _id,
-                                );
-                                e.cause = error;
-                                logger.error(e, true, _id);
-                            }
-                            analyses = undefined;
-                            break;
-                        }
-                    }
-
-                    if (!analyses) {
-                        // Something went wrong, we just skip the coder
-                        logger.warn(`[${dataset.name}] Skipping coder "${coder}"`, _id);
-                        continue;
+                        logger.lock();
+                        openFile(excelPath);
+                        await input({
+                            message: `Waiting for coder "${coder}" to fill in ${excelPath}.\nPress enter when done...`,
+                        });
+                        logger.unlock();
+                        analyses = await loadExcel(excelPath, this.config.codebookSheet);
                     }
                 }
 

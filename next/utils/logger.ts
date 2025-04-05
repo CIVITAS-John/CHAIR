@@ -1,4 +1,5 @@
-import { writeFileSync } from "fs";
+import type { WriteStream } from "fs";
+import { createWriteStream } from "fs";
 import { dirname } from "path";
 
 import chalk from "chalk";
@@ -18,15 +19,12 @@ const format = (message: string, level: string, source = "") =>
     `${level ? `[${level}] ` : ""}${source ? `${source}: ` : ""}${message}`;
 
 class Logger {
-    readonly #file: string;
+    readonly #file: WriteStream;
     readonly #verbosity: LogLevel;
 
     #consoleLock = false;
-    cls() {
-        process.stdout.write("\x1Bc");
-    }
     lock() {
-        this.cls();
+        console.clear();
         this.#consoleLock = true;
     }
     unlock() {
@@ -34,13 +32,17 @@ class Logger {
     }
 
     constructor(file?: string, verbosity?: LogLevel) {
-        this.#file = file ?? logPath;
-        ensureFolder(dirname(this.#file));
+        const path = file ?? logPath;
+        ensureFolder(dirname(path));
+        this.#file = createWriteStream(path, {
+            flags: "a+",
+            encoding: "utf-8",
+        });
         this.#verbosity = verbosity ?? LogLevel.INFO;
     }
 
     #logFile(message: string) {
-        writeFileSync(this.#file, `${new Date().toISOString()} ${message}\n`, { flag: "a+" });
+        this.#file.write(`${new Date().toISOString()} ${message}\n`);
     }
 
     error(error?: unknown, recoverable = false, source?: string) {
