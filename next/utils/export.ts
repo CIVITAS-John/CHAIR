@@ -1,6 +1,15 @@
 import Excel from "exceljs";
 
-import type { Code, CodedThreads, DataChunk, DataItem, Message, Project } from "../schema";
+import type {
+    Code,
+    CodedItem,
+    CodedThread,
+    CodedThreads,
+    DataChunk,
+    DataItem,
+    Message,
+    Project,
+} from "../schema";
 import type { IDStrFunc } from "../steps/base-step";
 
 import { logger } from "./logger";
@@ -165,15 +174,15 @@ export const exportChunksForCoding = <T extends DataItem>(
         // Write the messages
         for (const message of messages) {
             logger.debug(`Exporting message ${message.id}`, _id);
-            const item = analysis.items[message.id] ?? analysis.items[message.id.substring(2)];
             // TODO: Support subchunks
             if ("items" in message) {
-                logger.warn(
-                    "Subchunks are not yet supported, skipping",
-                    idStr("exportChunksForCoding"),
-                );
+                logger.warn("Subchunks are not yet supported, skipping", _id);
                 continue;
             }
+            const codes =
+                typeof analysis === "undefined"
+                    ? undefined
+                    : (analysis.items[message.id] ?? analysis.items[message.id.substring(2)]).codes;
             message.chunk = message.chunk ?? chunk.id;
             const columns = {
                 ID: message.id,
@@ -183,10 +192,10 @@ export const exportChunksForCoding = <T extends DataItem>(
                 Time: message.time,
                 In: message.chunk === chunk.id ? "Y" : "N",
                 Content: message.content,
-                Codes: item.codes?.join(", ") ?? "",
+                Codes: codes?.join(", ") ?? "",
                 Memo: message.tags?.join(", ") ?? "",
                 Consolidated: [
-                    ...new Set(item.codes?.map((Code) => consolidation.get(Code) ?? Code) ?? []),
+                    ...new Set(codes?.map((Code) => consolidation.get(Code) ?? Code) ?? []),
                 ].join(", "),
             };
             const Row = sheet.addRow(columns);
@@ -218,13 +227,20 @@ export const exportChunksForCoding = <T extends DataItem>(
         addExtraRow(
             -1,
             "Thoughts",
-            analysis.plan ?? "(Optional) Your thoughts before coding the chunk.",
+            (typeof analysis === "undefined" ? null : analysis.plan) ??
+                "(Optional) Your thoughts before coding the chunk.",
         );
-        addExtraRow(-2, "Summary", analysis.summary ?? "The summary of the chunk.");
+        addExtraRow(
+            -2,
+            "Summary",
+            (typeof analysis === "undefined" ? null : analysis.summary) ??
+                "The summary of the chunk.",
+        );
         addExtraRow(
             -3,
             "Reflection",
-            analysis.reflection ?? "Your reflections after coding the chunk.",
+            (typeof analysis === "undefined" ? null : analysis.reflection) ??
+                "Your reflections after coding the chunk.",
         );
         logger.debug("Finished exporting chunk", _id);
     }
@@ -232,6 +248,134 @@ export const exportChunksForCoding = <T extends DataItem>(
     exportCodebook(idStr, book, analyses);
     logger.info(`Exported ${chunks.length} chunks to Excel`, _id);
     return book;
+};
+
+const setWorksheetKeys = (worksheet: Excel.Worksheet) => {
+    worksheet.getColumn("A").key = "ID";
+    worksheet.getColumn("B").key = "CID";
+    worksheet.getColumn("C").key = "SID";
+    worksheet.getColumn("D").key = "Nickname";
+    worksheet.getColumn("E").key = "Time";
+    worksheet.getColumn("F").key = "In";
+    worksheet.getColumn("G").key = "Content";
+    worksheet.getColumn("H").key = "Codes";
+    worksheet.getColumn("I").key = "Memo";
+    worksheet.getColumn("J").key = "Consolidated";
+};
+
+export const importCodes = async (
+    idStr: IDStrFunc,
+    path: string,
+    codebookSheet = "Codebook",
+): Promise<CodedThreads> => {
+    const _id = idStr("importCodes");
+    logger.info(`Importing codes from ${path}`, _id);
+
+    const workbook = new Workbook();
+    await workbook.xlsx.readFile(path);
+
+    // Initialize the analyses object
+    const analyses: CodedThreads = {
+        threads: {},
+    };
+
+    // Process each worksheet (tab) except the Codebook
+    workbook.eachSheet((worksheet) => {
+        if (worksheet.name === codebookSheet) return; // Skip codebook, will handle separately
+
+        const chunkId = worksheet.name;
+        logger.debug(`Importing chunk ${chunkId}`, _id);
+
+        // Initialize the thread analysis
+        const analysis: CodedThread = {
+            id: chunkId,
+            codes: {},
+            items: {},
+            iteration: 0,
+        };
+
+        let msgs = 0;
+
+        setWorksheetKeys(worksheet);
+        // Process each row in the worksheet
+        worksheet.eachRow((row, rowNumber) => {
+            if (rowNumber === 1) return; // Skip header row
+
+            const id = row.getCell("ID").value;
+
+            // Check if this is a special row (thoughts, summary, reflection)
+            if (typeof id === "number" && id < 0) {
+                const name = row.getCell("Nickname").value?.toString();
+                const content = row.getCell("Content").value?.toString() ?? "";
+
+                switch (id) {
+                    case -1:
+                        if (
+                            name === "Thoughts" &&
+                            content !== "(Optional) Your thoughts before coding the chunk."
+                        ) {
+                            analysis.plan = content;
+                        }
+                        break;
+                    case -2:
+                        if (name === "Summary" && content !== "The summary of the chunk.") {
+                            analysis.summary = content;
+                        }
+                        break;
+                    case -3:
+                        if (
+                            name === "Reflection" &&
+                            content !== "Your reflections after coding the chunk."
+                        ) {
+                            analysis.reflection = content;
+                        }
+                        break;
+                }
+                return;
+            }
+
+            // Skip empty rows
+            if (!id) return;
+
+            const codesValue = row.getCell("Codes").value?.toString() ?? "";
+            const codes = codesValue ? codesValue.split(", ").filter(Boolean) : undefined;
+
+            // Skip rows without codes
+            if (!codes) return;
+
+            // Add item to analysis
+            const messageId = JSON.stringify(id);
+            analysis.items[messageId] = {
+                id: messageId,
+                codes,
+            };
+
+            ++msgs;
+        });
+
+        if (msgs === 0) {
+            logger.warn(`No valid coded messages found in chunk ${chunkId}`, _id);
+            return;
+        }
+
+        analyses.threads[chunkId] = analysis;
+
+        logger.debug(`Imported ${msgs} coded messages for chunk ${chunkId}`, _id);
+    });
+
+    // Import the codebook
+    try {
+        analyses.codebook = await importCodebook(idStr, path, codebookSheet);
+        logger.info(`Successfully imported codebook from ${path}`, _id);
+    } catch (error) {
+        logger.error(error, true, _id);
+    }
+
+    logger.info(
+        `Imported coded data from ${path}: ${Object.keys(analyses.threads).length} threads`,
+        _id,
+    );
+    return analyses;
 };
 
 /** Export a codebook into an Excel workbook. */
@@ -242,11 +386,6 @@ export const exportCodebook = (
     name = "Codebook",
 ) => {
     const _id = idStr("exportCodebook");
-
-    if (analyses.codebook === undefined) {
-        logger.warn("No codebook to export", _id);
-        return;
-    }
 
     logger.info("Exporting codebook to Excel", _id);
     const sheet = book.addWorksheet(name, {
@@ -268,6 +407,11 @@ export const exportCodebook = (
         bold: true,
     };
     sheet.properties.defaultRowHeight = 18;
+    if (analyses.codebook === undefined) {
+        logger.warn("No codebook to export", _id);
+        return;
+    }
+
     // Write the codebook
     let codes = Object.values(analyses.codebook);
     // Sort the codes
@@ -296,30 +440,125 @@ export const exportCodebook = (
                 )
                 .join("\n") ?? "";
         const alternatives = code.alternatives?.map((Code) => `* ${Code}`).join("\n") ?? "";
-        const Row = sheet.addRow({
+        const row = sheet.addRow({
             Label: code.label,
             Category: categories,
             Definition: definitions,
             Examples: examples,
             Alternatives: alternatives,
         });
-        Row.font = {
+        row.font = {
             name: "Lato",
             family: 4,
             size: 12,
         };
-        Row.height = Math.max(
+        row.height = Math.max(
             30,
             getRowHeight(categories, 100),
             getRowHeight(definitions, 100),
             getRowHeight(examples, 100),
         );
-        Row.alignment = { vertical: "middle" };
-        Row.getCell("Category").alignment = { vertical: "middle", wrapText: true };
-        Row.getCell("Definition").alignment = { vertical: "middle", wrapText: true };
-        Row.getCell("Examples").alignment = { vertical: "middle", wrapText: true };
-        Row.getCell("Alternatives").alignment = { vertical: "middle", wrapText: true };
+        row.alignment = { vertical: "middle" };
+        row.getCell("Category").alignment = { vertical: "middle", wrapText: true };
+        row.getCell("Definition").alignment = { vertical: "middle", wrapText: true };
+        row.getCell("Examples").alignment = { vertical: "middle", wrapText: true };
+        row.getCell("Alternatives").alignment = { vertical: "middle", wrapText: true };
         logger.debug(`Exported code ${code.label}`, _id);
     }
     logger.info("Exported codebook to Excel", _id);
+};
+
+/** Import a codebook from an Excel workbook. */
+export const importCodebook = async (
+    idStr: IDStrFunc,
+    path: string,
+    name = "Codebook",
+): Promise<Record<string, Code>> => {
+    const _id = idStr("importCodebook");
+
+    logger.info(`Importing codebook from ${path}`, _id);
+    const workbook = new Workbook();
+    await workbook.xlsx.readFile(path);
+
+    const sheet = workbook.getWorksheet(name);
+    if (!sheet) {
+        throw new Error(`Worksheet "${name}" not found in ${path}`);
+    }
+
+    const codebook: Record<string, Code> = {};
+
+    // Skip the header row (row 1)
+    sheet.eachRow((row, rowNumber) => {
+        if (rowNumber === 1) return;
+
+        const label = row.getCell("Label").value?.toString();
+        if (!label) return; // Skip rows without a label
+
+        logger.debug(`Importing code ${label}`, _id);
+
+        const categoryText = row.getCell("Category").value?.toString() ?? "";
+        const definitionText = row.getCell("Definition").value?.toString() ?? "";
+        const examplesText = row.getCell("Examples").value?.toString() ?? "";
+        const alternativesText = row.getCell("Alternatives").value?.toString() ?? "";
+
+        // Parse categories (handle bullet points)
+        const categories = categoryText
+            ? categoryText
+                  .split("\n")
+                  .map((c) => c.trim().replace(/^\* /, ""))
+                  .filter(Boolean)
+            : undefined;
+
+        // Parse definitions (handle bullet points)
+        const definitions = definitionText
+            ? definitionText
+                  .split("\n")
+                  .map((d) => d.trim().replace(/^\* /, ""))
+                  .filter(Boolean)
+            : undefined;
+
+        // Parse examples (handle bullet points and convert ": " back to "|||")
+        const examples = examplesText
+            ? examplesText
+                  .split("\n")
+                  .map((e) => {
+                      e = e.trim().replace(/^\* /, "");
+                      // Replace the first ": " with "|||"
+                      const colonIndex = e.indexOf(": ");
+                      if (colonIndex > 0) {
+                          e = `${e.substring(0, colonIndex)}|||${e.substring(colonIndex + 2)}`;
+                      }
+                      return e;
+                  })
+                  .filter(Boolean)
+            : undefined;
+
+        // Parse alternatives (handle bullet points)
+        const alternatives = alternativesText
+            ? alternativesText
+                  .split("\n")
+                  .map((a) => a.trim().replace(/^\* /, ""))
+                  .filter(Boolean)
+            : undefined;
+
+        // Create the code object
+        codebook[label] = {
+            label,
+            categories,
+            definitions,
+            examples,
+            alternatives,
+        };
+
+        logger.debug(`Imported code ${label}`, _id);
+    });
+
+    const codeCount = Object.keys(codebook).length;
+    if (codeCount === 0) {
+        logger.warn("No codes found in the codebook", _id);
+        return codebook;
+    }
+    logger.info(`Imported ${codeCount} codes from codebook`, _id);
+
+    return codebook;
 };

@@ -21,6 +21,18 @@ class Logger {
     readonly #file: string;
     readonly #verbosity: LogLevel;
 
+    #consoleLock = false;
+    cls() {
+        process.stdout.write("\x1Bc");
+    }
+    lock() {
+        this.cls();
+        this.#consoleLock = true;
+    }
+    unlock() {
+        this.#consoleLock = false;
+    }
+
     constructor(file?: string, verbosity?: LogLevel) {
         this.#file = file ?? logPath;
         ensureFolder(dirname(this.#file));
@@ -42,14 +54,14 @@ class Logger {
         const tb = error instanceof Error ? error.stack : undefined;
         const cause = error instanceof Error ? error.cause : undefined;
 
-        console.error(chalk.red(formatted));
+        if (!this.#consoleLock) console.error(chalk.red(formatted));
         this.#logFile(formatted);
         if (tb) {
-            console.error(chalk.red(tb));
+            if (!this.#consoleLock) console.error(chalk.red(tb));
             this.#logFile(tb);
         }
         if (cause) {
-            console.error(chalk.red("cause:"));
+            if (!this.#consoleLock) console.error(chalk.red("cause:"));
             this.#logFile("cause:");
             this.error(cause, recoverable, source);
         }
@@ -65,7 +77,7 @@ class Logger {
 
     warn(message: string, source?: string) {
         const formatted = format(message, "WARN", source);
-        if (this.#verbosity >= LogLevel.WARN) {
+        if (!this.#consoleLock && this.#verbosity >= LogLevel.WARN) {
             console.warn(chalk.yellow(formatted));
         }
         this.#logFile(formatted);
@@ -73,7 +85,7 @@ class Logger {
 
     success(message: string, source?: string) {
         const formatted = format(message, "SUCCESS", source);
-        if (this.#verbosity >= LogLevel.SUCCESS) {
+        if (!this.#consoleLock && this.#verbosity >= LogLevel.SUCCESS) {
             console.log(chalk.green(formatted));
         }
         this.#logFile(formatted);
@@ -81,7 +93,7 @@ class Logger {
 
     info(message: string, source?: string) {
         const formatted = format(message, "INFO", source);
-        if (this.#verbosity >= LogLevel.INFO) {
+        if (!this.#consoleLock && this.#verbosity >= LogLevel.INFO) {
             console.info(chalk.blue(formatted));
         }
         this.#logFile(formatted);
@@ -89,7 +101,7 @@ class Logger {
 
     debug(message: string, source?: string) {
         const formatted = format(message, "DEBUG", source);
-        if (this.#verbosity >= LogLevel.DEBUG) {
+        if (!this.#consoleLock && this.#verbosity >= LogLevel.DEBUG) {
             console.debug(chalk.gray(formatted));
         }
         this.#logFile(formatted);

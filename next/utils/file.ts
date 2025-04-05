@@ -1,3 +1,4 @@
+import { exec } from "child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "fs";
 import { join, resolve } from "path";
 
@@ -51,6 +52,9 @@ export const getFilesRecursively = (source: string) => {
     }
     return files;
 };
+
+export const openFile = (path: string) =>
+    exec(process.platform === "win32" ? `start "" "${path}"` : `open "${path}"`);
 
 /** Read or build a cache based on a hash. */
 export const cachedTask = async <T>(

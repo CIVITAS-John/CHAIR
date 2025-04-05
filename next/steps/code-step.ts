@@ -1,15 +1,18 @@
-import { writeFileSync } from "fs";
-import { basename } from "path";
+import { existsSync, readdirSync, writeFileSync } from "fs";
+import { basename, extname, join } from "path";
 
+import { input, select } from "@inquirer/prompts";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
-import type { Analyzer } from "../analyzer";
+import { type Analyzer, loopThroughChunk } from "../analyzer";
+import { mergeCodebook } from "../consolidating/codebooks";
 import type { CodedThread, CodedThreads, DataChunk, DataItem, Dataset } from "../schema";
-import { exportChunksForCoding } from "../utils/export";
+import { exportChunksForCoding, importCodes } from "../utils/export";
+import { ensureFolder, openFile, readJSONFile } from "../utils/file";
 import type { LLMModel, LLMSession } from "../utils/llms";
 import { requestLLM, useLLMs } from "../utils/llms";
 import { logger } from "../utils/logger";
-import { assembleExampleFrom, ensureFolder, getMessagesPath } from "../utils/misc";
+import { assembleExampleFrom } from "../utils/misc";
 
 import type { AIParameters, IDStrFunc } from "./base-step";
 import { BaseStep } from "./base-step";
@@ -23,13 +26,14 @@ export type CodeStepConfig<
     TUnit extends DataChunk<TSubunit>,
     TSubunit extends DataItem = DataItem,
 > = {
-    // To avoid confusion for AI "output" vs human "input", this is just the path to store the coded data
-    path?: string; // Defaults to?
     dataset?: LoadStep<TUnit> | LoadStep<TUnit>[]; // Defaults to all datasets loaded
 } & (
     | {
           agent: "Human";
-          // If path doesn't exist, data will be exported to a new file (e.g. ${Path}.TODO.xlsx) for the human to code
+          path?: string; // A path to the Excel/JSON files containing the human-coded data, relative to the dataset path (defaults to "human")
+          coders?: string[]; // A list of coder names (the files are assumed to be found at <path>/<coder>.xlsx/json)
+          onMissing?: "skip" | "wait" | "ask"; // What to do if the file does not exist or is empty (defaults to "ask")
+          codebookSheet?: string; // The name of the sheet to use for the codebook (defaults to "Codebook")
       }
     | {
           agent: "AI";
@@ -42,136 +46,18 @@ export type CodeStepConfig<
       }
 );
 
-const loopThroughChunks = async <TUnit, TSubunit, TAnalysis>(
-    idStr: IDStrFunc,
-    dataset: Dataset<TUnit>,
-    session: LLMSession,
-    analyzer: Analyzer<TUnit, TSubunit, TAnalysis>,
-    key: string,
-    analysis: TAnalysis,
-    source: TUnit,
-    sources: TSubunit[],
-    action: (
-        currents: TSubunit[],
-        chunkStart: number,
-        isFirst: boolean,
-        tries: number,
-        iteration: number,
-    ) => Promise<number>,
-    iteration?: (iteration: number) => Promise<void>,
-) => {
-    const _id = idStr("loopThroughChunks");
-
-    // Split units into smaller chunks based on the maximum items
-    for (let i = 0; i < analyzer.maxIterations; i++) {
-        logger.info(`[${dataset.name}/${key}] Iteration ${i + 1}/${analyzer.maxIterations}`, _id);
-        let cursor = 0;
-        // Preprocess and filter the subunits
-        sources = await analyzer.preprocess(analysis, source, sources, i);
-        if (sources.length === 0) {
-            continue;
-        }
-        const filtered = sources.filter((subunit) => analyzer.subunitFilter(subunit, i));
-        logger.debug(`[${dataset.name}/${key}] ${filtered.length} subunits filtered`, _id);
-        // Loop through the subunits
-        while (cursor < filtered.length) {
-            logger.debug(`[${dataset.name}/${key}] Cursor at ${cursor}/${filtered.length}`, _id);
-            let retries = 0;
-            let cursorRelative = 0;
-            let chunkSize = [0, 0, 0];
-            while (retries <= 4) {
-                // Get the chunk size
-                const _chunkSize = analyzer.getChunkSize(
-                    Math.min(session.llm.maxItems, filtered.length - cursor),
-                    filtered.length - cursor,
-                    i,
-                    retries,
-                );
-                logger.debug(
-                    `[${dataset.name}/${key}] Chunk size: ${JSON.stringify(_chunkSize)}`,
-                    _id,
-                );
-                if (typeof _chunkSize === "number") {
-                    if (_chunkSize < 0) {
-                        logger.warn(
-                            `[${dataset.name}/${key}] Stopped iteration due to signals sent by the analyzer (<0 chunk size)`,
-                            _id,
-                        );
-                        return;
-                    }
-                    chunkSize = [_chunkSize, 0, 0];
-                } else {
-                    chunkSize = _chunkSize;
-                }
-
-                // Get the chunk
-                const start = Math.max(cursor - chunkSize[1], 0);
-                const end = Math.min(cursor + chunkSize[0] + chunkSize[2], filtered.length);
-                const currents = filtered.slice(start, end);
-                const isFirst = cursor === 0;
-                logger.debug(
-                    `[${dataset.name}/${key}] Processing block ${start}-${end} (${currents.length} subunits)`,
-                    _id,
-                );
-                // Run the prompts
-                try {
-                    cursorRelative = await action(currents, cursor - start, isFirst, retries, i);
-                    logger.debug(
-                        `[${dataset.name}/${key}] Cursor relative movement: ${cursorRelative}`,
-                        _id,
-                    );
-                    // Sometimes, the action may return a relative cursor movement
-                    if (chunkSize[0] + cursorRelative <= 0) {
-                        throw new CodeStep.InternalError("Failed to process any subunits", _id);
-                    }
-                    session.expectedItems += chunkSize[0];
-                    session.finishedItems += chunkSize[0] + cursorRelative;
-                    if (cursorRelative !== 0) {
-                        logger.debug(
-                            `[${dataset.name}/${key}}] Expected ${chunkSize[0]} subunits, processed ${chunkSize[0] + cursorRelative} subunits`,
-                            _id,
-                        );
-                    }
-                    break;
-                } catch (e) {
-                    ++retries;
-                    const error = new CodeStep.InternalError(
-                        `Analysis error, try ${retries}/5`,
-                        _id,
-                    );
-                    error.cause = e;
-                    if (retries > 4) {
-                        throw error;
-                    }
-                    session.expectedItems += chunkSize[0];
-                    session.finishedItems += chunkSize[0];
-                    logger.error(error, true, _id);
-                }
-            }
-            // Move the cursor
-            cursor += chunkSize[0] + cursorRelative;
-        }
-        // Run the iteration function
-        await iteration?.(i);
-
-        logger.info(
-            `[${dataset.name}/${key}] Iteration ${i + 1}/${analyzer.maxIterations} completed`,
-            _id,
-        );
-    }
-};
-
 /** Analyze a chunk of data items. */
-const analyzeChunk = async <T extends DataItem>(
+const analyzeChunks = async <T extends DataItem>(
     idStr: IDStrFunc,
     dataset: Dataset<DataChunk<T>>,
     session: LLMSession,
     analyzer: Analyzer<DataChunk<T>, T, CodedThread>,
     chunks: Record<string, DataChunk<T>>,
     analyzed: CodedThreads = { threads: {} },
+    temperature?: number,
     fakeRequest = false,
 ) => {
-    const _id = idStr("analyzeChunk");
+    const _id = idStr("analyzeChunks");
 
     const keys = Object.keys(chunks);
     logger.info(`[${dataset.name}] Analyzing ${keys.length} chunks`, _id);
@@ -218,127 +104,135 @@ const analyzeChunk = async <T extends DataItem>(
         const analysis = analyzed.threads[key];
         // Run the messages through chunks (as defined by the analyzer)
         let prevAnalysis: CodedThread | undefined;
-        await loopThroughChunks(
-            idStr,
-            dataset,
-            session,
-            analyzer,
-            key,
-            analysis,
-            chunk,
-            messages,
-            async (currents, chunkStart, isFirst, tries, iteration) => {
-                // Sync from the previous analysis to keep the overlapping codes
-                if (prevAnalysis && prevAnalysis !== analysis) {
-                    for (const [id, item] of Object.entries(prevAnalysis.items)) {
-                        if (chunk.items.findIndex((m) => m.id === id) !== -1) {
-                            analysis.items[id] = { id, codes: item.codes };
+        try {
+            await loopThroughChunk(
+                idStr,
+                dataset,
+                session,
+                analyzer,
+                analysis,
+                chunk,
+                messages,
+                async (currents, chunkStart, isFirst, tries, iteration) => {
+                    // Sync from the previous analysis to keep the overlapping codes
+                    if (prevAnalysis && prevAnalysis !== analysis) {
+                        for (const [id, item] of Object.entries(prevAnalysis.items)) {
+                            if (chunk.items.findIndex((m) => m.id === id) !== -1) {
+                                analysis.items[id] = { id, codes: item.codes };
+                            }
                         }
                     }
-                }
-                // Build the prompts
-                const prompts = await analyzer.buildPrompts(
-                    analysis,
-                    chunk,
-                    currents,
-                    chunkStart,
-                    iteration,
-                );
-                let response = "";
-                // Run the prompts
-                if (prompts[0] !== "" || prompts[1] !== "") {
-                    if (!isFirst && analysis.summary) {
-                        prompts[1] = `Summary of previous conversation: ${analysis.summary}\n${prompts[1]}`;
-                    }
-                    logger.debug(
-                        `[${dataset.name}/${key}] Requesting LLM, iteration ${iteration}`,
-                        _id,
+                    // Build the prompts
+                    const prompts = await analyzer.buildPrompts(
+                        analysis,
+                        chunk,
+                        currents,
+                        chunkStart,
+                        iteration,
                     );
-                    response = await requestLLM(
-                        idStr,
-                        session,
-                        [new SystemMessage(prompts[0]), new HumanMessage(prompts[1])],
-                        `${basename(dataset.path)}/${analyzer.name}`,
-                        tries * 0.2 + analyzer.baseTemperature,
-                        fakeRequest,
-                    );
-                    logger.debug(
-                        `[${dataset.name}/${key}] Received response, iteration ${iteration}`,
-                        _id,
-                    );
-                    if (response === "") {
-                        return 0;
-                    }
-                }
-                const itemRes = await analyzer.parseResponse(
-                    analysis,
-                    response.split("\n").map((Line) => Line.trim()),
-                    currents,
-                    chunkStart,
-                    iteration,
-                );
-                // Process the results
-                if (typeof itemRes === "number") {
-                    logger.debug(
-                        `[${dataset.name}/${key}] Relative cursor movement: ${itemRes}`,
-                        _id,
-                    );
-                    return itemRes;
-                }
-                // Item-based coding
-                for (const [idx, res] of Object.entries(itemRes)) {
-                    const message = currents[parseInt(idx) - 1];
-                    const isCommaDelim = !(res.includes(";") || res.includes("|"));
-                    const codes = res
-                        .toLowerCase()
-                        .split(isCommaDelim ? /,/g : /\||;/g)
-                        .map((c) => c.trim().replace(/\.$/, "").toLowerCase())
-                        .filter(
-                            (c) =>
-                                c.length > 0 &&
-                                c !== message.content.toLowerCase() &&
-                                !c.endsWith("...") &&
-                                !c.endsWith("!") &&
-                                !c.endsWith("?") &&
-                                !c.endsWith(".") && // To avoid codes using the original content
-                                !c.endsWith(`p${message.uid}`),
+                    let response = "";
+                    // Run the prompts
+                    if (prompts[0] !== "" || prompts[1] !== "") {
+                        if (!isFirst && analysis.summary) {
+                            prompts[1] = `Summary of previous conversation: ${analysis.summary}\n${prompts[1]}`;
+                        }
+                        logger.debug(
+                            `[${dataset.name}/${key}] Requesting LLM, iteration ${iteration}`,
+                            _id,
                         );
-                    logger.debug(
-                        `[${dataset.name}/${key}] Received ${codes.length} codes for message ${message.id}: ${codes.join(", ")}`,
-                        _id,
-                    );
-                    // Record the codes from line-level coding
-                    analysis.items[message.id].codes = codes;
-                    codes.forEach((code) => {
-                        const cur = analysis.codes[code] ?? { label: code };
-                        cur.examples = cur.examples ?? [];
-                        const content = assembleExampleFrom(
-                            dataset.getSpeakerNameForExample,
-                            message,
+                        response = await requestLLM(
+                            idStr,
+                            session,
+                            [new SystemMessage(prompts[0]), new HumanMessage(prompts[1])],
+                            `${basename(dataset.path)}/${analyzer.name}`,
+                            tries * 0.2 + (temperature ?? analyzer.baseTemperature),
+                            fakeRequest,
                         );
-                        if (message.content !== "" && !cur.examples.includes(content)) {
-                            cur.examples.push(content);
-                            logger.debug(
-                                `[${dataset.name}/${key}] Added example for code ${code}: ${content}`,
-                                _id,
+                        logger.debug(
+                            `[${dataset.name}/${key}] Received response, iteration ${iteration}`,
+                            _id,
+                        );
+                        if (response === "") {
+                            return 0;
+                        }
+                    }
+                    const itemRes = await analyzer.parseResponse(
+                        analysis,
+                        response.split("\n").map((Line) => Line.trim()),
+                        currents,
+                        chunkStart,
+                        iteration,
+                    );
+                    // Process the results
+                    if (typeof itemRes === "number") {
+                        logger.debug(
+                            `[${dataset.name}/${key}] Relative cursor movement: ${itemRes}`,
+                            _id,
+                        );
+                        return itemRes;
+                    }
+                    // Item-based coding
+                    for (const [idx, res] of Object.entries(itemRes)) {
+                        const message = currents[parseInt(idx) - 1];
+                        const isCommaDelim = !(res.includes(";") || res.includes("|"));
+                        const codes = res
+                            .toLowerCase()
+                            .split(isCommaDelim ? /,/g : /\||;/g)
+                            .map((c) => c.trim().replace(/\.$/, "").toLowerCase())
+                            .filter(
+                                (c) =>
+                                    c.length > 0 &&
+                                    c !== message.content.toLowerCase() &&
+                                    !c.endsWith("...") &&
+                                    !c.endsWith("!") &&
+                                    !c.endsWith("?") &&
+                                    !c.endsWith(".") && // To avoid codes using the original content
+                                    !c.endsWith(`p${message.uid}`),
                             );
-                        }
-                        analysis.codes[code] = cur;
-                    });
-                }
-                prevAnalysis = analysis;
-                // Dial back the cursor if necessary
-                const movement = Object.keys(itemRes).length - currents.length;
-                logger.debug(`[${dataset.name}/${key}] Cursor movement: ${movement}`, _id);
-                return movement;
-            },
-        );
+                        logger.debug(
+                            `[${dataset.name}/${key}] Received ${codes.length} codes for message ${message.id}: ${codes.join(", ")}`,
+                            _id,
+                        );
+                        // Record the codes from line-level coding
+                        analysis.items[message.id].codes = codes;
+                        codes.forEach((code) => {
+                            const cur = analysis.codes[code] ?? { label: code };
+                            cur.examples = cur.examples ?? [];
+                            const content = assembleExampleFrom(
+                                dataset.getSpeakerNameForExample,
+                                message,
+                            );
+                            if (message.content !== "" && !cur.examples.includes(content)) {
+                                cur.examples.push(content);
+                                logger.debug(
+                                    `[${dataset.name}/${key}] Added example for code ${code}: ${content}`,
+                                    _id,
+                                );
+                            }
+                            analysis.codes[code] = cur;
+                        });
+                    }
+                    prevAnalysis = analysis;
+                    // Dial back the cursor if necessary
+                    const movement = Object.keys(itemRes).length - currents.length;
+                    logger.debug(`[${dataset.name}/${key}] Cursor movement: ${movement}`, _id);
+                    return movement;
+                },
+                undefined,
+            );
+        } catch (e) {
+            const err = new CodeStep.InternalError("Failed to analyze chunk", _id);
+            err.cause = e;
+            throw err;
+        }
         analysis.iteration++;
         logger.info(
             `[${dataset.name}] Analyzed chunk ${key}, iteration ${analysis.iteration}`,
             _id,
         );
     }
+    // Consolidate a codebook
+    mergeCodebook(analyzed);
     return analyzed;
 };
 
@@ -349,14 +243,29 @@ export class CodeStep<
     override _type = "Code";
     override dependsOn: LoadStep<TUnit>[];
 
+    #datasets: Dataset<TUnit>[] = [];
+    get datasets() {
+        // Sanity check
+        if (!this.executed || !this.#datasets.length) {
+            throw new CodeStep.UnexecutedError(this._idStr("datasets"));
+        }
+        return this.#datasets;
+    }
+
     // results[dataset][analyzer][ident] = CodedThreads
-    #results: Record<string, Record<string, Record<string, CodedThreads>>> = {};
-    get results() {
+    #results = new Map<string, Record<string, Record<string, CodedThreads>>>();
+    getResult(dataset: string) {
+        const _id = this._idStr("getResult");
+
         // Sanity check
         if (!this.executed || !Object.keys(this.#results).length) {
-            throw new CodeStep.UnexecutedError(this._idStr("results"));
+            throw new CodeStep.UnexecutedError(_id);
         }
-        return this.#results;
+        if (!this.#results.has(dataset)) {
+            throw new CodeStep.InternalError(`Dataset ${dataset} not found`, _id);
+        }
+
+        return this.#results.get(dataset) ?? {};
     }
 
     constructor(private readonly config: CodeStepConfig<TUnit, TSubunit>) {
@@ -369,100 +278,282 @@ export class CodeStep<
             : [];
     }
 
-    override async execute() {
-        void super.execute();
-        const _id = this._idStr("execute");
+    async #codeAI() {
+        const _id = this._idStr("executeAI");
 
-        const datasets = this.dependsOn.map((step) => step.dataset);
-        logger.info(`Coding ${datasets.length} datasets`, _id);
-
-        // TODO: Support human coding
-        // See if file already exists (xlsx or json), if so, skip, if not, we create template xlsx file for human to code
-        // Interactively select what to do when file does not exist/is completely empty
-        // 1. Skip
-        // 2. Wait for human to code
-        if (this.config.agent === "Human") {
-            throw new CodeStep.ConfigError("Human coding is not yet supported", _id);
+        // Sanity check
+        if (this.config.agent !== "AI") {
+            throw new CodeStep.InternalError(`Invalid agent ${this.config.agent}`, _id);
         }
 
         const strategies = Array.isArray(this.config.strategy)
             ? this.config.strategy
             : [this.config.strategy];
         const models = Array.isArray(this.config.model) ? this.config.model : [this.config.model];
+        logger.info(
+            `Coding ${this.#datasets.length} datasets with strategies ${strategies.map((s) => s.name).join(", ")} and models ${models.map((m) => (typeof m === "string" ? m : m.name)).join(", ")}`,
+            _id,
+        );
 
-        for (const dataset of datasets) {
-            logger.info(`Coding dataset ${dataset.name}`, _id);
+        for (const dataset of this.#datasets) {
+            logger.info(`[${dataset.name}] Coding dataset`, _id);
             for (const AnalyzerClass of strategies) {
                 logger.info(`[${dataset.name}] Using strategy ${AnalyzerClass.name}`, _id);
                 await useLLMs(
                     this._idStr,
                     async (session) => {
-                        logger.info(`[${dataset.name}] Using model ${session.llm.name}`, _id);
-                        const analyzer = new AnalyzerClass(dataset, session);
-                        // Analyze the chunks
-                        for (const [key, chunks] of Object.entries(dataset.data)) {
-                            if (this.config.agent === "Human") {
-                                // TODO: Support human coding
-                                throw new CodeStep.ConfigError(
-                                    "Human coding is not yet supported",
-                                    _id,
-                                );
-                            }
+                        // Sanity check
+                        if (this.config.agent !== "AI") {
+                            throw new CodeStep.InternalError(
+                                `Invalid agent ${this.config.agent}`,
+                                _id,
+                            );
+                        }
 
-                            const result = await analyzeChunk(
+                        const analyzer = new AnalyzerClass(dataset, session);
+                        logger.info(
+                            `[${dataset.name}/${analyzer.name}] Using model ${session.llm.name}`,
+                            _id,
+                        );
+                        // Analyze the chunks
+                        const numChunks = Object.keys(dataset.data).length;
+                        for (const [idx, [key, chunks]] of Object.entries(dataset.data).entries()) {
+                            logger.info(
+                                `[${dataset.name}/${analyzer.name}] Analyzing chunk ${key} (${idx + 1}/${numChunks})`,
+                                _id,
+                            );
+                            const result = await analyzeChunks(
                                 this._idStr,
                                 dataset,
                                 session,
                                 analyzer,
                                 chunks,
                                 { threads: {} },
+                                this.config.parameters?.temperature,
                                 this.config.parameters?.fakeRequest ?? false,
                             );
-                            const ident = `${key.replace(".json", "")}-${session.llm.name}${analyzer.suffix}`;
                             logger.success(
-                                `[${dataset.name}/${analyzer.name}/${ident}] Coded ${Object.keys(result.threads).length} threads`,
+                                `[${dataset.name}/${analyzer.name}/${key}] Coded ${Object.keys(result.threads).length} threads (${idx + 1}/${numChunks})`,
                                 _id,
                             );
+
+                            const filename = `${key.replace(".json", "")}-${session.llm.name}${analyzer.suffix}`;
                             // Write the result into a JSON file
-                            ensureFolder(getMessagesPath(dataset.path, analyzer.name));
-                            const jsonPath = getMessagesPath(
-                                dataset.path,
-                                `${analyzer.name}/${ident}.json`,
-                            );
+                            const analyzerPath = ensureFolder(join(dataset.path, analyzer.name));
+                            const jsonPath = join(analyzerPath, `${filename}.json`);
                             logger.info(
-                                `[${dataset.name}] Writing JSON result to ${jsonPath}`,
+                                `[${dataset.name}/${analyzer.name}/${key}] Writing JSON result to ${jsonPath}`,
                                 _id,
                             );
                             writeFileSync(jsonPath, JSON.stringify(result, null, 4));
+
                             // Write the result into an Excel file
                             const book = exportChunksForCoding(
                                 this._idStr,
                                 Object.values(chunks),
                                 result,
                             );
-                            const excelPath = getMessagesPath(
-                                dataset.path,
-                                `${analyzer.name}/${ident}.xlsx`,
-                            );
+                            const excelPath = join(analyzerPath, `${filename}.xlsx`);
                             logger.info(
-                                `[${dataset.name}] Writing Excel result to ${excelPath}`,
+                                `[${dataset.name}/${analyzer.name}/${key}] Writing Excel result to ${excelPath}`,
                                 _id,
                             );
                             await book.xlsx.writeFile(excelPath);
 
                             // Store the result
-                            this.#results[dataset.name] = {
-                                ...(this.#results[dataset.name] ?? {}),
+                            const cur = this.#results.get(dataset.name) ?? {};
+                            this.#results.set(dataset.name, {
+                                ...cur,
                                 [analyzer.name]: {
-                                    ...(this.#results[dataset.name][analyzer.name] ?? {}),
-                                    [ident]: result,
+                                    ...(cur[analyzer.name] ?? {}),
+                                    [filename]: result,
                                 },
-                            };
+                            });
                         }
                     },
                     models,
                 );
             }
+        }
+    }
+
+    async #codeHuman() {
+        const _id = this._idStr("executeHuman");
+
+        // Sanity check
+        if (this.config.agent !== "Human") {
+            throw new CodeStep.InternalError(`Invalid agent ${this.config.agent}`, _id);
+        }
+
+        // See if file already exists (xlsx or json), if so, skip, if not, we create template xlsx file for human to code
+        // Interactively select what to do when file does not exist/is completely empty
+        // 1. Skip
+        // 2. Wait for human to code
+
+        logger.info(`Coding ${this.#datasets.length} datasets with human`, _id);
+
+        for (const dataset of this.#datasets) {
+            logger.info(`[${dataset.name}] Loading human codes`, _id);
+
+            const loadExcel = async (path: string, sheet?: string) => {
+                if (!existsSync(path)) {
+                    logger.warn(`File ${path} does not exist`, _id);
+                    return;
+                }
+
+                try {
+                    const analyses = await importCodes(this._idStr, path, sheet);
+                    logger.info(`[${dataset.name}] Loaded codes via Excel from ${path}`, _id);
+                    return analyses;
+                } catch (error) {
+                    logger.warn(
+                        `[${dataset.name}] Failed to load codes via Excel from ${path}: ${error instanceof Error ? error.message : JSON.stringify(error)}, trying JSON`,
+                        _id,
+                    );
+                }
+            };
+            const loadJSON = (path: string) => {
+                if (!existsSync(path)) {
+                    logger.warn(`File ${path} does not exist`, _id);
+                    return;
+                }
+
+                const analyses: CodedThreads = readJSONFile(path);
+                if (!("threads" in analyses)) {
+                    throw new CodeStep.ConfigError(`Invalid JSON code file: ${path}`, _id);
+                }
+                logger.info(`[${dataset.name}] Loaded codes via JSON from ${path}`, _id);
+                return analyses;
+            };
+
+            const basePath = ensureFolder(join(dataset.path, this.config.path ?? "human"));
+            const coders = new Set(
+                this.config.coders ??
+                    readdirSync(basePath)
+                        .filter((file) => {
+                            const ext = extname(file).toLowerCase();
+                            return ext === ".xlsx" || ext === ".json";
+                        })
+                        .map((file) => basename(file, extname(file))),
+            );
+
+            if (!coders.size) {
+                throw new CodeStep.ConfigError(
+                    `No coders found in ${basePath}; please provide a valid path or a list of coders`,
+                    _id,
+                );
+            }
+
+            const codes: Record<string, CodedThreads> = {};
+            for (const coder of coders) {
+                const excelPath = join(basePath, `${coder}.xlsx`);
+                let analyses =
+                    (await loadExcel(excelPath, this.config.codebookSheet)) ??
+                    loadJSON(join(basePath, `${coder}.json`));
+
+                // Check if analyses is empty
+                if (!analyses || !Object.keys(analyses.threads).length) {
+                    if (!existsSync(excelPath)) {
+                        logger.warn(
+                            `[${dataset.name}] Exporting empty Excel workbook for coder "${coder}"`,
+                            _id,
+                        );
+                        // Export empty Excel file
+                        const book = exportChunksForCoding(
+                            this._idStr,
+                            Object.values(dataset.data).flatMap((cg) => Object.values(cg)),
+                        );
+                        await book.xlsx.writeFile(excelPath);
+                    }
+
+                    let action = this.config.onMissing ?? "ask";
+                    if (action === "ask") {
+                        logger.lock();
+                        action = await select({
+                            message: `No analyses found for human coder "${coder}". What do you want to do?`,
+                            choices: [
+                                { name: "Skip this coder", value: "skip" },
+                                { name: `Wait for coder to fill in ${excelPath}`, value: "wait" },
+                            ],
+                        });
+                        logger.unlock();
+                    }
+
+                    logger.debug(`[${dataset.name}] Action for coder "${coder}": ${action}`, _id);
+
+                    if (action === "skip") {
+                        logger.warn(`[${dataset.name}] Skipping coder "${coder}"`, _id);
+                        continue;
+                    }
+
+                    while (!analyses || !Object.keys(analyses.threads).length) {
+                        try {
+                            logger.lock();
+                            openFile(excelPath);
+                            await input({
+                                message: `Waiting for coder "${coder}" to fill in ${excelPath}.\nPress enter when done...`,
+                            });
+                            logger.unlock();
+                            analyses = await loadExcel(excelPath, this.config.codebookSheet);
+                        } catch (error) {
+                            logger.unlock();
+                            if (error instanceof Error && error.name === "ExitPromptError") {
+                                logger.warn(`[${dataset.name}] Coder "${coder}" interrupted`, _id);
+                            } else {
+                                const e = new CodeStep.InternalError(
+                                    `[${dataset.name}] Failed to load codes from ${excelPath}`,
+                                    _id,
+                                );
+                                e.cause = error;
+                                logger.error(e, true, _id);
+                            }
+                            analyses = undefined;
+                            break;
+                        }
+                    }
+
+                    if (!analyses) {
+                        // Something went wrong, we just skip the coder
+                        logger.warn(`[${dataset.name}] Skipping coder "${coder}"`, _id);
+                        continue;
+                    }
+                }
+
+                codes[coder] = analyses;
+                logger.success(
+                    `[${dataset.name}] Loaded ${Object.keys(analyses.threads).length} threads from "${coder}"`,
+                    _id,
+                );
+            }
+
+            if (!Object.keys(codes).length) {
+                logger.warn(
+                    `[${dataset.name}] No codes loaded, did you skip all human coders?`,
+                    _id,
+                );
+            }
+            // Store the result
+            this.#results.set(dataset.name, {
+                human: codes,
+            });
+        }
+    }
+
+    override async execute() {
+        void super.execute();
+        const _id = this._idStr("execute");
+
+        this.#datasets = this.dependsOn.map((step) => step.dataset);
+        logger.info(`Coding ${this.#datasets.length} datasets`, _id);
+
+        // Cast the agent to a generic string to perform runtime checks
+        const agent = this.config.agent as string;
+        if (agent === "AI") {
+            await this.#codeAI();
+        } else if (agent === "Human") {
+            await this.#codeHuman();
+        } else {
+            throw new CodeStep.ConfigError(`Invalid agent ${agent}`, _id);
         }
 
         this.executed = true;
