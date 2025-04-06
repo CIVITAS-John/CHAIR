@@ -57,8 +57,12 @@ export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> exten
     }
 
     override async execute() {
-        void super.execute();
         const _id = this._idStr("execute");
+        const abortedDep = await super.execute();
+        if (abortedDep) {
+            logger.warn(`Aborted: dependency ${abortedDep._id} aborted`, _id);
+            return;
+        }
 
         if (!this.config.path) {
             throw new LoadStep.ConfigError("config.path is required", _id);

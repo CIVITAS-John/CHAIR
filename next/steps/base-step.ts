@@ -36,6 +36,12 @@ export abstract class BaseStep {
             super("Step has not been executed yet", source);
         }
     };
+    static AbortedError = class extends BaseStep.Error {
+        name = "BaseStep.AbortedError";
+        constructor(source: string) {
+            super("Step has been aborted", source);
+        }
+    };
 
     static ConfigError = class extends BaseStep.Error {
         name = "BaseStep.ConfigError";
@@ -52,6 +58,19 @@ export abstract class BaseStep {
                 "Step has already been executed, please check job configuration",
                 _id,
             );
+        }
+        if (this.aborted) {
+            throw new BaseStep.AbortedError(_id);
+        }
+        if (this.dependsOn) {
+            for (const step of this.dependsOn) {
+                if (!step.executed) {
+                    throw new BaseStep.UnexecutedError(step._idStr("execute"));
+                }
+                if (step.aborted) {
+                    return step;
+                }
+            }
         }
 
         return Promise.resolve();

@@ -484,6 +484,8 @@ export class CodeStep<
 
                     if (action === "abort") {
                         logger.warn(`[${dataset.name}] User requested to abort`, _id);
+                        this.abort();
+                        return;
                     }
 
                     while (!analyses || !Object.keys(analyses.threads).length) {
@@ -519,8 +521,12 @@ export class CodeStep<
     }
 
     override async execute() {
-        void super.execute();
         const _id = this._idStr("execute");
+        const abortedDep = await super.execute();
+        if (abortedDep) {
+            logger.warn(`Aborted: dependency ${abortedDep._id} aborted`, _id);
+            return;
+        }
 
         this.#datasets = this.dependsOn.map((step) => step.dataset);
         logger.info(`Coding ${this.#datasets.length} datasets`, _id);
