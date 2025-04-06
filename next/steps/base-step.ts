@@ -1,3 +1,5 @@
+import { logger } from "../utils/logger";
+
 export interface AIParameters extends Record<string, unknown> {
     retries?: number;
     temperature?: number;
@@ -15,13 +17,13 @@ abstract class StepError extends Error {
 export type IDStrFunc = (mtd?: string) => string;
 
 export abstract class BaseStep {
-    abstract _type: string;
     abstract dependsOn?: BaseStep[];
     executed = false;
+    aborted = false;
 
     _id = "";
     protected _idStr: IDStrFunc = (mtd?: string) =>
-        `${this._id ? `${this._id} ` : ""}${this._type}Step${mtd ? `#${mtd}` : ""}`;
+        `${this._id ? `${this._id} ` : ""}${this.constructor.name}${mtd ? `#${mtd}` : ""}`;
 
     static Error = StepError;
     static InternalError = class extends BaseStep.Error {
@@ -53,5 +55,10 @@ export abstract class BaseStep {
         }
 
         return Promise.resolve();
+    }
+
+    abort() {
+        logger.warn(`Aborting step ${this._id}`);
+        this.aborted = true;
     }
 }

@@ -30,9 +30,9 @@ export type CodeStepConfig<
 } & (
     | {
           agent: "Human";
-          path?: string; // A path to the Excel/JSON files containing the human-coded data, relative to the dataset path (defaults to "human")
+          subdir?: string; // A path to the Excel/JSON files containing the human-coded data, relative to the dataset path (defaults to "human")
           coders?: string[]; // A list of coder names (the files are assumed to be found at <path>/<coder>.xlsx/json)
-          onMissing?: "skip" | "wait" | "ask"; // What to do if the file does not exist or is empty (defaults to "ask")
+          onMissing?: "ask" | "skip" | "wait" | "abort"; // What to do if the file does not exist or is empty (defaults to "ask")
           codebookSheet?: string; // The name of the sheet to use for the codebook (defaults to "Codebook")
       }
     | {
@@ -240,7 +240,6 @@ export class CodeStep<
     TUnit extends DataChunk<TSubunit>,
     TSubunit extends DataItem = DataItem,
 > extends BaseStep {
-    override _type = "Code";
     override dependsOn: LoadStep<TUnit>[];
 
     #datasets: Dataset<TUnit>[] = [];
@@ -421,7 +420,7 @@ export class CodeStep<
                 return analyses;
             };
 
-            const basePath = ensureFolder(join(dataset.path, this.config.path ?? "human"));
+            const basePath = ensureFolder(join(dataset.path, this.config.subdir ?? "human"));
             const coders = new Set(
                 this.config.coders ??
                     readdirSync(basePath)
@@ -470,6 +469,7 @@ export class CodeStep<
                             choices: [
                                 { name: "Skip this coder", value: "skip" },
                                 { name: `Wait for coder to fill in ${excelPath}`, value: "wait" },
+                                { name: "Abort and exit", value: "abort" },
                             ],
                         });
                         logger.unlock();
@@ -480,6 +480,10 @@ export class CodeStep<
                     if (action === "skip") {
                         logger.warn(`[${dataset.name}] Skipping coder "${coder}"`, _id);
                         continue;
+                    }
+
+                    if (action === "abort") {
+                        logger.warn(`[${dataset.name}] User requested to abort`, _id);
                     }
 
                     while (!analyses || !Object.keys(analyses.threads).length) {

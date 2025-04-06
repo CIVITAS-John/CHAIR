@@ -41,7 +41,6 @@ const initializeChunk = (chunk: RawDataChunk): DataChunk<DataItem> => ({
 });
 
 export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> extends BaseStep {
-    override _type = "Load";
     override dependsOn = undefined;
 
     #dataset?: Dataset<T>;

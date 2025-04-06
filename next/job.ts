@@ -1,25 +1,31 @@
 import type { BaseStep } from "./steps/base-step";
+import { CodeStep } from "./steps/code-step";
+import { ConsolidateStep } from "./steps/consolidate-step";
+import { EvaluateStep } from "./steps/evaluate-step";
+import { LoadStep } from "./steps/load-step";
+import { type EmbedderModel, initEmbedder } from "./utils/embeddings";
 import { logger } from "./utils/logger";
 
 export interface QAJobConfig {
-    embeddingModel: string;
+    embedder?: EmbedderModel;
     steps: BaseStep[] | BaseStep[][];
     parallel?: boolean;
 }
 
 const validateStep = (step: BaseStep) => {
-    switch (step._type) {
-        case "Load":
-            return 0;
-        case "Code":
-            return 1;
-        case "Consolidate":
-            return 2;
-        case "Evaluate":
-            return 3;
-        default:
-            throw new QAJob.ConfigError(`Unknown step type: ${step._type}`);
+    if (step instanceof LoadStep) {
+        return 0;
     }
+    if (step instanceof CodeStep) {
+        return 1;
+    }
+    if (step instanceof ConsolidateStep) {
+        return 2;
+    }
+    if (step instanceof EvaluateStep) {
+        return 3;
+    }
+    throw new QAJob.ConfigError(`Unknown step type: ${step.constructor.name}`);
 };
 
 export class QAJob {
@@ -38,9 +44,23 @@ export class QAJob {
             logger.warn("No steps provided", "QAJob#assignID");
             return;
         }
+
+        const embedder =
+            typeof this.config.embedder === "string"
+                ? initEmbedder(this.config.embedder)
+                : this.config.embedder;
+
         this.steps.forEach((steps, i) => {
             steps.forEach((step, j) => {
                 step._id = `${i + 1}.${j + 1}`;
+                if (step instanceof ConsolidateStep || step instanceof EvaluateStep) {
+                    if (!embedder) {
+                        throw new QAJob.ConfigError(
+                            "Embedder not provided for consolidation/evaluation",
+                        );
+                    }
+                    step.embedder = embedder;
+                }
             });
         });
     }
@@ -115,12 +135,12 @@ export class QAJob {
                         // Set the dependencies to all previous steps
                         step.dependsOn = [...prevSteps].filter(
                             (prevStep) =>
-                                prevStep._type ===
-                                (step._type === "Code"
-                                    ? "Load"
-                                    : step._type === "Consolidate"
-                                      ? "Code"
-                                      : "Consolidate"),
+                                prevStep instanceof
+                                (step instanceof CodeStep
+                                    ? LoadStep
+                                    : step instanceof ConsolidateStep
+                                      ? CodeStep
+                                      : ConsolidateStep),
                         );
                     } else if (step.dependsOn.some((dep) => !prevSteps.has(dep))) {
                         throw new QAJob.ConfigError(

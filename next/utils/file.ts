@@ -57,7 +57,7 @@ export const openFile = (path: string) =>
     exec(process.platform === "win32" ? `start "" "${path}"` : `open "${path}"`);
 
 /** Read or build a cache based on a hash. */
-export const cachedTask = async <T>(
+export const withCache = async <T>(
     idStr: IDStrFunc,
     cachePath: string,
     hash: string,

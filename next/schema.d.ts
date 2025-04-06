@@ -160,26 +160,26 @@ export interface Conversation extends DataChunk<Message> {
     firstSeen: number;
 }
 
-/** CodebookComparison: A package for comparing codebooks. */
+/** A package for comparing codebooks. */
 export interface CodebookComparison<T extends DataChunk<DataItem>> {
-    /** Title: The title of the comparison. */
-    Title: string;
-    /** Source: The underlying dataset of the codebooks. */
-    Source: Dataset<T>;
-    /** Codebooks: The codebooks to compare with. */
-    Codebooks: Codebook[];
-    /** Names: The names of the codebooks. */
-    Names: string[];
-    /** Codes: The codes in the combined codebook. */
-    Codes: Code[];
-    /** Weights: The weights of the codes in the combined codebook. */
-    Weights?: number[];
-    /** TotalWeight: The total weight of the codebooks. */
-    TotalWeight?: number;
-    /** UserIDToNicknames: The mapping from user ID to nicknames. */
-    UserIDToNicknames?: Map<string, string>;
-    /** Distances: The distance matrix between codes in the first codebook. */
-    Distances: number[][];
+    /** The title of the comparison. */
+    title: string;
+    /** The underlying dataset of the codebooks. */
+    source: Dataset<T>;
+    /** The codebooks to compare with. */
+    codebooks: Codebook[];
+    /** The names of the codebooks. */
+    names: string[];
+    /** The codes in the combined codebook. */
+    codes: Code[];
+    /** The weights of the codes in the combined codebook. */
+    weights?: number[];
+    /** The total weight of the codebooks. */
+    totalWeight?: number;
+    /** The mapping from user ID to nicknames. */
+    uidToNicknames?: Map<string, string>;
+    /** The distance matrix between codes in the first codebook. */
+    distances: number[][];
 }
 
 /** CodebookEvaluation: Evaluation of a codebook. */
