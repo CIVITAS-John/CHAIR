@@ -22,7 +22,7 @@ max_dist = float(sys.argv[5]) if len(sys.argv) > 5 else 0.65
 min_dist = float(sys.argv[6]) if len(sys.argv) > 6 else 0.4
 tar_dims = int(sys.argv[7]) if len(sys.argv) > 7 else dims
 plotting = bool(sys.argv[8]) if len(sys.argv) > 8 else False
-penalty = max_dist - min_dist
+g_penalty = max_dist - min_dist
 print(
     "Linkage:",
     linkage_mtd,
@@ -36,6 +36,7 @@ print(
     tar_dims,
 )
 
+# Separate the examples from labels
 sources = load_temp_json("clustering")
 # sources = [json.loads(label) for label in labels]
 labels = [source["label"] for source in sources]
@@ -75,7 +76,7 @@ for i in range(items):
         if distances[i][j] > min_dist:
             penalty = count_merged(i, j)
             penalty = penalty * penalty
-            distances[i][j] += penalty * penalty
+            distances[i][j] += penalty * g_penalty
 
 # Calculate the linkage
 linkages = linkage(condensed_distances, method=linkage_mtd)
@@ -116,8 +117,19 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
     # Apply the maximum penalty when the new size is 3 * std_size larger than the average
     t_penalty = min(1, max(0, (len(tree_examples[node.id]) - avg_size) / penalty_coff))
     t_penalty = t_penalty * t_penalty
-    criteria = max(max_dist - t_penalty * t_penalty, min_dist)
-    # print("Node:", node.id, ", Size:", len(tree_examples[node.id]), ", % Penalty:", penalty, ", Distance:", node.dist, ", Criteria:", criteria)
+    criteria = max(max_dist - t_penalty * g_penalty, min_dist)
+    # print(
+    #     "Node:",
+    #     node.id,
+    #     ", Size:",
+    #     len(tree_examples[node.id]),
+    #     ", % Penalty:",
+    #     penalty,
+    #     ", Distance:",
+    #     node.dist,
+    #     ", Criteria:",
+    #     criteria,
+    # )
     # Verbose: show the cluster
     # left_id = node.get_left().id
     # leftlabel = labels[left_id] if left_id < Items else "cluster-" + str(left_id)
