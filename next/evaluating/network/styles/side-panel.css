@@ -1,0 +1,155 @@
+/* The right side of the data layer is the side panel. */
+.layer-data .side-panel {
+    color: rgb(235, 219, 178);
+    width: 24rem;
+    padding: 1rem;
+    position: relative;
+    background-color: rgb(40, 40, 40);
+}
+/* Collapsable support. */
+.side-panel .content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    overflow: auto;
+    flex-direction: column;
+}
+.side-panel.collapsed {
+    width: 0;
+    padding: 0;
+}
+.side-panel.collapsed .content {
+    display: none;
+}
+.side-panel .collapsable {
+    top: calc(50% - 1rem);
+    left: -1.2rem;
+    width: 1.2rem;
+    height: 2rem;
+    padding-left: 0.1rem;
+    z-index: 255;
+    cursor: pointer;
+    text-align: center;
+    line-height: 1.1em;
+    font-size: 1.6rem;
+    position: absolute;
+    border-radius: 0.5rem 0 0 0.5rem;
+    background-color: #222;
+}
+.side-panel.collapsed .collapsable span {
+    font-size: 0;
+}
+.side-panel.collapsed .collapsable span::after {
+    content: "«";
+    font-size: 1.6rem;
+}
+/* Header style. */
+.side-panel .panel-header {
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid #ccc;
+}
+.side-panel .panel-menu {
+    display: flex;
+    margin-bottom: 0.5rem;
+    align-items: center;
+    justify-content: start;
+    background: rgba(255, 255, 255, 0.1);
+}
+.side-panel .panel-menu a {
+    color: rgb(235, 219, 178);
+    padding: 0.4rem 0.75rem;
+}
+.side-panel .panel-menu a:last-child {
+    font-weight: bold;
+    margin-left: auto;
+}
+.side-panel .panel-menu a:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+.side-panel .panel-menu a.chosen {
+    color: rgb(184, 187, 38);
+    font-weight: bold;
+}
+/* Generic content style. */
+.side-panel h3 {
+    margin: 0.5rem 0;
+}
+.side-panel h3 a {
+    color: #fff;
+    margin: 0 0.5rem 0 0;
+}
+.side-panel li strong {
+    color: rgb(184, 187, 38);
+}
+.side-panel li span {
+    margin-left: 0.25rem;
+}
+/* Data table style. */
+table.data-table,
+table.data-table td,
+table.data-table th {
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    user-select: none;
+}
+table.data-table {
+    width: 100%;
+    margin: 0.25rem 0;
+    border-spacing: 0;
+    background: rgba(255, 255, 255, 0.1);
+}
+table.data-table tr.chosen {
+    color: rgb(184, 187, 38);
+    background: rgba(255, 255, 255, 0.1);
+}
+table.data-table td,
+table.data-table th {
+    padding: 0.25rem;
+}
+table.data-table td h4 {
+    margin: 0;
+}
+table.data-table th {
+    color: rgb(184, 187, 38);
+    font-size: 0.8rem;
+}
+table.data-table td.actionable,
+table.data-table td.metric-cell {
+    cursor: pointer;
+}
+table.data-table td.metric-cell {
+    text-align: center;
+}
+table.data-table td.actionable:hover,
+table.data-table td.actionable.chosen {
+    background: rgba(255, 255, 255, 0.1);
+}
+table.data-table td.metric-cell:hover,
+table.data-table td.metric-cell.chosen,
+table.data-table tr.chosen .metric-cell {
+    font-weight: bold;
+}
+table.data-table .number-cell {
+    text-align: center;
+}
+table.data-table .number-cell p,
+table.data-table .metric-cell p {
+    font-size: 0.8rem;
+}
+/* Codebooks style. */
+.side-panel .codebook-cell.chosen {
+    color: rgb(184, 187, 38);
+    background: rgba(255, 255, 255, 0.1);
+}
+/* Codes style. */
+.side-panel p.owners {
+    font-size: 0.8rem;
+}
+.side-panel .code-cell h4 svg {
+    width: 1em;
+    height: 1em;
+    top: 0.2em;
+    margin-right: 0.2em;
+    position: relative;
+}

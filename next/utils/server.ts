@@ -10,7 +10,7 @@ import {
 import http from "http";
 import { basename, extname, join } from "path";
 
-import open from "open";
+import open, { apps } from "open";
 
 import { ensureFolder } from "./file";
 import { logger } from "./logger";
@@ -116,7 +116,7 @@ export const launchServer = <T>(
                 await Promise.all([
                     open(`http://localhost:${port}/`, {
                         wait: true,
-                        app: { name: "google chrome" },
+                        app: { name: apps.chrome },
                     }),
                     new Promise((resolve) =>
                         setTimeout(resolve, process.platform === "win32" ? 6000000 : 5000),

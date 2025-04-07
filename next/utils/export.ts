@@ -1,15 +1,6 @@
 import Excel from "exceljs";
 
-import type {
-    Code,
-    CodedItem,
-    CodedThread,
-    CodedThreads,
-    DataChunk,
-    DataItem,
-    Message,
-    Project,
-} from "../schema";
+import type { Code, CodedThread, CodedThreads, DataChunk, DataItem } from "../schema";
 import type { IDStrFunc } from "../steps/base-step";
 
 import { logger } from "./logger";
@@ -39,84 +30,84 @@ export const sortCodes = (codes: Code[]) =>
         return category !== 0 ? category : A.label.localeCompare(B.label);
     });
 
-// Export: Export the JSON data into human-readable formats.
-// ExportMessages: Export messages into markdown.
-export function ExportMessages(Messages: Message[], Originals?: Message[]): string {
-    let Result = "";
-    let LastConversation = "-1";
-    for (let I = 0; I < Messages.length; I++) {
-        const Message = Messages[I];
-        // Write a separator if the time gap is too long
-        if (Message.chunk && LastConversation !== Message.chunk) {
-            Result += `\n=== ${Message.chunk}\n\n`;
-            LastConversation = Message.chunk;
-        }
-        // Export the message
-        Result += `${Message.ID}. **P${Message.uid}, ${Message.nickname}**`;
-        if (Originals !== undefined && Originals[I].nickname !== Message.nickname) {
-            Result += ` (${Originals[I].nickname})`;
-        }
-        Result += `: ${Message.Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}\n`;
-        Result += Message.Content;
-        if (Originals !== undefined && Message.Content !== Originals[I].Content) {
-            Result += `\n${Originals[I].Content}`;
-        }
-        Result += "\n";
-    }
-    return Result;
-}
+// // Export: Export the JSON data into human-readable formats.
+// // ExportMessages: Export messages into markdown.
+// export function ExportMessages(Messages: Message[], Originals?: Message[]): string {
+//     let Result = "";
+//     let LastConversation = "-1";
+//     for (let I = 0; I < Messages.length; I++) {
+//         const Message = Messages[I];
+//         // Write a separator if the time gap is too long
+//         if (Message.chunk && LastConversation !== Message.chunk) {
+//             Result += `\n=== ${Message.chunk}\n\n`;
+//             LastConversation = Message.chunk;
+//         }
+//         // Export the message
+//         Result += `${Message.ID}. **P${Message.uid}, ${Message.nickname}**`;
+//         if (Originals !== undefined && Originals[I].nickname !== Message.nickname) {
+//             Result += ` (${Originals[I].nickname})`;
+//         }
+//         Result += `: ${Message.Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}\n`;
+//         Result += Message.Content;
+//         if (Originals !== undefined && Message.Content !== Originals[I].Content) {
+//             Result += `\n${Originals[I].Content}`;
+//         }
+//         Result += "\n";
+//     }
+//     return Result;
+// }
 
-// ExportProjects: Export projects into markdown.
-export function ExportProjects(Projects: Project[], Originals?: Project[]): string {
-    let Result = "";
-    for (let I = 0; I < Projects.length; I++) {
-        const Project = Projects[I];
-        const Original = Originals ? Originals[I] : undefined;
-        // Title
-        Result += `## ${Projects[I].Title} (${Projects[I].ID})`;
-        if (Original && Original.Title !== Project.Title) {
-            Result += `* Title: ${Original.Title}\n`;
-        }
-        // Author
-        Result += `\n* Author: P${Projects[I].uid}, ${Projects[I].nickname}`;
-        if (Original && Original.nickname !== Project.nickname) {
-            Result += ` (${Original.nickname})`;
-        }
-        // Tags
-        Result += `\n* Tags: ${Projects[I].Tags.join(", ")}`;
-        // Time
-        Result += `\n* Time: ${Projects[I].Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}`;
-        // Visits
-        Result += `\n* Popularity: Visits ${Projects[I].Visits}, Stars ${Projects[I].Stars}, Supports ${Projects[I].Supports}`;
-        // Image
-        Result += `\n![Cover](${Projects[I].Cover})`;
-        // Content
-        Result += `\n\n### Content\n${Projects[I].Content}`;
-        if (Original && Original.Content !== Project.Content) {
-            Result += `\n${Original.Content}`;
-        }
-        // Comments
-        if (Project.items) {
-            Result += "\n\n### Comments";
-            Project.items.reverse(); // Here I had a little bug, the original exports have comments in reversed order.
-            for (let N = 0; N < Project.items.length; N++) {
-                const Comment = Project.items[N];
-                const OriginalComment = Original ? Original.items[N] : undefined;
-                Result += `\n${N + 1}. **P${Comment.uid}, ${Comment.nickname}**`;
-                if (OriginalComment && Comment.nickname !== OriginalComment.nickname) {
-                    Result += ` (${OriginalComment.nickname})`;
-                }
-                Result += `: ${Comment.Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}\n`;
-                Result += Comment.Content;
-                if (OriginalComment && Comment.Content !== OriginalComment.Content) {
-                    Result += `\n${OriginalComment.Content}`;
-                }
-            }
-        }
-        Result += "\n\n";
-    }
-    return Result;
-}
+// // ExportProjects: Export projects into markdown.
+// export function ExportProjects(Projects: Project[], Originals?: Project[]): string {
+//     let Result = "";
+//     for (let I = 0; I < Projects.length; I++) {
+//         const Project = Projects[I];
+//         const Original = Originals ? Originals[I] : undefined;
+//         // Title
+//         Result += `## ${Projects[I].Title} (${Projects[I].ID})`;
+//         if (Original && Original.Title !== Project.Title) {
+//             Result += `* Title: ${Original.Title}\n`;
+//         }
+//         // Author
+//         Result += `\n* Author: P${Projects[I].uid}, ${Projects[I].nickname}`;
+//         if (Original && Original.nickname !== Project.nickname) {
+//             Result += ` (${Original.nickname})`;
+//         }
+//         // Tags
+//         Result += `\n* Tags: ${Projects[I].Tags.join(", ")}`;
+//         // Time
+//         Result += `\n* Time: ${Projects[I].Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}`;
+//         // Visits
+//         Result += `\n* Popularity: Visits ${Projects[I].Visits}, Stars ${Projects[I].Stars}, Supports ${Projects[I].Supports}`;
+//         // Image
+//         Result += `\n![Cover](${Projects[I].Cover})`;
+//         // Content
+//         Result += `\n\n### Content\n${Projects[I].Content}`;
+//         if (Original && Original.Content !== Project.Content) {
+//             Result += `\n${Original.Content}`;
+//         }
+//         // Comments
+//         if (Project.items) {
+//             Result += "\n\n### Comments";
+//             Project.items.reverse(); // Here I had a little bug, the original exports have comments in reversed order.
+//             for (let N = 0; N < Project.items.length; N++) {
+//                 const Comment = Project.items[N];
+//                 const OriginalComment = Original ? Original.items[N] : undefined;
+//                 Result += `\n${N + 1}. **P${Comment.uid}, ${Comment.nickname}**`;
+//                 if (OriginalComment && Comment.nickname !== OriginalComment.nickname) {
+//                     Result += ` (${OriginalComment.nickname})`;
+//                 }
+//                 Result += `: ${Comment.Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}\n`;
+//                 Result += Comment.Content;
+//                 if (OriginalComment && Comment.Content !== OriginalComment.Content) {
+//                     Result += `\n${OriginalComment.Content}`;
+//                 }
+//             }
+//         }
+//         Result += "\n\n";
+//     }
+//     return Result;
+// }
 
 /** Export Chunks into an Excel workbook for coding. */
 export const exportChunksForCoding = <T extends DataItem>(

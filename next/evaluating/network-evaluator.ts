@@ -152,14 +152,14 @@ export class NetworkEvaluator<
         // Run the HTTP server
         createOfflineBundle(
             `${exportPath}/network`,
-            ["evaluating/network", "out/evaluating/network"],
+            ["./next/evaluating/network", "./out/next/evaluating/network"],
             `${exportPath}/network.json`,
         );
         // Return the results from the server
         return (
             (await launchServer(
                 8080,
-                ["evaluating/network", "out/evaluating/network"],
+                ["./next/evaluating/network", "./out/next/evaluating/network"],
                 `${exportPath}/network.json`,
             )) ?? {}
         );

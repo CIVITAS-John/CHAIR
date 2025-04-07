@@ -1,0 +1,258 @@
+/** General layout */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5em;
+    font-family: "Lato", sans-serif;
+    font-size: 14px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0;
+    line-height: 1.5em;
+}
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+    color: #000000;
+    text-decoration: underline;
+}
+a {
+    color: #2881e0;
+    text-decoration: none;
+}
+html {
+    overflow: hidden;
+}
+ul {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+p.tips {
+    font-size: 0.8rem;
+}
+/* Layers occupies the entire viewport and displays in layers. */
+.layer {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+/* The data layer uses flex to create a left-right layout. */
+.layer-data {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 100%;
+}
+/* The left side of the data layer is the main visualization. */
+.layer-data .visualization {
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+.layer-data .visualization > svg {
+    width: 100%;
+    height: 100%;
+}
+/** Legends Styles */
+.visualization .floating {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+.visualization .legends {
+    border: 1px solid #ccc;
+    padding: 0.5rem 1rem;
+    padding-left: calc(max(1rem, 0.5rem + env(safe-area-inset-left)));
+}
+.visualization .legends span,
+.visualization .legends svg {
+    display: inline-block;
+    vertical-align: middle;
+}
+/** Filters Styles */
+.visualization .filters .filter {
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    border: 1px solid #ccc;
+    max-width: 18rem;
+    font-size: 0.9rem;
+    line-height: 1.3;
+    border-top: 0;
+}
+.visualization .filters .filter span {
+    margin: 0 0.2rem 0 0;
+}
+.visualization .filters .filter a:not(:last-child, :nth-last-child(2)):after {
+    content: ", ";
+}
+.visualization .filters .filter a.close {
+    right: 0.5rem;
+    position: absolute;
+    color: #cc2200;
+    margin-left: 0.5rem;
+}
+/** Visualization Styles */
+/* Components */
+body.simple .visualization .hulls {
+    display: none;
+}
+.visualization .hulls path {
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-opacity: 0.3;
+    fill-opacity: 0.1;
+}
+.visualization .hulls path.hovering {
+    stroke-opacity: 0.4;
+    fill-opacity: 0.2;
+}
+.component-chosen .hulls path:not(.chosen) {
+    stroke-opacity: 0.1;
+    fill-opacity: 0.05;
+}
+body.simple .visualization .components text {
+    display: none;
+}
+.visualization .components text {
+    cursor: pointer;
+    stroke-width: 0.1;
+    pointer-events: none;
+    user-select: none;
+    font-weight: bold;
+}
+.visualization .components text:not(.hovering) {
+    stroke: #000000;
+}
+.visualization .components text.hovering {
+    fill: #fff;
+    fill-opacity: 1;
+    stroke-width: 0.2;
+}
+/* Labels */
+body.simple .visualization .labels {
+    display: none;
+}
+.visualization .labels {
+    pointer-events: none;
+    user-select: none;
+}
+/* Circles */
+.visualization circle {
+    cursor: pointer;
+}
+circle:not(.chosen, .hovering) {
+    fill-opacity: 0.9;
+}
+/* Lines */
+line {
+    pointer-events: none;
+}
+/* Chosen styles */
+.node-chosen .labels text:not(.chosen, .chosen-neighbor, .hovering),
+.node-chosen circle:not(.chosen, .chosen-neighbor, .hovering) {
+    fill-opacity: 0.4;
+}
+body.conceptual .visualization circle {
+    r: 3;
+}
+circle.hidden {
+    fill: #999;
+}
+circle.hovering,
+circle.chosen {
+    stroke: #fff;
+    stroke-width: 0.2;
+    fill-opacity: 1;
+}
+circle.chosen-neighbor {
+    fill-opacity: 1;
+}
+.labels text.chosen,
+.labels text.chosen-neighbor,
+.labels text.hovering {
+    stroke: #333333;
+    stroke-width: 0.05;
+    fill-opacity: 1;
+    font-weight: bold;
+}
+.labels text.chosen {
+    fill: #fff;
+}
+body.conceptual .visualization .links {
+    display: none;
+}
+.links line.chosen,
+.links line.chosen-neighbor,
+.links line.hovering {
+    stroke-width: 0.4;
+    stroke-opacity: 1;
+}
+.node-chosen line:not(.chosen, .chosen-neighbor, .hovering) {
+    stroke-opacity: 0.1;
+}
+/* Hidden styles */
+text.hidden:not(.hovering, .chosen) {
+    color: #999;
+}
+line.hidden:not(.hovering, .chosen-neighbor, .chosen) {
+    stroke: #999;
+    stroke-opacity: 0.1;
+}
+/* Tutorial styles */
+.driver-popover {
+    font-size: 1rem;
+    max-width: calc(min(50vw, 27rem));
+}
+.tutorial-start {
+    max-width: calc(min(80vw, 33rem));
+}
+.driver-popover p.tips {
+    font-size: 0.8rem;
+    color: #666;
+}
+@media (min-width: 800px) or (orientation: landscape) {
+    .portrait-overlay {
+        display: none !important;
+    }
+}
+.portrait-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    z-index: 1000000001;
+}
+.portrait-overlay .content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(max(20rem, 75vw));
+    font-size: 1.2rem;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+.portrait-overlay .content img {
+    width: 6rem;
+}
+.portrait-overlay .content h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+}

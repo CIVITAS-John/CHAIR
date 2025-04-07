@@ -1,4 +1,4 @@
-import type { Codebook, DataItem } from "../schema";
+import type { DataItem } from "../schema";
 
 /** Reverse a string. */
 export const reverse = (s: string) => s.split("").reverse().join("");
@@ -66,24 +66,24 @@ export const seededShuffle = <T>(array: T[], seed: number) => {
     return array;
 };
 
-/** GetCategories: Get the categories from the codebook. */
-export function GetCategories(Codebook: Codebook): Map<string, string[]> {
-    const Categories = new Map<string, string[]>();
-    for (const Code of Object.values(Codebook)) {
-        for (const Category of Code.categories ?? []) {
-            if (Category === "") {
-                continue;
-            }
-            if (!Categories.has(Category)) {
-                Categories.set(Category, []);
-            }
-            if (!Categories.get(Category)!.includes(Code.label)) {
-                Categories.get(Category)!.push(Code.label);
-            }
-        }
-    }
-    return Categories;
-}
+// /** GetCategories: Get the categories from the codebook. */
+// export function GetCategories(Codebook: Codebook): Map<string, string[]> {
+//     const Categories = new Map<string, string[]>();
+//     for (const Code of Object.values(Codebook)) {
+//         for (const Category of Code.categories ?? []) {
+//             if (Category === "") {
+//                 continue;
+//             }
+//             if (!Categories.has(Category)) {
+//                 Categories.set(Category, []);
+//             }
+//             if (!Categories.get(Category)!.includes(Code.label)) {
+//                 Categories.get(Category)!.push(Code.label);
+//             }
+//         }
+//     }
+//     return Categories;
+// }
 
 /** AssembleExample: Assemble an example. */
 export const assembleExample = (

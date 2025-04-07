@@ -1,15 +1,7 @@
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 import { loopThroughChunk } from "../analyzer";
-import type {
-    Code,
-    Codebook,
-    CodedThreads,
-    CodedThreadsWithCodebook,
-    DataChunk,
-    DataItem,
-    Dataset,
-} from "../schema";
+import type { Code, Codebook, CodedThreads, CodedThreadsWithCodebook, Dataset } from "../schema";
 import type { IDStrFunc } from "../steps/base-step";
 import type { ClusterItem } from "../utils/embeddings";
 import { type LLMSession, requestLLM } from "../utils/llms";
@@ -105,57 +97,57 @@ export const mergeCodebooks = (codebooks: Codebook[], withReference = false) => 
     return Object.fromEntries(codes);
 };
 
-/** ConsolidateChunks: Load, consolidate, and export codebooks. */
-export async function ConsolidateChunks<T extends DataItem>(
-    Consolidator: CodebookConsolidator<DataChunk<T>>,
-    Group: string,
-    ConversationName: string,
-    Analyzer: string,
-    AnalyzerLLM: string,
-    FakeRequest = false,
-) {
-    const ExportFolder = GetMessagesPath(Group, `${Analyzer}-${Consolidator.Name}`);
-    EnsureFolder(ExportFolder);
-    // Load the conversations and analyses
-    const Conversations = LoadChunksForAnalysis(Group, ConversationName);
-    const Analyses = await LoadAnalyses(
-        GetMessagesPath(
-            Group,
-            `${Analyzer}/${ConversationName.replace(".json", `-${AnalyzerLLM}`)}`,
-        ),
-    );
-    const ResultName = AnalyzerLLM === LLMName ? AnalyzerLLM : `${AnalyzerLLM}-${LLMName}`;
-    // Consolidate the codebook
-    await consolidateCodebook(
-        Consolidator,
-        [...Object.values(Conversations)],
-        Analyses,
-        async (Iteration) => {
-            const Values = Object.values(Analyses.Codebook).filter(
-                (Code) => Code.Label !== "[Merged]",
-            );
-            Analyses.Codebook = {};
-            for (const Code of Values) {
-                Analyses.Codebook[Code.Label] = Code;
-            }
-            const Book = ExportChunksForCoding(Object.values(Conversations), Analyses);
-            await Book.xlsx.writeFile(
-                `${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}-${Iteration}`)}.xlsx`,
-            );
-        },
-        FakeRequest,
-    );
-    // Write the result into a JSON file
-    File.writeFileSync(
-        `${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}`)}.json`,
-        JSON.stringify(Analyses, null, 4),
-    );
-    // Write the result into an Excel file
-    const Book = ExportChunksForCoding(Object.values(Conversations), Analyses);
-    await Book.xlsx.writeFile(
-        `${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}`)}.xlsx`,
-    );
-}
+// /** ConsolidateChunks: Load, consolidate, and export codebooks. */
+// export async function ConsolidateChunks<T extends DataItem>(
+//     Consolidator: CodebookConsolidator<DataChunk<T>>,
+//     Group: string,
+//     ConversationName: string,
+//     Analyzer: string,
+//     AnalyzerLLM: string,
+//     FakeRequest = false,
+// ) {
+//     const ExportFolder = GetMessagesPath(Group, `${Analyzer}-${Consolidator.Name}`);
+//     EnsureFolder(ExportFolder);
+//     // Load the conversations and analyses
+//     const Conversations = LoadChunksForAnalysis(Group, ConversationName);
+//     const Analyses = await LoadAnalyses(
+//         GetMessagesPath(
+//             Group,
+//             `${Analyzer}/${ConversationName.replace(".json", `-${AnalyzerLLM}`)}`,
+//         ),
+//     );
+//     const ResultName = AnalyzerLLM === LLMName ? AnalyzerLLM : `${AnalyzerLLM}-${LLMName}`;
+//     // Consolidate the codebook
+//     await consolidateCodebook(
+//         Consolidator,
+//         [...Object.values(Conversations)],
+//         Analyses,
+//         async (Iteration) => {
+//             const Values = Object.values(Analyses.Codebook).filter(
+//                 (Code) => Code.Label !== "[Merged]",
+//             );
+//             Analyses.Codebook = {};
+//             for (const Code of Values) {
+//                 Analyses.Codebook[Code.Label] = Code;
+//             }
+//             const Book = ExportChunksForCoding(Object.values(Conversations), Analyses);
+//             await Book.xlsx.writeFile(
+//                 `${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}-${Iteration}`)}.xlsx`,
+//             );
+//         },
+//         FakeRequest,
+//     );
+//     // Write the result into a JSON file
+//     File.writeFileSync(
+//         `${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}`)}.json`,
+//         JSON.stringify(Analyses, null, 4),
+//     );
+//     // Write the result into an Excel file
+//     const Book = ExportChunksForCoding(Object.values(Conversations), Analyses);
+//     await Book.xlsx.writeFile(
+//         `${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}`)}.xlsx`,
+//     );
+// }
 
 /** Load, consolidate, and export codebooks. */
 export const consolidateCodebook = async <TUnit>(
@@ -193,36 +185,36 @@ export const consolidateCodebook = async <TUnit>(
         analyses,
         sources,
         codes,
-        async (Currents, ChunkStart, _IsFirst, Tries, Iteration) => {
+        async (currents, chunkStart, _isFirst, tries, iteration) => {
             const prompts = await consolidator.buildPrompts(
                 analyses,
                 sources,
-                Currents,
-                ChunkStart,
-                Iteration,
+                currents,
+                chunkStart,
+                iteration,
             );
             if (prompts[0] === "" && prompts[1] === "") {
                 return 0;
             }
             // Run the prompts
-            const Response = await requestLLM(
+            const response = await requestLLM(
                 idStr,
                 session,
                 [new SystemMessage(prompts[0]), new HumanMessage(prompts[1])],
                 `codebooks/${consolidator.name}`,
-                Math.min(Tries, 3) * 0.2 + consolidator.baseTemperature,
+                Math.min(tries, 3) * 0.2 + consolidator.baseTemperature,
                 fakeRequest,
             );
-            if (Response === "") {
+            if (response === "") {
                 return 0;
             }
             // Parse the response
             const res = await consolidator.parseResponse(
                 analyses,
-                Response.split("\n").map((Line) => Line.trim()),
-                Currents,
-                ChunkStart,
-                Iteration,
+                response.split("\n").map((Line) => Line.trim()),
+                currents,
+                chunkStart,
+                iteration,
             );
             if (typeof res === "number") {
                 return res;
@@ -253,7 +245,7 @@ export const mergeCodes = (parent: Code, code: Code) => {
     return parent;
 };
 
-/** MergeCodesByCluster: Merge codebooks based on clustering results. */
+/** Merge codebooks based on clustering results. */
 export const mergeCodesByCluster = (
     idStr: IDStrFunc,
     clusters: Record<number, ClusterItem[]>,
@@ -288,6 +280,7 @@ export const mergeCodesByCluster = (
                 // Codes that cannot be clustered
                 codebook[code.label] = code;
             } else if (code.label !== bestCode.label) {
+                // Merge the code
                 logger.info(
                     `Merging ${code.label} into ${bestCode.label} with ${(item.probability * 100).toFixed(2)}% certainty`,
                     _id,
@@ -344,92 +337,92 @@ export const updateCodes = (codebook: Codebook, newCodes: Code[], codes: Code[])
     return codebook;
 };
 
-/** UpdateCategories: Update category mappings for codes. */
-export function UpdateCategories(Categories: string[], NewCategories: string[], Codes: Code[]) {
-    for (let I = 0; I < Categories.length; I++) {
-        const Category = Categories[I];
-        const NewCategory = NewCategories[I];
-        for (const Code of Codes) {
-            if (Code.Categories?.includes(Category)) {
-                Code.Categories = Code.Categories.filter((C) => C !== Category);
-                if (!Code.Categories.includes(NewCategory)) {
-                    Code.Categories.push(NewCategory);
-                }
-            }
-        }
-    }
-}
+// /** UpdateCategories: Update category mappings for codes. */
+// export function UpdateCategories(Categories: string[], NewCategories: string[], Codes: Code[]) {
+//     for (let I = 0; I < Categories.length; I++) {
+//         const Category = Categories[I];
+//         const NewCategory = NewCategories[I];
+//         for (const Code of Codes) {
+//             if (Code.Categories?.includes(Category)) {
+//                 Code.Categories = Code.Categories.filter((C) => C !== Category);
+//                 if (!Code.Categories.includes(NewCategory)) {
+//                     Code.Categories.push(NewCategory);
+//                 }
+//             }
+//         }
+//     }
+// }
 
-/** UpdateCategoriesByMap: Update category mappings for codes using a map. */
-export function UpdateCategoriesByMap(Map: Map<string, string>, Codes: Code[]) {
-    UpdateCategories([...Map.keys()], [...Map.values()], Codes);
-}
+// /** UpdateCategoriesByMap: Update category mappings for codes using a map. */
+// export function UpdateCategoriesByMap(Map: Map<string, string>, Codes: Code[]) {
+//     UpdateCategories([...Map.keys()], [...Map.values()], Codes);
+// }
 
-/** AssignCategoriesByCluster: Assign categories based on category clustering results. */
-export function AssignCategoriesByCluster(
-    Clusters: Record<number, ClusterItem[]>,
-    Codes: Code[],
-): Record<string, Code[]> {
-    const Results: Record<string, Code[]> = {};
-    for (const Key of Object.keys(Clusters)) {
-        const ClusterID = parseInt(Key);
-        const ClusterName = ClusterID === -1 ? "miscellaneous" : `cluster ${ClusterID}`;
-        const Items: Code[] = [];
-        for (const Item of Clusters[ClusterID]) {
-            Codes[Item.ID].Categories = [ClusterName];
-            Items.push(Codes[Item.ID]);
-        }
-        if (ClusterID !== -1) {
-            Results[ClusterName] = Items;
-        }
-    }
-    return Results;
-}
+// /** AssignCategoriesByCluster: Assign categories based on category clustering results. */
+// export function AssignCategoriesByCluster(
+//     Clusters: Record<number, ClusterItem[]>,
+//     Codes: Code[],
+// ): Record<string, Code[]> {
+//     const Results: Record<string, Code[]> = {};
+//     for (const Key of Object.keys(Clusters)) {
+//         const ClusterID = parseInt(Key);
+//         const ClusterName = ClusterID === -1 ? "miscellaneous" : `cluster ${ClusterID}`;
+//         const Items: Code[] = [];
+//         for (const Item of Clusters[ClusterID]) {
+//             Codes[Item.ID].Categories = [ClusterName];
+//             Items.push(Codes[Item.ID]);
+//         }
+//         if (ClusterID !== -1) {
+//             Results[ClusterName] = Items;
+//         }
+//     }
+//     return Results;
+// }
 
-/** MergeCategoriesByCluster: Merge categories based on category clustering results. */
-export function MergeCategoriesByCluster(
-    Clusters: Record<number, ClusterItem[]>,
-    Categories: string[],
-    Codes: Code[],
-    TakeFirst = false,
-): Record<string, string[]> {
-    const Results: Record<string, string[]> = {};
-    for (const Key of Object.keys(Clusters)) {
-        const ClusterID = parseInt(Key);
-        // Skip the non-clustered ones
-        if (ClusterID === -1) {
-            continue;
-        }
-        // Get the current categories
-        const Subcategories = Clusters[ClusterID].map((Item) => Categories[Item.ID]);
-        if (Subcategories.length <= 1) {
-            continue;
-        }
-        // Merge the categories
-        const NewCategory = TakeFirst ? Subcategories[0] : Subcategories.join("|");
-        console.log(
-            `Merging categories: ${Clusters[ClusterID].map(
-                (Item) => `${Categories[Item.ID]} with ${(Item.Probability * 100).toFixed(2)}%`,
-            ).join(", ")}`,
-        );
-        for (const Code of Codes) {
-            if (!Code.Categories) {
-                continue;
-            }
-            const Filtered = Code.Categories.filter(
-                (Category) => !Subcategories.includes(Category),
-            );
-            if (Filtered.length !== Code.Categories.length) {
-                Code.Categories = Array.from(
-                    new Set([
-                        ...Code.Categories.filter((Category) => !Subcategories.includes(Category)),
-                        NewCategory,
-                    ]),
-                );
-            }
-        }
-        // Record the new category
-        Results[NewCategory] = Subcategories;
-    }
-    return Results;
-}
+// /** MergeCategoriesByCluster: Merge categories based on category clustering results. */
+// export function MergeCategoriesByCluster(
+//     Clusters: Record<number, ClusterItem[]>,
+//     Categories: string[],
+//     Codes: Code[],
+//     TakeFirst = false,
+// ): Record<string, string[]> {
+//     const Results: Record<string, string[]> = {};
+//     for (const Key of Object.keys(Clusters)) {
+//         const ClusterID = parseInt(Key);
+//         // Skip the non-clustered ones
+//         if (ClusterID === -1) {
+//             continue;
+//         }
+//         // Get the current categories
+//         const Subcategories = Clusters[ClusterID].map((Item) => Categories[Item.ID]);
+//         if (Subcategories.length <= 1) {
+//             continue;
+//         }
+//         // Merge the categories
+//         const NewCategory = TakeFirst ? Subcategories[0] : Subcategories.join("|");
+//         console.log(
+//             `Merging categories: ${Clusters[ClusterID].map(
+//                 (Item) => `${Categories[Item.ID]} with ${(Item.Probability * 100).toFixed(2)}%`,
+//             ).join(", ")}`,
+//         );
+//         for (const Code of Codes) {
+//             if (!Code.Categories) {
+//                 continue;
+//             }
+//             const Filtered = Code.Categories.filter(
+//                 (Category) => !Subcategories.includes(Category),
+//             );
+//             if (Filtered.length !== Code.Categories.length) {
+//                 Code.Categories = Array.from(
+//                     new Set([
+//                         ...Code.Categories.filter((Category) => !Subcategories.includes(Category)),
+//                         NewCategory,
+//                     ]),
+//                 );
+//             }
+//         }
+//         // Record the new category
+//         Results[NewCategory] = Subcategories;
+//     }
+//     return Results;
+// }

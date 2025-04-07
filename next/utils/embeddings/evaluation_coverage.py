@@ -384,12 +384,12 @@ for i, codebook in enumerate(group_ids[1:]):
         novelty,
     )
     evaluation[codebook] = {
-        "Spread": spread / reference_spread,
-        "Density": density / reference_density,
-        "Variation": variation,
-        "Conformity": conformity / meaningful_area,
-        "Contribution": contribution / contributing_area,
-        "Novelty": novelty / outlier_area,
+        "spread": spread / reference_spread,
+        "density": density / reference_density,
+        "variation": variation,
+        "conformity": conformity / meaningful_area,
+        "contribution": contribution / contributing_area,
+        "novelty": novelty / outlier_area,
     }
     # Plot the heatmap
     plot_comparison([codebook], distribution)

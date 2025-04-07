@@ -295,7 +295,7 @@ export const clusterTexts = async (
 ) => {
     const _id = idStr("clusterTexts");
 
-    logger.debug(`Requesting embeddings for: ${sources.length}`, _id);
+    logger.debug(`Requesting embeddings for ${sources.length} sources`, _id);
     if (sources.length === 0) {
         return {};
     }
@@ -374,9 +374,9 @@ export const evaluateTexts = async <T>(
     ...opts: string[]
 ) => {
     const _id = idStr("evaluateTexts");
-    logger.debug(`Requesting embeddings for: ${sources.length}`, _id);
+    logger.debug(`Requesting embeddings for ${sources.length} sources`, _id);
     const embeddings = await requestEmbeddings(idStr, embedder, sources, cache);
-    return evaluateEmbeddings<T>(
+    return await evaluateEmbeddings<T>(
         idStr,
         embedder,
         embeddings,
