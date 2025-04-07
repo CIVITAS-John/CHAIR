@@ -120,13 +120,13 @@ export const loopThroughChunk = async <TUnit, TSubunit, TAnalysis>(
 
     // Split units into smaller chunks based on the maximum items
     for (let i = 0; i < analyzer.maxIterations; i++) {
-        logger.info(`[${dataset.name}] Iteration ${i + 1}/${analyzer.maxIterations}`, _id);
-        let cursor = 0;
         // Preprocess and filter the subunits
         sources = await analyzer.preprocess(analysis, source, sources, i);
         if (sources.length === 0) {
             continue;
         }
+        logger.info(`[${dataset.name}] Iteration ${i + 1}/${analyzer.maxIterations}`, _id);
+        let cursor = 0;
         const filtered = sources.filter((subunit) => analyzer.subunitFilter(subunit, i));
         logger.debug(`[${dataset.name}] ${filtered.length} subunits filtered`, _id);
         // Loop through the subunits

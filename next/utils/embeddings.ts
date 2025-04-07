@@ -237,7 +237,7 @@ export const clusterCodes = (
     sources: string[],
     codes: Code[],
     cache: string,
-    ...options: string[]
+    ...opts: string[]
 ) =>
     clusterTexts(
         idStr,
@@ -255,7 +255,7 @@ export const clusterCodes = (
         })),
         cache,
         "linkage-jc",
-        ...options,
+        ...opts,
     );
 
 /** Categorize the categories into clusters using linkage-jc. */
@@ -265,7 +265,7 @@ export const clusterCategories = (
     sources: string[],
     categories: Map<string, string[]>,
     cache: string,
-    ...options: string[]
+    ...opts: string[]
 ) =>
     clusterTexts(
         idStr,
@@ -277,7 +277,7 @@ export const clusterCategories = (
         })),
         cache,
         "linkage-jc",
-        ...options,
+        ...opts,
     );
 
 /** Categorize the embeddings into clusters. */
@@ -291,7 +291,7 @@ export const clusterTexts = async (
     }[],
     cache: string,
     method = "hdbscan",
-    ...options: string[]
+    ...opts: string[]
 ) => {
     const _id = idStr("clusterTexts");
 
@@ -301,12 +301,12 @@ export const clusterTexts = async (
     }
 
     const embeddings = await requestEmbeddings(idStr, embedder, sources, cache);
-    return await clusterEmbeddings(idStr, embedder, embeddings, names, method, ...options);
+    return await clusterEmbeddings(idStr, embedder, embeddings, names, method, ...opts);
 };
 
 /**
  * Categorize the embeddings into clusters.
- * @retunrs { cluster: [id, probability][] }
+ * @returns { cluster: [id, probability][] }
  * */
 export const clusterEmbeddings = async (
     idStr: IDStrFunc,
@@ -317,7 +317,7 @@ export const clusterEmbeddings = async (
         examples?: string[];
     }[],
     method = "hdbscan",
-    ...options: string[]
+    ...opts: string[]
 ) => {
     const _id = idStr("clusterEmbeddings");
 
@@ -329,15 +329,16 @@ export const clusterEmbeddings = async (
     // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
     // Run the Python script
     await PythonShell.run(resolve(import.meta.dirname, `embeddings/clustering_${method}.py`), {
-        args: [embedder.dimensions.toString(), names.length.toString(), ...options],
+        args: [embedder.dimensions.toString(), names.length.toString(), ...opts],
         parser: (msg) => {
             if (msg.startsWith("[")) {
                 const data = JSON.parse(msg) as number[][];
-                // Get unique clusters
-                const clusters = [...new Set(data[0])].sort();
+                const clusters = data[0];
                 const probs = data[1];
+                // Get unique clusters
+                const uniqueClusters = [...new Set(clusters)].sort();
                 let noCluster = 0;
-                for (const cluster of clusters) {
+                for (const cluster of uniqueClusters) {
                     res[cluster] = [];
                     for (let j = 0; j < clusters.length; j++) {
                         if (clusters[j] === cluster) {
@@ -370,7 +371,7 @@ export const evaluateTexts = async <T>(
     ownerLabels: string[],
     cache: string,
     method = "coverage",
-    ...options: string[]
+    ...opts: string[]
 ) => {
     const _id = idStr("evaluateTexts");
     logger.debug(`Requesting embeddings for: ${sources.length}`, _id);
@@ -383,7 +384,7 @@ export const evaluateTexts = async <T>(
         owners,
         ownerLabels,
         method,
-        ...options,
+        ...opts,
     );
 };
 
@@ -399,7 +400,7 @@ export const evaluateEmbeddings = async <T>(
     owners: number[][],
     ownerLabels: string[],
     method = "coverage",
-    ...options: string[]
+    ...opts: string[]
 ) => {
     const _id = idStr("evaluateEmbeddings");
 
@@ -429,7 +430,7 @@ export const evaluateEmbeddings = async <T>(
             embedder.dimensions.toString(),
             labels.length.toString(),
             ownerLabels.length.toString(),
-            ...options,
+            ...opts,
         ],
         parser: (msg) => {
             if (msg.startsWith("{")) {
