@@ -64,11 +64,12 @@ export abstract class BaseStep {
         }
         if (this.dependsOn) {
             for (const step of this.dependsOn) {
+                if (step.aborted) {
+                    this.abort(_id, step);
+                    throw new BaseStep.AbortedError(_id);
+                }
                 if (!step.executed) {
                     throw new BaseStep.UnexecutedError(step._idStr("execute"));
-                }
-                if (step.aborted) {
-                    return step;
                 }
             }
         }
@@ -76,8 +77,8 @@ export abstract class BaseStep {
         return Promise.resolve();
     }
 
-    abort() {
-        logger.warn(`Aborting step ${this._id}`);
+    abort(id: string, dep?: BaseStep) {
+        logger.warn(`Aborting${dep ? `: dependency ${dep._id} aborted` : ""}`, id);
         this.aborted = true;
     }
 }

@@ -37,11 +37,7 @@ export class EvaluateStep<
 
     override async execute() {
         const _id = this._idStr("execute");
-        const abortedDep = await super.execute();
-        if (abortedDep) {
-            logger.warn(`Aborted: dependency ${abortedDep._id} aborted`, _id);
-            return;
-        }
+        await super.execute();
 
         // Sanity check
         if (!this.embedder) {

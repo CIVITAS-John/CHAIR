@@ -1,4 +1,4 @@
-import type { BaseStep } from "./steps/base-step";
+import { BaseStep } from "./steps/base-step";
 import { CodeStep } from "./steps/code-step";
 import { ConsolidateStep } from "./steps/consolidate-step";
 import { EvaluateStep } from "./steps/evaluate-step";
@@ -165,6 +165,21 @@ export class QAJob {
         );
     }
 
+    async #executeStep(step: BaseStep) {
+        const _id = "QAJob#executeStep";
+        logger.info(`Executing step ${step._id}`, _id);
+        try {
+            await step.execute();
+        } catch (error) {
+            if (error instanceof BaseStep.AbortedError && step.aborted) {
+                logger.warn(`Step ${step._id} aborted`, _id);
+                return;
+            }
+            throw error;
+        }
+        logger.info(`Executed step ${step._id}`, _id);
+    }
+
     async execute() {
         const _id = "QAJob#execute";
         logger.info("Executing job", _id);
@@ -174,13 +189,11 @@ export class QAJob {
             logger.info(`Executing dependency group ${i + 1}`, _id);
             if (this.config.parallel) {
                 // Execute the steps in parallel
-                await Promise.all(steps.map((step) => step.execute()));
+                await Promise.all(steps.map((step) => this.#executeStep(step)));
             } else {
                 // Execute the steps in sequence
-                for (const [j, step] of steps.entries()) {
-                    logger.info(`Executing step ${j + 1}`, _id);
-                    await step.execute();
-                    logger.info(`Executed step ${j + 1}`, _id);
+                for (const step of steps) {
+                    await this.#executeStep(step);
                 }
             }
             logger.success(`Executed dependency group ${i + 1}`, _id);

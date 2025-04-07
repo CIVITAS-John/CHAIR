@@ -7,7 +7,6 @@ import type { Codebook, DataChunk, DataItem, Dataset } from "../schema";
 import type { EmbedderObject } from "../utils/embeddings";
 import { ensureFolder, withCache } from "../utils/file";
 import { type LLMModel, useLLMs } from "../utils/llms";
-import { logger } from "../utils/logger";
 
 import type { AIParameters } from "./base-step";
 import { BaseStep } from "./base-step";
@@ -83,11 +82,7 @@ export class ConsolidateStep<
 
     override async execute() {
         const _id = this._idStr("execute");
-        const abortedDep = await super.execute();
-        if (abortedDep) {
-            logger.warn(`Aborted: dependency ${abortedDep._id} aborted`, _id);
-            return;
-        }
+        await super.execute();
 
         const datasets = new Map<string, Dataset<TUnit[]>>();
         this.dependsOn.forEach((coder) => {

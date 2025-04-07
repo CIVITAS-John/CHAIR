@@ -1,14 +1,15 @@
 import { existsSync, readdirSync, writeFileSync } from "fs";
 import { basename, extname, join } from "path";
 
-import { input, select } from "@inquirer/prompts";
+import { select } from "@inquirer/prompts";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
+import open from "open";
 
 import { type Analyzer, loopThroughChunk } from "../analyzer";
 import { mergeCodebook } from "../consolidating/codebooks";
 import type { CodedThread, CodedThreads, DataChunk, DataItem, Dataset } from "../schema";
 import { exportChunksForCoding, importCodes } from "../utils/export";
-import { ensureFolder, openFile, readJSONFile } from "../utils/file";
+import { ensureFolder, readJSONFile } from "../utils/file";
 import type { LLMModel, LLMSession } from "../utils/llms";
 import { requestLLM, useLLMs } from "../utils/llms";
 import { logger } from "../utils/logger";
@@ -484,16 +485,16 @@ export class CodeStep<
 
                     if (action === "abort") {
                         logger.warn(`[${dataset.name}] User requested to abort`, _id);
-                        this.abort();
+                        this.abort(_id);
                         return;
                     }
 
                     while (!analyses || !Object.keys(analyses.threads).length) {
                         logger.lock();
-                        openFile(excelPath);
-                        await input({
-                            message: `Waiting for coder "${coder}" to fill in ${excelPath}.\nPress enter when done...`,
-                        });
+                        console.log(
+                            `Waiting for coder "${coder}" to close the file at ${excelPath}...\n`,
+                        );
+                        await open(excelPath, { wait: true });
                         logger.unlock();
                         analyses = await loadExcel(excelPath, this.config.codebookSheet);
                     }
@@ -522,11 +523,7 @@ export class CodeStep<
 
     override async execute() {
         const _id = this._idStr("execute");
-        const abortedDep = await super.execute();
-        if (abortedDep) {
-            logger.warn(`Aborted: dependency ${abortedDep._id} aborted`, _id);
-            return;
-        }
+        await super.execute();
 
         this.#datasets = this.dependsOn.map((step) => step.dataset);
         logger.info(`Coding ${this.#datasets.length} datasets`, _id);
