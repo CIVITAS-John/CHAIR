@@ -13,7 +13,7 @@ fi
 
 # Check Node.js version (https://github.com/nodejs/release#release-schedule)
 node_version=$("$node" -v)
-if ! [[ $node_version =~ ^v(18|20|2[2-9]|[3-9][0-9]) ]]; then
+if ! [[ $node_version =~ ^v(20|2[2-9]|[3-9][0-9]) ]]; then
     echo -e "\033[1;31mNode.js is outdated. Please visit https://nodejs.org/en/download/prebuilt-installer to download and install the latest version.\033[0m"
     exit 1
 fi

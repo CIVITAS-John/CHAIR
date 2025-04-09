@@ -11,7 +11,7 @@ if (-not $node) {
 }
 # https://github.com/nodejs/release?tab=readme-ov-file#release-schedule
 $nodeVersion = & $node --version
-if ($nodeVersion -notmatch "^v(18|20|2[2-9]|[3-9]\d)") {
+if ($nodeVersion -notmatch "^v(20|2[2-9]|[3-9]\d)") {
     Write-Host "Node.js is outdated. Please visit https://nodejs.org/en/download/prebuilt-installer to download and install the latest version." -ForegroundColor Red
     exit 1
 }

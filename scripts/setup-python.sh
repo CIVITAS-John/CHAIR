@@ -26,20 +26,20 @@ if [[ -z $pip ]]; then
     fi
 fi
 
+# Ask the user if they want to use bertopic
+read -rp "Do you want to use topic modelling? [y/N]" bertopic
+
+# Ask the user if they want to use hdbscan
+read -rp "Do you want to install hdbscan? (for repository developers) [y/N]" hdbscan
+
 # Install the required packages from requirements.txt
 echo "Installing required packages..."
 "$pip" install -r requirements.txt
 
-# Ask the user if they want to use hdbscan
-clear
-read -rp "Do you want to use hdbscan? [y/N]: " hdbscan
 if [[ $hdbscan == "y" ]]; then
     "$pip" install -r requirements.hdbscan.txt
 fi
 
-# Ask the user if they want to use bertopic
-clear
-read -rp "Do you want to use bertopic? [y/N]: " bertopic
 if [[ $bertopic == "y" ]]; then
     "$pip" install -r requirements.bertopic.txt
 fi
