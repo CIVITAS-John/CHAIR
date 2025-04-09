@@ -5,12 +5,12 @@ import { LowLevelAnalyzerBase } from "./low-level";
 
 /**
  * Conduct the first-round low-level coding of the conversations.
- * Change from LowLevelAnalyzer3: We ask LLMs to produce description of the event.
+ * Use anything as the code label.
  * @author John Chen
  */
-export default class LowLevelAnalyzer4 extends LowLevelAnalyzerBase {
+export default class LowLevelAnalyzerAny extends LowLevelAnalyzerBase {
     /** The name of the analyzer. */
-    override name = "low-level-4";
+    override name = "low-level-any";
     /** The base temperature for the LLM. */
     override baseTemperature = 0.5;
 
@@ -47,8 +47,8 @@ export default class LowLevelAnalyzer4 extends LowLevelAnalyzerBase {
         return Promise.resolve([
             `
 You are an expert in thematic analysis with grounded theory, working on open coding.
-This is the first round of coding. Your goal is to describe each messages with phrases.
-Try your best to interpret events, contexts, and intents. Always use verb phrases.
+Your goal is to identify multiple low-level tags for each message.
+When writing tags, balance between specifics and generalizability across messages.
 ${this.dataset.researchQuestion}
 ${this.dataset.codingNotes}
 

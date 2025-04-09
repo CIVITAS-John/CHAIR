@@ -1,5 +1,5 @@
-import LowLevelAnalyzer4 from "../coding/low-level-4";
-import LowLevelAnalyzer5 from "../coding/low-level-5";
+import LowLevelAnalyzerAny from "../coding/low-level-any";
+import LowLevelAnalyzerVerb from "../coding/low-level-verb";
 import { QAJob, type QAJobConfig } from "../job";
 import { CodeStep } from "../steps/code-step";
 import { ConsolidateStep } from "../steps/consolidate-step";
@@ -13,8 +13,8 @@ const load = new LoadStep({
 
 const code = new CodeStep({
     agent: "AI",
-    strategy: [LowLevelAnalyzer4, LowLevelAnalyzer5],
-    model: ["gpt-3.5-turbo", "gpt-4.5-turbo", "o3-mini"],
+    strategy: [LowLevelAnalyzerAny, LowLevelAnalyzerVerb],
+    model: ["gpt-4.5-omni"],
 });
 
 // const code2 = new CodeStep({
@@ -23,7 +23,7 @@ const code = new CodeStep({
 // });
 
 const consolidate = new ConsolidateStep({
-    model: ["gpt-3.5-turbo", "gpt-4.5-turbo", "o3-mini"],
+    model: ["gpt-4.5-omni"],
 });
 
 const evaluate = new EvaluateStep({

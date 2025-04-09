@@ -5,18 +5,18 @@ import { LowLevelAnalyzerBase } from "./low-level";
 
 /**
  * Conduct the first-round low-level coding of the conversations.
- * Change from LowLevelAnalyzer4: We added a few instructions to enforce verb phrases for weaker LLMs.
+ * Only use verb phrases as the code labels.
  * @author John Chen
  */
-export default class LowLevelAnalyzer5 extends LowLevelAnalyzerBase {
+export default class LowLevelAnalyzerVerb extends LowLevelAnalyzerBase {
     /** The name of the analyzer. */
-    override name = "low-level-5";
+    override name = "low-level-verb";
     /** The base temperature for the LLM. */
     override baseTemperature = 0.5;
 
-    /** How we call a tag in the prompt */
+    /** How do we call a tag in the prompt. */
     protected override tagName = "phrase";
-    /** How we call tags in the prompt */
+    /** How do we call tags in the prompt. */
     protected override tagsName = "phrases";
 
     /**
