@@ -59,7 +59,7 @@ export const withCache = async <T>(
     hash: string,
     task: () => Promise<T>,
 ) => {
-    const _id = idStr("cachedTask");
+    const _id = idStr("withCache");
     // Check if the cache exists
     if (existsSync(`${cachePath}.json`) && existsSync(`${cachePath}.hash`)) {
         if (hash === readFileSync(`${cachePath}.hash`, "utf8")) {
