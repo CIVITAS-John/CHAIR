@@ -8,7 +8,7 @@ import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
-from embedding import Dimensions, Items, cpus, embeddings, load_temp_json
+from embedding import cpus, dims, embeddings, items, load_temp_json
 from scipy.cluster.hierarchy import dendrogram, linkage, to_tree
 from scipy.spatial.distance import squareform
 from sklearn.metrics.pairwise import pairwise_distances
@@ -16,46 +16,47 @@ from sklearn.preprocessing import normalize
 from umap import UMAP
 
 # Get the arguments
-Metrics = sys.argv[3] if len(sys.argv) > 3 else "euclidean"
-Linkage = sys.argv[4] if len(sys.argv) > 4 else "ward"
-MaxDistance = float(sys.argv[5]) if len(sys.argv) > 5 else 0.65
-MinDistance = float(sys.argv[6]) if len(sys.argv) > 6 else 0.4
-TargetDimensions = int(sys.argv[7]) if len(sys.argv) > 7 else Dimensions
-Plotting = bool(sys.argv[8]) if len(sys.argv) > 8 else False
-Penalty = MaxDistance - MinDistance
+metrics = sys.argv[3] if len(sys.argv) > 3 else "euclidean"
+linkage_mtd = sys.argv[4] if len(sys.argv) > 4 else "ward"
+max_dist = float(sys.argv[5]) if len(sys.argv) > 5 else 0.65
+min_dist = float(sys.argv[6]) if len(sys.argv) > 6 else 0.4
+tar_dims = int(sys.argv[7]) if len(sys.argv) > 7 else dims
+plotting = bool(sys.argv[8]) if len(sys.argv) > 8 else False
+g_penalty = max_dist - min_dist
 print(
     "Linkage:",
-    Linkage,
+    linkage_mtd,
     ", MaxDistance:",
-    MaxDistance,
+    max_dist,
     ", MinDistance:",
-    MinDistance,
+    min_dist,
     ", Metrics:",
-    Metrics,
+    metrics,
     ", Target Dimensions:",
-    TargetDimensions,
+    tar_dims,
 )
 
+# Separate the examples from labels
 sources = load_temp_json("clustering")
 # sources = [json.loads(label) for label in labels]
-labels = [source["Label"] for source in sources]
-examples = [set(source["Examples"]) for source in sources]
+labels = [source["label"] for source in sources]
+examples = [set(source["examples"]) for source in sources]
 
 # Use UMap to reduce the dimensions
-if TargetDimensions < Dimensions:
-    umap = UMAP(n_components=TargetDimensions)
+if tar_dims < dims:
+    umap = UMAP(n_components=tar_dims)
     embeddings = umap.fit_transform(embeddings)
     embeddings = normalize(embeddings, norm="l2")
     print("Embeddings reduced:", embeddings.shape)
 
 # Calculate distances
-distances = pairwise_distances(embeddings, embeddings, metric=Metrics, n_jobs=cpus)
+distances = pairwise_distances(embeddings, embeddings, metric=metrics, n_jobs=cpus)
 
 # Consdense distances
 condensed_distances = squareform(distances)
 
 # For average sizes, we only consider those with more than 1
-sizes_for_calc = [len(examples[i]) for i in range(Items) if len(examples[i]) > 1]
+sizes_for_calc = [len(examples[i]) for i in range(items) if len(examples[i]) > 1]
 avg_size = np.mean(sizes_for_calc)
 max_size = avg_size * 3
 penalty_coff = max_size - avg_size
@@ -70,15 +71,15 @@ def count_merged(code1, code2):
 
 
 # Calculate the penalty on the distance based on number of differences
-for i in range(Items):
-    for j in range(Items):
-        if distances[i][j] > MinDistance:
+for i in range(items):
+    for j in range(items):
+        if distances[i][j] > min_dist:
             penalty = count_merged(i, j)
             penalty = penalty * penalty
-            distances[i][j] += penalty * Penalty
+            distances[i][j] += penalty * g_penalty
 
 # Calculate the linkage
-linkages = linkage(condensed_distances, method=Linkage)
+linkages = linkage(condensed_distances, method=linkage_mtd)
 root = to_tree(linkages)
 
 tree_examples = {}
@@ -98,8 +99,8 @@ total_size = len(pre_traverse(root))
 
 # Default cluster: -1, 100%
 cluster_index = 0
-clusters = np.full(Items, -1)
-probs = np.full(Items, 1.0)
+clusters = np.full(items, -1)
+probs = np.full(items, 1.0)
 colors = {}
 
 
@@ -114,10 +115,21 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
         return 1
     # If it is not a leaf, check if it is a cluster
     # Apply the maximum penalty when the new size is 3 * std_size larger than the average
-    penalty = min(1, max(0, (len(tree_examples[node.id]) - avg_size) / penalty_coff))
-    penalty = penalty * penalty
-    criteria = max(MaxDistance - penalty * Penalty, MinDistance)
-    # print("Node:", node.id, ", Size:", len(tree_examples[node.id]), ", % Penalty:", penalty, ", Distance:", node.dist, ", Criteria:", criteria)
+    t_penalty = min(1, max(0, (len(tree_examples[node.id]) - avg_size) / penalty_coff))
+    t_penalty = t_penalty * t_penalty
+    criteria = max(max_dist - t_penalty * g_penalty, min_dist)
+    # print(
+    #     "Node:",
+    #     node.id,
+    #     ", Size:",
+    #     len(tree_examples[node.id]),
+    #     ", % Penalty:",
+    #     penalty,
+    #     ", Distance:",
+    #     node.dist,
+    #     ", Criteria:",
+    #     criteria,
+    # )
     # Verbose: show the cluster
     # left_id = node.get_left().id
     # leftlabel = labels[left_id] if left_id < Items else "cluster-" + str(left_id)
@@ -151,7 +163,7 @@ nodes = traverse(root, 0)
 #     plt.show()
 
 # Plot the dendrogram
-if Plotting:
+if plotting:
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     dendrogram(

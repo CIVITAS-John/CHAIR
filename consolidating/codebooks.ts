@@ -1,427 +1,428 @@
-import * as File from "fs";
-
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-import chalk from "chalk";
 
-import { LoopThroughChunks } from "../analyzer.js";
-import type { ClusterItem } from "../utils/embeddings.js";
-import { ExportChunksForCoding } from "../utils/export.js";
-import { EnsureFolder, LLMName, RequestLLMWithCache } from "../utils/llms.js";
-import { GetMessagesPath, LoadAnalyses, LoadChunksForAnalysis } from "../utils/loader.js";
-import type { Code, Codebook, CodedThreads, DataChunk, DataItem } from "../utils/schema.js";
+import { loopThroughChunk } from "../analyzer";
+import type { Code, Codebook, CodedThreads, CodedThreadsWithCodebook, Dataset } from "../schema";
+import type { IDStrFunc } from "../steps/base-step";
+import type { ClusterItem } from "../utils/embeddings";
+import { type LLMSession, requestLLM } from "../utils/llms";
+import { logger } from "../utils/logger";
 
-import type { CodebookConsolidator } from "./consolidator.js";
+import { CodebookConsolidator } from "./consolidator";
 
-/** MergeCodebook: Simply merge the codebooks without further consolidating. */
-export function MergeCodebook(Analyses: CodedThreads) {
-    Analyses.Codebook = {};
-    for (const Analysis of Object.values(Analyses.Threads)) {
-        for (const [Code, Value] of Object.entries(Analysis.Codes)) {
-            const Current = Analyses.Codebook[Code] ?? {
-                Label: Value.Label,
-                Examples: [],
-                Definitions: [],
-                Categories: [],
+/** Simply merge the codebooks without further consolidating. */
+export const mergeCodebook = (analyses: CodedThreads): CodedThreadsWithCodebook => {
+    analyses.codebook = {};
+    for (const analysis of Object.values(analyses.threads)) {
+        for (const [code, value] of Object.entries(analysis.codes)) {
+            const cur = analyses.codebook[code] ?? {
+                label: value.label,
+                examples: [],
+                definitions: [],
+                categories: [],
             };
-            if (Value.Examples?.length) {
-                Current.Examples = [...new Set([...Current.Examples!, ...Value.Examples])];
+            if (value.examples?.length) {
+                cur.examples = [...new Set([...(cur.examples ?? []), ...value.examples])];
             }
-            if (Value.Definitions?.length) {
-                Current.Definitions = [...new Set([...Current.Definitions!, ...Value.Definitions])];
+            if (value.definitions?.length) {
+                cur.definitions = [...new Set([...(cur.definitions ?? []), ...value.definitions])];
             }
-            if (Value.Categories?.length) {
-                Current.Categories = [...new Set([...Current.Categories!, ...Value.Categories])];
+            if (value.categories?.length) {
+                cur.categories = [...new Set([...(cur.categories ?? []), ...value.categories])];
             }
-            Analyses.Codebook[Code] = Current;
+            analyses.codebook[code] = cur;
         }
     }
-}
+    return analyses as CodedThreadsWithCodebook;
+};
 
-/** MergeCodebooks: Merge multiple codebooks simply by labels of codes. */
-export function MergeCodebooks(Codebooks: Codebook[], WithReference = false) {
-    const Codes = new Map<string, Code>();
-    const Alternatives = new Map<string, string>();
-    for (const Codebook of Codebooks) {
-        for (const Code of Object.values(Codebook)) {
-            Code.Owners = [];
+/** Merge multiple codebooks simply by labels of codes. */
+export const mergeCodebooks = (codebooks: Codebook[], withReference = false) => {
+    const codes = new Map<string, Code>();
+    const alternatives = new Map<string, string>();
+    for (const codebook of codebooks) {
+        for (const code of Object.values(codebook)) {
+            code.owners = [];
         }
     }
     // Then, we combine the codes from each codebook and record the ownership
     // We use the reference code as the baseline if multiple codes are found
     // Here, the reference codebook's first definition will be used (will need to change)
-    for (const [Index, Codebook] of Codebooks.entries()) {
-        for (const [Label, Code] of Object.entries(Codebook)) {
+    for (const [idx, codebook] of codebooks.entries()) {
+        for (const [label, code] of Object.entries(codebook)) {
             // We don't accept anything without an example.
-            if ((Code.Examples?.length ?? 0) === 0) {
+            if (!code.examples?.length) {
                 continue;
             }
-            let NewLabel = Label;
-            if (WithReference) {
+            let newLabel = label;
+            if (withReference) {
                 // Merge the alternatives
-                if (Index === 0) {
-                    Code.Alternatives?.forEach((Alternative) =>
-                        Alternatives.set(Alternative, Label),
-                    );
+                if (idx === 0) {
+                    code.alternatives?.forEach((alt) => alternatives.set(alt, label));
                 } else {
-                    if (Alternatives.has(Label)) {
-                        NewLabel = Alternatives.get(Label)!;
+                    if (alternatives.has(label)) {
+                        newLabel = alternatives.get(label) ?? label;
                     }
                 }
                 // Merge the code
-                if (!Codes.has(NewLabel)) {
+                if (!codes.has(newLabel)) {
                     // Here we want to create a clean copy
-                    const NewInstance: Code = {
-                        Label: NewLabel,
-                        Examples: Code.Examples,
-                        Definitions: Code.Definitions,
-                        Categories: Code.Categories,
+                    const newCode: Code = {
+                        label: newLabel,
+                        examples: code.examples,
+                        definitions: code.definitions,
+                        categories: code.categories,
                     };
                     // We only care about the reference codebook's alternatives
-                    if (Index === 0) {
-                        NewInstance.Alternatives = Code.Alternatives;
+                    if (idx === 0) {
+                        newCode.alternatives = code.alternatives;
                     }
-                    NewInstance.Owners = [Index];
-                    Codes.set(NewLabel, NewInstance);
+                    newCode.owners = [idx];
+                    codes.set(newLabel, newCode);
                 } else {
-                    const Instance = Codes.get(NewLabel)!;
-                    if (!Instance.Owners!.includes(Index)) {
-                        Instance.Owners!.push(Index);
+                    const code = codes.get(newLabel);
+                    if (!code?.owners?.includes(idx)) {
+                        code?.owners?.push(idx);
                     }
                 }
             } else {
                 // Merge the code
-                if (!Codes.has(NewLabel)) {
-                    Codes.set(NewLabel, Code);
+                if (!codes.has(newLabel)) {
+                    codes.set(newLabel, code);
                 } else {
-                    MergeCodes(Codes.get(NewLabel)!, Code);
+                    mergeCodes(codes.get(newLabel) ?? code, code);
                 }
             }
         }
     }
-    return Object.fromEntries(Codes);
-}
+    return Object.fromEntries(codes);
+};
 
-/** ConsolidateChunks: Load, consolidate, and export codebooks. */
-export async function ConsolidateChunks<T extends DataItem>(
-    Consolidator: CodebookConsolidator<DataChunk<T>>,
-    Group: string,
-    ConversationName: string,
-    Analyzer: string,
-    AnalyzerLLM: string,
-    FakeRequest = false,
-) {
-    const ExportFolder = GetMessagesPath(Group, `${Analyzer}-${Consolidator.Name}`);
-    EnsureFolder(ExportFolder);
-    // Load the conversations and analyses
-    const Conversations = LoadChunksForAnalysis(Group, ConversationName);
-    const Analyses = await LoadAnalyses(
-        GetMessagesPath(
-            Group,
-            `${Analyzer}/${ConversationName.replace(".json", `-${AnalyzerLLM}`)}`,
-        ),
-    );
-    const ResultName = AnalyzerLLM === LLMName ? AnalyzerLLM : `${AnalyzerLLM}-${LLMName}`;
-    // Consolidate the codebook
-    await ConsolidateCodebook(
-        Consolidator,
-        [...Object.values(Conversations)],
-        Analyses,
-        async (Iteration) => {
-            const Values = Object.values(Analyses.Codebook!).filter(
-                (Code) => Code.Label !== "[Merged]",
-            );
-            Analyses.Codebook = {};
-            for (const Code of Values) {
-                Analyses.Codebook[Code.Label] = Code;
-            }
-            const Book = ExportChunksForCoding(Object.values(Conversations), Analyses);
-            await Book.xlsx.writeFile(
-                `${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}-${Iteration}`)}.xlsx`,
-            );
-        },
-        FakeRequest,
-    );
-    // Write the result into a JSON file
-    File.writeFileSync(
-        `${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}`)}.json`,
-        JSON.stringify(Analyses, null, 4),
-    );
-    // Write the result into an Excel file
-    const Book = ExportChunksForCoding(Object.values(Conversations), Analyses);
-    await Book.xlsx.writeFile(
-        `${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}`)}.xlsx`,
-    );
-}
+// /** ConsolidateChunks: Load, consolidate, and export codebooks. */
+// export async function ConsolidateChunks<T extends DataItem>(
+//     Consolidator: CodebookConsolidator<DataChunk<T>>,
+//     Group: string,
+//     ConversationName: string,
+//     Analyzer: string,
+//     AnalyzerLLM: string,
+//     FakeRequest = false,
+// ) {
+//     const ExportFolder = GetMessagesPath(Group, `${Analyzer}-${Consolidator.Name}`);
+//     EnsureFolder(ExportFolder);
+//     // Load the conversations and analyses
+//     const Conversations = LoadChunksForAnalysis(Group, ConversationName);
+//     const Analyses = await LoadAnalyses(
+//         GetMessagesPath(
+//             Group,
+//             `${Analyzer}/${ConversationName.replace(".json", `-${AnalyzerLLM}`)}`,
+//         ),
+//     );
+//     const ResultName = AnalyzerLLM === LLMName ? AnalyzerLLM : `${AnalyzerLLM}-${LLMName}`;
+//     // Consolidate the codebook
+//     await consolidateCodebook(
+//         Consolidator,
+//         [...Object.values(Conversations)],
+//         Analyses,
+//         async (Iteration) => {
+//             const Values = Object.values(Analyses.Codebook).filter(
+//                 (Code) => Code.Label !== "[Merged]",
+//             );
+//             Analyses.Codebook = {};
+//             for (const Code of Values) {
+//                 Analyses.Codebook[Code.Label] = Code;
+//             }
+//             const Book = ExportChunksForCoding(Object.values(Conversations), Analyses);
+//             await Book.xlsx.writeFile(
+//                 `${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}-${Iteration}`)}.xlsx`,
+//             );
+//         },
+//         FakeRequest,
+//     );
+//     // Write the result into a JSON file
+//     File.writeFileSync(
+//         `${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}`)}.json`,
+//         JSON.stringify(Analyses, null, 4),
+//     );
+//     // Write the result into an Excel file
+//     const Book = ExportChunksForCoding(Object.values(Conversations), Analyses);
+//     await Book.xlsx.writeFile(
+//         `${ExportFolder}/${ConversationName.replace(".json", `-${ResultName}`)}.xlsx`,
+//     );
+// }
 
-/** ConsolidateCodebook: Load, consolidate, and export codebooks. */
-export async function ConsolidateCodebook<TUnit>(
-    Consolidator: CodebookConsolidator<TUnit>,
-    Sources: TUnit[],
-    Analyses: CodedThreads,
-    IterationCallback?: (Iteration: number) => Promise<void>,
-    FakeRequest = false,
-) {
+/** Load, consolidate, and export codebooks. */
+export const consolidateCodebook = async <TUnit>(
+    idStr: IDStrFunc,
+    dataset: Dataset<TUnit[]>,
+    session: LLMSession,
+    consolidator: CodebookConsolidator<TUnit>,
+    sources: TUnit[],
+    _analyses: CodedThreads,
+    onIterate?: (iteration: number) => Promise<void>,
+    fakeRequest = false,
+) => {
+    const _id = idStr("consolidateCodebook");
+
     // Check if the analysis is already done
-    if (Object.keys(Analyses.Threads).length !== Sources.length) {
-        throw new Error(
-            `Invalid analysis: Among ${Sources.length} threads, only ${Object.keys(Analyses.Threads).length} have been analyzed.`,
+    if (Object.keys(_analyses.threads).length !== sources.length) {
+        throw new CodebookConsolidator.ConfigError(
+            `Invalid analysis: expected ${sources.length} threads, got ${Object.keys(_analyses.threads).length}`,
+            _id,
         );
     }
-    if (!Analyses.Codebook) {
-        MergeCodebook(Analyses);
-    }
+
+    const analyses: CodedThreadsWithCodebook = _analyses.codebook
+        ? (_analyses as CodedThreadsWithCodebook)
+        : mergeCodebook(_analyses);
+
     // Ignore codes with 0 examples
-    const Codes = Object.values(Analyses.Codebook!).filter(
-        (Code) => (Code.Examples?.length ?? 0) > 0,
-    );
+    const codes = Object.values(analyses.codebook).filter((c) => c.examples?.length);
     // Run the coded threads through chunks (as defined by the consolidator)
-    await LoopThroughChunks(
-        Consolidator,
-        Analyses,
-        Sources,
-        Codes,
-        async (Currents, ChunkStart, _IsFirst, Tries, Iteration) => {
-            const Prompts = await Consolidator.BuildPrompts(
-                Analyses,
-                Sources,
-                Currents,
-                ChunkStart,
-                Iteration,
+    await loopThroughChunk(
+        idStr,
+        dataset,
+        session,
+        consolidator,
+        analyses,
+        sources,
+        codes,
+        async (currents, chunkStart, _isFirst, tries, iteration) => {
+            const prompts = await consolidator.buildPrompts(
+                analyses,
+                sources,
+                currents,
+                chunkStart,
+                iteration,
             );
-            if (Prompts[0] === "" && Prompts[1] === "") {
+            if (prompts[0] === "" && prompts[1] === "") {
                 return 0;
             }
             // Run the prompts
-            const Response = await RequestLLMWithCache(
-                [new SystemMessage(Prompts[0]), new HumanMessage(Prompts[1])],
-                `codebooks/${Consolidator.Name}`,
-                Math.min(Tries, 3) * 0.2 + Consolidator.BaseTemperature,
-                FakeRequest,
+            const response = await requestLLM(
+                idStr,
+                session,
+                [new SystemMessage(prompts[0]), new HumanMessage(prompts[1])],
+                `codebooks/${consolidator.name}`,
+                Math.min(tries, 3) * 0.2 + consolidator.baseTemperature,
+                fakeRequest,
             );
-            if (Response === "") {
+            if (response === "") {
                 return 0;
             }
             // Parse the response
-            const Result = await Consolidator.ParseResponse(
-                Analyses,
-                Response.split("\n").map((Line) => Line.trim()),
-                Currents,
-                ChunkStart,
-                Iteration,
+            const res = await consolidator.parseResponse(
+                analyses,
+                response.split("\n").map((Line) => Line.trim()),
+                currents,
+                chunkStart,
+                iteration,
             );
-            if (typeof Result === "number") {
-                return Result;
+            if (typeof res === "number") {
+                return res;
             }
             return 0;
         },
-        IterationCallback,
+        onIterate,
     );
-}
+};
 
-/** MergeCodes: Merge labels and definitions of two codes. */
-export function MergeCodes(Parent: Code, Code: Code) {
-    const Alternatives = new Set([
-        ...(Parent.Alternatives ?? []),
-        ...(Code.Alternatives ?? []),
-        Code.Label,
+/** Merge labels and definitions of two codes. */
+export const mergeCodes = (parent: Code, code: Code) => {
+    const alternatives = new Set([
+        ...(parent.alternatives ?? []),
+        ...(code.alternatives ?? []),
+        code.label,
     ]);
-    Alternatives.delete(Parent.Label);
-    Parent.Alternatives = Array.from(Alternatives);
-    Parent.Definitions = Array.from(
-        new Set((Parent.Definitions ?? []).concat(Code.Definitions ?? [])),
-    );
-    Parent.Categories = Array.from(
-        new Set((Parent.Categories ?? []).concat(Code.Categories ?? [])),
-    );
-    Parent.Examples = Array.from(new Set((Parent.Examples ?? []).concat(Code.Examples ?? [])));
-    if (Parent.Owners || Code.Owners) {
-        Parent.Owners = Array.from(new Set((Parent.Owners ?? []).concat(Code.Owners ?? [])));
-    }
-    Code.Label = "[Merged]";
-    return Parent;
-}
+    alternatives.delete(parent.label);
 
-/** MergeCodesByCluster: Merge codebooks based on clustering results. */
-export function MergeCodesByCluster(
-    Clusters: Record<number, ClusterItem[]>,
-    Codes: Code[],
-): Record<string, Code> {
-    const Codebook: Record<string, Code> = {};
+    parent.alternatives = Array.from(alternatives);
+    for (const prop of ["definitions", "categories", "examples"] as const) {
+        parent[prop] = Array.from(new Set((parent[prop] ?? []).concat(code[prop] ?? [])));
+    }
+    if (parent.owners || code.owners) {
+        parent.owners = Array.from(new Set((parent.owners ?? []).concat(code.owners ?? [])));
+    }
+    code.label = "[Merged]";
+    return parent;
+};
+
+/** Merge codebooks based on clustering results. */
+export const mergeCodesByCluster = (
+    idStr: IDStrFunc,
+    clusters: Record<number, ClusterItem[]>,
+    codes: Code[],
+) => {
+    const _id = idStr("mergeCodesByCluster");
+
+    const codebook: Record<string, Code> = {};
     // Remove temp labels
-    Codes.forEach((Code) => delete Code.OldLabels);
+    codes.forEach((code) => delete code.oldLabels);
     // Merge the codes based on clustering results
-    for (const Key of Object.keys(Clusters)) {
-        const ClusterID = parseInt(Key);
+    for (const key of Object.keys(clusters)) {
+        const clusterID = parseInt(key);
         // Pick the code with the highest probability and the shortest label + definition to merge into
         // This could inevitably go wrong. We will need another iteration to get a better new label
-        const BestCode = Clusters[ClusterID].sort((A, B) => B.Probability - A.Probability)
-            .map((Item) => Codes[Item.ID])
+        const bestCode = clusters[clusterID]
+            .sort((A, B) => B.probability - A.probability)
+            .map((item) => codes[item.id])
             .sort(
                 (A, B) =>
-                    A.Label.length * 5 +
-                    (A.Definitions?.[0]?.length ?? 0) -
-                    (B.Label.length * 5 + (B.Definitions?.[0]?.length ?? 0)),
+                    A.label.length * 5 +
+                    (A.definitions?.[0]?.length ?? 0) -
+                    (B.label.length * 5 + (B.definitions?.[0]?.length ?? 0)),
             )[0];
-        if (ClusterID !== -1) {
-            Codebook[BestCode.Label] = BestCode;
-            BestCode.OldLabels = BestCode.OldLabels ?? [];
+        if (clusterID !== -1) {
+            codebook[bestCode.label] = bestCode;
+            bestCode.oldLabels = bestCode.oldLabels ?? [];
         }
-        for (const Item of Clusters[ClusterID]) {
-            const Code = Codes[Item.ID];
-            if (ClusterID === -1) {
+        for (const item of clusters[clusterID]) {
+            const code = codes[item.id];
+            if (clusterID === -1) {
                 // Codes that cannot be clustered
-                Codebook[Code.Label] = Code;
-            } else if (Code.Label !== BestCode.Label) {
+                codebook[code.label] = code;
+            } else if (code.label !== bestCode.label) {
                 // Merge the code
-                console.log(
-                    `Merging: ${Code.Label} into ${BestCode.Label} with ${(Item.Probability * 100).toFixed(2)}% chance`,
+                logger.info(
+                    `Merging ${code.label} into ${bestCode.label} with ${(item.probability * 100).toFixed(2)}% certainty`,
+                    _id,
                 );
-                if (!BestCode.OldLabels!.includes(Code.Label)) {
-                    BestCode.OldLabels!.push(Code.Label);
+                if (!bestCode.oldLabels?.includes(code.label)) {
+                    bestCode.oldLabels?.push(code.label);
                 }
-                MergeCodes(BestCode, Code);
+                mergeCodes(bestCode, code);
             } else {
                 // Codes that have no name changes
-                Codebook[Code.Label] = Code;
+                codebook[code.label] = code;
             }
         }
     }
-    console.log(
-        chalk.green(
-            `Statistics: Codes merged from ${Codes.length} to ${Object.keys(Codebook).length}`,
-        ),
-    );
-    return Codebook;
-}
+    logger.success(`Merged ${codes.length} codes into ${Object.keys(codebook).length}`, _id);
+    return codebook;
+};
 
-/** UpdateCodes: Update code labels and definitions. */
-export function UpdateCodes(
-    Codebook: Codebook,
-    NewCodes: Code[],
-    Codes: Code[],
-): Record<string, Code> {
-    const AllCodes = Object.values(Codebook);
-    for (let I = 0; I < Codes.length; I++) {
-        const NewCode = NewCodes[I];
-        if (!NewCode) {
+/** Update code labels and definitions. */
+export const updateCodes = (codebook: Codebook, newCodes: Code[], codes: Code[]) => {
+    const allCodes = Object.values(codebook);
+    for (let i = 0; i < codes.length; i++) {
+        const newCode = newCodes[i];
+        if (typeof newCode !== "object") {
             break;
         }
-        const NewLabel = NewCode.Label.toLowerCase();
+        const newLabel = newCode.label.toLowerCase();
         // Update the code
-        Codes[I].Definitions = NewCode.Definitions;
-        Codes[I].Categories = NewCode.Categories;
+        codes[i].definitions = newCode.definitions;
+        codes[i].categories = newCode.categories;
         // Check if the label is changed
-        if (NewLabel !== Codes[I].Label) {
+        if (newLabel !== codes[i].label) {
             // Find the code with the same new label and merge
-            let Parent = AllCodes.find((Current) => Current.Label === NewLabel);
-            if (!Parent) {
-                Parent = AllCodes.find((Current) => Current.Alternatives?.includes(NewLabel));
+            let parent = allCodes.find((cur) => cur.label === newLabel);
+            if (!parent) {
+                parent = allCodes.find((cur) => cur.alternatives?.includes(newLabel));
             }
-            if (Parent && Parent !== Codes[I]) {
-                MergeCodes(Parent, Codes[I]);
+            if (parent && parent !== codes[i]) {
+                mergeCodes(parent, codes[i]);
                 continue;
             }
             // Otehrwise, update the label and alternatives
-            let Alternatives = Codes[I].Alternatives ?? [];
-            if (!Alternatives.includes(Codes[I].Label)) {
-                Alternatives.push(Codes[I].Label);
+            let alternatives = codes[i].alternatives ?? [];
+            if (!alternatives.includes(codes[i].label)) {
+                alternatives.push(codes[i].label);
             }
-            if (Alternatives.includes(NewLabel)) {
-                Alternatives = Alternatives.filter((Alternative) => Alternative !== NewLabel);
+            if (alternatives.includes(newLabel)) {
+                alternatives = alternatives.filter((Alternative) => Alternative !== newLabel);
             }
-            Codes[I].Alternatives = Alternatives;
-            Codes[I].Label = NewLabel;
+            codes[i].alternatives = alternatives;
+            codes[i].label = newLabel;
         }
     }
-    return Codebook;
-}
+    return codebook;
+};
 
-/** UpdateCategories: Update category mappings for codes. */
-export function UpdateCategories(Categories: string[], NewCategories: string[], Codes: Code[]) {
-    for (let I = 0; I < Categories.length; I++) {
-        const Category = Categories[I];
-        const NewCategory = NewCategories[I];
-        for (const Code of Codes) {
-            if (Code.Categories?.includes(Category)) {
-                Code.Categories = Code.Categories.filter((C) => C !== Category);
-                if (!Code.Categories.includes(NewCategory)) {
-                    Code.Categories.push(NewCategory);
-                }
-            }
-        }
-    }
-}
+// /** UpdateCategories: Update category mappings for codes. */
+// export function UpdateCategories(Categories: string[], NewCategories: string[], Codes: Code[]) {
+//     for (let I = 0; I < Categories.length; I++) {
+//         const Category = Categories[I];
+//         const NewCategory = NewCategories[I];
+//         for (const Code of Codes) {
+//             if (Code.Categories?.includes(Category)) {
+//                 Code.Categories = Code.Categories.filter((C) => C !== Category);
+//                 if (!Code.Categories.includes(NewCategory)) {
+//                     Code.Categories.push(NewCategory);
+//                 }
+//             }
+//         }
+//     }
+// }
 
-/** UpdateCategoriesByMap: Update category mappings for codes using a map. */
-export function UpdateCategoriesByMap(Map: Map<string, string>, Codes: Code[]) {
-    UpdateCategories([...Map.keys()], [...Map.values()], Codes);
-}
+// /** UpdateCategoriesByMap: Update category mappings for codes using a map. */
+// export function UpdateCategoriesByMap(Map: Map<string, string>, Codes: Code[]) {
+//     UpdateCategories([...Map.keys()], [...Map.values()], Codes);
+// }
 
-/** AssignCategoriesByCluster: Assign categories based on category clustering results. */
-export function AssignCategoriesByCluster(
-    Clusters: Record<number, ClusterItem[]>,
-    Codes: Code[],
-): Record<string, Code[]> {
-    const Results: Record<string, Code[]> = {};
-    for (const Key of Object.keys(Clusters)) {
-        const ClusterID = parseInt(Key);
-        const ClusterName = ClusterID === -1 ? "miscellaneous" : `cluster ${ClusterID}`;
-        const Items: Code[] = [];
-        for (const Item of Clusters[ClusterID]) {
-            Codes[Item.ID].Categories = [ClusterName];
-            Items.push(Codes[Item.ID]);
-        }
-        if (ClusterID !== -1) {
-            Results[ClusterName] = Items;
-        }
-    }
-    return Results;
-}
+// /** AssignCategoriesByCluster: Assign categories based on category clustering results. */
+// export function AssignCategoriesByCluster(
+//     Clusters: Record<number, ClusterItem[]>,
+//     Codes: Code[],
+// ): Record<string, Code[]> {
+//     const Results: Record<string, Code[]> = {};
+//     for (const Key of Object.keys(Clusters)) {
+//         const ClusterID = parseInt(Key);
+//         const ClusterName = ClusterID === -1 ? "miscellaneous" : `cluster ${ClusterID}`;
+//         const Items: Code[] = [];
+//         for (const Item of Clusters[ClusterID]) {
+//             Codes[Item.ID].Categories = [ClusterName];
+//             Items.push(Codes[Item.ID]);
+//         }
+//         if (ClusterID !== -1) {
+//             Results[ClusterName] = Items;
+//         }
+//     }
+//     return Results;
+// }
 
-/** MergeCategoriesByCluster: Merge categories based on category clustering results. */
-export function MergeCategoriesByCluster(
-    Clusters: Record<number, ClusterItem[]>,
-    Categories: string[],
-    Codes: Code[],
-    TakeFirst = false,
-): Record<string, string[]> {
-    const Results: Record<string, string[]> = {};
-    for (const Key of Object.keys(Clusters)) {
-        const ClusterID = parseInt(Key);
-        // Skip the non-clustered ones
-        if (ClusterID === -1) {
-            continue;
-        }
-        // Get the current categories
-        const Subcategories = Clusters[ClusterID].map((Item) => Categories[Item.ID]);
-        if (Subcategories.length <= 1) {
-            continue;
-        }
-        // Merge the categories
-        const NewCategory = TakeFirst ? Subcategories[0] : Subcategories.join("|");
-        console.log(
-            `Merging categories: ${Clusters[ClusterID].map(
-                (Item) => `${Categories[Item.ID]} with ${(Item.Probability * 100).toFixed(2)}%`,
-            ).join(", ")}`,
-        );
-        for (const Code of Codes) {
-            if (!Code.Categories) {
-                continue;
-            }
-            const Filtered = Code.Categories.filter(
-                (Category) => !Subcategories.includes(Category),
-            );
-            if (Filtered.length !== Code.Categories.length) {
-                Code.Categories = Array.from(
-                    new Set([
-                        ...Code.Categories.filter((Category) => !Subcategories.includes(Category)),
-                        NewCategory,
-                    ]),
-                );
-            }
-        }
-        // Record the new category
-        Results[NewCategory] = Subcategories;
-    }
-    return Results;
-}
+// /** MergeCategoriesByCluster: Merge categories based on category clustering results. */
+// export function MergeCategoriesByCluster(
+//     Clusters: Record<number, ClusterItem[]>,
+//     Categories: string[],
+//     Codes: Code[],
+//     TakeFirst = false,
+// ): Record<string, string[]> {
+//     const Results: Record<string, string[]> = {};
+//     for (const Key of Object.keys(Clusters)) {
+//         const ClusterID = parseInt(Key);
+//         // Skip the non-clustered ones
+//         if (ClusterID === -1) {
+//             continue;
+//         }
+//         // Get the current categories
+//         const Subcategories = Clusters[ClusterID].map((Item) => Categories[Item.ID]);
+//         if (Subcategories.length <= 1) {
+//             continue;
+//         }
+//         // Merge the categories
+//         const NewCategory = TakeFirst ? Subcategories[0] : Subcategories.join("|");
+//         console.log(
+//             `Merging categories: ${Clusters[ClusterID].map(
+//                 (Item) => `${Categories[Item.ID]} with ${(Item.Probability * 100).toFixed(2)}%`,
+//             ).join(", ")}`,
+//         );
+//         for (const Code of Codes) {
+//             if (!Code.Categories) {
+//                 continue;
+//             }
+//             const Filtered = Code.Categories.filter(
+//                 (Category) => !Subcategories.includes(Category),
+//             );
+//             if (Filtered.length !== Code.Categories.length) {
+//                 Code.Categories = Array.from(
+//                     new Set([
+//                         ...Code.Categories.filter((Category) => !Subcategories.includes(Category)),
+//                         NewCategory,
+//                     ]),
+//                 );
+//             }
+//         }
+//         // Record the new category
+//         Results[NewCategory] = Subcategories;
+//     }
+//     return Results;
+// }

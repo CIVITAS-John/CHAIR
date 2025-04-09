@@ -2,131 +2,136 @@ import type { Cash } from "cash-dom";
 import d3 from "d3";
 
 import { Panel } from "../panels/panel.js";
-import { EvaluateUsers } from "../utils/evaluate.js";
+import { evaluateUsers } from "../utils/evaluate.js";
 import { UserFilter } from "../utils/filters.js";
 import type { Visualizer } from "../visualizer.js";
 
-/** UserSection: The speaker side panel. */
+/** The speaker side panel. */
 export class UserSection extends Panel {
-    /** Name: The short name of the panel. */
-    public Name = "Speakers";
-    /** Title: The title of the panel. */
-    public override Title = "Speaker Overview";
-    /** Constructor: Constructing the panel. */
-    public constructor(Container: Cash, Visualizer: Visualizer) {
-        super(Container, Visualizer);
-        this.Visualizer = Visualizer;
-        this.Container = $('<div class="user"></div>').appendTo(Container).hide();
+    /** The short name of the panel. */
+    override name = "Speakers";
+    /** The title of the panel. */
+    override title = "Speaker Overview";
+
+    /** Constructing the panel. */
+    constructor(container: Cash, visualizer: Visualizer) {
+        super(container, visualizer);
+        this.visualizer = visualizer;
+        this.container = $('<div class="user"></div>').appendTo(container).hide();
     }
-    /** Render: Render the panel. */
-    public override Render() {
-        this.Container.empty();
+
+    /** Render the panel. */
+    override render() {
+        this.container.empty();
         // Some notes
-        this.Container.append(
+        this.container.append(
             $('<p class="tips"></p>').text(
                 "Note that all metrics are relative (i.e. against the Aggregated Code Space of the following Code Spaces).",
             ),
         );
         // Evaluate the codebooks
-        const Users = Array.from(this.Dataset.UserIDToNicknames?.keys() ?? []);
-        const Results = EvaluateUsers(this.Visualizer.Dataset, this.Parameters);
-        const Metrics = Object.keys(Results[Users[0]]).slice(0, -1);
-        const Colors: Record<string, d3.ScaleSequential<string>> = {};
+        const users = Array.from(this.dataset.uidToNicknames?.keys() ?? []);
+        const results = evaluateUsers(this.visualizer.dataset, this.parameters);
+        const metrics = Object.keys(results[users[0]]).slice(0, -1);
+        const colors: Record<string, d3.ScaleSequential<string>> = {};
         // Flatten the dataset
-        const Dataset: { ID: string; Name: string; Metric: string; Value: number }[] = [];
-        for (const User of Users) {
-            const Result = Results[User];
-            for (const Metric of Metrics) {
-                Dataset.push({
-                    ID: User,
-                    Name: this.Dataset.UserIDToNicknames?.get(User) ?? "",
-                    Metric,
-                    Value: Result[Metric],
+        const dataset: { id: string; name: string; metric: string; value: number }[] = [];
+        for (const user of users) {
+            const result = results[user];
+            for (const metric of metrics) {
+                dataset.push({
+                    id: user,
+                    name: this.dataset.uidToNicknames?.get(user) ?? "",
+                    metric,
+                    value: result[metric],
                 });
             }
         }
         // Build color scales
-        for (const Metric of Metrics) {
-            const Minimum = d3.min(
-                Dataset.filter((Evaluation) => Evaluation.Metric === Metric),
-                (Evaluation) => Evaluation.Value,
-            )!;
-            const Maximum = d3.max(
-                Dataset.filter((Evaluation) => Evaluation.Metric === Metric),
-                (Evaluation) => Evaluation.Value,
-            )!;
-            if (Metric === "Divergence") {
-                Colors[Metric] = d3
+        for (const metric of metrics) {
+            const minimum =
+                d3.min(
+                    dataset.filter((Evaluation) => Evaluation.metric === metric),
+                    (Evaluation) => Evaluation.value,
+                ) ?? NaN;
+            const maximum =
+                d3.max(
+                    dataset.filter((Evaluation) => Evaluation.metric === metric),
+                    (Evaluation) => Evaluation.value,
+                ) ?? NaN;
+            if (metric === "divergence") {
+                colors[metric] = d3
                     .scaleSequential()
                     .interpolator(d3.interpolateViridis)
-                    .domain([Maximum, Minimum]);
+                    .domain([maximum, minimum]);
             } else {
-                Colors[Metric] = d3
+                colors[metric] = d3
                     .scaleSequential()
                     .interpolator(d3.interpolateViridis)
-                    .domain([Minimum, Maximum]);
+                    .domain([minimum, maximum]);
             }
         }
         // Render the codebooks and evaluation results
-        this.BuildTable(
-            Object.entries(Results),
-            (Row, [Key, Value], Index) => {
+        this.buildTable(
+            Object.entries(results),
+            (row, [key, value], idx) => {
                 // Name of the codebook
-                const Summary = $('<td class="codebook-cell"></td>')
-                    .attr("id", `user-${Index + 1}`)
+                const summary = $('<td class="codebook-cell"></td>')
+                    .attr("id", `user-${idx + 1}`)
                     .addClass("actionable")
-                    .appendTo(Row);
-                Summary.append($("<h4></h4>").text(this.Dataset.UserIDToNicknames?.get(Key) ?? Key))
-                    .append($('<p class="tips"></p>').text(`${Results[Key].Count} items`))
-                    .on("mouseover", () => this.Visualizer.SetFilter(true, new UserFilter(), Key))
-                    .on("mouseout", () => this.Visualizer.SetFilter(true, new UserFilter()))
-                    .on("click", (Event: MouseEvent) => {
-                        if (Event.shiftKey) {
-                            this.Visualizer.SetFilter(false, new UserFilter(), Key, true);
+                    .appendTo(row);
+                summary
+                    .append($("<h4></h4>").text(this.dataset.uidToNicknames?.get(key) ?? key))
+                    .append($('<p class="tips"></p>').text(`${results[key].count} items`))
+                    .on("mouseover", () => this.visualizer.setFilter(true, new UserFilter(), key))
+                    .on("mouseout", () => this.visualizer.setFilter(true, new UserFilter()))
+                    .on("click", (event: MouseEvent) => {
+                        if (event.shiftKey) {
+                            this.visualizer.setFilter(false, new UserFilter(), key, true);
                         } else {
-                            if (!this.Visualizer.IsFilterApplied("User", Key)) {
-                                this.Visualizer.SetFilter(
+                            if (!this.visualizer.isFilterApplied("User", key)) {
+                                this.visualizer.setFilter(
                                     false,
                                     new UserFilter(),
-                                    Key,
-                                    Event.shiftKey,
+                                    key,
+                                    event.shiftKey,
                                     "Coverage",
                                 );
                             }
-                            this.Visualizer.Dialog.ShowUser(Key);
+                            this.visualizer.dialog.showUser(key);
                         }
                     })
-                    .toggleClass("chosen", this.Visualizer.IsFilterApplied("User", Key));
+                    .toggleClass("chosen", this.visualizer.isFilterApplied("User", key));
                 // Evaluation results
-                Metrics.forEach((Metric) => {
-                    const MetricValue = Value[Metric];
-                    const Color = Colors[Metric](MetricValue);
-                    const Cell = $('<td class="metric-cell"></td>')
-                        .attr("id", `metric-${Index}-${Metric}`)
-                        .text(d3.format(Metric === "Divergence" ? ".1%" : ".1%")(MetricValue))
+                metrics.forEach((metric) => {
+                    const metricValue = value[metric];
+                    const color = colors[metric](metricValue);
+                    const cell = $('<td class="metric-cell"></td>')
+                        .attr("id", `metric-${idx}-${metric}`)
+                        .text(d3.format(metric === "divergence" ? ".1%" : ".1%")(metricValue))
                         .on("mouseover", () =>
-                            this.Visualizer.SetFilter(true, new UserFilter(), Key, false, Metric),
+                            this.visualizer.setFilter(true, new UserFilter(), key, false, metric),
                         )
-                        .on("mouseout", () => this.Visualizer.SetFilter(true, new UserFilter()))
-                        .on("click", (Event: MouseEvent) =>
-                            this.Visualizer.SetFilter(
+                        .on("mouseout", () => this.visualizer.setFilter(true, new UserFilter()))
+                        .on("click", (event: MouseEvent) =>
+                            this.visualizer.setFilter(
                                 false,
                                 new UserFilter(),
-                                Key,
-                                Event.shiftKey,
-                                Metric,
+                                key,
+                                event.shiftKey,
+                                metric,
                             ),
                         )
-                        .css("background", Color)
-                        .css("color", d3.lab(Color).l > 70 ? "black" : "white")
+                        .css("background", color)
+                        .css("color", d3.lab(color).l > 70 ? "black" : "white")
                         .toggleClass(
                             "chosen",
-                            this.Visualizer.IsFilterApplied("User", Key, Metric),
+                            this.visualizer.isFilterApplied("User", key, metric),
                         );
-                    Row.append(Cell);
+                    row.append(cell);
                 });
             },
-            ["Speaker", ...Metrics],
+            ["Speaker", ...metrics],
         );
     }
 }

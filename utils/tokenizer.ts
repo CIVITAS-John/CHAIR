@@ -2,13 +2,8 @@ import { encoding_for_model } from "@dqbd/tiktoken";
 
 // This utils allows for estimating tokens for a given string.
 // We don't need much accuracy, so we use 3.5-turbo/4 tokenizer for everything
-// Encoding: Get the tokens from a string.
-const Encoding = encoding_for_model("gpt-3.5-turbo");
+const encoding = encoding_for_model("gpt-3.5-turbo");
 
-// Tokenize: Get the tokens from a string.
-export function Tokenize(Source: string): Uint32Array {
-    if (Source.charCodeAt === null) {
-        return new Uint32Array(0);
-    }
-    return Encoding.encode(Source);
-}
+// Get the tokens from a string.
+export const tokenize = (text: string) =>
+    typeof text.charCodeAt !== "function" ? new Uint32Array(0) : encoding.encode(text);

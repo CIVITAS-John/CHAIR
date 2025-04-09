@@ -8,7 +8,7 @@ import { LoadStep } from "../steps/load-step";
 import { logger } from "../utils/logger";
 
 const load = new LoadStep({
-    path: "./next/examples/data",
+    path: "./examples/data",
 });
 
 const code = new CodeStep({

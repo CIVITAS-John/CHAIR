@@ -1,24 +1,26 @@
-/** Shuffle: Shuffle an array using a seed. */
-// Source: https://stackoverflow.com/questions/16801687/javascript-random-ordering-with-seed
-export function Shuffle<T>(Array: T[], Seed: number) {
-    let m = Array.length,
+/** Generate a seeded random number. */
+const seededRand = (seed: number) => {
+    const x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+};
+
+/**
+ * Shuffle an array using a seed.
+ * @see https://stackoverflow.com/questions/16801687/javascript-random-ordering-with-seed
+ */
+export const seededShuffle = <T>(array: T[], seed: number) => {
+    let m = array.length,
         t,
         i;
-    // While there remain elements to shuffle…
+    // While there remain elements to shuffle...
     while (m) {
-        // Pick a remaining element…
-        i = Math.floor(SimpleSeededRandom(Seed) * m--);
+        // Pick a remaining element...
+        i = Math.floor(seededRand(seed) * m--);
         // And swap it with the current element.
-        t = Array[m];
-        Array[m] = Array[i];
-        Array[i] = t;
-        ++Seed;
+        t = array[m];
+        array[m] = array[i];
+        array[i] = t;
+        ++seed;
     }
-    return Array;
-}
-
-/** SimpleSeededRandom: Generate a seeded random number. */
-export function SimpleSeededRandom(Seed: number) {
-    const x = Math.sin(Seed++) * 10000;
-    return x - Math.floor(x);
-}
+    return array;
+};

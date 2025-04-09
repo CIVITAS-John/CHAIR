@@ -1,4 +1,4 @@
-import * as File from "fs";
+import { existsSync, readFileSync, writeFileSync } from "fs";
 
 import { ChatAnthropic } from "@langchain/anthropic";
 import type {
@@ -11,431 +11,412 @@ import { ChatGroq } from "@langchain/groq";
 import { ChatMistralAI } from "@langchain/mistralai";
 import { ChatOllama } from "@langchain/ollama";
 import { ChatOpenAI } from "@langchain/openai";
-import chalk from "chalk";
 import * as dotenv from "dotenv";
 import md5 from "md5";
 
-import { Tokenize } from "./tokenizer.js";
+import type { IDStrFunc } from "../steps/base-step";
 
-// Model: The chat model to use.
-export let Model: (Temperature: number) => BaseChatModel;
-// LLMName: The name of the current LLM.
-export let LLMName = "";
-// MaxInput: The maximum input tokens for each request.
-export let MaxInput = 16000;
-// MaxOutput: The maximum output tokens for each request.
-export let MaxOutput = 16000;
-// MaxItems: The maximum input items for each request.
-// Unfortunately, weaker LLMs like GPT-3.5 turbo sometimes cannot remember all bundled tasks.
-export let MaxItems = 64;
-// InputTokens: The total input tokens for requests so far.
-export let InputTokens = 0;
-// OutputTokens: The total output tokens for requests so far.
-export let OutputTokens = 0;
-// ExpectedItems: The total expected items for requests so far.
-export let ExpectedItems = 0;
-// FinishedItems: The total finished items for requests so far.
-export let FinishedItems = 0;
-// SystemMessage: Whether the model supports system messages.
-export let SystemMessage = true;
-/** CountItems: Count the expected and finished items. */
-export function CountItems(Expected: number, Finished: number) {
-    ExpectedItems += Expected;
-    FinishedItems += Finished;
-}
+import { ensureFolder } from "./file";
+import { logger } from "./logger";
+import { promiseWithTimeout } from "./misc";
+import { tokenize } from "./tokenizer";
 
-/** InitializeLLM: Initialize a LLM with the given name. */
-export function InitializeLLM(LLM: string) {
-    dotenv.config();
-    InputTokens = 0;
-    OutputTokens = 0;
-    ExpectedItems = 0;
-    FinishedItems = 0;
-    // Handle the multiple experiments
-    let RealLLM = LLM;
-    // ollama Support
-    let LocalModel = false;
-    if (LLM.startsWith("o_")) {
-        let Ollama = LLM.substring(2);
-        if (Ollama.includes("_")) {
-            const Split = Ollama.split("_");
-            RealLLM = Split[0];
-            Ollama = `${Split[0]}:${Split.slice(1).join("_")}`;
-        } else {
-            RealLLM = Ollama;
-        }
-        Model = (Temp) =>
-            new ChatOllama({
-                temperature: Temp,
-                model: Ollama,
+const MODELS = {
+    "gpt-3.5-turbo": {
+        // 0.5$ / 1.5$
+        maxInput: 16385,
+        maxOutput: 4096,
+        maxItems: 32,
+        model: (temperature) =>
+            new ChatOpenAI({
+                temperature,
+                modelName: "gpt-3.5-turbo-0125",
                 streaming: false,
-                baseUrl: process.env.OLLAMA_URL ?? "http://127.0.0.1:11434",
-            });
-        LocalModel = true;
-    } else {
-        if (LLM.endsWith("_0")) {
-            LLM = LLM.substring(0, LLM.length - 2);
-        }
-        if (LLM.indexOf("_")) {
-            RealLLM = LLM.split("_")[0];
-        }
-    }
-    // Initialize the LLM
-    switch (RealLLM) {
-        case "gpt-3.5-turbo":
-            // 0.5$ / 1.5$
-            MaxInput = 16385;
-            MaxOutput = 4096;
-            MaxItems = 32;
-            if (!LocalModel) {
-                Model = (Temp) =>
-                    new ChatOpenAI({
-                        temperature: Temp,
-                        modelName: "gpt-3.5-turbo-0125",
-                        streaming: false,
-                        maxTokens: MaxOutput,
-                    });
-            }
-            break;
-        case "gpt-4.5-turbo":
-            // 10$ / 30$
-            MaxInput = 16385;
-            MaxOutput = 4096;
-            MaxItems = 64;
-            if (!LocalModel) {
-                Model = (Temp) =>
-                    new ChatOpenAI({
-                        temperature: Temp,
-                        modelName: "gpt-4-turbo",
-                        streaming: false,
-                        maxTokens: MaxOutput,
-                    });
-            }
-            break;
-        case "gpt-4.5-omni":
-            // 2.5$ / 10$
-            MaxInput = 16385;
-            MaxOutput = 4096;
-            MaxItems = 64;
-            if (!LocalModel) {
-                Model = (Temp) =>
-                    new ChatOpenAI({
-                        temperature: Temp,
-                        modelName: "gpt-4o",
-                        streaming: false,
-                        maxTokens: MaxOutput,
-                    });
-            }
-            break;
-        case "gpt-4.5-mini":
-            // 0.15$ / 0.6$
-            MaxInput = 16385;
-            MaxOutput = 4096;
-            MaxItems = 64;
-            if (!LocalModel) {
-                Model = (Temp) =>
-                    new ChatOpenAI({
-                        temperature: Temp,
-                        modelName: "gpt-4o-mini",
-                        streaming: false,
-                        maxTokens: MaxOutput,
-                    });
-            }
-            break;
-        case "gpt-4.5-audio":
-            // 2.5$ / 10$
-            // 100$ / 200$ audio
-            MaxInput = 16385;
-            MaxOutput = 4096;
-            MaxItems = 64;
-            if (!LocalModel) {
-                Model = (Temp) =>
-                    new ChatOpenAI({
-                        temperature: Temp,
-                        modelName: "gpt-4o-audio-preview",
-                        streaming: false,
-                        maxTokens: MaxOutput,
-                    });
-            }
-            break;
-        case "o3-mini":
-            // 1.1$ / 4.4$
-            MaxInput = 16385;
-            MaxOutput = 4096;
-            MaxItems = 64;
-            SystemMessage = false;
-            if (!LocalModel) {
-                Model = (_Temp) =>
-                    new ChatOpenAI({
-                        // Does not support temperature
-                        modelName: "o3-mini",
-                        streaming: false,
-                        // maxCompletionTokens: MaxOutput,
-                        // need to update the package, it seems
-                    });
-            }
-            break;
-        case "o1":
-            // 15$ / 60$
-            MaxInput = 16385;
-            MaxOutput = 4096;
-            MaxItems = 64;
-            SystemMessage = false;
-            if (!LocalModel) {
-                Model = (_Temp) =>
-                    new ChatOpenAI({
-                        // Does not support temperature
-                        modelName: "o1",
-                        streaming: false,
-                        // maxCompletionTokens: MaxOutput,
-                        // need to update the package, it seems
-                    });
-            }
-            break;
-        case "claude3-haiku":
-            // 0.25$ / 0.75$
-            MaxInput = 200000;
-            MaxOutput = 4096;
-            MaxItems = 32;
-            if (!LocalModel) {
-                Model = (Temp) =>
-                    new ChatAnthropic({
-                        temperature: Temp,
-                        modelName: "claude-3-haiku-20240307",
-                        streaming: false,
-                        maxTokens: MaxOutput,
-                    });
-            }
-            break;
-        case "claude3-sonnet":
-            // 3$ / 15$
-            MaxInput = 200000;
-            MaxOutput = 4096;
-            MaxItems = 64;
-            if (!LocalModel) {
-                Model = (Temp) =>
-                    new ChatAnthropic({
-                        temperature: Temp,
-                        modelName: "claude-3-sonnet-20240229",
-                        streaming: false,
-                        maxTokens: MaxOutput,
-                    });
-            }
-            break;
-        case "claude3.5-sonnet":
-            // 3$ / 15$
-            MaxInput = 200000;
-            MaxOutput = 4096;
-            MaxItems = 64;
-            if (!LocalModel) {
-                Model = (Temp) =>
-                    new ChatAnthropic({
-                        temperature: Temp,
-                        modelName: "claude-3-5-sonnet-20240620",
-                        streaming: false,
-                        maxTokens: MaxOutput,
-                    });
-            }
-            break;
-        case "mixtral-8x22b":
-            // 2$ / 6$
-            MaxInput = 32000;
-            MaxOutput = 32000;
-            MaxItems = 32;
-            if (!LocalModel) {
-                Model = (_Temp) =>
-                    new ChatMistralAI({
-                        temperature: 1,
-                        modelName: "open-mixtral-8x22b",
-                        streaming: false,
-                        maxTokens: MaxOutput,
-                    });
-            }
-            break;
-        case "llama3-70b":
-            // 0.59$ / 0.79$
-            MaxInput = 8192;
-            MaxOutput = 8192;
-            MaxItems = 32;
-            if (!LocalModel) {
-                Model = (Temp) =>
-                    new ChatGroq({
-                        temperature: Temp,
-                        modelName: "llama3-70b-8192",
-                        streaming: false,
-                        maxTokens: MaxOutput,
-                    });
-            }
-            break;
-        case "llama3.3-70b":
-            // 0.59$ / 0.79$
-            MaxInput = 8192;
-            MaxOutput = 8192;
-            MaxItems = 32;
-            if (!LocalModel) {
-                Model = (Temp) =>
-                    new ChatGroq({
-                        temperature: Temp,
-                        modelName: "llama-3.3-70b-versatile",
-                        streaming: false,
-                        maxTokens: MaxOutput,
-                    });
-            }
-            break;
-        case "gemma2":
-            // Assuming 27b; models <= 10b generally don't really work
-            MaxInput = 64000;
-            MaxOutput = 64000;
-            MaxItems = 32;
-            if (!LocalModel) {
-                throw new Error(`LLM ${LLM} is local only through ollama.`);
-            }
-            break;
-        case "mistral-small":
-            // Assuming 22b
-            MaxInput = 64000;
-            MaxOutput = 64000;
-            MaxItems = 32;
-            if (!LocalModel) {
-                throw new Error(`LLM ${LLM} is local only through ollama.`);
-            }
-            break;
-        case "qwen2.5":
-            // Assuming 14b (32b takes a bit too much vrams)
-            MaxInput = 8192;
-            MaxOutput = 8192;
-            MaxItems = 16;
-            if (!LocalModel) {
-                throw new Error(`LLM ${LLM} is local only through ollama.`);
-            }
-            break;
-        case "mistral-nemo":
-            // It claims to support 128k, but I don't think it would work well with that large window.
-            MaxInput = 8192;
-            MaxOutput = 8192;
-            MaxItems = 16;
-            if (!LocalModel) {
-                throw new Error(`LLM ${LLM} is local only through ollama.`);
-            }
-            break;
-        default:
-            throw new Error(`LLM ${LLM} not supported.`);
-    }
-    LLMName = LLM;
+                maxTokens: 4096,
+            }),
+    },
+    "gpt-4.5-turbo": {
+        // 10$ / 30$
+        maxInput: 16385,
+        maxOutput: 4096,
+        maxItems: 64,
+        model: (temperature) =>
+            new ChatOpenAI({
+                temperature,
+                modelName: "gpt-4-turbo",
+                streaming: false,
+                maxTokens: 4096,
+            }),
+    },
+    "gpt-4.5-omni": {
+        // 2.5$ / 10$
+        maxInput: 16385,
+        maxOutput: 4096,
+        maxItems: 64,
+        model: (temperature) =>
+            new ChatOpenAI({
+                temperature,
+                modelName: "gpt-4o",
+                streaming: false,
+                maxTokens: 4096,
+            }),
+    },
+    "gpt-4.5-mini": {
+        // 0.15$ / 0.6$
+        maxInput: 16385,
+        maxOutput: 4096,
+        maxItems: 64,
+        model: (temperature) =>
+            new ChatOpenAI({
+                temperature,
+                modelName: "gpt-4o-mini",
+                streaming: false,
+                maxTokens: 4096,
+            }),
+    },
+    "gpt-4.5-audio": {
+        // 2.5$ / 10$
+        // 100$ / 200$ audio
+        maxInput: 16385,
+        maxOutput: 4096,
+        maxItems: 64,
+        model: (temperature) =>
+            new ChatOpenAI({
+                temperature,
+                modelName: "gpt-4o-audio-preview",
+                streaming: false,
+                maxTokens: 4096,
+            }),
+    },
+    "o3-mini": {
+        // 1.1$ / 4.4$
+        maxInput: 16385,
+        maxOutput: 4096,
+        maxItems: 64,
+        systemMessage: false,
+        model: () =>
+            new ChatOpenAI({
+                // Does not support temperature
+                modelName: "o3-mini",
+                streaming: false,
+                // maxCompletionTokens: MaxOutput,
+                // need to update the package, it seems
+            }),
+    },
+    o1: {
+        // 15$ / 60$
+        maxInput: 16385,
+        maxOutput: 4096,
+        maxItems: 64,
+        systemMessage: false,
+        model: () =>
+            new ChatOpenAI({
+                // Does not support temperature
+                modelName: "o1",
+                streaming: false,
+                // maxCompletionTokens: MaxOutput,
+                // need to update the package, it seems
+            }),
+    },
+    "claude3-haiku": {
+        // 0.25$ / 0.75$
+        maxInput: 200000,
+        maxOutput: 4096,
+        maxItems: 32,
+        model: (temperature) =>
+            new ChatAnthropic({
+                temperature,
+                modelName: "claude-3-haiku-20240307",
+                streaming: false,
+                maxTokens: 4096,
+            }),
+    },
+    "claude3-sonnet": {
+        // 3$ / 15$
+        maxInput: 200000,
+        maxOutput: 4096,
+        maxItems: 64,
+        model: (temperature) =>
+            new ChatAnthropic({
+                temperature,
+                modelName: "claude-3-sonnet-20240229",
+                streaming: false,
+                maxTokens: 4096,
+            }),
+    },
+    "claude3.5-sonnet": {
+        // 3$ / 15$
+        maxInput: 200000,
+        maxOutput: 4096,
+        maxItems: 64,
+        model: (temperature) =>
+            new ChatAnthropic({
+                temperature,
+                modelName: "claude-3-5-sonnet-20240620",
+                streaming: false,
+                maxTokens: 4096,
+            }),
+    },
+    "mixtral-8x22b": {
+        // 2$ / 6$
+        maxInput: 32000,
+        maxOutput: 32000,
+        maxItems: 32,
+        model: () =>
+            new ChatMistralAI({
+                temperature: 1,
+                modelName: "open-mixtral-8x22b",
+                streaming: false,
+                maxTokens: 32000,
+            }),
+    },
+    "llama3-70b": {
+        // 0.59$ / 0.79$
+        maxInput: 8192,
+        maxOutput: 8192,
+        maxItems: 32,
+        model: (temperature) =>
+            new ChatGroq({
+                temperature,
+                modelName: "llama3-70b-8192",
+                streaming: false,
+                maxTokens: 8192,
+            }),
+    },
+    "llama3.3-70b": {
+        // 0.59$ / 0.79$
+        maxInput: 8192,
+        maxOutput: 8192,
+        maxItems: 32,
+        model: (temperature) =>
+            new ChatGroq({
+                temperature,
+                modelName: "llama-3.3-70b-versatile",
+                streaming: false,
+                maxTokens: 8192,
+            }),
+    },
+    gemma2: {
+        // Assuming 27b; models <= 10b generally don't really work
+        maxInput: 64000,
+        maxOutput: 64000,
+        maxItems: 32,
+    },
+    "mistral-small": {
+        // Assuming 22b
+        maxInput: 64000,
+        maxOutput: 64000,
+        maxItems: 32,
+    },
+    "qwen2.5": {
+        // Assuming 14b (32b takes a bit too much vrams)
+        maxInput: 8192,
+        maxOutput: 8192,
+        maxItems: 16,
+    },
+    "mistral-nemo": {
+        // It claims to support 128k, but I don't think it would work well with that large window.
+        maxInput: 8192,
+        maxOutput: 8192,
+        maxItems: 16,
+    },
+} satisfies Record<string, Omit<LLMObject, "name" | "model"> & Partial<Pick<LLMObject, "model">>>;
+
+export type LLMName = keyof typeof MODELS;
+export interface LLMObject {
+    model: (temperature: number) => BaseChatModel;
+    name: string;
+    maxInput: number;
+    maxOutput: number;
+    maxItems: number;
+    systemMessage?: boolean;
+}
+export type LLMModel = LLMName | LLMObject;
+
+export interface LLMSession {
+    llm: LLMObject;
+    inputTokens: number;
+    outputTokens: number;
+    expectedItems: number;
+    finishedItems: number;
 }
 
-/** UseLLM: Use a specific LLM. Call it before start translating. */
-export function UseLLM(LLM: string): void {
-    InitializeLLM(LLM);
-}
+dotenv.config();
+
+/** Initialize a LLM with the given name. */
+export const initLLM = (LLM: string): LLMObject => {
+    // Handle the multiple experiments
+    let realLLM = LLM;
+
+    // ollama Support
+    if (LLM.startsWith("o_")) {
+        let ollama = LLM.substring(2);
+        if (ollama.includes("_")) {
+            const Split = ollama.split("_");
+            realLLM = Split[0];
+            ollama = `${Split[0]}:${Split.slice(1).join("_")}`;
+        } else {
+            realLLM = ollama;
+        }
+
+        if (!(realLLM in MODELS)) {
+            throw new Error(`LLM ${realLLM} not supported`);
+        }
+
+        return {
+            ...MODELS[realLLM as LLMName],
+            name: LLM,
+            model: (temperature) =>
+                new ChatOllama({
+                    temperature,
+                    model: ollama,
+                    streaming: false,
+                    baseUrl: process.env.OLLAMA_URL ?? "http://127.0.0.1:11434",
+                }),
+        };
+    }
+
+    if (LLM.endsWith("_0")) {
+        LLM = LLM.substring(0, LLM.length - 2);
+    }
+    if (LLM.indexOf("_")) {
+        realLLM = LLM.split("_")[0];
+    }
+
+    if (!(realLLM in MODELS)) {
+        throw new Error(`LLM ${LLM} not supported`);
+    }
+
+    const config = MODELS[realLLM as LLMName];
+    if (!("model" in config)) {
+        // No default online model
+        throw new Error(`LLM ${LLM} is local only through ollama`);
+    }
+    return {
+        ...config,
+        name: LLM,
+    };
+};
 
 /** UseLLMs: Use specific LLMs one by one. Call it before start translating. */
-export async function UseLLMs(Task: () => Promise<void>, ...LLMs: string[]): Promise<void> {
-    for (const LLM of LLMs) {
-        UseLLM(LLM);
-        await Task();
-        console.log(
-            `LLM ${LLM} done. Input tokens: ${InputTokens}, Output tokens: ${OutputTokens}. Finish rate: ${Math.round(
-                (FinishedItems / Math.max(1, ExpectedItems)) * 100,
-            )}%.\n`,
+export const useLLMs = async (
+    idStr: IDStrFunc,
+    task: (session: LLMSession) => Promise<void>,
+    LLMs: LLMModel[],
+) => {
+    for (const llm of LLMs) {
+        logger.debug(
+            `Initializing LLM ${typeof llm === "string" ? llm : llm.name}`,
+            idStr("useLLMs"),
+        );
+        const session: LLMSession = {
+            llm: typeof llm === "string" ? initLLM(llm) : llm,
+            inputTokens: 0,
+            outputTokens: 0,
+            expectedItems: 0,
+            finishedItems: 0,
+        };
+        logger.debug("Executing task", idStr("useLLMs"));
+        await task(session);
+        logger.info(
+            `LLM ${typeof llm === "string" ? llm : llm.name} completed (input tokens: ${session.inputTokens}, output tokens: ${session.outputTokens}, finish rate: ${Math.round(
+                (session.finishedItems / Math.max(1, session.expectedItems)) * 100,
+            )}%)`,
+            idStr("useLLMs"),
         );
     }
-}
+};
 
-/** RequestLLMWithCache: Call the model to generate text with cache. */
-export async function RequestLLMWithCache(
-    Messages: BaseMessage[],
-    Cache: string,
-    Temperature?: number,
-    FakeRequest = false,
-): Promise<string> {
-    const Input = Messages.map((Message) => Message.content).join("\n~~~\n");
-    const CacheFolder = EnsureFolder(`known/${Cache}/${LLMName}`);
+/** Call the model to generate text with cache. */
+export const requestLLM = async (
+    idStr: IDStrFunc,
+    session: LLMSession,
+    messages: BaseMessage[],
+    cache: string,
+    temperature?: number,
+    fakeRequest = false,
+) => {
+    const _id = idStr("requestLLM");
+
+    const input = messages.map((m) => m.content).join("\n~~~\n");
+
+    logger.debug(
+        `[${session.llm.name}] LLM request with temperature ${temperature ?? 0}: \n${messages.map((m) => `${m.getType()}: ${m.content as string}`).join("\n---\n")}`,
+        _id,
+    );
+    const cacheFolder = ensureFolder(`known/${cache}/${session.llm.name}`);
     // Check if the cache exists
-    const CacheFile = `${CacheFolder}/${md5(Input)}-${Temperature}.txt`;
-    if (File.existsSync(CacheFile)) {
-        const Cache = File.readFileSync(CacheFile, "utf-8");
-        const Split = Cache.split("\n===\n");
-        if (Split.length === 2) {
-            const Content = Split[1].trim();
-            if (Content.length > 0) {
-                InputTokens += Tokenize(Input).length;
-                OutputTokens += Tokenize(Content).length;
-                return Content;
+    const cacheFile = `${cacheFolder}/${md5(input)}-${temperature}.txt`;
+    logger.debug(`[${session.llm.name}] Cache file path: ${cacheFile}`, _id);
+    if (existsSync(cacheFile)) {
+        logger.debug(`[${session.llm.name}] Cache file exists`, _id);
+        const cache = readFileSync(cacheFile, "utf-8");
+        const split = cache.split("\n===\n");
+        if (split.length === 2) {
+            const content = split[1].trim();
+            if (content.length > 0) {
+                const inputTokens = tokenize(input).length,
+                    outputTokens = tokenize(content).length;
+                session.inputTokens += inputTokens;
+                session.outputTokens += outputTokens;
+                logger.info(
+                    `[${session.llm.name}] Cache hit (input tokens: ${inputTokens}, output tokens: ${outputTokens})`,
+                    _id,
+                );
+                logger.debug(`[${session.llm.name}] Cache content: ${content}`, _id);
+                return content;
             }
         }
     }
     // If not, call the model
-    const Result = await RequestLLM(Messages, Temperature, FakeRequest);
-    File.writeFileSync(CacheFile, `${Input}\n===\n${Result}`);
-    return Result;
-}
+    logger.info(`[${session.llm.name}] Cache miss`, _id);
+    const result = await requestLLMWithoutCache(idStr, session, messages, temperature, fakeRequest);
+    logger.debug(`[${session.llm.name}] Writing to cache file`, _id);
+    writeFileSync(cacheFile, `${input}\n===\n${result}`);
+    return result;
+};
 
-/** RequestLLM: Call the model to generate text. */
-export async function RequestLLM(
-    Messages: BaseMessage[],
-    Temperature?: number,
-    FakeRequest = false,
-): Promise<string> {
-    let Text = "";
-    try {
-        console.log(
-            chalk.dim(
-                `LLM Request ${Temperature ?? 0}: \n${Messages.map((Message) => `${Message.getType()}: ${Message.content as string}`).join("\n---\n")}\n`,
-            ),
-        );
-        if (!SystemMessage) {
-            Messages = Messages.map((Message) => new HumanMessage(Message.content as string));
-        }
-        if (!FakeRequest) {
-            await PromiseWithTimeout(
-                (
-                    Model(Temperature ?? 0) as BaseChatModel<
-                        { temperature: number } & BaseChatModelCallOptions
-                    >
-                )
-                    .invoke(Messages, { temperature: Temperature ?? 0 })
-                    .then((Result) => {
-                        Text = Result.content as string;
-                    }),
-                LLMName.startsWith("o_") ? 3600000 : 300000,
-            );
-            console.log(chalk.cyan(`LLM Result: \n${Text}`));
-        }
-        const Input = Messages.map((Message) => Tokenize(Message.content as string).length).reduce(
-            (Prev, Curr) => Prev + Curr,
-        );
-        const Output = Tokenize(Text).length;
-        InputTokens += Input;
-        OutputTokens += Output;
-        console.log(chalk.gray(`LLM Tokens: Input ${Input}, Output ${Output}\n`));
-    } catch (Error) {
-        console.log(Error);
-        throw Error;
+/** Call the model to generate text, explicitly bypassing cache. */
+export const requestLLMWithoutCache = async (
+    idStr: IDStrFunc,
+    session: LLMSession,
+    messages: BaseMessage[],
+    temperature?: number,
+    fakeRequest = false,
+) => {
+    const _id = idStr("requestLLMWithoutCache");
+    let text = "";
+
+    const { llm } = session;
+    logger.debug(
+        `[${llm.name}] LLM request with temperature ${temperature ?? 0}: \n${messages.map((m) => `${m.getType()}: ${m.content as string}`).join("\n---\n")}`,
+        _id,
+    );
+    if (!llm.systemMessage) {
+        messages = messages.map((m) => new HumanMessage(m.content as string));
     }
-    return Text;
-}
-
-/** PromiseWithTimeout: Create a promise with timeout. */
-export function PromiseWithTimeout<T>(
-    promise: Promise<T>,
-    time: number,
-    timeoutError = new Error("Sorry, the AI stopped responding."),
-): Promise<T> {
-    // create a promise that rejects in milliseconds
-    const timeout = new Promise<never>((_, reject) => {
-        setTimeout(() => {
-            reject(timeoutError);
-        }, time);
-    });
-    // returns a race between timeout and the passed promise
-    return Promise.race<T>([promise, timeout]);
-}
-
-/** EnsureFolder: Ensure that a folder exists. */
-export function EnsureFolder(Folder: string) {
-    if (!File.existsSync(Folder)) {
-        File.mkdirSync(Folder, { recursive: true });
+    if (!fakeRequest) {
+        await promiseWithTimeout(
+            llm
+                .model(temperature ?? 0)
+                .invoke(messages, { temperature: temperature ?? 0 } as BaseChatModelCallOptions)
+                .then((res) => {
+                    text = res.content as string;
+                }),
+            llm.name.startsWith("o_") ? 3600000 : 300000,
+        );
     }
-    return Folder;
-}
+    const input = messages
+        .map((m) => tokenize(m.content as string).length)
+        .reduce((acc, cur) => acc + cur);
+    const output = tokenize(text).length;
+    session.inputTokens += input;
+    session.outputTokens += output;
+
+    logger.info(
+        `[${llm.name}] LLM request completed (input tokens: ${input}, output tokens: ${output})`,
+        _id,
+    );
+    logger.debug(`[${llm.name}] LLM response: ${text}`, _id);
+    return text;
+};

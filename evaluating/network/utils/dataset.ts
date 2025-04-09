@@ -1,107 +1,105 @@
-import type { Code, Codebook, DataChunk, DataItem } from "../../../utils/schema.js";
+import type { Code, Codebook, DataChunk, DataItem } from "../../../schema.js";
 
-/** FindConsolidatedCode: Find a consolidated code by name. */
-export function FindConsolidatedCode(Consolidated: Codebook, Name: string) {
-    return Object.values(Consolidated).find(
-        (Code) => Code.Label === Name || Code.Alternatives?.includes(Name),
+/** Find a consolidated code by name. */
+export const findConsolidatedCode = (consolidated: Codebook, name: string) =>
+    Object.values(consolidated).find(
+        (Code) => Code.label === name || Code.alternatives?.includes(name),
     );
-}
 
-/** GetConsolidatedSize: Get the size of the consolidated codebook. */
-export function GetConsolidatedSize(Baseline: Codebook, Codebook: Codebook) {
-    return new Set(
-        Object.keys(Codebook)
-            .map((Code) => FindConsolidatedCode(Baseline, Code)?.Label)
+/** Get the size of the consolidated codebook. */
+export const getConsolidatedSize = (baseline: Codebook, codebook: Codebook) =>
+    new Set(
+        Object.keys(codebook)
+            .map((code) => findConsolidatedCode(baseline, code)?.label)
             .map((Code) => Code),
     ).size;
-}
 
-/** ExtractExamples: Extract examples from a code. */
-export function ExtractExamples(Examples: string[]): Map<string, string[]> {
-    const Results = new Map<string, string[]>();
-    const Scores = new Map<string, number>();
+/** Extract examples from a code. */
+export const extractExamples = (examples: string[]) => {
+    const results = new Map<string, string[]>();
+    const scores = new Map<string, number>();
     // Extract the examples
-    for (const Example of Examples) {
-        const Index = Example.indexOf("|||");
-        if (Index !== -1) {
-            const Quote = Example.substring(Index + 3);
-            const ID = Example.substring(0, Index);
-            if (!Results.has(Quote)) {
-                Results.set(Quote, []);
+    for (const example of examples) {
+        const index = example.indexOf("|||");
+        if (index !== -1) {
+            const quote = example.substring(index + 3);
+            const id = example.substring(0, index);
+            if (!results.has(quote)) {
+                results.set(quote, []);
             }
-            Results.get(Quote)!.push(ID);
+            results.get(quote)?.push(id);
         } else {
-            if (!Results.has(Example)) {
-                Results.set(Example, []);
+            if (!results.has(example)) {
+                results.set(example, []);
             }
-            Results.get(Example)!.push("");
+            results.get(example)?.push("");
         }
     }
     // Calculate the score
-    for (const [Quote, IDs] of Results) {
-        Scores.set(Quote, Quote.length * IDs.length);
+    for (const [quote, ids] of results) {
+        scores.set(quote, quote.length * ids.length);
     }
     // Sort by the score
-    const NewResults = new Map<string, string[]>();
-    Array.from(Scores.keys())
-        .sort((A, B) => Scores.get(B)! - Scores.get(A)!)
-        .forEach((Key) => {
-            NewResults.set(Key, Results.get(Key)!);
+    const newResults = new Map<string, string[]>();
+    Array.from(scores.keys())
+        .sort((a, b) => (scores.get(b) ?? NaN) - (scores.get(a) ?? NaN))
+        .forEach((key) => {
+            newResults.set(key, results.get(key) ?? []);
         });
-    return NewResults;
-}
+    return newResults;
+};
 
-/** FindOriginalCodes: Find the original codes from an owner. */
-export function FindOriginalCodes(
-    Codebook: Codebook,
-    Source: Code,
-    _Owner: number,
-    Example?: string,
-): Code[] {
-    let Codes = Object.values(Codebook);
-    Codes = Codes.filter(
-        (Code) => Source.Label === Code.Label || Source.Alternatives?.includes(Code.Label),
+/** Find the original codes from an owner. */
+export const findOriginalCodes = (
+    codebook: Codebook,
+    source: Code,
+    _owner: number,
+    example?: string,
+): Code[] => {
+    let codes = Object.values(codebook);
+    codes = codes.filter(
+        (code) => source.label === code.label || source.alternatives?.includes(code.label),
     );
-    if (Example) {
-        Codes = Codes.filter(
-            (Code) =>
-                Code.Examples?.includes(Example) ||
-                Code.Examples?.some((Current) => Current.startsWith(`${Example}|||`)),
+    if (example) {
+        codes = codes.filter(
+            (code) =>
+                code.examples?.includes(example) ??
+                code.examples?.some((cur) => cur.startsWith(`${example}|||`)),
         );
     }
-    return Codes;
-}
+    return codes;
+};
 
-/** FindExampleSources: Find the original sources of an example from an owner. */
-export function FindExampleSources(
-    Codebook: Codebook,
-    Source: Code,
-    Example: string,
-    Owner: number,
-): Code[] {
-    const Codes = FindOriginalCodes(Codebook, Source, Owner);
-    const SoftMatch = `|||${Example}`;
-    return Codes.filter(
-        (Code) =>
-            Code.Examples?.findIndex(
-                (Current) => Current === Example || Current.endsWith(SoftMatch),
-            ) !== -1,
+/** Find the original sources of an example from an owner. */
+export const findExampleSources = (
+    codebook: Codebook,
+    source: Code,
+    example: string,
+    owner: number,
+): Code[] => {
+    const codes = findOriginalCodes(codebook, source, owner);
+    const softMatch = `|||${example}`;
+    return codes.filter(
+        (code) =>
+            code.examples?.findIndex((cur) => cur === example || cur.endsWith(softMatch)) !== -1,
     );
-}
+};
 
-/** GetChunks: Get the chunks from the sources. */
-export function GetChunks(
-    Sources: Record<string, Record<string, DataChunk<DataItem>>>,
-): DataChunk<DataItem>[] {
-    return Object.values(Sources).flatMap((Source) => Object.values(Source));
-}
+/** Get the chunks from the sources. */
+export const getChunks = (
+    source: Record<string, Record<string, DataChunk<DataItem>>>,
+): DataChunk<DataItem>[] => Object.values(source).flatMap((source) => Object.values(source));
 
-/** GetItems: Get the items from the sources. */
-export function GetItems(Sources: Record<string, Record<string, DataChunk<DataItem>>>): DataItem[] {
-    return GetChunks(Sources).flatMap((Chunk) => Chunk.AllItems ?? []);
-}
+/** Get the items from the sources. */
+export const getItems = (
+    sources: Record<string, Record<string, DataChunk<DataItem>>>,
+): DataItem[] =>
+    getChunks(sources)
+        .flatMap((chunk) => chunk.items)
+        .filter((item) => !("items" in item)) as DataItem[];
 
-/** GetItems: Get the items from a source. */
-export function GetItemsFromDataset(Sources: Record<string, DataChunk<DataItem>>): DataItem[] {
-    return Object.values(Sources).flatMap((Chunk) => Chunk.AllItems ?? []);
-}
+/** Get the items from a source. */
+export const getItemsFromDataset = (Sources: Record<string, DataChunk<DataItem>>): DataItem[] =>
+    Object.values(Sources)
+        .flatMap((chunk) => chunk.items)
+        .filter((item) => !("items" in item)) as DataItem[];

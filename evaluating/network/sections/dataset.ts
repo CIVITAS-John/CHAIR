@@ -1,205 +1,212 @@
 import type { Cash } from "cash-dom";
 import d3 from "d3";
 
-import type { Code, DataChunk, DataItem } from "../../../utils/schema.js";
+import type { Code, DataChunk, DataItem } from "../../../schema.js";
 import { Panel } from "../panels/panel.js";
-import { GetItemsFromDataset } from "../utils/dataset.js";
+import { getItemsFromDataset } from "../utils/dataset.js";
 import { ChunkFilter, DatasetFilter } from "../utils/filters.js";
-import { FilterNodeByExample } from "../utils/graph.js";
-import { FormatDate } from "../utils/utils.js";
+import { filterNodeByExample } from "../utils/graph.js";
+import { formatDate } from "../utils/utils.js";
 import type { Visualizer } from "../visualizer.js";
 
-/** DatasetSection: The dataset side panel. */
+/** The dataset side panel. */
 export class DatasetSection extends Panel {
-    /** Name: The short name of the panel. */
-    public Name = "Datasets";
-    /** Title: The title of the panel. */
-    public override Title = "Dataset Overview";
-    /** Constructor: Constructing the panel. */
-    public constructor(Container: Cash, Visualizer: Visualizer) {
-        super(Container, Visualizer);
-        this.Visualizer = Visualizer;
-        this.Container = $('<div class="dataset"></div>').appendTo(Container).hide();
+    /** The short name of the panel. */
+    override name = "Datasets";
+    /** The title of the panel. */
+    override title = "Dataset Overview";
+
+    /** Constructing the panel. */
+    constructor(container: Cash, visualizer: Visualizer) {
+        super(container, visualizer);
+        this.visualizer = visualizer;
+        this.container = $('<div class="dataset"></div>').appendTo(container).hide();
     }
-    /** Show: Show the panel. */
-    public override Show() {
-        this.Container.show();
-        this.ShowDatasets();
+
+    /** Show the panel. */
+    override show() {
+        this.container.show();
+        this.showDatasets();
     }
-    /** RatioColorizer: The colorizer for ratios. */
-    private RatioColorizer = d3
-        .scaleSequential()
-        .interpolator(d3.interpolateViridis)
-        .domain([0, 1]);
-    /** ShowDatasets: Show all datasets. */
-    public ShowDatasets() {
-        this.SetRefresh(() => {
-            this.Container.empty();
+    /** The colorizer for ratios. */
+    #ratioColorizer = d3.scaleSequential().interpolator(d3.interpolateViridis).domain([0, 1]);
+    /** Show all datasets. */
+    showDatasets() {
+        this.setRefresh(() => {
+            this.container.empty();
             // Basic information
-            this.Container.append($("<h3>Metadata</h3>"));
-            this.BuildList(
+            this.container.append($("<h3>Metadata</h3>"));
+            this.buildList(
                 [
-                    { Name: "Title", Value: this.Source.Title },
-                    { Name: "Description", Value: this.Source.Description },
-                    { Name: "Research Question", Value: this.Source.ResearchQuestion },
-                    { Name: "Notes for Coding", Value: this.Source.CodingNotes },
+                    { name: "Title", value: this.source.title },
+                    { name: "Description", value: this.source.description },
+                    { name: "Research Question", value: this.source.researchQuestion },
+                    { name: "Notes for Coding", value: this.source.codingNotes },
                 ],
-                (Item, Data) => {
-                    Item.append($(`<strong>${Data.Name}:</strong>`));
-                    Item.append($("<span></span>").text(Data.Value));
+                (item, data) => {
+                    item.append($(`<strong>${data.name}:</strong>`));
+                    item.append($("<span></span>").text(data.value));
                 },
-            ).appendTo(this.Container);
+            ).appendTo(this.container);
             // Source datasets
-            const Nodes = this.GetGraph<Code>().Nodes;
-            this.Container.append($("<h3>Datasets</h3>"));
-            this.BuildTable(
-                Object.entries(this.Source.Data),
-                (Row, [Key, Value]) => {
+            const nodes = this.getGraph<Code>().nodes;
+            this.container.append($("<h3>Datasets</h3>"));
+            this.buildTable(
+                Object.entries(this.source.data),
+                (row, [key, value]) => {
                     // Interactivity
-                    Row.toggleClass("chosen", this.Visualizer.IsFilterApplied("Dataset", Key))
+                    row.toggleClass("chosen", this.visualizer.isFilterApplied("Dataset", key))
                         .on("mouseover", () =>
-                            this.Visualizer.SetFilter(true, new DatasetFilter(), Key),
+                            this.visualizer.setFilter(true, new DatasetFilter(), key),
                         )
-                        .on("mouseout", () => this.Visualizer.SetFilter(true, new DatasetFilter()));
+                        .on("mouseout", () => this.visualizer.setFilter(true, new DatasetFilter()));
                     // Show the summary
-                    const Summary = $('<td class="dataset-cell actionable"></td>')
-                        .attr("id", `dataset-${Key}`)
-                        .appendTo(Row);
-                    Summary.append($("<h4></h4>").text(Key)).on("click", (Event: MouseEvent) => {
-                        if (Event.shiftKey) {
-                            this.Visualizer.SetFilter(
+                    const summary = $('<td class="dataset-cell actionable"></td>')
+                        .attr("id", `dataset-${key}`)
+                        .appendTo(row);
+                    summary.append($("<h4></h4>").text(key)).on("click", (event: MouseEvent) => {
+                        if (event.shiftKey) {
+                            this.visualizer.setFilter(
                                 false,
                                 new DatasetFilter(),
-                                Key,
-                                Event.shiftKey,
+                                key,
+                                event.shiftKey,
                             );
                         } else {
-                            this.ShowDataset(Key, Value);
+                            this.showDataset(key, value);
                         }
                     });
                     // Find the date
-                    const Items = GetItemsFromDataset(Value);
-                    const Dates = Items.map((Item) => Item.Time).sort(
-                        (A, B) => A.getTime() - B.getTime(),
-                    );
-                    Summary.append($('<p class="tips"></p>').text(`From ${FormatDate(Dates[0])}`));
-                    Summary.append(
-                        $('<p class="tips"></p>').text(`To ${FormatDate(Dates[Dates.length - 1])}`),
+                    const items = getItemsFromDataset(value);
+                    const dates = items
+                        .map((item) => item.time)
+                        .sort((a, b) => a.getTime() - b.getTime());
+                    summary.append($('<p class="tips"></p>').text(`From ${formatDate(dates[0])}`));
+                    summary.append(
+                        $('<p class="tips"></p>').text(`To ${formatDate(dates[dates.length - 1])}`),
                     );
                     // Show the items
-                    const IDs = new Set(Items.map((Item) => Item.ID));
-                    const SizeCell = $('<td class="number-cell actionable"></td>')
-                        .text(`${IDs.size}`)
-                        .appendTo(Row);
-                    SizeCell.append(
-                        $('<p class="tips"></p>').text(`${Object.keys(Value).length} Chunks`),
+                    const ids = new Set(items.map((item) => item.id));
+                    const sizeCell = $('<td class="number-cell actionable"></td>')
+                        .text(`${ids.size}`)
+                        .appendTo(row);
+                    sizeCell.append(
+                        $('<p class="tips"></p>').text(`${Object.keys(value).length} Chunks`),
                     );
                     // Show the codes
-                    const Codes = Nodes.filter((Node) =>
-                        FilterNodeByExample(Node, Array.from(IDs)),
+                    const codes = nodes.filter((node) =>
+                        filterNodeByExample(node, Array.from(ids)),
                     );
-                    const Currents = Codes.filter((Node) => !Node.Hidden);
-                    const Color = this.RatioColorizer(Currents.length / Codes.length);
+                    const currents = codes.filter((node) => !node.hidden);
+                    const color = this.#ratioColorizer(currents.length / codes.length);
                     $('<td class="metric-cell"></td>')
-                        .css("background-color", Color.toString())
-                        .css("color", d3.lab(Color).l > 70 ? "black" : "white")
-                        .appendTo(Row)
-                        .text(`${Currents.length}`)
+                        .css("background-color", color.toString())
+                        .css("color", d3.lab(color).l > 70 ? "black" : "white")
+                        .appendTo(row)
+                        .text(`${currents.length}`)
                         .append(
-                            $("<p></p>").text(d3.format(".0%")(Currents.length / Codes.length)),
+                            $("<p></p>").text(d3.format(".0%")(currents.length / codes.length)),
                         );
                     $('<td class="number-cell actionable"></td>')
-                        .appendTo(Row)
-                        .text(`${Codes.length}`)
+                        .appendTo(row)
+                        .text(`${codes.length}`)
                         .append($("<p></p>").text("100%"));
                     // Generic click event
-                    Row.children("td:not(.dataset-cell)").on("click", (Event: MouseEvent) =>
-                        this.Visualizer.SetFilter(false, new DatasetFilter(), Key, Event.shiftKey),
+                    row.children("td:not(.dataset-cell)").on("click", (event: MouseEvent) =>
+                        this.visualizer.setFilter(false, new DatasetFilter(), key, event.shiftKey),
                     );
                 },
                 ["Metadata", "Items", "Filtered", "Codes"],
             );
         });
     }
-    /** ShowDataset: Show a specific dataset. */
-    public ShowDataset(Name: string, Dataset: Record<string, DataChunk<DataItem>>) {
+
+    /** Show a specific dataset. */
+    showDataset(name: string, dataset: Record<string, DataChunk<DataItem>>) {
         // Filter by the dataset, if not already
-        if (!this.Visualizer.IsFilterApplied("Dataset", Name)) {
-            this.Visualizer.SetFilter(false, new DatasetFilter(), Name);
+        if (!this.visualizer.isFilterApplied("Dataset", name)) {
+            this.visualizer.setFilter(false, new DatasetFilter(), name);
         }
         // Show the component
-        this.SetRefresh(() => {
-            this.Container.empty();
+        this.setRefresh(() => {
+            this.container.empty();
             // Show the title
-            this.Container.append(
-                $(`<h3>${Name} (${Object.keys(Dataset).length} Chunks)</h3>`).prepend(
-                    this.BuildReturn(() => {
-                        if (this.Visualizer.IsFilterApplied("Dataset", Name)) {
-                            this.Visualizer.SetFilter(false, new DatasetFilter());
+            this.container.append(
+                $(`<h3>${name} (${Object.keys(dataset).length} Chunks)</h3>`).prepend(
+                    this.buildReturn(() => {
+                        if (this.visualizer.isFilterApplied("Dataset", name)) {
+                            this.visualizer.setFilter(false, new DatasetFilter());
                         }
-                        this.ShowDatasets();
+                        this.showDatasets();
                     }),
                 ),
             );
             // Show the chunks
-            const Nodes = this.GetGraph<Code>().Nodes;
-            this.BuildTable(
-                Object.entries(Dataset),
-                (Row, [Key, Chunk]) => {
+            const nodes = this.getGraph<Code>().nodes;
+            this.buildTable(
+                Object.entries(dataset),
+                (row, [key, chunk]) => {
                     // Interactivity
-                    Row.toggleClass("chosen", this.Visualizer.IsFilterApplied("Chunk", Key))
+                    row.toggleClass("chosen", this.visualizer.isFilterApplied("Chunk", key))
                         .on("mouseover", () =>
-                            this.Visualizer.SetFilter(true, new ChunkFilter(), Key),
+                            this.visualizer.setFilter(true, new ChunkFilter(), key),
                         )
-                        .on("mouseout", () => this.Visualizer.SetFilter(true, new ChunkFilter()));
+                        .on("mouseout", () => this.visualizer.setFilter(true, new ChunkFilter()));
                     // Show the summary
-                    const Summary = $('<td class="chunk-cell actionable"></td>')
-                        .attr("id", `chunk-${Key}`)
-                        .appendTo(Row);
-                    Summary.append($("<h4></h4>").text(`Chunk ${Key}`));
+                    const summary = $('<td class="chunk-cell actionable"></td>')
+                        .attr("id", `chunk-${key}`)
+                        .appendTo(row);
+                    summary.append($("<h4></h4>").text(`Chunk ${key}`));
                     // Find the date
-                    let Items = Chunk.AllItems ?? [];
-                    Items = Items.filter((Item) =>
-                        this.Parameters.UseExtendedChunk ? true : !Item.Chunk || Item.Chunk === Key,
+                    let items = chunk.items;
+                    items = items.filter((item) =>
+                        this.parameters.useExtendedChunk
+                            ? true
+                            : !("chunk" in item) || !item.chunk || item.chunk === key,
                     );
-                    const Dates = Items.map((Item) => Item.Time).sort(
-                        (A, B) => A.getTime() - B.getTime(),
+                    const dates = items
+                        .map((item) => {
+                            if (!("time" in item)) {
+                                throw new Error("Item does not have a time property.");
+                            }
+                            return item.time;
+                        })
+                        .sort((a, b) => a.getTime() - b.getTime());
+                    summary.append($('<p class="tips"></p>').text(`From ${formatDate(dates[0])}`));
+                    summary.append(
+                        $('<p class="tips"></p>').text(`To ${formatDate(dates[dates.length - 1])}`),
                     );
-                    Summary.append($('<p class="tips"></p>').text(`From ${FormatDate(Dates[0])}`));
-                    Summary.append(
-                        $('<p class="tips"></p>').text(`To ${FormatDate(Dates[Dates.length - 1])}`),
-                    );
-                    Summary.on("click", () => {
-                        this.Dialog.ShowChunk(Key, Chunk);
+                    summary.on("click", () => {
+                        this.dialog.showChunk(key, chunk);
                     });
                     // Show the items
                     $('<td class="number-cell actionable"></td>')
-                        .text(Items.length.toString())
-                        .appendTo(Row);
+                        .text(items.length.toString())
+                        .appendTo(row);
                     // Show the codes
-                    const Codes = Nodes.filter((Node) =>
-                        FilterNodeByExample(
+                    const codes = nodes.filter((Node) =>
+                        filterNodeByExample(
                             Node,
-                            Items.map((Item) => Item.ID),
+                            items.map((item) => item.id),
                         ),
                     );
-                    const Currents = Codes.filter((Node) => !Node.Hidden);
-                    const Color = this.RatioColorizer(Currents.length / Math.max(1, Codes.length));
+                    const currents = codes.filter((node) => !node.hidden);
+                    const color = this.#ratioColorizer(currents.length / Math.max(1, codes.length));
                     $('<td class="metric-cell"></td>')
-                        .css("background-color", Color.toString())
-                        .css("color", d3.lab(Color).l > 70 ? "black" : "white")
-                        .appendTo(Row)
-                        .text(`${Currents.length}`)
+                        .css("background-color", color.toString())
+                        .css("color", d3.lab(color).l > 70 ? "black" : "white")
+                        .appendTo(row)
+                        .text(`${currents.length}`)
                         .append(
-                            $("<p></p>").text(d3.format(".0%")(Currents.length / Codes.length)),
+                            $("<p></p>").text(d3.format(".0%")(currents.length / codes.length)),
                         );
                     $('<td class="number-cell actionable"></td>')
-                        .appendTo(Row)
-                        .text(`${Codes.length}`)
+                        .appendTo(row)
+                        .text(`${codes.length}`)
                         .append($("<p></p>").text("100%"));
                     // Generic click event
-                    Row.children("td:not(.chunk-cell)").on("click", (Event: MouseEvent) =>
-                        this.Visualizer.SetFilter(false, new ChunkFilter(), Key, Event.shiftKey),
+                    row.children("td:not(.chunk-cell)").on("click", (event: MouseEvent) =>
+                        this.visualizer.setFilter(false, new ChunkFilter(), key, event.shiftKey),
                     );
                 },
                 ["Metadata", "Items", "Filtered", "Codes"],

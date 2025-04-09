@@ -4,102 +4,106 @@ import type { Visualizer } from "../visualizer.js";
 
 /** Panel: A panel for the visualizer. */
 export abstract class Panel {
-    /** Name: The short name of the panel. */
-    public Name = "";
-    /** Title: The title of the panel. */
-    public Title = "";
-    /** Visualizer: The visualizer in-use. */
-    protected Visualizer: Visualizer;
-    /** Container: The container for the side panel. */
-    protected Container: Cash;
-    /** Dataset: The codebook dataset of the visualizer. */
-    protected get Dataset() {
-        return this.Visualizer.Dataset;
+    /** The short name of the panel. */
+    name = "";
+    /** The title of the panel. */
+    title = "";
+    /** The codebook dataset of the visualizer. */
+    protected get dataset() {
+        return this.visualizer.dataset;
     }
-    /** Source: The source dataset of the visualizer. */
-    protected get Source() {
-        return this.Visualizer.Dataset.Source;
+    /** The source dataset of the visualizer. */
+    protected get source() {
+        return this.visualizer.dataset.source;
     }
-    /** InfoPanel: The information panel for the visualization. */
-    protected get InfoPanel() {
-        return this.Visualizer.InfoPanel;
+    /** The information panel for the visualization. */
+    protected get infoPanel() {
+        return this.visualizer.infoPanel;
     }
-    /** SidePanel: The side panel for the visualization. */
-    protected get SidePanel() {
-        return this.Visualizer.SidePanel;
+    /** The side panel for the visualization. */
+    protected get sidePanel() {
+        return this.visualizer.sidePanel;
     }
-    /** Dialog: Dialog for the visualization. */
-    protected get Dialog() {
-        return this.Visualizer.Dialog;
+    /** Dialog for the visualization. */
+    protected get dialog() {
+        return this.visualizer.dialog;
     }
-    /** Parameters: The parameters of the visualizer. */
-    protected get Parameters() {
-        return this.Visualizer.Parameters;
+    /** The parameters of the visualizer. */
+    protected get parameters() {
+        return this.visualizer.parameters;
     }
-    /** Graph: The current graph of the visualizer. */
-    protected GetGraph<T>() {
-        return this.Visualizer.GetStatus<T>().Graph;
+    /** The current graph of the visualizer. */
+    protected getGraph<T>() {
+        return this.visualizer.getStatus<T>().graph;
     }
-    /** Constructor: Constructing the side panel. */
-    public constructor(Container: Cash, Visualizer: Visualizer) {
-        this.Visualizer = Visualizer;
-        this.Container = Container;
+
+    /** Constructing the side panel. */
+    constructor(
+        /** The container for the side panel. */
+        protected container: Cash,
+        /** The visualizer in-use. */
+        protected visualizer: Visualizer,
+    ) {}
+
+    /** Show the panel. */
+    show() {
+        this.container.show();
+        this.render();
     }
-    /** Show: Show the panel. */
-    public Show() {
-        this.Container.show();
-        this.Render();
+    /** Hide the panel. */
+    hide() {
+        this.container.hide();
     }
-    /** Hide: Hide the panel. */
-    public Hide() {
-        this.Container.hide();
+    /** Toggle the panel. */
+    toggle() {
+        this.container.toggle();
     }
-    /** Toggle: Toggle the panel. */
-    public Toggle() {
-        this.Container.toggle();
+    /** Render the panel. */
+    render() {
+        this.refresh();
     }
-    /** Render: Render the panel. */
-    public Render() {
-        this.Refresh();
-    }
-    /** Refresh: The current program that actually renders the panel. Optional. */
-    protected Refresh: () => void = () => {
+
+    /** The current program that actually renders the panel. Optional. */
+    protected refresh: () => void = () => {
         // This method is intentionally left empty
     };
-    /** SetRefresh: Set the refresh function for the panel. */
-    protected SetRefresh(Refresh: () => void) {
-        this.Refresh = Refresh;
-        Refresh();
+    /** Set the refresh function for the panel. */
+    protected setRefresh(refresh: () => void) {
+        this.refresh = refresh;
+        refresh();
     }
-    /** BuildTable: Build a table for the panel. */
-    protected BuildTable<T>(
-        Data: T[],
-        Builder: (Row: Cash, Data: T, Index: number) => void,
-        Columns: string[] = [],
+
+    /** Build a table for the panel. */
+    protected buildTable<T>(
+        data: T[],
+        builder: (row: Cash, data: T, idx: number) => void,
+        columns: string[] = [],
     ) {
-        const Table = $('<table class="data-table"></table>').appendTo(this.Container);
-        if (Columns.length > 0) {
-            Table.append($("<tr></tr>").append(...Columns.map((C) => $("<th></th>").text(C))));
+        const table = $('<table class="data-table"></table>').appendTo(this.container);
+        if (columns.length > 0) {
+            table.append($("<tr></tr>").append(...columns.map((c) => $("<th></th>").text(c))));
         }
-        Data.forEach((Item, Index) => {
-            Builder($("<tr></tr>").appendTo(Table), Item, Index);
+        data.forEach((item, idx) => {
+            builder($("<tr></tr>").appendTo(table), item, idx);
         });
-        return Table;
+        return table;
     }
-    /** BuildList: Build a list for the panel. */
-    protected BuildList<T>(
-        Data: T[],
-        Builder: (Item: Cash, Data: T, Index: number) => void,
-        Type: "ul" | "ol" = "ul",
+
+    /** Build a list for the panel. */
+    protected buildList<T>(
+        data: T[],
+        builder: (item: Cash, data: T, idx: number) => void,
+        type: "ul" | "ol" = "ul",
     ) {
-        const List = $(`<${Type}></${Type}>`).appendTo(this.Container);
-        Data.forEach((Item, Index) => {
-            Builder($("<li></li>").appendTo(List), Item, Index);
+        const list = $(`<${type}></${type}>`).appendTo(this.container);
+        data.forEach((item, idx) => {
+            builder($("<li></li>").appendTo(list), item, idx);
         });
-        return List;
+        return list;
     }
-    /** BuildReturn: Build a return button. */
-    protected BuildReturn(Callback: () => void) {
-        return $('<a href="javascript:void(0)">↑</a>').on("click", Callback);
+
+    /** Build a return button. */
+    protected buildReturn(callback: () => void) {
+        return $('<a href="javascript:void(0)">↑</a>').on("click", callback);
     }
 }

@@ -1,167 +1,176 @@
 import type { Cash } from "cash-dom";
 
-import type { Code } from "../../../utils/schema.js";
-import { ExtractExamples, FindExampleSources, FindOriginalCodes } from "../utils/dataset.js";
+import type { Code } from "../../../schema.js";
+import { extractExamples, findExampleSources, findOriginalCodes } from "../utils/dataset.js";
 import type { Node } from "../utils/schema.js";
-import { GetCodebookColor } from "../utils/utils.js";
+import { getCodebookColor } from "../utils/utils.js";
 import type { Visualizer } from "../visualizer.js";
 
 import { Panel } from "./panel.js";
 
-/** InfoPanel: The info panel for the visualizer. */
+/** The info panel for the visualizer. */
 export class InfoPanel extends Panel {
-    /** Panels: Panels in the info panel. */
-    private Panels: Map<string, Cash> = new Map<string, Cash>();
-    /** Constructor: Constructing the side panel. */
-    public constructor(Container: Cash, Visualizer: Visualizer) {
-        super(Container, Visualizer);
-        Visualizer.RegisterChosenCallback<Code>("Code", (Node, Status) => {
-            this.ShowOrHidePanel<Code>(Node, Status);
+    /** Panels in the info panel. */
+    #panels: Map<string, Cash> = new Map<string, Cash>();
+
+    /** Constructing the side panel. */
+    constructor(container: Cash, visualizer: Visualizer) {
+        super(container, visualizer);
+        visualizer.registerChosenCallback<Code>("Code", (node, status) => {
+            this.showOrHidePanel<Code>(node, status);
         });
     }
-    /** ShowOrHidePanel: Show or hide a panel. */
-    public ShowOrHidePanel<T>(Node: Node<T>, Status: boolean) {
-        if (Status) {
-            this.ShowPanel(Node);
+
+    /** Show or hide a panel. */
+    showOrHidePanel<T>(node: Node<T>, status: boolean) {
+        if (status) {
+            this.showPanel(node);
         } else {
-            this.HidePanel(Node);
+            this.hidePanel(node);
         }
     }
-    /** ShowPanel: Show a panel for a data node. */
-    public ShowPanel<T>(Node: Node<T>) {
-        if (this.Panels.has(Node.ID)) {
+
+    /** Show a panel for a data node. */
+    showPanel<T>(node: Node<T>) {
+        if (this.#panels.has(node.id)) {
             return;
         }
-        const Panel = this.BuildPanel(Node, false);
-        this.Panels.set(Node.ID, Panel);
-        this.Container.append(Panel);
+        const panel = this.buildPanel(node, false);
+        this.#panels.set(node.id, panel);
+        this.container.append(panel);
     }
-    /** HidePanel: Hide a panel for a data node. */
-    public HidePanel<T>(Node: Node<T>) {
-        this.Panels.get(Node.ID)?.remove();
-        this.Panels.delete(Node.ID);
+
+    /** Hide a panel for a data node. */
+    hidePanel<T>(node: Node<T>) {
+        this.#panels.get(node.id)?.remove();
+        this.#panels.delete(node.id);
     }
-    /** BuildPanel: Build a panel for a data node. */
-    public BuildPanel<T>(Node: Node<T>, Everything = true) {
-        const Panel = $('<div class="panel"></div>');
-        switch (Node.Type) {
+
+    /** Build a panel for a data node. */
+    buildPanel<T>(node: Node<T>, everything = true) {
+        const panel = $('<div class="panel"></div>');
+        switch (node.type) {
             case "Code":
-                this.BuildPanelForCode(Panel, Node.Data as Code, Everything);
+                this.buildPanelForCode(panel, node.data as Code, everything);
                 break;
             default:
-                Panel.append($(`<h3>Unknown node type: ${Node.Type}</h3>`));
+                panel.append($(`<h3>Unknown node type: ${node.type}</h3>`));
                 break;
         }
-        return Panel;
+        return panel;
     }
-    /** BuildPanelForCode: Build a panel for a code. */
-    public BuildPanelForCode(Panel: Cash, Code: Code, Everything = true) {
-        if (Everything) {
-            Panel.append($(`<h3>${Code.Label}</h3>`));
+
+    /** Build a panel for a code. */
+    buildPanelForCode(panel: Cash, code: Code, everything = true) {
+        if (everything) {
+            panel.append($(`<h3>${code.label}</h3>`));
         } else {
-            Panel.append(
+            panel.append(
                 $("<h3></h3>").append(
-                    $(`<a href="javascript:void(0)">${Code.Label}</span>`).on("click", () => {
-                        this.Dialog.ShowCode(0, Code);
+                    $(`<a href="javascript:void(0)">${code.label}</span>`).on("click", () => {
+                        this.dialog.showCode(0, code);
                     }),
                 ),
             );
         }
-        if (Code.Owners && Code.Owners.length > 0) {
-            const Owners = $('<p class="owners">By: </p>').appendTo(Panel);
-            for (const Owner of Code.Owners) {
-                if (Owner === 0 && Code.Owners.length > 1) {
+        if (code.owners && code.owners.length > 0) {
+            const owners = $('<p class="owners">By: </p>').appendTo(panel);
+            for (const owner of code.owners) {
+                if (owner === 0 && code.owners.length > 1) {
                     continue;
                 }
-                this.BuildOwnerLink(
-                    Code,
-                    FindOriginalCodes(this.Dataset.Codebooks[Owner], Code, Owner),
-                    Owner,
-                ).appendTo(Owners);
+                this.buildOwnerLink(
+                    code,
+                    findOriginalCodes(this.dataset.codebooks[owner], code, owner),
+                    owner,
+                ).appendTo(owners);
             }
-        } else if (Code.Alternatives && Code.Alternatives.length > 0) {
-            Panel.append(
-                $(`<p class="alternatives">Consolidated from: ${Code.Alternatives.join(", ")}</p>`),
+        } else if (code.alternatives && code.alternatives.length > 0) {
+            panel.append(
+                $(`<p class="alternatives">Consolidated from: ${code.alternatives.join(", ")}</p>`),
             );
         }
-        if (Code.Definitions && Code.Definitions.length > 0) {
-            Panel.append($(`<p class="definition">${Code.Definitions[0]}</p>`));
+        if (code.definitions && code.definitions.length > 0) {
+            panel.append($(`<p class="definition">${code.definitions[0]}</p>`));
         } else {
-            Panel.append($("<p><i>No definition available.</i></p>"));
+            panel.append($("<p><i>No definition available.</i></p>"));
         }
-        if (Code.Examples && Code.Examples.length > 0) {
-            const Examples = ExtractExamples(Code.Examples);
-            Panel.append($("<hr>"));
-            if (Everything) {
-                const List = $('<ol class="quote"></ol>').appendTo(Panel);
-                for (const Example of Examples) {
+        if (code.examples && code.examples.length > 0) {
+            const examples = extractExamples(code.examples);
+            panel.append($("<hr>"));
+            if (everything) {
+                const list = $('<ol class="quote"></ol>').appendTo(panel);
+                for (const example of examples) {
                     $("<li></li>")
-                        .appendTo(List)
-                        .append(this.BuildExample(Code, Example[0], Example[1]));
+                        .appendTo(list)
+                        .append(this.buildExample(code, example[0], example[1]));
                 }
             } else {
-                const Quote = $('<p class="quote"></p>').appendTo(Panel);
+                const quote = $('<p class="quote"></p>').appendTo(panel);
                 $("<span></span>")
-                    .appendTo(Quote)
-                    .text(Examples.keys().next().value ?? "");
-                if (Code.Examples.length > 1) {
-                    $(`<a href="javascript:void(0)">(${Code.Examples.length - 1} more)</a>`)
-                        .appendTo(Quote)
+                    .appendTo(quote)
+                    .text(examples.keys().next().value ?? "");
+                if (code.examples.length > 1) {
+                    $(`<a href="javascript:void(0)">(${code.examples.length - 1} more)</a>`)
+                        .appendTo(quote)
                         .on("click", () => {
-                            this.Dialog.ShowCode(0, Code);
+                            this.dialog.showCode(0, code);
                         });
                 }
             }
         }
     }
-    /** BuildOwnerLink: Build a link for an owner. */
-    public BuildOwnerLink(Code: Code, Sources: Code[], Owner: number) {
-        const Link = $(
-            `<a href="javascript:void(0)" style="color: ${GetCodebookColor(Owner, this.Dataset.Codebooks.length)}">${this.Dataset.Names[Owner]}</a>`,
+
+    /** Build a link for an owner. */
+    buildOwnerLink(code: Code, sources: Code[], owner: number) {
+        const link = $(
+            `<a href="javascript:void(0)" style="color: ${getCodebookColor(owner, this.dataset.codebooks.length)}">${this.dataset.names[owner]}</a>`,
         );
-        if (Sources.length > 0) {
-            Link.attr("title", Sources.map((Original) => Original.Label).join(", "));
-            Link.on("click", () => {
-                this.Dialog.ShowCode(Owner, Code, ...Sources);
+        if (sources.length > 0) {
+            link.attr("title", sources.map((original) => original.label).join(", "));
+            link.on("click", () => {
+                this.dialog.showCode(owner, code, ...sources);
             });
         }
-        return Link;
+        return link;
     }
-    /** BuildExample: Build an element for a code example. */
-    public BuildExample(Code: Code, Example: string, IDs: string[] = []): Cash {
-        let Element = $(`<p>${Example}</p>`);
+
+    /** Build an element for a code example. */
+    buildExample(code: Code, example: string, ids: string[] = []) {
+        let element = $(`<p>${example}</p>`);
         // Add the source links
-        if (IDs.length > 0) {
-            IDs.forEach((ID) => Element.append(this.BuildSourceLink(ID)));
+        if (ids.length > 0) {
+            ids.forEach((ID) => element.append(this.buildSourceLink(ID)));
         }
         // Add the owners
-        if (Code.Owners && Code.Owners.length > 0) {
-            const Owners = $('<p class="owners">By: </p>');
-            for (const Owner of Code.Owners) {
-                if (Owner === 0) {
+        if (code.owners && code.owners.length > 0) {
+            const owners = $('<p class="owners">By: </p>');
+            for (const owner of code.owners) {
+                if (owner === 0) {
                     continue;
                 }
-                const Sources = FindExampleSources(
-                    this.Dataset.Codebooks[Owner],
-                    Code,
-                    Example,
-                    Owner,
+                const sources = findExampleSources(
+                    this.dataset.codebooks[owner],
+                    code,
+                    example,
+                    owner,
                 );
-                if (Sources.length === 0) {
+                if (sources.length === 0) {
                     continue;
                 }
-                this.BuildOwnerLink(Code, Sources, Owner).appendTo(Owners);
+                this.buildOwnerLink(code, sources, owner).appendTo(owners);
             }
-            if (Owners.children().length > 0) {
-                Element = Element.add(Owners);
+            if (owners.children().length > 0) {
+                element = element.add(owners);
             }
         }
-        return Element;
+        return element;
     }
-    /** BuildSourceLink: Build a link for a source. */
-    public BuildSourceLink(ID: string) {
-        return $(`<a class="source" href="javascript:void(0)">${ID}</a>`).on("click", () => {
-            this.Visualizer.Dialog.ShowChunkOf(ID);
+
+    /** Build a link for a source. */
+    buildSourceLink(id: string) {
+        return $(`<a class="source" href="javascript:void(0)">${id}</a>`).on("click", () => {
+            this.visualizer.dialog.showChunkOf(id);
         });
     }
 }

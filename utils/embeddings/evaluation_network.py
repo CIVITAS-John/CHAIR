@@ -27,5 +27,5 @@ embeddings = scaler.fit_transform(embeddings)
 x, y = embeddings[:, 0], embeddings[:, 1]
 
 # Send the results
-raw = {"Distances": distances.tolist(), "Positions": embeddings.tolist()}
+raw = {"distances": distances.tolist(), "positions": embeddings.tolist()}
 print(json.dumps(raw))

@@ -1,84 +1,86 @@
 import type { Cash } from "cash-dom";
 
-import type { Code, DataItem } from "../../../utils/schema.js";
+import type { Code, DataItem } from "../../../schema.js";
 import type { Node } from "../utils/schema.js";
 import type { Visualizer } from "../visualizer.js";
 
-import { FindOriginalCodes } from "./dataset.js";
-import { FilterNodeByExample, FilterNodeByOwners } from "./graph.js";
-import { FormatDate } from "./utils.js";
+import { findOriginalCodes } from "./dataset.js";
+import { filterNodeByExample, filterNodeByOwners } from "./graph.js";
+import { formatDate } from "./utils.js";
 
-/** RenderItem: Render a data item. */
-export function RenderItem(Visualizer: Visualizer, Item: DataItem, Owners: number[] = []): Cash {
-    const Current = $('<li class="custom"></li>').attr("seq", Item.ID);
-    const Header = $('<p><a href="javascript:void(0)"></a> at <i></i></p>').appendTo(Current);
-    Header.children("a")
-        .text(Item.Nickname)
+/** Render a data item. */
+export const renderItem = (visualizer: Visualizer, item: DataItem, owners: number[] = []) => {
+    const current = $('<li class="custom"></li>').attr("seq", item.id);
+    const header = $('<p><a href="javascript:void(0)"></a> at <i></i></p>').appendTo(current);
+    header
+        .children("a")
+        .text(item.nickname)
         .on("click", () => {
-            Visualizer.Dialog.ShowUser(Item.UserID, Owners, Item.ID);
+            visualizer.dialog.showUser(item.uid, owners, item.id);
         });
-    Header.children("i").text(FormatDate(Item.Time));
-    $("<p></p>").text(Item.Content).appendTo(Current);
-    return Current;
-}
+    header.children("i").text(formatDate(item.time));
+    $("<p></p>").text(item.content).appendTo(current);
+    return current;
+};
 
-/** RenderExamples: Render the examples of a quote. */
-export function RenderExamples(
-    Codes: Node<Code>[],
-    Visualizer: Visualizer,
-    Item: DataItem,
-    Owners: number[] = [],
-): Cash {
-    let Examples = Codes.filter((Node) => FilterNodeByExample(Node, [Item.ID]));
-    Examples = Examples.filter(
-        (Node) =>
-            Owners.length === 0 ||
-            FilterNodeByOwners(Node, Owners, Visualizer.Parameters.UseNearOwners),
+/** Render the examples of a quote. */
+export const renderExamples = (
+    codes: Node<Code>[],
+    visualizer: Visualizer,
+    item: DataItem,
+    owners: number[] = [],
+) => {
+    let examples = codes.filter((node) => filterNodeByExample(node, [item.id]));
+    examples = examples.filter(
+        (node) =>
+            owners.length === 0 ||
+            filterNodeByOwners(node, owners, visualizer.parameters.useNearOwners),
     );
-    if (Owners.length === 1) {
+    if (owners.length === 1) {
         return $('<p class="codes">Coded as:<span></span></p>')
             .children("span")
-            .text(Examples.map((Code) => Code.Data.Label).join(", "));
+            .text(examples.map((code) => code.data.label).join(", "));
     }
-    const CodeList = $('<ol class="codes"></ol>');
-    const CodeItems: Cash[] = [];
+    const codeList = $('<ol class="codes"></ol>');
+    const cdodeItems: Cash[] = [];
     // Show the codes
-    Examples.forEach((Code) => {
-        const CodeItem = $('<li class="owners"><i></i> from </li>');
-        CodeItem.children("i")
-            .text(Code.Data.Label)
+    examples.forEach((code) => {
+        const codeItem = $('<li class="owners"><i></i> from </li>');
+        codeItem
+            .children("i")
+            .text(code.data.label)
             .css("cursor", "pointer")
             .on("click", () => {
-                Visualizer.Dialog.ShowCode(0, Code.Data);
+                visualizer.dialog.showCode(0, code.data);
             });
         // Show the owners
-        let RealOwners = 0;
-        for (const Owner of Code.Data.Owners!) {
-            if (Owner === 0) {
+        let realOwners = 0;
+        for (const owner of code.data.owners ?? []) {
+            if (owner === 0) {
                 continue;
             }
-            const Originals = FindOriginalCodes(
-                Visualizer.Dataset.Codebooks[Owner],
-                Code.Data,
-                Owner,
-                Item.ID,
+            const originals = findOriginalCodes(
+                visualizer.dataset.codebooks[owner],
+                code.data,
+                owner,
+                item.id,
             );
             // Only show the owner if the code is related to THIS quote
-            if (Originals.length > 0) {
-                Visualizer.InfoPanel.BuildOwnerLink(Code.Data, Originals, Owner).appendTo(CodeItem);
-                RealOwners++;
+            if (originals.length > 0) {
+                visualizer.infoPanel.buildOwnerLink(code.data, originals, owner).appendTo(codeItem);
+                realOwners++;
             }
         }
-        CodeItem.data("owners", RealOwners);
+        codeItem.data("owners", realOwners);
         // Only show the code if it has owners
-        if (RealOwners > 0) {
-            CodeItems.push(CodeItem);
+        if (realOwners > 0) {
+            cdodeItems.push(codeItem);
         }
     });
     // Sort the codes by the number of owners
-    CodeItems.sort(
-        (A, B) => parseInt(B.data("owners") as string) - parseInt(A.data("owners") as string),
+    cdodeItems.sort(
+        (a, b) => parseInt(b.data("owners") as string) - parseInt(a.data("owners") as string),
     );
-    CodeItems.forEach((Item) => Item.appendTo(CodeList));
-    return CodeList;
-}
+    cdodeItems.forEach((item) => item.appendTo(codeList));
+    return codeList;
+};

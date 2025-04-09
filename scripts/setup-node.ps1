@@ -36,6 +36,17 @@ if (-not $pnpm) {
 
 # Install the required packages from package.json
 Write-Host "Installing required packages..."
-& $pnpm install --prod
+# & $pnpm install --prod
+& $pnpm install --frozen-lockfile
 
 Write-Host "All required packages have been installed." -ForegroundColor Green
+
+# Build the project
+Write-Host "Building the project..."
+& $pnpm run build
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Build failed. Please check the error messages above." -ForegroundColor Red
+    exit 1
+}
+
+Write-Host "Project has been built successfully." -ForegroundColor Green

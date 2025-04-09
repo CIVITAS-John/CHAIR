@@ -31,12 +31,14 @@ echo "Installing required packages..."
 "$pip" install -r requirements.txt
 
 # Ask the user if they want to use hdbscan
+clear
 read -rp "Do you want to use hdbscan? [y/N]: " hdbscan
 if [[ $hdbscan == "y" ]]; then
     "$pip" install -r requirements.hdbscan.txt
 fi
 
 # Ask the user if they want to use bertopic
+clear
 read -rp "Do you want to use bertopic? [y/N]: " bertopic
 if [[ $bertopic == "y" ]]; then
     "$pip" install -r requirements.bertopic.txt

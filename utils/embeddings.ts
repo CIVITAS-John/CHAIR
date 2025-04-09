@@ -1,376 +1,447 @@
-import * as File from "fs";
+import { existsSync, readFileSync, writeFileSync } from "fs";
+import { resolve } from "path";
 
 import { TaskType } from "@google/generative-ai";
 import type { Embeddings } from "@langchain/core/embeddings";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { OllamaEmbeddings } from "@langchain/ollama";
 import { OpenAIEmbeddings } from "@langchain/openai";
-import chalk from "chalk";
 import * as dotenv from "dotenv";
 import md5 from "md5";
 import { PythonShell } from "python-shell";
 
-import { EnsureFolder } from "./llms.js";
-import type { Code } from "./schema.js";
+import type { Code } from "../schema";
+import type { IDStrFunc } from "../steps/base-step";
 
-// Model: The embedding model to use.
-export let Model: Embeddings;
-// EmbeddingName: The name of the embedding model.
-export let EmbeddingName: string;
-// Dimensions: The number of dimensions in the embedding model.
-export let Dimensions: number;
+import { ensureFolder } from "./file";
+import { logger } from "./logger";
+import { sleep } from "./misc";
 
-/** sleep: Wait for a number of milliseconds. */
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-/** InitializeEmbeddings: Initialize the embeddings with the given name. */
-export function InitializeEmbeddings(Embedding: string) {
-    dotenv.config();
-    // ollama Support
-    // let LocalModel = false;
-    if (Embedding.startsWith("o_")) {
-        Embedding = Embedding.substring(2);
-        Model = new OllamaEmbeddings({
-            model: Embedding,
-            baseUrl: process.env.OLLAMA_URL ?? "https://127.0.0.1:11434",
-        });
-        // LocalModel = true;
-    }
-    switch (Embedding) {
-        case "openai-small-512":
-            Dimensions = 512;
-            Model = new OpenAIEmbeddings({
+const MODELS = {
+    "openai-small-512": {
+        dimensions: 512,
+        model: () =>
+            new OpenAIEmbeddings({
                 modelName: "text-embedding-3-small",
-                dimensions: Dimensions,
-            });
-            break;
-        case "openai-large-256":
-            Dimensions = 256;
-            Model = new OpenAIEmbeddings({
+                dimensions: 512,
+            }),
+    },
+    "openai-large-256": {
+        dimensions: 256,
+        model: () =>
+            new OpenAIEmbeddings({
                 modelName: "text-embedding-3-large",
-                dimensions: Dimensions,
-            });
-            break;
-        case "openai-large-1024":
-            Dimensions = 1024;
-            Model = new OpenAIEmbeddings({
+                dimensions: 256,
+            }),
+    },
+    "openai-large-1024": {
+        dimensions: 1024,
+        model: () =>
+            new OpenAIEmbeddings({
                 modelName: "text-embedding-3-large",
-                dimensions: Dimensions,
-            });
-            break;
-        case "gecko-768":
-            Dimensions = 768;
-            Model = new GoogleGenerativeAIEmbeddings({
+                dimensions: 1024,
+            }),
+    },
+    "gecko-768": {
+        dimensions: 768,
+        model: () =>
+            new GoogleGenerativeAIEmbeddings({
                 model: "text-embedding-004",
-            });
-            break;
-        case "gecko-768-classification":
-            Dimensions = 768;
-            Model = new GoogleGenerativeAIEmbeddings({
+            }),
+    },
+    "gecko-768-classification": {
+        dimensions: 768,
+        model: () =>
+            new GoogleGenerativeAIEmbeddings({
                 model: "text-embedding-004",
                 taskType: TaskType.CLASSIFICATION,
-            });
-            break;
-        case "gecko-768-clustering":
-            Dimensions = 768;
-            Model = new GoogleGenerativeAIEmbeddings({
+            }),
+    },
+    "gecko-768-clustering": {
+        dimensions: 768,
+        model: () =>
+            new GoogleGenerativeAIEmbeddings({
                 model: "text-embedding-004",
                 taskType: TaskType.CLUSTERING,
-            });
-            break;
-        case "gecko-768-similarity":
-            Dimensions = 768;
-            Model = new GoogleGenerativeAIEmbeddings({
+            }),
+    },
+    "gecko-768-similarity": {
+        dimensions: 768,
+        model: () =>
+            new GoogleGenerativeAIEmbeddings({
                 model: "text-embedding-004",
                 taskType: TaskType.SEMANTIC_SIMILARITY,
-            });
-            break;
-        case "mxbai-embed-large":
-            Dimensions = 1024;
-            break;
-        default:
-            throw new Error(`Invalid embedding model: ${Embedding}`);
+            }),
+    },
+    "mxbai-embed-large": {
+        dimensions: 1024,
+    },
+} satisfies Record<
+    string,
+    Omit<EmbedderObject, "name" | "model"> & {
+        model?: () => Embeddings;
     }
-    EmbeddingName = Embedding;
-}
+>;
 
-/** RequestEmbeddings: Call the model to generate text embeddings with cache. */
-export async function RequestEmbeddings(Sources: string[], Cache: string): Promise<Float32Array> {
+export type EmbedderName = keyof typeof MODELS;
+export interface EmbedderObject {
+    model: Embeddings;
+    name: string;
+    dimensions: number;
+}
+export type EmbedderModel = EmbedderName | EmbedderObject;
+
+dotenv.config();
+
+/** Initialize the embeddings with the given name. */
+export const initEmbedder = (embedder: string): EmbedderObject => {
+    // ollama Support
+    if (embedder.startsWith("o_")) {
+        embedder = embedder.substring(2);
+
+        if (!(embedder in MODELS)) {
+            throw new Error(`Embedder ${embedder} not supported`);
+        }
+
+        return {
+            ...MODELS[embedder as EmbedderName],
+            name: embedder,
+            model: new OllamaEmbeddings({
+                model: embedder,
+                baseUrl: process.env.OLLAMA_URL ?? "https://127.0.0.1:11434",
+            }),
+        };
+    }
+
+    if (!(embedder in MODELS)) {
+        throw new Error(`Embedder ${embedder} not supported`);
+    }
+
+    const config = MODELS[embedder as EmbedderName];
+    if (!("model" in config)) {
+        // No default online model
+        throw new Error(`Embedder ${embedder} is local only through ollama`);
+    }
+    return {
+        ...config,
+        name: embedder,
+        model: config.model(),
+    };
+};
+
+/** Call the model to generate text embeddings with cache. */
+export const requestEmbeddings = async (
+    idStr: IDStrFunc,
+    embedder: EmbedderObject,
+    sources: string[],
+    cache: string,
+): Promise<Float32Array> => {
+    const _id = idStr("requestEmbeddings");
+
     // Create the cache folder
-    const CacheFolder = `known/embeddings/${Cache}/${EmbeddingName}`;
-    EnsureFolder(CacheFolder);
+    const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
+    ensureFolder(cacheFolder);
     // Check if the cache exists
-    const Embeddings = new Float32Array(Dimensions * Sources.length);
-    const Requests: number[] = [];
-    for (let I = 0; I < Sources.length; I++) {
-        const Source = Sources[I];
-        const CacheFile = `${CacheFolder}/${md5(Source)}.bytes`;
-        if (File.existsSync(CacheFile)) {
-            const Buffer = File.readFileSync(CacheFile);
-            const Cached = new Float32Array(
-                Buffer.buffer,
-                Buffer.byteOffset,
-                Buffer.byteLength / 4,
+    const embeddings = new Float32Array(embedder.dimensions * sources.length);
+    const requests: number[] = [];
+    for (let i = 0; i < sources.length; i++) {
+        const source = sources[i];
+        const cacheFile = `${cacheFolder}/${md5(source)}.bytes`;
+        if (existsSync(cacheFile)) {
+            const buffer = readFileSync(cacheFile);
+            const cached = new Float32Array(
+                buffer.buffer,
+                buffer.byteOffset,
+                buffer.byteLength / 4,
             );
-            Embeddings.set(Cached, Dimensions * I);
+            embeddings.set(cached, embedder.dimensions * i);
         } else {
-            Requests.push(I);
+            requests.push(i);
         }
     }
     // Request the online embeddings
-    const BatchSize = 50;
-    for (let I = 0; I < Requests.length; I += BatchSize) {
-        let Retry = 0;
-        while (true) {
+    const batchSize = 50;
+    for (let i = 0; i < requests.length; i += batchSize) {
+        let retry = 0;
+        while (retry < 10) {
             try {
-                const Results = await Model.embedDocuments(
-                    Requests.slice(I, I + BatchSize).map((Index) => Sources[Index]),
+                const res = await embedder.model.embedDocuments(
+                    requests.slice(i, i + batchSize).map((idx) => sources[idx]),
                 );
-                for (let J = 0; J < Results.length; J++) {
-                    const Index = Requests[I + J];
-                    const Embedding = new Float32Array(Results[J]);
+                for (let j = 0; j < res.length; j++) {
+                    const idx = requests[i + j];
+                    const embedding = new Float32Array(res[j]);
                     // Check if all elements are 0
-                    if (Embedding.every((Value) => Value === 0)) {
-                        throw new Error(`Invalid embedding for: ${Sources[Index]}`);
+                    if (embedding.every((v) => v === 0)) {
+                        throw new Error(`Invalid embedding for: ${sources[idx]}`);
                     }
-                    Embeddings.set(Embedding, Dimensions * Index);
-                    const CacheFile = `${CacheFolder}/${md5(Sources[Index])}.bytes`;
-                    File.writeFileSync(CacheFile, Embedding);
+                    embeddings.set(embedding, embedder.dimensions * idx);
+                    const cacheFile = `${cacheFolder}/${md5(sources[idx])}.bytes`;
+                    writeFileSync(cacheFile, embedding);
                 }
                 break;
-            } catch (Error) {
-                if (Retry >= 10) {
-                    throw Error;
-                }
-                console.error(Error);
-                await sleep((Retry + 1) * 6000);
-                Retry++;
+            } catch (e) {
+                logger.error(e, ++retry >= 10, _id);
+                await sleep((retry + 1) * 6000);
             }
         }
     }
-    return Embeddings;
-}
+    return embeddings;
+};
 
-/** RequestEmbeddingWithCache: Call the model to generate a text embedding with cache. */
-export async function RequestEmbeddingWithCache(
-    Source: string,
-    Cache: string,
-): Promise<Float32Array> {
-    const CacheFolder = `known/embeddings/${Cache}/${EmbeddingName}`;
-    EnsureFolder(CacheFolder);
+/** Call the model to generate a text embedding with cache. */
+export const requestEmbedding = async (
+    idStr: IDStrFunc,
+    embedder: EmbedderObject,
+    source: string,
+    cache: string,
+) => {
+    const _id = idStr("requestEmbedding");
+
+    const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
+    ensureFolder(cacheFolder);
     // Check if the cache exists
-    const CacheFile = `${CacheFolder}/${md5(Source)}.bytes`;
-    if (File.existsSync(CacheFile)) {
-        const Buffer = File.readFileSync(CacheFile);
-        return new Float32Array(Buffer.buffer, Buffer.byteOffset, Buffer.byteLength / 4);
+    const cacheFile = `${cacheFolder}/${md5(source)}.bytes`;
+    if (existsSync(cacheFile)) {
+        const buffer = readFileSync(cacheFile);
+        return new Float32Array(buffer.buffer, buffer.byteOffset, buffer.byteLength / 4);
     }
-    const Result = Float32Array.from(await RequestEmbedding(Source));
-    File.writeFileSync(CacheFile, Result);
-    return Result;
-}
+    const res = Float32Array.from(await requestEmbeddingWithoutCache(idStr, embedder, source));
+    writeFileSync(cacheFile, res);
+    return res;
+};
 
-/** RequestEmbedding: Call the model to generate a text embedding. */
-export async function RequestEmbedding(Source: string): Promise<number[]> {
-    const Result = await Model.embedDocuments([Source]);
-    return Result[0];
-}
+/** Call the model to generate a text embedding. */
+export const requestEmbeddingWithoutCache = async (
+    idStr: IDStrFunc,
+    embedder: EmbedderObject,
+    source: string,
+) => {
+    const _id = idStr("requestEmbeddingWithoutCache");
 
-/** ClusterItem: The item in a cluster. */
+    return (await embedder.model.embedDocuments([source]))[0];
+};
+
+/** The item in a cluster. */
 export interface ClusterItem {
-    /** ID: The ID of the item. */
-    ID: number;
-    /** Probability: The probability of the item. */
-    Probability: number;
+    /** The ID of the item. */
+    id: number;
+    /** The probability of the item. */
+    probability: number;
 }
 
-/** ClusterCodes: Categorize the codes into clusters using linkage-jc. */
-export async function ClusterCodes(
-    Sources: string[],
-    Codes: Code[],
-    Cache: string,
-    ...ExtraOptions: string[]
-): Promise<Record<number, ClusterItem[]>> {
-    return await ClusterTexts(
-        Sources,
-        Codes.map((Code) => ({
-            Label: Code.Label,
-            Examples: Code.Examples?.map((Example) => {
-                const Index = Example.indexOf("|||");
-                if (Index === -1) {
-                    return Example;
+/** Categorize the codes into clusters using linkage-jc. */
+export const clusterCodes = (
+    idStr: IDStrFunc,
+    embedder: EmbedderObject,
+    sources: string[],
+    codes: Code[],
+    cache: string,
+    ...opts: string[]
+) =>
+    clusterTexts(
+        idStr,
+        embedder,
+        sources,
+        codes.map((code) => ({
+            label: code.label,
+            examples: code.examples?.map((example) => {
+                const idx = example.indexOf("|||");
+                if (idx === -1) {
+                    return example;
                 }
-                return Example.substring(0, Index);
+                return example.substring(0, idx);
             }),
         })),
-        Cache,
+        cache,
         "linkage-jc",
-        ...ExtraOptions,
+        ...opts,
     );
-}
 
-/** ClusterCategories: Categorize the categories into clusters using linkage-jc. */
-export async function ClusterCategories(
-    Sources: string[],
-    Categories: Map<string, string[]>,
-    Cache: string,
-    ...ExtraOptions: string[]
-): Promise<Record<number, ClusterItem[]>> {
-    return await ClusterTexts(
-        Sources,
-        Sources.map((Category) => ({
-            Label: Category,
-            Examples: Categories.get(Category) ?? [],
+/** Categorize the categories into clusters using linkage-jc. */
+export const clusterCategories = (
+    idStr: IDStrFunc,
+    embedder: EmbedderObject,
+    sources: string[],
+    categories: Map<string, string[]>,
+    cache: string,
+    ...opts: string[]
+) =>
+    clusterTexts(
+        idStr,
+        embedder,
+        sources,
+        sources.map((category) => ({
+            label: category,
+            examples: categories.get(category) ?? [],
         })),
-        Cache,
+        cache,
         "linkage-jc",
-        ...ExtraOptions,
+        ...opts,
     );
-}
 
-/** ClusterTexts: Categorize the embeddings into clusters. */
-export async function ClusterTexts(
-    Sources: string[],
-    Names: {
-        Label: string;
-        Examples?: string[];
+/** Categorize the embeddings into clusters. */
+export const clusterTexts = async (
+    idStr: IDStrFunc,
+    embedder: EmbedderObject,
+    sources: string[],
+    names: {
+        label: string;
+        examples?: string[];
     }[],
-    Cache: string,
-    Method = "hdbscan",
-    ...ExtraOptions: string[]
-): Promise<Record<number, ClusterItem[]>> {
-    console.log(chalk.gray(`Requesting embeddings for: ${Sources.length}`));
-    if (Sources.length === 0) {
+    cache: string,
+    method = "hdbscan",
+    ...opts: string[]
+) => {
+    const _id = idStr("clusterTexts");
+
+    logger.debug(`Requesting embeddings for ${sources.length} sources`, _id);
+    if (sources.length === 0) {
         return {};
     }
-    const Embeddings = await RequestEmbeddings(Sources, Cache);
-    return await ClusterEmbeddings(Embeddings, Names, Method, ...ExtraOptions);
-}
+
+    const embeddings = await requestEmbeddings(idStr, embedder, sources, cache);
+    return await clusterEmbeddings(idStr, embedder, embeddings, names, method, ...opts);
+};
 
 /**
- * ClusterEmbeddings: Categorize the embeddings into clusters.
- * Return format: { Cluster: [ID, Probability][] }
+ * Categorize the embeddings into clusters.
+ * @returns { cluster: [id, probability][] }
  * */
-export async function ClusterEmbeddings(
-    Embeddings: Float32Array,
-    Names: {
-        Label: string;
-        Examples?: string[];
+export const clusterEmbeddings = async (
+    idStr: IDStrFunc,
+    embedder: EmbedderObject,
+    embeddings: Float32Array,
+    names: {
+        label: string;
+        examples?: string[];
     }[],
-    Method = "hdbscan",
-    ...ExtraOptions: string[]
-): Promise<Record<number, ClusterItem[]>> {
-    const Results: Record<number, ClusterItem[]> = {};
+    method = "hdbscan",
+    ...opts: string[]
+) => {
+    const _id = idStr("clusterEmbeddings");
+
+    const res: Record<number, ClusterItem[]> = {};
     // Write it into ./known/temp.bytes
-    File.writeFileSync("./known/temp.bytes", Buffer.from(Embeddings.buffer));
-    // File.writeFileSync(`./known/temp.text`, Names.join("\n"));
-    File.writeFileSync("./known/clustering.temp.json", JSON.stringify(Names));
+    writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
+    // writeFileSync(`./known/temp.text`, Names.join("\n"));
+    writeFileSync("./known/clustering.temp.json", JSON.stringify(names));
     // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
     // Run the Python script
-    await PythonShell.run(`utils/embeddings/clustering_${Method}.py`, {
-        args: [Dimensions.toString(), Names.length.toString(), ...ExtraOptions],
-        parser: (Message) => {
-            if (Message.startsWith("[")) {
-                const Data = JSON.parse(Message) as number[][];
-                const Clusters = Data[0];
-                const Probabilities = Data[1];
+    await PythonShell.run(resolve(import.meta.dirname, `embeddings/clustering_${method}.py`), {
+        args: [embedder.dimensions.toString(), names.length.toString(), ...opts],
+        parser: (msg) => {
+            if (msg.startsWith("[")) {
+                const data = JSON.parse(msg) as number[][];
+                const clusters = data[0];
+                const probs = data[1];
                 // Get unique clusters
-                const UniqueClusters = [...new Set(Clusters)].sort();
-                let NoCluster = 0;
-                for (const Cluster of UniqueClusters) {
-                    Results[Cluster] = [];
-                    for (let J = 0; J < Clusters.length; J++) {
-                        if (Clusters[J] === Cluster) {
-                            Results[Cluster].push({ ID: J, Probability: Probabilities[J] });
-                            if (Cluster === -1) {
-                                NoCluster++;
+                const uniqueClusters = [...new Set(clusters)].sort();
+                let noCluster = 0;
+                for (const cluster of uniqueClusters) {
+                    res[cluster] = [];
+                    for (let j = 0; j < clusters.length; j++) {
+                        if (clusters[j] === cluster) {
+                            res[cluster].push({ id: j, probability: probs[j] });
+                            if (cluster === -1) {
+                                noCluster++;
                             }
                         }
                     }
                 }
-                console.log(
-                    chalk.green(
-                        `Statistics: Clusters ${UniqueClusters.length - (NoCluster > 0 ? 1 : 0)} from ${
-                            Names.length
-                        } items; ${NoCluster} items unclustered.`,
-                    ),
+                logger.success(
+                    `Received ${clusters.length - (noCluster > 0 ? 1 : 0)} clusters from ${names.length} items (${noCluster} items unclustered)`,
+                    _id,
                 );
             } else {
-                console.log(chalk.gray(Message));
+                logger.debug(msg, _id);
             }
         },
     });
-    return Results;
-}
+    return res;
+};
 
-/** EvaluateTexts: Evaluate a number of texts. */
-export async function EvaluateTexts<T>(
-    Sources: string[],
-    Labels: string[],
-    Owners: number[][],
-    OwnerLabels: string[],
-    Cache: string,
-    Method = "coverage",
-    ...ExtraOptions: string[]
-): Promise<T> {
-    console.log(chalk.gray(`Requesting embeddings for: ${Sources.length}`));
-    const Embeddings = await RequestEmbeddings(Sources, Cache);
-    return await EvaluateEmbeddings(
-        Embeddings,
-        Labels,
-        Owners,
-        OwnerLabels,
-        Method,
-        ...ExtraOptions,
+/** Evaluate a number of texts. */
+export const evaluateTexts = async <T>(
+    idStr: IDStrFunc,
+    embedder: EmbedderObject,
+    sources: string[],
+    labels: string[],
+    owners: number[][],
+    ownerLabels: string[],
+    cache: string,
+    method = "coverage",
+    ...opts: string[]
+) => {
+    const _id = idStr("evaluateTexts");
+    logger.debug(`Requesting embeddings for ${sources.length} sources`, _id);
+    const embeddings = await requestEmbeddings(idStr, embedder, sources, cache);
+    return await evaluateEmbeddings<T>(
+        idStr,
+        embedder,
+        embeddings,
+        labels,
+        owners,
+        ownerLabels,
+        method,
+        ...opts,
     );
-}
+};
 
 /**
  * EvaluateEmbeddings: Evaluate a number of embeddings.
  * Return format:
  * */
-export async function EvaluateEmbeddings<T>(
-    Embeddings: Float32Array,
-    Labels: string[],
-    Owners: number[][],
-    OwnerLabels: string[],
-    Method = "coverage",
-    ...ExtraOptions: string[]
-): Promise<T> {
-    let Results: T | undefined;
+export const evaluateEmbeddings = async <T>(
+    idStr: IDStrFunc,
+    embedder: EmbedderObject,
+    embeddings: Float32Array,
+    labels: string[],
+    owners: number[][],
+    ownerLabels: string[],
+    method = "coverage",
+    ...opts: string[]
+) => {
+    const _id = idStr("evaluateEmbeddings");
+
+    let res: T | undefined;
     // Write it into ./known/temp.bytes
-    File.writeFileSync("./known/temp.bytes", Buffer.from(Embeddings.buffer));
+    writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
     // let TextData = Labels.map((Label, Index) => `${Owners[Index].join(",")}|${Label}`);
-    const TextData = Labels.map((Label, Index) => ({
-        Label,
-        Owners: Owners[Index],
+    const textData = labels.map((label, index) => ({
+        label,
+        owners: owners[index],
     }));
     // File.writeFileSync(`./known/temp.text`, OwnerLabels.concat(TextData).join("\n"));
-    File.writeFileSync(
+    writeFileSync(
         "./known/evaluation.temp.json",
         JSON.stringify({
-            OwnerLabels,
-            Labels: TextData,
+            ownerLabels,
+            labels: textData,
         }),
     );
-    console.log(`Embeddings sent: ${Embeddings.buffer.byteLength} (${Labels.length} embeddings)`);
+    logger.debug(
+        `Embeddings sent: ${embeddings.buffer.byteLength} (${labels.length} embeddings)`,
+        _id,
+    );
     // Run the Python script
-    await PythonShell.run(`utils/embeddings/evaluation_${Method}.py`, {
+    await PythonShell.run(resolve(import.meta.dirname, `embeddings/evaluation_${method}.py`), {
         args: [
-            Dimensions.toString(),
-            Labels.length.toString(),
-            OwnerLabels.length.toString(),
-            ...ExtraOptions,
+            embedder.dimensions.toString(),
+            labels.length.toString(),
+            ownerLabels.length.toString(),
+            ...opts,
         ],
-        parser: (Message) => {
-            if (Message.startsWith("{")) {
-                Results = JSON.parse(Message) as T;
+        parser: (msg) => {
+            if (msg.startsWith("{")) {
+                res = JSON.parse(msg) as T;
             } else {
-                console.log(chalk.gray(Message));
+                logger.debug(msg, _id);
             }
         },
     });
-    if (!Results) {
-        throw new Error("No results returned from the Python script.");
+    if (!res) {
+        throw new Error("No results returned from evaluation Python script");
     }
-    return Results;
-}
+    return res;
+};

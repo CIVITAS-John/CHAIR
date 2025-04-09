@@ -1,460 +1,482 @@
 import type { Cash } from "cash-dom";
 import d3 from "d3";
 
-import type { Code, DataChunk, DataItem } from "../../../utils/schema.js";
+import type { Code, DataChunk, DataItem } from "../../../schema.js";
 import type { CodeSection } from "../sections/code.js";
-import { FindOriginalCodes, GetChunks } from "../utils/dataset.js";
-import { EvaluatePerCluster } from "../utils/evaluate.js";
+import { findOriginalCodes, getChunks } from "../utils/dataset.js";
+import { evaluatePerCluster } from "../utils/evaluate.js";
 import { OwnerFilter } from "../utils/filters.js";
-import { FilterItemByUser } from "../utils/graph.js";
-import { Shuffle } from "../utils/math.js";
-import { RenderExamples, RenderItem } from "../utils/render.js";
-import { GetCodebookColor } from "../utils/utils.js";
+import { filterItemByUser } from "../utils/graph.js";
+import { seededShuffle } from "../utils/math.js";
+import { renderExamples, renderItem } from "../utils/render.js";
+import { getCodebookColor } from "../utils/utils.js";
 import type { Visualizer } from "../visualizer.js";
 
 import { Panel } from "./panel.js";
 
-/** Dialog: The dialog for the visualizer. */
+/** The dialog for the visualizer. */
 export class Dialog extends Panel {
-    /** Constructor: Constructing the dialog. */
-    public constructor(Container: Cash, Visualizer: Visualizer) {
-        super(Container, Visualizer);
-        Container.children("div.close").on("click", () => {
-            this.Hide();
+    /** Constructing the dialog. */
+    constructor(container: Cash, visualizer: Visualizer) {
+        super(container, visualizer);
+        container.children("div.close").on("click", () => {
+            this.hide();
         });
     }
-    /** ShowPanel: Show a panel in the dialog. */
-    private ShowPanel(Panel: Cash) {
+
+    /** Show a panel in the dialog. */
+    #showPanel(panel: Cash) {
         // Add a back button
         $('<a class="back" href="javascript:void(0)">⮜</a>')
             .on("click", () => {
                 window.history.back();
             })
-            .prependTo(Panel.children("h3"));
+            .prependTo(panel.children("h3"));
         // Show the panel
-        const Content = this.Container.children("div.content");
-        Content.get(0)!.scrollTop = 0;
-        Content.children().remove();
-        Content.append(Panel);
-        this.Show();
+        const content = this.container.children("div.content");
+        const ele = content.get(0);
+        if (ele) ele.scrollTop = 0;
+        content.children().remove();
+        content.append(panel);
+        this.show();
     }
-    /** ShowCode: Show a dialog for a code. */
-    public ShowCode(Owner: number, Original: Code, ...Codes: Code[]) {
-        this.Visualizer.PushState(`code-${encodeURIComponent(Original.Label)}-${Owner}`, () => {
-            this.ShowCode(Owner, Original, ...Codes);
+
+    /** Show a dialog for a code. */
+    showCode(owner: number, original: Code, ...codes: Code[]) {
+        this.visualizer.pushState(`code-${encodeURIComponent(original.label)}-${owner}`, () => {
+            this.showCode(owner, original, ...codes);
         });
         // Check if it's the baseline
-        const IsBaseline = Owner === 0;
-        if (Codes.length === 0) {
-            Codes.push(Original);
+        const isBaseline = owner === 0;
+        if (codes.length === 0) {
+            codes.push(original);
         }
         // Build the panel
-        const Panel = $('<div class="panel"></div>');
-        for (const Code of Codes) {
-            if (Panel.children().length > 0) {
-                $("<hr>").appendTo(Panel);
+        const panel = $('<div class="panel"></div>');
+        for (const code of codes) {
+            if (panel.children().length > 0) {
+                $("<hr>").appendTo(panel);
             }
-            this.InfoPanel.BuildPanelForCode(Panel, Code, true);
+            this.infoPanel.buildPanelForCode(panel, code, true);
         }
-        Panel.children("h3").append(
-            $(
-                `<span style="color: ${GetCodebookColor(Owner, this.Dataset.Codebooks.length)}">${this.Dataset.Names[Owner]}</span>`,
-            ),
-        );
+        panel
+            .children("h3")
+            .append(
+                $(
+                    `<span style="color: ${getCodebookColor(owner, this.dataset.codebooks.length)}">${this.dataset.names[owner]}</span>`,
+                ),
+            );
         // Add a back button if it's not the baseline
-        if (!IsBaseline) {
-            const Source = $(
+        if (!isBaseline) {
+            const source = $(
                 '<p>Consolidated into: <a href="javascript:void(0)" class="back">←</a></p>',
             );
-            Source.children("a")
-                .text(Original.Label)
+            source
+                .children("a")
+                .text(original.label)
                 .on("click", () => {
-                    this.ShowCode(0, Original);
+                    this.showCode(0, original);
                 });
-            Panel.children("h3").after(Source);
+            panel.children("h3").after(source);
         }
         // Show the dialog
-        this.ShowPanel(Panel);
+        this.#showPanel(panel);
     }
-    /** ShowUser: Show a dialog for a user. */
-    public ShowUser(ID: string, Owners: number[] = [], ScrollTo?: string) {
-        this.Visualizer.PushState(`speaker-${ID}`, () => {
-            this.ShowUser(ID, Owners, ScrollTo);
+
+    /** Show a dialog for a user. */
+    showUser(id: string, owners: number[] = [], scrollTo?: string) {
+        this.visualizer.pushState(`speaker-${id}`, () => {
+            this.showUser(id, owners, scrollTo);
         });
         // Build the panel
-        const Panel = $('<div class="panel"></div>');
+        const panel = $('<div class="panel"></div>');
         // Add the title
-        Panel.append(
-            $(`<h3>User ${this.Visualizer.Dataset.UserIDToNicknames?.get(ID) ?? ID}</h3>`),
-        );
-        Panel.append($("<hr/>"));
-        const Codes = this.GetGraph<Code>().Nodes;
+        panel.append($(`<h3>User ${this.visualizer.dataset.uidToNicknames?.get(id) ?? id}</h3>`));
+        panel.append($("<hr/>"));
+        const codes = this.getGraph<Code>().nodes;
         // Show the items
-        const List = $('<ol class="quote"></ol>').appendTo(Panel);
-        const Items = FilterItemByUser(this.Visualizer.Dataset.Source, [ID]);
-        let TargetElement: Cash | undefined;
-        Items.forEach((Item) => {
+        const list = $('<ol class="quote"></ol>').appendTo(panel);
+        const items = filterItemByUser(this.visualizer.dataset.source, [id]);
+        let targetElement: Cash | undefined;
+        items.forEach((item) => {
+            // TODO: Support subchunks
+            if ("items" in item) {
+                return;
+            }
             // Show the item
-            const Current = RenderItem(this.Visualizer, Item, Owners).appendTo(List);
-            if (Item.ID === ScrollTo) {
-                TargetElement = Current;
-                Current.addClass("highlighted");
+            const current = renderItem(this.visualizer, item, owners).appendTo(list);
+            if (item.id === scrollTo) {
+                targetElement = current;
+                current.addClass("highlighted");
             }
             // Show related codes
-            Current.append(RenderExamples(Codes, this.Visualizer, Item, Owners));
+            current.append(renderExamples(codes, this.visualizer, item, owners));
         });
         // Show the dialog
-        this.ShowPanel(Panel);
+        this.#showPanel(panel);
         // Scroll to the target element
-        if (TargetElement) {
-            const Offset = TargetElement.offset()!.top;
-            this.Container.children("div.content")
+        if (targetElement) {
+            const offset = targetElement.offset()?.top ?? NaN;
+            this.container
+                .children("div.content")
                 .get(0)
-                ?.scrollTo(0, Offset - 60);
+                ?.scrollTo(0, offset - 60);
         }
     }
-    /** ShowChunk: Show a dialog for a chunk. */
-    public ShowChunk(
-        Name: string,
-        Chunk: DataChunk<DataItem>,
-        Owners: number[] = [],
-        ScrollTo?: string,
-    ) {
-        this.Visualizer.PushState(`chunk-${Name}`, () => {
-            this.ShowChunk(Name, Chunk, Owners, ScrollTo);
+
+    /** Show a dialog for a chunk. */
+    showChunk(name: string, chunk: DataChunk<DataItem>, owners: number[] = [], scrollTo?: string) {
+        this.visualizer.pushState(`chunk-${name}`, () => {
+            this.showChunk(name, chunk, owners, scrollTo);
         });
         // Build the panel
-        const Panel = $('<div class="panel"></div>');
+        const panel = $('<div class="panel"></div>');
         // Add the title
-        Panel.append($(`<h3>Chunk ${Name} (${Chunk.AllItems?.length} Items)</h3>`));
-        Panel.append($("<hr/>"));
-        const Codes = this.GetGraph<Code>().Nodes;
+        panel.append($(`<h3>Chunk ${name} (${chunk.items.length} Items)</h3>`));
+        panel.append($("<hr/>"));
+        const codes = this.getGraph<Code>().nodes;
         // Show the items
-        const List = $('<ol class="quote"></ol>').appendTo(Panel);
-        const Items = Chunk.AllItems ?? [];
-        let Orthodox = Items[0].Chunk === Name;
-        if (Orthodox) {
-            $('<li class="split">Items inside the chunk:</li>').prependTo(List);
+        const list = $('<ol class="quote"></ol>').appendTo(panel);
+        const items = chunk.items;
+        // TODO: Support subchunks
+        if (!("chunk" in items[0])) {
+            return;
         }
-        let TargetElement: Cash | undefined;
-        Items.forEach((Item) => {
+        let orthodox = items[0].chunk === name;
+        if (orthodox) {
+            $('<li class="split">Items inside the chunk:</li>').prependTo(list);
+        }
+        let targetElement: Cash | undefined;
+        items.forEach((item) => {
+            // TODO: Support subchunks
+            if (!("chunk" in item)) {
+                return;
+            }
             // Show divisors when needed
-            if ((Item.Chunk === Name) !== Orthodox) {
-                $("<hr>").appendTo(List);
-                if (!Orthodox) {
-                    $('<li class="split">Items before the chunk:</li>').prependTo(List);
-                    $('<li class="split">Items inside the chunk:</li>').appendTo(List);
+            if ((item.chunk === name) !== orthodox) {
+                $("<hr>").appendTo(list);
+                if (!orthodox) {
+                    $('<li class="split">Items before the chunk:</li>').prependTo(list);
+                    $('<li class="split">Items inside the chunk:</li>').appendTo(list);
                 } else {
-                    $('<li class="split">Items after the chunk:</li>').appendTo(List);
+                    $('<li class="split">Items after the chunk:</li>').appendTo(list);
                 }
-                Orthodox = !Orthodox;
+                orthodox = !orthodox;
             }
             // Show the item
-            const Current = RenderItem(this.Visualizer, Item, Owners).appendTo(List);
-            if (Item.ID === ScrollTo) {
-                TargetElement = Current;
-                Current.addClass("highlighted");
+            const current = renderItem(this.visualizer, item, owners).appendTo(list);
+            if (item.id === scrollTo) {
+                targetElement = current;
+                current.addClass("highlighted");
             }
             // Show related codes
-            Current.append(RenderExamples(Codes, this.Visualizer, Item, Owners));
+            current.append(renderExamples(codes, this.visualizer, item, owners));
         });
         // Show the dialog
-        this.ShowPanel(Panel);
+        this.#showPanel(panel);
         // Scroll to the target element
-        if (TargetElement) {
-            const Offset = TargetElement.offset()!.top;
-            this.Container.children("div.content")
+        if (targetElement) {
+            const offset = targetElement.offset()?.top ?? NaN;
+            this.container
+                .children("div.content")
                 .get(0)
-                ?.scrollTo(0, Offset - 60);
+                ?.scrollTo(0, offset - 60);
         }
     }
-    /** ShowChunkOf: Show a dialog for a chunk based on the content ID. */
-    public ShowChunkOf(ID: string) {
-        const Chunks = GetChunks(this.Dataset.Source.Data);
-        const Chunk = Chunks.find((Chunk) =>
-            Chunk.AllItems?.find(
-                (Item) => Item.ID === ID && (!Item.Chunk || Item.Chunk === Chunk.ID),
-            ),
+    /** Show a dialog for a chunk based on the content ID. */
+    showChunkOf(id: string) {
+        const chunks = getChunks(this.dataset.source.data);
+        const chunk = chunks.find((chunk) =>
+            chunk.items.find((item) => {
+                // TODO: Support subchunks
+                if (!("chunk" in item)) {
+                    return;
+                }
+                return item.id === id && (!item.chunk || item.chunk === chunk.id);
+            }),
         );
-        if (Chunk) {
-            this.ShowChunk(Chunk.ID, Chunk, undefined, ID);
+        if (chunk) {
+            this.showChunk(chunk.id, chunk, undefined, id);
         }
     }
-    /** CompareCoverageByClusters: Compare the coverage by clusters. */
-    public CompareCoverageByClusters() {
-        this.Visualizer.PushState("compare-coverage-by-clusters", () => {
-            this.CompareCoverageByClusters();
+
+    /** Compare the coverage by clusters. */
+    compareCoverageByClusters() {
+        this.visualizer.pushState("compare-coverage-by-clusters", () => {
+            this.compareCoverageByClusters();
         });
         // Build the panel
-        const Panel = $('<div class="panel"></div>');
+        const panel = $('<div class="panel"></div>');
         // Add the title
-        const Title = $("<h3>Potential Bias of Codebooks (By Clusters)</h3>").appendTo(Panel);
-        Panel.append($("<hr/>"));
+        const title = $("<h3>Potential Bias of Codebooks (By Clusters)</h3>").appendTo(panel);
+        panel.append($("<hr/>"));
         // Evaluate the coverage
-        const Graph = this.GetGraph<Code>();
-        const Results = EvaluatePerCluster(this.Dataset, Graph, this.Parameters);
-        const Colors = d3.scaleSequential().interpolator(d3.interpolateRdYlGn).domain([-1, 1]);
+        const graph = this.getGraph<Code>();
+        const results = evaluatePerCluster(this.dataset, graph, this.parameters);
+        const colors = d3.scaleSequential().interpolator(d3.interpolateRdYlGn).domain([-1, 1]);
         // Build the table
-        this.BuildTable(
-            Results,
-            (Row, { Component, Coverages, Differences }, Index) => {
-                Row.append(
+        this.buildTable(
+            results,
+            (row, { component, coverages, differences }, idx) => {
+                row.append(
                     $(
-                        `<td class="actionable"><h4>${Index + 1}. ${Component.Representative!.Data.Label}</h4><p class="tips">${
-                            Component.Nodes.length
+                        `<td class="actionable"><h4>${idx + 1}. ${component.representative?.data.label}</h4><p class="tips">${
+                            component.nodes.length
                         } codes</p></td>`,
                     ).on("click", () => {
-                        (this.SidePanel.ShowPanel("Codes") as CodeSection).ShowComponent(Component);
+                        (this.sidePanel.showPanel("Codes") as CodeSection).showComponent(component);
                     }),
                 );
-                Coverages.forEach((Coverage, I) => {
-                    const Difference = Differences[I];
-                    const Color = Colors(Math.min(1, Difference));
-                    const Cell = $('<td class="metric-cell actionable"></td>')
-                        .text(d3.format("+.1%")(Difference))
-                        .css("background", Color)
-                        .css("color", d3.lab(Color).l > 70 ? "black" : "white")
+                coverages.forEach((coverage, i) => {
+                    const difference = differences[i];
+                    const color = colors(Math.min(1, difference));
+                    const cell = $('<td class="metric-cell actionable"></td>')
+                        .text(d3.format("+.1%")(difference))
+                        .css("background", color)
+                        .css("color", d3.lab(color).l > 70 ? "black" : "white")
                         .on("click", () => {
-                            this.Visualizer.SetFilter(false, new OwnerFilter(), I + 1, false);
-                            (this.SidePanel.ShowPanel("Codes") as CodeSection).ShowComponent(
-                                Component,
+                            this.visualizer.setFilter(false, new OwnerFilter(), i + 1, false);
+                            (this.sidePanel.showPanel("Codes") as CodeSection).showComponent(
+                                component,
                             );
                         })
-                        .append($("<p></p>").text(d3.format(".1%")(Coverage)));
-                    Row.append(Cell);
+                        .append($("<p></p>").text(d3.format(".1%")(coverage)));
+                    row.append(cell);
                 });
             },
-            ["Cluster", ...this.Dataset.Names.slice(1)],
-        ).appendTo(Panel);
+            ["Cluster", ...this.dataset.names.slice(1)],
+        ).appendTo(panel);
         // Copy to clipboard
-        Title.append(
+        title.append(
             $('<span><a href="javascript:void(0)" class="copy">Copy to Clipboard</a></span>').on(
                 "click",
                 () => {
-                    const Table = [
-                        `ID\tCluster (Representative Code)\tCodes\t${this.Dataset.Names.slice(1).join("\t")}`,
+                    const table = [
+                        `ID\tCluster (Representative Code)\tCodes\t${this.dataset.names.slice(1).join("\t")}`,
                     ];
-                    Results.forEach(({ Component, Differences }, Index) => {
-                        Table.push(
-                            `${Index + 1}.\t${Component.Representative!.Data.Label}\t${Component.Nodes.length}\t${Differences.map(
-                                (Difference) => d3.format(".1%")(Difference).replace("−", "-"),
-                            ).join("\t")}`,
+                    results.forEach(({ component, differences }, idx) => {
+                        table.push(
+                            `${idx + 1}.\t${component.representative?.data.label}\t${component.nodes.length}\t${differences
+                                .map((difference) => d3.format(".1%")(difference).replace("−", "-"))
+                                .join("\t")}`,
                         );
                     });
-                    void navigator.clipboard.writeText(Table.join("\n"));
+                    void navigator.clipboard.writeText(table.join("\n"));
                 },
             ),
         );
         // Show the dialog
-        this.ShowPanel(Panel);
+        this.#showPanel(panel);
     }
-    /** VerifiedOwnerships: Human-verified ownership information. */
-    private VerifiedOwnerships = new Map<string, Map<number, number>>();
-    /** ValidateCoverageByCodes: Validate the coverage by individual codes. */
-    public ValidateCoverageByCodes(ScrollTo?: string) {
-        this.Visualizer.PushState("validate-coverage-by-codes", () => {
-            this.ValidateCoverageByCodes(ScrollTo);
+
+    /** Human-verified ownership information. */
+    #verifiedOwnerships = new Map<string, Map<number, number>>();
+    /** Validate the coverage by individual codes. */
+    validateCoverageByCodes(scrollTo?: string) {
+        this.visualizer.pushState("validate-coverage-by-codes", () => {
+            this.validateCoverageByCodes(scrollTo);
         });
         // Build the panel
-        const Panel = $('<div class="panel"></div>');
-        let TargetElement: Cash | undefined;
+        const panel = $('<div class="panel"></div>');
+        let targetElement: Cash | undefined;
         // Add the title
-        const Title = $("<h3>Ownership of Codes</h3>").appendTo(Panel);
-        Panel.append($("<hr/>"));
+        const title = $("<h3>Ownership of Codes</h3>").appendTo(panel);
+        panel.append($("<hr/>"));
         // Get the codebooks
-        const Indexes =
-            this.Visualizer.GetFilter<unknown, number>("Owner")?.Parameters ??
-            this.Visualizer.Dataset.Weights!.map((Weight, Index) =>
-                Weight > 0 ? Index : -1,
-            ).filter((Index) => Index >= 0);
-        const Names = Indexes.map((Index) => this.Dataset.Names[Index]);
+        const indexes =
+            this.visualizer.getFilter<unknown, number>("Owner")?.parameters ??
+            this.visualizer.dataset.weights
+                ?.map((weight, idx) => (weight > 0 ? idx : -1))
+                .filter((idx) => idx >= 0) ??
+            [];
+        const names = indexes.map((idx) => this.dataset.names[idx]);
         // Get the codes
-        const Graph = this.GetGraph<Code>();
-        const Distances = this.Visualizer.Dataset.Distances;
-        const Codes = [...Graph.Nodes];
-        Shuffle(Codes, 131072);
-        Codes.forEach((Node) => {
-            if (!this.VerifiedOwnerships.has(Node.ID)) {
-                const Default = new Map<number, number>();
-                for (let Index = 0; Index < this.Visualizer.Dataset.Codebooks.length; Index++) {
-                    Default.set(
-                        Index,
-                        Node.Owners.has(Index) ? 2 : Node.NearOwners.has(Index) ? 1 : 0,
-                    );
+        const graph = this.getGraph<Code>();
+        const distances = this.visualizer.dataset.distances;
+        const codes = [...graph.nodes];
+        seededShuffle(codes, 131072);
+        codes.forEach((node) => {
+            if (!this.#verifiedOwnerships.has(node.id)) {
+                const dft = new Map<number, number>();
+                for (let idx = 0; idx < this.visualizer.dataset.codebooks.length; idx++) {
+                    dft.set(idx, node.owners.has(idx) ? 2 : node.nearOwners.has(idx) ? 1 : 0);
                 }
-                this.VerifiedOwnerships.set(Node.ID, Default);
+                this.#verifiedOwnerships.set(node.id, dft);
             }
         });
         // Build the table
-        this.BuildTable(
-            Codes,
-            (Row, Node, Index) => {
-                if (Node.Data.Label === ScrollTo) {
-                    TargetElement = Row;
+        this.buildTable(
+            codes,
+            (row, node, idx) => {
+                if (node.data.label === scrollTo) {
+                    targetElement = row;
                 }
                 // Show the label
-                Row.append(
-                    $(`<td class="actionable"><h4>${Index + 1}. ${Node.Data.Label}</h4></td>`).on(
+                row.append(
+                    $(`<td class="actionable"><h4>${idx + 1}. ${node.data.label}</h4></td>`).on(
                         "click",
                         () => {
-                            this.Visualizer.PushState("validate-coverage-by-codes", () => {
-                                this.ValidateCoverageByCodes(Node.Data.Label);
+                            this.visualizer.pushState("validate-coverage-by-codes", () => {
+                                this.validateCoverageByCodes(node.data.label);
                             });
-                            this.ShowCode(0, Node.Data);
+                            this.showCode(0, node.data);
                         },
                     ),
                 );
                 // Show the description
-                const Description = $(
+                const description = $(
                     '<tr class="description"><td></td><td colspan="100"><p></p></td></tr>',
                 );
-                Description.find("p").text(`${Node.Data.Definitions?.join(", ")}`);
-                Row.after(Description);
+                description.find("p").text(`${node.data.definitions?.join(", ")}`);
+                row.after(description);
                 // Show the ownerships
-                for (const Codebook of Indexes) {
-                    ((Index) => {
-                        const Codebook = this.Dataset.Codebooks[Index];
-                        const Cell = $('<td class="codes"></td>').appendTo(Row);
+                for (const codebook of indexes) {
+                    ((idx) => {
+                        const codebook = this.dataset.codebooks[idx];
+                        const cell = $('<td class="codes"></td>').appendTo(row);
                         // Select
-                        const Select = $(`<select>
+                        const select = $(`<select>
                             <option value="0">Not related</option>
                             <option value="1">Related</option>
                             <option value="2">Very related</option>
-                        </select>`).appendTo(Cell);
-                        Select.on("change", () => {
-                            this.VerifiedOwnerships.get(Node.ID)!.set(
-                                Index,
-                                parseInt(Select.val() as string),
-                            );
-                        }).val(this.VerifiedOwnerships.get(Node.ID)!.get(Index)!.toString());
+                        </select>`).appendTo(cell);
+                        select
+                            .on("change", () => {
+                                this.#verifiedOwnerships
+                                    .get(node.id)
+                                    ?.set(idx, parseInt(select.val() as string));
+                            })
+                            .val(this.#verifiedOwnerships.get(node.id)?.get(idx)?.toString() ?? "");
                         // Find the related codes
-                        let Related: Code[] = [];
-                        if (Node.Owners.has(Index)) {
-                            Related = [Node.Data];
+                        let related: Code[] = [];
+                        if (node.owners.has(idx)) {
+                            related = [node.data];
                         } else {
                             // Find the closest owned code
-                            const Owned = Codes.filter((Code) => Code.Owners.has(Index));
+                            const owned = codes.filter((code) => code.owners.has(idx));
                             // Same logic as the links: if there are "similar" codes, use them all; otherwise, show the closest one
-                            let Nearest = Owned.filter(
-                                (Code) =>
-                                    Distances[Node.Index][Code.Index] <= Graph.MinimumDistance,
+                            let nearest = owned.filter(
+                                (code) => distances[node.index][code.index] <= graph.minDist,
                             );
-                            if (Nearest.length === 0) {
-                                Nearest = Owned.filter(
-                                    (Code) =>
-                                        Distances[Node.Index][Code.Index] <= Graph.MaximumDistance,
-                                ).sort(
-                                    (A, B) =>
-                                        Distances[A.Index][Node.Index] -
-                                        Distances[B.Index][Node.Index],
-                                );
-                                if (Nearest.length > 1) {
-                                    Nearest = [Nearest[0]];
+                            if (nearest.length === 0) {
+                                nearest = owned
+                                    .filter(
+                                        (code) =>
+                                            distances[node.index][code.index] <= graph.maxDist,
+                                    )
+                                    .sort(
+                                        (a, b) =>
+                                            distances[a.index][node.index] -
+                                            distances[b.index][node.index],
+                                    );
+                                if (nearest.length > 1) {
+                                    nearest = [nearest[0]];
                                 }
                             }
-                            Related = Nearest.map((Code) => Code.Data);
+                            related = nearest.map((code) => code.data);
                         }
                         // Show the related codes
-                        for (const Original of Related) {
-                            for (const Code of FindOriginalCodes(Codebook, Original, Index)) {
-                                ((Original, Code) => {
-                                    const Link = $('<a href="javascript:void(0)"></a>')
-                                        .text(Code.Label)
-                                        .appendTo(Cell);
-                                    Link.on("click", () => {
-                                        this.Visualizer.PushState(
+                        for (const original of related) {
+                            for (const code of findOriginalCodes(codebook, original, idx)) {
+                                ((original, code) => {
+                                    const link = $('<a href="javascript:void(0)"></a>')
+                                        .text(code.label)
+                                        .appendTo(cell);
+                                    link.on("click", () => {
+                                        this.visualizer.pushState(
                                             "validate-coverage-by-codes",
                                             () => {
-                                                this.ValidateCoverageByCodes(Node.Data.Label);
+                                                this.validateCoverageByCodes(node.data.label);
                                             },
                                         );
-                                        this.ShowCode(Index, Original, Code);
+                                        this.showCode(idx, original, code);
                                     });
-                                })(Original, Code);
+                                })(original, code);
                             }
                         }
-                    })(Codebook);
+                    })(codebook);
                 }
             },
-            ["Label", ...Names],
+            ["Label", ...names],
         )
             .addClass("code-table")
-            .appendTo(Panel);
+            .appendTo(panel);
         // Copy to clipboard
-        Title.append(
+        title.append(
             $('<span><a href="javascript:void(0)" class="copy">Save to Clipboard</a></span>').on(
                 "click",
                 () => {
-                    const Table = [`Label\t${Names.join("\t")}`];
-                    Codes.forEach((Node) => {
-                        const Owners = this.VerifiedOwnerships.get(Node.ID)!;
-                        Table.push(
-                            `${Node.Data.Label}\t${Indexes.map((Index) => Owners.get(Index)).join("\t")}`,
+                    const table = [`Label\t${names.join("\t")}`];
+                    codes.forEach((Node) => {
+                        const owners =
+                            this.#verifiedOwnerships.get(Node.id) ?? new Map<number, number>();
+                        table.push(
+                            `${Node.data.label}\t${indexes.map((Index) => owners.get(Index)).join("\t")}`,
                         );
                     });
-                    void navigator.clipboard.writeText(Table.join("\n"));
+                    void navigator.clipboard.writeText(table.join("\n"));
                 },
             ),
         );
         // Load from clipboard
-        Title.append(
+        title.append(
             $('<span><a href="javascript:void(0)" class="copy">Load from Clipboard</a></span>').on(
                 "click",
                 () => {
                     if (!confirm("Are you sure you want to load ownerships from the clipboard?")) {
                         return;
                     }
-                    void navigator.clipboard.readText().then((Text) => {
-                        const Table = Text.split("\n").map((Line) => {
-                            if (Line.endsWith("\r")) {
-                                Line = Line.slice(0, -1);
+                    void navigator.clipboard.readText().then((text) => {
+                        const table = text.split("\n").map((line) => {
+                            if (line.endsWith("\r")) {
+                                line = line.slice(0, -1);
                             }
-                            return Line.split("\t");
+                            return line.split("\t");
                         });
-                        const Header = Table[0];
-                        const Indexes = Header.slice(1).map((Name) =>
-                            this.Dataset.Names.indexOf(Name),
-                        );
-                        Table.slice(1).forEach(([Label, ...Owners]) => {
-                            const Node = Codes.find((Node) => Node.Data.Label === Label);
-                            if (!Node) {
+                        const header = table[0];
+                        const indexes = header
+                            .slice(1)
+                            .map((name) => this.dataset.names.indexOf(name));
+                        table.slice(1).forEach(([label, ...owners]) => {
+                            const node = codes.find((node) => node.data.label === label);
+                            if (!node) {
                                 return;
                             }
-                            Owners.forEach((Owner, Index) =>
-                                this.VerifiedOwnerships.get(Node.ID)!.set(
-                                    Indexes[Index],
-                                    parseInt(Owner),
-                                ),
+                            owners.forEach((owner, idx) =>
+                                this.#verifiedOwnerships
+                                    .get(node.id)
+                                    ?.set(indexes[idx], parseInt(owner)),
                             );
                         });
-                        this.ValidateCoverageByCodes();
+                        this.validateCoverageByCodes();
                     });
                 },
             ),
         );
         // Clear the values
-        Title.append(
+        title.append(
             $('<span><a href="javascript:void(0)" class="copy">Clear All</a></span>').on(
                 "click",
                 () => {
                     if (!confirm("Are you sure you want to clear all ownerships?")) {
                         return;
                     }
-                    this.VerifiedOwnerships.forEach((Owners) => {
-                        Indexes.forEach((Index) => Owners.set(Index, 0));
+                    this.#verifiedOwnerships.forEach((owners) => {
+                        indexes.forEach((idx) => owners.set(idx, 0));
                     });
-                    this.ValidateCoverageByCodes();
+                    this.validateCoverageByCodes();
                 },
             ),
         );
         // Show the dialog
-        this.ShowPanel(Panel);
+        this.#showPanel(panel);
         // Scroll to the target element
-        if (TargetElement) {
-            const Offset = TargetElement.offset()!.top;
-            this.Container.children("div.content")
+        if (targetElement) {
+            const offset = targetElement.offset()?.top ?? NaN;
+            this.container
+                .children("div.content")
                 .get(0)
-                ?.scrollTo(0, Offset - 60);
+                ?.scrollTo(0, offset - 60);
         }
     }
 }

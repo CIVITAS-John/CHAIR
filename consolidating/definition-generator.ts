@@ -1,121 +1,128 @@
-import { ResearchQuestion } from "../constants.js";
-import type { Code, Codebook } from "../utils/schema.js";
+import type { Code, Codebook, Dataset } from "../schema.js";
+import type { IDStrFunc } from "../steps/base-step.js";
 
-import { UpdateCodes } from "./codebooks.js";
+import { updateCodes } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
 
 /** DefinitionParse: Parse generated definitions based on labels and quotes. */
 export abstract class DefinitionParser extends CodeConsolidator {
-    /** Constructor: Create a new DefinitionParser. */
-    constructor() {
-        super();
-        this.Chunkified = true;
-    }
-    /** ParseResponse: Parse the response for the code consolidator. */
-    public ParseResponse(Codebook: Codebook, Codes: Code[], Lines: string[]): Promise<number> {
-        const Pendings: Code[] = [];
-        let CurrentCode: Code | undefined;
-        let Status = "";
+    override chunkified = true;
+
+    /** Parse the response for the code consolidator. */
+    override parseResponse(codebook: Codebook, codes: Code[], lines: string[]) {
+        const pendings: Code[] = [];
+        let curCode: Code | undefined;
+        let status = "";
         // Parse the definitions
-        for (let Line of Lines) {
-            if (Line === "" || Line.startsWith("---")) {
+        for (let line of lines) {
+            if (line === "" || line.startsWith("---")) {
                 continue;
             }
             // Sometimes, LLMs will do **(...)** for anything. We need to remove that.
-            Line = Line.replace(/\*\*/g, "");
+            line = line.replace(/\*\*/g, "");
             // If we see "...", that means later codes are not processed and should be truncated
-            if (Line === "...") {
+            if (line === "...") {
                 break;
             }
-            const Match = /^\d+\./.exec(Line);
-            if (Match) {
-                Line = Line.substring(Match[0].length).trim();
+            const match = /^\d+\./.exec(line);
+            if (match) {
+                line = line.substring(match[0].length).trim();
                 // Sometimes, the label is merged with the number
-                CurrentCode = {
-                    Label: Line.trim().toLowerCase(),
-                    Definitions: [],
-                    Categories: [],
-                    Examples: [],
-                    Alternatives: [],
+                curCode = {
+                    label: line.trim().toLowerCase(),
+                    definitions: [],
+                    categories: [],
+                    examples: [],
+                    alternatives: [],
                 };
-                Pendings.push(CurrentCode);
-                Status = "";
+                pendings.push(curCode);
+                status = "";
             }
-            if (Line.startsWith("Label:") && CurrentCode) {
-                CurrentCode.Label = Line.substring(6).trim().toLowerCase();
-                Status = "Label";
-            } else if (Line.startsWith("Phrase:") && CurrentCode) {
-                CurrentCode.Label = Line.substring(7).trim().toLowerCase();
-                Status = "Label";
-            } else if (Line.startsWith("Criteria:") && CurrentCode) {
-                const Definition = Line.substring(9).trim();
-                if (Definition !== "") {
-                    CurrentCode.Definitions = [Definition];
+            if (line.startsWith("Label:") && curCode) {
+                curCode.label = line.substring(6).trim().toLowerCase();
+                status = "Label";
+            } else if (line.startsWith("Phrase:") && curCode) {
+                curCode.label = line.substring(7).trim().toLowerCase();
+                status = "Label";
+            } else if (line.startsWith("Criteria:") && curCode) {
+                const definition = line.substring(9).trim();
+                if (definition !== "") {
+                    curCode.definitions = [definition];
                 }
-                Status = "Criteria";
-            } else if (Line.startsWith("Category:") && CurrentCode) {
-                const Category = Line.substring(9).trim();
+                status = "Criteria";
+            } else if (line.startsWith("Category:") && curCode) {
+                const Category = line.substring(9).trim();
                 if (Category !== "") {
-                    CurrentCode.Categories = [Category.toLowerCase()];
+                    curCode.categories = [Category.toLowerCase()];
                 }
-                Status = "Category";
-            } else if (Status === "Label") {
-                CurrentCode!.Label = `${CurrentCode!.Label}\n${Line}`.trim();
-            } else if (Status === "Criteria") {
-                CurrentCode!.Definitions!.push(Line.trim());
-            } else if (Status === "Theme") {
+                status = "Category";
+            } else if (status === "Label" && curCode) {
+                curCode.label = `${curCode.label}\n${line}`.trim();
+            } else if (status === "Criteria" && curCode) {
+                curCode.definitions?.push(line.trim());
+            } else if (status === "Theme" && curCode) {
                 // Sometimes, the theme ends with a "."
-                if (Line.endsWith(".")) {
-                    Line = Line.substring(0, Line.length - 1).trim();
+                if (line.endsWith(".")) {
+                    line = line.substring(0, line.length - 1).trim();
                 }
-                CurrentCode!.Categories!.push(Line.trim());
+                curCode.categories?.push(line.trim());
             }
         }
         // Check if we have all the codes and avoid mismatches
-        for (let I = 0; I < Pendings.length; I++) {
-            const NewCode = Pendings[I];
+        for (let i = 0; i < pendings.length; i++) {
+            const newCode = pendings[i];
             // Sometimes, the new label starts with "label:"
-            if (NewCode.Label.startsWith("label:")) {
-                NewCode.Label = NewCode.Label.substring(6).trim();
+            if (newCode.label.startsWith("label:")) {
+                newCode.label = newCode.label.substring(6).trim();
             }
             // Sometimes, the new label starts with "phrase:"
-            if (NewCode.Label.startsWith("phrase:")) {
-                NewCode.Label = NewCode.Label.substring(7).trim();
+            if (newCode.label.startsWith("phrase:")) {
+                newCode.label = newCode.label.substring(7).trim();
             }
             // Sometimes, the new label is wrapped in ""
-            if (NewCode.Label.startsWith('"') && NewCode.Label.endsWith('"')) {
-                NewCode.Label = NewCode.Label.substring(1, NewCode.Label.length - 1);
+            if (newCode.label.startsWith('"') && newCode.label.endsWith('"')) {
+                newCode.label = newCode.label.substring(1, newCode.label.length - 1);
             }
             // Sometimes, the new label ends with "."
-            if (NewCode.Label.endsWith(".")) {
-                NewCode.Label = NewCode.Label.substring(0, NewCode.Label.length - 1).trim();
+            if (newCode.label.endsWith(".")) {
+                newCode.label = newCode.label.substring(0, newCode.label.length - 1).trim();
             }
             // Sometimes, the order of labels is wrong (! found for gpt-3.5-turbo)
-            const Found = Codes.findIndex((Code) => Code.Label === NewCode.Label);
-            if (Found !== -1 && Found !== I) {
+            const Found = codes.findIndex((Code) => Code.label === newCode.label);
+            if (Found !== -1 && Found !== i) {
                 throw new Error(
-                    `Invalid response: code ${NewCode.Label}'s mapping order is wrong.`,
+                    `Invalid response: code ${newCode.label}'s mapping order is wrong.`,
                 );
             }
         }
         // Update the codes
-        UpdateCodes(Codebook, Pendings, Codes);
+        updateCodes(codebook, pendings, codes);
         // Remove temp labels
-        Codes.forEach((Code) => delete Code.OldLabels);
+        codes.forEach((Code) => delete Code.oldLabels);
         // Return the cursor movement
-        return Promise.resolve(Object.keys(Pendings).length - Codes.length);
+        return Promise.resolve(Object.keys(pendings).length - codes.length);
     }
 }
 
 /** DefinitionGenerator: Generate definitions based on labels and quotes. */
-export class DefinitionGenerator extends DefinitionParser {
-    /** SubunitFilter: Filter the subunits before chunking. */
-    public SubunitFilter(Code: Code): boolean {
-        // Only when the code has no definitions should we generate them
-        return super.SubunitFilter(Code) && (Code.Definitions?.length ?? 0) === 0;
+export class DefinitionGenerator<T> extends DefinitionParser {
+    protected override _idStr: IDStrFunc;
+
+    constructor(
+        idStr: IDStrFunc,
+        public dataset: Dataset<T>,
+    ) {
+        super();
+        this._idStr = (mtd?: string) => idStr(`DefinitionGenerator${mtd ? `#${mtd}` : ""}`);
     }
-    /** BuildPrompts: Build the prompts for the code consolidator. */
-    public BuildPrompts(_Codebook: Codebook, Codes: Code[]): Promise<[string, string]> {
+
+    /** Filter the subunits before chunking. */
+    override subunitFilter(Code: Code) {
+        // Only when the code has no definitions should we generate them
+        return super.subunitFilter(Code) && (Code.definitions?.length ?? 0) === 0;
+    }
+    /** Build the prompts for the code consolidator. */
+    override buildPrompts(_codebook: Codebook, codes: Code[]): Promise<[string, string]> {
         // Generate definitions for codes
         return Promise.resolve([
             `
@@ -123,49 +130,50 @@ You are an expert in thematic analysis clarifying the criteria of qualitative co
 Consider provided quotes, and note that each quote is independent of others.
 Write clear and generalizable criteria for each code and do not introduce unnecessary details.
 If necessary, refine labels to be more accurate, but do not repeat yourself.
-${ResearchQuestion}
+${this.dataset.researchQuestion}
 Always follow the output format:
 ---
-Definitions for each code (${Codes.length} in total):
+Definitions for each code (${codes.length} in total):
 1. 
 Criteria: {Who did what, and how for code 1}
 Label: {A descriptive label of code 1}
 ...
-${Codes.length}.
-Criteria: {Who did what, and how for code ${Codes.length}}
-Label: {A descriptive label of code ${Codes.length}}
+${codes.length}.
+Criteria: {Who did what, and how for code ${codes.length}}
+Label: {A descriptive label of code ${codes.length}}
 ---`.trim(),
-            Codes.map((Code, Index) =>
-                `
-${Index + 1}.
-Label: ${Code.Label}
+            codes
+                .map((code, idx) =>
+                    `
+${idx + 1}.
+Label: ${code.label}
 Quotes:
-${TakeExamples(Code.Examples ?? [], 5)
-    .map((Example) => `- ${Example}`)
+${takeExamples(code.examples ?? [], 5)
+    .map((example) => `- ${example}`)
     .join("\n")}`.trim(),
-            ).join("\n\n"),
+                )
+                .join("\n\n"),
         ]);
     }
 }
 
-/** TakeExamples: Take some best unique examples from a set. */
-// Here, best is defined as the longest * most frequent unique quotes.
-export function TakeExamples(Examples: string[], Take = 1000000): string[] {
-    const ExampleMap = new Map<string, number>();
-    for (let Example of Examples) {
-        const Index = Example.indexOf("|||");
+/**
+ * Take some best unique examples from a set.
+ * Here, best is defined as the longest * most frequent unique quotes.
+ */
+const takeExamples = (examples: string[], take = 1000000) => {
+    const exampleMap = new Map<string, number>();
+    for (let example of examples) {
+        const Index = example.indexOf("|||");
         if (Index !== -1) {
-            Example = Example.substring(Index + 3);
+            example = example.substring(Index + 3);
         }
-        if (!ExampleMap.has(Example)) {
-            ExampleMap.set(Example, 0);
-        }
-        ExampleMap.set(Example, ExampleMap.get(Example)! + 1);
+        exampleMap.set(example, exampleMap.get(example) ?? 0 + 1);
     }
-    for (const [Example, Count] of ExampleMap) {
-        ExampleMap.set(Example, Count * Example.length);
+    for (const [example, count] of exampleMap) {
+        exampleMap.set(example, count * example.length);
     }
-    return Array.from(ExampleMap.keys())
-        .sort((A, B) => ExampleMap.get(B)! - ExampleMap.get(A)!)
-        .slice(0, Take);
-}
+    return Array.from(exampleMap.keys())
+        .sort((A, B) => (exampleMap.get(B) ?? 0) - (exampleMap.get(A) ?? 0))
+        .slice(0, take);
+};

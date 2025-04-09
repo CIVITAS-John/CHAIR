@@ -8,87 +8,92 @@ import type { Visualizer } from "../visualizer.js";
 
 import { Panel } from "./panel.js";
 
-/** SidePanel: The side panel for the visualizer. */
+/** The side panel for the visualizer. */
 export class SidePanel extends Panel {
-    /** Contents: The content container for the side panel. */
-    private Contents: Cash;
-    /** Header: The header of the side panel. */
-    private Header: Cash;
-    /** Subpanels: The subpanels in the side panel. */
-    private Subpanels: Record<string, Panel> = {};
-    /** Constructor: Constructing the side panel. */
-    public constructor(Container: Cash, Visualizer: Visualizer) {
-        super(Container, Visualizer);
+    /** The content container for the side panel. */
+    #contents: Cash;
+    /** The header of the side panel. */
+    #header: Cash;
+    /** The subpanels in the side panel. */
+    #subpanels: Record<string, Panel> = {};
+
+    /** Constructing the side panel. */
+    constructor(container: Cash, visualizer: Visualizer) {
+        super(container, visualizer);
+
         // Add the side panel
-        this.Container.find(".collapsable").on("click", () => {
-            this.Toggle();
+        this.container.find(".collapsable").on("click", () => {
+            this.toggle();
         });
-        this.Header = this.Container.find(".panel-header h2");
-        this.Contents = this.Container.children(".content");
+        this.#header = this.container.find(".panel-header h2");
+        this.#contents = this.container.children(".content");
+
         // Add the subpanels
-        const Sections = [
-            new DatasetSection(this.Contents, this.Visualizer),
-            new CodebookSection(this.Contents, this.Visualizer),
-            new CodeSection(this.Contents, this.Visualizer),
-            new UserSection(this.Contents, this.Visualizer),
+        const sections = [
+            new DatasetSection(this.#contents, this.visualizer),
+            new CodebookSection(this.#contents, this.visualizer),
+            new CodeSection(this.#contents, this.visualizer),
+            new UserSection(this.#contents, this.visualizer),
         ];
-        for (const Section of Sections) {
-            this.Subpanels[Section.Name] = Section;
+        for (const section of sections) {
+            this.#subpanels[section.name] = section;
         }
+
         // Add the menu
-        const MenuContainer = this.Contents.children(".panel-menu");
-        const BuildMenu = (Name: string) => {
-            return $(
-                `<a href="javascript:void(0)" id="menu-${Name}">${this.Subpanels[Name].Name}</a>`,
-            ).on("click", () => this.ShowPanel(Name));
-        };
-        for (const Key in this.Subpanels) {
-            MenuContainer.append(BuildMenu(Key));
+        const menuContainer = this.#contents.children(".panel-menu");
+        const buildMenu = (name: string) =>
+            $(
+                `<a href="javascript:void(0)" id="menu-${name}">${this.#subpanels[name].name}</a>`,
+            ).on("click", () => this.showPanel(name));
+        for (const key in this.#subpanels) {
+            menuContainer.append(buildMenu(key));
         }
+
         // Show the tutorial
-        MenuContainer.append(
+        menuContainer.append(
             $('<a href="javascript:void(0)" id="menu-tutorial">?</a>').on("click", () => {
-                this.Visualizer.Tutorial.ShowTutorial(true);
+                this.visualizer.tutorial.showTutorial(true);
             }),
         );
     }
-    /** ShowPanel: Show a side panel. */
-    public ShowPanel(Name: string) {
-        const Panel = this.Subpanels[Name];
-        this.Header.text(Panel.Title);
-        for (const Key in this.Subpanels) {
-            if (Key === Name) {
-                this.Subpanels[Key].Show();
+
+    /** Show a side panel. */
+    showPanel(name: string) {
+        const panel = this.#subpanels[name];
+        this.#header.text(panel.title);
+        for (const key in this.#subpanels) {
+            if (key === name) {
+                this.#subpanels[key].show();
             } else {
-                this.Subpanels[Key].Hide();
+                this.#subpanels[key].hide();
             }
         }
-        $(`#menu-${this.CurrentPanel}`).toggleClass("chosen", false);
-        $(`#menu-${Name}`).toggleClass("chosen", true);
-        this.CurrentPanel = Name;
-        return Panel;
+        $(`#menu-${this.currentPanel}`).toggleClass("chosen", false);
+        $(`#menu-${name}`).toggleClass("chosen", true);
+        this.currentPanel = name;
+        return panel;
     }
-    /** CurrentPanel: The current panel being shown. */
-    public CurrentPanel = "Datasets";
-    /** Show: Show the side panel. */
-    public Show() {
-        this.Container.toggleClass("collapsed", false);
-        this.ShowPanel(this.CurrentPanel);
+    /** The current panel being shown. */
+    currentPanel = "Datasets";
+    /** Show the side panel. */
+    override show() {
+        this.container.toggleClass("collapsed", false);
+        this.showPanel(this.currentPanel);
     }
-    /** Hide: Hide the side panel. */
-    public Hide() {
-        this.Container.toggleClass("collapsed", true);
+    /** Hide the side panel. */
+    override hide() {
+        this.container.toggleClass("collapsed", true);
     }
-    /** Render: Render the panel. */
-    public Render() {
-        this.Subpanels[this.CurrentPanel].Render();
+    /** Render the panel. */
+    override render() {
+        this.#subpanels[this.currentPanel].render();
     }
-    /** Toggle: Toggle the side panel. */
-    public Toggle() {
-        if (this.Container.hasClass("collapsed")) {
-            this.Show();
+    /** Toggle the side panel. */
+    override toggle() {
+        if (this.container.hasClass("collapsed")) {
+            this.show();
         } else {
-            this.Hide();
+            this.hide();
         }
     }
 }

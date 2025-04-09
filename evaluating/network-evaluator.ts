@@ -1,9 +1,6 @@
 import md5 from "md5";
 
-import { MergeCodebooks } from "../consolidating/codebooks.js";
-import { GetSpeakerName } from "../constants.js";
-import { EvaluateTexts } from "../utils/embeddings.js";
-import { ReadOrBuildCache } from "../utils/file.js";
+import { mergeCodebooks } from "../consolidating/codebooks";
 import type {
     Code,
     Codebook,
@@ -12,132 +9,159 @@ import type {
     DataChunk,
     DataItem,
     Dataset,
-} from "../utils/schema.js";
-import { CreateOfflineBundle, CreateServer } from "../utils/server.js";
+} from "../schema";
+import type { IDStrFunc } from "../steps/base-step";
+import type { EmbedderObject } from "../utils/embeddings";
+import { evaluateTexts } from "../utils/embeddings";
+import { withCache } from "../utils/file";
+import { logger } from "../utils/logger";
+import { createOfflineBundle, launchServer } from "../utils/server";
 
-import { CodebookEvaluator } from "./codebooks.js";
+import { CodebookEvaluator } from "./codebooks";
+
+/** Get the strings of the codes. */
+const getCodeString = (code: Code) => {
+    let text = `Label: ${code.label}`;
+    if ((code.definitions?.length ?? 0) > 0) {
+        text += `\nDefinition: ${(code.definitions ?? [])[0]}`;
+    }
+    return text;
+};
 
 /** NetworkEvaluator: A network evaluator of codebook against a reference codebook (#0) with potential human inputs. */
-export class NetworkEvaluator extends CodebookEvaluator {
-    /** Name: The name of the evaluator. */
-    public Name = "network-evaluator";
-    /** Visualize: Whether we visualize the evaluation. */
-    public Visualize = false;
-    /** Dataset: The dataset underlying the codebooks. */
-    public Dataset: Dataset<DataChunk<DataItem>>;
-    /** Anonymize: Whether the dataset should be anonymized. */
-    public Anonymize: boolean;
-    /** Title: The title of the evaluator. */
-    public Title: string;
-    /** constructor: Initialize the evaluator. */
-    public constructor({
-        Dataset,
-        Anonymize,
-        Title,
-    }: {
-        Dataset: Dataset<DataChunk<DataItem>>;
-        Anonymize?: boolean;
-        Title?: string;
-    }) {
+export class NetworkEvaluator<
+    TUnit extends DataChunk<TSubunit>,
+    TSubunit extends DataItem = DataItem,
+> extends CodebookEvaluator {
+    protected _idStr: IDStrFunc;
+
+    /** The name of the evaluator. */
+    override name = "network-evaluator";
+    /** Whether we visualize the evaluation. */
+    visualize = false;
+    /** The dataset underlying the codebooks. */
+    dataset: Dataset<TUnit>;
+    /** Whether the dataset should be anonymized. */
+    anonymize: boolean;
+    /** The title of the evaluator. */
+    title: string;
+
+    /** Initialize the evaluator. */
+    constructor(
+        idStr: IDStrFunc,
+        /** The embedder object for the merger. */
+        public embedder: EmbedderObject,
+        {
+            dataset,
+            anonymize,
+            title,
+        }: {
+            dataset: Dataset<TUnit>;
+            anonymize?: boolean;
+            title?: string;
+        },
+    ) {
         super();
-        this.Dataset = Dataset;
-        this.Anonymize = Anonymize ?? true;
-        this.Title = Title ?? "Network Evaluator";
+        this._idStr = (mtd?: string) => idStr(`NetworkEvaluator${mtd ? `#${mtd}` : ""}`);
+        this.dataset = dataset;
+        this.anonymize = anonymize ?? true;
+        this.title = title ?? "Network Evaluator";
     }
-    /** Evaluate: Evaluate a number of codebooks. */
-    public async Evaluate(
-        Codebooks: Codebook[],
-        Names: string[],
-        ExportPath?: string,
+
+    /** Evaluate a number of codebooks. */
+    override async evaluate(
+        codebooks: Codebook[],
+        names: string[],
+        exportPath?: string,
     ): Promise<Record<string, CodebookEvaluation>> {
-        const Hash = md5(JSON.stringify(Codebooks));
+        const _id = this._idStr("evaluate");
+
+        const hash = md5(JSON.stringify(codebooks));
         // Weights
-        const Weights = Names.map((Name, Index) => {
-            if (Index === 0 || Name.startsWith("group:")) {
+        const weights = names.map((name, idx) => {
+            if (idx === 0 || name.startsWith("group:")) {
                 return 0;
             }
-            const Fields = Name.split("~");
-            const Value = parseFloat(Fields[Fields.length - 1]);
-            if (isNaN(Value)) {
+            const fields = name.split("~");
+            const value = parseFloat(fields[fields.length - 1]);
+            if (isNaN(value)) {
                 return 1;
             }
-            Names[Index] = Fields.slice(0, Fields.length - 1).join("~");
-            return Value;
+            names[idx] = fields.slice(0, fields.length - 1).join("~");
+            return value;
         });
         // Build the network information
-        await ReadOrBuildCache(`${ExportPath}/network`, Hash, async () => {
+        await withCache(this._idStr, `${exportPath}/network`, hash, async () => {
             // We treat the first input as the reference codebook
-            Names[0] = "baseline";
-            const Merged = MergeCodebooks(Codebooks, true);
+            names[0] = "baseline";
+            const merged = mergeCodebooks(codebooks, true);
             // Then, we convert each code into an embedding and send to Python
-            const Codes = Object.values(Merged);
-            const Labels = Codes.map((Code) => Code.Label);
-            const CodeStrings = Labels.map((Label) => GetCodeString(Merged[Label]));
-            const CodeOwners = Labels.map((Label) => Merged[Label].Owners!);
-            const Result = await EvaluateTexts<{
-                Distances: number[][];
-                Positions: [number, number][];
+            const codes = Object.values(merged);
+            const labels = codes.map((c) => c.label);
+            const codeStrings = labels.map((l) => getCodeString(merged[l]));
+            const codeOwners = labels.map((l) => merged[l].owners ?? []);
+            const res = await evaluateTexts<{
+                distances: number[][];
+                positions: [number, number][];
             }>(
-                CodeStrings,
-                Labels,
-                CodeOwners,
-                Names,
-                this.Name,
+                this._idStr,
+                this.embedder,
+                codeStrings,
+                labels,
+                codeOwners,
+                names,
+                this.name,
                 "network",
-                this.Visualize.toString(),
-                ExportPath ?? "./known",
+                this.visualize.toString(),
+                exportPath ?? "./known",
             );
             // Infuse the results back into the reference codebook
-            for (let I = 0; I < Codes.length; I++) {
-                Codes[I].Position = Result.Positions[I];
+            for (let i = 0; i < codes.length; i++) {
+                codes[i].position = res.positions[i];
             }
             // Remove sensitive data
-            if (this.Anonymize) {
-                for (const Dataset of Object.values(this.Dataset.Data)) {
-                    for (const Chunk of Object.values(Dataset)) {
-                        for (const Item of Chunk.AllItems ?? []) {
-                            Item.Nickname = GetSpeakerName(Item.UserID);
-                            if ((Item as unknown as Record<string, unknown>).CurrentNickname) {
-                                delete (Item as unknown as Record<string, unknown>).CurrentNickname;
+            if (this.anonymize) {
+                for (const dataset of Object.values(this.dataset.data)) {
+                    for (const chunk of Object.values(dataset)) {
+                        for (const item of chunk.items) {
+                            // TODO: Support subchunks
+                            if ("items" in item) {
+                                logger.warn("Subchunks are not yet supported, skipping", _id);
+                                continue;
+                            }
+                            item.nickname = this.dataset.getSpeakerName(item.uid);
+                            if ((item as unknown as Record<string, unknown>).CurrentNickname) {
+                                delete (item as unknown as Record<string, unknown>).CurrentNickname;
                             }
                         }
                     }
                 }
             }
             // Return in the format
-            const Package: CodebookComparison<DataChunk<DataItem>> = {
-                Codebooks,
-                Names,
-                Codes,
-                Distances: Result.Distances,
-                Source: this.Dataset,
-                Title: this.Title,
-                Weights,
+            const pkg: CodebookComparison<DataChunk<DataItem>> = {
+                codebooks,
+                names,
+                codes,
+                distances: res.distances,
+                source: this.dataset,
+                title: this.title,
+                weights,
             };
-            return Package;
+            return pkg;
         });
         // Run the HTTP server
-        CreateOfflineBundle(
-            `${ExportPath}/network`,
-            ["evaluating/network", "out/evaluating/network"],
-            `${ExportPath}/network.json`,
+        createOfflineBundle(
+            `${exportPath}/network`,
+            ["./evaluating/network", "./out/evaluating/network"],
+            `${exportPath}/network.json`,
         );
         // Return the results from the server
         return (
-            (await CreateServer(
+            (await launchServer(
                 8080,
-                ["evaluating/network", "out/evaluating/network"],
-                `${ExportPath}/network.json`,
+                ["./evaluating/network", "./out/evaluating/network"],
+                `${exportPath}/network.json`,
             )) ?? {}
         );
     }
-}
-
-/** GetCodeString: Get the strings of the codes. */
-export function GetCodeString(Code: Code): string {
-    let Text = `Label: ${Code.Label}`;
-    if ((Code.Definitions?.length ?? 0) > 0) {
-        Text += `\nDefinition: ${Code.Definitions![0]}`;
-    }
-    return Text;
 }

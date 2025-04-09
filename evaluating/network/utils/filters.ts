@@ -1,263 +1,273 @@
 import d3 from "d3";
 
-import type { Code } from "../../../utils/schema.js";
+import type { Code } from "../../../schema.js";
 import type { Visualizer } from "../visualizer.js";
 
 import {
-    FilterItemByUser,
-    FilterNodeByExample,
-    FilterNodeByOwner,
-    FilterNodeByOwners,
+    filterItemByUser,
+    filterNodeByExample,
+    filterNodeByOwner,
+    filterNodeByOwners,
 } from "./graph.js";
 import type { Component, Node } from "./schema.js";
 
-/** FilterBase: The base class for filters. */
+/** The base class for filters. */
 export abstract class FilterBase<TNode, TParameter> {
-    /** Name: The name of the filter. */
-    public abstract Name: string;
-    /** Parameters: The parameters of the filter. */
-    public Parameters: TParameter[] = [];
-    /** Mode: The mode of the filter. */
-    public Mode = "";
-    /** Filter: The filter function. */
-    public abstract Filter(Visualizer: Visualizer, Node: Node<TNode>): boolean;
-    /** GetColorizer: Get the colorizer for this filter. */
-    public GetColorizer(_Visualizer: Visualizer): Colorizer<TNode> | undefined {
+    /** The name of the filter. */
+    abstract name: string;
+    /** The parameters of the filter. */
+    parameters: TParameter[] = [];
+    /** The mode of the filter. */
+    mode = "";
+    /** The filter function. */
+    abstract filter(visualizer: Visualizer, node: Node<TNode>): boolean;
+
+    /** Get the colorizer for this filter. */
+    getColorizer(_visualizer: Visualizer): Colorizer<TNode> | undefined {
         return;
     }
-    /** GetParameterNames: Get the names of the parameters. */
-    public GetParameterNames(_Visualizer: Visualizer): string[] {
-        return this.Parameters.map((Parameter) => (Parameter as object).toString());
+
+    /** Get the names of the parameters. */
+    getParameterNames(_visualizer: Visualizer): string[] {
+        return this.parameters.map((param) => JSON.stringify(param));
     }
-    /** ToggleParameters: Toggle the parameters of the filter. */
-    public ToggleParameters(NewParameters: TParameter, Additive: boolean, Mode: string): boolean {
-        if (Mode === this.Mode && this.Parameters.includes(NewParameters)) {
-            this.Parameters.splice(this.Parameters.indexOf(NewParameters), 1);
-            this.SetParameter(this.Parameters);
+
+    /** Toggle the parameters of the filter. */
+    toggleParameters(newParam: TParameter, additive: boolean, mode: string): boolean {
+        if (mode === this.mode && this.parameters.includes(newParam)) {
+            this.parameters.splice(this.parameters.indexOf(newParam), 1);
+            this.setParameter(this.parameters);
             return false;
         }
-        if (!this.Parameters.includes(NewParameters)) {
-            if (Additive) {
-                this.Parameters.splice(this.Parameters.length - 1, 0, NewParameters);
-                this.SetParameter(this.Parameters);
+        if (!this.parameters.includes(newParam)) {
+            if (additive) {
+                this.parameters.splice(this.parameters.length - 1, 0, newParam);
+                this.setParameter(this.parameters);
             } else {
-                this.SetParameter([NewParameters]);
+                this.setParameter([newParam]);
             }
         }
-        this.Mode = Mode;
+        this.mode = mode;
         return true;
     }
-    /** SetParameter: Set the parameters of the filter. */
-    public SetParameter(NewParameters: TParameter[]) {
-        this.Parameters = NewParameters;
+
+    /** Set the parameters of the filter. */
+    setParameter(newParam: TParameter[]) {
+        this.parameters = newParam;
     }
 }
 
-/** Colorizer: A colorizer for the graph. */
+/** A colorizer for the graph. */
 export interface Colorizer<T> {
-    /** Colorize: The colorizer function. */
-    Colorize: (Node: Node<T>) => string;
-    /** Examples: The examples of the colorizer. */
-    Examples: Record<string, string>;
-    /** Results: The results of the colorizer. */
-    Results?: Record<string, Node<T>[]>;
+    /** The colorizer function. */
+    colorize: (node: Node<T>) => string;
+    /** The examples of the colorizer. */
+    examples: Record<string, string>;
+    /** The results of the colorizer. */
+    results?: Record<string, Node<T>[]>;
 }
 
-/** DatasetFilter: Filter the nodes by their datasets. */
+/** Filter the nodes by their datasets. */
 export class DatasetFilter extends FilterBase<Code, string> {
-    /** Name: The name of the filter. */
-    public Name = "Dataset";
-    /** ExampleIDs: The IDs of the examples. */
-    private ExampleIDs: string[] = [];
-    /** Filter: The filter function. */
-    public Filter(Visualizer: Visualizer, Node: Node<Code>): boolean {
-        if (this.ExampleIDs.length === 0) {
-            const Sources = Visualizer.Dataset.Source.Data;
-            this.ExampleIDs = Array.from(
+    /** The name of the filter. */
+    override name = "Dataset";
+    /** The IDs of the examples. */
+    #exampleIDs: string[] = [];
+
+    /** The filter function. */
+    override filter(visualizer: Visualizer, node: Node<Code>): boolean {
+        if (this.#exampleIDs.length === 0) {
+            const sources = visualizer.dataset.source.data;
+            this.#exampleIDs = Array.from(
                 new Set(
-                    Object.entries(Sources)
-                        .filter(([Key]) => this.Parameters.includes(Key))
-                        .flatMap(([, Value]) =>
-                            Object.values(Value).flatMap((Item) => Item.AllItems ?? []),
-                        )
-                        .map((Example) => Example.ID),
+                    Object.entries(sources)
+                        .filter(([k]) => this.parameters.includes(k))
+                        .flatMap(([, v]) => Object.values(v).flatMap((item) => item.items))
+                        .map((example) => example.id),
                 ),
             );
         }
-        return FilterNodeByExample(Node, this.ExampleIDs);
+        return filterNodeByExample(node, this.#exampleIDs);
     }
-    /** SetParameter: Set the parameters of the filter. */
-    public SetParameter(NewParameters: string[]) {
-        this.Parameters = NewParameters;
-        this.ExampleIDs = [];
+
+    /** Set the parameters of the filter. */
+    override setParameter(newParams: string[]) {
+        this.parameters = newParams;
+        this.#exampleIDs = [];
     }
 }
 
 /** ChunkFilter: Filter the nodes by their chunks. */
 export class ChunkFilter extends FilterBase<Code, string> {
-    /** Name: The name of the filter. */
-    public Name = "Chunk";
-    /** ExampleIDs: The IDs of the examples. */
-    private ExampleIDs: string[] = [];
-    /** Filter: The filter function. */
-    public Filter(Visualizer: Visualizer, Node: Node<Code>): boolean {
-        if (this.ExampleIDs.length === 0) {
-            const Sources = Visualizer.Dataset.Source.Data;
-            this.ExampleIDs = Array.from(
+    /** The name of the filter. */
+    override name = "Chunk";
+    /** The IDs of the examples. */
+    #exampleIDs: string[] = [];
+
+    /** The filter function. */
+    override filter(visualizer: Visualizer, node: Node<Code>): boolean {
+        if (this.#exampleIDs.length === 0) {
+            const sources = visualizer.dataset.source.data;
+            this.#exampleIDs = Array.from(
                 new Set(
-                    Object.values(Sources)
-                        .flatMap((Chunk) => Object.entries(Chunk))
-                        .filter(([Key]) => this.Parameters.includes(Key))
-                        .flatMap(([, Value]) => Value.AllItems ?? [])
-                        .map((Example) => Example.ID),
+                    Object.values(sources)
+                        .flatMap((chunk) => Object.entries(chunk))
+                        .filter(([k]) => this.parameters.includes(k))
+                        .flatMap(([, value]) => value.items)
+                        .map((example) => example.id),
                 ),
             );
         }
-        return FilterNodeByExample(Node, this.ExampleIDs);
+        return filterNodeByExample(node, this.#exampleIDs);
     }
-    /** SetParameter: Set the parameters of the filter. */
-    public SetParameter(NewParameters: string[]) {
-        this.Parameters = NewParameters;
-        this.ExampleIDs = [];
+
+    /** Set the parameters of the filter. */
+    override setParameter(newParams: string[]) {
+        this.parameters = newParams;
+        this.#exampleIDs = [];
     }
 }
 
-/** UserFilter: Filter the nodes by the item's UserID. */
+/** Filter the nodes by the item's UserID. */
 export class UserFilter extends FilterBase<Code, string> {
-    /** Name: The name of the filter. */
-    public Name = "Speaker";
-    /** ExampleIDs: The IDs of the examples. */
-    private ExampleIDs: string[] = [];
-    /** GetParameterNames: Get the names of the parameters. */
-    public GetParameterNames(Visualizer: Visualizer): string[] {
-        return this.Parameters.map(
-            (Parameter) => Visualizer.Dataset.UserIDToNicknames?.get(Parameter) ?? Parameter,
+    /** The name of the filter. */
+    override name = "Speaker";
+    /** The IDs of the examples. */
+    #exampleIDs: string[] = [];
+
+    /** Get the names of the parameters. */
+    override getParameterNames(visualizer: Visualizer): string[] {
+        return this.parameters.map(
+            (param) => visualizer.dataset.uidToNicknames?.get(param) ?? param,
         );
     }
-    /** Filter: The filter function. */
-    public Filter(Visualizer: Visualizer, Node: Node<Code>): boolean {
-        if (this.ExampleIDs.length === 0) {
-            this.ExampleIDs = FilterItemByUser(Visualizer.Dataset.Source, this.Parameters).map(
-                (Item) => Item.ID,
+
+    /** The filter function. */
+    override filter(visualizer: Visualizer, node: Node<Code>): boolean {
+        if (this.#exampleIDs.length === 0) {
+            this.#exampleIDs = filterItemByUser(visualizer.dataset.source, this.parameters).map(
+                (item) => item.id,
             );
         }
-        return FilterNodeByExample(Node, this.ExampleIDs);
+        return filterNodeByExample(node, this.#exampleIDs);
     }
-    /** SetParameter: Set the parameters of the filter. */
-    public SetParameter(NewParameters: string[]) {
-        this.Parameters = NewParameters;
-        this.ExampleIDs = [];
+
+    /** Set the parameters of the filter. */
+    override setParameter(newParams: string[]) {
+        this.parameters = newParams;
+        this.#exampleIDs = [];
     }
 }
 
-/** ComponentFilter: Filter the nodes by their components. */
+/** Filter the nodes by their components. */
 export class ComponentFilter extends FilterBase<Code, Component<Code>> {
-    /** Name: The name of the filter. */
-    public Name = "Component";
-    /** GetParameterNames: Get the names of the parameters. */
-    public GetParameterNames(_Visualizer: Visualizer): string[] {
-        return this.Parameters.map((Parameter) => Parameter.Representative!.Data.Label);
+    /** The name of the filter. */
+    override name = "Component";
+
+    /** Get the names of the parameters. */
+    override getParameterNames(_visualizer: Visualizer): string[] {
+        return this.parameters.map((param) => param.representative?.data.label ?? "");
     }
-    /** Filter: The filter function. */
-    public Filter(_Visualizer: Visualizer, Node: Node<Code>): boolean {
-        if (!Node.Component) {
+
+    /** The filter function. */
+    override filter(_visualizer: Visualizer, node: Node<Code>): boolean {
+        if (!node.component) {
             return false;
         }
-        return this.Parameters.includes(Node.Component);
+        return this.parameters.includes(node.component);
     }
 }
 
-/** OwnerFilter: Filter the nodes by their owners. */
+/** Filter the nodes by their owners. */
 export class OwnerFilter<T> extends FilterBase<T, number> {
-    /** Name: The name of the filter. */
-    public Name = "Owner";
-    /** Filter: The filter function. */
-    public Filter(Visualizer: Visualizer, Node: Node<T>): boolean {
-        return FilterNodeByOwners(
-            Node,
-            this.Parameters,
-            Visualizer.Parameters.UseNearOwners || this.Parameters.length === 1,
+    /** The name of the filter. */
+    override name = "Owner";
+
+    /** The filter function. */
+    override filter(visualizer: Visualizer, node: Node<T>): boolean {
+        return filterNodeByOwners(
+            node,
+            this.parameters,
+            visualizer.parameters.useNearOwners || this.parameters.length === 1,
         );
     }
-    /** GetParameterNames: Get the names of the parameters. */
-    public GetParameterNames(Visualizer: Visualizer): string[] {
-        return this.Parameters.map((Parameter) => Visualizer.Dataset.Names[Parameter]);
+
+    /** Get the names of the parameters. */
+    override getParameterNames(visualizer: Visualizer): string[] {
+        return this.parameters.map((param) => visualizer.dataset.names[param]);
     }
-    /** GetColorizer: Get the colorizer for this filter. */
-    public GetColorizer(Visualizer: Visualizer): Colorizer<T> {
-        if (this.Parameters.length === 0) {
+
+    /** Get the colorizer for this filter. */
+    override getColorizer(visualizer: Visualizer): Colorizer<T> {
+        if (this.parameters.length === 0) {
             return new OwnerColorizer(
-                Visualizer.Dataset.Weights!.map((Weight, Index) =>
-                    Weight > 0 ? Index : -1,
-                ).filter((Index) => Index >= 0),
-                Visualizer,
+                visualizer.dataset.weights
+                    ?.map((Weight, Index) => (Weight > 0 ? Index : -1))
+                    .filter((Index) => Index >= 0) ?? [],
+                visualizer,
             );
-        } else if (this.Parameters.length === 1) {
-            if (this.Mode === "Novelty" || this.Mode === "Divergence") {
-                return new NoveltyColorizer(this.Parameters[0], Visualizer);
+        } else if (this.parameters.length === 1) {
+            if (this.mode === "novelty" || this.mode === "divergence") {
+                return new NoveltyColorizer(this.parameters[0], visualizer);
             }
-            return new CoverageColorizer(this.Parameters[0]);
-        } else if (this.Parameters.length === 2) {
-            return new ComparisonColorizer(this.Parameters[0], this.Parameters[1], Visualizer);
+            return new CoverageColorizer(this.parameters[0]);
+        } else if (this.parameters.length === 2) {
+            return new ComparisonColorizer(this.parameters[0], this.parameters[1], visualizer);
         }
-        return new OwnerColorizer(this.Parameters, Visualizer);
+        return new OwnerColorizer(this.parameters, visualizer);
     }
 }
 
-/** CoverageColorizer: Colorize the nodes by an owner's coverage. */
+/** Colorize the nodes by an owner's coverage. */
 export class CoverageColorizer<T> implements Colorizer<T> {
-    /** Owner: The owner of the codebook. */
-    public Owner: number;
-    /** Constructor: Create a coverage colorizer. */
-    public constructor(Owner: number) {
-        this.Owner = Owner;
-    }
-    /** Colorize: The colorizer function. */
-    public Colorize(Node: Node<T>): string {
+    /** Create a coverage colorizer. */
+    constructor(public owner: number) {}
+
+    /** The colorizer function. */
+    colorize(Node: Node<T>): string {
         return d3.interpolateCool(
-            Node.Owners.has(this.Owner) ? 1 : Node.NearOwners.has(this.Owner) ? 0.55 : 0.1,
+            Node.owners.has(this.owner) ? 1 : Node.nearOwners.has(this.owner) ? 0.55 : 0.1,
         );
     }
-    /** Examples: The examples of the colorizer. */
-    public Examples: Record<string, string> = {
+
+    /** The examples of the colorizer. */
+    examples: Record<string, string> = {
         "In the codebook": d3.interpolateCool(1),
         "Has a similar concept": d3.interpolateCool(0.55),
         "Not covered": "#999999",
     };
 }
 
-/** NoveltyColorizer: Colorize the nodes by their novelty. */
+/** Colorize the nodes by their novelty. */
 export class NoveltyColorizer<T> implements Colorizer<T> {
-    /** Owner: The owner of the codebook. */
-    public Owner: number;
-    /** Visualizer: The visualizer. */
-    public Visualizer: Visualizer;
-    /** Constructor: Create a novelty colorizer. */
-    public constructor(Owner: number, Visualizer: Visualizer) {
-        this.Owner = Owner;
-        this.Visualizer = Visualizer;
-    }
-    /** Colorize: The colorizer function. */
-    public Colorize(Node: Node<T>): string {
+    /** Create a novelty colorizer. */
+    constructor(
+        public owner: number,
+        public visualizer: Visualizer,
+    ) {}
+
+    /** The colorizer function. */
+    colorize(node: Node<T>): string {
         // Not covered
-        if (!Node.NearOwners.has(this.Owner)) {
+        if (!node.nearOwners.has(this.owner)) {
             return "#999999";
         }
-        if (Node.Owners.has(this.Owner)) {
-            let Novel = true as boolean;
-            Node.Owners.forEach((Owner) => {
-                if (Owner !== this.Owner && this.Visualizer.Dataset.Weights![Owner] > 0) {
-                    Novel = false;
+        if (node.owners.has(this.owner)) {
+            let novel = true as boolean;
+            node.owners.forEach((Owner) => {
+                if (Owner !== this.owner && (this.visualizer.dataset.weights?.[Owner] ?? NaN) > 0) {
+                    novel = false;
                 }
             });
             // Novel / Conform
-            return d3.interpolatePlasma(Novel ? 1 : 0.35);
+            return d3.interpolatePlasma(novel ? 1 : 0.35);
         }
         // Nearly conform
         return d3.interpolatePlasma(0.7);
     }
-    /** Examples: The examples of the colorizer. */
-    public Examples: Record<string, string> = {
+
+    /** The examples of the colorizer. */
+    examples: Record<string, string> = {
         "Novel: only in this codebook": d3.interpolatePlasma(1),
         "Conform: has a similar concept": d3.interpolatePlasma(0.7),
         "Conform: in the codebook": d3.interpolatePlasma(0.35),
@@ -265,64 +275,69 @@ export class NoveltyColorizer<T> implements Colorizer<T> {
     };
 }
 
-/** ComparisonColorizer: Colorize the nodes by two owners' coverage. */
+/** Colorize the nodes by two owners' coverage. */
 export class ComparisonColorizer<T> implements Colorizer<T> {
-    /** Constructor: Create a comparison colorizer. */
-    public constructor(
-        public Owner1: number,
-        public Owner2: number,
-        public Visualizer: Visualizer,
+    /** Create a comparison colorizer. */
+    constructor(
+        public owner1: number,
+        public owner2: number,
+        public visualizer: Visualizer,
     ) {
-        this.Examples["Both codebooks"] = d3.schemeTableau10[5];
-        this.Examples[`Only in ${Visualizer.Dataset.Names[Owner1]}`] = d3.schemeTableau10[2];
-        this.Examples[`Only in ${Visualizer.Dataset.Names[Owner2]}`] = d3.schemeTableau10[4];
-        this.Examples["Not covered"] = "#999999";
+        this.examples["Both codebooks"] = d3.schemeTableau10[5];
+        this.examples[`Only in ${visualizer.dataset.names[owner1]}`] = d3.schemeTableau10[2];
+        this.examples[`Only in ${visualizer.dataset.names[owner2]}`] = d3.schemeTableau10[4];
+        this.examples["Not covered"] = "#999999";
     }
-    /** Colorize: The colorizer function. */
-    public Colorize(Node: Node<T>): string {
-        const NearOwner = FilterNodeByOwner(
-            Node,
-            this.Owner1,
-            this.Visualizer.Parameters.UseNearOwners,
+
+    /** The colorizer function. */
+    colorize(node: Node<T>): string {
+        const nearOwner = filterNodeByOwner(
+            node,
+            this.owner1,
+            this.visualizer.parameters.useNearOwners,
         );
-        const NearOther = FilterNodeByOwner(
-            Node,
-            this.Owner2,
-            this.Visualizer.Parameters.UseNearOwners,
+        const nearOther = filterNodeByOwner(
+            node,
+            this.owner2,
+            this.visualizer.parameters.useNearOwners,
         );
-        return NearOwner && NearOther
+
+        return nearOwner && nearOther
             ? d3.schemeTableau10[5]
-            : NearOwner
+            : nearOwner
               ? d3.schemeTableau10[2]
-              : NearOther
+              : nearOther
                 ? d3.schemeTableau10[4]
                 : "#999999";
     }
-    /** Examples: The examples of the colorizer. */
-    public Examples: Record<string, string> = {};
+
+    /** The examples of the colorizer. */
+    examples: Record<string, string> = {};
 }
 
-/** OwnerColorizer: Colorize the nodes by how many owners they have. */
+/** Colorize the nodes by how many owners they have. */
 export class OwnerColorizer<T> implements Colorizer<T> {
-    /** Constructor: Create an owner colorizer. */
-    public constructor(
-        public Owners: number[],
-        public Visualizer: Visualizer,
+    /** Create an owner colorizer. */
+    constructor(
+        public owners: number[],
+        public visualizer: Visualizer,
     ) {
-        for (let I = 1; I <= Owners.length; I++) {
-            this.Examples[
-                `In${this.Visualizer.Parameters.UseNearOwners ? " (or near)" : ""} ${I} codebooks`
-            ] = d3.interpolateViridis(I / Owners.length);
+        for (let i = 1; i <= owners.length; i++) {
+            this.examples[
+                `In${this.visualizer.parameters.useNearOwners ? " (or near)" : ""} ${i} codebooks`
+            ] = d3.interpolateViridis(i / owners.length);
         }
-        this.Examples["Not covered"] = "#999999";
+        this.examples["Not covered"] = "#999999";
     }
-    /** Colorize: The colorizer function. */
-    public Colorize(Node: Node<T>): string {
-        const Count = this.Owners.filter((Owner) =>
-            FilterNodeByOwner(Node, Owner, this.Visualizer.Parameters.UseNearOwners),
+
+    /** The colorizer function. */
+    colorize(node: Node<T>): string {
+        const count = this.owners.filter((Owner) =>
+            filterNodeByOwner(node, Owner, this.visualizer.parameters.useNearOwners),
         ).length;
-        return Count === 0 ? "#999999" : d3.interpolateViridis(Count / this.Owners.length);
+        return count === 0 ? "#999999" : d3.interpolateViridis(count / this.owners.length);
     }
-    /** Examples: The examples of the colorizer. */
-    public Examples: Record<string, string> = {};
+
+    /** The examples of the colorizer. */
+    examples: Record<string, string> = {};
 }

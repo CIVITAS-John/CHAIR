@@ -2,148 +2,153 @@ import type { Cash } from "cash-dom";
 import d3 from "d3";
 
 import { Panel } from "../panels/panel.js";
-import { GetConsolidatedSize } from "../utils/dataset.js";
-import { EvaluateCodebooks } from "../utils/evaluate.js";
+import { getConsolidatedSize } from "../utils/dataset.js";
+import { evaluateCodebooks } from "../utils/evaluate.js";
 import { OwnerFilter } from "../utils/filters.js";
 import type { Visualizer } from "../visualizer.js";
 
-/** CodebookSection: The codebook side panel. */
+/** The codebook side panel. */
 export class CodebookSection extends Panel {
-    /** Name: The short name of the panel. */
-    public Name = "Coders";
-    /** Title: The title of the panel. */
-    public override Title = "Codebook Overview";
-    /** Constructor: Constructing the panel. */
-    public constructor(Container: Cash, Visualizer: Visualizer) {
-        super(Container, Visualizer);
-        this.Visualizer = Visualizer;
-        this.Container = $('<div class="codebook"></div>').appendTo(Container).hide();
+    /** The short name of the panel. */
+    override name = "Coders";
+    /** The title of the panel. */
+    override title = "Codebook Overview";
+
+    /** Constructing the panel. */
+    constructor(container: Cash, visualizer: Visualizer) {
+        super(container, visualizer);
+        this.visualizer = visualizer;
+        this.container = $('<div class="codebook"></div>').appendTo(container).hide();
     }
-    /** Render: Render the panel. */
-    public override Render() {
-        this.Container.empty();
+
+    /** Render the panel. */
+    override render() {
+        this.container.empty();
         // Some notes
         $('<p class="tips"></p>')
-            .appendTo(this.Container)
+            .appendTo(this.container)
             .html(
                 `Note that all metrics are relative (i.e. against the Aggregated Code Space of the following Code Spaces).
                 <a href="javascript:void(0)">Click here</a> to manually verify each codebook's coverage.`,
             )
             .find("a")
             .on("click", () => {
-                this.Visualizer.Dialog.ValidateCoverageByCodes();
+                this.visualizer.dialog.validateCoverageByCodes();
             });
         // Evaluate the codebooks
-        const Names = this.Dataset.Names;
-        const Codebooks = this.Dataset.Codebooks;
-        const Results = EvaluateCodebooks(this.Visualizer.Dataset, this.Parameters);
-        const Metrics = Object.keys(Results[Names[1]]).slice(0, -2);
-        const Colors: Record<string, d3.ScaleSequential<string>> = {};
+        const names = this.dataset.names;
+        const codebooks = this.dataset.codebooks;
+        const results = evaluateCodebooks(this.visualizer.dataset, this.parameters);
+        const metrics = Object.keys(results[names[1]]).slice(0, -2);
+        const colors: Record<string, d3.ScaleSequential<string>> = {};
         // Flatten the dataset
-        const Dataset: { Name: string; Metric: string; Value: number }[] = [];
-        for (const Name of Names) {
-            const Result = Results[Name];
-            if (!Result) continue;
-            for (const Metric of Metrics) {
-                Dataset.push({ Name, Metric, Value: Result[Metric] });
+        const dataset: { name: string; metric: string; value: number }[] = [];
+        for (const name of names) {
+            const result = results[name];
+            if (typeof result !== "object") continue;
+            for (const metric of metrics) {
+                dataset.push({ name, metric, value: result[metric] });
             }
         }
         // Build color scales
-        for (const Metric of Metrics) {
-            const Minimum = d3.min(
-                Dataset.filter((Evaluation) => Evaluation.Metric === Metric),
-                (Evaluation) => Evaluation.Value,
-            )!;
-            const Maximum = d3.max(
-                Dataset.filter((Evaluation) => Evaluation.Metric === Metric),
-                (Evaluation) => Evaluation.Value,
-            )!;
-            if (Metric === "Divergence") {
-                Colors[Metric] = d3
+        for (const metric of metrics) {
+            const minimum =
+                d3.min(
+                    dataset.filter((evaluation) => evaluation.metric === metric),
+                    (evaluation) => evaluation.value,
+                ) ?? NaN;
+            const maximum =
+                d3.max(
+                    dataset.filter((evaluation) => evaluation.metric === metric),
+                    (evaluation) => evaluation.value,
+                ) ?? NaN;
+            if (metric === "divergence") {
+                colors[metric] = d3
                     .scaleSequential()
                     .interpolator(d3.interpolateViridis)
-                    .domain([Maximum, Minimum]);
+                    .domain([maximum, minimum]);
             } else {
-                Colors[Metric] = d3
+                colors[metric] = d3
                     .scaleSequential()
                     .interpolator(d3.interpolateViridis)
-                    .domain([Minimum, Maximum]);
+                    .domain([minimum, maximum]);
             }
         }
         // Render the codebooks and evaluation results
-        this.BuildTable(
-            Object.entries(Results),
-            (Row, [Key, Value], Index) => {
-                const Codebook = Codebooks[Index + 1];
+        this.buildTable(
+            Object.entries(results),
+            (row, [key, value], idx) => {
+                const codebook = codebooks[idx + 1];
                 // Name of the codebook
-                const Summary = $('<td class="codebook-cell"></td>')
-                    .attr("id", `codebook-${Index + 1}`)
+                const summary = $('<td class="codebook-cell"></td>')
+                    .attr("id", `codebook-${idx + 1}`)
                     .addClass("actionable")
-                    .appendTo(Row);
-                Summary.append($("<h4></h4>").text(Key))
-                    .append($('<p class="tips"></p>').text(`${Object.keys(Codebook).length} codes`))
+                    .appendTo(row);
+                summary
+                    .append($("<h4></h4>").text(key))
+                    .append($('<p class="tips"></p>').text(`${Object.keys(codebook).length} codes`))
                     .append(
                         $('<p class="tips"></p>').text(
-                            `${GetConsolidatedSize(Codebooks[0], Codebook)} consolidated`,
+                            `${getConsolidatedSize(codebooks[0], codebook)} consolidated`,
                         ),
                     )
                     .on("mouseover", () =>
-                        this.Visualizer.SetFilter(true, new OwnerFilter(), Index + 1),
+                        this.visualizer.setFilter(true, new OwnerFilter(), idx + 1),
                     )
-                    .on("mouseout", () => this.Visualizer.SetFilter(true, new OwnerFilter()))
-                    .on("click", (Event: MouseEvent) => {
-                        if (Event.shiftKey) {
-                            this.Visualizer.SetFilter(false, new OwnerFilter(), Index + 1, true);
+                    .on("mouseout", () => this.visualizer.setFilter(true, new OwnerFilter()))
+                    .on("click", (event: MouseEvent) => {
+                        if (event.shiftKey) {
+                            this.visualizer.setFilter(false, new OwnerFilter(), idx + 1, true);
                         } else {
-                            if (!this.Visualizer.IsFilterApplied("Owner", Index + 1)) {
-                                this.Visualizer.SetFilter(
+                            if (!this.visualizer.isFilterApplied("Owner", idx + 1)) {
+                                this.visualizer.setFilter(
                                     false,
                                     new OwnerFilter(),
-                                    Index + 1,
-                                    Event.shiftKey,
+                                    idx + 1,
+                                    event.shiftKey,
                                     "Coverage",
                                 );
                             }
-                            this.Visualizer.SidePanel.ShowPanel("Codes");
+                            this.visualizer.sidePanel.showPanel("Codes");
                         }
                     })
-                    .toggleClass("chosen", this.Visualizer.IsFilterApplied("Owner", Index + 1));
+                    .toggleClass("chosen", this.visualizer.isFilterApplied("Owner", idx + 1));
                 // Evaluation results
-                Metrics.forEach((Metric) => {
-                    const MetricValue = Value[Metric];
-                    const Color = Colors[Metric](MetricValue);
-                    const Cell = $('<td class="metric-cell"></td>')
-                        .attr("id", `metric-${Index}-${Metric}`)
-                        .text(d3.format(Metric === "Divergence" ? ".1%" : ".1%")(MetricValue))
+                metrics.forEach((metric) => {
+                    const metricValue = value[metric];
+                    const color = colors[metric](metricValue);
+                    const cell = $('<td class="metric-cell"></td>')
+                        .attr("id", `metric-${idx}-${metric}`)
+                        .text(d3.format(metric === "divergence" ? ".1%" : ".1%")(metricValue))
                         .on("mouseover", () =>
-                            this.Visualizer.SetFilter(
+                            this.visualizer.setFilter(
                                 true,
                                 new OwnerFilter(),
-                                Index + 1,
+                                idx + 1,
                                 false,
-                                Metric,
+                                metric,
                             ),
                         )
-                        .on("mouseout", () => this.Visualizer.SetFilter(true, new OwnerFilter()))
-                        .on("click", (Event: MouseEvent) =>
-                            this.Visualizer.SetFilter(
+                        .on("mouseout", () => this.visualizer.setFilter(true, new OwnerFilter()))
+                        .on("click", (event: MouseEvent) =>
+                            this.visualizer.setFilter(
                                 false,
                                 new OwnerFilter(),
-                                Index + 1,
-                                Event.shiftKey,
-                                Metric,
+                                idx + 1,
+                                event.shiftKey,
+                                metric,
                             ),
                         )
-                        .css("background", Color)
-                        .css("color", d3.lab(Color).l > 70 ? "black" : "white")
+                        .css("background", color)
+                        .css("color", d3.lab(color).l > 70 ? "black" : "white")
                         .toggleClass(
                             "chosen",
-                            this.Visualizer.IsFilterApplied("Owner", Index + 1, Metric),
+                            this.visualizer.isFilterApplied("Owner", idx + 1, metric),
                         );
-                    Row.append(Cell);
+                    row.append(cell);
                 });
             },
-            ["Codebook", ...Metrics],
+            ["Codebook", ...metrics],
         );
     }
 }

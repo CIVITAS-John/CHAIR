@@ -1,71 +1,79 @@
-import * as fs from "fs";
-import * as http from "http";
-import * as path from "path";
-import { setTimeout } from "timers/promises";
+import {
+    copyFileSync,
+    existsSync,
+    readdirSync,
+    readFile,
+    readFileSync,
+    statSync,
+    writeFileSync,
+} from "fs";
+import http from "http";
+import { basename, extname, join } from "path";
 
-import chalk from "chalk";
 import open, { apps } from "open";
 
-import { EnsureFolder } from "./llms.js";
+import { ensureFolder } from "./file";
+import { logger } from "./logger";
+import { sleep } from "./misc";
 
-/** CreateServer: Create a local server for interactivity. */
-export function CreateServer<T>(
-    Port: number,
-    BaseDirectories: string[],
-    ...DataFiles: string[]
-): Promise<T | undefined> {
-    let Shutdown: (Data?: T) => void;
+/** Create a local server for interactivity. */
+export const launchServer = <T>(
+    port: number,
+    baseDirs: string[],
+    ...dataFiles: string[]
+): Promise<T | undefined> => {
+    let shutdown: (data?: T) => void;
     // Create the server
-    const Server: http.Server = http.createServer(
-        (Request: http.IncomingMessage, Response: http.ServerResponse) => {
-            let Url = Request.url ?? "/";
-            if (Url === "/") {
-                Url = "/index.html";
+    const server: http.Server = http.createServer(
+        (req: http.IncomingMessage, res: http.ServerResponse) => {
+            let url = req.url ?? "/";
+            if (url === "/") {
+                url = "/index.html";
             }
             // Handle dynamic requests
-            if (Url.startsWith("/api/report/")) {
+            if (url.startsWith("/api/report/")) {
                 // Read the body
-                let Body = "";
-                Request.on("data", (chunk: Buffer) => {
-                    Body += chunk.toString();
+                let body = "";
+                req.on("data", (chunk: Buffer) => {
+                    body += chunk.toString();
                 });
-                Request.on("end", () => {
-                    const Data = JSON.parse(Body) as T;
-                    Response.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
-                    Response.end(JSON.stringify(Data));
-                    Shutdown(Data);
+                req.on("end", () => {
+                    const data = JSON.parse(body) as T;
+                    res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+                    res.end(JSON.stringify(data));
+                    shutdown(data);
                 });
                 return;
             }
             // Handle requests for data files specifically
-            for (const dataFile of DataFiles) {
-                if (Url === `/${path.basename(dataFile)}`) {
-                    SendData(Response, dataFile);
+            for (const dataFile of dataFiles) {
+                if (url === `/${basename(dataFile)}`) {
+                    sendData(res, dataFile);
                     return;
                 }
             }
             // Serve files from the BaseDirectory
-            for (const BaseDirectory of BaseDirectories) {
-                if (fs.existsSync(path.join(BaseDirectory, Url))) {
-                    SendData(Response, path.join(BaseDirectory, Url));
+            for (const baseDir of baseDirs) {
+                if (existsSync(join(baseDir, url))) {
+                    sendData(res, join(baseDir, url));
                     return;
                 }
             }
             // Handle 404 errors
-            Response.writeHead(404);
-            Response.end(`Error loading ${path.basename(Url)}`);
+            res.writeHead(404);
+            res.end(`Error loading ${basename(url)}`);
         },
     );
     // Send data to the client
-    const SendData = function (Response: http.ServerResponse, FilePath: string) {
-        fs.readFile(FilePath, (err: NodeJS.ErrnoException | null, data: Buffer) => {
+    const sendData = (res: http.ServerResponse, path: string) => {
+        readFile(path, (err, data) => {
             if (err) {
-                Response.writeHead(404);
-                Response.end(`Error loading ${path.basename(FilePath)}`);
+                res.writeHead(404);
+                res.end(`Error loading ${basename(path)}`);
                 return;
             }
             // Determine content type by file extension
-            const ext: string = path.extname(FilePath).toLowerCase();
+            const ext = extname(path).toLowerCase();
             let contentType = "text/html; charset=utf-8"; // Default content type
             let content = "";
             switch (ext) {
@@ -73,7 +81,7 @@ export function CreateServer<T>(
                     contentType = "text/javascript; charset=utf-8";
                     content = data.toString();
                     // Remove all import statements
-                    content = HandleScript(content);
+                    content = handleScript(content);
                     data = Buffer.from(content);
                     break;
                 case ".css":
@@ -93,96 +101,94 @@ export function CreateServer<T>(
                     contentType = "image/jpeg";
                     break;
             }
-            Response.writeHead(200, { "Content-Type": contentType });
-            Response.end(data);
+            res.writeHead(200, { "Content-Type": contentType });
+            res.end(data);
         });
     };
     // Start the server
-    return new Promise<T | undefined>((Resolve, Reject) => {
-        Server.listen(Port, async () => {
-            console.log(`Server running at http://localhost:${Port}/`);
-            console.log("Press Ctrl+C to shut down the server.");
-            // Automatically open the browser when the server starts
-            // Wait for 5 seconds or the browser tab to close
-            // On Windows, the browser tab may close prematurely, so we delay the shutdown
-            await Promise.all([
-                open(`http://localhost:${Port}/`, {
-                    wait: true,
-                    app: { name: apps.chrome },
-                }),
-                setTimeout(process.platform === "win32" ? 6000000 : 5000),
-            ]);
-            console.log("The browser tab has closed, shutting down the server.");
-            Shutdown();
+    return new Promise<T | undefined>((res, rej) => {
+        server.listen(port, () => {
+            void (async () => {
+                logger.success(`Server running at http://localhost:${port}/`);
+                logger.info("Press Ctrl+C to shut down the server.");
+                // Automatically open the browser when the server starts
+                // Wait for 5 seconds or the browser tab to close
+                // On Windows, the browser tab may close prematurely, so we delay the shutdown
+                await Promise.all([
+                    open(`http://localhost:${port}/`, {
+                        wait: true,
+                        app: { name: apps.chrome },
+                    }),
+                    sleep(process.platform === "win32" ? 6000000 : 5000),
+                ]);
+                logger.success("The browser tab has closed, shutting down the server");
+                shutdown();
+            })();
         });
         // Handle server shutdown
-        Shutdown = (Data) => {
-            Server.close((Error) => {
-                if (Error) {
-                    console.error("Failed to close server:", Error);
-                    Reject(Error); // Reject the promise on server close error
+        shutdown = (data) => {
+            server.close((error) => {
+                if (error) {
+                    logger.error(error);
+                    rej(error); // Reject the promise on server close error
                 } else {
-                    console.log("Server shut down gracefully.");
-                    Resolve(Data); // Resolve the promise when server closes successfully
+                    logger.info("Server shut down gracefully");
+                    res(data); // Resolve the promise when server closes successfully
                 }
             });
         };
         // Listen for SIGINT (e.g., Ctrl+C) and SIGTERM (sent from OS shutdown, etc.)
-        process.on("SIGINT", Shutdown);
-        process.on("SIGTERM", Shutdown);
+        process.on("SIGINT", shutdown);
+        process.on("SIGTERM", shutdown);
     });
-}
+};
 
-/** CreateOfflineBundle: Create an offline bundle for the web application. */
-export function CreateOfflineBundle(
-    TargetDirectory: string,
-    BaseDirectories: string[],
-    ...DataFiles: string[]
-) {
+/** Create an offline bundle for the web application. */
+export const createOfflineBundle = (
+    targetDir: string,
+    baseDirs: string[],
+    ...dataFiles: string[]
+) => {
     // Create the offline bundle directory
-    const OfflineBundleDirectory = TargetDirectory;
-    EnsureFolder(OfflineBundleDirectory);
+    const offlineBundleDir = ensureFolder(targetDir);
     // Copy the data files to the offline bundle directory
-    for (const dataFile of DataFiles) {
-        const name = path.basename(dataFile);
-        fs.copyFileSync(dataFile, path.join(OfflineBundleDirectory, name));
+    for (const dataFile of dataFiles) {
+        const name = basename(dataFile);
+        copyFileSync(dataFile, join(offlineBundleDir, name));
     }
     // Copy the web files recursively to the offline bundle directory while keeping the structure
-    const CopyFiles = function (Source: string, Destination: string) {
-        const files = fs.readdirSync(Source);
+    const copyFiles = (src: string, dst: string) => {
+        const files = readdirSync(src);
         for (const file of files) {
-            const filePath = path.join(Source, file);
-            const stat = fs.statSync(filePath);
+            const filePath = join(src, file);
+            const stat = statSync(filePath);
             if (stat.isDirectory()) {
-                const newDestination = path.join(Destination, file);
-                EnsureFolder(newDestination);
-                CopyFiles(filePath, newDestination);
+                const newDestination = ensureFolder(join(dst, file));
+                copyFiles(filePath, newDestination);
             } else {
-                const name = path.basename(filePath);
+                const name = basename(filePath);
                 if (name.endsWith(".ts")) {
                     continue;
                 } // Skip TypeScript files
                 if (name.endsWith(".js")) {
-                    let content = fs.readFileSync(filePath, "utf8");
+                    let content = readFileSync(filePath, "utf8");
                     // Remove all import statements
-                    content = HandleScript(content);
-                    fs.writeFileSync(path.join(Destination, name), content);
+                    content = handleScript(content);
+                    writeFileSync(join(dst, name), content);
                 } else {
-                    fs.copyFileSync(filePath, path.join(Destination, name));
+                    copyFileSync(filePath, join(dst, name));
                 }
             }
         }
     };
-    for (const BaseDirectory of BaseDirectories) {
-        CopyFiles(BaseDirectory, OfflineBundleDirectory);
+    for (const baseDir of baseDirs) {
+        copyFiles(baseDir, offlineBundleDir);
     }
-    console.log(chalk.blue(`Offline bundle created in: ${OfflineBundleDirectory}.`));
-}
+    logger.success(`Offline bundle created in: ${offlineBundleDir}`);
+};
 
-/** HandleScript: Filter a script content to exclude import statements. */
-function HandleScript(Content: string): string {
-    return Content.replaceAll(/^.*import.*? from ['"][^/]*?['"];?$/gm, "").replaceAll(
-        /^\/\/# sourceMappingURL.*/gm,
-        "",
-    );
-}
+/** Filter a script content to exclude import statements. */
+const handleScript = (content: string) =>
+    content
+        .replaceAll(/^.*import.*? from ['"][^/]*?['"];?$/gm, "")
+        .replaceAll(/^\/\/# sourceMappingURL.*/gm, "");

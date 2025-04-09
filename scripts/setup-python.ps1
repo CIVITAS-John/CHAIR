@@ -42,12 +42,14 @@ Write-Host "Installing required packages..."
 & $pip install -r requirements.txt
 
 # Ask the user if they want to use hdbscan
+Clear-Host
 $hdbscan = Read-Host "Do you want to use hdbscan? [y/N]"
 if ($hdbscan -eq "y") {
     & $pip install -r requirements.hdbscan.txt
 }
 
 # Ask the user if they want to use bertopic
+Clear-Host
 $bertopic = Read-Host "Do you want to use bertopic? [y/N]"
 if ($bertopic -eq "y") {
     & $pip install -r requirements.bertopic.txt

@@ -15,18 +15,19 @@ declare global {
     }
 }
 
-/** Tutorial: The interactive tutorial for the visualizer. */
+/** The interactive tutorial for the visualizer. */
 export class Tutorial extends Panel {
-    /** Constructor: Constructing the tutorial. */
-    public constructor(Container: Cash, Visualizer: Visualizer) {
-        super(Container, Visualizer);
-        Container.show();
+    /** Constructing the tutorial. */
+    constructor(container: Cash, visualizer: Visualizer) {
+        super(container, visualizer);
+        container.show();
         driver = window.driver?.js.driver ?? driverJS;
     }
-    /** ShowTutorial: Show the tutorial. */
-    public ShowTutorial(Restart = false) {
+
+    /** Show the tutorial. */
+    showTutorial(restart = false) {
         // Create the tutorial
-        const Tutorial = driver({
+        const tutorial = driver({
             showProgress: true,
             stagePadding: 0,
             steps: [
@@ -58,7 +59,7 @@ export class Tutorial extends Panel {
                         description: `
 <p>What research questions are we trying to answer? What are the datasets?</p>`,
                     },
-                    onHighlightStarted: () => this.Visualizer.SidePanel.ShowPanel("Datasets"),
+                    onHighlightStarted: () => this.visualizer.sidePanel.showPanel("Datasets"),
                 },
                 {
                     element: ".visualization",
@@ -78,10 +79,11 @@ export class Tutorial extends Panel {
 <p>Whenever you select a code, it - along with its neighbors - will be highlighted. Hold the <strong>shift</strong> key to select more.</p>`,
                     },
                     onHighlightStarted: () => {
-                        this.Visualizer.FocusOnNode(
-                            document.querySelector(".visualization .nodes circle:first-child")!,
+                        const node: SVGElement | null = document.querySelector(
+                            ".visualization .nodes circle:first-child",
                         );
-                        Tutorial.getConfig().stagePadding = 100;
+                        if (node) this.visualizer.focusOnNode(node);
+                        tutorial.getConfig().stagePadding = 100;
                     },
                 },
                 {
@@ -93,7 +95,7 @@ export class Tutorial extends Panel {
 <p>Other views may have different color schemes. Please refer to the <strong>legends</strong> for more information.</p>`,
                     },
                     onHighlightStarted: () => {
-                        Tutorial.getConfig().stagePadding = 5;
+                        tutorial.getConfig().stagePadding = 5;
                     },
                 },
                 {
@@ -105,9 +107,10 @@ export class Tutorial extends Panel {
 <p>Since <strong>each code is merged from multiple ones</strong>, hover on each codebook to see their original names.</p>`,
                     },
                     onHighlightStarted: () => {
-                        this.Visualizer.FocusOnNode(
-                            document.querySelector(".visualization .nodes circle:first-child")!,
+                        const node: SVGElement | null = document.querySelector(
+                            ".visualization .nodes circle:first-child",
                         );
+                        if (node) this.visualizer.focusOnNode(node);
                     },
                 },
                 {
@@ -118,7 +121,7 @@ export class Tutorial extends Panel {
 <p>AI-generated codebooks often contain hundreds of codes. A more structured way to view them is through <strong>clusters</strong>.</p>
 <p>Each cluster corresponds to <strong>a polygon hull</strong> in the visualization.</p>`,
                     },
-                    onHighlightStarted: () => this.Visualizer.SidePanel.ShowPanel("Codes"),
+                    onHighlightStarted: () => this.visualizer.sidePanel.showPanel("Codes"),
                 },
                 {
                     element: ".side-panel .content .codebook",
@@ -128,7 +131,7 @@ export class Tutorial extends Panel {
 <p>Before we finish this short tour, let's go back to the side panel.</p>
 <p>The <strong>Codebooks</strong> view provides an overall, quantitative comparison of the codebooks.</p>`,
                     },
-                    onHighlightStarted: () => this.Visualizer.SidePanel.ShowPanel("Coders"),
+                    onHighlightStarted: () => this.visualizer.sidePanel.showPanel("Coders"),
                 },
                 {
                     element: ".side-panel .content .codebook table",
@@ -168,20 +171,23 @@ export class Tutorial extends Panel {
                 },
             ],
             onHighlighted: () => {
-                window.localStorage.setItem("tutorial-step", Tutorial.getActiveIndex()!.toString());
-                console.log("Tutorial step", Tutorial.getActiveIndex());
+                window.localStorage.setItem(
+                    "tutorial-step",
+                    tutorial.getActiveIndex()?.toString() ?? "",
+                );
+                console.log("Tutorial step", tutorial.getActiveIndex());
             },
         });
         // Show the tutorial
-        const Step = window.localStorage.getItem("tutorial-step");
-        if (Restart) {
-            Tutorial.drive();
-        } else if (Step === "-1") {
+        const step = window.localStorage.getItem("tutorial-step");
+        if (restart) {
+            tutorial.drive();
+        } else if (step === "-1") {
             return;
-        } else if (Step) {
-            Tutorial.drive(parseInt(Step));
+        } else if (step) {
+            tutorial.drive(parseInt(step));
         } else {
-            Tutorial.drive();
+            tutorial.drive();
         }
     }
 }

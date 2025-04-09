@@ -37,6 +37,17 @@ fi
 
 # Install the required packages from package.json
 echo "Installing required packages..."
-"$pnpm" install --prod
+# "$pnpm" install --prod
+"$pnpm" install --frozen-lockfile
 
 echo -e "\033[1;32mAll required packages have been installed.\033[0m"
+
+# Build the project
+echo "Building the project..."
+"$pnpm" run build
+if [[ $? -ne 0 ]]; then
+    echo -e "\033[1;31mBuild failed. Please check the error messages above.\033[0m"
+    exit 1
+fi
+
+echo -e "\033[1;32mProject has been built successfully.\033[0m"

@@ -1,226 +1,225 @@
 import type { Cash } from "cash-dom";
 import d3 from "d3";
 
-import type { Code } from "../../../utils/schema.js";
+import type { Code } from "../../../schema.js";
 import { Panel } from "../panels/panel.js";
-import { FilterNodesByOwner } from "../utils/graph.js";
+import { filterNodesByOwner } from "../utils/graph.js";
 import type { Component } from "../utils/schema.js";
-import { GetCodebookColor } from "../utils/utils.js";
+import { getCodebookColor } from "../utils/utils.js";
 import type { Visualizer } from "../visualizer.js";
 
-/** CodeSection: The code side panel. */
+/** The code side panel. */
 export class CodeSection extends Panel {
-    /** Name: The short name of the panel. */
-    public Name = "Codes";
-    /** Title: The title of the panel. */
-    public override Title = "Consolidated Codes";
-    /** Constructor: Constructing the panel. */
-    public constructor(Container: Cash, Visualizer: Visualizer) {
-        super(Container, Visualizer);
-        this.Visualizer = Visualizer;
-        this.Container = $('<div class="code"></div>').appendTo(Container).hide();
+    /** The short name of the panel. */
+    override name = "Codes";
+    /** The title of the panel. */
+    override title = "Consolidated Codes";
+
+    /** Constructing the panel. */
+    constructor(container: Cash, visualizer: Visualizer) {
+        super(container, visualizer);
+        this.visualizer = visualizer;
+        this.container = $('<div class="code"></div>').appendTo(container).hide();
     }
-    /** Show: Show the panel. */
-    public override Show() {
-        this.Container.show();
-        this.ShowComponents();
+
+    /** Show the panel. */
+    override show() {
+        this.container.show();
+        this.showComponents();
     }
     /** RatioColorizer: The colorizer for ratios. */
-    private RatioColorizer = d3
-        .scaleSequential()
-        .interpolator(d3.interpolateViridis)
-        .domain([0, 1]);
-    /** ShowComponents: Show all components. */
-    public ShowComponents() {
-        this.SetRefresh(() => {
-            this.Container.empty();
+    #ratioColorizer = d3.scaleSequential().interpolator(d3.interpolateViridis).domain([0, 1]);
+    /** Show all components. */
+    showComponents() {
+        this.setRefresh(() => {
+            this.container.empty();
             // Some notes
             $('<p class="tips"></p>')
-                .appendTo(this.Container)
+                .appendTo(this.container)
                 .html(
                     `Clusters are not deterministic, only to help understand the data. Names are chosen by connectedness.
                     <a href="javascript:void(0)">Click here</a> to visualize codebooks' coverage by clusters.`,
                 )
                 .find("a")
                 .on("click", () => {
-                    this.Visualizer.Dialog.CompareCoverageByClusters();
+                    this.visualizer.dialog.compareCoverageByClusters();
                 });
             // Show the components
-            const Components = this.GetGraph<Code>().Components!;
-            this.Container.append(
-                $(`<h3>${Components.length} Clusters, ${this.Dataset.Codes.length} Codes</h3>`),
+            const components = this.getGraph<Code>().components ?? [];
+            this.container.append(
+                $(`<h3>${components.length} Clusters, ${this.dataset.codes.length} Codes</h3>`),
             );
-            this.BuildTable(
-                Components,
-                (Row, Component, Index) => {
+            this.buildTable(
+                components,
+                (row, component, idx) => {
                     // Interactivity
-                    Row.on("mouseover", (Event: Event) => {
-                        this.Visualizer.ComponentOver(Event, Component);
+                    row.on("mouseover", (event: Event) => {
+                        this.visualizer.componentOver(event, component);
                     })
-                        .on("mouseout", (Event: Event) => {
-                            this.Visualizer.ComponentOut(Event, Component);
+                        .on("mouseout", (event: Event) => {
+                            this.visualizer.componentOut(event, component);
                         })
                         .toggleClass(
                             "chosen",
-                            this.Visualizer.IsFilterApplied("Component", Component),
+                            this.visualizer.isFilterApplied("Component", component),
                         );
                     // Show the summary
-                    const Summary = $('<td class="cluster-cell"></td>')
-                        .attr("id", `cluster-${Component.ID}`)
+                    const summary = $('<td class="cluster-cell"></td>')
+                        .attr("id", `cluster-${component.id}`)
                         .addClass("actionable")
-                        .on("click", (Event: MouseEvent) => {
-                            if (Event.shiftKey) {
-                                this.Visualizer.ComponentChosen(Event, Component);
+                        .on("click", (event: MouseEvent) => {
+                            if (event.shiftKey) {
+                                this.visualizer.componentChosen(event, component);
                             } else {
-                                this.ShowComponent(Component);
+                                this.showComponent(component);
                             }
                         })
-                        .appendTo(Row);
-                    Summary.append(
-                        $("<h4></h4>").text(
-                            `#${Index + 1} ${Component.Representative!.Data.Label}`,
-                        ),
+                        .appendTo(row);
+                    summary.append(
+                        $("<h4></h4>").text(`#${idx + 1} ${component.representative?.data.label}`),
                     );
                     // Calculate the coverage of each codebook
-                    const Codebooks: Map<number, number> = this.Dataset.Names.reduce(
-                        (Previous, _Name, Index) => {
-                            Previous.set(
-                                Index,
-                                FilterNodesByOwner(
-                                    Component.Nodes,
-                                    Index,
-                                    this.Parameters.UseNearOwners,
+                    const codebooks: Map<number, number> = this.dataset.names.reduce(
+                        (prev, _name, idx) => {
+                            prev.set(
+                                idx,
+                                filterNodesByOwner(
+                                    component.nodes,
+                                    idx,
+                                    this.parameters.useNearOwners,
                                 ).length,
                             );
-                            return Previous;
+                            return prev;
                         },
                         new Map<number, number>(),
                     );
                     // Show the owners
-                    const Owners = $('<p class="owners"></p>').appendTo(Summary);
-                    this.Dataset.Names.forEach((_Name, NameIndex) => {
-                        const Count = Codebooks.get(NameIndex)!;
-                        if (NameIndex === 0 || Count === 0) {
+                    const owners = $('<p class="owners"></p>').appendTo(summary);
+                    this.dataset.names.forEach((_name, nameIndex) => {
+                        const count = codebooks.get(nameIndex) ?? NaN;
+                        if (nameIndex === 0 || count === 0) {
                             return;
                         }
-                        Owners.append(
+                        owners.append(
                             $(
-                                `<a href="javascript:void(0)" style="color: ${GetCodebookColor(NameIndex, this.Dataset.Codebooks.length)}">${
-                                    this.Dataset.Names[NameIndex]
+                                `<a href="javascript:void(0)" style="color: ${getCodebookColor(nameIndex, this.dataset.codebooks.length)}">${
+                                    this.dataset.names[nameIndex]
                                 }</a>`,
                             ).attr(
                                 "title",
-                                `${Count} codes (${d3.format(".0%")(Count / Component.Nodes.length)})`,
+                                `${count} codes (${d3.format(".0%")(count / component.nodes.length)})`,
                             ),
                         );
                     });
                     // Show the numbers
-                    const Filtered = Component.Nodes.filter((Node) => !Node.Hidden).length;
-                    const Color = this.RatioColorizer(Filtered / Component.Nodes.length);
+                    const filtered = component.nodes.filter((node) => !node.hidden).length;
+                    const color = this.#ratioColorizer(filtered / component.nodes.length);
                     $('<td class="metric-cell"></td>')
-                        .css("background-color", Color.toString())
-                        .css("color", d3.lab(Color).l > 70 ? "black" : "white")
-                        .appendTo(Row)
-                        .text(`${Filtered}`)
+                        .css("background-color", color.toString())
+                        .css("color", d3.lab(color).l > 70 ? "black" : "white")
+                        .appendTo(row)
+                        .text(`${filtered}`)
                         .append(
-                            $("<p></p>").text(d3.format(".0%")(Filtered / Component.Nodes.length)),
+                            $("<p></p>").text(d3.format(".0%")(filtered / component.nodes.length)),
                         )
-                        .on("click", (Event: MouseEvent) => {
-                            this.Visualizer.ComponentChosen(Event, Component);
+                        .on("click", (event: MouseEvent) => {
+                            this.visualizer.componentChosen(event, component);
                         });
                     $('<td class="number-cell actionable"></td>')
-                        .appendTo(Row)
-                        .text(`${Component.Nodes.length}`)
+                        .appendTo(row)
+                        .text(`${component.nodes.length}`)
                         .append($("<p></p>").text("100%"))
-                        .on("click", (Event: MouseEvent) => {
-                            this.Visualizer.ComponentChosen(Event, Component);
+                        .on("click", (event: MouseEvent) => {
+                            this.visualizer.componentChosen(event, component);
                         });
                 },
                 ["Cluster", "Filtered", "Codes"],
             );
         });
     }
-    /** ShowComponent: Show a code component. */
-    public ShowComponent(Component: Component<Code>) {
+
+    /** Show a code component. */
+    showComponent(component: Component<Code>) {
         // Switch to the component, if not already
-        if (!this.Visualizer.IsFilterApplied("Component", Component)) {
-            this.Visualizer.ComponentChosen(new MouseEvent("virtual"), Component);
+        if (!this.visualizer.isFilterApplied("Component", component)) {
+            this.visualizer.componentChosen(new MouseEvent("virtual"), component);
         }
         // Show the component
-        this.SetRefresh(() => {
-            const Colorizer = this.Visualizer.GetColorizer();
-            this.Container.empty();
+        this.setRefresh(() => {
+            const colorizer = this.visualizer.getColorizer();
+            this.container.empty();
             // Some notes
-            this.Container.append(
+            this.container.append(
                 $('<p class="tips"></p>').text(
                     "Note that clusters are not deterministic, only to help understand the data. Names are chosen from the most connected codes.",
                 ),
             );
             // Show the component
-            this.Container.append(
-                $(`<h3>${Component.Nodes.length} Codes</h3>`).prepend(
-                    this.BuildReturn(() => {
-                        this.Visualizer.ComponentChosen(new MouseEvent("virtual"), Component);
-                        this.ShowComponents();
+            this.container.append(
+                $(`<h3>${component.nodes.length} Codes</h3>`).prepend(
+                    this.buildReturn(() => {
+                        this.visualizer.componentChosen(new MouseEvent("virtual"), component);
+                        this.showComponents();
                     }),
                 ),
             );
-            this.BuildTable(
-                Component.Nodes,
-                (Row, Node) => {
+            this.buildTable(
+                component.nodes,
+                (row, node) => {
                     // Interactivity
-                    Row.on("mouseover", (Event: Event) => {
-                        this.Visualizer.NodeOver(Event, Node);
+                    row.on("mouseover", (event: Event) => {
+                        this.visualizer.nodeOver(event, node);
                     })
-                        .on("mouseout", (Event: Event) => {
-                            this.Visualizer.NodeOut(Event, Node);
+                        .on("mouseout", (event: Event) => {
+                            this.visualizer.nodeOut(event, node);
                         })
                         .toggleClass(
                             "chosen",
-                            this.Visualizer.GetStatus().ChosenNodes.includes(Node),
+                            this.visualizer.getStatus().chosenNodes.includes(node),
                         )
-                        .on("click", (Event: MouseEvent) => {
-                            if (this.Visualizer.NodeChosen(Event, Node)) {
-                                this.Visualizer.CenterCamera(Node.x!, Node.y!, 3);
+                        .on("click", (event: MouseEvent) => {
+                            if (this.visualizer.nodeChosen(event, node)) {
+                                this.visualizer.centerCamera(node.x ?? NaN, node.y ?? NaN, 3);
                             }
                         });
                     // Show the summary
-                    const Summary = $('<td class="code-cell actionable"></td>')
-                        .attr("id", `code-${Node.ID}`)
-                        .appendTo(Row);
+                    const summary = $('<td class="code-cell actionable"></td>')
+                        .attr("id", `code-${node.id}`)
+                        .appendTo(row);
                     // Calculate source codes
-                    const From = (Node.Data.Alternatives ?? [])
-                        .concat(Node.Data.Label)
-                        .filter((Name) => {
-                            return Object.values(this.Dataset.Codebooks).some(
-                                (Codebook) => Codebook[Name] !== undefined,
-                            );
-                        }).length;
+                    const from = (node.data.alternatives ?? [])
+                        .concat(node.data.label)
+                        .filter((name) =>
+                            Object.values(this.dataset.codebooks).some(
+                                (code) => typeof code[name] !== "undefined",
+                            ),
+                        ).length;
                     // Colorize the code in the same way as the graph
-                    let Color = Node.Hidden ? "#999999" : Colorizer.Colorize(Node);
-                    Summary.append(
+                    let color = node.hidden ? "#999999" : colorizer.colorize(node);
+                    summary.append(
                         $("<h4></h4>")
                             .append(
                                 $(
-                                    `<svg width="2" height="2" viewbox="0 0 2 2"><circle r="1" cx="1" cy="1" fill="${Color}"></circle></svg>`,
+                                    `<svg width="2" height="2" viewbox="0 0 2 2"><circle r="1" cx="1" cy="1" fill="${color}"></circle></svg>`,
                                 ),
                             )
-                            .append($("<span></span>").text(Node.Data.Label)),
+                            .append($("<span></span>").text(node.data.label)),
                     );
-                    Summary.append($('<p class="tips"></p>').text(`From ${From} codes`));
+                    summary.append($('<p class="tips"></p>').text(`From ${from} codes`));
                     // Show the consensus
-                    const Owners = $('<td class="metric-cell"></td>').appendTo(Row);
+                    const owners = $('<td class="metric-cell"></td>').appendTo(row);
                     // let OwnerSet = this.Parameters.UseNearOwners ? Node.Owners : Node.NearOwners;
                     // let Count = [...OwnerSet].filter(Owner => this.Dataset.Weights![Owner] !== 0).length;
-                    const Ratio = Node.TotalWeight / this.Dataset.TotalWeight!;
-                    Color = this.RatioColorizer(Ratio);
-                    Owners.text(d3.format(".0%")(Ratio))
-                        .css("background-color", Color.toString())
-                        .css("color", d3.lab(Color).l > 70 ? "black" : "white");
+                    const ratio = node.totalWeight / (this.dataset.totalWeight ?? NaN);
+                    color = this.#ratioColorizer(ratio);
+                    owners
+                        .text(d3.format(".0%")(ratio))
+                        .css("background-color", color.toString())
+                        .css("color", d3.lab(color).l > 70 ? "black" : "white");
                     // Show the examples
-                    Row.append(
+                    row.append(
                         $('<td class="number-cell actionable"></td>').text(
-                            `${Node.Data.Examples?.length ?? 0}`,
+                            `${node.data.examples?.length ?? 0}`,
                         ),
                     );
                 },
