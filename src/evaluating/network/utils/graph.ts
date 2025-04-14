@@ -261,7 +261,7 @@ export const sortNodesByCentrality = <T>(
             }
         });
     // Find the central node
-    // eslint-disable-next-line import-x/namespace
+
     const result = graphologyLibrary.metrics.centrality.pagerank(graph, {
         getEdgeWeight: (Edge) => weights.get(Edge) ?? NaN,
     });

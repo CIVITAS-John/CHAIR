@@ -1,5 +1,5 @@
 import type { Cash, CashStatic } from "cash-dom";
-import * as d3 from "d3";
+import d3 from "d3";
 
 import type { Code, CodebookComparison, DataChunk, DataItem } from "../../schema.js";
 
@@ -65,7 +65,9 @@ export class Visualizer {
         this.dialog = new Dialog($(".dialog"), this);
         this.tutorial = new Tutorial($(".portrait-overlay"), this);
         // Initialize the SVG
-        const root = d3.select(container.get(0)!).attr("style", "background-color: #290033");
+        const root = d3
+            .select(container.get(0) ?? ({} as HTMLElement))
+            .attr("style", "background-color: #290033");
         this.#container = root.append("svg");
         const scaler = this.#container.append("g");
         this.#hullLayer = scaler.append("g").attr("class", "hulls");
@@ -276,9 +278,7 @@ export class Visualizer {
                 }
             }
         }
-        if (!colorizer) {
-            colorizer = new OwnerFilter().getColorizer(this);
-        }
+        colorizer ??= new OwnerFilter().getColorizer(this);
         return colorizer;
     }
 

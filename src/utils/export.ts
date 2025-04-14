@@ -7,10 +7,14 @@ import { logger } from "./logger.js";
 
 const { Workbook } = Excel;
 
-// Range: Generate a range of numbers.
-export function Range(startAt: number, endAt: number): number[] {
-    return [...Array(endAt - startAt + 1).keys()].map((i) => i + startAt);
-}
+const getCellValueString = (row: Excel.Row, cell: string) => {
+    const cellValue = row.getCell(cell).value;
+    return cellValue === null || cellValue === undefined
+        ? ""
+        : typeof cellValue === "string"
+          ? cellValue
+          : JSON.stringify(cellValue);
+};
 
 /** Get the row height for the given content. */
 export const getRowHeight = (content: string, width: number) =>
@@ -296,8 +300,8 @@ export const importCodes = async (
 
             // Check if this is a special row (thoughts, summary, reflection)
             if (typeof id === "number" && id < 0) {
-                const name = row.getCell("Nickname").value?.toString();
-                const content = row.getCell("Content").value?.toString() ?? "";
+                const name = getCellValueString(row, "Nickname");
+                const content = getCellValueString(row, "Content");
 
                 switch (id) {
                     case -1:
@@ -328,14 +332,14 @@ export const importCodes = async (
             // Skip empty rows
             if (!id) return;
 
-            const codesValue = row.getCell("Codes").value?.toString() ?? "";
+            const codesValue = getCellValueString(row, "Codes");
             const codes = codesValue ? codesValue.split(", ").filter(Boolean) : undefined;
 
             // Skip rows without codes
             if (!codes) return;
 
             // Add item to analysis
-            const messageId = JSON.stringify(id);
+            const messageId = typeof id === "string" ? id : JSON.stringify(id);
             analysis.items[messageId] = {
                 id: messageId,
                 codes,
@@ -482,15 +486,15 @@ export const importCodebook = async (
     sheet.eachRow((row, rowNumber) => {
         if (rowNumber === 1) return;
 
-        const label = row.getCell("Label").value?.toString();
+        const label = getCellValueString(row, "Label").trim();
         if (!label) return; // Skip rows without a label
 
         logger.debug(`Importing code ${label}`, _id);
 
-        const categoryText = row.getCell("Category").value?.toString() ?? "";
-        const definitionText = row.getCell("Definition").value?.toString() ?? "";
-        const examplesText = row.getCell("Examples").value?.toString() ?? "";
-        const alternativesText = row.getCell("Alternatives").value?.toString() ?? "";
+        const categoryText = getCellValueString(row, "Category");
+        const definitionText = getCellValueString(row, "Definition");
+        const examplesText = getCellValueString(row, "Examples");
+        const alternativesText = getCellValueString(row, "Alternatives");
 
         // Parse categories (handle bullet points)
         const categories = categoryText

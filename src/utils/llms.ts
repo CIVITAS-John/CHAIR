@@ -338,7 +338,9 @@ export const requestLLM = async (
 ) => {
     const _id = idStr("requestLLM");
 
-    const input = messages.map((m) => m.content).join("\n~~~\n");
+    const input = messages
+        .map((m) => (typeof m.content === "string" ? m.content : JSON.stringify(m.content)))
+        .join("\n~~~\n");
 
     logger.debug(
         `[${session.llm.name}] LLM request with temperature ${temperature ?? 0}: \n${messages.map((m) => `${m.getType()}: ${m.content as string}`).join("\n---\n")}`,

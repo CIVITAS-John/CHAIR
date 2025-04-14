@@ -315,9 +315,7 @@ export const updateCodes = (codebook: Codebook, newCodes: Code[], codes: Code[])
         if (newLabel !== codes[i].label) {
             // Find the code with the same new label and merge
             let parent = allCodes.find((cur) => cur.label === newLabel);
-            if (!parent) {
-                parent = allCodes.find((cur) => cur.alternatives?.includes(newLabel));
-            }
+            parent ??= allCodes.find((cur) => cur.alternatives?.includes(newLabel));
             if (parent && parent !== codes[i]) {
                 mergeCodes(parent, codes[i]);
                 continue;
