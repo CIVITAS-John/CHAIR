@@ -16,26 +16,25 @@ if (-not $python) {
     }
 }
 
-# Check if "pip" or "pip3" is available
-$pip = (Get-Command -Name pip -ErrorAction SilentlyContinue).Source
-if (-not $pip) {
-    $pip = (Get-Command -Name pip3 -ErrorAction SilentlyContinue).Source
-}
-if (-not $pip) {
-    # Ask the user to provide a path to pip
-    Write-Host "pip cannot be detected." -ForegroundColor Yellow
-    $pip = Read-Host "Provide the path to pip, or leave empty to install pip"
-    if ($pip -eq "") {
-        Write-Host "Installing pip..."
-        & $python -m ensurepip
-        $pip = (Get-Command -Name pip -ErrorAction SilentlyContinue).Source
-        if (-not $pip) {
-            Write-Host "pip cannot be installed. Please follow https://pip.pypa.io/en/stable/installation/ to install pip." -ForegroundColor Red
-            exit 1
-        }
-        Write-Host "pip has been installed." -ForegroundColor Green
+# Create a virtual environment if it doesn't exist
+$venvPath = ".\.venv"
+if (-not (Test-Path $venvPath)) {
+    Write-Host "Creating a virtual environment..."
+    & $python -m venv $venvPath
+    if (-not (Test-Path $venvPath)) {
+        Write-Host "Failed to create a virtual environment. Please ensure Python is installed correctly." -ForegroundColor Red
+        exit 1
     }
+    Write-Host "Virtual environment created at $venvPath." -ForegroundColor Green
 }
+
+# Activate the virtual environment
+$activateScript = Join-Path $venvPath "Scripts\Activate.ps1"
+if (-not (Test-Path $activateScript)) {
+    Write-Host "Activation script not found. Ensure the virtual environment was created successfully." -ForegroundColor Red
+    exit 1
+}
+& $activateScript
 
 # Ask the user if they want to use bertopic
 $bertopic = Read-Host "Do you want to use topic modelling? [y/N]"
@@ -44,15 +43,17 @@ $bertopic = Read-Host "Do you want to use topic modelling? [y/N]"
 $hdbscan = Read-Host "Do you want to install hdbscan? (for repository developers) [y/N]"
 
 # Install the required packages from requirements.txt
-Write-Host "Installing required packages..."
-& $pip install -r requirements.txt
+Write-Host "Installing required packages in the virtual environment..."
+& python -m ensurepip --upgrade
+& python -m pip install --upgrade pip
+& python -m pip install -r requirements.txt
 
 if ($bertopic -eq "y") {
-    & $pip install -r requirements.bertopic.txt
+    & python -m pip install -r requirements.bertopic.txt
 }
 
 if ($hdbscan -eq "y") {
-    & $pip install -r requirements.hdbscan.txt
+    & python -m pip install -r requirements.hdbscan.txt
 }
 
-Write-Host "All required packages have been installed." -ForegroundColor Green
+Write-Host "All required packages have been installed in the virtual environment." -ForegroundColor Green
