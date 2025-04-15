@@ -136,7 +136,14 @@ export class ConsolidateStep<
                         session,
                         this.embedder,
                     );
-                    const referencePath = ensureFolder(join(dataset.path, "references"));
+                    const referencePath = ensureFolder(
+                        join(
+                            dataset.path,
+                            "references",
+                            // `${Analyzers.join("-")}_
+                            `${models.map((m) => (typeof m === "string" ? m : m.name)).join("-")}${builder.suffix}`,
+                        ),
+                    );
                     const hash = md5(JSON.stringify(codes));
                     const reference = await withCache(this._idStr, referencePath, hash, () =>
                         buildReferenceAndExport(this._idStr, builder, codes, referencePath),
