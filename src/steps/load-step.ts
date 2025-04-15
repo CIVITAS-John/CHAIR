@@ -40,10 +40,10 @@ const initializeChunk = (chunk: RawDataChunk): DataChunk<DataItem> => ({
     }),
 });
 
-export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> extends BaseStep {
+export class LoadStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem>> extends BaseStep {
     override dependsOn = undefined;
 
-    #dataset?: Dataset<T>;
+    #dataset?: Dataset<TUnit>;
     get dataset() {
         // Sanity check
         if (!this.executed || !this.#dataset) {
@@ -74,7 +74,7 @@ export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> exten
         );
 
         this.config.path = resolve(this.config.path);
-        const parsedData: Record<string, Record<string, T>> = {};
+        const parsedData: Record<string, Record<string, TUnit>> = {};
         for (const [gk, gv] of Object.entries(dataset.data)) {
             logger.info(`[${dataset.name}] Loading chunk group "${gk}" from ${gv}`, _id);
             let rawChunks = loadChunkGroup(this.config.path, gv);
@@ -89,13 +89,13 @@ export class LoadStep<T extends DataChunk<DataItem> = DataChunk<DataItem>> exten
                 continue;
             }
 
-            const parsedChunks: Record<string, T> = {};
+            const parsedChunks: Record<string, TUnit> = {};
             for (const [ck, cv] of Object.entries(rawChunks)) {
                 logger.debug(
                     `[${dataset.name}] Initializing chunk "${ck}" of chunk group "${gk}"`,
                     _id,
                 );
-                parsedChunks[ck] = initializeChunk(cv) as T;
+                parsedChunks[ck] = initializeChunk(cv) as TUnit;
             }
             parsedData[gk] = parsedChunks;
 

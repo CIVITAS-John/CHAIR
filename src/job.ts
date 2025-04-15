@@ -1,14 +1,18 @@
 import { BaseStep } from "./steps/base-step.js";
+import type { CodeStepConfig } from "./steps/code-step.js";
 import { CodeStep } from "./steps/code-step.js";
+import type { ConsolidateStepConfig } from "./steps/consolidate-step.js";
 import { ConsolidateStep } from "./steps/consolidate-step.js";
+import type { EvaluateStepConfig } from "./steps/evaluate-step.js";
 import { EvaluateStep } from "./steps/evaluate-step.js";
+import type { LoadStepConfig } from "./steps/load-step.js";
 import { LoadStep } from "./steps/load-step.js";
 import { type EmbedderModel, initEmbedder } from "./utils/embeddings.js";
 import { logger } from "./utils/logger.js";
 
 export interface QAJobConfig {
     embedder?: EmbedderModel;
-    steps: BaseStep[] | BaseStep[][];
+    steps?: BaseStep[] | BaseStep[][];
     parallel?: boolean;
 }
 
@@ -68,6 +72,12 @@ export class QAJob {
     constructor(private readonly config: QAJobConfig) {
         const _id = "QAJob#constructor";
         logger.info("Creating job", _id);
+
+        if (!config.steps) {
+            logger.debug("No steps provided in the config directly", _id);
+            this.steps = [];
+            return;
+        }
 
         if (!Array.isArray(config.steps[0])) {
             // config.steps is a flattened 1D array
@@ -163,6 +173,30 @@ export class QAJob {
             `Created job with ${this.steps.length} dependency groups (${this.steps.map((group) => group.length).join(", ")} steps)`,
             _id,
         );
+    }
+
+    addStep(step: BaseStep) {
+        logger.info(`Adding step of type ${step.constructor.name}`, "QAJob#addStep");
+        if (this.steps.length === 0) {
+            this.steps.push([step]);
+        } else {
+            this.steps[this.steps.length - 1].push(step);
+        }
+        step._id = `${this.steps.length}.${this.steps[this.steps.length - 1].length}`;
+        this.#assignID();
+        return step;
+    }
+    addLoadStep(config: LoadStepConfig) {
+        return this.addStep(new LoadStep(config));
+    }
+    addCodeStep(config: CodeStepConfig) {
+        return this.addStep(new CodeStep(config));
+    }
+    addConsolidateStep(config: ConsolidateStepConfig) {
+        return this.addStep(new ConsolidateStep(config));
+    }
+    addEvaluateStep(config: EvaluateStepConfig) {
+        return this.addStep(new EvaluateStep(config));
     }
 
     async #executeStep(step: BaseStep) {

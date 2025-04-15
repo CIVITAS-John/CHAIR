@@ -12,11 +12,11 @@ import { BaseStep } from "./base-step.js";
 import type { ConsolidateStep } from "./consolidate-step.js";
 
 export interface EvaluateStepConfig<
-    TUnit extends DataChunk<TSubunit>,
     TSubunit extends DataItem = DataItem,
+    TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
 > {
     // evaluator: new () => CodebookEvaluator;
-    consolidator: ConsolidateStep<TUnit, TSubunit>;
+    consolidator: ConsolidateStep<TSubunit, TUnit>;
     subdir?: string; // Defaults to "evaluation"
 }
 
@@ -24,11 +24,11 @@ export class EvaluateStep<
     TUnit extends DataChunk<TSubunit>,
     TSubunit extends DataItem = DataItem,
 > extends BaseStep {
-    override dependsOn: ConsolidateStep<TUnit, TSubunit>[];
+    override dependsOn: ConsolidateStep<TSubunit, TUnit>[];
 
     embedder?: EmbedderObject;
 
-    constructor(private readonly config: EvaluateStepConfig<TUnit, TSubunit>) {
+    constructor(private readonly config: EvaluateStepConfig<TSubunit, TUnit>) {
         super();
 
         // If config.consolidator is not provided, we will evaluate all consolidators

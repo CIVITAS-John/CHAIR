@@ -16,20 +16,20 @@ import { BaseStep } from "./base-step.js";
 import type { CodeStep } from "./code-step.js";
 
 export interface ConsolidateStepConfig<
-    TUnit extends DataChunk<TSubunit>,
     TSubunit extends DataItem = DataItem,
+    TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
 > {
-    coder?: CodeStep<TUnit, TSubunit> | CodeStep<TUnit, TSubunit>[]; // Defaults to all coders
+    coder?: CodeStep<TSubunit, TUnit> | CodeStep<TSubunit, TUnit>[]; // Defaults to all coders
     // strategy: ConsolidateStrategy;
     model: LLMModel | LLMModel[];
     parameters?: AIParameters;
 }
 
 export class ConsolidateStep<
-    TUnit extends DataChunk<TSubunit>,
     TSubunit extends DataItem = DataItem,
+    TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
 > extends BaseStep {
-    override dependsOn: CodeStep<TUnit, TSubunit>[];
+    override dependsOn: CodeStep<TSubunit, TUnit>[];
 
     embedder?: EmbedderObject;
 
@@ -72,7 +72,7 @@ export class ConsolidateStep<
         return this.#references.get(dataset) ?? {};
     }
 
-    constructor(private readonly config: ConsolidateStepConfig<TUnit, TSubunit>) {
+    constructor(private readonly config: ConsolidateStepConfig<TSubunit, TUnit>) {
         super();
 
         // If config.coder is not provided, we will consolidate all codes

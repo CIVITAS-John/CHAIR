@@ -24,8 +24,8 @@ type AnalyzerConstructor<TUnit, TSubunit, TAnalysis> = new (
 ) => Analyzer<TUnit, TSubunit, TAnalysis>;
 
 export type CodeStepConfig<
-    TUnit extends DataChunk<TSubunit>,
     TSubunit extends DataItem = DataItem,
+    TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
 > = {
     dataset?: LoadStep<TUnit> | LoadStep<TUnit>[]; // Defaults to all datasets loaded
 } & (
@@ -238,8 +238,8 @@ const analyzeChunks = async <T extends DataItem>(
 };
 
 export class CodeStep<
-    TUnit extends DataChunk<TSubunit>,
     TSubunit extends DataItem = DataItem,
+    TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
 > extends BaseStep {
     override dependsOn: LoadStep<TUnit>[];
 
@@ -268,7 +268,7 @@ export class CodeStep<
         return this.#results.get(dataset) ?? {};
     }
 
-    constructor(private readonly config: CodeStepConfig<TUnit, TSubunit>) {
+    constructor(private readonly config: CodeStepConfig<TSubunit, TUnit>) {
         super();
         // If config.dataset is not provided, we will code all datasets loaded
         this.dependsOn = config.dataset
