@@ -22,7 +22,7 @@ const MODELS = {
         dimensions: 512,
         model: () =>
             new OpenAIEmbeddings({
-                modelName: "text-embedding-3-small",
+                model: "text-embedding-3-small",
                 dimensions: 512,
             }),
     },
@@ -30,7 +30,7 @@ const MODELS = {
         dimensions: 256,
         model: () =>
             new OpenAIEmbeddings({
-                modelName: "text-embedding-3-large",
+                model: "text-embedding-3-large",
                 dimensions: 256,
             }),
     },
@@ -38,7 +38,7 @@ const MODELS = {
         dimensions: 1024,
         model: () =>
             new OpenAIEmbeddings({
-                modelName: "text-embedding-3-large",
+                model: "text-embedding-3-large",
                 dimensions: 1024,
             }),
     },

@@ -30,7 +30,7 @@ const MODELS = {
         model: (temperature) =>
             new ChatOpenAI({
                 temperature,
-                modelName: "gpt-3.5-turbo-0125",
+                model: "gpt-3.5-turbo-0125",
                 streaming: false,
                 maxTokens: 4096,
             }),
@@ -43,7 +43,7 @@ const MODELS = {
         model: (temperature) =>
             new ChatOpenAI({
                 temperature,
-                modelName: "gpt-4-turbo",
+                model: "gpt-4-turbo",
                 streaming: false,
                 maxTokens: 4096,
             }),
@@ -56,7 +56,7 @@ const MODELS = {
         model: (temperature) =>
             new ChatOpenAI({
                 temperature,
-                modelName: "gpt-4o",
+                model: "gpt-4o",
                 streaming: false,
                 maxTokens: 4096,
             }),
@@ -69,7 +69,7 @@ const MODELS = {
         model: (temperature) =>
             new ChatOpenAI({
                 temperature,
-                modelName: "gpt-4o-mini",
+                model: "gpt-4o-mini",
                 streaming: false,
                 maxTokens: 4096,
             }),
@@ -83,7 +83,7 @@ const MODELS = {
         model: (temperature) =>
             new ChatOpenAI({
                 temperature,
-                modelName: "gpt-4o-audio-preview",
+                model: "gpt-4o-audio-preview",
                 streaming: false,
                 maxTokens: 4096,
             }),
@@ -97,7 +97,7 @@ const MODELS = {
         model: () =>
             new ChatOpenAI({
                 // Does not support temperature
-                modelName: "o3-mini",
+                model: "o3-mini",
                 streaming: false,
                 // maxCompletionTokens: MaxOutput,
                 // need to update the package, it seems
@@ -112,7 +112,7 @@ const MODELS = {
         model: () =>
             new ChatOpenAI({
                 // Does not support temperature
-                modelName: "o1",
+                model: "o1",
                 streaming: false,
                 // maxCompletionTokens: MaxOutput,
                 // need to update the package, it seems
@@ -126,7 +126,7 @@ const MODELS = {
         model: (temperature) =>
             new ChatAnthropic({
                 temperature,
-                modelName: "claude-3-haiku-20240307",
+                model: "claude-3-haiku-20240307",
                 streaming: false,
                 maxTokens: 4096,
             }),
@@ -139,7 +139,7 @@ const MODELS = {
         model: (temperature) =>
             new ChatAnthropic({
                 temperature,
-                modelName: "claude-3-sonnet-20240229",
+                model: "claude-3-sonnet-20240229",
                 streaming: false,
                 maxTokens: 4096,
             }),
@@ -152,7 +152,7 @@ const MODELS = {
         model: (temperature) =>
             new ChatAnthropic({
                 temperature,
-                modelName: "claude-3-5-sonnet-20240620",
+                model: "claude-3-5-sonnet-20240620",
                 streaming: false,
                 maxTokens: 4096,
             }),
@@ -165,7 +165,7 @@ const MODELS = {
         model: () =>
             new ChatMistralAI({
                 temperature: 1,
-                modelName: "open-mixtral-8x22b",
+                model: "open-mixtral-8x22b",
                 streaming: false,
                 maxTokens: 32000,
             }),
@@ -178,7 +178,7 @@ const MODELS = {
         model: (temperature) =>
             new ChatGroq({
                 temperature,
-                modelName: "llama3-70b-8192",
+                model: "llama3-70b-8192",
                 streaming: false,
                 maxTokens: 8192,
             }),
@@ -191,7 +191,7 @@ const MODELS = {
         model: (temperature) =>
             new ChatGroq({
                 temperature,
-                modelName: "llama-3.3-70b-versatile",
+                model: "llama-3.3-70b-versatile",
                 streaming: false,
                 maxTokens: 8192,
             }),
