@@ -44,8 +44,7 @@ echo -e "\033[1;32mAll required packages have been installed.\033[0m"
 
 # Build the project
 echo "Building the project..."
-"$pnpm" run build
-if [[ $? -ne 0 ]]; then
+if ! "$pnpm" run build; then
     echo -e "\033[1;31mBuild failed. Please check the error messages above.\033[0m"
     exit 1
 fi
