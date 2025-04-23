@@ -42,34 +42,13 @@ const MODELS = {
                 dimensions: 1024,
             }),
     },
-    "gemini-3072": {
+    "gemini-3072-similarity": {
         dimensions: 3072,
+        batchSize: 10,
         model: () =>
             new GoogleGenerativeAIEmbeddings({
-                model: "gemini-embedding-exp-03-07"
-            }),
-    },
-    "gecko-768": {
-        dimensions: 768,
-        model: () =>
-            new GoogleGenerativeAIEmbeddings({
-                model: "text-embedding-004",
-            }),
-    },
-    "gecko-768-classification": {
-        dimensions: 768,
-        model: () =>
-            new GoogleGenerativeAIEmbeddings({
-                model: "text-embedding-004",
-                taskType: TaskType.CLASSIFICATION,
-            }),
-    },
-    "gecko-768-clustering": {
-        dimensions: 768,
-        model: () =>
-            new GoogleGenerativeAIEmbeddings({
-                model: "text-embedding-004",
-                taskType: TaskType.CLUSTERING,
+                model: "gemini-embedding-exp-03-07",
+                taskType: TaskType.SEMANTIC_SIMILARITY,
             }),
     },
     "gecko-768-similarity": {
@@ -94,6 +73,7 @@ export type EmbedderName = keyof typeof MODELS;
 export interface EmbedderObject {
     model: Embeddings;
     name: string;
+    batchSize?: number;
     dimensions: number;
 }
 export type EmbedderModel = EmbedderName | EmbedderObject;
@@ -167,11 +147,13 @@ export const requestEmbeddings = async (
         }
     }
     // Request the online embeddings
-    const batchSize = 50;
+    const batchSize = embedder.batchSize ?? 50;
     for (let i = 0; i < requests.length; i += batchSize) {
         let retry = 0;
         while (retry < 10) {
             try {
+                // This line could debug some underlying issue behind 0 embeddings, particularly for stupid Gemini API
+                // var test = await (embedder.model as any).client.embedContent("test");
                 const res = await embedder.model.embedDocuments(
                     requests.slice(i, i + batchSize).map((idx) => sources[idx]),
                 );

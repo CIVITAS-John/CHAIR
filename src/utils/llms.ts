@@ -103,6 +103,21 @@ const MODELS = {
                 // need to update the package, it seems
             }),
     },
+    "o4-mini": {
+        // 1.1$ / 4.4$
+        maxInput: 16385,
+        maxOutput: 4096,
+        maxItems: 64,
+        systemMessage: false,
+        model: () =>
+            new ChatOpenAI({
+                // Does not support temperature
+                model: "o4-mini",
+                streaming: false,
+                // maxCompletionTokens: MaxOutput,
+                // need to update the package, it seems
+            }),
+    },
     o1: {
         // 15$ / 60$
         maxInput: 16385,
