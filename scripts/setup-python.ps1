@@ -35,6 +35,7 @@ if (-not (Test-Path $activateScript)) {
     exit 1
 }
 & $activateScript
+Write-Host "Virtual environment activated." -ForegroundColor Green
 
 # Ask the user if they want to use bertopic
 $bertopic = Read-Host "Do you want to use topic modelling? [y/N]"

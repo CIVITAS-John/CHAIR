@@ -5,14 +5,14 @@ if (-not $node) {
     Write-Host "Node.js cannot be detected." -ForegroundColor Yellow
     $node = Read-Host "Provide the path to node, or leave empty to exit"
     if ($node -eq "") {
-        Write-Host "Node.js cannot be detected. Please visit https://nodejs.org/en/download/prebuilt-installer to download and install Node.js." -ForegroundColor Red
+        Write-Host "Node.js cannot be detected. Please visit https://nodejs.org/en/download to download and install Node.js." -ForegroundColor Red
         exit 1
     }
 }
 # https://github.com/nodejs/release?tab=readme-ov-file#release-schedule
 $nodeVersion = & $node --version
 if ($nodeVersion -notmatch "^v(20|2[2-9]|[3-9]\d)") {
-    Write-Host "Node.js is outdated. Please visit https://nodejs.org/en/download/prebuilt-installer to download and install the latest version." -ForegroundColor Red
+    Write-Host "Node.js is outdated. Please visit https://nodejs.org/en/download to download and install the latest/LTS version." -ForegroundColor Red
     exit 1
 }
 

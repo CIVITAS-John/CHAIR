@@ -6,7 +6,7 @@ if [[ -z $node ]]; then
     echo -e "\033[1;33mNode.js cannot be detected.\033[0m"
     read -rp "Provide the path to Node.js, or leave empty to exit: " node
     if [[ -z $node ]]; then
-        echo -e "\033[1;31mNode.js cannot be detected. Please visit https://nodejs.org/en/download/prebuilt-installer to download and install Node.js.\033[0m"
+        echo -e "\033[1;31mNode.js cannot be detected. Please visit https://nodejs.org/en/download to download and install Node.js.\033[0m"
         exit 1
     fi
 fi
@@ -14,7 +14,7 @@ fi
 # Check Node.js version (https://github.com/nodejs/release#release-schedule)
 node_version=$("$node" -v)
 if ! [[ $node_version =~ ^v(20|2[2-9]|[3-9][0-9]) ]]; then
-    echo -e "\033[1;31mNode.js is outdated. Please visit https://nodejs.org/en/download/prebuilt-installer to download and install the latest version.\033[0m"
+    echo -e "\033[1;31mNode.js is outdated. Please visit https://nodejs.org/en/download to download and install the latest/LTS version.\033[0m"
     exit 1
 fi
 
