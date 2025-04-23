@@ -42,18 +42,25 @@ const MODELS = {
                 dimensions: 1024,
             }),
     },
+    "gemini-3072": {
+        dimensions: 3072,
+        model: () =>
+            new GoogleGenerativeAIEmbeddings({
+                model: "gemini-embedding-exp-03-07"
+            }),
+    },
     "gecko-768": {
         dimensions: 768,
         model: () =>
             new GoogleGenerativeAIEmbeddings({
-                model: "text-embedding-005",
+                model: "text-embedding-004",
             }),
     },
     "gecko-768-classification": {
         dimensions: 768,
         model: () =>
             new GoogleGenerativeAIEmbeddings({
-                model: "text-embedding-005",
+                model: "text-embedding-004",
                 taskType: TaskType.CLASSIFICATION,
             }),
     },
@@ -61,7 +68,7 @@ const MODELS = {
         dimensions: 768,
         model: () =>
             new GoogleGenerativeAIEmbeddings({
-                model: "text-embedding-005",
+                model: "text-embedding-004",
                 taskType: TaskType.CLUSTERING,
             }),
     },
@@ -69,7 +76,7 @@ const MODELS = {
         dimensions: 768,
         model: () =>
             new GoogleGenerativeAIEmbeddings({
-                model: "text-embedding-005",
+                model: "text-embedding-004",
                 taskType: TaskType.SEMANTIC_SIMILARITY,
             }),
     },
