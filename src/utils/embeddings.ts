@@ -46,14 +46,14 @@ const MODELS = {
         dimensions: 768,
         model: () =>
             new GoogleGenerativeAIEmbeddings({
-                model: "text-embedding-004",
+                model: "text-embedding-005",
             }),
     },
     "gecko-768-classification": {
         dimensions: 768,
         model: () =>
             new GoogleGenerativeAIEmbeddings({
-                model: "text-embedding-004",
+                model: "text-embedding-005",
                 taskType: TaskType.CLASSIFICATION,
             }),
     },
@@ -61,7 +61,7 @@ const MODELS = {
         dimensions: 768,
         model: () =>
             new GoogleGenerativeAIEmbeddings({
-                model: "text-embedding-004",
+                model: "text-embedding-005",
                 taskType: TaskType.CLUSTERING,
             }),
     },
@@ -69,7 +69,7 @@ const MODELS = {
         dimensions: 768,
         model: () =>
             new GoogleGenerativeAIEmbeddings({
-                model: "text-embedding-004",
+                model: "text-embedding-005",
                 taskType: TaskType.SEMANTIC_SIMILARITY,
             }),
     },
