@@ -4,7 +4,13 @@ import type { DataItem } from "../schema.js";
 export const reverse = (s: string) => s.split("").reverse().join("");
 
 /** Wait for a number of milliseconds. */
-export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+export const sleep = (ms: number) =>
+    new Promise<true>((resolve) => {
+        const timeout = setTimeout(() => {
+            clearTimeout(timeout);
+            resolve(true);
+        }, ms);
+    });
 
 /** Create a promise with timeout. */
 export const promiseWithTimeout = async <T>(

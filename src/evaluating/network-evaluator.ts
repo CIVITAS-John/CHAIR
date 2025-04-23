@@ -1,3 +1,5 @@
+import { join } from "path";
+
 import md5 from "md5";
 
 import { mergeCodebooks } from "../consolidating/codebooks.js";
@@ -76,6 +78,8 @@ export class NetworkEvaluator<
     ): Promise<Record<string, CodebookEvaluation>> {
         const _id = this._idStr("evaluate");
 
+        exportPath = exportPath ?? "./known";
+
         const hash = md5(JSON.stringify(codebooks));
         // Weights
         const weights = names.map((name, idx) => {
@@ -91,7 +95,7 @@ export class NetworkEvaluator<
             return value;
         });
         // Build the network information
-        await withCache(this._idStr, `${exportPath}/network`, hash, async () => {
+        await withCache(this._idStr, join(exportPath, "network"), hash, async () => {
             // We treat the first input as the reference codebook
             names[0] = "baseline";
             const merged = mergeCodebooks(codebooks, true);
@@ -113,7 +117,7 @@ export class NetworkEvaluator<
                 this.name,
                 "network",
                 this.visualize.toString(),
-                exportPath ?? "./known",
+                exportPath,
             );
             // Infuse the results back into the reference codebook
             for (let i = 0; i < codes.length; i++) {
