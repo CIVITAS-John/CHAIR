@@ -6,16 +6,23 @@ if (Test-Path $envFile) {
 }
 
 # Ask the user for API keys
-$apiKeys =
+$envList =
 @("OpenAI", "Anthropic", "Mistral", "Groq", "Google") | ForEach-Object {
-    $key = Read-Host "Enter your $($_) API key (leave blank if not available)"
+    $key = Read-Host "Enter your $($_) API key (leave blank if not applicable)"
     if ($key -ne "") {
         "$($_.ToUpper())_API_KEY=$key"
-    } else {
+    }
+    else {
         "$($_.ToUpper())_API_KEY={Your $($_) API key}"
     }
 }
 
+# Ask the user for OLLAMA_URL
+$ollamaUrl = Read-Host "If you are using Ollama with a custom endpoint, please provide the URL (leave blank if not applicable)"
+if ($ollamaUrl -ne "") {
+    $envList += "OLLAMA_URL=$ollamaUrl"
+}
+
 # Write the API keys to the .env file
-$apiKeys | Out-File -FilePath $envFile -Encoding utf8
-Write-Host ".env file has been created with the provided API keys." -ForegroundColor Green
+$envList | Out-File -FilePath $envFile -Encoding utf8
+Write-Host ".env file has been created successfully." -ForegroundColor Green

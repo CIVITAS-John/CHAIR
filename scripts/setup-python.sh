@@ -28,12 +28,13 @@ activate_script="$venv_path/bin/activate"
 if [[ ! -f $activate_script ]]; then
     activate_script="$venv_path/Scripts/activate"
     if [[ ! -f $activate_script ]]; then
-        echo -e "\033[1;31mActivation script not found in both 'bin' and 'Scripts'. Ensure the virtual environment was created successfully.\033[0m"
+        echo -e "\033[1;31mActivation script not found. Ensure the virtual environment was created successfully.\033[0m"
         exit 1
     fi
 fi
 # shellcheck source=/dev/null
 source "$activate_script"
+echo -e "\033[1;32mVirtual environment activated.\033[0m"
 
 # Ask the user if they want to use bertopic
 read -rp "Do you want to use topic modelling? [y/N] " bertopic

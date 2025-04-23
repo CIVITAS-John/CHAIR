@@ -8,10 +8,11 @@
     ],
     "type": "module",
     "scripts": {
+        "clean": "rimraf out",
         "build:main": "tsc -p tsconfig.json",
         "build:network": "tsc -p src/evaluating/network/tsconfig.json",
         "copy": "copyfiles src/**/*.py out/",
-        "build": "pnpm run build:main && pnpm run build:network && pnpm run copy",
+        "build": "pnpm clean && pnpm run build:main && pnpm run build:network && pnpm run copy",
         "lint": "eslint --cache . && prettier --check --cache .",
         "format": "eslint --fix --cache . && prettier --write --cache ."
     },
@@ -58,6 +59,7 @@
         "eslint-plugin-regexp": "^2.7.0",
         "eslint-plugin-tsdoc": "^0.4.0",
         "prettier": "^3.5.3",
+        "rimraf": "^6.0.1",
         "tsx": "^4.19.3",
         "typedoc": "^0.28.2",
         "typescript": "^5.8.3",
