@@ -2,50 +2,37 @@
 
 Documentation in progress...
 
-# Installation
+## Setup
 
-Please install the latest [https://nodejs.org/en](node.js); and [https://python.org](python).
-Then, run the following command in your terminal at this folder:
+First, please ensure that [Node.js (v20 or later)](https://nodejs.org/en/download) and [Python (v3.13 or later)](https://www.python.org/downloads/) are installed.
 
-```
-pip install -r requirements.txt
-npm install
-npm install -D typescript
-```
+Obtain a copy of the code either by [downloading the zip file directly](https://github.com/CIVITAS-John/LLM-Qualitative-Analysis/archive/refs/heads/next.zip) or cloning:
 
-# API Access
-
-To run the code in this repository, you need to create the `.env` file in the repository folder with the following:
-
-```
-OPENAI_API_KEY={Your OpenAI API Key}
-ANTHROPIC_API_KEY={Your Anthropic API Key}
-MISTRAL_API_KEY={Your Mistral API Key}
-GROQ_API_KEY={Your Groq API Key} # for llama3 series models
-GOOGLE_API_KEY={Your Google API Key} # for gecko embedding models
-DATASET_PATH=./examples # or the root path to your datasets
-OLLAMA_URL=http://127.0.0.1:11434
+```bash
+git clone https://github.com/CIVITAS-John/LLM-Qualitative-Analysis.git
+cd LLM-Qualitative-Analysis
 ```
 
-For Google API, get the key at [Google AI Studio](https://aistudio.google.com/app/u/1/apikey).
+Depending on your operating system, run the setup script at `setup.bat` (Windows) or `setup.sh` (Linux/macOS), located in the root directory of the repository. This script will install all necessary dependencies and set up the environment for you.
 
-# Run the example analysis
+You will be asked to enter an API key for each of the available service backends. If not applicable, leave it empty. For the Google API, get the API key at [Google AI Studio](https://aistudio.google.com/app/apikey).
 
-Now, please go to `./examples/code-evaluate.ts`. If you are using Visual Studio Code, use `Run` => `Start Debugging` on the file. If you only have an API key for OpenAI, please change `gecko-768-similarity` to `openai-large-1024`. The performance of the evaluation/visualization would be slightly worse, though.
+## Run the example analysis
 
-# Troubleshooting
+The setup script should build the project, including the example analysis. If you cannot see the `out/examples` folder, please try running the following command:
 
-## macOS
-
-If you are using macOS and have issues with Python or Node.js, try using [https://brew.sh/](Homebrew). Then:
-
+```bash
+pnpm run build
 ```
-brew install python@3.12
-brew install node
-brew install cargo-c
-python3 -m venv .venv
-source .venv/bin/activate
-python3 -m ensurepip --upgrade
-python3 -m pip install setuptools
-python3 -m pip install -r requirements.txt
+
+If you wish to make adjustments to the models or the embedder used, please modify the `examples/job-config.ts` file. Once you have made the changes, run the above command again to rebuild the project.
+
+To run the example analysis, run the following command in the root directory of the repository:
+
+```bash
+node out/examples/job-config.js
 ```
+
+## Creating a job configuration
+
+// TODO: Add a detailed description of the job configuration file and its parameters.
