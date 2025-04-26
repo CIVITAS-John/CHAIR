@@ -199,10 +199,7 @@ const analyzeChunks = async <T extends DataItem>(
                         codes.forEach((code) => {
                             const cur = analysis.codes[code] ?? { label: code };
                             cur.examples = cur.examples ?? [];
-                            const content = assembleExampleFrom(
-                                dataset.getSpeakerNameForExample,
-                                message,
-                            );
+                            const content = assembleExampleFrom(dataset, message);
                             if (message.content !== "" && !cur.examples.includes(content)) {
                                 cur.examples.push(content);
                                 logger.debug(
@@ -310,7 +307,7 @@ export class CodeStep<
                             );
                         }
 
-                        const analyzer = new AnalyzerClass(dataset, session);
+                        const analyzer = new AnalyzerClass(this._idStr, dataset, session);
                         logger.info(
                             `[${dataset.name}/${analyzer.name}] Using model ${session.llm.name}`,
                             _id,

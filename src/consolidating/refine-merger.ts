@@ -23,7 +23,7 @@ export class RefineMerger<T> extends DefinitionParser {
     useVerbPhrases = false;
 
     /** The name of the consolidator. */
-    get name() {
+    override get name() {
         return `${super.name} (maximum: ${this.maximum}, minimum: ${this.minimum}, use definition: ${this.useDefinition})`;
     }
 

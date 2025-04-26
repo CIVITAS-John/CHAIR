@@ -8,7 +8,7 @@ export interface AIParameters extends Record<string, unknown> {
 }
 
 abstract class StepError extends Error {
-    name = "BaseStep.Error";
+    override name = "BaseStep.Error";
     constructor(message: string, source: string) {
         super(`${source}: ${message}`);
     }
@@ -27,24 +27,24 @@ export abstract class BaseStep {
 
     static Error = StepError;
     static InternalError = class extends BaseStep.Error {
-        name = "BaseStep.InternalError";
+        override name = "BaseStep.InternalError";
     };
 
     static UnexecutedError = class extends BaseStep.Error {
-        name = "BaseStep.UnexecutedError";
+        override name = "BaseStep.UnexecutedError";
         constructor(source: string) {
             super("Step has not been executed yet", source);
         }
     };
     static AbortedError = class extends BaseStep.Error {
-        name = "BaseStep.AbortedError";
+        override name = "BaseStep.AbortedError";
         constructor(source: string) {
             super("Step has been aborted", source);
         }
     };
 
     static ConfigError = class extends BaseStep.Error {
-        name = "BaseStep.ConfigError";
+        override name = "BaseStep.ConfigError";
     };
 
     execute() {

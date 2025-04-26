@@ -40,7 +40,7 @@ export class QAJob {
     steps: BaseStep[][];
 
     static ConfigError = class extends Error {
-        name = "QAJob.ConfigError";
+        override name = "QAJob.ConfigError";
     };
 
     #assignID() {

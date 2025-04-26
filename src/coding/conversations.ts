@@ -32,6 +32,5 @@ export const buildMessagePrompt = (
 };
 
 /** Revert a message format. */
-export const revertMessageFormat = (message: string) => {
-    return message.replaceAll(/\[(Image|Checkin|Emoji) [^\]]+\]/g, "[$1]");
-};
+export const revertMessageFormat = (message: string) =>
+    message.replaceAll(/\[(Image|Checkin|Emoji) [^\]]+\]/g, "[$1]");

@@ -116,11 +116,11 @@ export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
     constructor(
         idstr: IDStrFunc,
         /** The dataset the reference builder is working on. */
-        public dataset: Dataset<TUnit[]>,
+        dataset: Dataset<TUnit[]>,
         /** The LLM session for the reference builder. */
-        public session: LLMSession,
+        session: LLMSession,
         /** The embedder object for the reference builder. */
-        public embedder: EmbedderObject,
+        embedder: EmbedderObject,
         /** Whether the codebooks refer to the same underlying data. */
         public sameData = true,
         /** Whether the merging process should force verb phrases. */

@@ -1,4 +1,4 @@
-import type { DataItem } from "../schema.js";
+import type { DataItem, Dataset } from "../schema.js";
 
 /** Reverse a string. */
 export const reverse = (s: string) => s.split("").reverse().join("");
@@ -91,20 +91,14 @@ export const seededShuffle = <T>(array: T[], seed: number) => {
 //     return Categories;
 // }
 
-/** AssembleExample: Assemble an example. */
-export const assembleExample = (
+/** Assemble an example. */
+const assembleExample = (
     getSpeakerNameForExample: (uid: string) => string,
     id: string,
     uid: string,
     content: string,
-) => {
-    return `${id}|||${getSpeakerNameForExample(uid)}: ${content}`;
-};
+) => `${id}|||${getSpeakerNameForExample(uid)}: ${content}`;
 
-/** AssembleExampleFrom: Assemble an example from a data item. */
-export function assembleExampleFrom(
-    getSpeakerNameForExample: (uid: string) => string,
-    item: DataItem,
-) {
-    return assembleExample(getSpeakerNameForExample, item.id, item.uid, item.content);
-}
+/** Assemble an example from a data item. */
+export const assembleExampleFrom = <T>(dataset: Dataset<T>, item: DataItem) =>
+    assembleExample(dataset.getSpeakerNameForExample, item.id, item.uid, item.content);

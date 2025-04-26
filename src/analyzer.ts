@@ -4,7 +4,7 @@ import type { LLMSession } from "./utils/llms.js";
 import { logger } from "./utils/logger.js";
 
 abstract class AnalyzerError extends Error {
-    name = "Analyzer.Error";
+    override name = "Analyzer.Error";
     constructor(message: string, source?: string) {
         super(`${source ? `${source}: ` : ""}${message}`);
     }
@@ -15,8 +15,10 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     static Error = AnalyzerError;
 
     static InvalidResponseError = class extends AnalyzerError {
-        name = "Analyzer.InvalidResponseError";
+        override name = "Analyzer.InvalidResponseError";
     };
+
+    protected _idStr: IDStrFunc;
 
     /** The name of the analyzer. */
     name = "Unnamed";
@@ -28,11 +30,14 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     maxIterations = 1;
 
     constructor(
+        protected idStr: IDStrFunc,
         /** The dataset the analyzer is working on. */
         public dataset: Dataset<TUnit>,
         /** The LLM session for the analyzer. */
         public session: LLMSession,
-    ) {}
+    ) {
+        this._idStr = (mtd?: string) => idStr(`${this.name}${mtd ? `#${mtd}` : ""}`);
+    }
 
     /**
      * Get the chunk configuration for the LLM.

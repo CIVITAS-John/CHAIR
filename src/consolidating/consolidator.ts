@@ -64,14 +64,12 @@ export abstract class CodeConsolidator {
 
 export abstract class CodebookConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedThreads> {
     static ConfigError = class extends CodebookConsolidator.Error {
-        name = "CodebookConsolidator.ConfigError";
+        override name = "CodebookConsolidator.ConfigError";
     };
 }
 
 /** A pipeline consolidator that runs through multiple CodeConsolidator. */
 export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedThreadsWithCodebook> {
-    protected _idStr: IDStrFunc;
-
     /** The name of the consolidator. */
     override name = "consolidated";
     /** The base temperature for the LLM. */
@@ -91,7 +89,7 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         public override session: LLMSession,
         consolidators: CodeConsolidator[],
     ) {
-        super(dataset, session);
+        super(idStr, dataset, session);
         this._idStr = (mtd?: string) => idStr(`PipelineConsolidator${mtd ? `#${mtd}` : ""}`);
         this.#consolidators = consolidators;
     }
