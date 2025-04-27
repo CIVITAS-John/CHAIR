@@ -2,6 +2,7 @@ import { join } from "path";
 
 import md5 from "md5";
 
+import type { ReferenceBuilderConfig } from "../evaluating/reference-builder.js";
 import {
     buildReferenceAndExport,
     RefiningReferenceBuilder,
@@ -23,6 +24,7 @@ export interface ConsolidateStepConfig<
     // strategy: ConsolidateStrategy;
     model: LLMModel | LLMModel[];
     parameters?: AIParameters;
+    builderConfig?: ReferenceBuilderConfig<TUnit>;
 }
 
 export class ConsolidateStep<
@@ -135,6 +137,7 @@ export class ConsolidateStep<
                         dataset,
                         session,
                         this.embedder,
+                        this.config.builderConfig,
                     );
                     const referencePath = ensureFolder(
                         join(

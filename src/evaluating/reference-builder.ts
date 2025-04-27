@@ -13,7 +13,7 @@ import type { LLMSession } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 
 /** A reference codebook builder. */
-export class ReferenceBuilder<TUnit> {
+export abstract class ReferenceBuilder<TUnit> {
     /** The suffix of the reference codebook. */
     suffix = "";
     /** The base temperature for the reference builder. */
@@ -108,10 +108,27 @@ export class ReferenceBuilder<TUnit> {
     }
 }
 
-/** RefiningReferenceBuilder: A builder of reference codebook that further refines codes. */
+export type ReferenceBuilderConfig<TUnit> =
+    | {
+          baseTemperature?: number;
+          sameData?: boolean;
+          useVerbPhrases?: boolean;
+      }
+    | {
+          consolidator: PipelineConsolidator<TUnit>;
+      };
+
+/** A builder of reference codebook that further refines codes. */
 export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
     /** The suffix of the reference codebook. */
     override suffix = "-refined";
+    override baseTemperature = 0.5;
+
+    /** Whether the codebooks refer to the same underlying data. */
+    public sameData = true;
+    /** Whether the merging process should force verb phrases. */
+    public useVerbPhrases = false;
+    public consolidator?: PipelineConsolidator<TUnit>;
 
     constructor(
         idstr: IDStrFunc,
@@ -121,13 +138,18 @@ export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
         session: LLMSession,
         /** The embedder object for the reference builder. */
         embedder: EmbedderObject,
-        /** Whether the codebooks refer to the same underlying data. */
-        public sameData = true,
-        /** Whether the merging process should force verb phrases. */
-        public useVerbPhrases = false,
-        override baseTemperature = 0.5,
+        config?: ReferenceBuilderConfig<TUnit>,
     ) {
         super(idstr, dataset, session, embedder);
+        if (config) {
+            if ("consolidator" in config) {
+                this.consolidator = config.consolidator;
+            } else {
+                this.baseTemperature = config.baseTemperature ?? this.baseTemperature;
+                this.sameData = config.sameData ?? this.sameData;
+                this.useVerbPhrases = config.useVerbPhrases ?? this.useVerbPhrases;
+            }
+        }
     }
 
     /** Further merge the codebook.*/
@@ -137,37 +159,39 @@ export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
         const threads: CodedThreadsWithCodebook = { codebook, threads: {} };
         Object.values(codebook).forEach((Code) => (Code.alternatives = []));
 
-        const consolidator = new PipelineConsolidator(this._idStr, this.dataset, this.session, [
-            // Merge codes that have been merged
-            // new AlternativeMerger(),
-            // Merge very similar names
-            new SimpleMerger(this._idStr, this.embedder, { looping: true }),
-            // Generate definitions for missing ones
-            new DefinitionGenerator(this._idStr, this.dataset),
-            // Merge definitions
-            // Do not use penalty mechanism when the codebooks refer to different data
-            // It may create a bias against smaller datasets
-            // new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.4, UseDefinition: false, UseVerbPhrases: this.UseVerbPhrases }),
-            new RefineMerger(this._idStr, this.dataset, this.embedder, {
-                maximum: 0.5,
-                minimum: !this.sameData ? 0.5 : 0.4,
-                useVerbPhrases: this.useVerbPhrases,
-                looping: true,
-            }),
-            // new RefineMerger({ Maximum: 0.6, Minimum: !this.SameData ? 0.6 : 0.4, UseDefinition: false, UseVerbPhrases: this.UseVerbPhrases }),
-            new RefineMerger(this._idStr, this.dataset, this.embedder, {
-                maximum: 0.6,
-                minimum: !this.sameData ? 0.6 : 0.4,
-                useVerbPhrases: this.useVerbPhrases,
-                looping: true,
-            }),
-        ]);
-        consolidator.baseTemperature = this.baseTemperature;
+        this.consolidator =
+            this.consolidator ??
+            new PipelineConsolidator(this._idStr, this.dataset, this.session, [
+                // Merge codes that have been merged
+                // new AlternativeMerger(),
+                // Merge very similar names
+                new SimpleMerger(this._idStr, this.embedder, { looping: true }),
+                // Generate definitions for missing ones
+                new DefinitionGenerator(this._idStr, this.dataset),
+                // Merge definitions
+                // Do not use penalty mechanism when the codebooks refer to different data
+                // It may create a bias against smaller datasets
+                // new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.4, UseDefinition: false, UseVerbPhrases: this.UseVerbPhrases }),
+                new RefineMerger(this._idStr, this.dataset, this.embedder, {
+                    maximum: 0.5,
+                    minimum: !this.sameData ? 0.5 : 0.4,
+                    useVerbPhrases: this.useVerbPhrases,
+                    looping: true,
+                }),
+                // new RefineMerger({ Maximum: 0.6, Minimum: !this.SameData ? 0.6 : 0.4, UseDefinition: false, UseVerbPhrases: this.UseVerbPhrases }),
+                new RefineMerger(this._idStr, this.dataset, this.embedder, {
+                    maximum: 0.6,
+                    minimum: !this.sameData ? 0.6 : 0.4,
+                    useVerbPhrases: this.useVerbPhrases,
+                    looping: true,
+                }),
+            ]);
+        this.consolidator.baseTemperature = this.baseTemperature;
         await consolidateCodebook(
             this._idStr,
             this.dataset,
             this.session,
-            consolidator,
+            this.consolidator,
             [],
             threads,
             (iter) => this.sanityCheck(iter, threads.codebook),
