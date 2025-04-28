@@ -19,9 +19,9 @@ import { ChunkLevelAnalyzerBase } from "./chunk-level.js";
 */
 
 /** Conduct the first-round high-level coding of the conversations. */
-export default class ChunkLevelAnalyzer3 extends ChunkLevelAnalyzerBase {
+export default class ChunkLevelAnalyzerVerb extends ChunkLevelAnalyzerBase {
     /** The name of the analyzer. */
-    override name = "high-level-3";
+    override name = "chunk-verb";
     /** The base temperature for the LLM. */
     override baseTemperature = 0.5;
 

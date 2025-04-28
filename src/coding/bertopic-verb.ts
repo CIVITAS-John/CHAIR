@@ -59,7 +59,7 @@ export default class BertopicAnalyzerVerb extends ConversationAnalyzer {
         writeFileSync("./known/bertopic.temp.json", JSON.stringify(content));
         // Run the Python script
         let topics: BertopicTopics = {};
-        await PythonShell.run("coding/conversations/bertopic_impl.py", {
+        await PythonShell.run("src/coding/bertopic_impl.py", {
             args: [messages.length.toString()],
             parser: (message) => {
                 if (message.startsWith("{")) {
