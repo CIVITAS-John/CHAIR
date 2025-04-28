@@ -120,6 +120,7 @@ export const loopThroughChunk = async <TUnit, TSubunit, TAnalysis>(
         iteration: number,
     ) => Promise<number>,
     onIterate?: (iteration: number) => Promise<void>,
+    retries = 5,
 ) => {
     const _id = idStr("loopThroughChunk");
 
@@ -137,16 +138,16 @@ export const loopThroughChunk = async <TUnit, TSubunit, TAnalysis>(
         // Loop through the subunits
         while (cursor < filtered.length) {
             logger.debug(`[${dataset.name}] Cursor at ${cursor}/${filtered.length}`, _id);
-            let retries = 0;
+            let tries = 0;
             let cursorRelative = 0;
             let chunkSize = [0, 0, 0];
-            while (retries <= 4) {
+            while (tries < retries) {
                 // Get the chunk size
                 const _chunkSize = analyzer.getChunkSize(
                     Math.min(session.llm.maxItems, filtered.length - cursor),
                     filtered.length - cursor,
                     i,
-                    retries,
+                    tries,
                 );
                 logger.debug(`[${dataset.name}] Chunk size: ${JSON.stringify(_chunkSize)}`, _id);
                 if (typeof _chunkSize === "number") {
@@ -173,7 +174,7 @@ export const loopThroughChunk = async <TUnit, TSubunit, TAnalysis>(
                 );
                 // Run the prompts
                 try {
-                    cursorRelative = await action(currents, cursor - start, isFirst, retries, i);
+                    cursorRelative = await action(currents, cursor - start, isFirst, tries, i);
                     logger.debug(
                         `[${dataset.name}] Cursor relative movement: ${cursorRelative}`,
                         _id,
@@ -192,10 +193,10 @@ export const loopThroughChunk = async <TUnit, TSubunit, TAnalysis>(
                     }
                     break;
                 } catch (e) {
-                    ++retries;
-                    const error = new Error(`Analysis error, try ${retries}/5`);
+                    ++tries;
+                    const error = new Error(`Analysis error, try ${tries}/${retries}`);
                     error.cause = e;
-                    if (retries > 4) {
+                    if (tries >= retries) {
                         throw error;
                     }
                     session.expectedItems += chunkSize[0];

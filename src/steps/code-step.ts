@@ -59,6 +59,7 @@ const analyzeChunks = async <T extends DataItem>(
     analyzed: CodedThreads = { threads: {} },
     temperature?: number,
     fakeRequest = false,
+    retries?: number,
 ) => {
     const _id = idStr("analyzeChunks");
 
@@ -219,6 +220,7 @@ const analyzeChunks = async <T extends DataItem>(
                     return movement;
                 },
                 undefined,
+                retries,
             );
         } catch (e) {
             const err = new CodeStep.InternalError("Failed to analyze chunk", _id);
@@ -334,7 +336,8 @@ export class CodeStep<
                                 chunks,
                                 { threads: {} },
                                 this.config.parameters?.temperature,
-                                this.config.parameters?.fakeRequest ?? false,
+                                this.config.parameters?.fakeRequest,
+                                this.config.parameters?.retries,
                             );
                             logger.success(
                                 `[${dataset.name}/${analyzer.name}/${key}] Coded ${Object.keys(result.threads).length} threads (${idx + 1}/${numChunks})`,
