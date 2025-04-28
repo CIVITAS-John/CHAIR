@@ -131,7 +131,8 @@ export class ConsolidateStep<
                 }
 
                 for (const dataset of this.#datasets) {
-                    const codes = Object.values(this.#codebooks.get(dataset.name) ?? {});
+                    // We made a deep copy here because the reference builder may modify the codebooks
+                    const codes = JSON.stringify(Object.values(this.#codebooks.get(dataset.name) ?? {}));
                     const builder = new RefiningReferenceBuilder(
                         this._idStr,
                         dataset,
@@ -147,9 +148,9 @@ export class ConsolidateStep<
                             `${models.map((m) => (typeof m === "string" ? m : m.name)).join("-")}${builder.suffix}`,
                         ),
                     );
-                    const hash = md5(JSON.stringify(codes));
+                    const hash = md5(codes);
                     const reference = await withCache(this._idStr, referencePath, hash, () =>
-                        buildReferenceAndExport(this._idStr, builder, codes, referencePath),
+                        buildReferenceAndExport(this._idStr, builder, JSON.parse(codes), referencePath),
                     );
                     this.#references.set(dataset.name, reference);
                 }
