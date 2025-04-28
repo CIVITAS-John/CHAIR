@@ -18,6 +18,7 @@ export interface EvaluateStepConfig<
     // evaluator: new () => CodebookEvaluator;
     consolidator: ConsolidateStep<TSubunit, TUnit>;
     subdir?: string; // Defaults to "evaluation"
+    ignoreGroups?: boolean; // Defaults to false
 }
 
 export class EvaluateStep<
@@ -27,12 +28,13 @@ export class EvaluateStep<
     override dependsOn: ConsolidateStep<TSubunit, TUnit>[];
 
     embedder?: EmbedderObject;
+    ignoreGroups: boolean;
 
     constructor(private readonly config: EvaluateStepConfig<TSubunit, TUnit>) {
         super();
-
         // If config.consolidator is not provided, we will evaluate all consolidators
         this.dependsOn = [config.consolidator];
+        this.ignoreGroups = config.ignoreGroups ?? false;
     }
 
     override async execute() {
@@ -46,11 +48,13 @@ export class EvaluateStep<
 
         const datasets: Dataset<TUnit[]>[] = [],
             codebooks = new Map<string, Record<string, Codebook>>(),
+            groups = new Map<string, Record<string, Codebook>>(),
             references = new Map<string, Codebook>();
         const consolidator = this.config.consolidator;
         consolidator.datasets.forEach((dataset) => {
             datasets.push(dataset);
             codebooks.set(dataset.name, consolidator.getCodebooks(dataset.name));
+            groups.set(dataset.name, consolidator.getGroups(dataset.name));
             references.set(dataset.name, consolidator.getReference(dataset.name));
         });
 
@@ -59,13 +63,15 @@ export class EvaluateStep<
                 dataset: dataset as unknown as Dataset<TUnit>,
             });
             const codes = codebooks.get(dataset.name) ?? {};
+            const gs = this.ignoreGroups ? {} : groups.get(dataset.name) ?? {};
             const exportPath = ensureFolder(
                 join(dataset.path, "evaluation", this.config.subdir ?? "evaluation"),
             );
+
             // Evaluate the codebooks
             const results = await evaluator.evaluate(
-                [references.get(dataset.name) ?? {}, ...Object.values(codes)],
-                [join(dataset.path, "references"), ...Object.keys(codes)],
+                [references.get(dataset.name) ?? {}, ...Object.values(codes), ...Object.values(gs)],
+                [join(dataset.path, "references"), ...Object.keys(codes), ...Object.keys(gs).map(n => `group: ${n}`)],
                 exportPath,
             );
 

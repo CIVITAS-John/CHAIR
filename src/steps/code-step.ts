@@ -31,6 +31,7 @@ export type CodeStepConfig<
 } & (
     | {
           agent: "Human";
+          group?: string; // The group name for human coders (defaults to "human")
           subdir?: string; // A path to the Excel/JSON files containing the human-coded data, relative to the dataset path (defaults to "human")
           coders?: string[]; // A list of coder names (the files are assumed to be found at <path>/<coder>.xlsx/json)
           onMissing?: "ask" | "skip" | "wait" | "abort"; // What to do if the file does not exist or is empty (defaults to "ask")
@@ -38,6 +39,7 @@ export type CodeStepConfig<
       }
     | {
           agent: "AI";
+          group?: string; // The group name for human coders (defaults to "ai")
           // Renaming "Analyzer" to "Strategy" to avoid confusion with "the LLM that analyzes the data"
           strategy:
               | AnalyzerConstructor<TUnit, TSubunit, CodedThread>
@@ -249,6 +251,9 @@ export class CodeStep<
         return this.#datasets;
     }
 
+    // the step's group name (for the consolidation step)
+    group: string;
+
     // results[dataset][analyzer][ident] = CodedThreads
     #results = new Map<string, Record<string, Record<string, CodedThreads>>>();
     getResult(dataset: string) {
@@ -273,6 +278,8 @@ export class CodeStep<
                 ? config.dataset
                 : [config.dataset]
             : [];
+        // Initialize the group name
+        this.group = config.group ?? config.agent.toLowerCase();
     }
 
     async #codeAI() {

@@ -15,6 +15,7 @@ import { type LLMModel, useLLMs } from "../utils/llms.js";
 import type { AIParameters } from "./base-step.js";
 import { BaseStep } from "./base-step.js";
 import type { CodeStep } from "./code-step.js";
+import { mergeCodebooks } from "../consolidating/codebooks.js";
 
 export interface ConsolidateStepConfig<
     TSubunit extends DataItem = DataItem,
@@ -59,6 +60,21 @@ export class ConsolidateStep<
         return this.#codebooks.get(dataset) ?? {};
     }
 
+    #groups = new Map<string, Record<string, Codebook>>();
+    getGroups(dataset: string) {
+        const _id = this._idStr("getGroups");
+
+        // Sanity check
+        if (!this.executed || !this.#groups.size) {
+            throw new ConsolidateStep.UnexecutedError(this._idStr("codebooks"));
+        }
+        if (!this.#groups.has(dataset)) {
+            throw new ConsolidateStep.InternalError(`Dataset ${dataset} not found`, _id);
+        }
+
+        return this.#groups.get(dataset) ?? {};
+    }
+
     #references = new Map<string, Codebook>();
     getReference(dataset: string) {
         const _id = this._idStr("getReference");
@@ -97,6 +113,8 @@ export class ConsolidateStep<
                     datasets.set(dataset.name, dataset as unknown as Dataset<TUnit[]>);
                 }
 
+                const codebooks: Codebook[] = [];
+                // Put the codebooks into the map
                 this.#codebooks.set(dataset.name, {
                     ...(this.#codebooks.get(dataset.name) ?? {}),
                     ...Object.entries(results).reduce<Record<string, Codebook>>(
@@ -110,12 +128,20 @@ export class ConsolidateStep<
                                     );
                                 }
                                 acc[key] = codedThreads.codebook;
+                                codebooks.push(codedThreads.codebook);
                             });
                             return acc;
                         },
                         {},
                     ),
                 });
+                // Put the group codebooks into the map, if more than one codebook is present
+                if (!this.#groups.has(dataset.name))
+                    this.#groups.set(dataset.name, {});
+                if (codebooks.length > 1) {
+                    var group: Codebook = mergeCodebooks(codebooks);
+                    this.#groups.get(dataset.name)![coder.group] = group;
+                }
             });
         });
         this.#datasets = [...datasets.values()];

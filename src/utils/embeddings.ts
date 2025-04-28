@@ -317,7 +317,8 @@ export const clusterEmbeddings = async (
     writeFileSync("./known/clustering.temp.json", JSON.stringify(names));
     // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
     // Run the Python script
-    await PythonShell.run(resolve(import.meta.dirname, `embeddings/clustering_${method}.py`), {
+    const dirname = import.meta.dirname;
+    await PythonShell.run(resolve(dirname, `embeddings/clustering_${method}.py`), {
         args: [embedder.dimensions.toString(), names.length.toString(), ...opts],
         parser: (msg) => {
             if (msg.startsWith("[")) {
