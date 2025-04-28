@@ -329,7 +329,7 @@ export const importCodes = async (
             if (!id) return;
 
             const codesValue = getCellValueString(row, "Codes");
-            const codes = codesValue ? codesValue.split(",").filter(Boolean) : undefined;
+            const codes = codesValue ? codesValue.split(/[,;\n]+/).filter(Boolean) : undefined;
 
             // Skip rows without codes
             if (!codes) return;
