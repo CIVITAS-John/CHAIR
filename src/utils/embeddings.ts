@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
+import { fileURLToPath } from "url";
 
 import { TaskType } from "@google/generative-ai";
 import type { Embeddings } from "@langchain/core/embeddings";
@@ -16,7 +17,6 @@ import type { IDStrFunc } from "../steps/base-step.js";
 import { ensureFolder } from "./file.js";
 import { logger } from "./logger.js";
 import { sleep } from "./misc.js";
-import { fileURLToPath } from "url";
 
 const MODELS = {
     "openai-small-512": {

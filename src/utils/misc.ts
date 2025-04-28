@@ -107,27 +107,27 @@ export const assembleExampleFrom = <T>(dataset: Dataset<T>, item: DataItem) =>
 export const getAllItems = <
     TSubunit extends DataItem = DataItem,
     TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
->(dataset: Dataset<TUnit>): TSubunit[] =>
+>(
+    dataset: Dataset<TUnit>,
+): TSubunit[] =>
     Object.values(dataset.data).flatMap((chunk) =>
-        // Not sure why Typescript won't infer the type here
-        Object.values(chunk).flatMap(getAllItemsFromChunk as any),
+        Object.values(chunk).flatMap(getAllItemsFromChunk),
     );
 
 /** Get all items from a data chunk. */
-export const getAllItemsFromChunk = <
-    TSubunit extends DataItem = DataItem,
-    TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
->(chunk: TUnit) => {
+export const getAllItemsFromChunk = <TSubunit extends DataItem = DataItem>(
+    chunk: DataChunk<TSubunit>,
+): TSubunit[] => {
     const items: TSubunit[] = [];
     for (const item of chunk.items) {
         if ("items" in item) {
-            const subchunk = item as TUnit;
+            const subchunk = item;
             // Not sure why Typescript won't infer the type here
-            const subitems = getAllItemsFromChunk(subchunk) as any;
+            const subitems = getAllItemsFromChunk(subchunk);
             items.push(...subitems);
         } else {
             items.push(item);
         }
     }
     return items;
-}
+};

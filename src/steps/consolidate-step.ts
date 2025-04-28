@@ -2,6 +2,7 @@ import { join } from "path";
 
 import md5 from "md5";
 
+import { mergeCodebooks } from "../consolidating/codebooks.js";
 import type { RefiningReferenceBuilderConfig } from "../evaluating/reference-builder.js";
 import {
     buildReferenceAndExport,
@@ -15,7 +16,6 @@ import { type LLMModel, useLLMs } from "../utils/llms.js";
 import type { AIParameters } from "./base-step.js";
 import { BaseStep } from "./base-step.js";
 import type { CodeStep } from "./code-step.js";
-import { mergeCodebooks } from "../consolidating/codebooks.js";
 
 export interface ConsolidateStepConfig<
     TSubunit extends DataItem = DataItem,
@@ -136,11 +136,13 @@ export class ConsolidateStep<
                     ),
                 });
                 // Put the group codebooks into the map, if more than one codebook is present
-                if (!this.#groups.has(dataset.name))
+                if (!this.#groups.has(dataset.name)) {
                     this.#groups.set(dataset.name, {});
+                }
                 if (codebooks.length > 1) {
-                    var group: Codebook = mergeCodebooks(codebooks);
-                    this.#groups.get(dataset.name)![coder.group] = group;
+                    const group = mergeCodebooks(codebooks);
+                    const prev = this.#groups.get(dataset.name) ?? {};
+                    this.#groups.set(dataset.name, { ...prev, [coder.group]: group });
                 }
             });
         });
@@ -158,7 +160,9 @@ export class ConsolidateStep<
 
                 for (const dataset of this.#datasets) {
                     // We made a deep copy here because the reference builder may modify the codebooks
-                    const codes = JSON.stringify(Object.values(this.#codebooks.get(dataset.name) ?? {}));
+                    const codes = JSON.stringify(
+                        Object.values(this.#codebooks.get(dataset.name) ?? {}),
+                    );
                     const builder = new RefiningReferenceBuilder(
                         this._idStr,
                         dataset,
@@ -176,7 +180,12 @@ export class ConsolidateStep<
                     );
                     const hash = md5(codes);
                     const reference = await withCache(this._idStr, referencePath, hash, () =>
-                        buildReferenceAndExport(this._idStr, builder, JSON.parse(codes), referencePath),
+                        buildReferenceAndExport(
+                            this._idStr,
+                            builder,
+                            JSON.parse(codes) as Codebook[],
+                            referencePath,
+                        ),
                     );
                     this.#references.set(dataset.name, reference);
                 }

@@ -63,7 +63,7 @@ export class EvaluateStep<
                 dataset: dataset as unknown as Dataset<TUnit>,
             });
             const codes = codebooks.get(dataset.name) ?? {};
-            const gs = this.ignoreGroups ? {} : groups.get(dataset.name) ?? {};
+            const gs = this.ignoreGroups ? {} : (groups.get(dataset.name) ?? {});
             const exportPath = ensureFolder(
                 join(dataset.path, "evaluation", this.config.subdir ?? "evaluation"),
             );
@@ -71,7 +71,11 @@ export class EvaluateStep<
             // Evaluate the codebooks
             const results = await evaluator.evaluate(
                 [references.get(dataset.name) ?? {}, ...Object.values(codes), ...Object.values(gs)],
-                [join(dataset.path, "references"), ...Object.keys(codes), ...Object.keys(gs).map(n => `group: ${n}`)],
+                [
+                    join(dataset.path, "references"),
+                    ...Object.keys(codes),
+                    ...Object.keys(gs).map((n) => `group: ${n}`),
+                ],
                 exportPath,
             );
 

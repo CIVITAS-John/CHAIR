@@ -115,7 +115,9 @@ export abstract class ChunkLevelAnalyzerBase extends ConversationAnalyzer {
                         });
                     }
                     if (!message) {
-                        console.log(`Cannot find the coded message for: ${line}. The LLM has likely slightly changed the content.`);
+                        console.log(
+                            `Cannot find the coded message for: ${line}. The LLM has likely slightly changed the content.`,
+                        );
                     }
                     const example = message ? assembleExampleFrom(this.dataset, message) : line;
                     if (message && !currentCode.examples.includes(example)) {

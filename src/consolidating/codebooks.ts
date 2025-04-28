@@ -36,7 +36,7 @@ export const mergeCodebook = (analyses: CodedThreads): CodedThreadsWithCodebook 
 };
 
 /** Merge multiple codebooks simply by labels of codes. */
-export const mergeCodebooks = (codebooks: Codebook[], withReference = false) => {
+export const mergeCodebooks = (codebooks: Codebook[], withReference = false): Codebook => {
     const codes = new Map<string, Code>();
     const alternatives = new Map<string, string>();
     for (const codebook of codebooks) {

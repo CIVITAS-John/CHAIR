@@ -191,7 +191,7 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         analysis.codebook = prompts;
         return ["", ""];
     }
-    
+
     /** Parse the responses from the LLM. */
     override async parseResponse(
         analysis: CodedThreadsWithCodebook,

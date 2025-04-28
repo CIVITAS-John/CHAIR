@@ -28,7 +28,7 @@ const consolidate = new ConsolidateStep({
 
 const evaluate = new EvaluateStep({
     consolidator: consolidate,
-    subdir: "evaluation"
+    subdir: "evaluation",
 });
 
 const config: QAJobConfig = {

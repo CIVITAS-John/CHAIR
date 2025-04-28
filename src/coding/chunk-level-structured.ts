@@ -1,7 +1,7 @@
 import type { CodedThread, Conversation, Message } from "../schema.js";
 
-import { buildMessagePrompt } from "./conversations.js";
 import { ChunkLevelAnalyzerBase } from "./chunk-level.js";
+import { buildMessagePrompt } from "./conversations.js";
 
 /**
  * Original prompt format:
@@ -13,10 +13,10 @@ import { ChunkLevelAnalyzerBase } from "./chunk-level.js";
  * ---
  * However, the original prompt does not give examples as documented by the paper. We modified the prompt to make that happen. Note that the original paper's codebook only has around 8-11 codes. Therefore, we only ask ChatGPT to generate a single layer of codes.
  * Changes from ChunkLevelAnalyzerBarany: We mentioned fields in the prompt and added a planning stage. We also ask LLMs to provide two levels of codes.
- * 
- * @author: Barany et al.
- * @adapter: John Chen
-*/
+ *
+ * @author Barany et al.
+ * @adapter John Chen
+ */
 
 /** Conduct the first-round high-level coding of the conversations. */
 export default class ChunkLevelAnalyzerStructured extends ChunkLevelAnalyzerBase {
