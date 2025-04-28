@@ -1,10 +1,10 @@
 import Excel from "exceljs";
 
-import { mergeCodebook } from "../consolidating/codebooks.js";
 import type { Code, CodedThread, CodedThreads, DataChunk, DataItem, Dataset } from "../schema.js";
 import type { IDStrFunc } from "../steps/base-step.js";
 
 import { logger } from "./logger.js";
+import { mergeCodebook } from "../consolidating/codebooks.js";
 import { assembleExampleFrom, getAllItems } from "./misc.js";
 
 const { Workbook } = Excel;
@@ -284,9 +284,8 @@ export const importCodes = async (
 
         // Find the column keys (not all worksheet will include all columns)
         for (const column of worksheet.columns) {
-            if (!column.values?.[1]) continue; // Skip empty columns
-            const key = column.values[1];
-            column.key = typeof key === "string" ? key : JSON.stringify(key);
+            if (!column.values || !column.values[1]) continue; // Skip empty columns
+            column.key = column.values[1].toString();
         }
 
         // Process each row in the worksheet
@@ -295,7 +294,7 @@ export const importCodes = async (
 
             const id = row.getCell("ID").value;
             const name = getCellValueString(row, "Nickname");
-            // const sid = getCellValueString(row, "SID");
+            const sid = getCellValueString(row, "SID");
             const content = getCellValueString(row, "Content");
 
             // Check if this is a special row (thoughts, summary, reflection)
@@ -342,24 +341,24 @@ export const importCodes = async (
                 codes,
             };
             analysis.items[messageId] = item;
-
+            
             // Add item to the list of codes
             for (const code of item.codes) {
                 const current: Code = analysis.codes[code] ?? { label: code, examples: [] };
                 analysis.codes[code] = current;
                 // find the message
-                const message = allItems.find((item) => item.id === messageId);
+                const message = allItems.find(item => item.id == messageId);
                 if (!message) {
                     logger.warn(`Message ${messageId} not found in chunk ${chunkId}`, _id);
                     continue;
                 }
                 // assemble the message
                 const contentWithID = assembleExampleFrom(dataset, message);
-                if (content !== "" && !current.examples?.includes(contentWithID)) {
-                    current.examples?.push(contentWithID);
+                if (content !== "" && !current.examples!.includes(contentWithID)) {
+                    current.examples!.push(contentWithID);
                 }
             }
-
+            
             ++msgs;
         });
 
@@ -379,10 +378,7 @@ export const importCodes = async (
         logger.info(`Successfully imported codebook from ${path}`, _id);
     } catch (error) {
         // Build the codebook
-        logger.warn(
-            `Failed to import codebook from ${path}: ${error instanceof Error ? error.message : JSON.stringify(error)}, building one`,
-            _id,
-        );
+        logger.warn(`Failed to import codebook from ${path}. Building one.`, _id);
         mergeCodebook(analyses);
     }
 
