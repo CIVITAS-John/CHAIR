@@ -13,9 +13,9 @@ import type {
     Dataset,
 } from "../schema.js";
 import type { IDStrFunc } from "../steps/base-step.js";
+import { withCache } from "../utils/cache.js";
 import type { EmbedderObject } from "../utils/embeddings.js";
 import { evaluateTexts } from "../utils/embeddings.js";
-import { withCache } from "../utils/file.js";
 import { logger } from "../utils/logger.js";
 import { createOfflineBundle, launchServer } from "../utils/server.js";
 

@@ -9,8 +9,9 @@ import {
     RefiningReferenceBuilder,
 } from "../evaluating/reference-builder.js";
 import type { Codebook, DataChunk, DataItem, Dataset } from "../schema.js";
+import { withCache } from "../utils/cache.js";
 import type { EmbedderObject } from "../utils/embeddings.js";
-import { ensureFolder, withCache } from "../utils/file.js";
+import { ensureFolder } from "../utils/file.js";
 import { type LLMModel, useLLMs } from "../utils/llms.js";
 
 import type { AIParameters } from "./base-step.js";
