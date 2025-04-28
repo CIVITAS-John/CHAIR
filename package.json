@@ -11,7 +11,7 @@
         "clean": "rimraf out",
         "build:main": "tsc -p tsconfig.json",
         "build:network": "tsc -p src/evaluating/network/tsconfig.json",
-        "copy": "copyfiles src/**/**/*.py out/",
+        "copy": "copyfiles src/**/**/*.py out/ && copyfiles src/**/*.py out/",
         "build": "pnpm clean && pnpm run build:main && pnpm run build:network && pnpm run copy",
         "lint": "eslint --cache . && prettier --check --cache .",
         "format": "eslint --fix --cache . && prettier --write --cache ."
