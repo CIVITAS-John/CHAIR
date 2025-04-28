@@ -4,6 +4,7 @@ import type { Code, CodedThread, CodedThreads, DataChunk, DataItem } from "../sc
 import type { IDStrFunc } from "../steps/base-step.js";
 
 import { logger } from "./logger.js";
+import { mergeCodebook } from "../consolidating/codebooks.js";
 
 const { Workbook } = Excel;
 
@@ -355,7 +356,9 @@ export const importCodes = async (
         analyses.codebook = await importCodebook(idStr, path, codebookSheet);
         logger.info(`Successfully imported codebook from ${path}`, _id);
     } catch (error) {
-        logger.error(error, true, _id);
+        // Build the codebook
+        logger.warn(`Failed to import codebook from ${path}. Building one.`, _id);
+        mergeCodebook(analyses);
     }
 
     logger.info(
