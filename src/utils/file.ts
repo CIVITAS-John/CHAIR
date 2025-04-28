@@ -97,3 +97,19 @@ export const removePrefixSuffix = (names: string[]) => {
     });
     return names;
 };
+
+export const getPythonPath = () => {
+    // TODO: Do not assume running from the root of the repo
+    const venvPath = resolve(process.cwd(), ".venv");
+    if (!existsSync(venvPath)) {
+        return;
+    }
+    let pythonPath = resolve(venvPath, "bin", "python");
+    if (!existsSync(pythonPath)) {
+        pythonPath = resolve(venvPath, "Scripts", "python");
+    }
+    if (!existsSync(pythonPath)) {
+        return;
+    }
+    return pythonPath;
+};

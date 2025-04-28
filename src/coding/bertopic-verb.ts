@@ -1,9 +1,12 @@
 import { writeFileSync } from "fs";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
 
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { PythonShell } from "python-shell";
 
 import type { BertopicTopics, CodedThread, Conversation, Message } from "../schema.js";
+import { getPythonPath } from "../utils/file.js";
 import { requestLLM } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 
@@ -59,7 +62,9 @@ export default class BertopicAnalyzerVerb extends ConversationAnalyzer {
         writeFileSync("./known/bertopic.temp.json", JSON.stringify(content));
         // Run the Python script
         let topics: BertopicTopics = {};
-        await PythonShell.run("src/coding/bertopic_impl.py", {
+        const __dirname = dirname(fileURLToPath(import.meta.url));
+        await PythonShell.run(resolve(__dirname, "bertopic_impl.py"), {
+            pythonPath: getPythonPath(),
             args: [messages.length.toString()],
             parser: (message) => {
                 if (message.startsWith("{")) {

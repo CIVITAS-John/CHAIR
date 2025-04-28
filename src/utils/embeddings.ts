@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
-import { resolve } from "path";
+import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
 import { TaskType } from "@google/generative-ai";
@@ -14,7 +14,7 @@ import { PythonShell } from "python-shell";
 import type { Code } from "../schema.js";
 import type { IDStrFunc } from "../steps/base-step.js";
 
-import { ensureFolder } from "./file.js";
+import { ensureFolder, getPythonPath } from "./file.js";
 import { logger } from "./logger.js";
 import { sleep } from "./misc.js";
 
@@ -318,8 +318,9 @@ export const clusterEmbeddings = async (
     writeFileSync("./known/clustering.temp.json", JSON.stringify(names));
     // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
     // Run the Python script
-    const filename = fileURLToPath(import.meta.url);
-    await PythonShell.run(resolve(filename, `../embeddings/clustering_${method}.py`), {
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+    await PythonShell.run(resolve(__dirname, `embeddings/clustering_${method}.py`), {
+        pythonPath: getPythonPath(),
         args: [embedder.dimensions.toString(), names.length.toString(), ...opts],
         parser: (msg) => {
             if (msg.startsWith("[")) {
@@ -416,8 +417,9 @@ export const evaluateEmbeddings = async <T>(
         _id,
     );
     // Run the Python script
-    const filename = fileURLToPath(import.meta.url);
-    await PythonShell.run(resolve(filename, `../embeddings/evaluation_${method}.py`), {
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+    await PythonShell.run(resolve(__dirname, `embeddings/evaluation_${method}.py`), {
+        pythonPath: getPythonPath(),
         args: [
             embedder.dimensions.toString(),
             labels.length.toString(),
