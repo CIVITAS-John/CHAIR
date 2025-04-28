@@ -63,8 +63,10 @@ export const findOriginalCodes = (
     if (example) {
         codes = codes.filter(
             (code) =>
-                code.examples?.includes(example) ??
-                code.examples?.some((cur) => cur.startsWith(`${example}|||`)),
+                code.examples
+                    ? code.examples.includes(example) ||
+                      code.examples.some((cur) => cur.startsWith(`${example}|||`))
+                    : false, // Shouldn't happen
         );
     }
     return codes;
