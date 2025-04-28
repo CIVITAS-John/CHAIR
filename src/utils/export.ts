@@ -1,10 +1,11 @@
 import Excel from "exceljs";
 
-import type { Code, CodedThread, CodedThreads, DataChunk, DataItem } from "../schema.js";
+import type { Code, CodedThread, CodedThreads, DataChunk, DataItem, Dataset } from "../schema.js";
 import type { IDStrFunc } from "../steps/base-step.js";
 
 import { logger } from "./logger.js";
 import { mergeCodebook } from "../consolidating/codebooks.js";
+import { assembleExampleFrom, getAllItems } from "./misc.js";
 
 const { Workbook } = Excel;
 
@@ -248,6 +249,7 @@ export const exportChunksForCoding = <T extends DataItem>(
 
 export const importCodes = async (
     idStr: IDStrFunc,
+    dataset: Dataset<DataChunk<DataItem>>,
     path: string,
     codebookSheet = "Codebook",
 ): Promise<CodedThreads> => {
@@ -256,6 +258,7 @@ export const importCodes = async (
 
     const workbook = new Workbook();
     await workbook.xlsx.readFile(path);
+    const allItems = getAllItems(dataset);
 
     // Initialize the analyses object
     const analyses: CodedThreads = {
@@ -290,12 +293,12 @@ export const importCodes = async (
             if (rowNumber === 1) return; // Skip header row
 
             const id = row.getCell("ID").value;
+            const name = getCellValueString(row, "Nickname");
+            const sid = getCellValueString(row, "SID");
+            const content = getCellValueString(row, "Content");
 
             // Check if this is a special row (thoughts, summary, reflection)
             if (typeof id === "number" && id < 0) {
-                const name = getCellValueString(row, "Nickname");
-                const content = getCellValueString(row, "Content");
-
                 switch (id) {
                     case -1:
                         if (
@@ -333,11 +336,29 @@ export const importCodes = async (
 
             // Add item to analysis
             const messageId = typeof id === "string" ? id : JSON.stringify(id);
-            analysis.items[messageId] = {
+            const item = {
                 id: messageId,
                 codes,
             };
-
+            analysis.items[messageId] = item;
+            
+            // Add item to the list of codes
+            for (const code of item.codes) {
+                const current: Code = analysis.codes[code] ?? { label: code, examples: [] };
+                analysis.codes[code] = current;
+                // find the message
+                const message = allItems.find(item => item.id == messageId);
+                if (!message) {
+                    logger.warn(`Message ${messageId} not found in chunk ${chunkId}`, _id);
+                    continue;
+                }
+                // assemble the message
+                const contentWithID = assembleExampleFrom(dataset, message);
+                if (content !== "" && !current.examples!.includes(contentWithID)) {
+                    current.examples!.push(contentWithID);
+                }
+            }
+            
             ++msgs;
         });
 
