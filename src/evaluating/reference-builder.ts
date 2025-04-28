@@ -12,6 +12,11 @@ import { exportChunksForCoding } from "../utils/export.js";
 import type { LLMSession } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 
+interface ReferenceBuilderConfig {
+    retries?: number;
+    fakeRequest?: boolean;
+}
+
 /** A reference codebook builder. */
 export abstract class ReferenceBuilder<TUnit> {
     /** The suffix of the reference codebook. */
@@ -32,6 +37,7 @@ export abstract class ReferenceBuilder<TUnit> {
         public session: LLMSession,
         /** The embedder object for the reference builder. */
         public embedder: EmbedderObject,
+        public config?: ReferenceBuilderConfig,
     ) {
         this._idStr = (mtd?: string) => idstr(`ReferenceBuilder${mtd ? `#${mtd}` : ""}`);
     }
@@ -108,15 +114,17 @@ export abstract class ReferenceBuilder<TUnit> {
     }
 }
 
-export type ReferenceBuilderConfig<TUnit> =
-    | {
-          baseTemperature?: number;
-          sameData?: boolean;
-          useVerbPhrases?: boolean;
-      }
-    | {
-          consolidator: PipelineConsolidator<TUnit>;
-      };
+export type RefiningReferenceBuilderConfig<TUnit> = ReferenceBuilderConfig &
+    (
+        | {
+              baseTemperature?: number;
+              sameData?: boolean;
+              useVerbPhrases?: boolean;
+          }
+        | {
+              consolidator: PipelineConsolidator<TUnit>;
+          }
+    );
 
 /** A builder of reference codebook that further refines codes. */
 export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
@@ -138,7 +146,7 @@ export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
         session: LLMSession,
         /** The embedder object for the reference builder. */
         embedder: EmbedderObject,
-        config?: ReferenceBuilderConfig<TUnit>,
+        config?: RefiningReferenceBuilderConfig<TUnit>,
     ) {
         super(idstr, dataset, session, embedder);
         if (config) {
@@ -195,6 +203,8 @@ export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
             [],
             threads,
             (iter) => this.sanityCheck(iter, threads.codebook),
+            undefined,
+            this.config?.retries,
         );
         logger.success(
             `${Object.keys(threads.codebook).length} codes remained after consolidation`,

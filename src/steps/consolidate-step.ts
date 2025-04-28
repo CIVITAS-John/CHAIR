@@ -2,7 +2,7 @@ import { join } from "path";
 
 import md5 from "md5";
 
-import type { ReferenceBuilderConfig } from "../evaluating/reference-builder.js";
+import type { RefiningReferenceBuilderConfig } from "../evaluating/reference-builder.js";
 import {
     buildReferenceAndExport,
     RefiningReferenceBuilder,
@@ -25,7 +25,7 @@ export interface ConsolidateStepConfig<
     // strategy: ConsolidateStrategy;
     model: LLMModel | LLMModel[];
     parameters?: AIParameters;
-    builderConfig?: ReferenceBuilderConfig<TUnit>;
+    builderConfig?: RefiningReferenceBuilderConfig<TUnit>;
 }
 
 export class ConsolidateStep<

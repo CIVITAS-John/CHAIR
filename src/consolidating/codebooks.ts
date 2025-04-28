@@ -159,6 +159,7 @@ export const consolidateCodebook = async <TUnit>(
     _analyses: CodedThreads,
     onIterate?: (iteration: number) => Promise<void>,
     fakeRequest = false,
+    retries?: number,
 ) => {
     const _id = idStr("consolidateCodebook");
 
@@ -222,6 +223,7 @@ export const consolidateCodebook = async <TUnit>(
             return 0;
         },
         onIterate,
+        retries,
     );
 };
 
