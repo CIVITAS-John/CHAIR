@@ -416,7 +416,7 @@ export const evaluateEmbeddings = async <T>(
         _id,
     );
     // Run the Python script
-    await PythonShell.run(resolve(import.meta.dirname, `embeddings/evaluation_${method}.py`), {
+    await PythonShell.run(resolve(import.meta.url, `../embeddings/evaluation_${method}.py`), {
         args: [
             embedder.dimensions.toString(),
             labels.length.toString(),
