@@ -57,8 +57,8 @@ export abstract class ChunkLevelAnalyzerBase extends ConversationAnalyzer {
                 // Get or create the code
                 line = line.toLowerCase();
                 currentCode = analysis.codes[line] ?? {
-                    Categories: [category.toLowerCase()],
-                    Label: line,
+                    categories: [category.toLowerCase()],
+                    label: line,
                 };
                 analysis.codes[line] = currentCode;
             } else if (line.startsWith("Definition: ")) {
