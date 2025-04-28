@@ -1,5 +1,5 @@
-import LowLevelAnalyzerAny from "../src/coding/low-level-any.js";
-import LowLevelAnalyzerVerb from "../src/coding/low-level-verb.js";
+import ItemLevelAnalyzerAny from "../src/coding/item-level-any.js";
+import ItemLevelAnalyzerVerb from "../src/coding/item-level-verb.js";
 import { QAJob, type QAJobConfig } from "../src/job.js";
 import { CodeStep } from "../src/steps/code-step.js";
 import { ConsolidateStep } from "../src/steps/consolidate-step.js";
@@ -13,7 +13,7 @@ const load = new LoadStep({
 
 const code = new CodeStep({
     agent: "AI",
-    strategy: [LowLevelAnalyzerAny, LowLevelAnalyzerVerb],
+    strategy: [ItemLevelAnalyzerAny, ItemLevelAnalyzerVerb],
     model: ["gpt-4.5-omni"],
 });
 

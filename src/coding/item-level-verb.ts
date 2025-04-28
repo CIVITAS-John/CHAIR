@@ -1,16 +1,16 @@
 import type { CodedThread, Conversation, Message } from "../schema.js";
 
 import { buildMessagePrompt } from "./conversations.js";
-import { LowLevelAnalyzerBase } from "./low-level.js";
+import { ItemLevelAnalyzerBase } from "./item-level.js";
 
 /**
- * Conduct the first-round low-level coding of the conversations.
- * Use anything as the code label.
+ * Conduct the first-round item-level coding of the conversations.
+ * Only use verb phrases as the code labels.
  * @author John Chen
  */
-export default class LowLevelAnalyzerAny extends LowLevelAnalyzerBase {
+export default class ItemLevelAnalyzerVerb extends ItemLevelAnalyzerBase {
     /** The name of the analyzer. */
-    override name = "low-level-any";
+    override name = "item-verb";
     /** The base temperature for the LLM. */
     override baseTemperature = 0.5;
 
@@ -42,23 +42,22 @@ export default class LowLevelAnalyzerAny extends LowLevelAnalyzerBase {
         analysis: CodedThread,
         _target: Conversation,
         messages: Message[],
-        _chunkStart: number,
     ): Promise<[string, string]> {
         return Promise.resolve([
             `
 You are an expert in thematic analysis with grounded theory, working on open coding.
-Your goal is to identify multiple low-level tags for each message.
-When writing tags, balance between specifics and generalizability across messages.
+This is the first round of coding. Your goal is to describe each item with verb phrases.
+Try your best to interpret events, contexts, and intents. Always use ";" to separate verb phrases.
 ${this.dataset.researchQuestion}
 ${this.dataset.codingNotes}
 
 Always follow the output format:
 ---
 Thoughts: {A paragraph of plans and guiding questions about analyzing the conversation from multiple theoretical angles}
-Interpretations for each message (${messages.length} in total):
-1. {phrase 1}; {phrase 2}; ...
+Interpretation phrases for each item (${messages.length} in total):
+1. {phrase 1}; {phrase 2}; {phrase 3}; ...
 ...
-${messages.length}. {phrase 1}; {phrase 2}; ...
+${messages.length}. {phrase 1}; {phrase 2}; {phrase 3}; ...
 Summary: {A somehow detailed summary of the conversation, including previous ones}
 Notes: {Notes and hypotheses about the conversation until now}`.trim(),
             messages

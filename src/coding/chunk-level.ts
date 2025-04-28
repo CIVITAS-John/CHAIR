@@ -4,10 +4,10 @@ import { assembleExampleFrom } from "../utils/misc.js";
 import { ConversationAnalyzer, revertMessageFormat } from "./conversations.js";
 
 /**
- * Conduct the first-round high-level coding of the conversations.
+ * Conduct the first-round chunk-level coding of the conversations.
  * @author John Chen
  */
-export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
+export abstract class ChunkLevelAnalyzerBase extends ConversationAnalyzer {
     /**
      * Get the chunk size and cursor movement for the LLM.
      * @returns [Chunk size, Cursor movement]
@@ -115,7 +115,7 @@ export abstract class HighLevelAnalyzerBase extends ConversationAnalyzer {
                         });
                     }
                     if (!message) {
-                        console.log(`Cannot find message for: ${line}`);
+                        console.log(`Cannot find the coded message for: ${line}. The LLM has likely slightly changed the content.`);
                     }
                     const example = message ? assembleExampleFrom(this.dataset, message) : line;
                     if (message && !currentCode.examples.includes(example)) {

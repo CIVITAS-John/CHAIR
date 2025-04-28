@@ -3,10 +3,10 @@ import type { CodedThread, Message } from "../schema.js";
 import { ConversationAnalyzer } from "./conversations.js";
 
 /**
- * Conduct the first-round low-level coding of the conversations.
+ * Conduct the first-round item-level coding of the conversations.
  * @author John Chen
  */
-export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
+export abstract class ItemLevelAnalyzerBase extends ConversationAnalyzer {
     /** How we call a tag in the prompt. */
     protected tagName = "tag";
     /** How we call tags in the prompt. */
@@ -152,19 +152,19 @@ export abstract class LowLevelAnalyzerBase extends ConversationAnalyzer {
             }
         }
         if (Object.values(results).every((Value) => Value === "")) {
-            throw new LowLevelAnalyzerBase.InvalidResponseError("All codes are empty");
+            throw new ItemLevelAnalyzerBase.InvalidResponseError("All codes are empty");
         }
         if (analysis.plan === undefined) {
-            throw new LowLevelAnalyzerBase.InvalidResponseError("No plans");
+            throw new ItemLevelAnalyzerBase.InvalidResponseError("The response has no plans");
         }
         if (analysis.reflection === undefined) {
-            throw new LowLevelAnalyzerBase.InvalidResponseError("No reflections");
+            throw new ItemLevelAnalyzerBase.InvalidResponseError("The response has no reflections");
         }
         if (analysis.summary === undefined) {
-            throw new LowLevelAnalyzerBase.InvalidResponseError("No summary");
+            throw new ItemLevelAnalyzerBase.InvalidResponseError("The response has no summary");
         }
         if (Object.keys(results).length !== messages.length) {
-            throw new LowLevelAnalyzerBase.InvalidResponseError(
+            throw new ItemLevelAnalyzerBase.InvalidResponseError(
                 `${Object.keys(results).length} results for ${messages.length} messages`,
             );
         }
