@@ -42,7 +42,8 @@ if probs is None:
 # Generate the output: for each topic, return the IDs, probabilities
 output = {}
 for index, row in model.get_topic_info().iterrows():
-    topic = row["topic"]
+    # this is from the BERTopic! Don't change the case
+    topic = row["Topic"]
     _keywords = cast(
         Union[List[Tuple[str, float]], Literal[False]], model.get_topic(topic)
     )
