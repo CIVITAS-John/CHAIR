@@ -167,9 +167,10 @@ export const createOfflineBundle = (
                 copyFiles(filePath, newDestination);
             } else {
                 const name = basename(filePath);
-                if (name.endsWith(".ts")) {
+                if (name.endsWith(".ts") || name.startsWith("tsconfig")) {
+                    // Skip TypeScript files and tsconfig.json
                     continue;
-                } // Skip TypeScript files
+                }
                 if (name.endsWith(".js")) {
                     let content = readFileSync(filePath, "utf8");
                     // Remove all import statements
