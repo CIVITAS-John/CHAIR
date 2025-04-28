@@ -394,7 +394,7 @@ export class CodeStep<
                 }
 
                 try {
-                    const analyses = await importCodes(this._idStr, path, sheet);
+                    const analyses = await importCodes(this._idStr, dataset, path, sheet);
                     logger.info(`[${dataset.name}] Loaded codes via Excel from ${path}`, _id);
                     return analyses;
                 } catch (error) {
