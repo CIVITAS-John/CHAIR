@@ -104,6 +104,6 @@ export default tseslint.config(
     },
     includeIgnoreFile(`${import.meta.dirname}/.gitignore`),
     {
-        ignores: ["src/evaluating/network/dependencies"],
+        ignores: ["src/evaluating/network/dependencies", "examples/**/network"],
     },
 );
