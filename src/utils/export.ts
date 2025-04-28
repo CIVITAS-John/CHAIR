@@ -245,19 +245,6 @@ export const exportChunksForCoding = <T extends DataItem>(
     return book;
 };
 
-const setWorksheetKeys = (worksheet: Excel.Worksheet) => {
-    worksheet.getColumn("A").key = "ID";
-    worksheet.getColumn("B").key = "CID";
-    worksheet.getColumn("C").key = "SID";
-    worksheet.getColumn("D").key = "Nickname";
-    worksheet.getColumn("E").key = "Time";
-    worksheet.getColumn("F").key = "In";
-    worksheet.getColumn("G").key = "Content";
-    worksheet.getColumn("H").key = "Codes";
-    worksheet.getColumn("I").key = "Memo";
-    worksheet.getColumn("J").key = "Consolidated";
-};
-
 export const importCodes = async (
     idStr: IDStrFunc,
     path: string,
@@ -291,7 +278,12 @@ export const importCodes = async (
 
         let msgs = 0;
 
-        setWorksheetKeys(worksheet);
+        // Find the column keys (not all worksheet will include all columns)
+        for (const column of worksheet.columns) {
+            if (!column.values || !column.values[1]) continue; // Skip empty columns
+            column.key = column.values[1].toString();
+        }
+
         // Process each row in the worksheet
         worksheet.eachRow((row, rowNumber) => {
             if (rowNumber === 1) return; // Skip header row
@@ -333,7 +325,7 @@ export const importCodes = async (
             if (!id) return;
 
             const codesValue = getCellValueString(row, "Codes");
-            const codes = codesValue ? codesValue.split(", ").filter(Boolean) : undefined;
+            const codes = codesValue ? codesValue.split(",").filter(Boolean) : undefined;
 
             // Skip rows without codes
             if (!codes) return;
