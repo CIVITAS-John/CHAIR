@@ -6,7 +6,7 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { PythonShell } from "python-shell";
 
 import type { BertopicTopics, CodedThread, Conversation, Message } from "../schema.js";
-import { getPythonPath } from "../utils/file.js";
+import { ensureFolder, getPythonPath } from "../utils/file.js";
 import { requestLLM } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 
@@ -59,6 +59,7 @@ export default class BertopicAnalyzerVerb extends ConversationAnalyzer {
                   )
                 : "",
         );
+        ensureFolder("./known");
         writeFileSync("./known/bertopic.temp.json", JSON.stringify(content));
         // Run the Python script
         let topics: BertopicTopics = {};

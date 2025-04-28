@@ -9,6 +9,7 @@ import type { Codebook, CodedThreadsWithCodebook, Dataset } from "../schema.js";
 import type { IDStrFunc } from "../steps/base-step.js";
 import type { EmbedderObject } from "../utils/embeddings.js";
 import { exportChunksForCoding } from "../utils/export.js";
+import { ensureFolder } from "../utils/file.js";
 import type { LLMSession } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 
@@ -97,6 +98,7 @@ export abstract class ReferenceBuilder<TUnit> {
     protected sanityCheck(iter: number, codebook: Codebook) {
         const _id = this._idStr("sanityCheck");
 
+        ensureFolder("./known");
         writeFileSync(`./known/codebook-${iter}.json`, JSON.stringify(codebook, null, 4), "utf8");
         if (iter === 0) {
             this.originalCodes = new Set<string>(Object.values(codebook).map((c) => c.label));

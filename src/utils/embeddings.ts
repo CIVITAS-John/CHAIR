@@ -312,6 +312,7 @@ export const clusterEmbeddings = async (
     const _id = idStr("clusterEmbeddings");
 
     const res: Record<number, ClusterItem[]> = {};
+    ensureFolder("./known");
     // Write it into ./known/temp.bytes
     writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
     // writeFileSync(`./known/temp.text`, Names.join("\n"));
@@ -398,6 +399,7 @@ export const evaluateEmbeddings = async <T>(
 
     let res: T | undefined;
     // Write it into ./known/temp.bytes
+    ensureFolder("./known");
     writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
     // let TextData = Labels.map((Label, Index) => `${Owners[Index].join(",")}|${Label}`);
     const textData = labels.map((label, index) => ({
