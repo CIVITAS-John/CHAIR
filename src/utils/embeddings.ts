@@ -16,6 +16,7 @@ import type { IDStrFunc } from "../steps/base-step.js";
 import { ensureFolder } from "./file.js";
 import { logger } from "./logger.js";
 import { sleep } from "./misc.js";
+import { fileURLToPath } from "url";
 
 const MODELS = {
     "openai-small-512": {
@@ -317,8 +318,8 @@ export const clusterEmbeddings = async (
     writeFileSync("./known/clustering.temp.json", JSON.stringify(names));
     // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
     // Run the Python script
-    const dirname = import.meta.dirname;
-    await PythonShell.run(resolve(dirname, `embeddings/clustering_${method}.py`), {
+    const filename = fileURLToPath(import.meta.url);
+    await PythonShell.run(resolve(filename, `../embeddings/clustering_${method}.py`), {
         args: [embedder.dimensions.toString(), names.length.toString(), ...opts],
         parser: (msg) => {
             if (msg.startsWith("[")) {
