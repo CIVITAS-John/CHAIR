@@ -1,4 +1,4 @@
-import type { DataItem, Dataset } from "../schema.js";
+import type { DataChunk, DataItem, Dataset } from "../schema.js";
 
 /** Reverse a string. */
 export const reverse = (s: string) => s.split("").reverse().join("");
@@ -102,3 +102,32 @@ const assembleExample = (
 /** Assemble an example from a data item. */
 export const assembleExampleFrom = <T>(dataset: Dataset<T>, item: DataItem) =>
     assembleExample(dataset.getSpeakerNameForExample, item.id, item.uid, item.content);
+
+/** Get all items from a dataset. */
+export const getAllItems = <
+    TSubunit extends DataItem = DataItem,
+    TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
+>(dataset: Dataset<TUnit>): TSubunit[] =>
+    Object.values(dataset.data).flatMap((chunk) =>
+        // Not sure why Typescript won't infer the type here
+        Object.values(chunk).flatMap(getAllItemsFromChunk as any),
+    );
+
+/** Get all items from a data chunk. */
+export const getAllItemsFromChunk = <
+    TSubunit extends DataItem = DataItem,
+    TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
+>(chunk: TUnit) => {
+    const items: TSubunit[] = [];
+    for (const item of chunk.items) {
+        if ("items" in item) {
+            const subchunk = item as TUnit;
+            // Not sure why Typescript won't infer the type here
+            const subitems = getAllItemsFromChunk(subchunk) as any;
+            items.push(...subitems);
+        } else {
+            items.push(item);
+        }
+    }
+    return items;
+}
