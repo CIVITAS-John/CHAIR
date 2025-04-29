@@ -59,6 +59,6 @@ for index, row in model.get_topic_info().iterrows():
     }
 
 # Write into a UTF-8 json
-sys.stdout.buffer.write(
-    json.dumps(output, indent=4, ensure_ascii=False).encode("utf-8")
-)
+result = json.dumps(output, ensure_ascii=False).encode("utf-8")
+# Write the result to stdout
+sys.stdout.buffer.write(result)
