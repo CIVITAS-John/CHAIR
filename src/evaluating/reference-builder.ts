@@ -1,6 +1,7 @@
 import { writeFileSync } from "fs";
 
 import { consolidateCodebook, mergeCodebooks } from "../consolidating/codebooks.js";
+import type { CodeConsolidator } from "../consolidating/consolidator.js";
 import { PipelineConsolidator } from "../consolidating/consolidator.js";
 import { DefinitionGenerator } from "../consolidating/definition-generator.js";
 import { RefineMerger } from "../consolidating/refine-merger.js";
@@ -116,7 +117,7 @@ export abstract class ReferenceBuilder<TUnit> {
     }
 }
 
-export type RefiningReferenceBuilderConfig<TUnit> = ReferenceBuilderConfig &
+export type RefiningReferenceBuilderConfig = ReferenceBuilderConfig &
     (
         | {
               baseTemperature?: number;
@@ -124,7 +125,7 @@ export type RefiningReferenceBuilderConfig<TUnit> = ReferenceBuilderConfig &
               useVerbPhrases?: boolean;
           }
         | {
-              consolidator: PipelineConsolidator<TUnit>;
+              consolidators: CodeConsolidator[];
           }
     );
 
@@ -138,7 +139,7 @@ export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
     public sameData = true;
     /** Whether the merging process should force verb phrases. */
     public useVerbPhrases = false;
-    public consolidator?: PipelineConsolidator<TUnit>;
+    public consolidators?: CodeConsolidator[];
 
     constructor(
         idstr: IDStrFunc,
@@ -148,12 +149,12 @@ export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
         session: LLMSession,
         /** The embedder object for the reference builder. */
         embedder: EmbedderObject,
-        config?: RefiningReferenceBuilderConfig<TUnit>,
+        config?: RefiningReferenceBuilderConfig,
     ) {
         super(idstr, dataset, session, embedder);
         if (config) {
-            if ("consolidator" in config) {
-                this.consolidator = config.consolidator;
+            if ("consolidators" in config) {
+                this.consolidators = config.consolidators;
             } else {
                 this.baseTemperature = config.baseTemperature ?? this.baseTemperature;
                 this.sameData = config.sameData ?? this.sameData;
@@ -169,9 +170,11 @@ export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
         const threads: CodedThreadsWithCodebook = { codebook, threads: {} };
         Object.values(codebook).forEach((Code) => (Code.alternatives = []));
 
-        this.consolidator =
-            this.consolidator ??
-            new PipelineConsolidator(this._idStr, this.dataset, this.session, [
+        const consolidator = new PipelineConsolidator(
+            this._idStr,
+            this.dataset,
+            this.session,
+            this.consolidators ?? [
                 // Merge codes that have been merged
                 // new AlternativeMerger(),
                 // Merge very similar names
@@ -195,13 +198,14 @@ export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
                     useVerbPhrases: this.useVerbPhrases,
                     looping: true,
                 }),
-            ]);
-        this.consolidator.baseTemperature = this.baseTemperature;
+            ],
+        );
+        consolidator.baseTemperature = this.baseTemperature;
         await consolidateCodebook(
             this._idStr,
             this.dataset,
             this.session,
-            this.consolidator,
+            consolidator,
             [],
             threads,
             (iter) => this.sanityCheck(iter, threads.codebook),

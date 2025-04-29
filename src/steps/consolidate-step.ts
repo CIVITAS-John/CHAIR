@@ -26,7 +26,7 @@ export interface ConsolidateStepConfig<
     // strategy: ConsolidateStrategy;
     model: LLMModel | LLMModel[];
     parameters?: AIParameters;
-    builderConfig?: RefiningReferenceBuilderConfig<TUnit>;
+    builderConfig?: RefiningReferenceBuilderConfig;
 }
 
 export class ConsolidateStep<
