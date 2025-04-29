@@ -1,4 +1,4 @@
-export default /** @type {import("../../schema").RawDataset} */ ({
+export default /** @type {import("../../src/schema").RawDataset} */ ({
     name: "example-dataset",
     title: "Example Dataset",
     data: {
