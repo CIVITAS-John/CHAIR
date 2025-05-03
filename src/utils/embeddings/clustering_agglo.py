@@ -1,0 +1,109 @@
+"""
+Hierarchical Agglomerative Clustering
+"""
+
+import json
+import sys
+from typing import Literal, cast
+
+import matplotlib.pyplot as plt
+import numpy as np
+from embedding import cpus, dims, embeddings, items, load_temp_json
+from numpy.typing import NDArray
+from scipy.cluster.hierarchy import dendrogram
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.metrics.pairwise import pairwise_distances
+from umap import UMAP
+
+labels = [source["label"] for source in load_temp_json("clustering")]
+
+# Get the arguments
+metrics = sys.argv[3] if len(sys.argv) > 3 else "cosine"
+linkage_mtd = cast(
+    Literal["ward", "complete", "average", "single"],
+    sys.argv[4] if len(sys.argv) > 4 else "average",
+)
+max_dist = float(sys.argv[5]) if len(sys.argv) > 5 else 0.25
+tar_dims = int(sys.argv[6]) if len(sys.argv) > 6 else dims
+plotting = bool(sys.argv[7]) if len(sys.argv) > 7 else True
+print(
+    "Linkage:",
+    linkage_mtd,
+    ", MaxDistance:",
+    max_dist,
+    ", Metrics:",
+    metrics,
+    ", Target Dimensions:",
+    tar_dims,
+)
+
+# Use UMap to reduce the dimensions
+if tar_dims < dims:
+    umap = UMAP(n_components=tar_dims)
+    embeddings = cast(NDArray[np.float32], umap.fit_transform(embeddings))
+    # from sklearn.preprocessing import normalize
+    # embeddings = normalize(embeddings, norm='l2')
+    print("Embeddings reduced:", embeddings.shape)
+
+# Calculate distances
+distances = pairwise_distances(embeddings, embeddings, metric=metrics, n_jobs=cpus)
+
+# Plot the clusters
+
+
+def plot_dendrogram(model, **kwargs):
+    """Create linkage matrix and then plot the dendrogram."""
+
+    # Create the counts of samples under each node
+    counts = np.zeros(model.children_.shape[0])
+    n_samples = len(model.labels_)
+    for i, merge in enumerate(model.children_):
+        current_count = 0
+        for child_idx in merge:
+            if child_idx < n_samples:
+                current_count += 1  # leaf node
+            else:
+                current_count += counts[child_idx - n_samples]
+        counts[i] = current_count
+
+    linkage_matrix = np.column_stack(
+        [model.children_, model.distances_, counts]
+    ).astype(float)
+
+    # Maximize the dendrogram
+    wm = plt.get_current_fig_manager()
+    if wm is not None:
+        wm.window.state("zoomed")  # type: ignore
+
+    # Plot the corresponding dendrogram
+    dendrogram(linkage_matrix, **kwargs)
+
+
+# Send into Clustering
+db = AgglomerativeClustering(
+    n_clusters=None,
+    distance_threshold=max_dist,
+    metric="precomputed",
+    linkage=linkage_mtd,
+)
+db.fit(distances)
+
+# Plot the distances
+if plotting:
+    # Do a dendrogram
+    plot_dendrogram(db, truncate_mode=None, labels=labels)
+
+    # Exclude the diagonal on a new instance
+    hist_distances = np.copy(distances)
+    np.fill_diagonal(hist_distances, 1)
+
+    # Do a histogram of the distances
+    hist_distances = hist_distances.min(axis=1)
+    hist_distances = hist_distances[hist_distances < 1]
+    hist_distances = hist_distances[hist_distances > 0]
+
+    plt.hist(hist_distances, bins=100)
+    plt.show()
+
+# Send the results
+print(json.dumps([db.labels_.tolist(), np.ones(items).tolist()]))

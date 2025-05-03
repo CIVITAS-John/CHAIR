@@ -23,6 +23,7 @@ export default tseslint.config(
                 projectService: {
                     allowDefaultProject: ["*.js"],
                 },
+                project: true,
                 tsconfigRootDir: import.meta.dirname,
             },
         },
@@ -103,6 +104,6 @@ export default tseslint.config(
     },
     includeIgnoreFile(`${import.meta.dirname}/.gitignore`),
     {
-        ignores: ["evaluating/network/dependencies/", "examples/data/**/*", "!examples/data/*.*"],
+        ignores: ["src/evaluating/network/dependencies", "examples/**/network"],
     },
 );
