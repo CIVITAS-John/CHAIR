@@ -296,7 +296,7 @@ export const clusterTexts = async (
 
 /**
  * Categorize the embeddings into clusters.
- * @returns { cluster: [id, probability][] }
+ * @returns `{ cluster: [id, probability][] }`
  * */
 export const clusterEmbeddings = async (
     idStr: IDStrFunc,

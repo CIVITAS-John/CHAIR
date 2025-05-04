@@ -15,7 +15,7 @@ import { buildMessagePrompt } from "./conversations.js";
  * Changes from ChunkLevelAnalyzerBarany: We mentioned fields in the prompt and added a planning stage. We also ask LLMs to provide two levels of codes.
  *
  * @author Barany et al.
- * @adapter John Chen
+ * Adapted by John Chen.
  */
 
 /** Conduct the first-round high-level coding of the conversations. */

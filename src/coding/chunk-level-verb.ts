@@ -15,7 +15,7 @@ import { buildMessagePrompt } from "./conversations.js";
  * Changes from ChunkLevelAnalyzerStructured: We asked LLMs to write verb phrases.
  *
  * @author Barany et al.
- * @adapter John Chen
+ * Adapted by John Chen.
  */
 
 /** Conduct the first-round high-level coding of the conversations. */

@@ -89,7 +89,7 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     }
     /**
      * Parse the responses from the LLM.
-     * The return value is only for item-based coding, where each item has its own response. Otherwise, return {}.
+     * The return value is only for item-based coding, where each item has its own response. Otherwise, return `{}`.
      * Alternatively, it can return a number to indicate the relative cursor movement. (Actual units - Expected units, often negative.)
      */
     async parseResponse(

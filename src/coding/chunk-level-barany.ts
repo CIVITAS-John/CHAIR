@@ -14,7 +14,7 @@ import { buildMessagePrompt } from "./conversations.js";
  * However, the original prompt does not give examples as documented by the paper. We modified the prompt to make that happen. Note that the original paper's codebook only has around 8-11 codes. Therefore, we only ask ChatGPT to generate a single layer of codes.
  *
  * @author Barany et al.
- * @adapter John Chen
+ * Adapted by John Chen.
  */
 
 /** Conduct the first-round high-level coding of the conversations. */
