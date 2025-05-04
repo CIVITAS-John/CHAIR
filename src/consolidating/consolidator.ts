@@ -59,9 +59,6 @@ export abstract class CodeConsolidator {
 }
 
 /** An abstract codebook consolidator. */
-// ESLint does not recognize type parameters in array
-// See https://typescript-eslint.io/rules/no-unnecessary-type-parameters/#limitations
-
 export abstract class CodebookConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedThreads> {
     static ConfigError = class extends CodebookConsolidator.Error {
         override name = "CodebookConsolidator.ConfigError";

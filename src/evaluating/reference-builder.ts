@@ -14,7 +14,7 @@ import { ensureFolder } from "../utils/file.js";
 import type { LLMSession } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 
-interface ReferenceBuilderConfig {
+export interface ReferenceBuilderConfig {
     retries?: number;
     fakeRequest?: boolean;
 }
