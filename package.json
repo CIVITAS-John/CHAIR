@@ -17,9 +17,9 @@
         "format": "eslint --fix --cache . && prettier --write --cache ."
     },
     "dependencies": {
-        "@dqbd/tiktoken": "^1.0.20",
-        "@google/generative-ai": "^0.24.0",
-        "@inquirer/prompts": "^7.4.1",
+        "@dqbd/tiktoken": "^1.0.21",
+        "@google/generative-ai": "^0.24.1",
+        "@inquirer/prompts": "^7.5.0",
         "@langchain/anthropic": "^0.3.17",
         "@langchain/community": "^0.3.40",
         "@langchain/core": "^0.3.44",
@@ -40,35 +40,36 @@
         "graphology-library": "^0.8.0",
         "langchain": "^0.3.21",
         "md5": "^2.3.0",
-        "open": "^10.1.0",
+        "open": "^10.1.2",
         "python-shell": "^5.0.0"
     },
     "devDependencies": {
-        "@eslint/compat": "^1.2.8",
-        "@eslint/js": "^9.24.0",
+        "@eslint/compat": "^1.2.9",
+        "@eslint/js": "^9.26.0",
         "@types/d3": "^7.4.3",
         "@types/md5": "^2.3.5",
-        "@types/node": "^22.14.1",
+        "@types/node": "^22.15.3",
         "@types/seedrandom": "^3.0.8",
-        "@typescript-eslint/parser": "^8.30.1",
+        "@typescript-eslint/parser": "^8.31.1",
         "copyfiles": "^2.4.1",
-        "eslint": "^9.24.0",
+        "eslint": "^9.26.0",
         "eslint-config-prettier": "^10.1.2",
-        "eslint-import-resolver-typescript": "^4.3.2",
-        "eslint-plugin-import-x": "^4.10.3",
+        "eslint-import-resolver-typescript": "^4.3.4",
+        "eslint-plugin-import-x": "^4.11.0",
         "eslint-plugin-regexp": "^2.7.0",
         "eslint-plugin-tsdoc": "^0.4.0",
         "prettier": "^3.5.3",
         "rimraf": "^6.0.1",
-        "tsx": "^4.19.3",
-        "typedoc": "^0.28.2",
+        "tsx": "^4.19.4",
+        "typedoc": "^0.28.4",
         "typescript": "^5.8.3",
-        "typescript-eslint": "^8.30.1"
+        "typescript-eslint": "^8.31.1"
     },
-    "packageManager": "pnpm@10.9.0+sha512.0486e394640d3c1fb3c9d43d49cf92879ff74f8516959c235308f5a8f62e2e19528a65cdc2a3058f587cde71eba3d5b56327c8c33a97e4c4051ca48a10ca2d5f",
+    "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39",
     "pnpm": {
         "onlyBuiltDependencies": [
-            "esbuild"
+            "esbuild",
+            "unrs-resolver"
         ]
     }
 }
