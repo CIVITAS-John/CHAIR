@@ -247,6 +247,7 @@ export const exportChunksForCoding = <T extends DataItem>(
     return book;
 };
 
+/** Import coded results from an Excel workbook. */
 export const importCodes = async (
     idStr: IDStrFunc,
     dataset: Dataset<DataChunk<DataItem>>,
@@ -293,7 +294,8 @@ export const importCodes = async (
         worksheet.eachRow((row, rowNumber) => {
             if (rowNumber === 1) return; // Skip header row
 
-            const id = row.getCell("ID").value;
+            // If the row has no ID cell, use (the row number - 1) as ID
+            const id = row.getCell("ID").value ?? rowNumber - 1;
             const name = getCellValueString(row, "Nickname");
             // const sid = getCellValueString(row, "SID");
             const content = getCellValueString(row, "Content");
@@ -327,7 +329,7 @@ export const importCodes = async (
             }
 
             // Skip empty rows
-            if (!id) return;
+            if (!content) return;
 
             const codesValue = getCellValueString(row, "Codes");
             const codes = codesValue ? codesValue.split(/[,;\n]+/).filter(Boolean) : undefined;
