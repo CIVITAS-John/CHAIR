@@ -1,3 +1,5 @@
+import { AsyncScope } from "async_store";
+
 import { BaseStep } from "./steps/base-step.js";
 import type { CodeStepConfig } from "./steps/code-step.js";
 import { CodeStep } from "./steps/code-step.js";
@@ -70,6 +72,7 @@ export class QAJob {
     }
 
     constructor(private readonly config: QAJobConfig) {
+        // At this point, we are not running in a scope, so we need to set the logger source manually
         const _id = "QAJob#constructor";
         logger.info("Creating job", _id);
 
@@ -200,18 +203,21 @@ export class QAJob {
     }
 
     async #executeStep(step: BaseStep) {
-        const _id = "QAJob#executeStep";
-        logger.info(`Executing step ${step._id}`, _id);
-        try {
-            await step.execute();
-        } catch (error) {
-            if (error instanceof BaseStep.AbortedError && step.aborted) {
-                logger.warn(`Step ${step._id} aborted`, _id);
-                return;
-            }
-            throw error;
-        }
-        logger.info(`Executed step ${step._id}`, _id);
+        await new AsyncScope().run(async () => {
+            await logger.withSource("QAJob#executeStep", async () => {
+                logger.info(`Executing step ${step._id}`);
+                try {
+                    await step.execute();
+                } catch (error) {
+                    if (error instanceof BaseStep.AbortedError && step.aborted) {
+                        logger.warn(`Step ${step._id} aborted`);
+                        return;
+                    }
+                    throw error;
+                }
+                logger.info(`Executed step ${step._id}`);
+            });
+        });
     }
 
     async execute() {

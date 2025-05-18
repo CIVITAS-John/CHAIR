@@ -37,13 +37,10 @@ export class EvaluateStep<
         this.ignoreGroups = config.ignoreGroups ?? false;
     }
 
-    override async execute() {
-        const _id = this._idStr("execute");
-        await super.execute();
-
+    async #execute() {
         // Sanity check
         if (!this.embedder) {
-            throw new EvaluateStep.ConfigError("Embedder not set", _id);
+            throw new EvaluateStep.ConfigError("Embedder not set");
         }
 
         const datasets: Dataset<TUnit[]>[] = [],
@@ -59,7 +56,7 @@ export class EvaluateStep<
         });
 
         for (const dataset of datasets.values()) {
-            const evaluator = new NetworkEvaluator(this._idStr, this.embedder, {
+            const evaluator = new NetworkEvaluator(this.embedder, {
                 dataset: dataset as unknown as Dataset<TUnit>,
             });
             const codes = codebooks.get(dataset.name) ?? {};
@@ -79,10 +76,16 @@ export class EvaluateStep<
                 exportPath,
             );
 
-            logger.info(`Writing evaluation results to ${exportPath}`, _id);
+            logger.info(`Writing evaluation results to ${exportPath}`);
             writeFileSync(`${exportPath}-${evaluator.name}.json`, JSON.stringify(results, null, 4));
         }
 
         this.executed = true;
+    }
+
+    override async execute() {
+        await super.execute();
+
+        await logger.withSource(this._prefix, "execute", true, this.#execute.bind(this));
     }
 }

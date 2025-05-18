@@ -12,7 +12,6 @@ import md5 from "md5";
 import { PythonShell } from "python-shell";
 
 import type { Code } from "../schema.js";
-import type { IDStrFunc } from "../steps/base-step.js";
 
 import { ensureFolder, getPythonPath } from "./file.js";
 import { logger } from "./logger.js";
@@ -118,99 +117,84 @@ export const initEmbedder = (embedder: string): EmbedderObject => {
 };
 
 /** Call the model to generate text embeddings with cache. */
-export const requestEmbeddings = async (
-    idStr: IDStrFunc,
+export const requestEmbeddings = (
     embedder: EmbedderObject,
     sources: string[],
     cache: string,
-): Promise<Float32Array> => {
-    const _id = idStr("requestEmbeddings");
+): Promise<Float32Array> =>
+    logger.withDefaultSource("requestEmbeddings", async () => {
+        // Create the cache folder
+        const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
+        ensureFolder(cacheFolder);
+        // Check if the cache exists
+        const embeddings = new Float32Array(embedder.dimensions * sources.length);
+        const requests: number[] = [];
+        for (let i = 0; i < sources.length; i++) {
+            const source = sources[i];
+            const cacheFile = `${cacheFolder}/${md5(source)}.bytes`;
+            if (existsSync(cacheFile)) {
+                const buffer = readFileSync(cacheFile);
+                const cached = new Float32Array(
+                    buffer.buffer,
+                    buffer.byteOffset,
+                    buffer.byteLength / 4,
+                );
+                embeddings.set(cached, embedder.dimensions * i);
+            } else {
+                requests.push(i);
+            }
+        }
+        // Request the online embeddings
+        const batchSize = embedder.batchSize ?? 50;
+        for (let i = 0; i < requests.length; i += batchSize) {
+            let retry = 0;
+            while (retry < 10) {
+                try {
+                    // This line could debug some underlying issue behind 0 embeddings, particularly for stupid Gemini API
+                    // var test = await (embedder.model as any).client.embedContent("test");
+                    const res = await embedder.model.embedDocuments(
+                        requests.slice(i, i + batchSize).map((idx) => sources[idx]),
+                    );
+                    for (let j = 0; j < res.length; j++) {
+                        const idx = requests[i + j];
+                        const embedding = new Float32Array(res[j]);
+                        // Check if all elements are 0
+                        if (embedding.every((v) => v === 0)) {
+                            throw new Error(`Invalid embedding for: ${sources[idx]}`);
+                        }
+                        embeddings.set(embedding, embedder.dimensions * idx);
+                        const cacheFile = `${cacheFolder}/${md5(sources[idx])}.bytes`;
+                        writeFileSync(cacheFile, embedding);
+                    }
+                    break;
+                } catch (e) {
+                    logger.error(e, ++retry >= 10);
+                    await sleep((retry + 1) * 6000);
+                }
+            }
+        }
+        return embeddings;
+    });
 
-    // Create the cache folder
-    const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
-    ensureFolder(cacheFolder);
-    // Check if the cache exists
-    const embeddings = new Float32Array(embedder.dimensions * sources.length);
-    const requests: number[] = [];
-    for (let i = 0; i < sources.length; i++) {
-        const source = sources[i];
+/** Call the model to generate a text embedding with cache. */
+export const requestEmbedding = (embedder: EmbedderObject, source: string, cache: string) =>
+    logger.withDefaultSource("requestEmbedding", async () => {
+        const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
+        ensureFolder(cacheFolder);
+        // Check if the cache exists
         const cacheFile = `${cacheFolder}/${md5(source)}.bytes`;
         if (existsSync(cacheFile)) {
             const buffer = readFileSync(cacheFile);
-            const cached = new Float32Array(
-                buffer.buffer,
-                buffer.byteOffset,
-                buffer.byteLength / 4,
-            );
-            embeddings.set(cached, embedder.dimensions * i);
-        } else {
-            requests.push(i);
+            return new Float32Array(buffer.buffer, buffer.byteOffset, buffer.byteLength / 4);
         }
-    }
-    // Request the online embeddings
-    const batchSize = embedder.batchSize ?? 50;
-    for (let i = 0; i < requests.length; i += batchSize) {
-        let retry = 0;
-        while (retry < 10) {
-            try {
-                // This line could debug some underlying issue behind 0 embeddings, particularly for stupid Gemini API
-                // var test = await (embedder.model as any).client.embedContent("test");
-                const res = await embedder.model.embedDocuments(
-                    requests.slice(i, i + batchSize).map((idx) => sources[idx]),
-                );
-                for (let j = 0; j < res.length; j++) {
-                    const idx = requests[i + j];
-                    const embedding = new Float32Array(res[j]);
-                    // Check if all elements are 0
-                    if (embedding.every((v) => v === 0)) {
-                        throw new Error(`Invalid embedding for: ${sources[idx]}`);
-                    }
-                    embeddings.set(embedding, embedder.dimensions * idx);
-                    const cacheFile = `${cacheFolder}/${md5(sources[idx])}.bytes`;
-                    writeFileSync(cacheFile, embedding);
-                }
-                break;
-            } catch (e) {
-                logger.error(e, ++retry >= 10, _id);
-                await sleep((retry + 1) * 6000);
-            }
-        }
-    }
-    return embeddings;
-};
-
-/** Call the model to generate a text embedding with cache. */
-export const requestEmbedding = async (
-    idStr: IDStrFunc,
-    embedder: EmbedderObject,
-    source: string,
-    cache: string,
-) => {
-    const _id = idStr("requestEmbedding");
-
-    const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
-    ensureFolder(cacheFolder);
-    // Check if the cache exists
-    const cacheFile = `${cacheFolder}/${md5(source)}.bytes`;
-    if (existsSync(cacheFile)) {
-        const buffer = readFileSync(cacheFile);
-        return new Float32Array(buffer.buffer, buffer.byteOffset, buffer.byteLength / 4);
-    }
-    const res = Float32Array.from(await requestEmbeddingWithoutCache(idStr, embedder, source));
-    writeFileSync(cacheFile, res);
-    return res;
-};
+        const res = Float32Array.from(await requestEmbeddingWithoutCache(embedder, source));
+        writeFileSync(cacheFile, res);
+        return res;
+    });
 
 /** Call the model to generate a text embedding. */
-export const requestEmbeddingWithoutCache = async (
-    idStr: IDStrFunc,
-    embedder: EmbedderObject,
-    source: string,
-) => {
-    const _id = idStr("requestEmbeddingWithoutCache");
-
-    return (await embedder.model.embedDocuments([source]))[0];
-};
+export const requestEmbeddingWithoutCache = async (embedder: EmbedderObject, source: string) =>
+    (await embedder.model.embedDocuments([source]))[0];
 
 /** The item in a cluster. */
 export interface ClusterItem {
@@ -222,7 +206,6 @@ export interface ClusterItem {
 
 /** Categorize the codes into clusters using linkage-jc. */
 export const clusterCodes = (
-    idStr: IDStrFunc,
     embedder: EmbedderObject,
     sources: string[],
     codes: Code[],
@@ -230,7 +213,6 @@ export const clusterCodes = (
     ...opts: string[]
 ) =>
     clusterTexts(
-        idStr,
         embedder,
         sources,
         codes.map((code) => ({
@@ -250,7 +232,6 @@ export const clusterCodes = (
 
 /** Categorize the categories into clusters using linkage-jc. */
 export const clusterCategories = (
-    idStr: IDStrFunc,
     embedder: EmbedderObject,
     sources: string[],
     categories: Map<string, string[]>,
@@ -258,7 +239,6 @@ export const clusterCategories = (
     ...opts: string[]
 ) =>
     clusterTexts(
-        idStr,
         embedder,
         sources,
         sources.map((category) => ({
@@ -271,8 +251,7 @@ export const clusterCategories = (
     );
 
 /** Categorize the embeddings into clusters. */
-export const clusterTexts = async (
-    idStr: IDStrFunc,
+export const clusterTexts = (
     embedder: EmbedderObject,
     sources: string[],
     names: {
@@ -282,24 +261,22 @@ export const clusterTexts = async (
     cache: string,
     method = "hdbscan",
     ...opts: string[]
-) => {
-    const _id = idStr("clusterTexts");
+) =>
+    logger.withDefaultSource("clusterTexts", async () => {
+        logger.debug(`Requesting embeddings for ${sources.length} sources`);
+        if (sources.length === 0) {
+            return {};
+        }
 
-    logger.debug(`Requesting embeddings for ${sources.length} sources`, _id);
-    if (sources.length === 0) {
-        return {};
-    }
-
-    const embeddings = await requestEmbeddings(idStr, embedder, sources, cache);
-    return await clusterEmbeddings(idStr, embedder, embeddings, names, method, ...opts);
-};
+        const embeddings = await requestEmbeddings(embedder, sources, cache);
+        return await clusterEmbeddings(embedder, embeddings, names, method, ...opts);
+    });
 
 /**
  * Categorize the embeddings into clusters.
- * @returns { cluster: [id, probability][] }
+ * @returns \{ cluster: [id, probability][] \}
  * */
-export const clusterEmbeddings = async (
-    idStr: IDStrFunc,
+export const clusterEmbeddings = (
     embedder: EmbedderObject,
     embeddings: Float32Array,
     names: {
@@ -308,55 +285,52 @@ export const clusterEmbeddings = async (
     }[],
     method = "hdbscan",
     ...opts: string[]
-) => {
-    const _id = idStr("clusterEmbeddings");
-
-    const res: Record<number, ClusterItem[]> = {};
-    ensureFolder("./known");
-    // Write it into ./known/temp.bytes
-    writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
-    // writeFileSync(`./known/temp.text`, Names.join("\n"));
-    writeFileSync("./known/clustering.temp.json", JSON.stringify(names));
-    // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
-    // Run the Python script
-    const __dirname = dirname(fileURLToPath(import.meta.url));
-    await PythonShell.run(resolve(__dirname, `embeddings/clustering_${method}.py`), {
-        pythonPath: getPythonPath(),
-        args: [embedder.dimensions.toString(), names.length.toString(), ...opts],
-        parser: (msg) => {
-            if (msg.startsWith("[")) {
-                const data = JSON.parse(msg) as number[][];
-                const clusters = data[0];
-                const probs = data[1];
-                // Get unique clusters
-                const uniqueClusters = [...new Set(clusters)].sort();
-                let noCluster = 0;
-                for (const cluster of uniqueClusters) {
-                    res[cluster] = [];
-                    for (let j = 0; j < clusters.length; j++) {
-                        if (clusters[j] === cluster) {
-                            res[cluster].push({ id: j, probability: probs[j] });
-                            if (cluster === -1) {
-                                noCluster++;
+) =>
+    logger.withDefaultSource("clusterEmbeddings", async () => {
+        const res: Record<number, ClusterItem[]> = {};
+        ensureFolder("./known");
+        // Write it into ./known/temp.bytes
+        writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
+        // writeFileSync(`./known/temp.text`, Names.join("\n"));
+        writeFileSync("./known/clustering.temp.json", JSON.stringify(names));
+        // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
+        // Run the Python script
+        const __dirname = dirname(fileURLToPath(import.meta.url));
+        await PythonShell.run(resolve(__dirname, `embeddings/clustering_${method}.py`), {
+            pythonPath: getPythonPath(),
+            args: [embedder.dimensions.toString(), names.length.toString(), ...opts],
+            parser: (msg) => {
+                if (msg.startsWith("[")) {
+                    const data = JSON.parse(msg) as number[][];
+                    const clusters = data[0];
+                    const probs = data[1];
+                    // Get unique clusters
+                    const uniqueClusters = [...new Set(clusters)].sort();
+                    let noCluster = 0;
+                    for (const cluster of uniqueClusters) {
+                        res[cluster] = [];
+                        for (let j = 0; j < clusters.length; j++) {
+                            if (clusters[j] === cluster) {
+                                res[cluster].push({ id: j, probability: probs[j] });
+                                if (cluster === -1) {
+                                    noCluster++;
+                                }
                             }
                         }
                     }
+                    logger.success(
+                        `Received ${clusters.length - (noCluster > 0 ? 1 : 0)} clusters from ${names.length} items (${noCluster} items unclustered)`,
+                    );
+                } else {
+                    logger.debug(msg);
                 }
-                logger.success(
-                    `Received ${clusters.length - (noCluster > 0 ? 1 : 0)} clusters from ${names.length} items (${noCluster} items unclustered)`,
-                    _id,
-                );
-            } else {
-                logger.debug(msg, _id);
-            }
-        },
+            },
+        });
+        return res;
     });
-    return res;
-};
 
 /** Evaluate a number of texts. */
-export const evaluateTexts = async <T>(
-    idStr: IDStrFunc,
+export const evaluateTexts = <T>(
     embedder: EmbedderObject,
     sources: string[],
     labels: string[],
@@ -365,28 +339,26 @@ export const evaluateTexts = async <T>(
     cache: string,
     method = "coverage",
     ...opts: string[]
-) => {
-    const _id = idStr("evaluateTexts");
-    logger.debug(`Requesting embeddings for ${sources.length} sources`, _id);
-    const embeddings = await requestEmbeddings(idStr, embedder, sources, cache);
-    return await evaluateEmbeddings<T>(
-        idStr,
-        embedder,
-        embeddings,
-        labels,
-        owners,
-        ownerLabels,
-        method,
-        ...opts,
-    );
-};
+) =>
+    logger.withDefaultSource("evaluateTexts", async () => {
+        logger.debug(`Requesting embeddings for ${sources.length} sources`);
+        const embeddings = await requestEmbeddings(embedder, sources, cache);
+        return evaluateEmbeddings<T>(
+            embedder,
+            embeddings,
+            labels,
+            owners,
+            ownerLabels,
+            method,
+            ...opts,
+        );
+    });
 
 /**
  * EvaluateEmbeddings: Evaluate a number of embeddings.
  * Return format:
  * */
-export const evaluateEmbeddings = async <T>(
-    idStr: IDStrFunc,
+export const evaluateEmbeddings = <T>(
     embedder: EmbedderObject,
     embeddings: Float32Array,
     labels: string[],
@@ -394,50 +366,48 @@ export const evaluateEmbeddings = async <T>(
     ownerLabels: string[],
     method = "coverage",
     ...opts: string[]
-) => {
-    const _id = idStr("evaluateEmbeddings");
-
-    let res: T | undefined;
-    // Write it into ./known/temp.bytes
-    ensureFolder("./known");
-    writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
-    // let TextData = Labels.map((Label, Index) => `${Owners[Index].join(",")}|${Label}`);
-    const textData = labels.map((label, index) => ({
-        label,
-        owners: owners[index],
-    }));
-    // File.writeFileSync(`./known/temp.text`, OwnerLabels.concat(TextData).join("\n"));
-    writeFileSync(
-        "./known/evaluation.temp.json",
-        JSON.stringify({
-            ownerLabels,
-            labels: textData,
-        }),
-    );
-    logger.debug(
-        `Embeddings sent: ${embeddings.buffer.byteLength} (${labels.length} embeddings)`,
-        _id,
-    );
-    // Run the Python script
-    const __dirname = dirname(fileURLToPath(import.meta.url));
-    await PythonShell.run(resolve(__dirname, `embeddings/evaluation_${method}.py`), {
-        pythonPath: getPythonPath(),
-        args: [
-            embedder.dimensions.toString(),
-            labels.length.toString(),
-            ownerLabels.length.toString(),
-            ...opts,
-        ],
-        parser: (msg) => {
-            if (msg.startsWith("{")) {
-                res = JSON.parse(msg) as T;
-            } else {
-                logger.debug(msg, _id);
-            }
-        },
+) =>
+    logger.withDefaultSource("evaluateEmbeddings", async () => {
+        let res: T | undefined;
+        // Write it into ./known/temp.bytes
+        ensureFolder("./known");
+        writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
+        // let TextData = Labels.map((Label, Index) => `${Owners[Index].join(",")}|${Label}`);
+        const textData = labels.map((label, index) => ({
+            label,
+            owners: owners[index],
+        }));
+        // File.writeFileSync(`./known/temp.text`, OwnerLabels.concat(TextData).join("\n"));
+        writeFileSync(
+            "./known/evaluation.temp.json",
+            JSON.stringify({
+                ownerLabels,
+                labels: textData,
+            }),
+        );
+        logger.debug(
+            `Embeddings sent: ${embeddings.buffer.byteLength} (${labels.length} embeddings)`,
+        );
+        // Run the Python script
+        const __dirname = dirname(fileURLToPath(import.meta.url));
+        await PythonShell.run(resolve(__dirname, `embeddings/evaluation_${method}.py`), {
+            pythonPath: getPythonPath(),
+            args: [
+                embedder.dimensions.toString(),
+                labels.length.toString(),
+                ownerLabels.length.toString(),
+                ...opts,
+            ],
+            parser: (msg) => {
+                if (msg.startsWith("{")) {
+                    res = JSON.parse(msg) as T;
+                } else {
+                    logger.debug(msg);
+                }
+            },
+        });
+        if (!res) {
+            throw new Error("No results returned from evaluation Python script");
+        }
+        return res;
     });
-    if (!res) {
-        throw new Error("No results returned from evaluation Python script");
-    }
-    return res;
-};

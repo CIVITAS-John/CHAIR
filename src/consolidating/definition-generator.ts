@@ -1,5 +1,5 @@
 import type { Code, Codebook, Dataset } from "../schema.js";
-import type { IDStrFunc } from "../steps/base-step.js";
+import { logger } from "../utils/logger.js";
 
 import { updateCodes } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
@@ -106,14 +106,12 @@ export abstract class DefinitionParser extends CodeConsolidator {
 
 /** DefinitionGenerator: Generate definitions based on labels and quotes. */
 export class DefinitionGenerator<T> extends DefinitionParser {
-    protected override _idStr: IDStrFunc;
+    protected override get _prefix() {
+        return logger.prefixed(logger.prefix, "DefinitionGenerator");
+    }
 
-    constructor(
-        idStr: IDStrFunc,
-        public dataset: Dataset<T>,
-    ) {
+    constructor(public dataset: Dataset<T>) {
         super();
-        this._idStr = (mtd?: string) => idStr(`DefinitionGenerator${mtd ? `#${mtd}` : ""}`);
     }
 
     /** Filter the subunits before chunking. */

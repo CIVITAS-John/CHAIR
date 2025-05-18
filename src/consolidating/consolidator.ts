@@ -1,13 +1,12 @@
 import { Analyzer } from "../analyzer.js";
 import type { Code, Codebook, CodedThreads, CodedThreadsWithCodebook, Dataset } from "../schema.js";
-import type { IDStrFunc } from "../steps/base-step.js";
 import type { LLMSession } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 import { seededShuffle } from "../utils/misc.js";
 
 /** An abstract code consolidator. */
 export abstract class CodeConsolidator {
-    protected abstract _idStr: IDStrFunc;
+    protected abstract get _prefix(): string;
 
     /** Whether the consolidator needs chunkified results. */
     chunkified = false;
@@ -81,16 +80,18 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
     /** The list of consolidators in the pipeline. */
     #consolidators: CodeConsolidator[];
 
+    override get _prefix() {
+        return logger.prefixed(logger.prefix, `PipelineConsolidator#${this.#index}`);
+    }
+
     constructor(
-        idStr: IDStrFunc,
         /** The dataset the consolidator is working on. */
         public override dataset: Dataset<TUnit[]>,
         /** The LLM session for the consolidator. */
         public override session: LLMSession,
         consolidators: CodeConsolidator[],
     ) {
-        super(idStr, dataset, session);
-        this._idStr = (mtd?: string) => idStr(`PipelineConsolidator${mtd ? `#${mtd}` : ""}`);
+        super(dataset, session);
         this.#consolidators = consolidators;
     }
 
@@ -111,45 +112,48 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
     }
 
     /** Preprocess the subunits before filtering and chunking. */
-    override async preprocess(
+    override preprocess(
         analysis: CodedThreadsWithCodebook,
         _data: TUnit[],
         subunits: Code[],
         iteration: number,
     ): Promise<Code[]> {
-        const _id = this._idStr("preprocess");
+        return logger.withSource(this._prefix, "preprocess", async () => {
+            if (this.#index >= this.#consolidators.length) {
+                return [];
+            }
 
-        if (this.#index >= this.#consolidators.length) {
-            return [];
-        }
-
-        if (this.#index > -1 && this.#consolidators[this.#index].looping) {
-            // If the previous consolidator is looping, check if it's stopping
-            if (this.#consolidators[this.#index].stopping || subunits.length === 0) {
-                this.#consolidators[this.#index].stopping = false;
+            if (this.#index > -1 && this.#consolidators[this.#index].looping) {
+                // If the previous consolidator is looping, check if it's stopping
+                if (this.#consolidators[this.#index].stopping || subunits.length === 0) {
+                    this.#consolidators[this.#index].stopping = false;
+                    this.#index++;
+                }
+                // Otherwise, advance the index
+            } else {
                 this.#index++;
             }
-            // Otherwise, advance the index
-        } else {
-            this.#index++;
-        }
-        if (this.#index >= this.#consolidators.length) {
-            return [];
-        }
+            if (this.#index >= this.#consolidators.length) {
+                return [];
+            }
 
-        logger.info(`Iteration ${iteration}: ${this.#consolidators[this.#index].name}`, _id);
+            logger.info(`Iteration ${iteration}: ${this.#consolidators[this.#index].name}`);
 
-        // Preprocess the subunits
-        subunits = subunits.filter((Code) => Code.label !== "[Merged]");
-        // Reorder the subunits to prevent over-merging
-        subunits = seededShuffle(subunits, 0);
+            // Preprocess the subunits
+            subunits = subunits.filter((Code) => Code.label !== "[Merged]");
+            // Reorder the subunits to prevent over-merging
+            subunits = seededShuffle(subunits, 0);
 
-        const res = await this.#consolidators[this.#index].preprocess(analysis.codebook, subunits);
-        if (Array.isArray(res)) {
-            return res;
-        }
-        analysis.codebook = res;
-        return Object.values(res);
+            const res = await this.#consolidators[this.#index].preprocess(
+                analysis.codebook,
+                subunits,
+            );
+            if (Array.isArray(res)) {
+                return res;
+            }
+            analysis.codebook = res;
+            return Object.values(res);
+        });
     }
 
     /** Filter the subunits before chunking. */
@@ -168,8 +172,6 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         _chunkStart: number,
         _iteration: number,
     ): Promise<[string, string]> {
-        const _id = this._idStr("buildPrompts");
-
         if (
             this.#index >= this.#consolidators.length ||
             this.#consolidators[this.#index].stopping
@@ -200,8 +202,6 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         _chunkStart: number,
         _iteration: number,
     ): Promise<number> {
-        const _id = this._idStr("parseResponse");
-
         if (
             this.#index >= this.#consolidators.length ||
             this.#consolidators[this.#index].stopping

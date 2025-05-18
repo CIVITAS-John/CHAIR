@@ -2,7 +2,6 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 import { loopThroughChunk } from "../analyzer.js";
 import type { Code, Codebook, CodedThreads, CodedThreadsWithCodebook, Dataset } from "../schema.js";
-import type { IDStrFunc } from "../steps/base-step.js";
 import type { ClusterItem } from "../utils/embeddings.js";
 import { type LLMSession, requestLLM } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
@@ -150,8 +149,7 @@ export const mergeCodebooks = (codebooks: Codebook[], withReference = false): Co
 // }
 
 /** Load, consolidate, and export codebooks. */
-export const consolidateCodebook = async <TUnit>(
-    idStr: IDStrFunc,
+export const consolidateCodebook = <TUnit>(
     dataset: Dataset<TUnit[]>,
     session: LLMSession,
     consolidator: CodebookConsolidator<TUnit>,
@@ -160,72 +158,68 @@ export const consolidateCodebook = async <TUnit>(
     onIterate?: (iteration: number) => Promise<void>,
     fakeRequest = false,
     retries?: number,
-) => {
-    const _id = idStr("consolidateCodebook");
+) =>
+    logger.withDefaultSource("consolidateCodebook", async () => {
+        // Check if the analysis is already done
+        if (Object.keys(_analyses.threads).length !== sources.length) {
+            throw new CodebookConsolidator.ConfigError(
+                `Invalid analysis: expected ${sources.length} threads, got ${Object.keys(_analyses.threads).length}`,
+            );
+        }
 
-    // Check if the analysis is already done
-    if (Object.keys(_analyses.threads).length !== sources.length) {
-        throw new CodebookConsolidator.ConfigError(
-            `Invalid analysis: expected ${sources.length} threads, got ${Object.keys(_analyses.threads).length}`,
-            _id,
+        const analyses: CodedThreadsWithCodebook = _analyses.codebook
+            ? (_analyses as CodedThreadsWithCodebook)
+            : mergeCodebook(_analyses);
+
+        // Ignore codes with 0 examples
+        const codes = Object.values(analyses.codebook).filter((c) => c.examples?.length);
+        // Run the coded threads through chunks (as defined by the consolidator)
+        await loopThroughChunk(
+            dataset,
+            session,
+            consolidator,
+            analyses,
+            sources,
+            codes,
+            async (currents, chunkStart, _isFirst, tries, iteration) => {
+                const prompts = await consolidator.buildPrompts(
+                    analyses,
+                    sources,
+                    currents,
+                    chunkStart,
+                    iteration,
+                );
+                if (prompts[0] === "" && prompts[1] === "") {
+                    return 0;
+                }
+                // Run the prompts
+                const response = await requestLLM(
+                    session,
+                    [new SystemMessage(prompts[0]), new HumanMessage(prompts[1])],
+                    `codebooks/${consolidator.name}`,
+                    Math.min(tries, 3) * 0.2 + consolidator.baseTemperature,
+                    fakeRequest,
+                );
+                if (response === "") {
+                    return 0;
+                }
+                // Parse the response
+                const res = await consolidator.parseResponse(
+                    analyses,
+                    response.split("\n").map((Line) => Line.trim()),
+                    currents,
+                    chunkStart,
+                    iteration,
+                );
+                if (typeof res === "number") {
+                    return res;
+                }
+                return 0;
+            },
+            onIterate,
+            retries,
         );
-    }
-
-    const analyses: CodedThreadsWithCodebook = _analyses.codebook
-        ? (_analyses as CodedThreadsWithCodebook)
-        : mergeCodebook(_analyses);
-
-    // Ignore codes with 0 examples
-    const codes = Object.values(analyses.codebook).filter((c) => c.examples?.length);
-    // Run the coded threads through chunks (as defined by the consolidator)
-    await loopThroughChunk(
-        idStr,
-        dataset,
-        session,
-        consolidator,
-        analyses,
-        sources,
-        codes,
-        async (currents, chunkStart, _isFirst, tries, iteration) => {
-            const prompts = await consolidator.buildPrompts(
-                analyses,
-                sources,
-                currents,
-                chunkStart,
-                iteration,
-            );
-            if (prompts[0] === "" && prompts[1] === "") {
-                return 0;
-            }
-            // Run the prompts
-            const response = await requestLLM(
-                idStr,
-                session,
-                [new SystemMessage(prompts[0]), new HumanMessage(prompts[1])],
-                `codebooks/${consolidator.name}`,
-                Math.min(tries, 3) * 0.2 + consolidator.baseTemperature,
-                fakeRequest,
-            );
-            if (response === "") {
-                return 0;
-            }
-            // Parse the response
-            const res = await consolidator.parseResponse(
-                analyses,
-                response.split("\n").map((Line) => Line.trim()),
-                currents,
-                chunkStart,
-                iteration,
-            );
-            if (typeof res === "number") {
-                return res;
-            }
-            return 0;
-        },
-        onIterate,
-        retries,
-    );
-};
+    });
 
 /** Merge labels and definitions of two codes. */
 export const mergeCodes = (parent: Code, code: Code) => {
@@ -248,58 +242,52 @@ export const mergeCodes = (parent: Code, code: Code) => {
 };
 
 /** Merge codebooks based on clustering results. */
-export const mergeCodesByCluster = (
-    idStr: IDStrFunc,
-    clusters: Record<number, ClusterItem[]>,
-    codes: Code[],
-) => {
-    const _id = idStr("mergeCodesByCluster");
-
-    const codebook: Record<string, Code> = {};
-    // Remove temp labels
-    codes.forEach((code) => delete code.oldLabels);
-    // Merge the codes based on clustering results
-    for (const key of Object.keys(clusters)) {
-        const clusterID = parseInt(key);
-        // Pick the code with the highest probability and the shortest label + definition to merge into
-        // This could inevitably go wrong. We will need another iteration to get a better new label
-        const bestCode = clusters[clusterID]
-            .sort((A, B) => B.probability - A.probability)
-            .map((item) => codes[item.id])
-            .sort(
-                (A, B) =>
-                    A.label.length * 5 +
-                    (A.definitions?.[0]?.length ?? 0) -
-                    (B.label.length * 5 + (B.definitions?.[0]?.length ?? 0)),
-            )[0];
-        if (clusterID !== -1) {
-            codebook[bestCode.label] = bestCode;
-            bestCode.oldLabels = bestCode.oldLabels ?? [];
-        }
-        for (const item of clusters[clusterID]) {
-            const code = codes[item.id];
-            if (clusterID === -1) {
-                // Codes that cannot be clustered
-                codebook[code.label] = code;
-            } else if (code.label !== bestCode.label) {
-                // Merge the code
-                logger.info(
-                    `Merging ${code.label} into ${bestCode.label} with ${(item.probability * 100).toFixed(2)}% certainty`,
-                    _id,
-                );
-                if (!bestCode.oldLabels?.includes(code.label)) {
-                    bestCode.oldLabels?.push(code.label);
+export const mergeCodesByCluster = (clusters: Record<number, ClusterItem[]>, codes: Code[]) =>
+    logger.withDefaultSource("mergeCodesByCluster", () => {
+        const codebook: Record<string, Code> = {};
+        // Remove temp labels
+        codes.forEach((code) => delete code.oldLabels);
+        // Merge the codes based on clustering results
+        for (const key of Object.keys(clusters)) {
+            const clusterID = parseInt(key);
+            // Pick the code with the highest probability and the shortest label + definition to merge into
+            // This could inevitably go wrong. We will need another iteration to get a better new label
+            const bestCode = clusters[clusterID]
+                .sort((A, B) => B.probability - A.probability)
+                .map((item) => codes[item.id])
+                .sort(
+                    (A, B) =>
+                        A.label.length * 5 +
+                        (A.definitions?.[0]?.length ?? 0) -
+                        (B.label.length * 5 + (B.definitions?.[0]?.length ?? 0)),
+                )[0];
+            if (clusterID !== -1) {
+                codebook[bestCode.label] = bestCode;
+                bestCode.oldLabels = bestCode.oldLabels ?? [];
+            }
+            for (const item of clusters[clusterID]) {
+                const code = codes[item.id];
+                if (clusterID === -1) {
+                    // Codes that cannot be clustered
+                    codebook[code.label] = code;
+                } else if (code.label !== bestCode.label) {
+                    // Merge the code
+                    logger.info(
+                        `Merging ${code.label} into ${bestCode.label} with ${(item.probability * 100).toFixed(2)}% certainty`,
+                    );
+                    if (!bestCode.oldLabels?.includes(code.label)) {
+                        bestCode.oldLabels?.push(code.label);
+                    }
+                    mergeCodes(bestCode, code);
+                } else {
+                    // Codes that have no name changes
+                    codebook[code.label] = code;
                 }
-                mergeCodes(bestCode, code);
-            } else {
-                // Codes that have no name changes
-                codebook[code.label] = code;
             }
         }
-    }
-    logger.success(`Merged ${codes.length} codes into ${Object.keys(codebook).length}`, _id);
-    return codebook;
-};
+        logger.success(`Merged ${codes.length} codes into ${Object.keys(codebook).length}`);
+        return codebook;
+    });
 
 /** Update code labels and definitions. */
 export const updateCodes = (codebook: Codebook, newCodes: Code[], codes: Code[]) => {

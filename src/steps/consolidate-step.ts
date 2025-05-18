@@ -13,6 +13,7 @@ import { withCache } from "../utils/cache.js";
 import type { EmbedderObject } from "../utils/embeddings.js";
 import { ensureFolder } from "../utils/file.js";
 import { type LLMModel, useLLMs } from "../utils/llms.js";
+import { logger } from "../utils/logger.js";
 
 import type { AIParameters } from "./base-step.js";
 import { BaseStep } from "./base-step.js";
@@ -41,52 +42,52 @@ export class ConsolidateStep<
     get datasets() {
         // Sanity check
         if (!this.executed || !this.#datasets.length) {
-            throw new ConsolidateStep.UnexecutedError(this._idStr("datasets"));
+            throw new ConsolidateStep.UnexecutedError(logger.prefixed(this._prefix, "datasets"));
         }
         return this.#datasets;
     }
 
     #codebooks = new Map<string, Record<string, Codebook>>();
     getCodebooks(dataset: string) {
-        const _id = this._idStr("getCodebooks");
-
-        // Sanity check
-        if (!this.executed || !this.#codebooks.size) {
-            throw new ConsolidateStep.UnexecutedError(this._idStr("codebooks"));
-        }
-        if (!this.#codebooks.has(dataset)) {
-            throw new ConsolidateStep.InternalError(`Dataset ${dataset} not found`, _id);
-        }
+        logger.withSource(this._prefix, "getCodebooks", () => {
+            // Sanity check
+            if (!this.executed || !this.#codebooks.size) {
+                throw new ConsolidateStep.UnexecutedError();
+            }
+            if (!this.#codebooks.has(dataset)) {
+                throw new ConsolidateStep.InternalError(`Dataset ${dataset} not found`);
+            }
+        });
 
         return this.#codebooks.get(dataset) ?? {};
     }
 
     #groups = new Map<string, Record<string, Codebook>>();
     getGroups(dataset: string) {
-        const _id = this._idStr("getGroups");
-
-        // Sanity check
-        if (!this.executed || !this.#groups.size) {
-            throw new ConsolidateStep.UnexecutedError(this._idStr("codebooks"));
-        }
-        if (!this.#groups.has(dataset)) {
-            throw new ConsolidateStep.InternalError(`Dataset ${dataset} not found`, _id);
-        }
+        logger.withSource(this._prefix, "getGroups", () => {
+            // Sanity check
+            if (!this.executed || !this.#groups.size) {
+                throw new ConsolidateStep.UnexecutedError();
+            }
+            if (!this.#groups.has(dataset)) {
+                throw new ConsolidateStep.InternalError(`Dataset ${dataset} not found`);
+            }
+        });
 
         return this.#groups.get(dataset) ?? {};
     }
 
     #references = new Map<string, Codebook>();
     getReference(dataset: string) {
-        const _id = this._idStr("getReference");
-
-        // Sanity check
-        if (!this.executed || !this.#references.size) {
-            throw new ConsolidateStep.UnexecutedError(_id);
-        }
-        if (!this.#references.has(dataset)) {
-            throw new ConsolidateStep.InternalError(`Dataset ${dataset} not found`, _id);
-        }
+        logger.withSource(this._prefix, "getReference", () => {
+            // Sanity check
+            if (!this.executed || !this.#references.size) {
+                throw new ConsolidateStep.UnexecutedError();
+            }
+            if (!this.#references.has(dataset)) {
+                throw new ConsolidateStep.InternalError(`Dataset ${dataset} not found`);
+            }
+        });
 
         return this.#references.get(dataset) ?? {};
     }
@@ -102,10 +103,7 @@ export class ConsolidateStep<
             : [];
     }
 
-    override async execute() {
-        const _id = this._idStr("execute");
-        await super.execute();
-
+    async #_execute() {
         const datasets = new Map<string, Dataset<TUnit[]>>();
         this.dependsOn.forEach((coder) => {
             coder.datasets.forEach((dataset) => {
@@ -125,7 +123,6 @@ export class ConsolidateStep<
                                 if (!codedThreads.codebook) {
                                     throw new ConsolidateStep.InternalError(
                                         `Codebook not found in ${key}`,
-                                        _id,
                                     );
                                 }
                                 acc[key] = codedThreads.codebook;
@@ -151,49 +148,49 @@ export class ConsolidateStep<
 
         const models = Array.isArray(this.config.model) ? this.config.model : [this.config.model];
 
-        await useLLMs(
-            this._idStr,
-            async (session) => {
-                // Sanity check
-                if (!this.embedder) {
-                    throw new ConsolidateStep.ConfigError("Embedder not set", _id);
-                }
+        await useLLMs(async (session) => {
+            // Sanity check
+            if (!this.embedder) {
+                throw new ConsolidateStep.ConfigError("Embedder not set");
+            }
 
-                for (const dataset of this.#datasets) {
-                    // We made a deep copy here because the reference builder may modify the codebooks
-                    const codes = JSON.stringify(
-                        Object.values(this.#codebooks.get(dataset.name) ?? {}),
-                    );
-                    const builder = new RefiningReferenceBuilder(
-                        this._idStr,
-                        dataset,
-                        session,
-                        this.embedder,
-                        this.config.builderConfig,
-                    );
-                    const referencePath = ensureFolder(
-                        join(
-                            dataset.path,
-                            "references",
-                            // `${Analyzers.join("-")}_
-                            `${models.map((m) => (typeof m === "string" ? m : m.name)).join("-")}${builder.suffix}`,
-                        ),
-                    );
-                    const hash = md5(codes);
-                    const reference = await withCache(this._idStr, referencePath, hash, () =>
-                        buildReferenceAndExport(
-                            this._idStr,
-                            builder,
-                            JSON.parse(codes) as Codebook[],
-                            referencePath,
-                        ),
-                    );
-                    this.#references.set(dataset.name, reference);
-                }
-            },
-            models,
-        );
+            for (const dataset of this.#datasets) {
+                // We made a deep copy here because the reference builder may modify the codebooks
+                const codes = JSON.stringify(
+                    Object.values(this.#codebooks.get(dataset.name) ?? {}),
+                );
+                const builder = new RefiningReferenceBuilder(
+                    dataset,
+                    session,
+                    this.embedder,
+                    this.config.builderConfig,
+                );
+                const referencePath = ensureFolder(
+                    join(
+                        dataset.path,
+                        "references",
+                        // `${Analyzers.join("-")}_
+                        `${models.map((m) => (typeof m === "string" ? m : m.name)).join("-")}${builder.suffix}`,
+                    ),
+                );
+                const hash = md5(codes);
+                const reference = await withCache(referencePath, hash, () =>
+                    buildReferenceAndExport(
+                        builder,
+                        JSON.parse(codes) as Codebook[],
+                        referencePath,
+                    ),
+                );
+                this.#references.set(dataset.name, reference);
+            }
+        }, models);
 
         this.executed = true;
+    }
+
+    override async execute() {
+        await super.execute();
+
+        await logger.withSource(this._prefix, "execute", true, this.#_execute.bind(this));
     }
 }
