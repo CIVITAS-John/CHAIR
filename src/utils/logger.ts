@@ -2,7 +2,7 @@ import type { WriteStream } from "fs";
 import { createWriteStream } from "fs";
 import { dirname } from "path";
 
-import { AsyncVar } from "async_store";
+import { AsyncScope, AsyncVar } from "@rakuzen25/async-store";
 import chalk from "chalk";
 
 import { ensureFolder } from "./file.js";
@@ -45,6 +45,7 @@ class Logger {
     readonly #verbosity: LogLevel;
     readonly format = (message: string, level: string, source?: string) =>
         `${level ? `[${level}] ` : ""}${source ? `${source}: ` : this.#source ? `${this.source}: ` : ""}${message}`;
+    readonly prefixed = (prefix: string, mtd: string) => `${prefix}#${mtd}`;
     readonly filePath = `logs/${new Date().toISOString().replace(/:/g, "-")}.log`;
 
     constructor(file?: string, verbosity?: LogLevel) {
@@ -151,9 +152,12 @@ class Logger {
         try {
             return LoggerSource.get().peek();
         } catch (e) {
-            const err = new Logger.ScopeError(
-                "Tried getting source without a scope, am I wrapped in AsyncScope.run()?",
-            );
+            const err =
+                e instanceof AsyncScope.NotFoundError
+                    ? new Logger.ScopeError(
+                          "Tried getting source without a scope, am I wrapped in AsyncScope.run()?",
+                      )
+                    : new Logger.InternalError("An error occurred", "Logger#source");
             err.cause = e;
             throw err;
         }
@@ -178,33 +182,35 @@ class Logger {
             LoggerPrefix.get().pop();
             return result;
         } catch (e) {
-            const err = new Logger.ScopeError(
-                `Tried setting prefix to ${prefix} without a scope, am I wrapped in AsyncScope.run()?`,
-            );
+            const err =
+                e instanceof AsyncScope.NotFoundError
+                    ? new Logger.ScopeError(
+                          `Tried setting prefix to ${prefix} without a scope, am I wrapped in AsyncScope.run()?`,
+                      )
+                    : new Logger.InternalError("An error occurred", "Logger#withPrefix");
             err.cause = e;
             throw err;
         }
     }
     get prefix() {
+        let prefix: string | undefined;
         try {
-            const prefix = LoggerPrefix.get().peek();
-            if (!prefix) {
-                throw new Logger.PrefixError();
-            }
-            return prefix;
+            prefix = LoggerPrefix.get().peek();
         } catch (e) {
-            if (e instanceof Logger.PrefixError) {
-                throw e;
-            }
-            const err = new Logger.ScopeError(
-                "Tried to prefix without a scope, am I wrapped in AsyncScope.run()?",
-            );
+            const err =
+                e instanceof AsyncScope.NotFoundError
+                    ? new Logger.ScopeError(
+                          "Tried to prefix without a scope, am I wrapped in AsyncScope.run()?",
+                      )
+                    : new Logger.InternalError("An error occurred", "Logger#prefix");
             err.cause = e;
             throw err;
         }
-    }
-    prefixed(prefix: string, mtd: string) {
-        return `${prefix}#${mtd}`;
+
+        if (!prefix) {
+            throw new Logger.PrefixError();
+        }
+        return prefix;
     }
 
     error(error?: unknown, recoverable = false, source?: string) {

@@ -41,9 +41,9 @@ importers:
       '@langchain/openai':
         specifier: ^0.5.5
         version: 0.5.5(@langchain/core@0.3.44(openai@4.94.0(encoding@0.1.13)(ws@8.18.1)(zod@3.24.2)))(encoding@0.1.13)(ws@8.18.1)
-      async_store:
-        specifier: npm:@dabomb/async_store@0.0.1
-        version: '@dabomb/async_store@0.0.1'
+      '@rakuzen25/async-store':
+        specifier: github:rakuzen25/async-store
+        version: https://codeload.github.com/rakuzen25/async-store/tar.gz/9733dc8ec46ce11242ef707800a327bed3a4f6ab
       cash-dom:
         specifier: ^8.1.5
         version: 8.1.5
@@ -170,9 +170,6 @@ packages:
 
   '@cfworker/json-schema@4.1.1':
     resolution: {integrity: sha512-gAmrUZSGtKc3AiBL71iNWxDsyUC5uMaKKGdvzYsBoTW/xi42JQHl7eKV2OYzCUqvc+D2RCcf7EXY2iCyFIk6og==}
-
-  '@dabomb/async_store@0.0.1':
-    resolution: {integrity: sha512-ZFy3MlFp6ETNH1RjaogDbw0qHn6qOafBTR8Fscu2cfPdyZTr6DTILdBhXTT1L/iK8bsPv7C+dURqHhF8Y5gOBA==}
 
   '@dqbd/tiktoken@1.0.20':
     resolution: {integrity: sha512-WsLzNYO1uzYOvIXunvwRcQObD4UsebirRnGzOuZc/x4oJ+0haEjdNxeeCfFaQami+Bai3u06QTt0/FWyYRsIhw==}
@@ -1015,6 +1012,10 @@ packages:
     resolution: {integrity: sha512-nM+kEaTSAoVlXmMPH10017vn3FSiFqr/bh4fKg9vmAdMfd9SDqRZNvPSiAHADc/itWak+qPvMPZQOPwCBW7k7Q==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@rakuzen25/async-store@https://codeload.github.com/rakuzen25/async-store/tar.gz/9733dc8ec46ce11242ef707800a327bed3a4f6ab':
+    resolution: {tarball: https://codeload.github.com/rakuzen25/async-store/tar.gz/9733dc8ec46ce11242ef707800a327bed3a4f6ab}
+    version: 0.0.2
 
   '@shikijs/engine-oniguruma@3.2.2':
     resolution: {integrity: sha512-vyXRnWVCSvokwbaUD/8uPn6Gqsf5Hv7XwcW4AgiU4Z2qwy19sdr6VGzMdheKKN58tJOOe5MIKiNb901bgcUXYQ==}
@@ -3326,8 +3327,6 @@ snapshots:
 
   '@cfworker/json-schema@4.1.1': {}
 
-  '@dabomb/async_store@0.0.1': {}
-
   '@dqbd/tiktoken@1.0.20': {}
 
   '@emnapi/core@1.4.1':
@@ -3814,6 +3813,8 @@ snapshots:
   '@playwright/test@1.51.1':
     dependencies:
       playwright: 1.51.1
+
+  '@rakuzen25/async-store@https://codeload.github.com/rakuzen25/async-store/tar.gz/9733dc8ec46ce11242ef707800a327bed3a4f6ab': {}
 
   '@shikijs/engine-oniguruma@3.2.2':
     dependencies:

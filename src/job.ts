@@ -1,4 +1,4 @@
-import { AsyncScope } from "async_store";
+import { AsyncScope } from "@rakuzen25/async-store";
 
 import { BaseStep } from "./steps/base-step.js";
 import type { CodeStepConfig } from "./steps/code-step.js";
