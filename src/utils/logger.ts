@@ -71,28 +71,20 @@ class Logger {
         this.#consoleLock = false;
     }
 
-    withSource<T>(source: string, func: () => Promise<T>): Promise<T>;
     withSource<T>(source: string, func: () => T): T;
     withSource<T>(prefix: string, method: string, func: () => T): T;
-    withSource<T>(prefix: string, method: string, func: () => Promise<T>): Promise<T>;
     withSource<T>(prefix: string, method: string, withPrefix: true, func: () => T): T;
     withSource<T>(
-        prefix: string,
-        method: string,
-        withPrefix: true,
-        func: () => Promise<T>,
-    ): Promise<T>;
-    withSource<T>(
         sourceOrPrefix: string,
-        funcOrMethod: (() => T | Promise<T>) | string,
-        funcOrWithPrefix?: true | (() => T | Promise<T>),
-        _func?: () => T | Promise<T>,
-    ) {
+        funcOrMethod: (() => T) | string,
+        funcOrWithPrefix?: true | (() => T),
+        _func?: () => T,
+    ): T {
         let prefix: string | undefined,
             method: string | undefined,
             source: string,
             withPrefix = false,
-            func: () => T | Promise<T>;
+            func: () => T;
 
         if (typeof funcOrMethod === "function") {
             // withSource(source, func)
@@ -125,7 +117,7 @@ class Logger {
             if (result instanceof Promise) {
                 return result.finally(() => {
                     LoggerSource.get().pop();
-                });
+                }) as T;
             }
 
             LoggerSource.get().pop();
@@ -138,9 +130,7 @@ class Logger {
             throw err;
         }
     }
-    withDefaultSource<T>(method: string, func: () => T): T;
-    withDefaultSource<T>(method: string, func: () => Promise<T>): Promise<T>;
-    withDefaultSource<T>(method: string, func: () => T | Promise<T>) {
+    withDefaultSource<T>(method: string, func: () => T): T {
         return this.withSource(this.prefixed(this.prefix, method), func);
     }
     get #source() {
@@ -163,9 +153,7 @@ class Logger {
         }
     }
 
-    withPrefix<T>(prefix: string, func: () => T): T;
-    withPrefix<T>(prefix: string, func: () => Promise<T>): Promise<T>;
-    withPrefix<T>(prefix: string, func: () => T | Promise<T>) {
+    withPrefix<T>(prefix: string, func: () => T): T {
         try {
             if (!LoggerPrefix.exists()) {
                 LoggerPrefix.set(new Stack<string>());
@@ -176,7 +164,7 @@ class Logger {
             if (result instanceof Promise) {
                 return result.finally(() => {
                     LoggerPrefix.get().pop();
-                });
+                }) as T;
             }
 
             LoggerPrefix.get().pop();
