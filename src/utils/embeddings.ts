@@ -188,8 +188,12 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
     });
 
 /** Call the model to generate a text embedding with cache. */
-export const requestEmbedding = (embedder: EmbedderObject, source: string, cache: string) =>
+export const requestEmbedding = (source: string, cache: string) =>
     logger.withDefaultSource("requestEmbedding", async () => {
+        const { embedder } = StepContext.get();
+        if (!embedder) {
+            throw new ContextVarNotFoundError("embedder");
+        }
         const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
         ensureFolder(cacheFolder);
         // Check if the cache exists
@@ -198,14 +202,19 @@ export const requestEmbedding = (embedder: EmbedderObject, source: string, cache
             const buffer = readFileSync(cacheFile);
             return new Float32Array(buffer.buffer, buffer.byteOffset, buffer.byteLength / 4);
         }
-        const res = Float32Array.from(await requestEmbeddingWithoutCache(embedder, source));
+        const res = Float32Array.from(await requestEmbeddingWithoutCache(source));
         writeFileSync(cacheFile, res);
         return res;
     });
 
 /** Call the model to generate a text embedding. */
-export const requestEmbeddingWithoutCache = async (embedder: EmbedderObject, source: string) =>
-    (await embedder.model.embedDocuments([source]))[0];
+export const requestEmbeddingWithoutCache = async (source: string) => {
+    const { embedder } = StepContext.get();
+    if (!embedder) {
+        throw new ContextVarNotFoundError("embedder");
+    }
+    return (await embedder.model.embedDocuments([source]))[0];
+};
 
 /** The item in a cluster. */
 export interface ClusterItem {
@@ -269,12 +278,8 @@ export const clusterTexts = (
             return {};
         }
 
-        const { embedder } = StepContext.get();
-        if (!embedder) {
-            throw new ContextVarNotFoundError("embedder");
-        }
         const embeddings = await requestEmbeddings(sources, cache);
-        return await clusterEmbeddings(embedder, embeddings, names, method, ...opts);
+        return await clusterEmbeddings(embeddings, names, method, ...opts);
     });
 
 /**
@@ -282,7 +287,6 @@ export const clusterTexts = (
  * @returns \{ cluster: [id, probability][] \}
  * */
 export const clusterEmbeddings = (
-    embedder: EmbedderObject,
     embeddings: Float32Array,
     names: {
         label: string;
@@ -292,6 +296,10 @@ export const clusterEmbeddings = (
     ...opts: string[]
 ) =>
     logger.withDefaultSource("clusterEmbeddings", async () => {
+        const { embedder } = StepContext.get();
+        if (!embedder) {
+            throw new ContextVarNotFoundError("embedder");
+        }
         const res: Record<number, ClusterItem[]> = {};
         ensureFolder("./known");
         // Write it into ./known/temp.bytes

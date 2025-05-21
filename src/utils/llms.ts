@@ -387,7 +387,7 @@ export const requestLLM = (
         }
         // If not, call the model
         logger.info(`[${session.llm.name}] Cache miss`);
-        const result = await requestLLMWithoutCache(session, messages, temperature, fakeRequest);
+        const result = await requestLLMWithoutCache(messages, temperature, fakeRequest);
         logger.debug(`[${session.llm.name}] Writing to cache file`);
         writeFileSync(cacheFile, `${input}\n===\n${result}`);
         return result;
@@ -395,12 +395,16 @@ export const requestLLM = (
 
 /** Call the model to generate text, explicitly bypassing cache. */
 export const requestLLMWithoutCache = (
-    session: LLMSession,
     messages: BaseMessage[],
     temperature?: number,
     fakeRequest = false,
 ) =>
     logger.withDefaultSource("requestLLMWithoutCache", async () => {
+        const { session } = StepContext.get();
+        if (!session) {
+            throw new ContextVarNotFoundError("session");
+        }
+
         let text = "";
 
         const { llm } = session;
