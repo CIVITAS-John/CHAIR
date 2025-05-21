@@ -1,4 +1,5 @@
 import type { CodedThread, Conversation, Message } from "../schema.js";
+import { ContextVarNotFoundError, StepContext } from "../steps/base-step.js";
 
 import { buildMessagePrompt } from "./conversations.js";
 import { ItemLevelAnalyzerBase } from "./item-level.js";
@@ -30,8 +31,12 @@ export default class ItemLevelAnalyzerAny extends ItemLevelAnalyzerBase {
         _iteration: number,
         tries: number,
     ): [number, number, number] {
+        const { session } = StepContext.get();
+        if (!session) {
+            throw new ContextVarNotFoundError("session");
+        }
         // For weaker models, we will reduce the chunk size (32 => 24 => 16 => 8)
-        if (recommended === this.session.llm.maxItems) {
+        if (recommended === session.llm.maxItems) {
             return [recommended - tries * 8, 3, 0];
         }
         return [recommended - tries * 2, Math.max(8 - recommended - tries, 3), 0];
@@ -44,13 +49,14 @@ export default class ItemLevelAnalyzerAny extends ItemLevelAnalyzerBase {
         messages: Message[],
         _chunkStart: number,
     ): Promise<[string, string]> {
+        const { dataset } = StepContext.get();
         return Promise.resolve([
             `
 You are an expert in thematic analysis with grounded theory, working on open coding.
 Your goal is to identify multiple low-level tags for each message.
 When writing tags, balance between specifics and generalizability across messages.
-${this.dataset.researchQuestion}
-${this.dataset.codingNotes}
+${dataset.researchQuestion}
+${dataset.codingNotes}
 
 Always follow the output format:
 ---
@@ -64,7 +70,7 @@ Notes: {Notes and hypotheses about the conversation until now}`.trim(),
             messages
                 .map(
                     (message, idx) =>
-                        `${idx + 1}. ${buildMessagePrompt(this.dataset, message, analysis.items[message.id], this.tagsName)}`,
+                        `${idx + 1}. ${buildMessagePrompt(dataset, message, analysis.items[message.id], this.tagsName)}`,
                 )
                 .join("\n"),
         ]);

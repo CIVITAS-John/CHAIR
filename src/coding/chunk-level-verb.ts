@@ -1,4 +1,5 @@
 import type { CodedThread, Conversation, Message } from "../schema.js";
+import { StepContext } from "../steps/base-step.js";
 
 import { ChunkLevelAnalyzerBase } from "./chunk-level.js";
 import { buildMessagePrompt } from "./conversations.js";
@@ -32,12 +33,13 @@ export default class ChunkLevelAnalyzerVerb extends ChunkLevelAnalyzerBase {
         messages: Message[],
         _chunkStart: number,
     ): Promise<[string, string]> {
+        const { dataset } = StepContext.get();
         return Promise.resolve([
             `
 You are an expert in thematic analysis with grounded theory, working on open coding.
 Please give me a codebook to analyze factors within this interaction that could contribute to the research.
-${this.dataset.researchQuestion}
-${this.dataset.codingNotes}
+${dataset.researchQuestion}
+${dataset.codingNotes}
 Always use verb phrases. For each phrase, try to find at least 3 quotes. Always follow the output format:
 ---
 * Summary
@@ -56,7 +58,7 @@ Definition: A definition of phrase 1
 # ...
 `.trim(),
             messages
-                .map((message, idx) => `${idx + 1}. ${buildMessagePrompt(this.dataset, message)}`)
+                .map((message, idx) => `${idx + 1}. ${buildMessagePrompt(dataset, message)}`)
                 .join("\n"),
         ]);
     }

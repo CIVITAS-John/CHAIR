@@ -12,6 +12,7 @@ import md5 from "md5";
 import { PythonShell } from "python-shell";
 
 import type { Code } from "../schema.js";
+import { ContextVarNotFoundError, StepContext } from "../steps/base-step.js";
 
 import { ensureFolder, getPythonPath } from "./file.js";
 import { logger } from "./logger.js";
@@ -77,6 +78,16 @@ export interface EmbedderObject {
     dimensions: number;
 }
 export type EmbedderModel = EmbedderName | EmbedderObject;
+export class EmbedderNotSupportedError extends Error {
+    override name = "EmbedderNotSupportedError";
+    constructor(model: string, local = false) {
+        super(
+            local
+                ? `Embedder ${model} is local only through ollama`
+                : `Embedder ${model} not supported`,
+        );
+    }
+}
 
 dotenv.config();
 
@@ -87,7 +98,7 @@ export const initEmbedder = (embedder: string): EmbedderObject => {
         embedder = embedder.substring(2);
 
         if (!(embedder in MODELS)) {
-            throw new Error(`Embedder ${embedder} not supported`);
+            throw new EmbedderNotSupportedError(embedder);
         }
 
         return {
@@ -101,13 +112,13 @@ export const initEmbedder = (embedder: string): EmbedderObject => {
     }
 
     if (!(embedder in MODELS)) {
-        throw new Error(`Embedder ${embedder} not supported`);
+        throw new EmbedderNotSupportedError(embedder);
     }
 
     const config = MODELS[embedder as EmbedderName];
     if (!("model" in config)) {
         // No default online model
-        throw new Error(`Embedder ${embedder} is local only through ollama`);
+        throw new EmbedderNotSupportedError(embedder);
     }
     return {
         ...config,
@@ -117,12 +128,12 @@ export const initEmbedder = (embedder: string): EmbedderObject => {
 };
 
 /** Call the model to generate text embeddings with cache. */
-export const requestEmbeddings = (
-    embedder: EmbedderObject,
-    sources: string[],
-    cache: string,
-): Promise<Float32Array> =>
+export const requestEmbeddings = (sources: string[], cache: string): Promise<Float32Array> =>
     logger.withDefaultSource("requestEmbeddings", async () => {
+        const { embedder } = StepContext.get();
+        if (!embedder) {
+            throw new ContextVarNotFoundError("embedder");
+        }
         // Create the cache folder
         const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
         ensureFolder(cacheFolder);
@@ -205,15 +216,8 @@ export interface ClusterItem {
 }
 
 /** Categorize the codes into clusters using linkage-jc. */
-export const clusterCodes = (
-    embedder: EmbedderObject,
-    sources: string[],
-    codes: Code[],
-    cache: string,
-    ...opts: string[]
-) =>
+export const clusterCodes = (sources: string[], codes: Code[], cache: string, ...opts: string[]) =>
     clusterTexts(
-        embedder,
         sources,
         codes.map((code) => ({
             label: code.label,
@@ -232,14 +236,12 @@ export const clusterCodes = (
 
 /** Categorize the categories into clusters using linkage-jc. */
 export const clusterCategories = (
-    embedder: EmbedderObject,
     sources: string[],
     categories: Map<string, string[]>,
     cache: string,
     ...opts: string[]
 ) =>
     clusterTexts(
-        embedder,
         sources,
         sources.map((category) => ({
             label: category,
@@ -252,7 +254,6 @@ export const clusterCategories = (
 
 /** Categorize the embeddings into clusters. */
 export const clusterTexts = (
-    embedder: EmbedderObject,
     sources: string[],
     names: {
         label: string;
@@ -268,7 +269,11 @@ export const clusterTexts = (
             return {};
         }
 
-        const embeddings = await requestEmbeddings(embedder, sources, cache);
+        const { embedder } = StepContext.get();
+        if (!embedder) {
+            throw new ContextVarNotFoundError("embedder");
+        }
+        const embeddings = await requestEmbeddings(sources, cache);
         return await clusterEmbeddings(embedder, embeddings, names, method, ...opts);
     });
 
@@ -331,7 +336,6 @@ export const clusterEmbeddings = (
 
 /** Evaluate a number of texts. */
 export const evaluateTexts = <T>(
-    embedder: EmbedderObject,
     sources: string[],
     labels: string[],
     owners: number[][],
@@ -342,16 +346,8 @@ export const evaluateTexts = <T>(
 ) =>
     logger.withDefaultSource("evaluateTexts", async () => {
         logger.debug(`Requesting embeddings for ${sources.length} sources`);
-        const embeddings = await requestEmbeddings(embedder, sources, cache);
-        return evaluateEmbeddings<T>(
-            embedder,
-            embeddings,
-            labels,
-            owners,
-            ownerLabels,
-            method,
-            ...opts,
-        );
+        const embeddings = await requestEmbeddings(sources, cache);
+        return evaluateEmbeddings<T>(embeddings, labels, owners, ownerLabels, method, ...opts);
     });
 
 /**
@@ -359,7 +355,6 @@ export const evaluateTexts = <T>(
  * Return format:
  * */
 export const evaluateEmbeddings = <T>(
-    embedder: EmbedderObject,
     embeddings: Float32Array,
     labels: string[],
     owners: number[][],
@@ -368,6 +363,10 @@ export const evaluateEmbeddings = <T>(
     ...opts: string[]
 ) =>
     logger.withDefaultSource("evaluateEmbeddings", async () => {
+        const { embedder } = StepContext.get();
+        if (!embedder) {
+            throw new ContextVarNotFoundError("embedder");
+        }
         let res: T | undefined;
         // Write it into ./known/temp.bytes
         ensureFolder("./known");

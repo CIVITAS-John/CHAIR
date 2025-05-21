@@ -10,13 +10,13 @@ import { mergeCodebook } from "../consolidating/codebooks.js";
 import type { CodedThread, CodedThreads, DataChunk, DataItem, Dataset } from "../schema.js";
 import { exportChunksForCoding, importCodes } from "../utils/export.js";
 import { ensureFolder, readJSONFile } from "../utils/file.js";
-import type { LLMModel, LLMSession } from "../utils/llms.js";
+import type { LLMModel } from "../utils/llms.js";
 import { requestLLM, useLLMs } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 import { assembleExampleFrom } from "../utils/misc.js";
 
 import type { AIParameters } from "./base-step.js";
-import { BaseStep } from "./base-step.js";
+import { BaseStep, StepContext } from "./base-step.js";
 import type { LoadStep } from "./load-step.js";
 
 type AnalyzerConstructor<TUnit, TSubunit, TAnalysis> = new (
@@ -51,8 +51,6 @@ export type CodeStepConfig<
 
 /** Analyze a chunk of data items. */
 const analyzeChunks = <T extends DataItem>(
-    dataset: Dataset<DataChunk<T>>,
-    session: LLMSession,
     analyzer: Analyzer<DataChunk<T>, T, CodedThread>,
     chunks: Record<string, DataChunk<T>>,
     analyzed: CodedThreads = { threads: {} },
@@ -61,6 +59,8 @@ const analyzeChunks = <T extends DataItem>(
     retries?: number,
 ) =>
     logger.withDefaultSource("analyzeChunks", async () => {
+        const { dataset } = StepContext.get();
+
         const keys = Object.keys(chunks);
         logger.info(`[${dataset.name}] Analyzing ${keys.length} chunks`);
 
@@ -108,8 +108,6 @@ const analyzeChunks = <T extends DataItem>(
             let prevAnalysis: CodedThread | undefined;
             try {
                 await loopThroughChunk(
-                    dataset,
-                    session,
                     analyzer,
                     analysis,
                     chunk,
@@ -141,7 +139,6 @@ const analyzeChunks = <T extends DataItem>(
                                 `[${dataset.name}/${key}] Requesting LLM, iteration ${iteration}`,
                             );
                             response = await requestLLM(
-                                session,
                                 [new SystemMessage(prompts[0]), new HumanMessage(prompts[1])],
                                 `${basename(dataset.path)}/${analyzer.name}`,
                                 tries * 0.2 + (temperature ?? analyzer.baseTemperature),
@@ -294,62 +291,77 @@ export class CodeStep<
                 for (const AnalyzerClass of strategies) {
                     logger.info(`[${dataset.name}] Using strategy ${AnalyzerClass.name}`);
                     await useLLMs(async (session) => {
-                        // Sanity check
-                        if (this.config.agent !== "AI") {
-                            throw new CodeStep.InternalError(`Invalid agent ${this.config.agent}`);
-                        }
-
-                        const analyzer = new AnalyzerClass(dataset, session);
-                        logger.info(
-                            `[${dataset.name}/${analyzer.name}] Using model ${session.llm.name}`,
-                        );
-                        // Analyze the chunks
-                        const numChunks = Object.keys(dataset.data).length;
-                        for (const [idx, [key, chunks]] of Object.entries(dataset.data).entries()) {
-                            logger.info(
-                                `[${dataset.name}/${analyzer.name}] Analyzing chunk ${key} (${idx + 1}/${numChunks})`,
-                            );
-                            const result = await analyzeChunks(
+                        await StepContext.with(
+                            {
                                 dataset,
                                 session,
-                                analyzer,
-                                chunks,
-                                { threads: {} },
-                                this.config.parameters?.temperature,
-                                this.config.parameters?.fakeRequest,
-                                this.config.parameters?.retries,
-                            );
-                            logger.success(
-                                `[${dataset.name}/${analyzer.name}/${key}] Coded ${Object.keys(result.threads).length} threads (${idx + 1}/${numChunks})`,
-                            );
+                            },
+                            async () => {
+                                // Sanity check
+                                if (this.config.agent !== "AI") {
+                                    throw new CodeStep.InternalError(
+                                        `Invalid agent ${this.config.agent}`,
+                                    );
+                                }
 
-                            const filename = `${key.replace(".json", "")}-${session.llm.name}${analyzer.suffix}`;
-                            // Write the result into a JSON file
-                            const analyzerPath = ensureFolder(join(dataset.path, analyzer.name));
-                            const jsonPath = join(analyzerPath, `${filename}.json`);
-                            logger.info(
-                                `[${dataset.name}/${analyzer.name}/${key}] Writing JSON result to ${jsonPath}`,
-                            );
-                            writeFileSync(jsonPath, JSON.stringify(result, null, 4));
+                                const analyzer = new AnalyzerClass();
+                                logger.info(
+                                    `[${dataset.name}/${analyzer.name}] Using model ${session.llm.name}`,
+                                );
+                                // Analyze the chunks
+                                const numChunks = Object.keys(dataset.data).length;
+                                for (const [idx, [key, chunks]] of Object.entries(
+                                    dataset.data,
+                                ).entries()) {
+                                    logger.info(
+                                        `[${dataset.name}/${analyzer.name}] Analyzing chunk ${key} (${idx + 1}/${numChunks})`,
+                                    );
+                                    const result = await analyzeChunks(
+                                        analyzer,
+                                        chunks,
+                                        { threads: {} },
+                                        this.config.parameters?.temperature,
+                                        this.config.parameters?.fakeRequest,
+                                        this.config.parameters?.retries,
+                                    );
+                                    logger.success(
+                                        `[${dataset.name}/${analyzer.name}/${key}] Coded ${Object.keys(result.threads).length} threads (${idx + 1}/${numChunks})`,
+                                    );
 
-                            // Write the result into an Excel file
-                            const book = exportChunksForCoding(Object.values(chunks), result);
-                            const excelPath = join(analyzerPath, `${filename}.xlsx`);
-                            logger.info(
-                                `[${dataset.name}/${analyzer.name}/${key}] Writing Excel result to ${excelPath}`,
-                            );
-                            await book.xlsx.writeFile(excelPath);
+                                    const filename = `${key.replace(".json", "")}-${session.llm.name}${analyzer.suffix}`;
+                                    // Write the result into a JSON file
+                                    const analyzerPath = ensureFolder(
+                                        join(dataset.path, analyzer.name),
+                                    );
+                                    const jsonPath = join(analyzerPath, `${filename}.json`);
+                                    logger.info(
+                                        `[${dataset.name}/${analyzer.name}/${key}] Writing JSON result to ${jsonPath}`,
+                                    );
+                                    writeFileSync(jsonPath, JSON.stringify(result, null, 4));
 
-                            // Store the result
-                            const cur = this.#results.get(dataset.name) ?? {};
-                            this.#results.set(dataset.name, {
-                                ...cur,
-                                [analyzer.name]: {
-                                    ...(cur[analyzer.name] ?? {}),
-                                    [filename]: result,
-                                },
-                            });
-                        }
+                                    // Write the result into an Excel file
+                                    const book = exportChunksForCoding(
+                                        Object.values(chunks),
+                                        result,
+                                    );
+                                    const excelPath = join(analyzerPath, `${filename}.xlsx`);
+                                    logger.info(
+                                        `[${dataset.name}/${analyzer.name}/${key}] Writing Excel result to ${excelPath}`,
+                                    );
+                                    await book.xlsx.writeFile(excelPath);
+
+                                    // Store the result
+                                    const cur = this.#results.get(dataset.name) ?? {};
+                                    this.#results.set(dataset.name, {
+                                        ...cur,
+                                        [analyzer.name]: {
+                                            ...(cur[analyzer.name] ?? {}),
+                                            [filename]: result,
+                                        },
+                                    });
+                                }
+                            },
+                        );
                     }, models);
                 }
             }

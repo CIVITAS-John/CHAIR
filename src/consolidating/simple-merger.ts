@@ -1,5 +1,4 @@
 import type { Code, Codebook } from "../schema.js";
-import type { EmbedderObject } from "../utils/embeddings.js";
 import { clusterCodes } from "../utils/embeddings.js";
 import { logger } from "../utils/logger.js";
 
@@ -25,21 +24,17 @@ export class SimpleMerger extends CodeConsolidator {
     /** Whether we use definitions in merging (used to inform LLM). */
     useDefinition = false;
 
-    constructor(
-        /** The embedder object for the consolidator. */
-        public embedder: EmbedderObject,
-        {
-            maximum,
-            minimum,
-            useDefinition,
-            looping,
-        }: {
-            maximum?: number;
-            minimum?: number;
-            useDefinition?: boolean;
-            looping?: boolean;
-        } = {},
-    ) {
+    constructor({
+        maximum,
+        minimum,
+        useDefinition,
+        looping,
+    }: {
+        maximum?: number;
+        minimum?: number;
+        useDefinition?: boolean;
+        looping?: boolean;
+    } = {}) {
         super();
         this.maximum = maximum ?? this.maximum;
         this.minimum = minimum ?? this.minimum;
@@ -58,7 +53,6 @@ export class SimpleMerger extends CodeConsolidator {
                     : code.label,
             );
             const clusters = await clusterCodes(
-                this.embedder,
                 labels,
                 codes,
                 "consolidator",

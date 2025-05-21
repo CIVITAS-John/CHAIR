@@ -1,5 +1,5 @@
-import type { Code, Codebook, Dataset } from "../schema.js";
-import type { EmbedderObject } from "../utils/embeddings.js";
+import type { Code, Codebook } from "../schema.js";
+import { StepContext } from "../steps/base-step.js";
 import { clusterCodes } from "../utils/embeddings.js";
 import { logger } from "../utils/logger.js";
 
@@ -7,7 +7,7 @@ import { mergeCodesByCluster } from "./codebooks.js";
 import { DefinitionParser } from "./definition-generator.js";
 
 /** Merge codes based on names and definitions. Then, refine the definitions into one. */
-export class RefineMerger<T> extends DefinitionParser {
+export class RefineMerger extends DefinitionParser {
     protected get _prefix() {
         return logger.prefixed(logger.prefix, "RefineMerger");
     }
@@ -29,25 +29,19 @@ export class RefineMerger<T> extends DefinitionParser {
         return `${super.name} (maximum: ${this.maximum}, minimum: ${this.minimum}, use definition: ${this.useDefinition})`;
     }
 
-    constructor(
-        /** The dataset the merger is working on. */
-        public dataset: Dataset<T>,
-        /** The embedder object for the merger. */
-        public embedder: EmbedderObject,
-        {
-            maximum,
-            minimum,
-            useDefinition,
-            useVerbPhrases,
-            looping,
-        }: {
-            maximum?: number;
-            minimum?: number;
-            useDefinition?: boolean;
-            useVerbPhrases?: boolean;
-            looping?: boolean;
-        } = {},
-    ) {
+    constructor({
+        maximum,
+        minimum,
+        useDefinition,
+        useVerbPhrases,
+        looping,
+    }: {
+        maximum?: number;
+        minimum?: number;
+        useDefinition?: boolean;
+        useVerbPhrases?: boolean;
+        looping?: boolean;
+    } = {}) {
         super();
         this.maximum = maximum ?? this.maximum;
         this.minimum = minimum ?? this.minimum;
@@ -75,7 +69,6 @@ export class RefineMerger<T> extends DefinitionParser {
             );
             // Categorize the strings
             const clusters = await clusterCodes(
-                this.embedder,
                 codeStrings,
                 codes,
                 "consolidator",
@@ -103,6 +96,7 @@ export class RefineMerger<T> extends DefinitionParser {
 
     /** Build the prompts for the code consolidator. */
     override buildPrompts(_codebook: Codebook, codes: Code[]): Promise<[string, string]> {
+        const { dataset } = StepContext.get();
         return Promise.resolve([
             `
 You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
@@ -110,7 +104,7 @@ Each code includes one or more concepts and definitions. Each code is independen
 For each code, reflect on the logical relationship between the concepts.
 Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
 Finally, write an accurate ${this.useVerbPhrases ? "verb phrase" : "label"} to best represent the code.
-${this.dataset.researchQuestion}
+${dataset.researchQuestion}
 Always follow the output format:
 ---
 Definitions for each code (${codes.length} in total):

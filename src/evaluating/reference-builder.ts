@@ -6,11 +6,9 @@ import { PipelineConsolidator } from "../consolidating/consolidator.js";
 import { DefinitionGenerator } from "../consolidating/definition-generator.js";
 import { RefineMerger } from "../consolidating/refine-merger.js";
 import { SimpleMerger } from "../consolidating/simple-merger.js";
-import type { Codebook, CodedThreadsWithCodebook, Dataset } from "../schema.js";
-import type { EmbedderObject } from "../utils/embeddings.js";
+import type { Codebook, CodedThreadsWithCodebook } from "../schema.js";
 import { exportChunksForCoding } from "../utils/export.js";
 import { ensureFolder } from "../utils/file.js";
-import type { LLMSession } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 
 interface ReferenceBuilderConfig {
@@ -19,7 +17,7 @@ interface ReferenceBuilderConfig {
 }
 
 /** A reference codebook builder. */
-export abstract class ReferenceBuilder<TUnit> {
+export abstract class ReferenceBuilder {
     /** The suffix of the reference codebook. */
     suffix = "";
     /** The base temperature for the reference builder. */
@@ -30,15 +28,7 @@ export abstract class ReferenceBuilder<TUnit> {
 
     protected _prefix: string;
 
-    constructor(
-        /** The dataset the reference builder is working on. */
-        public dataset: Dataset<TUnit[]>,
-        /** The LLM session for the reference builder. */
-        public session: LLMSession,
-        /** The embedder object for the reference builder. */
-        public embedder: EmbedderObject,
-        public config?: ReferenceBuilderConfig,
-    ) {
+    constructor(public config?: ReferenceBuilderConfig) {
         this._prefix = logger.prefixed(logger.prefix, "ReferenceBuilder");
     }
 
@@ -65,25 +55,18 @@ export abstract class ReferenceBuilder<TUnit> {
     protected refineCodebook(codebook: Codebook): Promise<Codebook> {
         return logger.withSource(this._prefix, "refineCodebook", async () => {
             const threads: CodedThreadsWithCodebook = { codebook, threads: {} };
-            const consolidator = new PipelineConsolidator(this.dataset, this.session, [
+            const consolidator = new PipelineConsolidator([
                 // Merge codes that have been merged
                 // new AlternativeMerger(),
                 // Merge very similar names
-                new SimpleMerger(this.embedder, { looping: true }),
+                new SimpleMerger({ looping: true }),
                 // Generate definitions for missing ones
-                new DefinitionGenerator(this.dataset),
+                new DefinitionGenerator(),
             ]);
             consolidator.baseTemperature = this.baseTemperature;
-            await consolidateCodebook(
-                this.dataset,
-                this.session,
-                consolidator,
-                [],
-                threads,
-                (iter) => {
-                    return this.sanityCheck(iter, threads.codebook);
-                },
-            );
+            await consolidateCodebook(consolidator, [], threads, (iter) => {
+                return this.sanityCheck(iter, threads.codebook);
+            });
             logger.success(
                 `${Object.keys(threads.codebook).length} codes remained after consolidation`,
             );
@@ -131,7 +114,7 @@ export type RefiningReferenceBuilderConfig = ReferenceBuilderConfig &
     );
 
 /** A builder of reference codebook that further refines codes. */
-export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
+export class RefiningReferenceBuilder extends ReferenceBuilder {
     /** The suffix of the reference codebook. */
     override suffix = "-refined";
     override baseTemperature = 0.5;
@@ -142,16 +125,8 @@ export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
     public useVerbPhrases = false;
     public consolidators?: CodeConsolidator[];
 
-    constructor(
-        /** The dataset the reference builder is working on. */
-        dataset: Dataset<TUnit[]>,
-        /** The LLM session for the reference builder. */
-        session: LLMSession,
-        /** The embedder object for the reference builder. */
-        embedder: EmbedderObject,
-        config?: RefiningReferenceBuilderConfig,
-    ) {
-        super(dataset, session, embedder);
+    constructor(config?: RefiningReferenceBuilderConfig) {
+        super();
         if (config) {
             if ("consolidators" in config) {
                 this.consolidators = config.consolidators;
@@ -170,27 +145,25 @@ export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
             Object.values(codebook).forEach((Code) => (Code.alternatives = []));
 
             const consolidator = new PipelineConsolidator(
-                this.dataset,
-                this.session,
                 this.consolidators ?? [
                     // Merge codes that have been merged
                     // new AlternativeMerger(),
                     // Merge very similar names
-                    new SimpleMerger(this.embedder, { looping: true }),
+                    new SimpleMerger({ looping: true }),
                     // Generate definitions for missing ones
-                    new DefinitionGenerator(this.dataset),
+                    new DefinitionGenerator(),
                     // Merge definitions
                     // Do not use penalty mechanism when the codebooks refer to different data
                     // It may create a bias against smaller datasets
                     // new RefineMerger({ Maximum: 0.5, Minimum: !this.SameData ? 0.5 : 0.4, UseDefinition: false, UseVerbPhrases: this.UseVerbPhrases }),
-                    new RefineMerger(this.dataset, this.embedder, {
+                    new RefineMerger({
                         maximum: 0.5,
                         minimum: !this.sameData ? 0.5 : 0.4,
                         useVerbPhrases: this.useVerbPhrases,
                         looping: true,
                     }),
                     // new RefineMerger({ Maximum: 0.6, Minimum: !this.SameData ? 0.6 : 0.4, UseDefinition: false, UseVerbPhrases: this.UseVerbPhrases }),
-                    new RefineMerger(this.dataset, this.embedder, {
+                    new RefineMerger({
                         maximum: 0.6,
                         minimum: !this.sameData ? 0.6 : 0.4,
                         useVerbPhrases: this.useVerbPhrases,
@@ -200,8 +173,6 @@ export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
             );
             consolidator.baseTemperature = this.baseTemperature;
             await consolidateCodebook(
-                this.dataset,
-                this.session,
                 consolidator,
                 [],
                 threads,
@@ -221,8 +192,8 @@ export class RefiningReferenceBuilder<TUnit> extends ReferenceBuilder<TUnit> {
 }
 
 /** Build a reference codebook and export it. */
-export const buildReferenceAndExport = <T>(
-    builder: ReferenceBuilder<T>,
+export const buildReferenceAndExport = (
+    builder: ReferenceBuilder,
     codebooks: Codebook[],
     targetPath: string,
 ) =>

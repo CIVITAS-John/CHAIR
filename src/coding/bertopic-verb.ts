@@ -6,6 +6,7 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { PythonShell } from "python-shell";
 
 import type { BertopicTopics, CodedThread, Conversation, Message } from "../schema.js";
+import { StepContext } from "../steps/base-step.js";
 import { ensureFolder, getPythonPath } from "../utils/file.js";
 import { requestLLM } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
@@ -39,6 +40,7 @@ export default class BertopicAnalyzerVerb extends ConversationAnalyzer {
         _analyzed: CodedThread[],
     ): Promise<void> {
         await logger.withSource(this._prefix, "batchPreprocess", true, async () => {
+            const { dataset } = StepContext.get();
             // Write the messages into the file.
             const messages = conversations.flatMap((conversation) =>
                 conversation.items.filter(
@@ -52,13 +54,10 @@ export default class BertopicAnalyzerVerb extends ConversationAnalyzer {
             const content = messages.map((message) =>
                 // TODO: Support subchunks
                 "content" in message
-                    ? buildMessagePrompt(
-                          this.dataset,
-                          message,
-                          undefined,
-                          undefined,
-                          true,
-                      ).replaceAll("\n", " ")
+                    ? buildMessagePrompt(dataset, message, undefined, undefined, true).replaceAll(
+                          "\n",
+                          " ",
+                      )
                     : "",
             );
             ensureFolder("./known");
@@ -89,8 +88,8 @@ export default class BertopicAnalyzerVerb extends ConversationAnalyzer {
                 const prompt = `
 You are an expert in thematic analysis with grounded theory, working on open coding.
 You identified a topic from the input quotes. Each quote is independent from another.
-${this.dataset.researchQuestion}
-${this.dataset.codingNotes}
+${dataset.researchQuestion}
+${dataset.codingNotes}
 
 Always follow the output format:
 ===
@@ -101,7 +100,6 @@ Phrase: {A single verb phrase that faithfully describes the topic}
                 const keywords = topic.keywords.slice(0, 5);
                 // Request the LLM
                 const response = await requestLLM(
-                    this.session,
                     [
                         new SystemMessage(prompt),
                         new HumanMessage(
@@ -110,7 +108,7 @@ ${examples
     .map((message) =>
         // TODO: Support subchunks
         "content" in message
-            ? `- ${buildMessagePrompt(this.dataset, message, undefined, undefined, true)}`
+            ? `- ${buildMessagePrompt(dataset, message, undefined, undefined, true)}`
             : "",
     )
     .join("\n")}

@@ -1,11 +1,23 @@
 import { Analyzer } from "../analyzer.js";
-import type { Code, Codebook, CodedThreads, CodedThreadsWithCodebook, Dataset } from "../schema.js";
-import type { LLMSession } from "../utils/llms.js";
+import type { Code, Codebook, CodedThreads, CodedThreadsWithCodebook } from "../schema.js";
 import { logger } from "../utils/logger.js";
 import { seededShuffle } from "../utils/misc.js";
 
+abstract class ConsolidatorError extends Error {
+    override name = "Consolidator.Error";
+    constructor(message: string, source?: string) {
+        super(`${source ? `${source}: ` : ""}${message}`);
+    }
+}
+
 /** An abstract code consolidator. */
 export abstract class CodeConsolidator {
+    static Error = ConsolidatorError;
+
+    static InvalidResponseError = class extends ConsolidatorError {
+        override name = "Analyzer.InvalidResponseError";
+    };
+
     protected abstract get _prefix(): string;
 
     /** Whether the consolidator needs chunkified results. */
@@ -84,14 +96,8 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         return logger.prefixed(logger.prefix, `PipelineConsolidator#${this.#index}`);
     }
 
-    constructor(
-        /** The dataset the consolidator is working on. */
-        public override dataset: Dataset<TUnit[]>,
-        /** The LLM session for the consolidator. */
-        public override session: LLMSession,
-        consolidators: CodeConsolidator[],
-    ) {
-        super(dataset, session);
+    constructor(consolidators: CodeConsolidator[]) {
+        super();
         this.#consolidators = consolidators;
     }
 

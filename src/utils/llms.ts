@@ -14,6 +14,8 @@ import { ChatOpenAI } from "@langchain/openai";
 import * as dotenv from "dotenv";
 import md5 from "md5";
 
+import { ContextVarNotFoundError, StepContext } from "../steps/base-step.js";
+
 import { ensureFolder } from "./file.js";
 import { logger } from "./logger.js";
 import { promiseWithTimeout } from "./misc.js";
@@ -245,6 +247,12 @@ export interface LLMObject {
     systemMessage?: boolean;
 }
 export type LLMModel = LLMName | LLMObject;
+export class LLMNotSupportedError extends Error {
+    override name = "LLMNotSupportedError";
+    constructor(model: string, local = false) {
+        super(local ? `LLM ${model} is local only through ollama` : `LLM ${model} not supported`);
+    }
+}
 
 export interface LLMSession {
     llm: LLMObject;
@@ -273,7 +281,7 @@ export const initLLM = (LLM: string): LLMObject => {
         }
 
         if (!(realLLM in MODELS)) {
-            throw new Error(`LLM ${realLLM} not supported`);
+            throw new LLMNotSupportedError(LLM);
         }
 
         return {
@@ -297,13 +305,13 @@ export const initLLM = (LLM: string): LLMObject => {
     }
 
     if (!(realLLM in MODELS)) {
-        throw new Error(`LLM ${LLM} not supported`);
+        throw new LLMNotSupportedError(LLM);
     }
 
     const config = MODELS[realLLM as LLMName];
     if (!("model" in config)) {
         // No default online model
-        throw new Error(`LLM ${LLM} is local only through ollama`);
+        throw new LLMNotSupportedError(LLM, true);
     }
     return {
         ...config,
@@ -336,13 +344,17 @@ export const useLLMs = async (task: (session: LLMSession) => Promise<void>, LLMs
 
 /** Call the model to generate text with cache. */
 export const requestLLM = (
-    session: LLMSession,
     messages: BaseMessage[],
     cache: string,
     temperature?: number,
     fakeRequest = false,
 ) =>
     logger.withDefaultSource("requestLLM", async () => {
+        const { session } = StepContext.get();
+        if (!session) {
+            throw new ContextVarNotFoundError("session");
+        }
+
         const input = messages
             .map((m) => (typeof m.content === "string" ? m.content : JSON.stringify(m.content)))
             .join("\n~~~\n");

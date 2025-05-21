@@ -1,4 +1,6 @@
+import { Analyzer } from "../analyzer.js";
 import type { Code, CodedThread, Message } from "../schema.js";
+import { StepContext } from "../steps/base-step.js";
 import { logger } from "../utils/logger.js";
 import { assembleExampleFrom } from "../utils/misc.js";
 
@@ -25,6 +27,8 @@ export abstract class ChunkLevelAnalyzerBase extends ConversationAnalyzer {
         _chunkStart: number,
     ): Promise<number> {
         return logger.withDefaultSource("parseResponse", () => {
+            const { dataset } = StepContext.get();
+
             let category = "";
             let position = "";
             let currentCode: Code | undefined;
@@ -48,7 +52,7 @@ export abstract class ChunkLevelAnalyzerBase extends ConversationAnalyzer {
                     line = line.substring(3).trim();
                     // Sometimes, the LLM will return "P{number}" as the name of the code
                     if (/^P\d+(?:$|:)/.exec(line)) {
-                        throw new Error(`Invalid code name: ${line}.`);
+                        throw new Analyzer.InvalidResponseError(`Invalid code name: ${line}`);
                     }
                     // Sometimes, the LLM will return "**{code}**" as the name of the code
                     line = line.replace(/^\*\*(.*)\*\*/, "$1").trim();
@@ -121,7 +125,7 @@ export abstract class ChunkLevelAnalyzerBase extends ConversationAnalyzer {
                                 `Cannot find the coded message for: ${line}. The LLM has likely slightly changed the content.`,
                             );
                         }
-                        const example = message ? assembleExampleFrom(this.dataset, message) : line;
+                        const example = message ? assembleExampleFrom(dataset, message) : line;
                         if (message && !currentCode.examples.includes(example)) {
                             currentCode.examples.push(example);
                         }

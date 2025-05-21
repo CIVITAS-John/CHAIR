@@ -16,7 +16,7 @@ import { type LLMModel, useLLMs } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 
 import type { AIParameters } from "./base-step.js";
-import { BaseStep } from "./base-step.js";
+import { BaseStep, StepContext } from "./base-step.js";
 import type { CodeStep } from "./code-step.js";
 
 export interface ConsolidateStepConfig<
@@ -149,39 +149,43 @@ export class ConsolidateStep<
         const models = Array.isArray(this.config.model) ? this.config.model : [this.config.model];
 
         await useLLMs(async (session) => {
-            // Sanity check
-            if (!this.embedder) {
-                throw new ConsolidateStep.ConfigError("Embedder not set");
-            }
-
             for (const dataset of this.#datasets) {
-                // We made a deep copy here because the reference builder may modify the codebooks
-                const codes = JSON.stringify(
-                    Object.values(this.#codebooks.get(dataset.name) ?? {}),
+                // Sanity check
+                if (!this.embedder) {
+                    throw new ConsolidateStep.ConfigError("Embedder not set");
+                }
+
+                await StepContext.with(
+                    {
+                        dataset,
+                        session,
+                        embedder: this.embedder,
+                    },
+                    async () => {
+                        // We made a deep copy here because the reference builder may modify the codebooks
+                        const codes = JSON.stringify(
+                            Object.values(this.#codebooks.get(dataset.name) ?? {}),
+                        );
+                        const builder = new RefiningReferenceBuilder(this.config.builderConfig);
+                        const referencePath = ensureFolder(
+                            join(
+                                dataset.path,
+                                "references",
+                                // `${Analyzers.join("-")}_
+                                `${models.map((m) => (typeof m === "string" ? m : m.name)).join("-")}${builder.suffix}`,
+                            ),
+                        );
+                        const hash = md5(codes);
+                        const reference = await withCache(referencePath, hash, () =>
+                            buildReferenceAndExport(
+                                builder,
+                                JSON.parse(codes) as Codebook[],
+                                referencePath,
+                            ),
+                        );
+                        this.#references.set(dataset.name, reference);
+                    },
                 );
-                const builder = new RefiningReferenceBuilder(
-                    dataset,
-                    session,
-                    this.embedder,
-                    this.config.builderConfig,
-                );
-                const referencePath = ensureFolder(
-                    join(
-                        dataset.path,
-                        "references",
-                        // `${Analyzers.join("-")}_
-                        `${models.map((m) => (typeof m === "string" ? m : m.name)).join("-")}${builder.suffix}`,
-                    ),
-                );
-                const hash = md5(codes);
-                const reference = await withCache(referencePath, hash, () =>
-                    buildReferenceAndExport(
-                        builder,
-                        JSON.parse(codes) as Codebook[],
-                        referencePath,
-                    ),
-                );
-                this.#references.set(dataset.name, reference);
             }
         }, models);
 

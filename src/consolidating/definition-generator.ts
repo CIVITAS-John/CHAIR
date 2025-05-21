@@ -1,4 +1,5 @@
-import type { Code, Codebook, Dataset } from "../schema.js";
+import type { Code, Codebook } from "../schema.js";
+import { StepContext } from "../steps/base-step.js";
 import { logger } from "../utils/logger.js";
 
 import { updateCodes } from "./codebooks.js";
@@ -90,7 +91,7 @@ export abstract class DefinitionParser extends CodeConsolidator {
             // Sometimes, the order of labels is wrong (! found for gpt-3.5-turbo)
             const Found = codes.findIndex((Code) => Code.label === newCode.label);
             if (Found !== -1 && Found !== i) {
-                throw new Error(
+                throw new CodeConsolidator.InvalidResponseError(
                     `Invalid response: code ${newCode.label}'s mapping order is wrong.`,
                 );
             }
@@ -105,13 +106,9 @@ export abstract class DefinitionParser extends CodeConsolidator {
 }
 
 /** DefinitionGenerator: Generate definitions based on labels and quotes. */
-export class DefinitionGenerator<T> extends DefinitionParser {
+export class DefinitionGenerator extends DefinitionParser {
     protected override get _prefix() {
         return logger.prefixed(logger.prefix, "DefinitionGenerator");
-    }
-
-    constructor(public dataset: Dataset<T>) {
-        super();
     }
 
     /** Filter the subunits before chunking. */
@@ -121,6 +118,7 @@ export class DefinitionGenerator<T> extends DefinitionParser {
     }
     /** Build the prompts for the code consolidator. */
     override buildPrompts(_codebook: Codebook, codes: Code[]): Promise<[string, string]> {
+        const { dataset } = StepContext.get();
         // Generate definitions for codes
         return Promise.resolve([
             `
@@ -128,7 +126,7 @@ You are an expert in thematic analysis clarifying the criteria of qualitative co
 Consider provided quotes, and note that each quote is independent of others.
 Write clear and generalizable criteria for each code and do not introduce unnecessary details.
 If necessary, refine labels to be more accurate, but do not repeat yourself.
-${this.dataset.researchQuestion}
+${dataset.researchQuestion}
 Always follow the output format:
 ---
 Definitions for each code (${codes.length} in total):

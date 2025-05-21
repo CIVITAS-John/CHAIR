@@ -1,9 +1,9 @@
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 import { loopThroughChunk } from "../analyzer.js";
-import type { Code, Codebook, CodedThreads, CodedThreadsWithCodebook, Dataset } from "../schema.js";
+import type { Code, Codebook, CodedThreads, CodedThreadsWithCodebook } from "../schema.js";
 import type { ClusterItem } from "../utils/embeddings.js";
-import { type LLMSession, requestLLM } from "../utils/llms.js";
+import { requestLLM } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 
 import { CodebookConsolidator } from "./consolidator.js";
@@ -150,8 +150,6 @@ export const mergeCodebooks = (codebooks: Codebook[], withReference = false): Co
 
 /** Load, consolidate, and export codebooks. */
 export const consolidateCodebook = <TUnit>(
-    dataset: Dataset<TUnit[]>,
-    session: LLMSession,
     consolidator: CodebookConsolidator<TUnit>,
     sources: TUnit[],
     _analyses: CodedThreads,
@@ -175,8 +173,6 @@ export const consolidateCodebook = <TUnit>(
         const codes = Object.values(analyses.codebook).filter((c) => c.examples?.length);
         // Run the coded threads through chunks (as defined by the consolidator)
         await loopThroughChunk(
-            dataset,
-            session,
             consolidator,
             analyses,
             sources,
@@ -194,7 +190,6 @@ export const consolidateCodebook = <TUnit>(
                 }
                 // Run the prompts
                 const response = await requestLLM(
-                    session,
                     [new SystemMessage(prompts[0]), new HumanMessage(prompts[1])],
                     `codebooks/${consolidator.name}`,
                     Math.min(tries, 3) * 0.2 + consolidator.baseTemperature,

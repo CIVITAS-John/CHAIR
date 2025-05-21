@@ -1,5 +1,4 @@
-import type { Dataset } from "./schema.js";
-import type { LLMSession } from "./utils/llms.js";
+import { ContextVarNotFoundError, StepContext } from "./steps/base-step.js";
 import { logger } from "./utils/logger.js";
 
 abstract class AnalyzerError extends Error {
@@ -16,6 +15,9 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     static InvalidResponseError = class extends AnalyzerError {
         override name = "Analyzer.InvalidResponseError";
     };
+    static InternalError = class extends AnalyzerError {
+        override name = "Analyzer.InternalError";
+    };
 
     protected get _prefix() {
         return logger.prefixed(logger.prefix, this.name);
@@ -29,13 +31,6 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     baseTemperature = 0;
     /** The maximum number of iterations for the analyzer. */
     maxIterations = 1;
-
-    constructor(
-        /** The dataset the analyzer is working on. */
-        public dataset: Dataset<TUnit>,
-        /** The LLM session for the analyzer. */
-        public session: LLMSession,
-    ) {}
 
     /**
      * Get the chunk configuration for the LLM.
@@ -103,8 +98,6 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
 
 /** Process data through the analyzer in a chunkified way. */
 export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
-    dataset: Dataset<TUnit>,
-    session: LLMSession,
     analyzer: Analyzer<TUnit, TSubunit, TAnalysis>,
     analysis: TAnalysis,
     source: TUnit,
@@ -120,6 +113,11 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
     retries = 5,
 ) =>
     logger.withDefaultSource("loopThroughChunk", async () => {
+        const { dataset, session } = StepContext.get();
+        if (!session) {
+            throw new ContextVarNotFoundError("session");
+        }
+
         // Split units into smaller chunks based on the maximum items
         for (let i = 0; i < analyzer.maxIterations; i++) {
             // Preprocess and filter the subunits
@@ -186,7 +184,9 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
                         break;
                     } catch (e) {
                         ++tries;
-                        const error = new Error(`Analysis error, try ${tries}/${retries}`);
+                        const error = new Analyzer.InternalError(
+                            `Analysis error, try ${tries}/${retries}`,
+                        );
                         error.cause = e;
                         if (tries >= retries) {
                             throw error;

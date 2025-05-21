@@ -13,7 +13,6 @@ import type {
     Dataset,
 } from "../schema.js";
 import { withCache } from "../utils/cache.js";
-import type { EmbedderObject } from "../utils/embeddings.js";
 import { evaluateTexts } from "../utils/embeddings.js";
 import { logger } from "../utils/logger.js";
 import { createOfflineBundle, launchServer } from "../utils/server.js";
@@ -50,19 +49,15 @@ export class NetworkEvaluator<
     title: string;
 
     /** Initialize the evaluator. */
-    constructor(
-        /** The embedder object for the merger. */
-        public embedder: EmbedderObject,
-        {
-            dataset,
-            anonymize,
-            title,
-        }: {
-            dataset: Dataset<TUnit>;
-            anonymize?: boolean;
-            title?: string;
-        },
-    ) {
+    constructor({
+        dataset,
+        anonymize,
+        title,
+    }: {
+        dataset: Dataset<TUnit>;
+        anonymize?: boolean;
+        title?: string;
+    }) {
         super();
         this.dataset = dataset;
         this.anonymize = anonymize ?? true;
@@ -104,7 +99,6 @@ export class NetworkEvaluator<
                     distances: number[][];
                     positions: [number, number][];
                 }>(
-                    this.embedder,
                     codeStrings,
                     labels,
                     codeOwners,
