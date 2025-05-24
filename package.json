@@ -8,13 +8,52 @@
     ],
     "type": "module",
     "scripts": {
-        "clean": "rimraf out",
+        "clean": "rimraf dist",
         "build:main": "tsc -p tsconfig.json",
         "build:network": "tsc -p src/evaluating/network/tsconfig.json",
-        "copy": "copyfiles \"src/**/*.py\" out/",
+        "copy": "copyfiles -u 1 \"src/**/*.py\" dist/",
         "build": "pnpm clean && pnpm run build:main && pnpm run build:network && pnpm run copy",
         "lint": "eslint --cache . && prettier --check --cache .",
-        "format": "eslint --fix --cache . && prettier --write --cache ."
+        "format": "eslint --fix --cache . && prettier --write --cache .",
+        "docs": "typedoc"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/job.d.ts",
+            "default": "./dist/job.js"
+        },
+        "./steps/load-step": {
+            "types": "./dist/steps/load-step.d.ts",
+            "default": "./dist/steps/load-step.js"
+        },
+        "./steps/code-step": {
+            "types": "./dist/steps/code-step.d.ts",
+            "default": "./dist/steps/code-step.js"
+        },
+        "./steps/consolidate-step": {
+            "types": "./dist/steps/consolidate-step.d.ts",
+            "default": "./dist/steps/consolidate-step.js"
+        },
+        "./steps/evaluate-step": {
+            "types": "./dist/steps/evaluate-step.d.ts",
+            "default": "./dist/steps/evaluate-step.js"
+        },
+        "./coding/*": {
+            "types": "./dist/coding/*.d.ts",
+            "default": "./dist/coding/*.js"
+        },
+        "./consolidating/*": {
+            "types": "./dist/coding/*.d.ts",
+            "default": "./dist/coding/*.js"
+        },
+        "./evaluating/*": {
+            "types": "./dist/evaluating/*.d.ts",
+            "default": "./dist/evaluating/*.js"
+        },
+        "./utils": {
+            "types": "./dist/utils.d.ts",
+            "default": "./dist/utils.js"
+        }
     },
     "dependencies": {
         "@dqbd/tiktoken": "^1.0.21",

@@ -146,7 +146,7 @@ export class NetworkEvaluator<
             // Run the HTTP server
             createOfflineBundle(
                 `${exportPath}/network`,
-                ["./src/evaluating/network", "./out/src/evaluating/network"],
+                ["./src/evaluating/network", "./dist/evaluating/network"],
                 `${exportPath}/network.json`,
             );
             // Return the results from the server
