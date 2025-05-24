@@ -4,11 +4,10 @@ import { join } from "path";
 // import type { CodebookEvaluator } from "../evaluating/codebooks";
 import { NetworkEvaluator } from "../evaluating/network-evaluator.js";
 import type { Codebook, DataChunk, DataItem, Dataset } from "../schema.js";
-import type { EmbedderObject } from "../utils/embeddings.js";
 import { ensureFolder } from "../utils/file.js";
 import { logger } from "../utils/logger.js";
 
-import { BaseStep, StepContext } from "./base-step.js";
+import { BaseStep } from "./base-step.js";
 import type { ConsolidateStep } from "./consolidate-step.js";
 
 export interface EvaluateStepConfig<
@@ -27,7 +26,6 @@ export class EvaluateStep<
 > extends BaseStep {
     override dependsOn: ConsolidateStep<TSubunit, TUnit>[];
 
-    embedder?: EmbedderObject;
     ignoreGroups: boolean;
 
     constructor(private readonly config: EvaluateStepConfig<TSubunit, TUnit>) {
@@ -38,11 +36,6 @@ export class EvaluateStep<
     }
 
     async #execute() {
-        // Sanity check
-        if (!this.embedder) {
-            throw new EvaluateStep.ConfigError("Embedder not set");
-        }
-
         const datasets: Dataset<TUnit[]>[] = [],
             codebooks = new Map<string, Record<string, Codebook>>(),
             groups = new Map<string, Record<string, Codebook>>(),
@@ -56,10 +49,9 @@ export class EvaluateStep<
         });
 
         for (const dataset of datasets.values()) {
-            await StepContext.with(
+            await BaseStep.Context.with(
                 {
                     dataset,
-                    embedder: this.embedder,
                 },
                 async () => {
                     const evaluator = new NetworkEvaluator({

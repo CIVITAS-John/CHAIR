@@ -9,14 +9,14 @@ import { OllamaEmbeddings } from "@langchain/ollama";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import * as dotenv from "dotenv";
 import md5 from "md5";
-import { PythonShell } from "python-shell";
 
+import { QAJob } from "../job.js";
 import type { Code } from "../schema.js";
-import { ContextVarNotFoundError, StepContext } from "../steps/base-step.js";
 
-import { ensureFolder, getPythonPath } from "./file.js";
+import { ensureFolder } from "./file.js";
 import { logger } from "./logger.js";
 import { sleep } from "./misc.js";
+import { runPythonScript } from "./python.js";
 
 const MODELS = {
     "openai-small-512": {
@@ -130,9 +130,9 @@ export const initEmbedder = (embedder: string): EmbedderObject => {
 /** Call the model to generate text embeddings with cache. */
 export const requestEmbeddings = (sources: string[], cache: string): Promise<Float32Array> =>
     logger.withDefaultSource("requestEmbeddings", async () => {
-        const { embedder } = StepContext.get();
+        const { embedder } = QAJob.Context.get();
         if (!embedder) {
-            throw new ContextVarNotFoundError("embedder");
+            throw new QAJob.ContextVarNotFoundError("embedder");
         }
         // Create the cache folder
         const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
@@ -190,9 +190,9 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
 /** Call the model to generate a text embedding with cache. */
 export const requestEmbedding = (source: string, cache: string) =>
     logger.withDefaultSource("requestEmbedding", async () => {
-        const { embedder } = StepContext.get();
+        const { embedder } = QAJob.Context.get();
         if (!embedder) {
-            throw new ContextVarNotFoundError("embedder");
+            throw new QAJob.ContextVarNotFoundError("embedder");
         }
         const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
         ensureFolder(cacheFolder);
@@ -209,9 +209,9 @@ export const requestEmbedding = (source: string, cache: string) =>
 
 /** Call the model to generate a text embedding. */
 export const requestEmbeddingWithoutCache = async (source: string) => {
-    const { embedder } = StepContext.get();
+    const { embedder } = QAJob.Context.get();
     if (!embedder) {
-        throw new ContextVarNotFoundError("embedder");
+        throw new QAJob.ContextVarNotFoundError("embedder");
     }
     return (await embedder.model.embedDocuments([source]))[0];
 };
@@ -296,9 +296,9 @@ export const clusterEmbeddings = (
     ...opts: string[]
 ) =>
     logger.withDefaultSource("clusterEmbeddings", async () => {
-        const { embedder } = StepContext.get();
+        const { embedder } = QAJob.Context.get();
         if (!embedder) {
-            throw new ContextVarNotFoundError("embedder");
+            throw new QAJob.ContextVarNotFoundError("embedder");
         }
         const res: Record<number, ClusterItem[]> = {};
         ensureFolder("./known");
@@ -309,8 +309,7 @@ export const clusterEmbeddings = (
         // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
         // Run the Python script
         const __dirname = dirname(fileURLToPath(import.meta.url));
-        await PythonShell.run(resolve(__dirname, `embeddings/clustering_${method}.py`), {
-            pythonPath: getPythonPath(),
+        await runPythonScript(resolve(__dirname, `embeddings/clustering_${method}.py`), {
             args: [embedder.dimensions.toString(), names.length.toString(), ...opts],
             parser: (msg) => {
                 if (msg.startsWith("[")) {
@@ -371,9 +370,9 @@ export const evaluateEmbeddings = <T>(
     ...opts: string[]
 ) =>
     logger.withDefaultSource("evaluateEmbeddings", async () => {
-        const { embedder } = StepContext.get();
+        const { embedder } = QAJob.Context.get();
         if (!embedder) {
-            throw new ContextVarNotFoundError("embedder");
+            throw new QAJob.ContextVarNotFoundError("embedder");
         }
         let res: T | undefined;
         // Write it into ./known/temp.bytes
@@ -397,8 +396,7 @@ export const evaluateEmbeddings = <T>(
         );
         // Run the Python script
         const __dirname = dirname(fileURLToPath(import.meta.url));
-        await PythonShell.run(resolve(__dirname, `embeddings/evaluation_${method}.py`), {
-            pythonPath: getPythonPath(),
+        await runPythonScript(resolve(__dirname, `embeddings/evaluation_${method}.py`), {
             args: [
                 embedder.dimensions.toString(),
                 labels.length.toString(),

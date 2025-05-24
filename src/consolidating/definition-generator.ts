@@ -1,5 +1,5 @@
 import type { Code, Codebook } from "../schema.js";
-import { StepContext } from "../steps/base-step.js";
+import { BaseStep } from "../steps/base-step.js";
 import { logger } from "../utils/logger.js";
 
 import { updateCodes } from "./codebooks.js";
@@ -118,7 +118,7 @@ export class DefinitionGenerator extends DefinitionParser {
     }
     /** Build the prompts for the code consolidator. */
     override buildPrompts(_codebook: Codebook, codes: Code[]): Promise<[string, string]> {
-        const { dataset } = StepContext.get();
+        const { dataset } = BaseStep.Context.get();
         // Generate definitions for codes
         return Promise.resolve([
             `

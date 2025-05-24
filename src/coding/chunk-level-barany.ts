@@ -1,5 +1,5 @@
 import type { CodedThread, Conversation, Message } from "../schema.js";
-import { StepContext } from "../steps/base-step.js";
+import { BaseStep } from "../steps/base-step.js";
 
 import { ChunkLevelAnalyzerBase } from "./chunk-level.js";
 import { buildMessagePrompt } from "./conversations.js";
@@ -32,7 +32,7 @@ export default class ChunkLevelAnalyzerBarany extends ChunkLevelAnalyzerBase {
         messages: Message[],
         _chunkStart: number,
     ): Promise<[string, string]> {
-        const { dataset } = StepContext.get();
+        const { dataset } = BaseStep.Context.get();
         return Promise.resolve([
             `
 Hi ChatGPT, I want to analyze the following interaction in one of Physics Lab's online message groups.

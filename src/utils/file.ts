@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync } from "fs";
+import { mkdirSync, readdirSync, readFileSync, statSync } from "fs";
 import { join, resolve } from "path";
 
 import commonPathPrefix from "common-path-prefix";
@@ -68,20 +68,4 @@ export const removePrefixSuffix = (names: string[]) => {
         return newName === "" ? "root" : newName;
     });
     return names;
-};
-
-export const getPythonPath = () => {
-    // TODO: Do not assume running from the root of the repo
-    const venvPath = resolve(process.cwd(), ".venv");
-    if (!existsSync(venvPath)) {
-        return;
-    }
-    let pythonPath = resolve(venvPath, "bin", "python");
-    if (!existsSync(pythonPath)) {
-        pythonPath = resolve(venvPath, "Scripts", "python");
-    }
-    if (!existsSync(pythonPath)) {
-        return;
-    }
-    return pythonPath;
 };

@@ -10,13 +10,12 @@ import {
 } from "../evaluating/reference-builder.js";
 import type { Codebook, DataChunk, DataItem, Dataset } from "../schema.js";
 import { withCache } from "../utils/cache.js";
-import type { EmbedderObject } from "../utils/embeddings.js";
 import { ensureFolder } from "../utils/file.js";
 import { type LLMModel, useLLMs } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 
 import type { AIParameters } from "./base-step.js";
-import { BaseStep, StepContext } from "./base-step.js";
+import { BaseStep } from "./base-step.js";
 import type { CodeStep } from "./code-step.js";
 
 export interface ConsolidateStepConfig<
@@ -35,8 +34,6 @@ export class ConsolidateStep<
     TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
 > extends BaseStep {
     override dependsOn: CodeStep<TSubunit, TUnit>[];
-
-    embedder?: EmbedderObject;
 
     #datasets: Dataset<TUnit[]>[] = [];
     get datasets() {
@@ -150,16 +147,10 @@ export class ConsolidateStep<
 
         await useLLMs(async (session) => {
             for (const dataset of this.#datasets) {
-                // Sanity check
-                if (!this.embedder) {
-                    throw new ConsolidateStep.ConfigError("Embedder not set");
-                }
-
-                await StepContext.with(
+                await BaseStep.Context.with(
                     {
                         dataset,
                         session,
-                        embedder: this.embedder,
                     },
                     async () => {
                         // We made a deep copy here because the reference builder may modify the codebooks

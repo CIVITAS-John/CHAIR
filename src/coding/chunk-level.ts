@@ -1,6 +1,6 @@
 import { Analyzer } from "../analyzer.js";
 import type { Code, CodedThread, Message } from "../schema.js";
-import { StepContext } from "../steps/base-step.js";
+import { BaseStep } from "../steps/base-step.js";
 import { logger } from "../utils/logger.js";
 import { assembleExampleFrom } from "../utils/misc.js";
 
@@ -27,7 +27,7 @@ export abstract class ChunkLevelAnalyzerBase extends ConversationAnalyzer {
         _chunkStart: number,
     ): Promise<number> {
         return logger.withDefaultSource("parseResponse", () => {
-            const { dataset } = StepContext.get();
+            const { dataset } = BaseStep.Context.get();
 
             let category = "";
             let position = "";

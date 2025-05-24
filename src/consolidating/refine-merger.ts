@@ -1,5 +1,5 @@
 import type { Code, Codebook } from "../schema.js";
-import { StepContext } from "../steps/base-step.js";
+import { BaseStep } from "../steps/base-step.js";
 import { clusterCodes } from "../utils/embeddings.js";
 import { logger } from "../utils/logger.js";
 
@@ -96,7 +96,7 @@ export class RefineMerger extends DefinitionParser {
 
     /** Build the prompts for the code consolidator. */
     override buildPrompts(_codebook: Codebook, codes: Code[]): Promise<[string, string]> {
-        const { dataset } = StepContext.get();
+        const { dataset } = BaseStep.Context.get();
         return Promise.resolve([
             `
 You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.

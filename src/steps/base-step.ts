@@ -1,7 +1,6 @@
 import { AsyncVar } from "@rakuzen25/async-store";
 
 import type { Dataset } from "../schema.js";
-import type { EmbedderObject } from "../utils/embeddings.js";
 import type { LLMSession } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 
@@ -15,14 +14,6 @@ export interface AIParameters extends Record<string, unknown> {
 interface IStepContext {
     dataset: Dataset<unknown>;
     session?: LLMSession;
-    embedder?: EmbedderObject;
-}
-export const StepContext = new AsyncVar<IStepContext>("StepContext");
-export class ContextVarNotFoundError extends Error {
-    override name = "ContextVarNotFoundError";
-    constructor(name: keyof IStepContext) {
-        super(`${name} not provided in StepContext`);
-    }
 }
 
 abstract class StepError extends Error {
@@ -62,6 +53,14 @@ export abstract class BaseStep {
 
     static ConfigError = class extends BaseStep.Error {
         override name = "BaseStep.ConfigError";
+    };
+
+    static Context = new AsyncVar<IStepContext>("BaseStep.Context");
+    static ContextVarNotFoundError = class extends BaseStep.Error {
+        override name = "BaseStep.ContextVarNotFoundError";
+        constructor(name: keyof IStepContext, source?: string) {
+            super(`${name} not provided in BaseStep.Context`, source);
+        }
     };
 
     execute() {

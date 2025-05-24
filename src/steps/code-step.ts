@@ -16,7 +16,7 @@ import { logger } from "../utils/logger.js";
 import { assembleExampleFrom } from "../utils/misc.js";
 
 import type { AIParameters } from "./base-step.js";
-import { BaseStep, StepContext } from "./base-step.js";
+import { BaseStep } from "./base-step.js";
 import type { LoadStep } from "./load-step.js";
 
 type AnalyzerConstructor<TUnit, TSubunit, TAnalysis> = new (
@@ -59,7 +59,7 @@ const analyzeChunks = <T extends DataItem>(
     retries?: number,
 ) =>
     logger.withDefaultSource("analyzeChunks", async () => {
-        const { dataset } = StepContext.get();
+        const { dataset } = BaseStep.Context.get();
 
         const keys = Object.keys(chunks);
         logger.info(`[${dataset.name}] Analyzing ${keys.length} chunks`);
@@ -291,7 +291,7 @@ export class CodeStep<
                 for (const AnalyzerClass of strategies) {
                     logger.info(`[${dataset.name}] Using strategy ${AnalyzerClass.name}`);
                     await useLLMs(async (session) => {
-                        await StepContext.with(
+                        await BaseStep.Context.with(
                             {
                                 dataset,
                                 session,

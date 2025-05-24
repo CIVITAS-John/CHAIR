@@ -1,4 +1,4 @@
-import { ContextVarNotFoundError, StepContext } from "./steps/base-step.js";
+import { BaseStep } from "./steps/base-step.js";
 import { logger } from "./utils/logger.js";
 
 abstract class AnalyzerError extends Error {
@@ -113,9 +113,9 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
     retries = 5,
 ) =>
     logger.withDefaultSource("loopThroughChunk", async () => {
-        const { dataset, session } = StepContext.get();
+        const { dataset, session } = BaseStep.Context.get();
         if (!session) {
-            throw new ContextVarNotFoundError("session");
+            throw new BaseStep.ContextVarNotFoundError("session");
         }
 
         // Split units into smaller chunks based on the maximum items

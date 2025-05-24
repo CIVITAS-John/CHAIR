@@ -14,7 +14,7 @@ import { ChatOpenAI } from "@langchain/openai";
 import * as dotenv from "dotenv";
 import md5 from "md5";
 
-import { ContextVarNotFoundError, StepContext } from "../steps/base-step.js";
+import { BaseStep } from "../steps/base-step.js";
 
 import { ensureFolder } from "./file.js";
 import { logger } from "./logger.js";
@@ -350,9 +350,9 @@ export const requestLLM = (
     fakeRequest = false,
 ) =>
     logger.withDefaultSource("requestLLM", async () => {
-        const { session } = StepContext.get();
+        const { session } = BaseStep.Context.get();
         if (!session) {
-            throw new ContextVarNotFoundError("session");
+            throw new BaseStep.ContextVarNotFoundError("session");
         }
 
         const input = messages
@@ -400,9 +400,9 @@ export const requestLLMWithoutCache = (
     fakeRequest = false,
 ) =>
     logger.withDefaultSource("requestLLMWithoutCache", async () => {
-        const { session } = StepContext.get();
+        const { session } = BaseStep.Context.get();
         if (!session) {
-            throw new ContextVarNotFoundError("session");
+            throw new BaseStep.ContextVarNotFoundError("session");
         }
 
         let text = "";
