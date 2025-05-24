@@ -1,7 +1,6 @@
 import type { Code, Codebook } from "../schema.js";
-import type { IDStrFunc } from "../steps/base-step.js";
-import type { EmbedderObject } from "../utils/embeddings.js";
 import { clusterCodes } from "../utils/embeddings.js";
+import { logger } from "../utils/logger.js";
 
 import { mergeCodesByCluster } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";
@@ -12,7 +11,9 @@ import { CodeConsolidator } from "./consolidator.js";
  * So we don't recommend setting a high threshold, because different concepts may be merged.
  */
 export class SimpleMerger extends CodeConsolidator {
-    protected _idStr: IDStrFunc;
+    protected get _prefix() {
+        return logger.prefixed(logger.prefix, "SimpleMerger");
+    }
 
     override looping = false;
 
@@ -23,24 +24,18 @@ export class SimpleMerger extends CodeConsolidator {
     /** Whether we use definitions in merging (used to inform LLM). */
     useDefinition = false;
 
-    constructor(
-        idStr: IDStrFunc,
-        /** The embedder object for the consolidator. */
-        public embedder: EmbedderObject,
-        {
-            maximum,
-            minimum,
-            useDefinition,
-            looping,
-        }: {
-            maximum?: number;
-            minimum?: number;
-            useDefinition?: boolean;
-            looping?: boolean;
-        } = {},
-    ) {
+    constructor({
+        maximum,
+        minimum,
+        useDefinition,
+        looping,
+    }: {
+        maximum?: number;
+        minimum?: number;
+        useDefinition?: boolean;
+        looping?: boolean;
+    } = {}) {
         super();
-        this._idStr = (mtd?: string) => idStr(`SimpleMerger${mtd ? `#${mtd}` : ""}`);
         this.maximum = maximum ?? this.maximum;
         this.minimum = minimum ?? this.minimum;
         this.useDefinition = useDefinition ?? this.useDefinition;
@@ -49,28 +44,28 @@ export class SimpleMerger extends CodeConsolidator {
 
     /** In this case, we do not really use the LLM, so we just merge the codes. */
     override async preprocess(codebook: Codebook, codes: Code[]) {
-        const len = Object.keys(codebook).length;
-        // Categorize the strings
-        const labels = codes.map((code) =>
-            this.useDefinition
-                ? `Label: ${code.label}${code.definitions?.length ? `\nDefinitions:\n${code.definitions.map((d) => `- ${d}`).join("\n")}` : ""}`.trim()
-                : code.label,
-        );
-        const clusters = await clusterCodes(
-            this._idStr,
-            this.embedder,
-            labels,
-            codes,
-            "consolidator",
-            "euclidean",
-            "ward",
-            this.maximum.toString(),
-            this.minimum.toString(),
-        );
-        // Merge the codes
-        const res = mergeCodesByCluster(this._idStr, clusters, codes);
-        // Check if we should stop - when nothing is merged
-        this.stopping = Object.keys(res).length === len;
-        return res;
+        return await logger.withPrefix(this._prefix, async () => {
+            const len = Object.keys(codebook).length;
+            // Categorize the strings
+            const labels = codes.map((code) =>
+                this.useDefinition
+                    ? `Label: ${code.label}${code.definitions?.length ? `\nDefinitions:\n${code.definitions.map((d) => `- ${d}`).join("\n")}` : ""}`.trim()
+                    : code.label,
+            );
+            const clusters = await clusterCodes(
+                labels,
+                codes,
+                "consolidator",
+                "euclidean",
+                "ward",
+                this.maximum.toString(),
+                this.minimum.toString(),
+            );
+            // Merge the codes
+            const res = mergeCodesByCluster(clusters, codes);
+            // Check if we should stop - when nothing is merged
+            this.stopping = Object.keys(res).length === len;
+            return res;
+        });
     }
 }

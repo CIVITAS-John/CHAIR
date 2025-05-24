@@ -1,4 +1,5 @@
 import type { CodedThread, Message } from "../schema.js";
+import { ContextVarNotFoundError, StepContext } from "../steps/base-step.js";
 
 import { ConversationAnalyzer } from "./conversations.js";
 
@@ -22,8 +23,12 @@ export abstract class ItemLevelAnalyzerBase extends ConversationAnalyzer {
         _iteration: number,
         tries: number,
     ): [number, number, number] {
+        const { session } = StepContext.get();
+        if (!session) {
+            throw new ContextVarNotFoundError("session");
+        }
         // For weaker models, we will reduce the chunk size (32 => 24 => 16 => 8)
-        if (recommended === this.session.llm.maxItems) {
+        if (recommended === session.llm.maxItems) {
             return [recommended - tries * 8, 0, 0];
         }
         return [recommended - tries * 2, Math.max(8 - recommended - tries, 0), 0];
@@ -35,6 +40,7 @@ export abstract class ItemLevelAnalyzerBase extends ConversationAnalyzer {
         lines: string[],
         messages: Message[],
     ): Promise<Record<number, string>> {
+        const { dataset } = StepContext.get();
         const results: Record<number, string> = {};
         let nextMessage: ((content: string) => void) | undefined;
         for (let i = 0; i < lines.length; i++) {
@@ -135,7 +141,7 @@ export abstract class ItemLevelAnalyzerBase extends ConversationAnalyzer {
                     // Sometimes the LLM will generate multiple spaces
                     codes = codes.replaceAll(/\s+/g, " ");
                     // Sometimes the LLM will return "{speaker}, {other codes}"
-                    let speaker = this.dataset.getSpeakerName(message.uid).toLowerCase();
+                    let speaker = dataset.getSpeakerName(message.uid).toLowerCase();
                     if (speaker.includes("-")) {
                         speaker = speaker.substring(0, speaker.indexOf("-")).trim();
                     }

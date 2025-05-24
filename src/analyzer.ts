@@ -1,6 +1,4 @@
-import type { Dataset } from "./schema.js";
-import type { IDStrFunc } from "./steps/base-step.js";
-import type { LLMSession } from "./utils/llms.js";
+import { ContextVarNotFoundError, StepContext } from "./steps/base-step.js";
 import { logger } from "./utils/logger.js";
 
 abstract class AnalyzerError extends Error {
@@ -17,8 +15,13 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     static InvalidResponseError = class extends AnalyzerError {
         override name = "Analyzer.InvalidResponseError";
     };
+    static InternalError = class extends AnalyzerError {
+        override name = "Analyzer.InternalError";
+    };
 
-    protected _idStr: IDStrFunc;
+    protected get _prefix() {
+        return logger.prefixed(logger.prefix, this.name);
+    }
 
     /** The name of the analyzer. */
     name = "Unnamed";
@@ -28,16 +31,6 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     baseTemperature = 0;
     /** The maximum number of iterations for the analyzer. */
     maxIterations = 1;
-
-    constructor(
-        protected idStr: IDStrFunc,
-        /** The dataset the analyzer is working on. */
-        public dataset: Dataset<TUnit>,
-        /** The LLM session for the analyzer. */
-        public session: LLMSession,
-    ) {
-        this._idStr = (mtd?: string) => idStr(`${this.name}${mtd ? `#${mtd}` : ""}`);
-    }
 
     /**
      * Get the chunk configuration for the LLM.
@@ -104,10 +97,7 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
 }
 
 /** Process data through the analyzer in a chunkified way. */
-export const loopThroughChunk = async <TUnit, TSubunit, TAnalysis>(
-    idStr: IDStrFunc,
-    dataset: Dataset<TUnit>,
-    session: LLMSession,
+export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
     analyzer: Analyzer<TUnit, TSubunit, TAnalysis>,
     analysis: TAnalysis,
     source: TUnit,
@@ -121,98 +111,97 @@ export const loopThroughChunk = async <TUnit, TSubunit, TAnalysis>(
     ) => Promise<number>,
     onIterate?: (iteration: number) => Promise<void>,
     retries = 5,
-) => {
-    const _id = idStr("loopThroughChunk");
-
-    // Split units into smaller chunks based on the maximum items
-    for (let i = 0; i < analyzer.maxIterations; i++) {
-        // Preprocess and filter the subunits
-        sources = await analyzer.preprocess(analysis, source, sources, i);
-        if (sources.length === 0) {
-            continue;
+) =>
+    logger.withDefaultSource("loopThroughChunk", async () => {
+        const { dataset, session } = StepContext.get();
+        if (!session) {
+            throw new ContextVarNotFoundError("session");
         }
-        logger.info(`[${dataset.name}] Iteration ${i + 1}/${analyzer.maxIterations}`, _id);
-        let cursor = 0;
-        const filtered = sources.filter((subunit) => analyzer.subunitFilter(subunit, i));
-        logger.debug(`[${dataset.name}] ${filtered.length} subunits filtered`, _id);
-        // Loop through the subunits
-        while (cursor < filtered.length) {
-            logger.debug(`[${dataset.name}] Cursor at ${cursor}/${filtered.length}`, _id);
-            let tries = 0;
-            let cursorRelative = 0;
-            let chunkSize = [0, 0, 0];
-            while (tries < retries) {
-                // Get the chunk size
-                const _chunkSize = analyzer.getChunkSize(
-                    Math.min(session.llm.maxItems, filtered.length - cursor),
-                    filtered.length - cursor,
-                    i,
-                    tries,
-                );
-                logger.debug(`[${dataset.name}] Chunk size: ${JSON.stringify(_chunkSize)}`, _id);
-                if (typeof _chunkSize === "number") {
-                    if (_chunkSize < 0) {
-                        logger.warn(
-                            `[${dataset.name}] Stopped iteration due to signals sent by the analyzer (<0 chunk size)`,
-                            _id,
-                        );
-                        return;
-                    }
-                    chunkSize = [_chunkSize, 0, 0];
-                } else {
-                    chunkSize = _chunkSize;
-                }
 
-                // Get the chunk
-                const start = Math.max(cursor - chunkSize[1], 0);
-                const end = Math.min(cursor + chunkSize[0] + chunkSize[2], filtered.length);
-                const currents = filtered.slice(start, end);
-                const isFirst = cursor === 0;
-                logger.debug(
-                    `[${dataset.name}] Processing block ${start}-${end} (${currents.length} subunits)`,
-                    _id,
-                );
-                // Run the prompts
-                try {
-                    cursorRelative = await action(currents, cursor - start, isFirst, tries, i);
-                    logger.debug(
-                        `[${dataset.name}] Cursor relative movement: ${cursorRelative}`,
-                        _id,
-                    );
-                    // Sometimes, the action may return a relative cursor movement
-                    if (chunkSize[0] + cursorRelative <= 0) {
-                        throw new Error("Failed to process any subunits");
-                    }
-                    session.expectedItems += chunkSize[0];
-                    session.finishedItems += chunkSize[0] + cursorRelative;
-                    if (cursorRelative !== 0) {
-                        logger.debug(
-                            `[${dataset.name}}] Expected ${chunkSize[0]} subunits, processed ${chunkSize[0] + cursorRelative} subunits`,
-                            _id,
-                        );
-                    }
-                    break;
-                } catch (e) {
-                    ++tries;
-                    const error = new Error(`Analysis error, try ${tries}/${retries}`);
-                    error.cause = e;
-                    if (tries >= retries) {
-                        throw error;
-                    }
-                    session.expectedItems += chunkSize[0];
-                    session.finishedItems += chunkSize[0];
-                    logger.error(error, true, _id);
-                }
+        // Split units into smaller chunks based on the maximum items
+        for (let i = 0; i < analyzer.maxIterations; i++) {
+            // Preprocess and filter the subunits
+            sources = await analyzer.preprocess(analysis, source, sources, i);
+            if (sources.length === 0) {
+                continue;
             }
-            // Move the cursor
-            cursor += chunkSize[0] + cursorRelative;
-        }
-        // Run the iteration function
-        await onIterate?.(i);
+            logger.info(`[${dataset.name}] Iteration ${i + 1}/${analyzer.maxIterations}`);
+            let cursor = 0;
+            const filtered = sources.filter((subunit) => analyzer.subunitFilter(subunit, i));
+            logger.debug(`[${dataset.name}] ${filtered.length} subunits filtered`);
+            // Loop through the subunits
+            while (cursor < filtered.length) {
+                logger.debug(`[${dataset.name}] Cursor at ${cursor}/${filtered.length}`);
+                let tries = 0;
+                let cursorRelative = 0;
+                let chunkSize = [0, 0, 0];
+                while (tries < retries) {
+                    // Get the chunk size
+                    const _chunkSize = analyzer.getChunkSize(
+                        Math.min(session.llm.maxItems, filtered.length - cursor),
+                        filtered.length - cursor,
+                        i,
+                        tries,
+                    );
+                    logger.debug(`[${dataset.name}] Chunk size: ${JSON.stringify(_chunkSize)}`);
+                    if (typeof _chunkSize === "number") {
+                        if (_chunkSize < 0) {
+                            logger.warn(
+                                `[${dataset.name}] Stopped iteration due to signals sent by the analyzer (<0 chunk size)`,
+                            );
+                            return;
+                        }
+                        chunkSize = [_chunkSize, 0, 0];
+                    } else {
+                        chunkSize = _chunkSize;
+                    }
 
-        logger.info(
-            `[${dataset.name}] Iteration ${i + 1}/${analyzer.maxIterations} completed`,
-            _id,
-        );
-    }
-};
+                    // Get the chunk
+                    const start = Math.max(cursor - chunkSize[1], 0);
+                    const end = Math.min(cursor + chunkSize[0] + chunkSize[2], filtered.length);
+                    const currents = filtered.slice(start, end);
+                    const isFirst = cursor === 0;
+                    logger.debug(
+                        `[${dataset.name}] Processing block ${start}-${end} (${currents.length} subunits)`,
+                    );
+                    // Run the prompts
+                    try {
+                        cursorRelative = await action(currents, cursor - start, isFirst, tries, i);
+                        logger.debug(
+                            `[${dataset.name}] Cursor relative movement: ${cursorRelative}`,
+                        );
+                        // Sometimes, the action may return a relative cursor movement
+                        if (chunkSize[0] + cursorRelative <= 0) {
+                            throw new Error("Failed to process any subunits");
+                        }
+                        session.expectedItems += chunkSize[0];
+                        session.finishedItems += chunkSize[0] + cursorRelative;
+                        if (cursorRelative !== 0) {
+                            logger.debug(
+                                `[${dataset.name}}] Expected ${chunkSize[0]} subunits, processed ${chunkSize[0] + cursorRelative} subunits`,
+                            );
+                        }
+                        break;
+                    } catch (e) {
+                        ++tries;
+                        const error = new Analyzer.InternalError(
+                            `Analysis error, try ${tries}/${retries}`,
+                        );
+                        error.cause = e;
+                        if (tries >= retries) {
+                            throw error;
+                        }
+                        session.expectedItems += chunkSize[0];
+                        session.finishedItems += chunkSize[0];
+                        logger.error(error, true);
+                    }
+                }
+                // Move the cursor
+                cursor += chunkSize[0] + cursorRelative;
+            }
+            // Run the iteration function
+            await onIterate?.(i);
+
+            logger.info(`[${dataset.name}] Iteration ${i + 1}/${analyzer.maxIterations} completed`);
+        }
+    });

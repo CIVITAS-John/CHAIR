@@ -6,6 +6,7 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { PythonShell } from "python-shell";
 
 import type { BertopicTopics, CodedThread, Conversation, Message } from "../schema.js";
+import { StepContext } from "../steps/base-step.js";
 import { ensureFolder, getPythonPath } from "../utils/file.js";
 import { requestLLM } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
@@ -37,103 +38,104 @@ export default class BertopicAnalyzerAny extends ConversationAnalyzer {
         conversations: Conversation[],
         _analyzed: CodedThread[],
     ): Promise<void> {
-        const _id = this._idStr("batchPreprocess");
-
-        // Write the messages into the file.
-        const messages = conversations.flatMap((conversation) =>
-            conversation.items.filter(
-                (message) =>
-                    // TODO: Support subchunks
-                    "content" in message &&
-                    message.content.length > 0 &&
-                    (!message.chunk || message.chunk === conversation.id),
-            ),
-        );
-        const content = messages.map((message) =>
-            // TODO: Support subchunks
-            "content" in message
-                ? buildMessagePrompt(this.dataset, message, undefined, undefined, true).replaceAll(
-                      "\n",
-                      " ",
-                  )
-                : "",
-        );
-        ensureFolder("./known");
-        writeFileSync("./known/bertopic.temp.json", JSON.stringify(content));
-        // Run the Python script
-        let topics: BertopicTopics = {};
-        const __dirname = dirname(fileURLToPath(import.meta.url));
-        await PythonShell.run(resolve(__dirname, "bertopic_impl.py"), {
-            pythonPath: getPythonPath(),
-            args: [messages.length.toString()],
-            parser: (message) => {
-                if (message.startsWith("{")) {
-                    logger.success(message, _id);
-                    topics = JSON.parse(message) as BertopicTopics;
-                } else {
-                    logger.warn(message, _id);
-                }
-            },
-        });
-        // Generate a label and definition for each topic
-        for (const topic of Object.values(topics)) {
-            const ids = topic.ids.sort((A, B) => topic.probabilities[B] - topic.probabilities[A]);
-            // Maximum 5 examples sorted by probabilities
-            const examples = ids.slice(0, 5).map((ID) => messages[ID]);
-            // Build the prompt
-            const prompt = `
+        await logger.withSource(this._prefix, "batchPreprocess", true, async () => {
+            const { dataset } = StepContext.get();
+            // Write the messages into the file.
+            const messages = conversations.flatMap((conversation) =>
+                conversation.items.filter(
+                    (message) =>
+                        // TODO: Support subchunks
+                        "content" in message &&
+                        message.content.length > 0 &&
+                        (!message.chunk || message.chunk === conversation.id),
+                ),
+            );
+            const content = messages.map((message) =>
+                // TODO: Support subchunks
+                "content" in message
+                    ? buildMessagePrompt(dataset, message, undefined, undefined, true).replaceAll(
+                          "\n",
+                          " ",
+                      )
+                    : "",
+            );
+            ensureFolder("./known");
+            writeFileSync("./known/bertopic.temp.json", JSON.stringify(content));
+            // Run the Python script
+            let topics: BertopicTopics = {};
+            const __dirname = dirname(fileURLToPath(import.meta.url));
+            await PythonShell.run(resolve(__dirname, "bertopic_impl.py"), {
+                pythonPath: getPythonPath(),
+                args: [messages.length.toString()],
+                parser: (message) => {
+                    if (message.startsWith("{")) {
+                        logger.success(message);
+                        topics = JSON.parse(message) as BertopicTopics;
+                    } else {
+                        logger.warn(message);
+                    }
+                },
+            });
+            // Generate a label and definition for each topic
+            for (const topic of Object.values(topics)) {
+                const ids = topic.ids.sort(
+                    (A, B) => topic.probabilities[B] - topic.probabilities[A],
+                );
+                // Maximum 5 examples sorted by probabilities
+                const examples = ids.slice(0, 5).map((ID) => messages[ID]);
+                // Build the prompt
+                const prompt = `
 You are an expert in thematic analysis with grounded theory, working on open coding.
 You identified a topic from the input quotes. Each quote is independent from another.
-${this.dataset.researchQuestion}
-${this.dataset.codingNotes}
+${dataset.researchQuestion}
+${dataset.codingNotes}
 
 Always follow the output format:
 ===
 Thought: {What is the most common theme among the input quotes? Do not over-interpret the data.}
 Label: {A single label that faithfully describes the topic}
 ===`.trim();
-            // Find 5 keywords from the topic
-            const keywords = topic.keywords.slice(0, 5);
-            // Request the LLM
-            const response = await requestLLM(
-                this.idStr,
-                this.session,
-                [
-                    new SystemMessage(prompt),
-                    new HumanMessage(
-                        `Quotes:
+                // Find 5 keywords from the topic
+                const keywords = topic.keywords.slice(0, 5);
+                // Request the LLM
+                const response = await requestLLM(
+                    [
+                        new SystemMessage(prompt),
+                        new HumanMessage(
+                            `Quotes:
 ${examples
     .map((message) =>
         // TODO: Support subchunks
         "content" in message
-            ? `- ${buildMessagePrompt(this.dataset, message, undefined, undefined, true)}`
+            ? `- ${buildMessagePrompt(dataset, message, undefined, undefined, true)}`
             : "",
     )
     .join("\n")}
 Keywords: ${keywords.join(", ")}`.trim(),
-                    ),
-                ],
-                `messaging-groups/${this.name}`,
-                this.baseTemperature,
-                false,
-            );
-            // Parse the response
-            let phrase = "";
-            const lines = response.split("\n");
-            for (const _line of lines) {
-                const line = _line.trim();
-                if (line.startsWith("Label:")) {
-                    phrase = line.slice(6).trim().toLowerCase();
-                    if (phrase.endsWith(".")) {
-                        phrase = phrase.slice(0, -1);
+                        ),
+                    ],
+                    `messaging-groups/${this.name}`,
+                    this.baseTemperature,
+                    false,
+                );
+                // Parse the response
+                let phrase = "";
+                const lines = response.split("\n");
+                for (const _line of lines) {
+                    const line = _line.trim();
+                    if (line.startsWith("Label:")) {
+                        phrase = line.slice(6).trim().toLowerCase();
+                        if (phrase.endsWith(".")) {
+                            phrase = phrase.slice(0, -1);
+                        }
                     }
                 }
+                // Assign messages to the topic
+                for (const id of ids) {
+                    this.#codes[messages[id].id] = phrase;
+                }
             }
-            // Assign messages to the topic
-            for (const id of ids) {
-                this.#codes[messages[id].id] = phrase;
-            }
-        }
+        });
     }
 
     /** Parse the response from the LLM. */

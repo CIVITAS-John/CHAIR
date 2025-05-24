@@ -14,7 +14,7 @@ import { ChatOpenAI } from "@langchain/openai";
 import * as dotenv from "dotenv";
 import md5 from "md5";
 
-import type { IDStrFunc } from "../steps/base-step.js";
+import { ContextVarNotFoundError, StepContext } from "../steps/base-step.js";
 
 import { ensureFolder } from "./file.js";
 import { logger } from "./logger.js";
@@ -247,6 +247,12 @@ export interface LLMObject {
     systemMessage?: boolean;
 }
 export type LLMModel = LLMName | LLMObject;
+export class LLMNotSupportedError extends Error {
+    override name = "LLMNotSupportedError";
+    constructor(model: string, local = false) {
+        super(local ? `LLM ${model} is local only through ollama` : `LLM ${model} not supported`);
+    }
+}
 
 export interface LLMSession {
     llm: LLMObject;
@@ -275,7 +281,7 @@ export const initLLM = (LLM: string): LLMObject => {
         }
 
         if (!(realLLM in MODELS)) {
-            throw new Error(`LLM ${realLLM} not supported`);
+            throw new LLMNotSupportedError(LLM);
         }
 
         return {
@@ -299,13 +305,13 @@ export const initLLM = (LLM: string): LLMObject => {
     }
 
     if (!(realLLM in MODELS)) {
-        throw new Error(`LLM ${LLM} not supported`);
+        throw new LLMNotSupportedError(LLM);
     }
 
     const config = MODELS[realLLM as LLMName];
     if (!("model" in config)) {
         // No default online model
-        throw new Error(`LLM ${LLM} is local only through ollama`);
+        throw new LLMNotSupportedError(LLM, true);
     }
     return {
         ...config,
@@ -313,127 +319,122 @@ export const initLLM = (LLM: string): LLMObject => {
     };
 };
 
-/** UseLLMs: Use specific LLMs one by one. Call it before start translating. */
-export const useLLMs = async (
-    idStr: IDStrFunc,
-    task: (session: LLMSession) => Promise<void>,
-    LLMs: LLMModel[],
-) => {
-    for (const llm of LLMs) {
-        logger.debug(
-            `Initializing LLM ${typeof llm === "string" ? llm : llm.name}`,
-            idStr("useLLMs"),
-        );
-        const session: LLMSession = {
-            llm: typeof llm === "string" ? initLLM(llm) : llm,
-            inputTokens: 0,
-            outputTokens: 0,
-            expectedItems: 0,
-            finishedItems: 0,
-        };
-        logger.debug("Executing task", idStr("useLLMs"));
-        await task(session);
-        logger.info(
-            `LLM ${typeof llm === "string" ? llm : llm.name} completed (input tokens: ${session.inputTokens}, output tokens: ${session.outputTokens}, finish rate: ${Math.round(
-                (session.finishedItems / Math.max(1, session.expectedItems)) * 100,
-            )}%)`,
-            idStr("useLLMs"),
-        );
-    }
+/** Use specific LLMs one by one. Call it before start translating. */
+export const useLLMs = async (task: (session: LLMSession) => Promise<void>, LLMs: LLMModel[]) => {
+    await logger.withDefaultSource("useLLMs", async () => {
+        for (const llm of LLMs) {
+            logger.debug(`Initializing LLM ${typeof llm === "string" ? llm : llm.name}`);
+            const session: LLMSession = {
+                llm: typeof llm === "string" ? initLLM(llm) : llm,
+                inputTokens: 0,
+                outputTokens: 0,
+                expectedItems: 0,
+                finishedItems: 0,
+            };
+            logger.debug("Executing task");
+            await task(session);
+            logger.info(
+                `LLM ${typeof llm === "string" ? llm : llm.name} completed (input tokens: ${session.inputTokens}, output tokens: ${session.outputTokens}, finish rate: ${Math.round(
+                    (session.finishedItems / Math.max(1, session.expectedItems)) * 100,
+                )}%)`,
+            );
+        }
+    });
 };
 
 /** Call the model to generate text with cache. */
-export const requestLLM = async (
-    idStr: IDStrFunc,
-    session: LLMSession,
+export const requestLLM = (
     messages: BaseMessage[],
     cache: string,
     temperature?: number,
     fakeRequest = false,
-) => {
-    const _id = idStr("requestLLM");
+) =>
+    logger.withDefaultSource("requestLLM", async () => {
+        const { session } = StepContext.get();
+        if (!session) {
+            throw new ContextVarNotFoundError("session");
+        }
 
-    const input = messages
-        .map((m) => (typeof m.content === "string" ? m.content : JSON.stringify(m.content)))
-        .join("\n~~~\n");
+        const input = messages
+            .map((m) => (typeof m.content === "string" ? m.content : JSON.stringify(m.content)))
+            .join("\n~~~\n");
 
-    logger.debug(
-        `[${session.llm.name}] LLM request with temperature ${temperature ?? 0}: \n${messages.map((m) => `${m.getType()}: ${m.content as string}`).join("\n---\n")}`,
-        _id,
-    );
-    const cacheFolder = ensureFolder(`known/${cache}/${session.llm.name}`);
-    // Check if the cache exists
-    const cacheFile = `${cacheFolder}/${md5(input)}-${temperature}.txt`;
-    logger.debug(`[${session.llm.name}] Cache file path: ${cacheFile}`, _id);
-    if (existsSync(cacheFile)) {
-        logger.debug(`[${session.llm.name}] Cache file exists`, _id);
-        const cache = readFileSync(cacheFile, "utf-8");
-        const split = cache.split("\n===\n");
-        if (split.length === 2) {
-            const content = split[1].trim();
-            if (content.length > 0) {
-                const inputTokens = tokenize(input).length,
-                    outputTokens = tokenize(content).length;
-                session.inputTokens += inputTokens;
-                session.outputTokens += outputTokens;
-                logger.info(
-                    `[${session.llm.name}] Cache hit (input tokens: ${inputTokens}, output tokens: ${outputTokens})`,
-                    _id,
-                );
-                logger.debug(`[${session.llm.name}] Cache content: ${content}`, _id);
-                return content;
+        logger.debug(
+            `[${session.llm.name}] LLM request with temperature ${temperature ?? 0}: \n${messages.map((m) => `${m.getType()}: ${m.content as string}`).join("\n---\n")}`,
+        );
+        const cacheFolder = ensureFolder(`known/${cache}/${session.llm.name}`);
+        // Check if the cache exists
+        const cacheFile = `${cacheFolder}/${md5(input)}-${temperature}.txt`;
+        logger.debug(`[${session.llm.name}] Cache file path: ${cacheFile}`);
+        if (existsSync(cacheFile)) {
+            logger.debug(`[${session.llm.name}] Cache file exists`);
+            const cache = readFileSync(cacheFile, "utf-8");
+            const split = cache.split("\n===\n");
+            if (split.length === 2) {
+                const content = split[1].trim();
+                if (content.length > 0) {
+                    const inputTokens = tokenize(input).length,
+                        outputTokens = tokenize(content).length;
+                    session.inputTokens += inputTokens;
+                    session.outputTokens += outputTokens;
+                    logger.info(
+                        `[${session.llm.name}] Cache hit (input tokens: ${inputTokens}, output tokens: ${outputTokens})`,
+                    );
+                    logger.debug(`[${session.llm.name}] Cache content: ${content}`);
+                    return content;
+                }
             }
         }
-    }
-    // If not, call the model
-    logger.info(`[${session.llm.name}] Cache miss`, _id);
-    const result = await requestLLMWithoutCache(idStr, session, messages, temperature, fakeRequest);
-    logger.debug(`[${session.llm.name}] Writing to cache file`, _id);
-    writeFileSync(cacheFile, `${input}\n===\n${result}`);
-    return result;
-};
+        // If not, call the model
+        logger.info(`[${session.llm.name}] Cache miss`);
+        const result = await requestLLMWithoutCache(messages, temperature, fakeRequest);
+        logger.debug(`[${session.llm.name}] Writing to cache file`);
+        writeFileSync(cacheFile, `${input}\n===\n${result}`);
+        return result;
+    });
 
 /** Call the model to generate text, explicitly bypassing cache. */
-export const requestLLMWithoutCache = async (
-    idStr: IDStrFunc,
-    session: LLMSession,
+export const requestLLMWithoutCache = (
     messages: BaseMessage[],
     temperature?: number,
     fakeRequest = false,
-) => {
-    const _id = idStr("requestLLMWithoutCache");
-    let text = "";
+) =>
+    logger.withDefaultSource("requestLLMWithoutCache", async () => {
+        const { session } = StepContext.get();
+        if (!session) {
+            throw new ContextVarNotFoundError("session");
+        }
 
-    const { llm } = session;
-    logger.debug(
-        `[${llm.name}] LLM request with temperature ${temperature ?? 0}: \n${messages.map((m) => `${m.getType()}: ${m.content as string}`).join("\n---\n")}`,
-        _id,
-    );
-    if (!llm.systemMessage) {
-        messages = messages.map((m) => new HumanMessage(m.content as string));
-    }
-    if (!fakeRequest) {
-        await promiseWithTimeout(
-            llm
-                .model(temperature ?? 0)
-                .invoke(messages, { temperature: temperature ?? 0 } as BaseChatModelCallOptions)
-                .then((res) => {
-                    text = res.content as string;
-                }),
-            llm.name.startsWith("o_") ? 3600000 : 300000,
+        let text = "";
+
+        const { llm } = session;
+        logger.debug(
+            `[${llm.name}] LLM request with temperature ${temperature ?? 0}: \n${messages.map((m) => `${m.getType()}: ${m.content as string}`).join("\n---\n")}`,
         );
-    }
-    const input = messages
-        .map((m) => tokenize(m.content as string).length)
-        .reduce((acc, cur) => acc + cur);
-    const output = tokenize(text).length;
-    session.inputTokens += input;
-    session.outputTokens += output;
+        if (!llm.systemMessage) {
+            messages = messages.map((m) => new HumanMessage(m.content as string));
+        }
+        if (!fakeRequest) {
+            await promiseWithTimeout(
+                llm
+                    .model(temperature ?? 0)
+                    .invoke(messages, { temperature: temperature ?? 0 } as BaseChatModelCallOptions)
+                    .then((res) => {
+                        text = res.content as string;
+                    }),
+                llm.name.startsWith("o_") ? 3600000 : 300000,
+            );
+        }
+        const input = messages
+            .map((m) => tokenize(m.content as string).length)
+            .reduce((acc, cur) => acc + cur);
+        const output = tokenize(text).length;
+        session.inputTokens += input;
+        session.outputTokens += output;
 
-    logger.info(
-        `[${llm.name}] LLM request completed (input tokens: ${input}, output tokens: ${output})`,
-        _id,
-    );
-    logger.debug(`[${llm.name}] LLM response: ${text}`, _id);
-    return text;
-};
+        logger.info(
+            `[${llm.name}] LLM request completed (input tokens: ${input}, output tokens: ${output})`,
+        );
+        logger.debug(`[${llm.name}] LLM response: ${text}`);
+        return text;
+    });

@@ -47,7 +47,7 @@ export class LoadStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem>> e
     get dataset() {
         // Sanity check
         if (!this.executed || !this.#dataset) {
-            throw new LoadStep.UnexecutedError(this._idStr("dataset"));
+            throw new LoadStep.UnexecutedError(logger.prefixed(this._prefix, "dataset"));
         }
         return this.#dataset;
     }
@@ -56,52 +56,44 @@ export class LoadStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem>> e
         super();
     }
 
-    override async execute() {
-        const _id = this._idStr("execute");
-        await super.execute();
-
+    async #execute() {
         if (!this.config.path) {
-            throw new LoadStep.ConfigError("config.path is required", _id);
+            throw new LoadStep.ConfigError("config.path is required");
         }
 
-        logger.info(`Loading dataset from ${this.config.path}`, _id);
+        logger.info(`Loading dataset from ${this.config.path}`);
         const dataset = (await importDefault(
             join(this.config.path, "configuration.js"),
         )) as RawDataset;
         logger.info(
             `Found dataset ${dataset.name} (${dataset.title}) with ${Object.keys(dataset.data).length} chunk groups`,
-            _id,
         );
 
         this.config.path = resolve(this.config.path);
         const parsedData: Record<string, Record<string, TUnit>> = {};
         for (const [gk, gv] of Object.entries(dataset.data)) {
-            logger.info(`[${dataset.name}] Loading chunk group "${gk}" from ${gv}`, _id);
+            logger.info(`[${dataset.name}] Loading chunk group "${gk}" from ${gv}`);
             let rawChunks = loadChunkGroup(this.config.path, gv);
 
             if (this.config.filter) {
-                logger.debug(`[${dataset.name}] Filtering chunk group "${gk}"`, _id);
+                logger.debug(`[${dataset.name}] Filtering chunk group "${gk}"`);
                 rawChunks = this.config.filter(rawChunks);
             }
 
             if (!Object.keys(rawChunks).length) {
-                logger.warn(`[${dataset.name}] Chunk group "${gk}" is empty, skipping...`, _id);
+                logger.warn(`[${dataset.name}] Chunk group "${gk}" is empty, skipping...`);
                 continue;
             }
 
             const parsedChunks: Record<string, TUnit> = {};
             for (const [ck, cv] of Object.entries(rawChunks)) {
-                logger.debug(
-                    `[${dataset.name}] Initializing chunk "${ck}" of chunk group "${gk}"`,
-                    _id,
-                );
+                logger.debug(`[${dataset.name}] Initializing chunk "${ck}" of chunk group "${gk}"`);
                 parsedChunks[ck] = initializeChunk(cv) as TUnit;
             }
             parsedData[gk] = parsedChunks;
 
             logger.info(
                 `[${dataset.name}] Loaded chunk group "${gk}" with ${Object.keys(parsedChunks).length} chunks`,
-                _id,
             );
         }
 
@@ -114,8 +106,14 @@ export class LoadStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem>> e
             getSpeakerName,
             getSpeakerNameForExample: dataset.getSpeakerNameForExample ?? getSpeakerName,
         };
-        logger.success(`Loaded dataset ${dataset.name}`, _id);
+        logger.success(`Loaded dataset ${dataset.name}`);
 
         this.executed = true;
+    }
+
+    override async execute() {
+        await super.execute();
+
+        await logger.withSource(this._prefix, "execute", true, this.#execute.bind(this));
     }
 }

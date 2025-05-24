@@ -1,14 +1,16 @@
-import type { Code, Codebook, Dataset } from "../schema.js";
-import type { IDStrFunc } from "../steps/base-step.js";
-import type { EmbedderObject } from "../utils/embeddings.js";
+import type { Code, Codebook } from "../schema.js";
+import { StepContext } from "../steps/base-step.js";
 import { clusterCodes } from "../utils/embeddings.js";
+import { logger } from "../utils/logger.js";
 
 import { mergeCodesByCluster } from "./codebooks.js";
 import { DefinitionParser } from "./definition-generator.js";
 
 /** Merge codes based on names and definitions. Then, refine the definitions into one. */
-export class RefineMerger<T> extends DefinitionParser {
-    protected _idStr: IDStrFunc;
+export class RefineMerger extends DefinitionParser {
+    protected get _prefix() {
+        return logger.prefixed(logger.prefix, "RefineMerger");
+    }
 
     override chunkified = true;
     override looping = false;
@@ -27,28 +29,20 @@ export class RefineMerger<T> extends DefinitionParser {
         return `${super.name} (maximum: ${this.maximum}, minimum: ${this.minimum}, use definition: ${this.useDefinition})`;
     }
 
-    constructor(
-        idStr: IDStrFunc,
-        /** The dataset the merger is working on. */
-        public dataset: Dataset<T>,
-        /** The embedder object for the merger. */
-        public embedder: EmbedderObject,
-        {
-            maximum,
-            minimum,
-            useDefinition,
-            useVerbPhrases,
-            looping,
-        }: {
-            maximum?: number;
-            minimum?: number;
-            useDefinition?: boolean;
-            useVerbPhrases?: boolean;
-            looping?: boolean;
-        } = {},
-    ) {
+    constructor({
+        maximum,
+        minimum,
+        useDefinition,
+        useVerbPhrases,
+        looping,
+    }: {
+        maximum?: number;
+        minimum?: number;
+        useDefinition?: boolean;
+        useVerbPhrases?: boolean;
+        looping?: boolean;
+    } = {}) {
         super();
-        this._idStr = (mtd?: string) => idStr(`RefineMerger${mtd ? `#${mtd}` : ""}`);
         this.maximum = maximum ?? this.maximum;
         this.minimum = minimum ?? this.minimum;
         this.useDefinition = useDefinition ?? this.useDefinition;
@@ -58,37 +52,37 @@ export class RefineMerger<T> extends DefinitionParser {
 
     /** Preprocess the subunits before filtering and chunking. */
     override async preprocess(_codebook: Codebook, codes: Code[]) {
-        // Only when the code has at least one definition should we merge them
-        codes = codes.filter((Code) => (this.useDefinition ? Code.definitions?.length : true));
-        if (codes.length === 0) {
-            return {};
-        }
+        return await logger.withPrefix(this._prefix, async () => {
+            // Only when the code has at least one definition should we merge them
+            codes = codes.filter((Code) => (this.useDefinition ? Code.definitions?.length : true));
+            if (codes.length === 0) {
+                return {};
+            }
 
-        const len = codes.length;
-        // Cluster codes using text embeddings
-        // Combine each code into a string for clustering
-        const codeStrings = codes.map((code) =>
-            this.useDefinition
-                ? `Label: ${code.label}\nDefinition: ${code.definitions?.join(", ")}`
-                : code.label,
-        );
-        // Categorize the strings
-        const clusters = await clusterCodes(
-            this._idStr,
-            this.embedder,
-            codeStrings,
-            codes,
-            "consolidator",
-            "euclidean",
-            "ward",
-            this.maximum.toString(),
-            this.minimum.toString(),
-        );
-        // Merge the codes
-        const res = mergeCodesByCluster(this._idStr, clusters, codes);
-        // Check if we should stop - when nothing is merged
-        this.stopping = Object.keys(res).length === len;
-        return res;
+            const len = codes.length;
+            // Cluster codes using text embeddings
+            // Combine each code into a string for clustering
+            const codeStrings = codes.map((code) =>
+                this.useDefinition
+                    ? `Label: ${code.label}\nDefinition: ${code.definitions?.join(", ")}`
+                    : code.label,
+            );
+            // Categorize the strings
+            const clusters = await clusterCodes(
+                codeStrings,
+                codes,
+                "consolidator",
+                "euclidean",
+                "ward",
+                this.maximum.toString(),
+                this.minimum.toString(),
+            );
+            // Merge the codes
+            const res = mergeCodesByCluster(clusters, codes);
+            // Check if we should stop - when nothing is merged
+            this.stopping = Object.keys(res).length === len;
+            return res;
+        });
     }
 
     /** Filter the subunits before chunking. */
@@ -102,6 +96,7 @@ export class RefineMerger<T> extends DefinitionParser {
 
     /** Build the prompts for the code consolidator. */
     override buildPrompts(_codebook: Codebook, codes: Code[]): Promise<[string, string]> {
+        const { dataset } = StepContext.get();
         return Promise.resolve([
             `
 You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
@@ -109,7 +104,7 @@ Each code includes one or more concepts and definitions. Each code is independen
 For each code, reflect on the logical relationship between the concepts.
 Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
 Finally, write an accurate ${this.useVerbPhrases ? "verb phrase" : "label"} to best represent the code.
-${this.dataset.researchQuestion}
+${dataset.researchQuestion}
 Always follow the output format:
 ---
 Definitions for each code (${codes.length} in total):

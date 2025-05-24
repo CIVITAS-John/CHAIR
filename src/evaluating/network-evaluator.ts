@@ -12,9 +12,7 @@ import type {
     DataItem,
     Dataset,
 } from "../schema.js";
-import type { IDStrFunc } from "../steps/base-step.js";
 import { withCache } from "../utils/cache.js";
-import type { EmbedderObject } from "../utils/embeddings.js";
 import { evaluateTexts } from "../utils/embeddings.js";
 import { logger } from "../utils/logger.js";
 import { createOfflineBundle, launchServer } from "../utils/server.js";
@@ -35,7 +33,9 @@ export class NetworkEvaluator<
     TUnit extends DataChunk<TSubunit>,
     TSubunit extends DataItem = DataItem,
 > extends CodebookEvaluator {
-    protected _idStr: IDStrFunc;
+    protected get _prefix() {
+        return logger.prefixed(logger.prefix, "NetworkEvaluator");
+    }
 
     /** The name of the evaluator. */
     override name = "network-evaluator";
@@ -49,123 +49,114 @@ export class NetworkEvaluator<
     title: string;
 
     /** Initialize the evaluator. */
-    constructor(
-        idStr: IDStrFunc,
-        /** The embedder object for the merger. */
-        public embedder: EmbedderObject,
-        {
-            dataset,
-            anonymize,
-            title,
-        }: {
-            dataset: Dataset<TUnit>;
-            anonymize?: boolean;
-            title?: string;
-        },
-    ) {
+    constructor({
+        dataset,
+        anonymize,
+        title,
+    }: {
+        dataset: Dataset<TUnit>;
+        anonymize?: boolean;
+        title?: string;
+    }) {
         super();
-        this._idStr = (mtd?: string) => idStr(`NetworkEvaluator${mtd ? `#${mtd}` : ""}`);
         this.dataset = dataset;
         this.anonymize = anonymize ?? true;
         this.title = title ?? "Network Evaluator";
     }
 
     /** Evaluate a number of codebooks. */
-    override async evaluate(
+    override evaluate(
         codebooks: Codebook[],
         names: string[],
-        exportPath?: string,
+        exportPath = "./known",
     ): Promise<Record<string, CodebookEvaluation>> {
-        const _id = this._idStr("evaluate");
-
-        exportPath = exportPath ?? "./known";
-
-        const hash = md5(JSON.stringify(codebooks));
-        // Weights
-        const weights = names.map((name, idx) => {
-            if (idx === 0 || name.startsWith("group:")) {
-                return 0;
-            }
-            const fields = name.split("~");
-            const value = parseFloat(fields[fields.length - 1]);
-            if (isNaN(value)) {
-                return 1;
-            }
-            names[idx] = fields.slice(0, fields.length - 1).join("~");
-            return value;
-        });
-        // Build the network information
-        await withCache(this._idStr, join(exportPath, "network"), hash, async () => {
-            // We treat the first input as the reference codebook
-            names[0] = "baseline";
-            const merged = mergeCodebooks(codebooks, true);
-            // Then, we convert each code into an embedding and send to Python
-            const codes = Object.values(merged);
-            const labels = codes.map((c) => c.label);
-            const codeStrings = labels.map((l) => getCodeString(merged[l]));
-            const codeOwners = labels.map((l) => merged[l].owners ?? []);
-            const res = await evaluateTexts<{
-                distances: number[][];
-                positions: [number, number][];
-            }>(
-                this._idStr,
-                this.embedder,
-                codeStrings,
-                labels,
-                codeOwners,
-                names,
-                this.name,
-                "network",
-                this.visualize.toString(),
-                exportPath,
-            );
-            // Infuse the results back into the reference codebook
-            for (let i = 0; i < codes.length; i++) {
-                codes[i].position = res.positions[i];
-            }
-            // Remove sensitive data
-            if (this.anonymize) {
-                for (const dataset of Object.values(this.dataset.data)) {
-                    for (const chunk of Object.values(dataset)) {
-                        for (const item of chunk.items) {
-                            // TODO: Support subchunks
-                            if ("items" in item) {
-                                logger.warn("Subchunks are not yet supported, skipping", _id);
-                                continue;
-                            }
-                            item.nickname = this.dataset.getSpeakerName(item.uid);
-                            if ((item as unknown as Record<string, unknown>).CurrentNickname) {
-                                delete (item as unknown as Record<string, unknown>).CurrentNickname;
+        return logger.withSource(this._prefix, "evaluate", true, async () => {
+            const hash = md5(JSON.stringify(codebooks));
+            // Weights
+            const weights = names.map((name, idx) => {
+                if (idx === 0 || name.startsWith("group:")) {
+                    return 0;
+                }
+                const fields = name.split("~");
+                const value = parseFloat(fields[fields.length - 1]);
+                if (isNaN(value)) {
+                    return 1;
+                }
+                names[idx] = fields.slice(0, fields.length - 1).join("~");
+                return value;
+            });
+            // Build the network information
+            await withCache(join(exportPath, "network"), hash, async () => {
+                // We treat the first input as the reference codebook
+                names[0] = "baseline";
+                const merged = mergeCodebooks(codebooks, true);
+                // Then, we convert each code into an embedding and send to Python
+                const codes = Object.values(merged);
+                const labels = codes.map((c) => c.label);
+                const codeStrings = labels.map((l) => getCodeString(merged[l]));
+                const codeOwners = labels.map((l) => merged[l].owners ?? []);
+                const res = await evaluateTexts<{
+                    distances: number[][];
+                    positions: [number, number][];
+                }>(
+                    codeStrings,
+                    labels,
+                    codeOwners,
+                    names,
+                    this.name,
+                    "network",
+                    this.visualize.toString(),
+                    exportPath,
+                );
+                // Infuse the results back into the reference codebook
+                for (let i = 0; i < codes.length; i++) {
+                    codes[i].position = res.positions[i];
+                }
+                // Remove sensitive data
+                if (this.anonymize) {
+                    for (const dataset of Object.values(this.dataset.data)) {
+                        for (const chunk of Object.values(dataset)) {
+                            for (const item of chunk.items) {
+                                // TODO: Support subchunks
+                                if ("items" in item) {
+                                    logger.warn("Subchunks are not yet supported, skipping");
+                                    continue;
+                                }
+                                item.nickname = this.dataset.getSpeakerName(item.uid);
+                                if ((item as unknown as Record<string, unknown>).CurrentNickname) {
+                                    delete (item as unknown as Record<string, unknown>)
+                                        .CurrentNickname;
+                                }
                             }
                         }
                     }
                 }
-            }
-            // Return in the format
-            const pkg: CodebookComparison<DataChunk<DataItem>> = {
-                codebooks,
-                names,
-                codes,
-                distances: res.distances,
-                source: this.dataset,
-                title: this.title,
-                weights,
-            };
-            return pkg;
-        });
-        // Run the HTTP server
-        createOfflineBundle(
-            `${exportPath}/network`,
-            ["./src/evaluating/network", "./out/src/evaluating/network"],
-            `${exportPath}/network.json`,
-        );
-        // Return the results from the server
-        return (
-            (await launchServer(
-                8080,
+                // Return in the format
+                const pkg: CodebookComparison<DataChunk<DataItem>> = {
+                    codebooks,
+                    names,
+                    codes,
+                    distances: res.distances,
+                    source: this.dataset,
+                    title: this.title,
+                    weights,
+                };
+                return pkg;
+            });
+            // Run the HTTP server
+            createOfflineBundle(
+                `${exportPath}/network`,
                 ["./src/evaluating/network", "./out/src/evaluating/network"],
                 `${exportPath}/network.json`,
-            )) ?? {}
-        );
+            );
+            // Return the results from the server
+            return (
+                (await launchServer(
+                    8080,
+                    ["./src/evaluating/network", "./out/src/evaluating/network"],
+                    `${exportPath}/network.json`,
+                )) ?? {}
+            );
+        });
     }
 }

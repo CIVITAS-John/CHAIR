@@ -1,4 +1,5 @@
 import type { CodedThread, Conversation, Message } from "../schema.js";
+import { StepContext } from "../steps/base-step.js";
 
 import { ChunkLevelAnalyzerBase } from "./chunk-level.js";
 import { buildMessagePrompt } from "./conversations.js";
@@ -31,12 +32,13 @@ export default class ChunkLevelAnalyzerBarany extends ChunkLevelAnalyzerBase {
         messages: Message[],
         _chunkStart: number,
     ): Promise<[string, string]> {
+        const { dataset } = StepContext.get();
         return Promise.resolve([
             `
 Hi ChatGPT, I want to analyze the following interaction in one of Physics Lab's online message groups.
 Please give me a codebook to analyze factors within this interaction that could contribute to the research.
-${this.dataset.researchQuestion}
-${this.dataset.codingNotes}
+${dataset.researchQuestion}
+${dataset.codingNotes}
 For each code, try to find 3 quotes. Always follow the output format:
 ---
 ## Label: A label of code 1
@@ -47,7 +49,7 @@ Definition: A definition of code 1
 ## ...
 `.trim(),
             messages
-                .map((message, idx) => `${idx + 1}. ${buildMessagePrompt(this.dataset, message)}`)
+                .map((message, idx) => `${idx + 1}. ${buildMessagePrompt(dataset, message)}`)
                 .join("\n"),
         ]);
     }

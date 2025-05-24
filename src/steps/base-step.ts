@@ -1,3 +1,8 @@
+import { AsyncVar } from "@rakuzen25/async-store";
+
+import type { Dataset } from "../schema.js";
+import type { EmbedderObject } from "../utils/embeddings.js";
+import type { LLMSession } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 
 export interface AIParameters extends Record<string, unknown> {
@@ -7,14 +12,25 @@ export interface AIParameters extends Record<string, unknown> {
     fakeRequest?: boolean;
 }
 
-abstract class StepError extends Error {
-    override name = "BaseStep.Error";
-    constructor(message: string, source: string) {
-        super(`${source}: ${message}`);
+interface IStepContext {
+    dataset: Dataset<unknown>;
+    session?: LLMSession;
+    embedder?: EmbedderObject;
+}
+export const StepContext = new AsyncVar<IStepContext>("StepContext");
+export class ContextVarNotFoundError extends Error {
+    override name = "ContextVarNotFoundError";
+    constructor(name: keyof IStepContext) {
+        super(`${name} not provided in StepContext`);
     }
 }
 
-export type IDStrFunc = (mtd?: string) => string;
+abstract class StepError extends Error {
+    override name = "BaseStep.Error";
+    constructor(message: string, source?: string) {
+        super(`${source ?? logger.source}: ${message}`);
+    }
+}
 
 export abstract class BaseStep {
     abstract dependsOn?: BaseStep[];
@@ -22,8 +38,9 @@ export abstract class BaseStep {
     aborted = false;
 
     _id = "";
-    protected _idStr: IDStrFunc = (mtd?: string) =>
-        `${this._id ? `${this._id} ` : ""}${this.constructor.name}${mtd ? `#${mtd}` : ""}`;
+    protected get _prefix() {
+        return `${this._id ? `${this._id} ` : ""}${this.constructor.name}`;
+    }
 
     static Error = StepError;
     static InternalError = class extends BaseStep.Error {
@@ -32,13 +49,13 @@ export abstract class BaseStep {
 
     static UnexecutedError = class extends BaseStep.Error {
         override name = "BaseStep.UnexecutedError";
-        constructor(source: string) {
+        constructor(source?: string) {
             super("Step has not been executed yet", source);
         }
     };
     static AbortedError = class extends BaseStep.Error {
         override name = "BaseStep.AbortedError";
-        constructor(source: string) {
+        constructor(source?: string) {
             super("Step has been aborted", source);
         }
     };
@@ -48,37 +65,38 @@ export abstract class BaseStep {
     };
 
     execute() {
-        const _id = this._idStr("execute");
-
-        if (!this._id) {
-            throw new BaseStep.InternalError("Step ID is not set", _id);
-        }
-        if (this.executed) {
-            throw new BaseStep.ConfigError(
-                "Step has already been executed, please check job configuration",
-                _id,
-            );
-        }
-        if (this.aborted) {
-            throw new BaseStep.AbortedError(_id);
-        }
-        if (this.dependsOn) {
-            for (const step of this.dependsOn) {
-                if (step.aborted) {
-                    this.abort(_id, step);
-                    throw new BaseStep.AbortedError(_id);
-                }
-                if (!step.executed) {
-                    throw new BaseStep.UnexecutedError(step._idStr("execute"));
+        logger.withSource(this._prefix, "execute", () => {
+            if (!this._id) {
+                throw new BaseStep.InternalError("Step ID is not set");
+            }
+            if (this.executed) {
+                throw new BaseStep.ConfigError(
+                    "Step has already been executed, please check job configuration",
+                );
+            }
+            if (this.aborted) {
+                throw new BaseStep.AbortedError();
+            }
+            if (this.dependsOn) {
+                for (const step of this.dependsOn) {
+                    if (step.aborted) {
+                        this.abort(step);
+                        throw new BaseStep.AbortedError();
+                    }
+                    if (!step.executed) {
+                        throw new BaseStep.UnexecutedError();
+                    }
                 }
             }
-        }
+        });
 
         return Promise.resolve();
     }
 
-    abort(id: string, dep?: BaseStep) {
-        logger.warn(`Aborting${dep ? `: dependency ${dep._id} aborted` : ""}`, id);
-        this.aborted = true;
+    abort(dep?: BaseStep) {
+        logger.withSource(this._prefix, "abort", () => {
+            logger.warn(`Aborting${dep ? `: dependency ${dep._id} aborted` : ""}`);
+            this.aborted = true;
+        });
     }
 }

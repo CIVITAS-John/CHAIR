@@ -41,6 +41,9 @@ importers:
       '@langchain/openai':
         specifier: ^0.5.5
         version: 0.5.5(@langchain/core@0.3.44(openai@4.94.0(encoding@0.1.13)(ws@8.18.2)(zod@3.24.2)))(encoding@0.1.13)(ws@8.18.2)
+      '@rakuzen25/async-store':
+        specifier: github:rakuzen25/async-store
+        version: https://codeload.github.com/rakuzen25/async-store/tar.gz/0d623143cbdfbe47dedf45cdf16304f0c1492214
       cash-dom:
         specifier: ^8.1.5
         version: 8.1.5
@@ -1014,6 +1017,10 @@ packages:
     resolution: {integrity: sha512-nM+kEaTSAoVlXmMPH10017vn3FSiFqr/bh4fKg9vmAdMfd9SDqRZNvPSiAHADc/itWak+qPvMPZQOPwCBW7k7Q==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@rakuzen25/async-store@https://codeload.github.com/rakuzen25/async-store/tar.gz/0d623143cbdfbe47dedf45cdf16304f0c1492214':
+    resolution: {tarball: https://codeload.github.com/rakuzen25/async-store/tar.gz/0d623143cbdfbe47dedf45cdf16304f0c1492214}
+    version: 0.0.2
 
   '@shikijs/engine-oniguruma@3.3.0':
     resolution: {integrity: sha512-l0vIw+GxeNU7uGnsu6B+Crpeqf+WTQ2Va71cHb5ZYWEVEPdfYwY5kXwYqRJwHrxz9WH+pjSpXQz+TJgAsrkA5A==}
@@ -4042,6 +4049,8 @@ snapshots:
   '@playwright/test@1.51.1':
     dependencies:
       playwright: 1.51.1
+
+  '@rakuzen25/async-store@https://codeload.github.com/rakuzen25/async-store/tar.gz/0d623143cbdfbe47dedf45cdf16304f0c1492214': {}
 
   '@shikijs/engine-oniguruma@3.3.0':
     dependencies:

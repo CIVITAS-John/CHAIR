@@ -1,5 +1,8 @@
 import ItemLevelAnalyzerAny from "../src/coding/item-level-any.js";
 import ItemLevelAnalyzerVerb from "../src/coding/item-level-verb.js";
+import { DefinitionGenerator } from "../src/consolidating/definition-generator.js";
+import { RefineMerger } from "../src/consolidating/refine-merger.js";
+import { SimpleMerger } from "../src/consolidating/simple-merger.js";
 import { QAJob, type QAJobConfig } from "../src/job.js";
 import { CodeStep } from "../src/steps/code-step.js";
 import { ConsolidateStep } from "../src/steps/consolidate-step.js";
@@ -24,6 +27,22 @@ const code = new CodeStep({
 
 const consolidate = new ConsolidateStep({
     model: ["gpt-4.5-omni"],
+    builderConfig: {
+        consolidators: [
+            new SimpleMerger({ looping: true }),
+            new DefinitionGenerator(),
+            new RefineMerger({
+                maximum: 0.5,
+                minimum: 0.4,
+                looping: true,
+            }),
+            new RefineMerger({
+                maximum: 0.6,
+                minimum: 0.4,
+                looping: true,
+            }),
+        ],
+    },
 });
 
 const evaluate = new EvaluateStep({
