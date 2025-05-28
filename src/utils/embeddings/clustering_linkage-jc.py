@@ -5,6 +5,8 @@ A penalty is applied to the relative size (e.g. numbers of examples or codes) of
 
 import json
 import sys
+from PyQt6.QtWidgets import (QApplication, QDialog, QDoubleSpinBox, 
+                           QVBoxLayout, QLabel, QDialogButtonBox, QWidget)
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -20,7 +22,7 @@ metrics = sys.argv[3] if len(sys.argv) > 3 else "euclidean"
 linkage_mtd = sys.argv[4] if len(sys.argv) > 4 else "ward"
 max_dist = float(sys.argv[5]) if len(sys.argv) > 5 else 0.6
 min_dist = float(sys.argv[6]) if len(sys.argv) > 6 else 0.4
-interactive = int(sys.argv[7]) if len(sys.argv) > 7 else False
+interactive = bool(sys.argv[7]) if len(sys.argv) > 7 else False
 tar_dims = int(sys.argv[8]) if len(sys.argv) > 8 else dims
 plotting = bool(sys.argv[9]) if len(sys.argv) > 9 else False
 
@@ -46,8 +48,10 @@ examples = [set(source["examples"]) for source in sources]
 if tar_dims < dims:
     umap = UMAP(n_components=tar_dims)
     embeddings = umap.fit_transform(embeddings)
-    embeddings = normalize(embeddings, norm="l2")
     print("Embeddings reduced:", embeddings.shape)
+
+# Normalized L2 embeddings will make euclidean distance equivalent to cosine similarity
+embeddings = normalize(embeddings, norm="l2")
 
 # Calculate distances
 distances = pairwise_distances(embeddings, embeddings, metric=metrics, n_jobs=cpus)
@@ -59,20 +63,62 @@ condensed_distances = squareform(distances)
 if interactive:
     fig, ax = plt.subplots()
     # Filter out distances > 0.7, as they are not useful for clustering
-    distances = distances[distances < 0.7]
-    ax.hist(distances.flatten(), bins=70, log=True)
+    vis_distances = distances[distances < 1]
+    vis_distances = vis_distances[vis_distances > 0]
+    ax.hist(vis_distances.flatten(), bins=70, log=True)
     ax.set_xlabel("Distance")
     ax.set_ylabel("Log Frequency")
-    ax.set_title("Distribution of Distances")
-    wm = plt.get_current_fig_manager()
-    wm.window.state("zoomed")
+    ax.set_title("Distribution of Embedding Distances. 0 = Identical, 2 = Vastly Different")
     plt.show()
     # Take the user input for max_dist and min_dist
-    # Use the default from the max_dist variable if not provided
-    print("Please input the max distance (default: ", max_dist, "):")
-    max_dist = float(input() or max_dist)
-    print("Please input the min distance (default: ", min_dist, "):")
-    min_dist = float(input() or min_dist)
+    # Create QApplication instance
+    app = QApplication.instance()
+    if app is None:
+        app = QApplication(sys.argv)
+    
+    class DistanceDialog(QDialog):
+        def __init__(self, parent=None):
+            super().__init__(parent)
+            self.setWindowTitle("Distance Parameters")
+            layout = QVBoxLayout()
+            
+            # Max distance input
+            layout.addWidget(QLabel("Maximum distance:"))
+            self.max_spin = QDoubleSpinBox()
+            self.max_spin.setRange(0.0, 1.0)
+            self.max_spin.setDecimals(2)
+            self.max_spin.setValue(max_dist)
+            layout.addWidget(self.max_spin)
+            
+            # Min distance input
+            layout.addWidget(QLabel("Minimum distance:"))
+            self.min_spin = QDoubleSpinBox()
+            self.min_spin.setRange(0.0, 1.0)
+            self.min_spin.setDecimals(2)
+            self.min_spin.setValue(min_dist)
+            layout.addWidget(self.min_spin)
+            
+            # Add OK and Cancel buttons
+            buttonBox = QDialogButtonBox(
+                QDialogButtonBox.StandardButton.Ok | 
+                QDialogButtonBox.StandardButton.Cancel
+            )
+            buttonBox.accepted.connect(self.accept)
+            buttonBox.rejected.connect(self.reject)
+            layout.addWidget(buttonBox)
+            
+            self.setLayout(layout)
+            
+            # Connect max value change to update min spinner's max value
+            self.max_spin.valueChanged.connect(self.update_min_range)
+        
+        def update_min_range(self, max_val):
+            self.min_spin.setMaximum(max_val)
+    
+    dialog = DistanceDialog()
+    if dialog.exec():
+        max_dist = dialog.max_spin.value()
+        min_dist = dialog.min_spin.value()
 
 # Print the hyperparameters
 g_penalty = max_dist - min_dist

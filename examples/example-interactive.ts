@@ -37,10 +37,14 @@ const consolidate = new ConsolidateStep({
             new RefineMerger({
                 looping: true,
                 interactive: true,
+                maximum: 0.5,
+                minimum: 0.4,
             }),
             new RefineMerger({
                 looping: true,
                 interactive: true,
+                maximum: 0.6,
+                minimum: 0.4,
             }),
         ],
     },
