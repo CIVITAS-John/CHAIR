@@ -40,7 +40,6 @@ print(
 
 # Separate the examples from labels
 sources = load_temp_json("clustering")
-# sources = [json.loads(label) for label in labels]
 labels = [source["label"] for source in sources]
 examples = [set(source["examples"]) for source in sources]
 
@@ -62,70 +61,145 @@ condensed_distances = squareform(distances)
 
 # If interactive, visualize the distances
 if interactive:
-    fig, ax = plt.subplots()
-    # Add instruction text above the plot
+    # Create figure with 2 columns - left for histogram, right for tables
+    fig = plt.figure(figsize=(20, 8))
+    gs = plt.GridSpec(1, 2, width_ratios=[3, 2])
+    
+    # Left plot - histogram
+    ax_hist = fig.add_subplot(gs[0])
     value_text = fig.text(0.1, 0.95, "", fontsize=10, va='top')
     instruction_text = fig.text(0.1, 0.9, "Click to set max distance (red line)", 
                               fontsize=10, va='top')
     
-    # Filter out distances > 1, as they are not likely useful for clustering
+    # Filter and plot histogram as before
     vis_distances = distances[distances < 1]
     vis_distances = vis_distances[vis_distances > 0]
-    
-    # Visualize in a histogram
-    ax.hist(vis_distances.flatten(), bins=70, log=True)
-    ax.set_xlabel("Distance")
-    ax.set_ylabel("Log Frequency")
-    ax.set_title("Distribution of Code Distances\n0 = Identical, 2 = Vastly Different", 
-                 loc='right', pad=10)
+    ax_hist.hist(vis_distances.flatten(), bins=70, log=True)
+    ax_hist.set_xlabel("Distance")
+    ax_hist.set_ylabel("Log Frequency")
+    ax_hist.set_title("Distribution of Code Distances\n0 = Identical, 2 = Vastly Different",
+                     loc='right', pad=10)
     
     # Initialize lines
-    max_line = ax.axvline(max_dist, color='red', linestyle='--', label='Max')
-    min_line = ax.axvline(min_dist, color='blue', linestyle='--', label='Min')
-    ax.legend()
-    
-    # Update the value text with current max and min distances.
+    max_line = ax_hist.axvline(max_dist, color='red', linestyle='--', label='Max')
+    min_line = ax_hist.axvline(min_dist, color='blue', linestyle='--', label='Min')
+    ax_hist.legend()
+
+    # Right side - tables
+    ax_tables = fig.add_subplot(gs[1])
+    ax_tables.axis('off')
+
+    def update_tables():
+        ax_tables.clear()
+        ax_tables.axis('off')
+        
+        # Get pairs around thresholds
+        pairs = []
+        for i in range(items):
+            for j in range(i + 1, items):
+                pairs.append((i, j, distances[i][j]))
+        
+        # Sort by distance
+        pairs.sort(key=lambda x: -x[2])
+        
+        # Find pairs around max threshold
+        max_pairs = []
+        min_pairs = []
+        for i, j, dist in pairs:
+            if max_dist > dist:
+                max_pairs.append((labels[i], labels[j], f"{dist:.3f}"))
+            if min_dist > dist:
+                min_pairs.append((labels[i], labels[j], f"{dist:.3f}"))
+            if len(max_pairs) >= 10 and len(min_pairs) >= 10:
+                break
+
+        # Create table data
+        max_table_data = max_pairs[:10]
+        min_table_data = min_pairs[:10]
+
+        # Add tables
+        ax_tables.text(0.05, 1, "Pairs Near Max Threshold", fontsize=12, fontweight='bold')
+        ax_tables.text(0.05, 0.97, "Codes under the threshold can be merged when examples are similar", 
+                      fontsize=10)
+        max_table = ax_tables.table(
+            cellText=max_table_data,
+            colLabels=['Code 1', 'Code 2', 'Dist'],
+            loc='top',
+            cellLoc='left',
+            bbox=[0.05, 0.55, 0.9, 0.4],
+            colWidths=[0.45, 0.45, 0.1]
+        )
+        max_table.auto_set_font_size(False)
+        max_table.set_fontsize(9)
+        
+        # Adjust cell padding for max_table
+        for cell in max_table._cells.values():
+            cell.PAD = 0.02
+
+        ax_tables.text(0.05, 0.5, "Pairs Near Min Threshold", fontsize=12, fontweight='bold')
+        ax_tables.text(0.05, 0.47, "Codes under the threshold will always be merged", 
+                      fontsize=10)
+        min_table = ax_tables.table(
+            cellText=min_table_data,
+            colLabels=['Code 1', 'Code 2', 'Dist'],
+            loc='top',
+            cellLoc='left',
+            bbox=[0.05, 0.05, 0.9, 0.4],
+            colWidths=[0.45, 0.45, 0.1]
+        )
+        min_table.auto_set_font_size(False)
+        min_table.set_fontsize(9)
+        
+        # Adjust cell padding for max_table
+        for cell in min_table._cells.values():
+            cell.PAD = 0.02
+
+        fig.canvas.draw()
+
+    # Update both value text and tables
     def update_value():
         value_text.set_text(
-            f"Max Threshold: {max_dist:.2f}, Min Threshold: {min_dist:.2f}"
+            f"Max Threshold: {max_dist:.2f}, Min Threshold: {min_dist:.2f}\nPress Enter to confirm the changes and merge."
         )
-    update_value()
-    
-    # Click event handler to set max and min distances
-    # Keep track of which line to update
-    update_max = True
-    def onclick(event):
-        global max_dist, min_dist, update_max
-        if event.inaxes != ax:
-            return
-        
-        if update_max:
-            # Round to 0.01
-            max_dist = round(event.xdata, 2)
-            max_dist = max(max_dist, min_dist)  # Ensure max >= min
-            max_line.set_xdata([max_dist, max_dist])
-            instruction_text.set_text("Click to set min threshold (blue line)")
-        else:
-            min_dist = round(event.xdata, 2)
-            min_dist = min(min_dist, max_dist)  # Ensure min <= max
-            min_line.set_xdata([min_dist, min_dist])
-            instruction_text.set_text("Click to set max threshold (red line)")
-        
-        update_max = not update_max
-        fig.canvas.draw()
-        update_value()
+        update_tables()
 
     # Key event handler to close the plot
     def onkey(event):
         if event.key == 'enter':
             plt.close()
 
+    # Update click handler to refresh tables
+    update_max = True  # Start with max threshold
+    def onclick(event):
+        global max_dist, min_dist, update_max
+        if event.inaxes != ax_hist:
+            return
+        
+        if update_max:
+            max_dist = round(event.xdata, 2)
+            max_dist = max(max_dist, min_dist)
+            max_line.set_xdata([max_dist, max_dist])
+            instruction_text.set_text("Click to set min threshold (blue line)")
+        else:
+            min_dist = round(event.xdata, 2)
+            min_dist = min(min_dist, max_dist)
+            min_line.set_xdata([min_dist, min_dist])
+            instruction_text.set_text("Click to set max threshold (red line)")
+        
+        update_max = not update_max
+        update_value()
+
+    # Initial table update
+    update_tables()
+    update_value()
+
     # Connect the event handlers
     fig.canvas.mpl_connect('button_press_event', onclick)
     fig.canvas.mpl_connect('key_press_event', onkey)
     
+    # Show the plot
     plt.tight_layout()
-    plt.subplots_adjust(top=0.85)  # Make room for instruction
+    plt.subplots_adjust(top=0.85)
     plt.show()
 
 # Print the hyperparameters
@@ -166,6 +240,7 @@ root = to_tree(linkages)
 
 tree_examples = {}
 
+# Pre-traverse the tree to get the sizes of the leaves and compile the examples
 def pre_traverse(node):
     """Pre-traverse the tree for bottom-up depth (leaf = size of the leaf, root = total_size)."""
     if node.is_leaf():
@@ -175,7 +250,6 @@ def pre_traverse(node):
     )
     return tree_examples[node.id]
 
-
 total_size = len(pre_traverse(root))
 
 # Default cluster: -1, 100%
@@ -184,7 +258,7 @@ clusters = np.full(items, -1)
 probs = np.full(items, 1.0)
 colors = {}
 
-
+# Traverse the tree
 def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
     """Traverse the tree."""
     global cluster_index
@@ -199,23 +273,7 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
     t_penalty = min(1, max(0, (len(tree_examples[node.id]) - avg_size) / penalty_coff))
     t_penalty = t_penalty * t_penalty
     criteria = max(max_dist - t_penalty * g_penalty, min_dist)
-    # print(
-    #     "Node:",
-    #     node.id,
-    #     ", Size:",
-    #     len(tree_examples[node.id]),
-    #     ", % Penalty:",
-    #     penalty,
-    #     ", Distance:",
-    #     node.dist,
-    #     ", Criteria:",
-    #     criteria,
-    # )
-    # Verbose: show the cluster
-    # left_id = node.get_left().id
-    # leftlabel = labels[left_id] if left_id < Items else "cluster-" + str(left_id)
-    # right_id = node.get_right().id
-    # rightlabel = labels[right_id] if right_id < Items else "cluster-" + str(right_id)
+
     if cluster == -1 and node.dist <= criteria:
         cluster = cluster_index
         cluster_index += 1
