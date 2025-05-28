@@ -31,7 +31,7 @@ export class SimpleMerger extends CodeConsolidator {
         minimum,
         useDefinition,
         looping,
-        interactive = false,
+        interactive,
     }: {
         maximum?: number;
         minimum?: number;
@@ -65,7 +65,7 @@ export class SimpleMerger extends CodeConsolidator {
                 "ward",
                 this.maximum.toString(),
                 this.minimum.toString(),
-                this.interactive.toString(),
+                this.interactive ? "True" : "False",
             );
             // Merge the codes
             const res = mergeCodesByCluster(clusters, codes);

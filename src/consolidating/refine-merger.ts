@@ -81,10 +81,10 @@ export class RefineMerger extends DefinitionParser {
                 "ward",
                 this.maximum.toString(),
                 this.minimum.toString(),
-                this.interactive.toString(),
+                this.interactive ? "True" : "False",
             );
             // If interactive, try to update the parameters
-            
+
             // Merge the codes
             const res = mergeCodesByCluster(clusters, codes);
             // Check if we should stop - when nothing is merged
