@@ -21,6 +21,8 @@ export class SimpleMerger extends CodeConsolidator {
     maximum = 0.35;
     /** The minimum threshold for merging codes. */
     minimum = 0.35;
+    /** Whether the merging process should be interactive. */
+    interactive = false;
     /** Whether we use definitions in merging (used to inform LLM). */
     useDefinition = false;
 
@@ -29,17 +31,20 @@ export class SimpleMerger extends CodeConsolidator {
         minimum,
         useDefinition,
         looping,
+        interactive = false,
     }: {
         maximum?: number;
         minimum?: number;
         useDefinition?: boolean;
         looping?: boolean;
+        interactive?: boolean;
     } = {}) {
         super();
         this.maximum = maximum ?? this.maximum;
         this.minimum = minimum ?? this.minimum;
         this.useDefinition = useDefinition ?? this.useDefinition;
         this.looping = looping ?? this.looping;
+        this.interactive = interactive ?? this.interactive;
     }
 
     /** In this case, we do not really use the LLM, so we just merge the codes. */
@@ -60,6 +65,7 @@ export class SimpleMerger extends CodeConsolidator {
                 "ward",
                 this.maximum.toString(),
                 this.minimum.toString(),
+                this.interactive.toString(),
             );
             // Merge the codes
             const res = mergeCodesByCluster(clusters, codes);

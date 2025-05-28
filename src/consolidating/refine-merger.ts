@@ -19,6 +19,8 @@ export class RefineMerger extends DefinitionParser {
     maximum = 0.6;
     /** The minimum threshold for merging codes. */
     minimum = 0.4;
+    /** Whether the merging process should be interactive. */
+    interactive = false;
     /** Whether we use definitions in merging (used to inform LLM). */
     useDefinition = true;
     /** Whether the merging process should force verb phrases. */
@@ -35,12 +37,14 @@ export class RefineMerger extends DefinitionParser {
         useDefinition,
         useVerbPhrases,
         looping,
+        interactive,
     }: {
         maximum?: number;
         minimum?: number;
         useDefinition?: boolean;
         useVerbPhrases?: boolean;
         looping?: boolean;
+        interactive?: boolean;
     } = {}) {
         super();
         this.maximum = maximum ?? this.maximum;
@@ -48,6 +52,7 @@ export class RefineMerger extends DefinitionParser {
         this.useDefinition = useDefinition ?? this.useDefinition;
         this.useVerbPhrases = useVerbPhrases ?? this.useVerbPhrases;
         this.looping = looping ?? this.looping;
+        this.interactive = interactive ?? this.interactive;
     }
 
     /** Preprocess the subunits before filtering and chunking. */
@@ -76,7 +81,10 @@ export class RefineMerger extends DefinitionParser {
                 "ward",
                 this.maximum.toString(),
                 this.minimum.toString(),
+                this.interactive.toString(),
             );
+            // If interactive, try to update the parameters
+            
             // Merge the codes
             const res = mergeCodesByCluster(clusters, codes);
             // Check if we should stop - when nothing is merged

@@ -18,22 +18,22 @@ from umap import UMAP
 # Get the arguments
 metrics = sys.argv[3] if len(sys.argv) > 3 else "euclidean"
 linkage_mtd = sys.argv[4] if len(sys.argv) > 4 else "ward"
-max_dist = float(sys.argv[5]) if len(sys.argv) > 5 else 0.65
+max_dist = float(sys.argv[5]) if len(sys.argv) > 5 else 0.6
 min_dist = float(sys.argv[6]) if len(sys.argv) > 6 else 0.4
-tar_dims = int(sys.argv[7]) if len(sys.argv) > 7 else dims
-plotting = bool(sys.argv[8]) if len(sys.argv) > 8 else False
-g_penalty = max_dist - min_dist
+interactive = int(sys.argv[7]) if len(sys.argv) > 7 else False
+tar_dims = int(sys.argv[8]) if len(sys.argv) > 8 else dims
+plotting = bool(sys.argv[9]) if len(sys.argv) > 9 else False
+
+# Print the parameters
 print(
-    "Linkage:",
+    "Parameters - Linkage:",
     linkage_mtd,
-    ", MaxDistance:",
-    max_dist,
-    ", MinDistance:",
-    min_dist,
     ", Metrics:",
     metrics,
     ", Target Dimensions:",
     tar_dims,
+    ", Interactive:",
+    interactive,
 )
 
 # Separate the examples from labels
@@ -55,6 +55,36 @@ distances = pairwise_distances(embeddings, embeddings, metric=metrics, n_jobs=cp
 # Consdense distances
 condensed_distances = squareform(distances)
 
+# If interactive, visualize the distances
+if interactive:
+    fig, ax = plt.subplots()
+    # Filter out distances > 0.7, as they are not useful for clustering
+    distances = distances[distances < 0.7]
+    ax.hist(distances.flatten(), bins=70, log=True)
+    ax.set_xlabel("Distance")
+    ax.set_ylabel("Log Frequency")
+    ax.set_title("Distribution of Distances")
+    wm = plt.get_current_fig_manager()
+    wm.window.state("zoomed")
+    plt.show()
+    # Take the user input for max_dist and min_dist
+    # Use the default from the max_dist variable if not provided
+    print("Please input the max distance (default: ", max_dist, "):")
+    max_dist = float(input() or max_dist)
+    print("Please input the min distance (default: ", min_dist, "):")
+    min_dist = float(input() or min_dist)
+
+# Print the hyperparameters
+g_penalty = max_dist - min_dist
+print(
+    'Hyperparameters - Max Distance:',
+    max_dist,
+    ", MinDistance:",
+    min_dist,
+    ", Penalty Coefficient:",
+    g_penalty,
+)
+
 # For average sizes, we only consider those with more than 1
 sizes_for_calc = [len(examples[i]) for i in range(items) if len(examples[i]) > 1]
 avg_size = np.mean(sizes_for_calc)
@@ -62,13 +92,11 @@ max_size = avg_size * 3
 penalty_coff = max_size - avg_size
 print("Average size:", avg_size, ", Max penalty size:", max_size)
 
-
 def count_merged(code1, code2):
     """Calculate the unique differences of examples after merged."""
     return len(examples[code1] - examples[code2]) / len(
         examples[code1] | examples[code2]
     )
-
 
 # Calculate the penalty on the distance based on number of differences
 for i in range(items):
@@ -83,7 +111,6 @@ linkages = linkage(condensed_distances, method=linkage_mtd)
 root = to_tree(linkages)
 
 tree_examples = {}
-
 
 def pre_traverse(node):
     """Pre-traverse the tree for bottom-up depth (leaf = size of the leaf, root = total_size)."""
@@ -146,21 +173,7 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
         node.get_right(), depth + 1, cluster, prob, color
     )
 
-
 nodes = traverse(root, 0)
-
-# Plot the distribution of distances with log scale
-# if False:
-#     fig, ax = plt.subplots()
-#     # Filter out distances > 0.8
-#     distances = distances[distances < 0.7]
-#     ax.hist(distances.flatten(), bins=70, log=True)
-#     ax.set_xlabel("Distance")
-#     ax.set_ylabel("Log Frequency")
-#     ax.set_title("Distribution of Distances")
-#     wm = plt.get_current_fig_manager()
-#     wm.window.state("zoomed")
-#     plt.show()
 
 # Plot the dendrogram
 if plotting:
