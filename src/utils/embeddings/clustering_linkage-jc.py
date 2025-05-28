@@ -67,8 +67,7 @@ if interactive:
     
     # Left plot - histogram
     ax_hist = fig.add_subplot(gs[0])
-    value_text = fig.text(0.1, 0.95, "", fontsize=10, va='top')
-    instruction_text = fig.text(0.1, 0.9, "Click to set max distance (red line)", 
+    instruction_text = fig.text(0.1, 0.9, "Click to set max distance (red line)\nPress Enter to confirm the choices", 
                               fontsize=10, va='top')
     
     # Filter and plot histogram as before
@@ -102,7 +101,7 @@ if interactive:
         # Sort by distance
         pairs.sort(key=lambda x: -x[2])
         
-        # Find pairs around max threshold
+        # Find pairs around max/min thresholds
         max_pairs = []
         min_pairs = []
         for i, j, dist in pairs:
@@ -117,8 +116,14 @@ if interactive:
         max_table_data = max_pairs[:10]
         min_table_data = min_pairs[:10]
 
+        # Handle case where there are no pairs
+        if (len(max_table_data) == 0):
+            max_table_data = [("No pairs found", "", "")]
+        if (len(min_table_data) == 0):
+            min_table_data = [("No pairs found", "", "")]
+
         # Add tables
-        ax_tables.text(0.05, 1, "Pairs Near Max Threshold", fontsize=12, fontweight='bold')
+        ax_tables.text(0.05, 1, f"Pairs Near Max Threshold = {max_dist:.2f}", fontsize=12, fontweight='bold')
         ax_tables.text(0.05, 0.97, "Codes under the threshold can be merged when examples are similar", 
                       fontsize=10)
         max_table = ax_tables.table(
@@ -136,9 +141,10 @@ if interactive:
         for cell in max_table._cells.values():
             cell.PAD = 0.02
 
-        ax_tables.text(0.05, 0.5, "Pairs Near Min Threshold", fontsize=12, fontweight='bold')
+        ax_tables.text(0.05, 0.5, f"Pairs Near Min Threshold = {min_dist:.2f}", fontsize=12, fontweight='bold')
         ax_tables.text(0.05, 0.47, "Codes under the threshold will always be merged", 
                       fontsize=10)
+
         min_table = ax_tables.table(
             cellText=min_table_data,
             colLabels=['Code 1', 'Code 2', 'Dist'],
@@ -156,13 +162,6 @@ if interactive:
 
         fig.canvas.draw()
 
-    # Update both value text and tables
-    def update_value():
-        value_text.set_text(
-            f"Max Threshold: {max_dist:.2f}, Min Threshold: {min_dist:.2f}\nPress Enter to confirm the changes and merge."
-        )
-        update_tables()
-
     # Key event handler to close the plot
     def onkey(event):
         if event.key == 'enter':
@@ -179,19 +178,18 @@ if interactive:
             max_dist = round(event.xdata, 2)
             max_dist = max(max_dist, min_dist)
             max_line.set_xdata([max_dist, max_dist])
-            instruction_text.set_text("Click to set min threshold (blue line)")
+            instruction_text.set_text("Click to set min threshold (blue line)\nPress Enter to confirm the choices")
         else:
             min_dist = round(event.xdata, 2)
             min_dist = min(min_dist, max_dist)
             min_line.set_xdata([min_dist, min_dist])
-            instruction_text.set_text("Click to set max threshold (red line)")
+            instruction_text.set_text("Click to set max threshold (red line)\nPress Enter to confirm the choices")
         
         update_max = not update_max
-        update_value()
+        update_tables()
 
     # Initial table update
     update_tables()
-    update_value()
 
     # Connect the event handlers
     fig.canvas.mpl_connect('button_press_event', onclick)
