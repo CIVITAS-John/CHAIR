@@ -51,7 +51,8 @@ if tar_dims < dims:
     print("Embeddings reduced:", embeddings.shape)
 
 # Normalized L2 embeddings will make euclidean distance equivalent to cosine similarity
-# embeddings = normalize(embeddings, norm="l2")
+# Many embedding models are already normalized, but we do it here for safety
+embeddings = normalize(embeddings, norm="l2")
 
 # Calculate distances
 distances = pairwise_distances(embeddings, embeddings, metric=metrics, n_jobs=cpus)
@@ -65,10 +66,15 @@ if interactive:
     # Filter out distances > 0.7, as they are not useful for clustering
     vis_distances = distances[distances < 1]
     vis_distances = vis_distances[vis_distances > 0]
+    # Visualize in a histogram
     ax.hist(vis_distances.flatten(), bins=70, log=True)
     ax.set_xlabel("Distance")
     ax.set_ylabel("Log Frequency")
     ax.set_title("Distribution of Embedding Distances. 0 = Identical, 2 = Vastly Different")
+    # Enable the user to choose the max and min distance on the plot
+    ax.axvline(max_dist, color='red', linestyle='--', label='Max Distance')
+    ax.axvline(min_dist, color='blue', linestyle='--', label='Min Distance')
+    ax.legend()
     plt.show()
     # Take the user input for max_dist and min_dist
     # Create QApplication instance
