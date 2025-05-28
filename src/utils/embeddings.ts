@@ -275,7 +275,7 @@ export const clusterTexts = (
     logger.withDefaultSource("clusterTexts", async () => {
         logger.debug(`Requesting embeddings for ${sources.length} sources`);
         if (sources.length === 0) {
-            return {};
+            return {res: {}, param: []};
         }
 
         const embeddings = await requestEmbeddings(sources, cache);
@@ -301,6 +301,7 @@ export const clusterEmbeddings = (
             throw new QAJob.ContextVarNotFoundError("embedder");
         }
         const res: Record<number, ClusterItem[]> = {};
+        var param: number[] = [];
         ensureFolder("./known");
         // Write it into ./known/temp.bytes
         writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
@@ -313,9 +314,11 @@ export const clusterEmbeddings = (
             args: [embedder.dimensions.toString(), names.length.toString(), ...opts],
             parser: (msg) => {
                 if (msg.startsWith("[")) {
-                    const data = JSON.parse(msg) as number[][];
-                    const clusters = data[0];
-                    const probs = data[1];
+                    const data = JSON.parse(msg) as any[];
+                    const clusters = data[0] as number[];
+                    const probs = data[1] as number[];
+                    // More parameters from the algorithm if necessary
+                    param = data.slice(2) as number[];
                     // Get unique clusters
                     const uniqueClusters = [...new Set(clusters)].sort();
                     let noCluster = 0;
@@ -338,7 +341,7 @@ export const clusterEmbeddings = (
                 }
             },
         });
-        return res;
+        return {res, param};
     });
 
 /** Evaluate a number of texts. */

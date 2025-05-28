@@ -22,7 +22,8 @@ metrics = sys.argv[3] if len(sys.argv) > 3 else "euclidean"
 linkage_mtd = sys.argv[4] if len(sys.argv) > 4 else "ward"
 max_dist = float(sys.argv[5]) if len(sys.argv) > 5 else 0.6
 min_dist = float(sys.argv[6]) if len(sys.argv) > 6 else 0.4
-interactive = sys.argv[7] == "True" if len(sys.argv) > 7 else False
+interactive = sys.argv[7] if len(sys.argv) > 7 else False
+interactive = False if interactive == "false" else interactive
 tar_dims = int(sys.argv[8]) if len(sys.argv) > 8 else dims
 plotting = sys.argv[9] == "True" if len(sys.argv) > 9 else False
 
@@ -60,10 +61,13 @@ distances = pairwise_distances(embeddings, embeddings, metric=metrics, n_jobs=cp
 condensed_distances = squareform(distances)
 
 # If interactive, visualize the distances
-if interactive:
+if interactive != False:
     # Create figure with 2 columns - left for histogram, right for tables
     fig = plt.figure(figsize=(20, 8))
     gs = plt.GridSpec(1, 2, width_ratios=[3, 2])
+
+    # Set the window title
+    fig.canvas.manager.set_window_title(interactive)
     
     # Left plot - histogram
     ax_hist = fig.add_subplot(gs[0])
@@ -303,5 +307,5 @@ if plotting:
         wm.window.state("zoomed")  # type: ignore
     plt.show()
 
-# Send the results
-print(json.dumps([clusters.tolist(), probs.tolist()]))
+# Send the results:
+print(json.dumps([clusters.tolist(), probs.tolist(), max_dist, min_dist]))

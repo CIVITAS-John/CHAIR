@@ -65,10 +65,19 @@ export class SimpleMerger extends CodeConsolidator {
                 "ward",
                 this.maximum.toString(),
                 this.minimum.toString(),
-                this.interactive ? "True" : "False",
+                this.interactive ? "Setting Thresholds for Simple Merger (Without LLM)" : "false",
             );
+            // If interactive, try to update the parameters
+            if (this.interactive && clusters.param.length > 0) {
+                this.maximum = clusters.param[0];
+                this.minimum = clusters.param[1];
+                this.interactive = false; // Stop the interactive mode after the first run
+                logger.info(
+                    `Updated parameters to maximum: ${this.maximum}, minimum: ${this.minimum}`,
+                );
+            }
             // Merge the codes
-            const res = mergeCodesByCluster(clusters, codes);
+            const res = mergeCodesByCluster(clusters.res, codes);
             // Check if we should stop - when nothing is merged
             this.stopping = Object.keys(res).length === len;
             return res;
