@@ -87,7 +87,7 @@ if interactive:
     # Update the value text with current max and min distances.
     def update_value():
         value_text.set_text(
-            f"Max Distance: {max_dist:.2f}, Min Distance: {min_dist:.2f}"
+            f"Max Threshold: {max_dist:.2f}, Min Threshold: {min_dist:.2f}"
         )
     update_value()
     
@@ -104,12 +104,12 @@ if interactive:
             max_dist = round(event.xdata, 2)
             max_dist = max(max_dist, min_dist)  # Ensure max >= min
             max_line.set_xdata([max_dist, max_dist])
-            instruction_text.set_text("Click to set min distance (blue line)")
+            instruction_text.set_text("Click to set min threshold (blue line)")
         else:
             min_dist = round(event.xdata, 2)
             min_dist = min(min_dist, max_dist)  # Ensure min <= max
             min_line.set_xdata([min_dist, min_dist])
-            instruction_text.set_text("Click to set max distance (red line)")
+            instruction_text.set_text("Click to set max threshold (red line)")
         
         update_max = not update_max
         fig.canvas.draw()
