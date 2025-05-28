@@ -63,68 +63,70 @@ condensed_distances = squareform(distances)
 # If interactive, visualize the distances
 if interactive:
     fig, ax = plt.subplots()
-    # Filter out distances > 0.7, as they are not useful for clustering
+    # Add instruction text above the plot
+    value_text = fig.text(0.1, 0.95, "", fontsize=10, va='top')
+    instruction_text = fig.text(0.1, 0.9, "Click to set max distance (red line)", 
+                              fontsize=10, va='top')
+    
+    # Filter out distances > 1, as they are not likely useful for clustering
     vis_distances = distances[distances < 1]
     vis_distances = vis_distances[vis_distances > 0]
+    
     # Visualize in a histogram
     ax.hist(vis_distances.flatten(), bins=70, log=True)
     ax.set_xlabel("Distance")
     ax.set_ylabel("Log Frequency")
-    ax.set_title("Distribution of Embedding Distances. 0 = Identical, 2 = Vastly Different")
-    # Enable the user to choose the max and min distance on the plot
-    ax.axvline(max_dist, color='red', linestyle='--', label='Max Distance')
-    ax.axvline(min_dist, color='blue', linestyle='--', label='Min Distance')
+    ax.set_title("Distribution of Code Distances\n0 = Identical, 2 = Vastly Different", 
+                 loc='right', pad=10)
+    
+    # Initialize lines
+    max_line = ax.axvline(max_dist, color='red', linestyle='--', label='Max')
+    min_line = ax.axvline(min_dist, color='blue', linestyle='--', label='Min')
     ax.legend()
-    plt.show()
-    # Take the user input for max_dist and min_dist
-    # Create QApplication instance
-    app = QApplication.instance()
-    if app is None:
-        app = QApplication(sys.argv)
     
-    class DistanceDialog(QDialog):
-        def __init__(self, parent=None):
-            super().__init__(parent)
-            self.setWindowTitle("Distance Parameters")
-            layout = QVBoxLayout()
-            
-            # Max distance input
-            layout.addWidget(QLabel("Maximum distance:"))
-            self.max_spin = QDoubleSpinBox()
-            self.max_spin.setRange(0.0, 1.0)
-            self.max_spin.setDecimals(2)
-            self.max_spin.setValue(max_dist)
-            layout.addWidget(self.max_spin)
-            
-            # Min distance input
-            layout.addWidget(QLabel("Minimum distance:"))
-            self.min_spin = QDoubleSpinBox()
-            self.min_spin.setRange(0.0, 1.0)
-            self.min_spin.setDecimals(2)
-            self.min_spin.setValue(min_dist)
-            layout.addWidget(self.min_spin)
-            
-            # Add OK and Cancel buttons
-            buttonBox = QDialogButtonBox(
-                QDialogButtonBox.StandardButton.Ok | 
-                QDialogButtonBox.StandardButton.Cancel
-            )
-            buttonBox.accepted.connect(self.accept)
-            buttonBox.rejected.connect(self.reject)
-            layout.addWidget(buttonBox)
-            
-            self.setLayout(layout)
-            
-            # Connect max value change to update min spinner's max value
-            self.max_spin.valueChanged.connect(self.update_min_range)
+    # Update the value text with current max and min distances.
+    def update_value():
+        value_text.set_text(
+            f"Max Distance: {max_dist:.2f}, Min Distance: {min_dist:.2f}"
+        )
+    update_value()
+    
+    # Click event handler to set max and min distances
+    # Keep track of which line to update
+    update_max = True
+    def onclick(event):
+        global max_dist, min_dist, update_max
+        if event.inaxes != ax:
+            return
         
-        def update_min_range(self, max_val):
-            self.min_spin.setMaximum(max_val)
+        if update_max:
+            # Round to 0.01
+            max_dist = round(event.xdata, 2)
+            max_dist = max(max_dist, min_dist)  # Ensure max >= min
+            max_line.set_xdata([max_dist, max_dist])
+            instruction_text.set_text("Click to set min distance (blue line)")
+        else:
+            min_dist = round(event.xdata, 2)
+            min_dist = min(min_dist, max_dist)  # Ensure min <= max
+            min_line.set_xdata([min_dist, min_dist])
+            instruction_text.set_text("Click to set max distance (red line)")
+        
+        update_max = not update_max
+        fig.canvas.draw()
+        update_value()
+
+    # Key event handler to close the plot
+    def onkey(event):
+        if event.key == 'enter':
+            plt.close()
+
+    # Connect the event handlers
+    fig.canvas.mpl_connect('button_press_event', onclick)
+    fig.canvas.mpl_connect('key_press_event', onkey)
     
-    dialog = DistanceDialog()
-    if dialog.exec():
-        max_dist = dialog.max_spin.value()
-        min_dist = dialog.min_spin.value()
+    plt.tight_layout()
+    plt.subplots_adjust(top=0.85)  # Make room for instruction
+    plt.show()
 
 # Print the hyperparameters
 g_penalty = max_dist - min_dist
