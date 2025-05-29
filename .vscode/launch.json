@@ -5,9 +5,9 @@
             "type": "node",
             "request": "launch",
             "name": "Launch TypeScript File",
-            "program": "${workspaceFolder}/dist/${relativeFileDirname}/${fileBasenameNoExtension}.js",
+            "program": "${workspaceFolder}/out/${relativeFileDirname}/${fileBasenameNoExtension}.js",
             "preLaunchTask": "build",
-            "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+            "outFiles": ["${workspaceFolder}/out/**/*.js"],
             "sourceMaps": true,
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}"
