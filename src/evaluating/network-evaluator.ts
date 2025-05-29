@@ -153,7 +153,7 @@ export class NetworkEvaluator<
             return (
                 (await launchServer(
                     8080,
-                    ["./src/evaluating/network", "./out/src/evaluating/network"],
+                    ["./src/evaluating/network", "./dist/evaluating/network"],
                     `${exportPath}/network.json`,
                 )) ?? {}
             );
