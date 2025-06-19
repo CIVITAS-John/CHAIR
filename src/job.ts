@@ -119,27 +119,27 @@ export class QAJob {
                 stepSet.add(step);
             });
 
-            if (config.parallel) {
-                // We group the steps by type - load, code, then consolidate
-                this.steps = [[], [], [], []];
-                // Classify each step
-                stepsFlat.forEach((step) => this.steps[validateStep(step)].push(step));
-                // Set the dependencies of unspecified steps
-                for (let i = 1; i < 4; i++) {
-                    this.steps[i].forEach((step) => {
-                        if (!step.dependsOn?.length) {
-                            step.dependsOn = this.steps[i - 1];
-                        }
-                    });
-                }
-                // Remove empty groups
-                this.steps = this.steps.filter((group) => group.length);
-                logger.debug(
-                    `Grouped steps: ${this.steps.map((group) => group.length).join(", ")}`,
-                    _id,
-                );
-            } else {
-                // We just have one group of steps in sequence
+            // We group the steps by type - load, code, then consolidate
+            this.steps = [[], [], [], []];
+            // Classify each step
+            stepsFlat.forEach((step) => this.steps[validateStep(step)].push(step));
+            // Set the dependencies of unspecified steps
+            for (let i = 1; i < 4; i++) {
+                this.steps[i].forEach((step) => {
+                    if (!step.dependsOn?.length) {
+                        step.dependsOn = this.steps[i - 1];
+                    }
+                });
+            }
+            // Remove empty groups
+            this.steps = this.steps.filter((group) => group.length);
+            logger.debug(
+                `Grouped steps: ${this.steps.map((group) => group.length).join(", ")}`,
+                _id,
+            );
+
+            // If non-parallel, we just have one grop of steps in sequence
+            if (!config.parallel) {
                 this.steps = [stepsFlat];
             }
 
