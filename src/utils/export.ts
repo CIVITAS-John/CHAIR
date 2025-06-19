@@ -176,8 +176,7 @@ export const exportChunksForCoding = <T extends DataItem>(
                 const codes =
                     typeof analysis === "undefined"
                         ? undefined
-                        : (analysis.items[message.id] ?? analysis.items[message.id.substring(2)])
-                              .codes;
+                        : (analysis.items[message.id] ?? analysis.items[message.id.substring(2)])?.codes;
                 message.chunk = message.chunk ?? chunk.id;
                 const columns = {
                     ID: message.id,
