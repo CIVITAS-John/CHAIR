@@ -379,7 +379,7 @@ export const importCodes = (
         } catch (error) {
             // Build the codebook
             logger.warn(
-                `Failed to import codebook from ${path}: ${error instanceof Error ? error.message : JSON.stringify(error)}, building one`,
+                `Failed to import codebook from ${path}, building one: ${error instanceof Error ? error.message + "\n" + error.stack : JSON.stringify(error)}`,
             );
             mergeCodebook(analyses);
         }

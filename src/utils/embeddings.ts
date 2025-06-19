@@ -43,12 +43,12 @@ const MODELS = {
                 dimensions: 1024,
             }),
     },
-    "gemini-3072-similarity": {
+    "gemini-embedding-001": {
         dimensions: 3072,
         batchSize: 10,
         model: () =>
             new GoogleGenerativeAIEmbeddings({
-                model: "gemini-embedding-exp-03-07",
+                model: "gemini-embedding-001",
                 taskType: TaskType.SEMANTIC_SIMILARITY,
             }),
     },
@@ -60,8 +60,8 @@ const MODELS = {
                 taskType: TaskType.SEMANTIC_SIMILARITY,
             }),
     },
-    "mxbai-embed-large": {
-        dimensions: 1024,
+    "Qwen3-Embedding-4B": {
+        dimensions: 2560,
     },
 } satisfies Record<
     string,
@@ -77,6 +77,12 @@ export interface EmbedderObject {
     batchSize?: number;
     dimensions: number;
 }
+export interface OllamaEmbeddingsOptions {
+    name: string;
+    dimensions: number;
+    batchSize?: number;
+    baseUrl?: string;
+}
 export type EmbedderModel = EmbedderName | EmbedderObject;
 export class EmbedderNotSupportedError extends Error {
     override name = "EmbedderNotSupportedError";
@@ -91,30 +97,24 @@ export class EmbedderNotSupportedError extends Error {
 
 dotenv.config();
 
+/** Initialize the Ollama embeddings with the given options. */
+export const initOllamaEmbedder = (options: OllamaEmbeddingsOptions): EmbedderObject => {
+    return {
+        name: options.name,
+        model: new OllamaEmbeddings({
+            model: options.name,
+            baseUrl: options.baseUrl ?? process.env.OLLAMA_URL ?? "https://127.0.0.1:11434",
+        }),
+        dimensions: options.dimensions,
+        batchSize: options.batchSize ?? 50, // Default batch size
+    };
+}
+
 /** Initialize the embeddings with the given name. */
 export const initEmbedder = (embedder: string): EmbedderObject => {
-    // ollama Support
-    if (embedder.startsWith("o_")) {
-        embedder = embedder.substring(2);
-
-        if (!(embedder in MODELS)) {
-            throw new EmbedderNotSupportedError(embedder);
-        }
-
-        return {
-            ...MODELS[embedder as EmbedderName],
-            name: embedder,
-            model: new OllamaEmbeddings({
-                model: embedder,
-                baseUrl: process.env.OLLAMA_URL ?? "https://127.0.0.1:11434",
-            }),
-        };
-    }
-
     if (!(embedder in MODELS)) {
         throw new EmbedderNotSupportedError(embedder);
     }
-
     const config = MODELS[embedder as EmbedderName];
     if (!("model" in config)) {
         // No default online model
@@ -168,6 +168,9 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
                     );
                     for (let j = 0; j < res.length; j++) {
                         const idx = requests[i + j];
+                        // Cull embeddings to dimensions if necessary (need matryoshka support for the model)
+                        if (res[j].length !== embedder.dimensions)
+                            res[j] = res[j].slice(0, embedder.dimensions);
                         const embedding = new Float32Array(res[j]);
                         // Check if all elements are 0
                         if (embedding.every((v) => v === 0)) {

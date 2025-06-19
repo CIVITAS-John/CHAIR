@@ -17,7 +17,7 @@ const load = new LoadStep({
 const code = new CodeStep({
     agent: "AI",
     strategy: [ItemLevelAnalyzerAny, ItemLevelAnalyzerVerb],
-    model: ["gpt-4.5-omni"],
+    model: ["gpt-4o"],
 });
 
 // const code2 = new CodeStep({
@@ -26,7 +26,7 @@ const code = new CodeStep({
 // });
 
 const consolidate = new ConsolidateStep({
-    model: ["gpt-4.5-omni"],
+    model: ["gpt-4o"],
     builderConfig: {
         consolidators: [
             new SimpleMerger({ 

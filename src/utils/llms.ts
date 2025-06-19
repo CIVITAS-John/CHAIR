@@ -30,25 +30,12 @@ const MODELS = {
         model: (temperature) =>
             new ChatOpenAI({
                 temperature,
-                model: "gpt-3.5-turbo-0125",
+                model: "gpt-3.5-turbo",
                 streaming: false,
                 maxTokens: 4096,
             }),
     },
-    "gpt-4.5-turbo": {
-        // 10$ / 30$
-        maxInput: 16385,
-        maxOutput: 4096,
-        maxItems: 64,
-        model: (temperature) =>
-            new ChatOpenAI({
-                temperature,
-                model: "gpt-4-turbo",
-                streaming: false,
-                maxTokens: 4096,
-            }),
-    },
-    "gpt-4.5-omni": {
+    "gpt-4o": {
         // 2.5$ / 10$
         maxInput: 16385,
         maxOutput: 4096,
@@ -61,7 +48,7 @@ const MODELS = {
                 maxTokens: 4096,
             }),
     },
-    "gpt-4.5-mini": {
+    "gpt-4o-mini": {
         // 0.15$ / 0.6$
         maxInput: 16385,
         maxOutput: 4096,
@@ -74,7 +61,7 @@ const MODELS = {
                 maxTokens: 4096,
             }),
     },
-    "gpt-4.5-audio": {
+    "gpt-4o-audio": {
         // 2.5$ / 10$
         // 100$ / 200$ audio
         maxInput: 16385,
@@ -86,21 +73,6 @@ const MODELS = {
                 model: "gpt-4o-audio-preview",
                 streaming: false,
                 maxTokens: 4096,
-            }),
-    },
-    "o3-mini": {
-        // 1.1$ / 4.4$
-        maxInput: 16385,
-        maxOutput: 4096,
-        maxItems: 64,
-        systemMessage: false,
-        model: () =>
-            new ChatOpenAI({
-                // Does not support temperature
-                model: "o3-mini",
-                streaming: false,
-                // maxCompletionTokens: MaxOutput,
-                // need to update the package, it seems
             }),
     },
     "o4-mini": {
@@ -118,21 +90,6 @@ const MODELS = {
                 // need to update the package, it seems
             }),
     },
-    o1: {
-        // 15$ / 60$
-        maxInput: 16385,
-        maxOutput: 4096,
-        maxItems: 64,
-        systemMessage: false,
-        model: () =>
-            new ChatOpenAI({
-                // Does not support temperature
-                model: "o1",
-                streaming: false,
-                // maxCompletionTokens: MaxOutput,
-                // need to update the package, it seems
-            }),
-    },
     "claude3-haiku": {
         // 0.25$ / 0.75$
         maxInput: 200000,
@@ -142,19 +99,6 @@ const MODELS = {
             new ChatAnthropic({
                 temperature,
                 model: "claude-3-haiku-20240307",
-                streaming: false,
-                maxTokens: 4096,
-            }),
-    },
-    "claude3-sonnet": {
-        // 3$ / 15$
-        maxInput: 200000,
-        maxOutput: 4096,
-        maxItems: 64,
-        model: (temperature) =>
-            new ChatAnthropic({
-                temperature,
-                model: "claude-3-sonnet-20240229",
                 streaming: false,
                 maxTokens: 4096,
             }),
@@ -211,10 +155,10 @@ const MODELS = {
                 maxTokens: 8192,
             }),
     },
-    gemma2: {
-        // Assuming 27b; models <= 10b generally don't really work
-        maxInput: 64000,
-        maxOutput: 64000,
+    gemma3: {
+        // Assuming 27b or 14b
+        maxInput: 8192,
+        maxOutput: 8192,
         maxItems: 32,
     },
     "mistral-small": {
@@ -246,6 +190,15 @@ export interface LLMObject {
     maxItems: number;
     systemMessage?: boolean;
 }
+export interface OllamaLLMOptions {
+    name: string;
+    model?: string;
+    maxInput?: number;
+    maxOutput?: number;
+    maxItems?: number;
+    baseUrl?: string;
+    systemMessage?: boolean;
+}
 export type LLMModel = LLMName | LLMObject;
 export class LLMNotSupportedError extends Error {
     override name = "LLMNotSupportedError";
@@ -263,6 +216,25 @@ export interface LLMSession {
 }
 
 dotenv.config();
+
+
+/** Initialize the Ollama embeddings with the given options. */
+export const initOllamaLLM = (options: OllamaLLMOptions): LLMObject => {
+    return {
+        name: options.name,
+        model: (temperature) =>
+            new ChatOllama({
+                temperature,
+                model: options.model ?? options.name,
+                streaming: false,
+                baseUrl: options.baseUrl ?? process.env.OLLAMA_URL ?? "https://127.0.0.1:11434",
+            }),
+        maxInput: options.maxInput ?? 8192,
+        maxOutput: options.maxOutput ?? 8192,
+        maxItems: options.maxItems ?? 32,
+        systemMessage: options.systemMessage ?? true,
+    };
+}
 
 /** Initialize a LLM with the given name. */
 export const initLLM = (LLM: string): LLMObject => {
