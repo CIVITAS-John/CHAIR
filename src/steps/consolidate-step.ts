@@ -27,6 +27,7 @@ export interface ConsolidateStepConfig<
     model: LLMModel | LLMModel[];
     parameters?: AIParameters;
     builderConfig?: RefiningReferenceBuilderConfig;
+    prefix?: string; // Prefix for the reference files
 }
 
 export class ConsolidateStep<
@@ -162,8 +163,7 @@ export class ConsolidateStep<
                             join(
                                 dataset.path,
                                 "references",
-                                // `${Analyzers.join("-")}_
-                                `${models.map((m) => (typeof m === "string" ? m : m.name)).join("-")}${builder.suffix}`,
+                                `${this.config.prefix ? this.config.prefix + "-" : ""}${models.map((m) => (typeof m === "string" ? m : m.name)).join("-")}${builder.suffix}`,
                             ),
                         );
                         const hash = md5(codes);

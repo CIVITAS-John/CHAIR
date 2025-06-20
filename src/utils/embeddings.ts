@@ -59,10 +59,7 @@ const MODELS = {
                 model: "text-embedding-004",
                 taskType: TaskType.SEMANTIC_SIMILARITY,
             }),
-    },
-    "Qwen3-Embedding-4B": {
-        dimensions: 2560,
-    },
+    }
 } satisfies Record<
     string,
     Omit<EmbedderObject, "name" | "model"> & {
@@ -76,6 +73,7 @@ export interface EmbedderObject {
     name: string;
     batchSize?: number;
     dimensions: number;
+    prompt?: string;
 }
 export interface OllamaEmbeddingsOptions {
     name: string;
@@ -83,6 +81,7 @@ export interface OllamaEmbeddingsOptions {
     dimensions: number;
     batchSize?: number;
     baseUrl?: string;
+    prompt?: string;
 }
 export type EmbedderModel = EmbedderName | EmbedderObject;
 export class EmbedderNotSupportedError extends Error {
@@ -108,6 +107,7 @@ export const initOllamaEmbedder = (options: OllamaEmbeddingsOptions): EmbedderOb
         }),
         dimensions: options.dimensions,
         batchSize: options.batchSize ?? 50, // Default batch size
+        prompt: options.prompt
     };
 }
 
@@ -131,6 +131,7 @@ export const initEmbedder = (embedder: string): EmbedderObject => {
 /** Call the model to generate text embeddings with cache. */
 export const requestEmbeddings = (sources: string[], cache: string): Promise<Float32Array> =>
     logger.withDefaultSource("requestEmbeddings", async () => {
+        const localsources: string[] = sources.map(source => source.trim());
         const { embedder } = QAJob.Context.get();
         if (!embedder) {
             throw new QAJob.ContextVarNotFoundError("embedder");
@@ -141,9 +142,10 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
         // Check if the cache exists
         const embeddings = new Float32Array(embedder.dimensions * sources.length);
         const requests: number[] = [];
-        for (let i = 0; i < sources.length; i++) {
-            const source = sources[i];
-            const cacheFile = `${cacheFolder}/${md5(source)}.bytes`;
+        for (let i = 0; i < localsources.length; i++) {
+            // Apply the prompt if provided
+            localsources[i] = (embedder.prompt ?? "{0}").replace("{0}", localsources[i]);
+            const cacheFile = `${cacheFolder}/${md5(localsources[i])}.bytes`;
             if (existsSync(cacheFile)) {
                 const buffer = readFileSync(cacheFile);
                 const cached = new Float32Array(
@@ -165,7 +167,7 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
                     // This line could debug some underlying issue behind 0 embeddings, particularly for stupid Gemini API
                     // var test = await (embedder.model as any).client.embedContent("test");
                     const res = await embedder.model.embedDocuments(
-                        requests.slice(i, i + batchSize).map((idx) => sources[idx]),
+                        requests.slice(i, i + batchSize).map((idx) => localsources[idx]),
                     );
                     for (let j = 0; j < res.length; j++) {
                         const idx = requests[i + j];
@@ -178,7 +180,7 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
                             throw new Error(`Invalid embedding for: ${sources[idx]}`);
                         }
                         embeddings.set(embedding, embedder.dimensions * idx);
-                        const cacheFile = `${cacheFolder}/${md5(sources[idx])}.bytes`;
+                        const cacheFile = `${cacheFolder}/${md5(localsources[idx])}.bytes`;
                         writeFileSync(cacheFile, embedding);
                     }
                     break;
@@ -200,6 +202,8 @@ export const requestEmbedding = (source: string, cache: string) =>
         }
         const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
         ensureFolder(cacheFolder);
+        // Apply the prompt if provided
+        source = (embedder.prompt ?? "{0}").replace("{0}", source);
         // Check if the cache exists
         const cacheFile = `${cacheFolder}/${md5(source)}.bytes`;
         if (existsSync(cacheFile)) {
