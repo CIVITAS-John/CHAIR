@@ -106,15 +106,13 @@ export abstract class ItemLevelAnalyzerBase extends ConversationAnalyzer {
                         codes = "Checkin";
                     }
                     // Remove the () part
-                    codes = codes.replace(/\(.*?\)/, "").trim();
-                    // Remove the **** part
-                    codes = codes.replace(/\*\*(.*?)\*\(/, "$1").trim();
+                    codes = codes.replaceAll(/\(.*?\)/g, "").trim();
                     // Remove the ** part
-                    codes = codes.replace(/\*(.*?)\*/, "$1").trim();
+                    codes = codes.replaceAll(/\*(.*?)\*/g, "$1").trim();
                     // Sometimes the LLM will return "tag{number}: {codes}"
                     codes = codes.replace(new RegExp(`^${this.tagName}(\\d+):`), "").trim();
                     // Sometimes the LLM will return "{codes}, {codes}"
-                    codes = codes.replace(/\{(.*?)\}/, "$1").trim();
+                    codes = codes.replaceAll(/\{(.*?)\}/g, "$1").trim();
                     // Sometimes the LLM will start with the original content
                     if (codes.toLowerCase().startsWith(message.content.toLowerCase())) {
                         codes = codes.substring(message.content.length).trim();
