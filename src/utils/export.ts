@@ -328,7 +328,7 @@ export const importCodes = (
                 if (!content) return;
 
                 const codesValue = getCellValueString(row, "Codes");
-                const codes = codesValue ? codesValue.split(/[,;\n]+/).filter(Boolean) : undefined;
+                const codes = codesValue ? codesValue.split(/[,;\n]+/).filter(Boolean).map(code => code.trim()) : undefined;
 
                 // Skip rows without codes
                 if (!codes) return;

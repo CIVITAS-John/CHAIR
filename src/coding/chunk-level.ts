@@ -61,7 +61,7 @@ export abstract class ChunkLevelAnalyzerBase extends ConversationAnalyzer {
                     // Sometimes, the LLM will return "Label: {code}" as the name of the code
                     line = line.replace(/^(?:Label|Code)\s*\d*:/, "").trim();
                     // Get or create the code
-                    line = line.toLowerCase();
+                    line = line.trim().toLowerCase();
                     currentCode = analysis.codes[line] ?? {
                         categories: [category.toLowerCase()],
                         label: line,

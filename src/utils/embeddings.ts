@@ -79,6 +79,7 @@ export interface EmbedderObject {
 }
 export interface OllamaEmbeddingsOptions {
     name: string;
+    model?: string;
     dimensions: number;
     batchSize?: number;
     baseUrl?: string;
@@ -102,7 +103,7 @@ export const initOllamaEmbedder = (options: OllamaEmbeddingsOptions): EmbedderOb
     return {
         name: options.name,
         model: new OllamaEmbeddings({
-            model: options.name,
+            model: options.model ?? options.name,
             baseUrl: options.baseUrl ?? process.env.OLLAMA_URL ?? "https://127.0.0.1:11434",
         }),
         dimensions: options.dimensions,
