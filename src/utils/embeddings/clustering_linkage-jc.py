@@ -50,7 +50,7 @@ if tar_dims < dims:
     embeddings = umap.fit_transform(embeddings)
     print("Embeddings reduced:", embeddings.shape)
 
-# Normalized L2 embeddings will make euclidean distance equivalent to cosine similarity
+# Normalized L2 embeddings will make euclidean distance close to cosine distance (same range 0-2, but ^2)
 # Many embedding models are already normalized, but we do it here for safety
 embeddings = normalize(embeddings, norm="l2")
 

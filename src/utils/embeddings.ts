@@ -144,7 +144,7 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
         const requests: number[] = [];
         for (let i = 0; i < localsources.length; i++) {
             // Apply the prompt if provided
-            localsources[i] = (embedder.prompt ?? "{0}").replace("{0}", localsources[i]);
+            localsources[i] = (embedder.prompt ?? "{input}").replace("{input}", localsources[i]);
             const cacheFile = `${cacheFolder}/${md5(localsources[i])}.bytes`;
             if (existsSync(cacheFile)) {
                 const buffer = readFileSync(cacheFile);
@@ -203,7 +203,7 @@ export const requestEmbedding = (source: string, cache: string) =>
         const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
         ensureFolder(cacheFolder);
         // Apply the prompt if provided
-        source = (embedder.prompt ?? "{0}").replace("{0}", source);
+        source = (embedder.prompt ?? "{input}").replace("{input}", source);
         // Check if the cache exists
         const cacheFile = `${cacheFolder}/${md5(source)}.bytes`;
         if (existsSync(cacheFile)) {

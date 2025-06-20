@@ -107,6 +107,8 @@ export abstract class ItemLevelAnalyzerBase extends ConversationAnalyzer {
                     }
                     // Remove the () part
                     codes = codes.replace(/\(.*?\)/, "").trim();
+                    // Remove the **** part
+                    codes = codes.replace(/\*\*(.*?)\*\(/, "$1").trim();
                     // Remove the ** part
                     codes = codes.replace(/\*(.*?)\*/, "$1").trim();
                     // Sometimes the LLM will return "tag{number}: {codes}"
