@@ -64,7 +64,7 @@ export const buildSemanticGraph = (
                 potentials.add(j);
             }
         }
-        // Create the links
+        // Create the links and assign weights based on closeness
         for (const j of potentials) {
             if (i === j) {
                 continue;
@@ -111,10 +111,16 @@ export const buildSemanticGraph = (
     // Calculate the weights
     for (const source of nodes) {
         for (let owner = 0; owner < allOwners; owner++) {
-            source.weights[owner] = Math.min(
-                Math.max(source.weights[owner] / Math.max(source.neighbors, 1), 0),
-                1,
-            );
+            if (source.neighbors == 0) {
+                source.weights[owner] = 0;
+            } else {
+                source.weights[owner] = Math.min(
+                    // Math.max(source.weights[owner] / Math.max(source.neighbors, 1), 0),
+                    // changed 2025-6-19: use log2 function to reduce the impact of having many neighbors
+                    Math.log2(source.weights[owner] + 1) / Math.log2(source.neighbors + 1),
+                    1,
+                );
+            }
         }
         let realOwners = 0;
         for (const owner of source.owners) {
