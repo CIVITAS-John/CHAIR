@@ -122,21 +122,22 @@ export class DefinitionGenerator extends DefinitionParser {
         // Generate definitions for codes
         return Promise.resolve([
             `
-You are an expert in thematic analysis clarifying the criteria of qualitative codes. Do not attempt to merge codes now.
-Consider provided quotes, and note that each quote is independent of others.
+You are an expert in thematic analysis clarifying the criteria of qualitative codes. 
+Each code is independent of others. Do not attempt to merge codes now.
 Write clear and generalizable criteria for each code and do not introduce unnecessary details.
-If necessary, refine labels to be more accurate, but do not repeat yourself.
+Try to understand and follow the coder's intention by considering provided quotes. Each quote is independent of others. 
+If necessary for accuracy and clarity, refine labels, but follow the original intent and style.
 ${dataset.researchQuestion}
 Always follow the output format:
 ---
 Definitions for each code (${codes.length} in total):
 1. 
 Criteria: {Who did what, and how for code 1}
-Label: {A descriptive label of code 1}
+Label: {An accurate label of code 1}
 ...
 ${codes.length}.
 Criteria: {Who did what, and how for code ${codes.length}}
-Label: {A descriptive label of code ${codes.length}}
+Label: {An accurate label of code ${codes.length}}
 ---`.trim(),
             codes
                 .map((code, idx) =>
