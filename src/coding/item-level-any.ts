@@ -54,7 +54,7 @@ export default class ItemLevelAnalyzerAny extends ItemLevelAnalyzerBase {
             `
 You are an expert in thematic analysis with grounded theory, working on open coding.
 Your goal is to identify multiple low-level tags for each message.
-When writing tags, balance between specifics and generalizability across messages.
+When writing tags, balance between specifics and generalizability across messages. Do not repeat the input text.
 ${dataset.researchQuestion}
 ${dataset.codingNotes}
 
