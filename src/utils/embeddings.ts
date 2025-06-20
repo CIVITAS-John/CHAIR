@@ -43,12 +43,11 @@ const MODELS = {
                 dimensions: 1024,
             }),
     },
-    "gemini-embedding-001": {
+    "gemini-embedding-exp": {
         dimensions: 3072,
-        batchSize: 10,
         model: () =>
             new GoogleGenerativeAIEmbeddings({
-                model: "gemini-embedding-001",
+                model: "gemini-embedding-exp-03-07",
                 taskType: TaskType.SEMANTIC_SIMILARITY,
             }),
     },
@@ -162,7 +161,7 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
         const batchSize = embedder.batchSize ?? 50;
         for (let i = 0; i < requests.length; i += batchSize) {
             let retry = 0;
-            while (retry < 10) {
+            while (true) {
                 try {
                     // This line could debug some underlying issue behind 0 embeddings, particularly for stupid Gemini API
                     // var test = await (embedder.model as any).client.embedContent("test");
@@ -177,7 +176,7 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
                         const embedding = new Float32Array(res[j]);
                         // Check if all elements are 0
                         if (embedding.every((v) => v === 0)) {
-                            throw new Error(`Invalid embedding for: ${sources[idx]}`);
+                            throw new Error(`Invalid embedding for: ${sources[idx]} (at index ${idx} / i ${i} j ${j} batchSize ${batchSize})`);
                         }
                         embeddings.set(embedding, embedder.dimensions * idx);
                         const cacheFile = `${cacheFolder}/${md5(localsources[idx])}.bytes`;
@@ -185,8 +184,8 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
                     }
                     break;
                 } catch (e) {
-                    logger.error(e, ++retry >= 10);
-                    await sleep((retry + 1) * 6000);
+                    logger.error(e, ++retry <= 10);
+                    await sleep(6000 + retry * 2000);
                 }
             }
         }
