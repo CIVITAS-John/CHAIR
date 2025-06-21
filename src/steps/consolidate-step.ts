@@ -27,6 +27,7 @@ export interface ConsolidateStepConfig<
     model: LLMModel | LLMModel[];
     parameters?: AIParameters;
     builderConfig?: RefiningReferenceBuilderConfig;
+    namePattern?: string; // Pattern for the codebook names
     prefix?: string; // Prefix for the reference files
 }
 
@@ -118,7 +119,13 @@ export class ConsolidateStep<
                     ...Object.entries(results).reduce<Record<string, Codebook>>(
                         (acc, [analyzer, result]) => {
                             Object.entries(result).forEach(([ident, codedThreads]) => {
-                                const key = `${analyzer}-${ident}`;
+                                var key = `${analyzer}-${ident}`;
+                                if (this.config.namePattern) {
+                                    key = this.config.namePattern
+                                        .replace("{dataset}", dataset.name)
+                                        .replace("{analyzer}", analyzer)
+                                        .replace("{coder}", ident);
+                                }
                                 if (!codedThreads.codebook) {
                                     throw new ConsolidateStep.InternalError(
                                         `Codebook not found in ${key}`,
