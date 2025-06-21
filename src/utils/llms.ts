@@ -156,6 +156,18 @@ const MODELS = {
                 maxTokens: 8192,
             }),
     },
+    "qwen-qwq-32b": {
+        maxInput: 8192,
+        maxOutput: 8192,
+        maxItems: 16,
+        model: (temperature) =>
+            new ChatGroq({
+                temperature,
+                model: "qwen-qwq-32b",
+                streaming: false,
+                maxTokens: 8192,
+            }),
+    },
     "gemma3-27b": {
         maxInput: 32000,
         maxOutput: 32000,
@@ -172,12 +184,6 @@ const MODELS = {
         maxInput: 64000,
         maxOutput: 64000,
         maxItems: 32,
-    },
-    "qwen2.5": {
-        // Assuming 14b (32b takes a bit too much vrams)
-        maxInput: 8192,
-        maxOutput: 8192,
-        maxItems: 16,
     },
     "mistral-nemo": {
         // It claims to support 128k, but I don't think it would work well with that large window.
@@ -359,7 +365,7 @@ export const requestLLM = (
                         `[${session.llm.name}] Cache hit (input tokens: ${inputTokens}, output tokens: ${outputTokens})`,
                     );
                     logger.debug(`[${session.llm.name}] Cache content: ${content}`);
-                    return content;
+                    return stripThinkTags(content);
                 }
             }
         }
@@ -368,7 +374,7 @@ export const requestLLM = (
         const result = await requestLLMWithoutCache(messages, temperature, fakeRequest);
         logger.debug(`[${session.llm.name}] Writing to cache file`);
         writeFileSync(cacheFile, `${input}\n===\n${result}`);
-        return result;
+        return stripThinkTags(result);
     });
 
 /** Call the model to generate text, explicitly bypassing cache. */
@@ -416,3 +422,9 @@ export const requestLLMWithoutCache = (
         logger.debug(`[${llm.name}] LLM response: ${text}`);
         return text;
     });
+
+/** Strip the <think> tags from the text. */
+const stripThinkTags = (text: string): string => {
+    // Remove everything between <think> and </think> tags
+    return text.replace(/<think>.*?<\/think>/gs, "").trim();
+}
