@@ -140,10 +140,9 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
                 return [];
             }
 
-            logger.info(`Iteration ${iteration}: ${this.#consolidators[this.#index].name}`);
-
             // Preprocess the subunits
             subunits = subunits.filter((Code) => Code.label !== "[Merged]");
+            logger.info(`Iteration ${iteration}: ${this.#consolidators[this.#index].name}, ${subunits.length} codes remaining`);
             // Reorder the subunits to prevent over-merging
             subunits = seededShuffle(subunits, 0);
 

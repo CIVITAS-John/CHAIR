@@ -119,6 +119,7 @@ export class DefinitionGenerator extends DefinitionParser {
     /** Build the prompts for the code consolidator. */
     override buildPrompts(_codebook: Codebook, codes: Code[]): Promise<[string, string]> {
         const { dataset } = BaseStep.Context.get();
+        codes = codes.filter((Code) => (Code.definitions?.length ?? 0) == 0);
         // Generate definitions for codes
         return Promise.resolve([
             `
