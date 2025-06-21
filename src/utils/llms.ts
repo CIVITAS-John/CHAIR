@@ -20,6 +20,7 @@ import { ensureFolder } from "./file.js";
 import { logger } from "./logger.js";
 import { promiseWithTimeout } from "./misc.js";
 import { tokenize } from "./tokenizer.js";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 
 const MODELS = {
     "gpt-3.5-turbo": {
@@ -155,11 +156,16 @@ const MODELS = {
                 maxTokens: 8192,
             }),
     },
-    gemma3: {
-        // Assuming 27b or 14b
-        maxInput: 8192,
-        maxOutput: 8192,
+    "gemma3-27b": {
+        maxInput: 32000,
+        maxOutput: 32000,
         maxItems: 32,
+        model: (temperature) => 
+            new ChatGoogleGenerativeAI({
+                temperature,
+                model: "gemma-3-27b-it",
+                streaming: false
+            })
     },
     "mistral-small": {
         // Assuming 22b

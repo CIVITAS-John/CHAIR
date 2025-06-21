@@ -13,7 +13,8 @@
         "build:network": "tsc -p src/evaluating/network/tsconfig.json",
         "copy:python": "copyfiles -u 1 \"src/**/*.py\" dist/",
         "build": "pnpm run clean && pnpm run build:main && pnpm run build:network && pnpm run copy:python",
-        "build:examples": "pnpm run build && tsc -p examples/tsconfig.json && copyfiles -u 1 \"src/**/*.py\" out/src/ && copyfiles -u 1 \"dist/evaluating/network/**/*.*\" out/src/evaluating/network/",
+        "build:examples": "pnpm run clean && pnpm run build:network && pnpm run copy:python && tsc -p examples/tsconfig.json && copyfiles -u 1 \"src/**/*.py\" out/src/ && copyfiles -u 1 \"dist/evaluating/network/**/*.*\" out/src/evaluating/network/",
+        "build:workspaces": "pnpm run clean && pnpm run build:network && pnpm run copy:python && tsc -p workspaces/tsconfig.json && copyfiles -u 1 \"src/**/*.py\" out/src/ && copyfiles -u 1 \"dist/evaluating/network/**/*.*\" out/src/evaluating/network/",
         "lint": "eslint --cache . && prettier --check --cache .",
         "format": "eslint --fix --cache . && prettier --write --cache .",
         "docs": "typedoc"
@@ -64,6 +65,7 @@
         "@langchain/community": "^0.3.40",
         "@langchain/core": "^0.3.44",
         "@langchain/google-genai": "^0.2.3",
+        "@langchain/google-vertexai": "^0.2.13",
         "@langchain/groq": "^0.2.2",
         "@langchain/mistralai": "^0.2.0",
         "@langchain/ollama": "^0.2.0",

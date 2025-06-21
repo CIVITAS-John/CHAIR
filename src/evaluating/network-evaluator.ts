@@ -21,9 +21,9 @@ import { CodebookEvaluator } from "./codebooks.js";
 
 /** Get the strings of the codes. */
 const getCodeString = (code: Code) => {
-    let text = `Label: ${code.label}`;
+    let text = `${code.label}`;
     if ((code.definitions?.length ?? 0) > 0) {
-        text += `\nDefinition: ${(code.definitions ?? [])[0]}`;
+        text += `Label: ${code.label}\nDefinition: ${(code.definitions ?? [])[0]}`;
     }
     return text;
 };

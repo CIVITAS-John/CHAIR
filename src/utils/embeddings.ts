@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import { TaskType } from "@google/generative-ai";
 import type { Embeddings } from "@langchain/core/embeddings";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
+import { VertexAIEmbeddings } from "@langchain/google-vertexai";
 import { OllamaEmbeddings } from "@langchain/ollama";
 import { OpenAIEmbeddings } from "@langchain/openai";
 import * as dotenv from "dotenv";
@@ -43,8 +44,16 @@ const MODELS = {
                 dimensions: 1024,
             }),
     },
+    "gemini-embedding-001": {
+        dimensions: 3072,
+        model: () =>
+            new VertexAIEmbeddings({
+                model: "gemini-embedding-001",
+            }),
+    },
     "gemini-embedding-exp": {
         dimensions: 3072,
+        batchSize: 100,
         model: () =>
             new GoogleGenerativeAIEmbeddings({
                 model: "gemini-embedding-exp-03-07",
