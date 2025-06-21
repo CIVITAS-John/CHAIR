@@ -45,7 +45,7 @@ export class CodebookSection extends Panel {
         const dataset: { name: string; metric: string; value: number }[] = [];
         for (const name of names) {
             const result = results[name];
-            if (name == "$$$ total" || typeof result !== "object") continue;
+            if (typeof result !== "object") continue;
             for (const metric of metrics) {
                 dataset.push({ name, metric, value: result[metric] });
             }
@@ -76,7 +76,8 @@ export class CodebookSection extends Panel {
         }
         // Render the codebooks and evaluation results
         this.buildTable(
-            Object.entries(results),
+            Object.entries(results).filter(
+                ([key]) => key !== "$$$ total"),
             (row, [key, value], idx) => {
                 const codebook = codebooks[idx + 1];
                 // Name of the codebook
