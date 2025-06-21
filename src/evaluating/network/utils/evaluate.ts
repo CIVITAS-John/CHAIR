@@ -29,12 +29,13 @@ export const evaluateCodebooks = (
     // Calculate weights per node
     const graph = buildSemanticGraph(dataset, parameters);
     const nodeWeights = new Map<string, number>();
-    let totalWeight = 0;
+    let totalWeight = 0, totalNovelty = 0;
     for (const node of graph.nodes) {
         const weight = node.totalWeight / (dataset.totalWeight ?? NaN);
         observations[0].push(weight);
         nodeWeights.set(node.id, weight);
         totalWeight += weight;
+        totalNovelty += node.novelty ?? 0;
     }
     // The expectations are made based on (consolidate codes in each codebook) / (codes in the baseline)
     const consolidated = codebooks.map((codebook, i) => {
@@ -44,19 +45,14 @@ export const evaluateCodebooks = (
         return getConsolidatedSize(codebooks[0], codebook);
     });
     // Check if each node is covered by the codebooks
-    let totalNovelty = 0;
     for (const node of graph.nodes) {
         const weight = nodeWeights.get(node.id) ?? NaN;
-        // Check novelty
-        if (node.novel) {
-            totalNovelty += weight;
-        }
         // Calculate on each codebook
         for (let i = 1; i < codebooks.length; i++) {
             const result = results[names[i]];
             const observed = node.weights[i];
             result.coverage += weight * observed;
-            result.novelty += weight * observed * (node.novel ? 1 : 0);
+            result.novelty += observed * (node.novelty ?? 0);
             observations[i].push(observed);
         }
     }
@@ -125,27 +121,23 @@ export const evaluateUsers = (
         weights,
     );
     const nodeWeights: Map<string, number> = new Map<string, number>();
-    let totalWeight = 0;
+    let totalWeight = 0, totalNovelty = 0;
     for (const node of graph.nodes) {
         const weight = node.totalWeight / (users.length - 1);
         observations[0].push(weight);
         nodeWeights.set(node.id, weight);
         totalWeight += weight;
+        totalNovelty += node.novelty ?? 0;
     }
     // Check if each node is covered by the codebooks
-    let totalNovelty = 0;
     for (const node of graph.nodes) {
         const weight = nodeWeights.get(node.id) ?? NaN;
-        // Check novelty
-        if (node.novel) {
-            totalNovelty += weight;
-        }
         // Calculate on each user
         for (let i = 1; i < users.length; i++) {
             const result = results[users[i]];
             const observed = node.weights[i];
             result.coverage += weight * observed;
-            result.novelty += weight * observed * (node.novel ? 1 : 0);
+            result.novelty += observed * (node.novelty ?? 0);
             observations[i].push(observed);
         }
     }

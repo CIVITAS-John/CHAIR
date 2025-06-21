@@ -129,7 +129,7 @@ export const buildSemanticGraph = (
             }
             source.weights[owner] = 1;
         }
-        source.novel = realOwners === 1;
+        source.novelty = realOwners === 1 ? Math.pow(2, -source.neighbors) : 0;
         source.totalWeight = source.weights.reduce(
             (A, B, I) => (I === 0 ? A : A + B * getWeight(I)),
             0,

@@ -18,6 +18,8 @@ export interface EvaluateStepConfig<
     consolidator: ConsolidateStep<TSubunit, TUnit>;
     subdir?: string; // Defaults to "evaluation"
     ignoreGroups?: boolean; // Defaults to false
+    anonymize?: boolean; // Defaults to true
+    parameters?: Record<string, any>; // Extra parameters for the evaluation
 }
 
 export class EvaluateStep<
@@ -56,6 +58,8 @@ export class EvaluateStep<
                 async () => {
                     const evaluator = new NetworkEvaluator({
                         dataset: dataset as unknown as Dataset<TUnit>,
+                        parameters: this.config.parameters ?? {},
+                        anonymize: this.config.anonymize ?? true,
                     });
                     const codes = codebooks.get(dataset.name) ?? {};
                     const gs = this.ignoreGroups ? {} : (groups.get(dataset.name) ?? {});

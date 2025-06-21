@@ -47,21 +47,26 @@ export class NetworkEvaluator<
     anonymize: boolean;
     /** The title of the evaluator. */
     title: string;
+    /** The extra parameters for the evaluation. */
+    parameters: Record<string, any> = {};
 
     /** Initialize the evaluator. */
     constructor({
         dataset,
         anonymize,
         title,
+        parameters
     }: {
         dataset: Dataset<TUnit>;
         anonymize?: boolean;
         title?: string;
+        parameters?: Record<string, any>;
     }) {
         super();
         this.dataset = dataset;
         this.anonymize = anonymize ?? true;
         this.title = title ?? "Network Evaluator";
+        this.parameters = parameters ?? {};
     }
 
     /** Evaluate a number of codebooks. */
@@ -140,6 +145,7 @@ export class NetworkEvaluator<
                     source: this.dataset,
                     title: this.title,
                     weights,
+                    parameters: this.parameters,
                 };
                 return pkg;
             });

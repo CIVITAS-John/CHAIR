@@ -180,6 +180,8 @@ export interface CodebookComparison<T extends DataChunk<DataItem>> {
     uidToNicknames?: Map<string, string>;
     /** The distance matrix between codes in the first codebook. */
     distances: number[][];
+    /** Extra parameters for the comparison (to override defaults). */
+    parameters?: Record<string, any>;
 }
 
 /** CodebookEvaluation: Evaluation of a codebook. */
