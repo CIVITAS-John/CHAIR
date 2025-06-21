@@ -62,7 +62,7 @@ export abstract class CodeConsolidator {
     postprocess(
         subunits: Code[]
     ): Promise<Code[]> {
-        return Promise.resolve(subunits);
+        return Promise.resolve(subunits.filter((Code) => Code.label !== "[Merged]"));
     }
 
     /**
@@ -146,11 +146,12 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
                 this.#index++;
             }
             if (this.#index >= this.#consolidators.length) {
+                analysis.codebook = Object.fromEntries(
+                    subunits.map((Code) => [Code.label, Code]));
                 return [];
             }
 
             // Preprocess the subunits
-            subunits = subunits.filter((Code) => Code.label !== "[Merged]");
             logger.info(`Iteration ${iteration}: ${this.#consolidators[this.#index].name}, started with ${subunits.length} codes`);
             // Reorder the subunits to prevent over-merging
             subunits = seededShuffle(subunits, 0);
@@ -160,6 +161,8 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
                 subunits,
             );
             if (Array.isArray(res)) {
+                analysis.codebook = Object.fromEntries(
+                    res.map((Code) => [Code.label, Code]));
                 return res;
             }
             analysis.codebook = res;

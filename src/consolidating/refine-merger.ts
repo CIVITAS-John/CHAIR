@@ -116,8 +116,8 @@ export class RefineMerger extends DefinitionParser {
             `
 You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
 Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
-For each code, reflect on the logical relationship between the concepts.
-Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+For each code, reflect on the logical relationship between the input concepts.
+Then, write a combined sentence of criteria covering all the code's input concepts. Use clear and generalizable language and do not introduce unnecessary details. 
 Finally, write an accurate ${this.useVerbPhrases ? "verb phrase" : "label"} to best represent the code.
 ${dataset.researchQuestion}
 Always follow the output format:
