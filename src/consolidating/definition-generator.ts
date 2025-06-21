@@ -14,6 +14,8 @@ export abstract class DefinitionParser extends CodeConsolidator {
         const pendings: Code[] = [];
         let curCode: Code | undefined;
         let status = "";
+        // Filter has to happen here, otherwise some codes will get omitted
+        const oldcodes = codes.filter((Code) => (Code.definitions?.length ?? 0) == 0);
         // Parse the definitions
         for (let line of lines) {
             if (line === "" || line.startsWith("---")) {
@@ -89,19 +91,19 @@ export abstract class DefinitionParser extends CodeConsolidator {
                 newCode.label = newCode.label.substring(0, newCode.label.length - 1).trim();
             }
             // Sometimes, the order of labels is wrong (! found for gpt-3.5-turbo)
-            const Found = codes.findIndex((Code) => Code.label === newCode.label);
+            const Found = oldcodes.findIndex((Code) => Code.label === newCode.label);
             if (Found !== -1 && Found !== i) {
                 throw new CodeConsolidator.InvalidResponseError(
-                    `Invalid response: code ${newCode.label}'s mapping order is wrong.`,
+                    `Invalid response: code ${newCode.label}'s mapping order is wrong (was at ${Found}, now at ${i}).`,
                 );
             }
         }
         // Update the codes
-        updateCodes(codebook, pendings, codes);
+        updateCodes(codebook, pendings, oldcodes);
         // Remove temp labels
         codes.forEach((Code) => delete Code.oldLabels);
         // Return the cursor movement
-        return Promise.resolve(Object.keys(pendings).length - codes.length);
+        return Promise.resolve(Object.keys(pendings).length - oldcodes.length);
     }
 }
 
