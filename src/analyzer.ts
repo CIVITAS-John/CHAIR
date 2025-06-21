@@ -128,7 +128,7 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
             logger.info(`[${dataset.name}] Iteration ${i + 1}/${analyzer.maxIterations}`);
             let cursor = 0;
             const filtered = sources.filter((subunit) => analyzer.subunitFilter(subunit, i));
-            logger.debug(`[${dataset.name}] ${filtered.length} subunits filtered`);
+            logger.info(`[${dataset.name}] ${filtered.length} subunits filtered`);
             // Loop through the subunits
             while (cursor < filtered.length) {
                 logger.debug(`[${dataset.name}] Cursor at ${cursor}/${filtered.length}`);

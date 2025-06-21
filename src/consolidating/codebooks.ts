@@ -88,7 +88,7 @@ export const mergeCodebooks = (codebooks: Codebook[], withReference = false): Co
                 if (!codes.has(newLabel)) {
                     codes.set(newLabel, code);
                 } else {
-                    mergeCodes(codes.get(newLabel) ?? code, code);
+                    mergeCodes(codes.get(newLabel)!, code);
                 }
             }
         }
@@ -302,6 +302,9 @@ export const updateCodes = (codebook: Codebook, newCodes: Code[], codes: Code[])
             let parent = allCodes.find((cur) => cur.label === newLabel);
             parent ??= allCodes.find((cur) => cur.alternatives?.includes(newLabel));
             if (parent && parent !== codes[i]) {
+                logger.info(
+                    `Merging ${codes[i].label} into ${parent.label} due to updated label "${newLabel}"`,
+                );
                 mergeCodes(parent, codes[i]);
                 continue;
             }

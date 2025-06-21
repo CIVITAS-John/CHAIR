@@ -58,6 +58,13 @@ export abstract class CodeConsolidator {
         return Promise.resolve(0);
     }
 
+    /** Postprocess the subunits after everything is done. */
+    postprocess(
+        subunits: Code[]
+    ): Promise<Code[]> {
+        return Promise.resolve(subunits);
+    }
+
     /**
      * Get the chunk size and cursor movement for the LLM.
      * @returns [Chunk size, Cursor movement]
@@ -129,11 +136,13 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
             if (this.#index > -1 && this.#consolidators[this.#index].looping) {
                 // If the previous consolidator is looping, check if it's stopping
                 if (this.#consolidators[this.#index].stopping || subunits.length === 0) {
+                    subunits = await this.#consolidators[this.#index]?.postprocess(subunits) ?? subunits;
                     this.#consolidators[this.#index].stopping = false;
                     this.#index++;
                 }
                 // Otherwise, advance the index
             } else {
+                subunits = await this.#consolidators[this.#index]?.postprocess(subunits) ?? subunits;
                 this.#index++;
             }
             if (this.#index >= this.#consolidators.length) {
@@ -142,7 +151,7 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
 
             // Preprocess the subunits
             subunits = subunits.filter((Code) => Code.label !== "[Merged]");
-            logger.info(`Iteration ${iteration}: ${this.#consolidators[this.#index].name}, ${subunits.length} codes remaining`);
+            logger.info(`Iteration ${iteration}: ${this.#consolidators[this.#index].name}, started with ${subunits.length} codes`);
             // Reorder the subunits to prevent over-merging
             subunits = seededShuffle(subunits, 0);
 
