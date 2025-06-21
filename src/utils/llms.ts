@@ -229,7 +229,6 @@ export interface LLMSession {
 
 dotenv.config();
 
-
 /** Initialize the Ollama embeddings with the given options. */
 export const initOllamaLLM = (options: OllamaLLMOptions): LLMObject => {
     return {

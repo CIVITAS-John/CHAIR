@@ -171,9 +171,10 @@ export class NetworkEvaluator<
                 `${exportPath}/network.json`,
             );
             // Return the results from the server
+            const port = 8000 + Math.floor(Math.random() * 1999);
             return (
                 (await launchServer(
-                    8080,
+                    port,
                     ["./src/evaluating/network", "./dist/evaluating/network"],
                     `${exportPath}/network.json`,
                 )) ?? {}
