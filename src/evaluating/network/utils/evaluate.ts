@@ -56,9 +56,12 @@ export const evaluateCodebooks = (
             // For overlap, we reduce the code's own weight from the total weight, thus ignoring its own contribution
             // For grouped codebooks, we sum the weight of its component codebooks
             var contribution = observed;
-            if ((dataset.groups?.[i]?.length ?? 0) > 0)
-                contribution = dataset.groups![i].reduce(
-                    (sum, j) => sum + node.weights[j]);
+            if ((dataset.groups?.[i]?.length ?? 0) > 0) {
+                contribution = 0;
+                for (const j of dataset.groups![i]) {
+                    contribution += node.weights[j];
+                }
+            }
             result.weights += contribution;
             result.overlap += (weight - contribution) * observed;
             observations[i].push(observed);
