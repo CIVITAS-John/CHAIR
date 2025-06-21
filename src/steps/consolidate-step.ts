@@ -124,7 +124,8 @@ export class ConsolidateStep<
                                     key = this.config.namePattern
                                         .replace("{dataset}", dataset.name)
                                         .replace("{analyzer}", analyzer)
-                                        .replace("{coder}", ident);
+                                        .replace("{coder}", ident)
+                                        .replace("{coder-human}", coder.group == "human" ? ident : "ai");
                                 }
                                 if (!codedThreads.codebook) {
                                     throw new ConsolidateStep.InternalError(

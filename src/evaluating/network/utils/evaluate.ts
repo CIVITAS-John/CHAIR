@@ -79,6 +79,10 @@ export const evaluateCodebooks = (
         result.consolidated = consolidated[i];
         delete result.weights; // Remove weights as it is not needed in the final results
     }
+    // Count the code numbers
+    results["$$$ total"] = {
+        consolidated: consolidated[0],
+    }
     return results;
 };
 

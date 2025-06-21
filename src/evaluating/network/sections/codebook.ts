@@ -45,7 +45,7 @@ export class CodebookSection extends Panel {
         const dataset: { name: string; metric: string; value: number }[] = [];
         for (const name of names) {
             const result = results[name];
-            if (typeof result !== "object") continue;
+            if (name == "$$$ total" || typeof result !== "object") continue;
             for (const metric of metrics) {
                 dataset.push({ name, metric, value: result[metric] });
             }
