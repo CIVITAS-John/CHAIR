@@ -40,7 +40,7 @@ export class EvaluateStep<
     async #execute() {
         const datasets: Dataset<TUnit[]>[] = [],
             codebooks = new Map<string, Record<string, Codebook>>(),
-            groups = new Map<string, Record<string, Codebook>>(),
+            groups = new Map<string, Record<string, [Codebook, string[]]>>(),
             references = new Map<string, Codebook>();
         const consolidator = this.config.consolidator;
         consolidator.datasets.forEach((dataset) => {
@@ -69,17 +69,8 @@ export class EvaluateStep<
 
                     // Evaluate the codebooks
                     const results = await evaluator.evaluate(
-                        [
-                            references.get(dataset.name) ?? {},
-                            ...Object.values(codes),
-                            ...Object.values(gs),
-                        ],
-                        [
-                            join(dataset.path, "references"),
-                            ...Object.keys(codes),
-                            ...Object.keys(gs).map((n) => `group: ${n}`),
-                        ],
-                        exportPath,
+                        references.get(dataset.name) ?? {},
+                        codes, gs, exportPath,
                     );
 
                     logger.info(`Writing evaluation results to ${exportPath}`);

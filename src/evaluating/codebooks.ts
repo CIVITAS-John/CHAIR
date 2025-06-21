@@ -6,10 +6,11 @@ export abstract class CodebookEvaluator {
     name = "Unnamed";
     /** Evaluate a number of codebooks. */
     abstract evaluate(
-        Codebooks: Codebook[],
-        Names: string[],
-        ExportPath?: string,
-    ): Promise<Record<string, CodebookEvaluation>>;
+        reference: Codebook,
+        codebooks: Record<string, Codebook>,
+        groups: Record<string, [Codebook, string[]]>,
+        exportPath: string,
+    ): Promise<Record<string, CodebookEvaluation>>
 }
 
 // /** EvaluateCodebooksWithReference: Evaluate a number of codebooks. */

@@ -60,7 +60,7 @@ export class ConsolidateStep<
         return this.#codebooks.get(dataset) ?? {};
     }
 
-    #groups = new Map<string, Record<string, Codebook>>();
+    #groups = new Map<string, Record<string, [Codebook, string[]]>>();
     getGroups(dataset: string) {
         logger.withSource(this._prefix, "getGroups", () => {
             // Sanity check
@@ -111,6 +111,7 @@ export class ConsolidateStep<
                 }
 
                 const codebooks: Codebook[] = [];
+                const names: string[] = [];
                 // Put the codebooks into the map
                 this.#codebooks.set(dataset.name, {
                     ...(this.#codebooks.get(dataset.name) ?? {}),
@@ -125,6 +126,7 @@ export class ConsolidateStep<
                                 }
                                 acc[key] = codedThreads.codebook;
                                 codebooks.push(codedThreads.codebook);
+                                names.push(key);
                             });
                             return acc;
                         },
@@ -138,7 +140,7 @@ export class ConsolidateStep<
                 if (codebooks.length > 1) {
                     const group = mergeCodebooks(codebooks);
                     const prev = this.#groups.get(dataset.name) ?? {};
-                    this.#groups.set(dataset.name, { ...prev, [coder.group]: group });
+                    this.#groups.set(dataset.name, { ...prev, [coder.group]: [group, names] });
                 }
             });
         });

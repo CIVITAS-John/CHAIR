@@ -71,15 +71,30 @@ export class NetworkEvaluator<
 
     /** Evaluate a number of codebooks. */
     override evaluate(
-        codebooks: Codebook[],
-        names: string[],
+        reference: Codebook,
+        codebooks: Record<string, Codebook>,
+        groups: Record<string, [Codebook, string[]]>,
         exportPath = "./known",
     ): Promise<Record<string, CodebookEvaluation>> {
         return logger.withSource(this._prefix, "evaluate", true, async () => {
             const hash = md5(JSON.stringify(codebooks));
-            // Weights
+            const allCodebooks = [reference];
+            const names: string[] = ["baseline"];
+            const groupIndexes: number[][] = [[]];
+            // Collect the names of the codebooks and groups
+            for (const [name, codebook] of Object.entries(codebooks)) {
+                names.push(name);
+                groupIndexes.push([]);
+                allCodebooks.push(codebook);
+            }
+            for (const [name, group] of Object.entries(groups)) {
+                names.push(`group: ${name}`);
+                groupIndexes.push(group[1].map((c) => names.indexOf(c)));
+                allCodebooks.push(group[0]);
+            }
+            // Parse the codebooks and groups
             const weights = names.map((name, idx) => {
-                if (idx === 0 || name.startsWith("group:")) {
+                if (idx === 0 || name.startsWith("group: ")) {
                     return 0;
                 }
                 const fields = name.split("~");
@@ -93,8 +108,7 @@ export class NetworkEvaluator<
             // Build the network information
             await withCache(join(exportPath, "network"), hash, async () => {
                 // We treat the first input as the reference codebook
-                names[0] = "baseline";
-                const merged = mergeCodebooks(codebooks, true);
+                const merged = mergeCodebooks(allCodebooks, true);
                 // Then, we convert each code into an embedding and send to Python
                 const codes = Object.values(merged);
                 const labels = codes.map((c) => c.label);
@@ -138,13 +152,14 @@ export class NetworkEvaluator<
                 }
                 // Return in the format
                 const pkg: CodebookComparison<DataChunk<DataItem>> = {
-                    codebooks,
+                    codebooks: allCodebooks,
                     names,
                     codes,
                     distances: res.distances,
                     source: this.dataset,
                     title: this.title,
                     weights,
+                    groups: groupIndexes,
                     parameters: this.parameters,
                 };
                 return pkg;

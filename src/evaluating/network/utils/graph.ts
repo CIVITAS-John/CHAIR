@@ -42,7 +42,8 @@ export const buildSemanticGraph = (
         nearOwners: ownerGetter(code),
         weights: new Array(allOwners).fill(0),
         totalWeight: 0,
-        neighbors: 0,
+        neighbors: new Set<Node<Code>>(),
+        soleOwner: -1,
         size: Math.sqrt(code.examples?.length ?? 1),
         x: 0,
         y: 0,
@@ -100,8 +101,8 @@ export const buildSemanticGraph = (
                         source.nearOwners.add(Owner);
                         source.weights[Owner] += 1;
                     });
-                    source.neighbors++;
-                    target.neighbors++;
+                    source.neighbors.add(target);
+                    target.neighbors.add(source);
                 }
             }
             maxDist = Math.max(maxDist, distance);
@@ -111,29 +112,43 @@ export const buildSemanticGraph = (
     // Calculate the weights
     for (const source of nodes) {
         for (let owner = 0; owner < allOwners; owner++) {
-            if (source.neighbors == 0) {
+            if (source.neighbors.size == 0) {
                 source.weights[owner] = 0;
             } else {
                 source.weights[owner] = Math.min(
                     // Math.max(source.weights[owner] / Math.max(source.neighbors, 1), 0),
                     // changed 2025-6-19: use log2 function to reduce the impact of having many neighbors
-                    Math.log2(source.weights[owner] + 1) / Math.log2(source.neighbors + 1),
+                    Math.log2(source.weights[owner] + 1) / Math.log2(source.neighbors.size + 1),
                     1,
                 );
             }
         }
         let realOwners = 0;
+        let firstOwner = 0;
         for (const owner of source.owners) {
             if (getWeight(owner) > 0) {
+                firstOwner = owner;
                 realOwners++;
             }
             source.weights[owner] = 1;
         }
-        source.novelty = realOwners === 1 ? Math.pow(2, -source.neighbors) : 0;
+        if (realOwners === 1) source.soleOwner = firstOwner;
         source.totalWeight = source.weights.reduce(
             (A, B, I) => (I === 0 ? A : A + B * getWeight(I)),
             0,
         );
+    }
+
+    // 6/21/25: new novelty calculation
+    // If the source has only one owner, then calculate its novelty based on the number of neighbors
+    // Otherwise, set it to 0
+    for (const source of nodes) {
+        if ((source.soleOwner ?? -1) !== -1) {
+            // Calculate novelty as 2^(-number of neighbors)
+            source.novelty = Math.pow(2, -source.neighbors.size);
+        } else {
+            source.novelty = 0;
+        }
     }
 
     // Store it

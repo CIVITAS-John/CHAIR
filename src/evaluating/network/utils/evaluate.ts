@@ -23,7 +23,7 @@ export const evaluateCodebooks = (
     const codebooks = dataset.codebooks;
     const names = dataset.names;
     for (let i = 1; i < codebooks.length; i++) {
-        results[names[i]] = { coverage: 0, density: 0, novelty: 0, divergence: 0 };
+        results[names[i]] = { coverage: 0, density: 0, overlap: 0, novelty: 0, divergence: 0, weights: 0 };
         observations.push([]);
     }
     // Calculate weights per node
@@ -31,8 +31,8 @@ export const evaluateCodebooks = (
     const nodeWeights = new Map<string, number>();
     let totalWeight = 0, totalNovelty = 0;
     for (const node of graph.nodes) {
-        const weight = node.totalWeight / (dataset.totalWeight ?? NaN);
-        observations[0].push(weight);
+        const weight = node.totalWeight;
+        observations[0].push(weight / (dataset.totalWeight ?? NaN));
         nodeWeights.set(node.id, weight);
         totalWeight += weight;
         totalNovelty += node.novelty ?? 0;
@@ -53,6 +53,14 @@ export const evaluateCodebooks = (
             const observed = node.weights[i];
             result.coverage += weight * observed;
             result.novelty += observed * (node.novelty ?? 0);
+            // For overlap, we reduce the code's own weight from the total weight, thus ignoring its own contribution
+            // For grouped codebooks, we sum the weight of its component codebooks
+            var contribution = observed;
+            if ((dataset.groups?.[i]?.length ?? 0) > 0)
+                contribution = dataset.groups![i].reduce(
+                    (sum, j) => sum + node.weights[j]);
+            result.weights += contribution;
+            result.overlap += (weight - contribution) * observed;
             observations[i].push(observed);
         }
     }
@@ -60,11 +68,13 @@ export const evaluateCodebooks = (
     for (let i = 1; i < codebooks.length; i++) {
         const result = results[names[i]];
         result.coverage = result.coverage / totalWeight;
+        result.overlap = result.overlap / (totalWeight - result.weights);
         result.density = consolidated[i] / consolidated[0] / result.coverage;
         result.novelty = result.novelty / totalNovelty;
         result.divergence = Math.sqrt(calculateJSD(observations[0], observations[i]));
         result.count = Object.keys(codebooks[i]).length;
         result.consolidated = consolidated[i];
+        delete result.weights; // Remove weights as it is not needed in the final results
     }
     return results;
 };
