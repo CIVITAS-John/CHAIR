@@ -129,7 +129,7 @@ export const launchServer = <T>(
         shutdown = (data) => {
             server.close((error) => {
                 if (error) {
-                    logger.error(error);
+                    logger.warn(error.message);
                     rej(error); // Reject the promise on server close error
                 } else {
                     logger.info("Server shut down gracefully");

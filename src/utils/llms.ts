@@ -49,6 +49,19 @@ const MODELS = {
                 maxTokens: 4096,
             }),
     },
+    "gpt-4.1": {
+        // 2$ / 8$
+        maxInput: 16385,
+        maxOutput: 4096,
+        maxItems: 64,
+        model: (temperature) =>
+            new ChatOpenAI({
+                temperature,
+                model: "gpt-4.1",
+                streaming: false,
+                maxTokens: 4096,
+            }),
+    },
     "gpt-4o-mini": {
         // 0.15$ / 0.6$
         maxInput: 16385,
@@ -167,6 +180,17 @@ const MODELS = {
                 streaming: false,
                 maxTokens: 8192,
             }),
+    },
+    "gemini-2.5-pro": {
+        maxInput: 32000,
+        maxOutput: 32000,
+        maxItems: 64,
+        model: (temperature) => 
+            new ChatGoogleGenerativeAI({
+                temperature,
+                model: "gemini-2.5-pro",
+                streaming: false
+            })
     },
     "gemma3-27b": {
         maxInput: 32000,

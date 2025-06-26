@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
+import AsyncLock from "async-lock";
 
 import { TaskType } from "@google/generative-ai";
 import type { Embeddings } from "@langchain/core/embeddings";
@@ -298,6 +299,7 @@ export const clusterTexts = (
         return await clusterEmbeddings(embeddings, names, method, ...opts);
     });
 
+const embeddingLock = new AsyncLock();
 /**
  * Categorize the embeddings into clusters.
  * @returns \{ cluster: [id, probability][] \}
@@ -319,43 +321,44 @@ export const clusterEmbeddings = (
         const res: Record<number, ClusterItem[]> = {};
         var param: number[] = [];
         ensureFolder("./known");
-        // Write it into ./known/temp.bytes
-        writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
-        // writeFileSync(`./known/temp.text`, Names.join("\n"));
-        writeFileSync("./known/clustering.temp.json", JSON.stringify(names));
-        // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
-        // Run the Python script
-        const __dirname = dirname(fileURLToPath(import.meta.url));
-        await runPythonScript(resolve(__dirname, `embeddings/clustering_${method}.py`), {
-            args: [embedder.dimensions.toString(), names.length.toString(), ...opts],
-            parser: (msg) => {
-                if (msg.startsWith("[")) {
-                    const data = JSON.parse(msg) as any[];
-                    const clusters = data[0] as number[];
-                    const probs = data[1] as number[];
-                    // More parameters from the algorithm if necessary
-                    param = data.slice(2) as number[];
-                    // Get unique clusters
-                    const uniqueClusters = [...new Set(clusters)].sort();
-                    let noCluster = 0;
-                    for (const cluster of uniqueClusters) {
-                        res[cluster] = [];
-                        for (let j = 0; j < clusters.length; j++) {
-                            if (clusters[j] === cluster) {
-                                res[cluster].push({ id: j, probability: probs[j] });
-                                if (cluster === -1) {
-                                    noCluster++;
+        // Lock the file to prevent concurrent writes
+        await embeddingLock.acquire("temp", async () => {
+            writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
+            writeFileSync("./known/clustering.temp.json", JSON.stringify(names));
+            // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
+            // Run the Python script
+            const __dirname = dirname(fileURLToPath(import.meta.url));
+            await runPythonScript(resolve(__dirname, `embeddings/clustering_${method}.py`), {
+                args: [embedder.dimensions.toString(), names.length.toString(), ...opts],
+                parser: (msg) => {
+                    if (msg.startsWith("[")) {
+                        const data = JSON.parse(msg) as any[];
+                        const clusters = data[0] as number[];
+                        const probs = data[1] as number[];
+                        // More parameters from the algorithm if necessary
+                        param = data.slice(2) as number[];
+                        // Get unique clusters
+                        const uniqueClusters = [...new Set(clusters)].sort();
+                        let noCluster = 0;
+                        for (const cluster of uniqueClusters) {
+                            res[cluster] = [];
+                            for (let j = 0; j < clusters.length; j++) {
+                                if (clusters[j] === cluster) {
+                                    res[cluster].push({ id: j, probability: probs[j] });
+                                    if (cluster === -1) {
+                                        noCluster++;
+                                    }
                                 }
                             }
                         }
+                        logger.success(
+                            `Received ${clusters.length - (noCluster > 0 ? 1 : 0)} clusters from ${names.length} items (${noCluster} items unclustered)`,
+                        );
+                    } else {
+                        logger.debug(msg);
                     }
-                    logger.success(
-                        `Received ${clusters.length - (noCluster > 0 ? 1 : 0)} clusters from ${names.length} items (${noCluster} items unclustered)`,
-                    );
-                } else {
-                    logger.debug(msg);
-                }
-            },
+                },
+            });
         });
         return {res, param};
     });
@@ -394,42 +397,44 @@ export const evaluateEmbeddings = <T>(
             throw new QAJob.ContextVarNotFoundError("embedder");
         }
         let res: T | undefined;
-        // Write it into ./known/temp.bytes
         ensureFolder("./known");
-        writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
-        // let TextData = Labels.map((Label, Index) => `${Owners[Index].join(",")}|${Label}`);
-        const textData = labels.map((label, index) => ({
-            label,
-            owners: owners[index],
-        }));
-        // File.writeFileSync(`./known/temp.text`, OwnerLabels.concat(TextData).join("\n"));
-        writeFileSync(
-            "./known/evaluation.temp.json",
-            JSON.stringify({
-                ownerLabels,
-                labels: textData,
-            }),
-        );
-        logger.debug(
-            `Embeddings sent: ${embeddings.buffer.byteLength} (${labels.length} embeddings)`,
-        );
-        // Run the Python script
-        const __dirname = dirname(fileURLToPath(import.meta.url));
-        await runPythonScript(resolve(__dirname, `embeddings/evaluation_${method}.py`), {
-            args: [
-                embedder.dimensions.toString(),
-                labels.length.toString(),
-                ownerLabels.length.toString(),
-                ...opts,
-            ],
-            parser: (msg) => {
-                if (msg.startsWith("{")) {
-                    res = JSON.parse(msg) as T;
-                } else {
-                    logger.debug(msg);
-                }
-            },
+        // Lock the file to prevent concurrent writes
+        await embeddingLock.acquire("temp", async () => {
+            // Write it into ./known/temp.bytes
+            writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
+            const textData = labels.map((label, index) => ({
+                label,
+                owners: owners[index],
+            }));
+            writeFileSync(
+                "./known/evaluation.temp.json",
+                JSON.stringify({
+                    ownerLabels,
+                    labels: textData,
+                }),
+            );
+            logger.debug(
+                `Embeddings sent: ${embeddings.buffer.byteLength} (${labels.length} embeddings)`,
+            );
+            // Run the Python script
+            const __dirname = dirname(fileURLToPath(import.meta.url));
+            await runPythonScript(resolve(__dirname, `embeddings/evaluation_${method}.py`), {
+                args: [
+                    embedder.dimensions.toString(),
+                    labels.length.toString(),
+                    ownerLabels.length.toString(),
+                    ...opts,
+                ],
+                parser: (msg) => {
+                    if (msg.startsWith("{")) {
+                        res = JSON.parse(msg) as T;
+                    } else {
+                        logger.debug(msg);
+                    }
+                },
+            });
         });
+        // Check if the result is defined
         if (!res) {
             throw new Error("No results returned from evaluation Python script");
         }
