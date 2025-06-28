@@ -233,6 +233,7 @@ export const mergeCodes = (parent: Code, code: Code) => {
         parent.owners = Array.from(new Set((parent.owners ?? []).concat(code.owners ?? [])));
     }
     code.label = "[Merged]";
+    code.alternatives = [];
     return parent;
 };
 
