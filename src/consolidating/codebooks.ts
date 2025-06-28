@@ -262,6 +262,7 @@ export const mergeCodesByCluster = (clusters: Record<number, ClusterItem[]>, cod
             }
             for (const item of clusters[clusterID]) {
                 const code = codes[item.id];
+                if (code.label == "[Merged]") continue;
                 if (clusterID === -1) {
                     // Codes that cannot be clustered
                     codebook[code.label] = code;
@@ -289,9 +290,8 @@ export const updateCodes = (codebook: Codebook, newCodes: Code[], codes: Code[])
     const allCodes = Object.values(codebook);
     for (let i = 0; i < codes.length; i++) {
         const newCode = newCodes[i];
-        if (typeof newCode !== "object") {
-            break;
-        }
+        if (typeof newCode !== "object") break;
+        if (codes[i].label == "[Merged]") continue;
         const newLabel = newCode.label.toLowerCase();
         // Update the code
         codes[i].definitions = newCode.definitions;
