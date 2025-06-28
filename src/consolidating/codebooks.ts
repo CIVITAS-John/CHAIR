@@ -248,15 +248,18 @@ export const mergeCodesByCluster = (clusters: Record<number, ClusterItem[]>, cod
             const clusterID = parseInt(key);
             // Pick the code with the highest probability and the shortest label + definition to merge into
             // This could inevitably go wrong. We will need another iteration to get a better new label
-            const bestCode = clusters[clusterID]
+            const bestCodes = clusters[clusterID]
                 .sort((A, B) => B.probability - A.probability)
                 .map((item) => codes[item.id])
+                .filter((code) => code.label != "[Merged]")
                 .sort(
                     (A, B) =>
                         A.label.length * 5 +
                         (A.definitions?.[0]?.length ?? 0) -
                         (B.label.length * 5 + (B.definitions?.[0]?.length ?? 0)),
-                )[0];
+                );
+            if (bestCodes.length == 0) continue;
+            const bestCode = bestCodes[0];
             if (clusterID !== -1) {
                 codebook[bestCode.label] = bestCode;
                 bestCode.oldLabels = bestCode.oldLabels ?? [];
@@ -292,7 +295,7 @@ export const updateCodes = (codebook: Codebook, newCodes: Code[], codes: Code[])
     for (let i = 0; i < codes.length; i++) {
         const newCode = newCodes[i];
         if (typeof newCode !== "object") break;
-        if (codes[i].label == "[Merged]") continue;
+        if (codes[i].label == "[Merged]" || newCode.label == "[Merged]") continue;
         const newLabel = newCode.label.toLowerCase();
         // Update the code
         codes[i].definitions = newCode.definitions;
