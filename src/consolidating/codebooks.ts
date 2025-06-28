@@ -49,7 +49,7 @@ export const mergeCodebooks = (codebooks: Codebook[], withReference = false): Co
     for (const [idx, codebook] of codebooks.entries()) {
         for (const [label, code] of Object.entries(codebook)) {
             // We don't accept anything without an example.
-            if (!code.examples?.length) {
+            if (!code.examples?.length || code.label == "[Merged]") {
                 continue;
             }
             let newLabel = label;
