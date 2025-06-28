@@ -116,7 +116,8 @@ export class DefinitionGenerator extends DefinitionParser {
         const oldcodes = codes.filter((Code) => (Code.definitions?.length ?? 0) == 0);
         const result = await super.parseResponse(codebook, oldcodes, lines);
         logger.debug(
-            `Generated ${oldcodes.filter((Code) => (Code.definitions?.length ?? 0) > 0).length} definitions for ${oldcodes.length} codes (${codes.length} in total), cursor movement ${result}.`,)
+            `Generated ${oldcodes.filter((Code) => (Code.definitions?.length ?? 0) > 0).length} definitions for ${oldcodes.length} codes (${codes.length} in total), cursor movement ${result}.`,);
+        if (result !== 0) debugger;
         return result;
     }
 

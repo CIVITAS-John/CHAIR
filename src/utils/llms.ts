@@ -388,7 +388,11 @@ export const requestLLM = (
                         `[${session.llm.name}] Cache hit (input tokens: ${inputTokens}, output tokens: ${outputTokens})`,
                     );
                     logger.debug(`[${session.llm.name}] Cache content: ${content}`);
-                    return stripThinkTags(content);
+                    // Strip the <think> tags
+                    const stripped = stripThinkTags(content);
+                    if (stripped.includes("<think>"))
+                        throw new Error("The return content has unclosed <think> tags!");
+                    return stripped;
                 }
             }
         }
@@ -397,7 +401,11 @@ export const requestLLM = (
         const result = await requestLLMWithoutCache(messages, temperature, fakeRequest);
         logger.debug(`[${session.llm.name}] Writing to cache file`);
         writeFileSync(cacheFile, `${input}\n===\n${result}`);
-        return stripThinkTags(result);
+        // Strip the <think> tags
+        const stripped = stripThinkTags(result);
+        if (stripped.includes("<think>"))
+            throw new Error("The return content has unclosed <think> tags!");
+        return stripped;
     });
 
 /** Call the model to generate text, explicitly bypassing cache. */
