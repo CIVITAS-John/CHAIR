@@ -62,7 +62,7 @@ export const evaluateCodebooks = (
                 }
             } 
             result.contributions += contribution;
-            result.overlap += (weight - contribution) * observed;
+            result.overlap += weighted - contribution;
         }
     }
     // Finalize the results
