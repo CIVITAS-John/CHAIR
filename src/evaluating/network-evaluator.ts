@@ -100,7 +100,9 @@ export class NetworkEvaluator<
                 const fields = name.split("~");
                 const value = parseFloat(fields[fields.length - 1]);
                 if (isNaN(value)) {
-                    return 1;
+                    // By default, calculate weight as 1 / sqrt(# of codes)
+                    var size = Object.keys(allCodebooks[idx]).length;
+                    return 1 / (size == 0 ? 1 : Math.sqrt(size));
                 }
                 names[idx] = fields.slice(0, fields.length - 1).join("~");
                 return value;
