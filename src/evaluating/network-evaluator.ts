@@ -16,6 +16,7 @@ import { withCache } from "../utils/cache.js";
 import { evaluateTexts } from "../utils/embeddings.js";
 import { logger } from "../utils/logger.js";
 import { createOfflineBundle, launchServer } from "../utils/server.js";
+import { getMedian } from "../utils/misc.js";
 
 import { CodebookEvaluator } from "./codebooks.js";
 
@@ -81,17 +82,21 @@ export class NetworkEvaluator<
             const allCodebooks = [reference];
             const names: string[] = ["baseline"];
             const groupIndexes: number[][] = [[]];
+            const sizes: number[] = [];
             // Collect the names of the codebooks and groups
             for (const [name, codebook] of Object.entries(codebooks)) {
                 names.push(name);
                 groupIndexes.push([]);
                 allCodebooks.push(codebook);
+                sizes.push(Object.keys(codebook).length);
             }
             for (const [name, group] of Object.entries(groups)) {
                 names.push(`group: ${name}`);
                 groupIndexes.push(group[1].map((c) => names.indexOf(c)));
                 allCodebooks.push(group[0]);
             }
+            // Get the median codebook size
+            const medianSize = getMedian(sizes);
             // Parse the codebooks and groups
             const weights = names.map((name, idx) => {
                 if (idx === 0 || name.startsWith("group: ")) {
@@ -100,9 +105,9 @@ export class NetworkEvaluator<
                 const fields = name.split("~");
                 const value = parseFloat(fields[fields.length - 1]);
                 if (isNaN(value)) {
-                    // By default, calculate weight as 1 / sqrt(# of codes)
+                    // By default, calculate weight as 1 / max(median(# of codes), sqrt(# of codes))
                     var size = Object.keys(allCodebooks[idx]).length;
-                    return 1 / (size == 0 ? 1 : Math.sqrt(size));
+                    return 1 / (size == 0 ? 1 : Math.sqrt(Math.max(size, medianSize)));
                 }
                 names[idx] = fields.slice(0, fields.length - 1).join("~");
                 return value;

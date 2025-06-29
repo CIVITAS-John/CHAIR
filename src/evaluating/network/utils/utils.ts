@@ -24,20 +24,20 @@ export const inverseLerp = (a: number, b: number, t: number, clamp = true) => {
     return result;
 };
 
+// Helper function to calculate the KL divergence
+const KLD = (P: number[], Q: number[]) =>
+    P.reduce((sum, p, i) => {
+        if (p === 0) {
+            return sum;
+        }
+        if (Q[i] === 0) {
+            throw new Error("KL Divergence is not defined when Q[i] is 0 and P[i] is non-zero");
+        }
+        return sum + p * Math.log(p / Q[i]);
+    }, 0);
+
 /** Calculate the Jensen-Shannon Divergence between two distributions. */
 export const calculateJSD = (P: number[], Q: number[]) => {
-    // Helper function to calculate the KL divergence
-    const KLD = (P: number[], Q: number[]) =>
-        P.reduce((sum, p, i) => {
-            if (p === 0) {
-                return sum;
-            }
-            if (Q[i] === 0) {
-                throw new Error("KL Divergence is not defined when Q[i] is 0 and P[i] is non-zero");
-            }
-            return sum + p * Math.log(p / Q[i]);
-        }, 0);
-
     // Normalize the distributions to make them probability distributions
     const sumP = P.reduce((a, b) => a + b, 0);
     const sumQ = Q.reduce((a, b) => a + b, 0);
@@ -51,6 +51,18 @@ export const calculateJSD = (P: number[], Q: number[]) => {
     const jsd = (KLD(normalizedP, M) + KLD(normalizedQ, M)) / 2;
 
     return jsd;
+};
+
+/** Calculate the KL Divergence between two distributions. */
+export const calculateKL = (P: number[], Q: number[]) => {
+    // Normalize the distributions to make them probability distributions
+    const sumP = P.reduce((a, b) => a + b, 0);
+    const sumQ = Q.reduce((a, b) => a + b, 0);
+    const normalizedP = P.map((p) => p / sumP);
+    const normalizedQ = Q.map((q) => q / sumQ);
+
+    // Calculate the KL Divergence
+    return KLD(normalizedP, normalizedQ);
 };
 
 /** Get the color of a codebook. */
