@@ -5,7 +5,7 @@ import { select } from "@inquirer/prompts";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import open from "open";
 
-import { type Analyzer, loopThroughChunk } from "../analyzer.js";
+import { Analyzer, loopThroughChunk } from "../analyzer.js";
 import { mergeCodebook } from "../consolidating/codebooks.js";
 import type { CodedThread, CodedThreads, DataChunk, DataItem, Dataset } from "../schema.js";
 import { exportChunksForCoding, importCodes } from "../utils/export.js";
@@ -43,7 +43,9 @@ export type CodeStepConfig<
           // Renaming "Analyzer" to "Strategy" to avoid confusion with "the LLM that analyzes the data"
           strategy:
               | AnalyzerConstructor<TUnit, TSubunit, CodedThread>
-              | AnalyzerConstructor<TUnit, TSubunit, CodedThread>[];
+              | AnalyzerConstructor<TUnit, TSubunit, CodedThread>[]
+              | Analyzer<TUnit, TSubunit, CodedThread>
+              | Analyzer<TUnit, TSubunit, CodedThread>[];
           model: LLMModel | LLMModel[];
           parameters?: AIParameters;
       }
@@ -288,8 +290,8 @@ export class CodeStep<
 
             for (const dataset of this.#datasets) {
                 logger.info(`[${dataset.name}] Coding dataset`);
-                for (const AnalyzerClass of strategies) {
-                    logger.info(`[${dataset.name}] Using strategy ${AnalyzerClass.name}`);
+                for (const strategy of strategies) {
+                    logger.info(`[${dataset.name}] Using strategy ${strategy.name}`);
                     await useLLMs(async (session) => {
                         await BaseStep.Context.with(
                             {
@@ -304,7 +306,8 @@ export class CodeStep<
                                     );
                                 }
 
-                                const analyzer = new AnalyzerClass();
+                                const analyzer =
+                                    strategy instanceof Analyzer ? strategy : new strategy();
                                 logger.info(
                                     `[${dataset.name}/${analyzer.name}] Using model ${session.llm.name}`,
                                 );
