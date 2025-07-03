@@ -120,7 +120,7 @@ export class CodebookSection extends Panel {
                     const color = colors[metric](metricValue);
                     const cell = $('<td class="metric-cell"></td>')
                         .attr("id", `metric-${idx}-${metric}`)
-                        .text(d3.format(metric === "divergence" ? ".2" : ".1%")(metricValue))
+                        .text(d3.format(metric === "divergence" ? ".2f" : ".1%")(metricValue))
                         .on("mouseover", () =>
                             this.visualizer.setFilter(
                                 true,
