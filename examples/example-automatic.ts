@@ -16,7 +16,13 @@ const load = new LoadStep({
 
 const code = new CodeStep({
     agent: "AI",
-    strategy: [ItemLevelAnalyzerAny, ItemLevelAnalyzerVerb],
+    strategy: [
+        ItemLevelAnalyzerAny,
+        ItemLevelAnalyzerVerb,
+        new ItemLevelAnalyzerAny(
+            "Special requirement: always generate more than 20 phrases for each message.",
+        ),
+    ],
     model: ["gpt-4o"],
 });
 

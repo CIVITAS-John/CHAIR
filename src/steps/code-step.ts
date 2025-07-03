@@ -43,9 +43,11 @@ export type CodeStepConfig<
           // Renaming "Analyzer" to "Strategy" to avoid confusion with "the LLM that analyzes the data"
           strategy:
               | AnalyzerConstructor<TUnit, TSubunit, CodedThread>
-              | AnalyzerConstructor<TUnit, TSubunit, CodedThread>[]
               | Analyzer<TUnit, TSubunit, CodedThread>
-              | Analyzer<TUnit, TSubunit, CodedThread>[];
+              | (
+                    | Analyzer<TUnit, TSubunit, CodedThread>
+                    | AnalyzerConstructor<TUnit, TSubunit, CodedThread>
+                )[];
           model: LLMModel | LLMModel[];
           parameters?: AIParameters;
       }
@@ -308,6 +310,12 @@ export class CodeStep<
 
                                 const analyzer =
                                     strategy instanceof Analyzer ? strategy : new strategy();
+                                if (
+                                    !analyzer.customPrompt &&
+                                    this.config.parameters?.customPrompt
+                                ) {
+                                    analyzer.customPrompt = this.config.parameters.customPrompt;
+                                }
                                 logger.info(
                                     `[${dataset.name}/${analyzer.name}] Using model ${session.llm.name}`,
                                 );

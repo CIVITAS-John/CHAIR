@@ -39,6 +39,7 @@ Hi ChatGPT, I want to analyze the following interaction in one of Physics Lab's 
 Please give me a codebook to analyze factors within this interaction that could contribute to the research.
 ${dataset.researchQuestion}
 ${dataset.codingNotes}
+${this.customPrompt ?? ""}
 For each code, try to find 3 quotes. Always follow the output format:
 ---
 ## Label: A label of code 1

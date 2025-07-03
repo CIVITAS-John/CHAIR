@@ -56,6 +56,7 @@ This is the first round of coding. Your goal is to describe each item with verb 
 Try your best to interpret events, contexts, and intents. Always use ";" to separate verb phrases. Do not repeat the input text.
 ${dataset.researchQuestion}
 ${dataset.codingNotes}
+${this.customPrompt ?? ""}
 
 Always follow the output format:
 ---

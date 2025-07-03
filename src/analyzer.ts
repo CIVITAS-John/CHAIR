@@ -31,6 +31,12 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     baseTemperature = 0;
     /** The maximum number of iterations for the analyzer. */
     maxIterations = 1;
+    /** Custom requirement to be used in the LLM request. */
+    customPrompt: string;
+
+    constructor(customPrompt?: string) {
+        this.customPrompt = customPrompt ? `\n${customPrompt}` : "";
+    }
 
     /**
      * Get the chunk configuration for the LLM.

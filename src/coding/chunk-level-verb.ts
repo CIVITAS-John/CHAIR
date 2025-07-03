@@ -40,6 +40,7 @@ You are an expert in thematic analysis with grounded theory, working on open cod
 Please give me a codebook to analyze factors within this interaction that could contribute to the research.
 ${dataset.researchQuestion}
 ${dataset.codingNotes}
+${this.customPrompt ?? ""}
 Always use verb phrases. For each phrase, try to find at least 3 quotes. Always follow the output format:
 ---
 * Summary
