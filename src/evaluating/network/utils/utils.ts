@@ -65,6 +65,34 @@ export const calculateKL = (P: number[], Q: number[]) => {
     return KLD(normalizedP, normalizedQ);
 };
 
+/** Calculate the Weighted Absolute Difference % (value / maximum) between observed values from a codebook & the aggregation (baseline) of its peers. */
+export const calculateWAD = (W: number[], B: number[], O: number[]) => {
+    var value = 0;
+    var maximum = 0;
+    for (var i = 0; i < O.length; i++) {
+        const w = W[i];
+        const b = B[i];
+        const o = O[i];
+        value += w * Math.abs(b - o);
+        maximum += w;
+    }
+    return value / maximum;
+}
+
+/** Calculate the Weighted Squared Difference % (value / maximum) between observed values from a codebook & the aggregation (baseline) of its peers. */
+export const calculateWSD = (W: number[], B: number[], O: number[]) => {
+    var value = 0;
+    var maximum = 0;
+    for (var i = 0; i < O.length; i++) {
+        const w = W[i];
+        const b = B[i];
+        const o = O[i];
+        value += w * Math.abs(b - o) * Math.abs(b - o);
+        maximum += w;
+    }
+    return value / maximum;
+}
+
 /** Get the color of a codebook. */
 export const getCodebookColor = (num: number, codebooks: number) => {
     if (codebooks <= 10) {

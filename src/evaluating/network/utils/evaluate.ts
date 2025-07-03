@@ -10,7 +10,7 @@ import { getConsolidatedSize } from "./dataset.js";
 import { buildSemanticGraph } from "./graph.js";
 import type { Component, Graph } from "./schema.js";
 import type { Parameters } from "./utils.js";
-import { calculateJSD, calculateKL } from "./utils.js";
+import { calculateJSD, calculateKL, calculateWSD } from "./utils.js";
 
 /** Evaluate all codebooks based on the network structure. */
 export const evaluateCodebooks = (
@@ -20,6 +20,8 @@ export const evaluateCodebooks = (
     const results: Record<string, CodebookEvaluation> = {};
     const observations: number[][] = [[]];
     const baselines: number[][] = [[]];
+    const ndWeights: number[] = [];
+    const cbWeights: number[] = [0];
     // Prepare for the results
     const codebooks = dataset.codebooks;
     const names = dataset.names;
@@ -27,6 +29,7 @@ export const evaluateCodebooks = (
         results[names[i]] = { coverage: 0, density: 0, overlap: 0, novelty: 0, divergence: 0, contributions: 0 };
         observations.push([]);
         baselines.push([]);
+        cbWeights.push(dataset.weights?.[i] ?? 1);
     }
     // Calculate weights per node
     const graph = buildSemanticGraph(dataset, parameters);
@@ -34,6 +37,7 @@ export const evaluateCodebooks = (
     for (const node of graph.nodes) {
         totalWeight += node.totalWeight;
         totalNovelty += (node.novelty ?? 0) * node.totalWeight;
+        ndWeights.push(node.totalWeight);
     }
     // The expectations are made based on (consolidate codes in each codebook) / (codes in the baseline)
     const consolidated = codebooks.map((codebook, i) => {
@@ -50,23 +54,32 @@ export const evaluateCodebooks = (
             const result = results[names[i]];
             const observed = node.weights[i];
             const weighted = nodeWeight * observed;
+            result.density += observed;
             result.coverage += weighted;
             result.novelty += weighted * (node.novelty ?? 0);
             // For overlap, we reduce the code's own weight from the total weight, thus ignoring its own contribution
             // For grouped codebooks, we sum the weight of its component codebooks
-            var contribution = observed * (dataset.weights?.[i] ?? 1);
+            var contribution = observed * cbWeights[i];
+            var potential = dataset.totalWeight!;
             if ((dataset.groups?.[i]?.length ?? 0) > 0) {
                 contribution = 0;
                 for (const j of dataset.groups![i]) {
-                    contribution += node.weights[j] * (dataset.weights?.[j] ?? 1);
+                    contribution += node.weights[j] * cbWeights[j];
+                    potential -= cbWeights[i];
                 }
-            } 
+            } else potential -= cbWeights[i];
             var overlap = (nodeWeight - contribution) * observed;
             result.contributions += contribution;
             result.overlap += overlap;
-            // Divergence is in between: for the baseline, remove your own contribution
-            observations[i].push(weighted);
-            baselines[i].push(nodeWeight - contribution);
+            // for KL
+            observations[i].push(nodeWeight * observed);
+            baselines[i].push(nodeWeight * nodeWeight / totalWeight);
+            // for JSD
+            // observations[i].push(nodeWeight * observed);
+            // baselines[i].push(nodeWeight * (nodeWeight - contribution) / potential);
+            // for WSD
+            // observations[i].push(observed);
+            // baselines[i].push((nodeWeight - contribution) / potential);
         }
     }
     // Finalize the results
@@ -74,9 +87,13 @@ export const evaluateCodebooks = (
         const result = results[names[i]];
         result.coverage = result.coverage / totalWeight;
         result.overlap = result.overlap / (totalWeight - result.contributions);
-        result.density = consolidated[i] / consolidated[0] / result.coverage;
+        // 7/2 change: density should mean "how many codes did you use to get to that *unweighted* coverage? ie how interconnected your codes are?"
+        result.density = consolidated[i] / result.density;
+        // result.density = consolidated[i] / consolidated[0] / result.coverage;
         result.novelty = result.novelty / totalNovelty;
-        result.divergence = Math.sqrt(calculateJSD(observations[i], baselines[i]));
+        result.divergence = calculateKL(observations[i], baselines[i]);
+        // result.divergence = Math.sqrt(calculateJSD(baselines[i], observations[i]));
+        // result.divergence = calculateWSD(ndWeights, baselines[i], observations[i]);
         result.count = Object.keys(codebooks[i]).length;
         result.consolidated = consolidated[i];
         delete result.contributions; // Remove weights as it is not needed in the final results
@@ -184,7 +201,7 @@ export const evaluatePerCluster = (
         let coverages = dataset.names.map(() => 0);
         // Check if each node is covered by the codebooks
         for (const node of cluster.nodes) {
-            const weight = node.totalWeight / (dataset.totalWeight ?? NaN);
+            const weight = node.totalWeight;
             totalWeight += weight;
             // Calculate on each codebook
             for (let i = 0; i < codebooks.length; i++) {
