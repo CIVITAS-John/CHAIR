@@ -55,8 +55,7 @@ You are an expert in thematic analysis with grounded theory, working on open cod
 This is the first round of coding. Your goal is to describe each item with verb phrases.
 Try your best to interpret events, contexts, and intents. Always use ";" to separate verb phrases. Do not repeat the input text.
 ${dataset.researchQuestion}
-${dataset.codingNotes}
-${this.customPrompt ?? ""}
+${dataset.codingNotes}${this.customPrompt}
 
 Always follow the output format:
 ---
