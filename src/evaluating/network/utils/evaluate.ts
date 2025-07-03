@@ -19,14 +19,16 @@ export const evaluateCodebooks = (
 ): Record<string, CodebookEvaluation> => {
     const results: Record<string, CodebookEvaluation> = {};
     const observations: number[][] = [[]];
+    const baselines: number[][] = [[]];
     const ndWeights: number[] = [];
     const cbWeights: number[] = [0];
     // Prepare for the results
     const codebooks = dataset.codebooks;
     const names = dataset.names;
     for (let i = 1; i < codebooks.length; i++) {
-        results[names[i]] = { coverage: 0, density: 0, overlap: 0, novelty: 0, divergence: 0, contributions: 0 };
+        results[names[i]] = { coverage: 0, overlap: 0, novelty: 0, divergence: 0, contributions: 0 };
         observations.push([]);
+        baselines.push([]);
         cbWeights.push(dataset.weights?.[i] ?? 1);
     }
     // Calculate weights per node
@@ -36,7 +38,7 @@ export const evaluateCodebooks = (
         totalWeight += node.totalWeight;
         totalNovelty += (node.novelty ?? 0) * node.totalWeight;
         ndWeights.push(node.totalWeight);
-        observations[0].push(node.totalWeight * node.totalWeight / totalWeight);
+        // observations[0].push(node.totalWeight / totalWeight);
     }
     // The expectations are made based on (consolidate codes in each codebook) / (codes in the baseline)
     const consolidated = codebooks.map((codebook, i) => {
@@ -53,7 +55,6 @@ export const evaluateCodebooks = (
             const result = results[names[i]];
             const observed = node.weights[i];
             const weighted = nodeWeight * observed;
-            result.density += observed;
             result.coverage += weighted;
             result.novelty += weighted * (node.novelty ?? 0);
             // For overlap, we reduce the code's own weight from the total weight, thus ignoring its own contribution
@@ -71,27 +72,23 @@ export const evaluateCodebooks = (
             result.contributions += contribution;
             result.overlap += overlap;
             // for KL
-            observations[i].push(weighted);
+            // observations[i].push(observed);
             // for JSD
-            // observations[i].push(nodeWeight * observed);
-            // baselines[i].push(nodeWeight * (nodeWeight - contribution) / potential);
+            observations[i].push(observed);
+            baselines[i].push((nodeWeight - contribution) / potential);
             // for WSD
             // observations[i].push(observed);
             // baselines[i].push((nodeWeight - contribution) / potential);
         }
     }
     // Finalize the results
-    const totalDensity = graph.links.length / graph.nodes.length;
     for (let i = 1; i < codebooks.length; i++) {
         const result = results[names[i]];
         result.coverage = result.coverage / totalWeight;
         result.overlap = result.overlap / (totalWeight - result.contributions);
-        // 7/2 change: how much codes one used to achieve the unweighted coverage?
-        result.density = consolidated[i] / result.density;
-        // result.density = consolidated[i] / consolidated[0] / result.coverage;
         result.novelty = result.novelty / totalNovelty;
-        result.divergence = calculateKL(observations[i], observations[0]);
-        // result.divergence = Math.sqrt(calculateJSD(baselines[i], observations[i]));
+        // result.divergence = calculateKL(observations[i], observations[0]);
+        result.divergence = Math.sqrt(calculateJSD(observations[i], baselines[i]));
         // result.divergence = calculateWSD(ndWeights, baselines[i], observations[i]);
         result.count = Object.keys(codebooks[i]).length;
         result.consolidated = consolidated[i];
@@ -110,6 +107,7 @@ export const evaluateUsers = (
     parameters: Parameters,
 ): Record<string, CodebookEvaluation> => {
     const results: Record<string, CodebookEvaluation> = {};
+    const baselines: number[][] = [[]];
     const observations: number[][] = [[]];
     // Prepare for the results
     const users = Array.from(dataset.uidToNicknames?.keys() ?? []);
@@ -117,6 +115,7 @@ export const evaluateUsers = (
     for (let i = 1; i < users.length; i++) {
         results[users[i]] = { coverage: 0, novelty: 0, divergence: 0, count: 0 };
         observations.push([]);
+        baselines.push([]);
     }
     // Prepare for the examples
     const examples: Map<string, number> = new Map<string, number>();
