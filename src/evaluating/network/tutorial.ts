@@ -136,11 +136,11 @@ export class Tutorial extends Panel {
                 {
                     element: ".side-panel .content .codebook table",
                     popover: {
-                        title: "Coverage & Density",
+                        title: "Coverage & Overlap",
                         description: `
 <p>What do those metrics mean?</p>
-<p><strong>Coverage</strong> measures how well the codebook covers potential concepts from the dataset. If a codebook only has a highly related code, we count as 0.5. Codes covered by more codebooks will have higher weights.</p>
-<p><strong>Density</strong> measures how many codes the codebook used to achieve the coverage, in % relative to the baseline codebook (the merged result of all codebooks).</p>`,
+<p><strong>Coverage</strong> measures how well the codebook covers potential concepts from the dataset. Codes covered by more codebooks will have higher weights.</p>
+<p><strong>Overlap</strong> measures how well the codebook covers potential concepts from other coders, excluding itself.</p>`,
                     },
                 },
                 {
