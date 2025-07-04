@@ -56,7 +56,7 @@ export class NetworkEvaluator<
         dataset,
         anonymize,
         title,
-        parameters
+        parameters,
     }: {
         dataset: Dataset<TUnit>;
         anonymize?: boolean;

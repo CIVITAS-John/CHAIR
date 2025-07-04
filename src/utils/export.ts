@@ -176,7 +176,8 @@ export const exportChunksForCoding = <T extends DataItem>(
                 const codes =
                     typeof analysis === "undefined"
                         ? undefined
-                        : (analysis.items[message.id] ?? analysis.items[message.id.substring(2)])?.codes;
+                        : (analysis.items[message.id] ?? analysis.items[message.id.substring(2)])
+                              ?.codes;
                 message.chunk = message.chunk ?? chunk.id;
                 const columns = {
                     ID: message.id,
@@ -328,7 +329,12 @@ export const importCodes = (
                 if (!content) return;
 
                 const codesValue = getCellValueString(row, "Codes");
-                const codes = codesValue ? codesValue.split(/[,;\n]+/).filter(Boolean).map(code => code.trim()) : undefined;
+                const codes = codesValue
+                    ? codesValue
+                          .split(/[,;\n]+/)
+                          .filter(Boolean)
+                          .map((code) => code.trim())
+                    : undefined;
 
                 // Skip rows without codes
                 if (!codes) return;

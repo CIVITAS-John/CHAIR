@@ -26,14 +26,22 @@ export const evaluateCodebooks = (
     const codebooks = dataset.codebooks;
     const names = dataset.names;
     for (let i = 1; i < codebooks.length; i++) {
-        results[names[i]] = { coverage: 0, density: 0, overlap: 0, novelty: 0, divergence: 0, contributions: 0 };
+        results[names[i]] = {
+            coverage: 0,
+            density: 0,
+            overlap: 0,
+            novelty: 0,
+            divergence: 0,
+            contributions: 0,
+        };
         observations.push([]);
         baselines.push([]);
         cbWeights.push(dataset.weights?.[i] ?? 1);
     }
     // Calculate weights per node
     const graph = buildSemanticGraph(dataset, parameters);
-    let totalWeight = 0, totalNovelty = 0;
+    let totalWeight = 0,
+        totalNovelty = 0;
     for (const node of graph.nodes) {
         totalWeight += node.totalWeight;
         totalNovelty += (node.novelty ?? 0) * node.totalWeight;
@@ -73,7 +81,7 @@ export const evaluateCodebooks = (
             result.overlap += overlap;
             // for KL
             observations[i].push(nodeWeight * observed);
-            baselines[i].push(nodeWeight * nodeWeight / totalWeight);
+            baselines[i].push((nodeWeight * nodeWeight) / totalWeight);
             // for JSD
             // observations[i].push(nodeWeight * observed);
             // baselines[i].push(nodeWeight * (nodeWeight - contribution) / potential);
@@ -101,7 +109,7 @@ export const evaluateCodebooks = (
     // Count the code numbers
     results["$$$ total"] = {
         consolidated: consolidated[0],
-    }
+    };
     return results;
 };
 
@@ -156,7 +164,8 @@ export const evaluateUsers = (
         },
         weights,
     );
-    let totalWeight = 0, totalNovelty = 0;
+    let totalWeight = 0,
+        totalNovelty = 0;
     for (const node of graph.nodes) {
         observations[0].push(node.totalWeight);
         totalWeight += node.totalWeight;

@@ -185,23 +185,23 @@ const MODELS = {
         maxInput: 32000,
         maxOutput: 32000,
         maxItems: 64,
-        model: (temperature) => 
+        model: (temperature) =>
             new ChatGoogleGenerativeAI({
                 temperature,
                 model: "gemini-2.5-pro",
-                streaming: false
-            })
+                streaming: false,
+            }),
     },
     "gemma3-27b": {
         maxInput: 32000,
         maxOutput: 32000,
         maxItems: 32,
-        model: (temperature) => 
+        model: (temperature) =>
             new ChatGoogleGenerativeAI({
                 temperature,
                 model: "gemma-3-27b-it",
-                streaming: false
-            })
+                streaming: false,
+            }),
     },
     "mistral-small": {
         // Assuming 22b
@@ -269,7 +269,7 @@ export const initOllamaLLM = (options: OllamaLLMOptions): LLMObject => {
         maxItems: options.maxItems ?? 32,
         systemMessage: options.systemMessage ?? true,
     };
-}
+};
 
 /** Initialize a LLM with the given name. */
 export const initLLM = (LLM: string): LLMObject => {
@@ -458,4 +458,4 @@ export const requestLLMWithoutCache = (
 const stripThinkTags = (text: string): string => {
     // Remove everything between <think> and </think> tags
     return text.replace(/<think>.*?<\/think>/gs, "").trim();
-}
+};

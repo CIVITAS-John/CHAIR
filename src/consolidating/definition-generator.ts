@@ -116,22 +116,22 @@ export class DefinitionGenerator extends DefinitionParser {
         const oldcodes = codes.filter((Code) => (Code.definitions?.length ?? 0) == 0);
         const result = await super.parseResponse(codebook, oldcodes, lines);
         logger.debug(
-            `Generated ${oldcodes.filter((Code) => (Code.definitions?.length ?? 0) > 0).length} definitions for ${oldcodes.length} codes (${codes.length} in total), cursor movement ${result}.`,);
+            `Generated ${oldcodes.filter((Code) => (Code.definitions?.length ?? 0) > 0).length} definitions for ${oldcodes.length} codes (${codes.length} in total), cursor movement ${result}.`,
+        );
         if (result > 0) debugger;
         return result;
     }
 
     /** Postprocess the subunits after everything is done. */
-    override postprocess(
-        subunits: Code[]
-    ): Promise<Code[]> {
+    override postprocess(subunits: Code[]): Promise<Code[]> {
         var mergedCodes = subunits.filter((Code) => (Code.oldLabels?.length ?? 0) > 0);
         var mergedCount = mergedCodes.reduce((acc, Code) => acc + (Code.oldLabels?.length ?? 0), 0);
         logger.success(
-            `Generated ${subunits.filter((Code) => (Code.definitions?.length ?? 0) > 0).length} definitions for ${subunits.length} codes, with ${subunits.filter((Code) => Code.label == "[Merged]").length} implicitly merged. Sanity check: ${mergedCodes.length} codes merged ${mergedCount}.`,)
+            `Generated ${subunits.filter((Code) => (Code.definitions?.length ?? 0) > 0).length} definitions for ${subunits.length} codes, with ${subunits.filter((Code) => Code.label == "[Merged]").length} implicitly merged. Sanity check: ${mergedCodes.length} codes merged ${mergedCount}.`,
+        );
         return super.postprocess(subunits);
     }
-    
+
     /** Build the prompts for the code consolidator. */
     override buildPrompts(_codebook: Codebook, codes: Code[]): Promise<[string, string]> {
         const { dataset } = BaseStep.Context.get();

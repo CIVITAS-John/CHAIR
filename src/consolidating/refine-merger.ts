@@ -59,7 +59,9 @@ export class RefineMerger extends DefinitionParser {
     override async preprocess(_codebook: Codebook, codes: Code[]) {
         return await logger.withPrefix(this._prefix, async () => {
             // Only when the code has at least one definition should we merge them
-            codes = codes.filter((Code) => (this.useDefinition ? (Code.definitions?.length ?? 0) > 0 : true));
+            codes = codes.filter((Code) =>
+                this.useDefinition ? (Code.definitions?.length ?? 0) > 0 : true,
+            );
             if (codes.length === 0) {
                 return {};
             }

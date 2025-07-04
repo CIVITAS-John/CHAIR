@@ -126,7 +126,10 @@ export class ConsolidateStep<
                                         .replace("{analyzer}", analyzer)
                                         .replace("{group}", coder.group)
                                         .replace("{coder}", ident)
-                                        .replace("{coder-human}", coder.group == "human" ? ident : "ai");
+                                        .replace(
+                                            "{coder-human}",
+                                            coder.group == "human" ? ident : "ai",
+                                        );
                                 }
                                 if (!codedThreads.codebook) {
                                     throw new ConsolidateStep.InternalError(
@@ -170,12 +173,10 @@ export class ConsolidateStep<
                             Object.values(this.#codebooks.get(dataset.name) ?? {}),
                         );
                         const builder = new RefiningReferenceBuilder(this.config.builderConfig);
-                        const referencePath = join(ensureFolder(
-                            join(
-                                dataset.path,
-                                "references",
-                            ),
-                        ), `${this.config.prefix ?? session.llm.name}${builder.suffix}`);
+                        const referencePath = join(
+                            ensureFolder(join(dataset.path, "references")),
+                            `${this.config.prefix ?? session.llm.name}${builder.suffix}`,
+                        );
                         const hash = md5(codes);
                         const reference = await withCache(referencePath, hash, () =>
                             buildReferenceAndExport(

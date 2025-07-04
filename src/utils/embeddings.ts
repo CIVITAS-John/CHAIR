@@ -68,7 +68,7 @@ const MODELS = {
                 model: "text-embedding-004",
                 taskType: TaskType.SEMANTIC_SIMILARITY,
             }),
-    }
+    },
 } satisfies Record<
     string,
     Omit<EmbedderObject, "name" | "model"> & {
@@ -116,9 +116,9 @@ export const initOllamaEmbedder = (options: OllamaEmbeddingsOptions): EmbedderOb
         }),
         dimensions: options.dimensions,
         batchSize: options.batchSize ?? 50, // Default batch size
-        prompt: options.prompt
+        prompt: options.prompt,
     };
-}
+};
 
 /** Initialize the embeddings with the given name. */
 export const initEmbedder = (embedder: string): EmbedderObject => {
@@ -140,7 +140,7 @@ export const initEmbedder = (embedder: string): EmbedderObject => {
 /** Call the model to generate text embeddings with cache. */
 export const requestEmbeddings = (sources: string[], cache: string): Promise<Float32Array> =>
     logger.withDefaultSource("requestEmbeddings", async () => {
-        const localsources: string[] = sources.map(source => source.trim());
+        const localsources: string[] = sources.map((source) => source.trim());
         const { embedder } = QAJob.Context.get();
         if (!embedder) {
             throw new QAJob.ContextVarNotFoundError("embedder");
@@ -186,7 +186,9 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
                         const embedding = new Float32Array(res[j]);
                         // Check if all elements are 0
                         if (embedding.every((v) => v === 0)) {
-                            throw new Error(`Invalid embedding for: ${sources[idx]} (at index ${idx} / i ${i} j ${j} batchSize ${batchSize})`);
+                            throw new Error(
+                                `Invalid embedding for: ${sources[idx]} (at index ${idx} / i ${i} j ${j} batchSize ${batchSize})`,
+                            );
                         }
                         embeddings.set(embedding, embedder.dimensions * idx);
                         const cacheFile = `${cacheFolder}/${md5(localsources[idx])}.bytes`;
@@ -292,7 +294,7 @@ export const clusterTexts = (
     logger.withDefaultSource("clusterTexts", async () => {
         logger.debug(`Requesting embeddings for ${sources.length} sources`);
         if (sources.length === 0) {
-            return {res: {}, param: []};
+            return { res: {}, param: [] };
         }
 
         const embeddings = await requestEmbeddings(sources, cache);
@@ -360,7 +362,7 @@ export const clusterEmbeddings = (
                 },
             });
         });
-        return {res, param};
+        return { res, param };
     });
 
 /** Evaluate a number of texts. */

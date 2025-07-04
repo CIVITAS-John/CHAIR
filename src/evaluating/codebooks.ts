@@ -10,7 +10,7 @@ export abstract class CodebookEvaluator {
         codebooks: Record<string, Codebook>,
         groups: Record<string, [Codebook, string[]]>,
         exportPath: string,
-    ): Promise<Record<string, CodebookEvaluation>>
+    ): Promise<Record<string, CodebookEvaluation>>;
 }
 
 // /** EvaluateCodebooksWithReference: Evaluate a number of codebooks. */

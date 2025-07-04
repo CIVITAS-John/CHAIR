@@ -77,7 +77,7 @@ export const getMedian = (arr: number[]) => {
     if (arr.length == 0) return 0;
     if (arr.length == 1) return arr[0];
     const mid = Math.floor(arr.length / 2),
-    nums = [...arr].sort((a, b) => a - b);
+        nums = [...arr].sort((a, b) => a - b);
     return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
 };
 

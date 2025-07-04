@@ -70,7 +70,9 @@ export class EvaluateStep<
                     // Evaluate the codebooks
                     const results = await evaluator.evaluate(
                         references.get(dataset.name) ?? {},
-                        codes, gs, exportPath,
+                        codes,
+                        gs,
+                        exportPath,
                     );
 
                     logger.info(`Writing evaluation results to ${exportPath}`);
