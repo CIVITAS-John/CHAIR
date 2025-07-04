@@ -58,6 +58,11 @@ export abstract class CodeConsolidator {
         return Promise.resolve(0);
     }
 
+    /** Postprocess the subunits after everything is done. */
+    postprocess(subunits: Code[]): Promise<Code[]> {
+        return Promise.resolve(subunits.filter((Code) => Code.label !== "[Merged]"));
+    }
+
     /**
      * Get the chunk size and cursor movement for the LLM.
      * @returns [Chunk size, Cursor movement]
@@ -70,9 +75,6 @@ export abstract class CodeConsolidator {
 }
 
 /** An abstract codebook consolidator. */
-// ESLint does not recognize type parameters in array
-// See https://typescript-eslint.io/rules/no-unnecessary-type-parameters/#limitations
-
 export abstract class CodebookConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedThreads> {
     static ConfigError = class extends CodebookConsolidator.Error {
         override name = "CodebookConsolidator.ConfigError";
@@ -132,21 +134,28 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
             if (this.#index > -1 && this.#consolidators[this.#index].looping) {
                 // If the previous consolidator is looping, check if it's stopping
                 if (this.#consolidators[this.#index].stopping || subunits.length === 0) {
+                    subunits =
+                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                        (await this.#consolidators[this.#index]?.postprocess(subunits)) ?? subunits;
                     this.#consolidators[this.#index].stopping = false;
                     this.#index++;
                 }
                 // Otherwise, advance the index
             } else {
+                subunits =
+                    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                    (await this.#consolidators[this.#index]?.postprocess(subunits)) ?? subunits;
                 this.#index++;
             }
             if (this.#index >= this.#consolidators.length) {
+                analysis.codebook = Object.fromEntries(subunits.map((Code) => [Code.label, Code]));
                 return [];
             }
 
-            logger.info(`Iteration ${iteration}: ${this.#consolidators[this.#index].name}`);
-
             // Preprocess the subunits
-            subunits = subunits.filter((Code) => Code.label !== "[Merged]");
+            logger.info(
+                `Iteration ${iteration}: ${this.#consolidators[this.#index].name}, started with ${subunits.length} codes`,
+            );
             // Reorder the subunits to prevent over-merging
             subunits = seededShuffle(subunits, 0);
 
@@ -155,6 +164,7 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
                 subunits,
             );
             if (Array.isArray(res)) {
+                analysis.codebook = Object.fromEntries(res.map((Code) => [Code.label, Code]));
                 return res;
             }
             analysis.codebook = res;

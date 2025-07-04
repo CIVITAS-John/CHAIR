@@ -10,13 +10,12 @@ import {
 } from "../evaluating/reference-builder.js";
 import type { Codebook, DataChunk, DataItem, Dataset } from "../schema.js";
 import { withCache } from "../utils/cache.js";
-import type { EmbedderObject } from "../utils/embeddings.js";
 import { ensureFolder } from "../utils/file.js";
 import { type LLMModel, useLLMs } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 
 import type { AIParameters } from "./base-step.js";
-import { BaseStep, StepContext } from "./base-step.js";
+import { BaseStep } from "./base-step.js";
 import type { CodeStep } from "./code-step.js";
 
 export interface ConsolidateStepConfig<
@@ -28,6 +27,8 @@ export interface ConsolidateStepConfig<
     model: LLMModel | LLMModel[];
     parameters?: AIParameters;
     builderConfig?: RefiningReferenceBuilderConfig;
+    namePattern?: string; // Pattern for the codebook names
+    prefix?: string; // Prefix for the reference files
 }
 
 export class ConsolidateStep<
@@ -35,8 +36,6 @@ export class ConsolidateStep<
     TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
 > extends BaseStep {
     override dependsOn: CodeStep<TSubunit, TUnit>[];
-
-    embedder?: EmbedderObject;
 
     #datasets: Dataset<TUnit[]>[] = [];
     get datasets() {
@@ -62,7 +61,7 @@ export class ConsolidateStep<
         return this.#codebooks.get(dataset) ?? {};
     }
 
-    #groups = new Map<string, Record<string, Codebook>>();
+    #groups = new Map<string, Record<string, [Codebook, string[]]>>();
     getGroups(dataset: string) {
         logger.withSource(this._prefix, "getGroups", () => {
             // Sanity check
@@ -113,13 +112,25 @@ export class ConsolidateStep<
                 }
 
                 const codebooks: Codebook[] = [];
+                const names: string[] = [];
                 // Put the codebooks into the map
                 this.#codebooks.set(dataset.name, {
                     ...(this.#codebooks.get(dataset.name) ?? {}),
                     ...Object.entries(results).reduce<Record<string, Codebook>>(
                         (acc, [analyzer, result]) => {
                             Object.entries(result).forEach(([ident, codedThreads]) => {
-                                const key = `${analyzer}-${ident}`;
+                                let key = `${analyzer}-${ident}`;
+                                if (this.config.namePattern) {
+                                    key = this.config.namePattern
+                                        .replace("{dataset}", dataset.name)
+                                        .replace("{analyzer}", analyzer)
+                                        .replace("{group}", coder.group)
+                                        .replace("{coder}", ident)
+                                        .replace(
+                                            "{coder-human}",
+                                            coder.group === "human" ? ident : "ai",
+                                        );
+                                }
                                 if (!codedThreads.codebook) {
                                     throw new ConsolidateStep.InternalError(
                                         `Codebook not found in ${key}`,
@@ -127,6 +138,7 @@ export class ConsolidateStep<
                                 }
                                 acc[key] = codedThreads.codebook;
                                 codebooks.push(codedThreads.codebook);
+                                names.push(key);
                             });
                             return acc;
                         },
@@ -140,7 +152,7 @@ export class ConsolidateStep<
                 if (codebooks.length > 1) {
                     const group = mergeCodebooks(codebooks);
                     const prev = this.#groups.get(dataset.name) ?? {};
-                    this.#groups.set(dataset.name, { ...prev, [coder.group]: group });
+                    this.#groups.set(dataset.name, { ...prev, [coder.group]: [group, names] });
                 }
             });
         });
@@ -150,16 +162,10 @@ export class ConsolidateStep<
 
         await useLLMs(async (session) => {
             for (const dataset of this.#datasets) {
-                // Sanity check
-                if (!this.embedder) {
-                    throw new ConsolidateStep.ConfigError("Embedder not set");
-                }
-
-                await StepContext.with(
+                await BaseStep.Context.with(
                     {
                         dataset,
                         session,
-                        embedder: this.embedder,
                     },
                     async () => {
                         // We made a deep copy here because the reference builder may modify the codebooks
@@ -167,13 +173,9 @@ export class ConsolidateStep<
                             Object.values(this.#codebooks.get(dataset.name) ?? {}),
                         );
                         const builder = new RefiningReferenceBuilder(this.config.builderConfig);
-                        const referencePath = ensureFolder(
-                            join(
-                                dataset.path,
-                                "references",
-                                // `${Analyzers.join("-")}_
-                                `${models.map((m) => (typeof m === "string" ? m : m.name)).join("-")}${builder.suffix}`,
-                            ),
+                        const referencePath = join(
+                            ensureFolder(join(dataset.path, "references")),
+                            `${this.config.prefix ?? session.llm.name}${builder.suffix}`,
                         );
                         const hash = md5(codes);
                         const reference = await withCache(referencePath, hash, () =>

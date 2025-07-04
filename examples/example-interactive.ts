@@ -16,8 +16,15 @@ const load = new LoadStep({
 
 const code = new CodeStep({
     agent: "AI",
-    strategy: [ItemLevelAnalyzerAny, ItemLevelAnalyzerVerb],
-    model: ["gpt-4.5-omni"],
+    strategy: [
+        ItemLevelAnalyzerAny,
+        ItemLevelAnalyzerVerb,
+        new ItemLevelAnalyzerAny({
+            name: "item-flooding",
+            prompt: "Special requirement: always generate more than 20 phrases for each message.",
+        }),
+    ],
+    model: ["gpt-4o"],
 });
 
 // const code2 = new CodeStep({
@@ -26,20 +33,25 @@ const code = new CodeStep({
 // });
 
 const consolidate = new ConsolidateStep({
-    model: ["gpt-4.5-omni"],
+    model: ["gpt-4o"],
     builderConfig: {
         consolidators: [
-            new SimpleMerger({ looping: true }),
+            new SimpleMerger({
+                looping: true,
+                interactive: true,
+            }),
             new DefinitionGenerator(),
             new RefineMerger({
+                looping: true,
+                interactive: true,
                 maximum: 0.5,
                 minimum: 0.4,
-                looping: true,
             }),
             new RefineMerger({
+                looping: true,
+                interactive: true,
                 maximum: 0.6,
                 minimum: 0.4,
-                looping: true,
             }),
         ],
     },

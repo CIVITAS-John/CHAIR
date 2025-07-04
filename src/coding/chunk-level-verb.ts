@@ -1,5 +1,5 @@
 import type { CodedThread, Conversation, Message } from "../schema.js";
-import { StepContext } from "../steps/base-step.js";
+import { BaseStep } from "../steps/base-step.js";
 
 import { ChunkLevelAnalyzerBase } from "./chunk-level.js";
 import { buildMessagePrompt } from "./conversations.js";
@@ -16,7 +16,7 @@ import { buildMessagePrompt } from "./conversations.js";
  * Changes from ChunkLevelAnalyzerStructured: We asked LLMs to write verb phrases.
  *
  * @author Barany et al.
- * @adapter John Chen
+ * Adapted by John Chen.
  */
 
 /** Conduct the first-round high-level coding of the conversations. */
@@ -33,13 +33,13 @@ export default class ChunkLevelAnalyzerVerb extends ChunkLevelAnalyzerBase {
         messages: Message[],
         _chunkStart: number,
     ): Promise<[string, string]> {
-        const { dataset } = StepContext.get();
+        const { dataset } = BaseStep.Context.get();
         return Promise.resolve([
             `
 You are an expert in thematic analysis with grounded theory, working on open coding.
 Please give me a codebook to analyze factors within this interaction that could contribute to the research.
 ${dataset.researchQuestion}
-${dataset.codingNotes}
+${dataset.codingNotes}${this.customPrompt}
 Always use verb phrases. For each phrase, try to find at least 3 quotes. Always follow the output format:
 ---
 * Summary

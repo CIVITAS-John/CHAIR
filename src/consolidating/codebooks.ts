@@ -49,7 +49,7 @@ export const mergeCodebooks = (codebooks: Codebook[], withReference = false): Co
     for (const [idx, codebook] of codebooks.entries()) {
         for (const [label, code] of Object.entries(codebook)) {
             // We don't accept anything without an example.
-            if (!code.examples?.length) {
+            if (!code.examples?.length || code.label === "[Merged]") {
                 continue;
             }
             let newLabel = label;
@@ -88,7 +88,7 @@ export const mergeCodebooks = (codebooks: Codebook[], withReference = false): Co
                 if (!codes.has(newLabel)) {
                     codes.set(newLabel, code);
                 } else {
-                    mergeCodes(codes.get(newLabel) ?? code, code);
+                    mergeCodes(codes.get(newLabel) ?? ({} as Code), code);
                 }
             }
         }
@@ -233,6 +233,7 @@ export const mergeCodes = (parent: Code, code: Code) => {
         parent.owners = Array.from(new Set((parent.owners ?? []).concat(code.owners ?? [])));
     }
     code.label = "[Merged]";
+    code.alternatives = [];
     return parent;
 };
 
@@ -247,21 +248,25 @@ export const mergeCodesByCluster = (clusters: Record<number, ClusterItem[]>, cod
             const clusterID = parseInt(key);
             // Pick the code with the highest probability and the shortest label + definition to merge into
             // This could inevitably go wrong. We will need another iteration to get a better new label
-            const bestCode = clusters[clusterID]
+            const bestCodes = clusters[clusterID]
                 .sort((A, B) => B.probability - A.probability)
                 .map((item) => codes[item.id])
+                .filter((code) => code.label !== "[Merged]")
                 .sort(
                     (A, B) =>
                         A.label.length * 5 +
                         (A.definitions?.[0]?.length ?? 0) -
                         (B.label.length * 5 + (B.definitions?.[0]?.length ?? 0)),
-                )[0];
+                );
+            if (bestCodes.length === 0) continue;
+            const bestCode = bestCodes[0];
             if (clusterID !== -1) {
                 codebook[bestCode.label] = bestCode;
                 bestCode.oldLabels = bestCode.oldLabels ?? [];
             }
             for (const item of clusters[clusterID]) {
                 const code = codes[item.id];
+                if (code.label === "[Merged]") continue;
                 if (clusterID === -1) {
                     // Codes that cannot be clustered
                     codebook[code.label] = code;
@@ -289,9 +294,8 @@ export const updateCodes = (codebook: Codebook, newCodes: Code[], codes: Code[])
     const allCodes = Object.values(codebook);
     for (let i = 0; i < codes.length; i++) {
         const newCode = newCodes[i];
-        if (typeof newCode !== "object") {
-            break;
-        }
+        if (typeof newCode !== "object") break;
+        if (codes[i].label === "[Merged]" || newCode.label === "[Merged]") continue;
         const newLabel = newCode.label.toLowerCase();
         // Update the code
         codes[i].definitions = newCode.definitions;
@@ -302,6 +306,9 @@ export const updateCodes = (codebook: Codebook, newCodes: Code[], codes: Code[])
             let parent = allCodes.find((cur) => cur.label === newLabel);
             parent ??= allCodes.find((cur) => cur.alternatives?.includes(newLabel));
             if (parent && parent !== codes[i]) {
+                logger.info(
+                    `Merging ${codes[i].label} into ${parent.label} due to updated label "${newLabel}"`,
+                );
                 mergeCodes(parent, codes[i]);
                 continue;
             }

@@ -45,16 +45,16 @@ $hdbscan = Read-Host "Do you want to install hdbscan? (for repository developers
 
 # Install the required packages from requirements.txt
 Write-Host "Installing required packages in the virtual environment..."
-& python -m ensurepip --upgrade
-& python -m pip install --upgrade pip
-& python -m pip install -r requirements.txt
+& $python -m ensurepip --upgrade
+& $python -m pip install --upgrade pip
+& $python -m pip install -r requirements.txt
 
 if ($bertopic -eq "y") {
-    & python -m pip install -r requirements.bertopic.txt
+    & $python -m pip install -r requirements.bertopic.txt
 }
 
 if ($hdbscan -eq "y") {
-    & python -m pip install -r requirements.hdbscan.txt
+    & $python -m pip install -r requirements.hdbscan.txt
 }
 
 Write-Host "All required packages have been installed in the virtual environment." -ForegroundColor Green

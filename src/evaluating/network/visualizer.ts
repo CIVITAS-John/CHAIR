@@ -118,6 +118,8 @@ export class Visualizer {
             this.dataset.weights =
                 this.dataset.weights ?? this.dataset.names.map((_, idx) => (idx === 0 ? 0 : 1));
             this.dataset.totalWeight = this.dataset.weights.reduce((A, B) => A + B, 0);
+            // Apply the extra parameters
+            if (this.dataset.parameters) Object.assign(this.parameters, this.dataset.parameters);
             // Build the default graph
             this.setStatus("Code", buildSemanticGraph(this.dataset, this.parameters));
             this.sidePanel.show();
@@ -720,7 +722,7 @@ const setClassForComponent = <T>(
     if (forNodes) {
         component.nodes.forEach((node) => {
             setClassForNode(node.id, className, status);
-            // SetClassForLinks(Node.ID, Class, Status, (Other) => Component.Nodes.findIndex(Node => Node.ID == Other) != -1);
+            // SetClassForLinks(Node.ID, Class, Status, (Other) => Component.Nodes.findIndex(Node => Node.ID === Other) !== -1);
         });
     }
 };

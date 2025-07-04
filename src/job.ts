@@ -1,4 +1,4 @@
-import { AsyncScope } from "@rakuzen25/async-store";
+import { AsyncScope, AsyncVar } from "@rakuzen25/async-store";
 
 import { BaseStep } from "./steps/base-step.js";
 import type { CodeStepConfig } from "./steps/code-step.js";
@@ -9,13 +9,27 @@ import type { EvaluateStepConfig } from "./steps/evaluate-step.js";
 import { EvaluateStep } from "./steps/evaluate-step.js";
 import type { LoadStepConfig } from "./steps/load-step.js";
 import { LoadStep } from "./steps/load-step.js";
-import { type EmbedderModel, initEmbedder } from "./utils/embeddings.js";
+import type { EmbedderModel, EmbedderObject } from "./utils/embeddings.js";
+import { initEmbedder } from "./utils/embeddings.js";
 import { logger } from "./utils/logger.js";
 
 export interface QAJobConfig {
     embedder?: EmbedderModel;
     steps?: BaseStep[] | BaseStep[][];
     parallel?: boolean;
+    pythonPath?: string;
+}
+
+interface IJobContext {
+    pythonPath?: string;
+    embedder?: EmbedderObject;
+}
+
+abstract class QAJobError extends Error {
+    override name = "QAJob.Error";
+    constructor(message: string, source?: string) {
+        super(`${source ?? logger.source}: ${message}`);
+    }
 }
 
 const validateStep = (step: BaseStep) => {
@@ -41,8 +55,18 @@ export class QAJob {
      */
     steps: BaseStep[][];
 
-    static ConfigError = class extends Error {
+    embedder?: EmbedderObject;
+
+    static ConfigError = class extends QAJobError {
         override name = "QAJob.ConfigError";
+    };
+
+    static Context = new AsyncVar<IJobContext>("QAJob.Context");
+    static ContextVarNotFoundError = class extends BaseStep.Error {
+        override name = "QAJob.ContextVarNotFoundError";
+        constructor(name: keyof IJobContext, source?: string) {
+            super(`${name} not provided in QAJob.Context`, source);
+        }
     };
 
     #assignID() {
@@ -51,21 +75,15 @@ export class QAJob {
             return;
         }
 
-        const embedder =
-            typeof this.config.embedder === "string"
-                ? initEmbedder(this.config.embedder)
-                : this.config.embedder;
-
         this.steps.forEach((steps, i) => {
             steps.forEach((step, j) => {
                 step._id = `${i + 1}.${j + 1}`;
                 if (step instanceof ConsolidateStep || step instanceof EvaluateStep) {
-                    if (!embedder) {
+                    if (!this.embedder) {
                         throw new QAJob.ConfigError(
                             "Embedder not provided for consolidation/evaluation",
                         );
                     }
-                    step.embedder = embedder;
                 }
             });
         });
@@ -82,6 +100,11 @@ export class QAJob {
             return;
         }
 
+        this.embedder =
+            typeof this.config.embedder === "string"
+                ? initEmbedder(this.config.embedder)
+                : this.config.embedder;
+
         if (!Array.isArray(config.steps[0])) {
             // config.steps is a flattened 1D array
             const stepsFlat = config.steps as BaseStep[];
@@ -96,27 +119,27 @@ export class QAJob {
                 stepSet.add(step);
             });
 
-            if (config.parallel) {
-                // We group the steps by type - load, code, then consolidate
-                this.steps = [[], [], [], []];
-                // Classify each step
-                stepsFlat.forEach((step) => this.steps[validateStep(step)].push(step));
-                // Set the dependencies of unspecified steps
-                for (let i = 1; i < 4; i++) {
-                    this.steps[i].forEach((step) => {
-                        if (!step.dependsOn?.length) {
-                            step.dependsOn = this.steps[i - 1];
-                        }
-                    });
-                }
-                // Remove empty groups
-                this.steps = this.steps.filter((group) => group.length);
-                logger.debug(
-                    `Grouped steps: ${this.steps.map((group) => group.length).join(", ")}`,
-                    _id,
-                );
-            } else {
-                // We just have one group of steps in sequence
+            // We group the steps by type - load, code, then consolidate
+            this.steps = [[], [], [], []];
+            // Classify each step
+            stepsFlat.forEach((step) => this.steps[validateStep(step)].push(step));
+            // Set the dependencies of unspecified steps
+            for (let i = 1; i < 4; i++) {
+                this.steps[i].forEach((step) => {
+                    if (!step.dependsOn?.length) {
+                        step.dependsOn = this.steps[i - 1];
+                    }
+                });
+            }
+            // Remove empty groups
+            this.steps = this.steps.filter((group) => group.length);
+            logger.debug(
+                `Grouped steps: ${this.steps.map((group) => group.length).join(", ")}`,
+                _id,
+            );
+
+            // If non-parallel, we just have one grop of steps in sequence
+            if (!config.parallel) {
                 this.steps = [stepsFlat];
             }
 
@@ -204,6 +227,10 @@ export class QAJob {
 
     async #executeStep(step: BaseStep) {
         await new AsyncScope().run(async () => {
+            QAJob.Context.set({
+                pythonPath: this.config.pythonPath,
+                embedder: this.embedder,
+            });
             await logger.withSource("QAJob#executeStep", async () => {
                 logger.info(`Executing step ${step._id}`);
                 try {

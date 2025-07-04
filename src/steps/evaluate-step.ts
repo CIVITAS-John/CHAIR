@@ -4,11 +4,10 @@ import { join } from "path";
 // import type { CodebookEvaluator } from "../evaluating/codebooks";
 import { NetworkEvaluator } from "../evaluating/network-evaluator.js";
 import type { Codebook, DataChunk, DataItem, Dataset } from "../schema.js";
-import type { EmbedderObject } from "../utils/embeddings.js";
 import { ensureFolder } from "../utils/file.js";
 import { logger } from "../utils/logger.js";
 
-import { BaseStep, StepContext } from "./base-step.js";
+import { BaseStep } from "./base-step.js";
 import type { ConsolidateStep } from "./consolidate-step.js";
 
 export interface EvaluateStepConfig<
@@ -19,6 +18,8 @@ export interface EvaluateStepConfig<
     consolidator: ConsolidateStep<TSubunit, TUnit>;
     subdir?: string; // Defaults to "evaluation"
     ignoreGroups?: boolean; // Defaults to false
+    anonymize?: boolean; // Defaults to true
+    parameters?: Record<string, unknown>; // Extra parameters for the evaluation
 }
 
 export class EvaluateStep<
@@ -27,7 +28,6 @@ export class EvaluateStep<
 > extends BaseStep {
     override dependsOn: ConsolidateStep<TSubunit, TUnit>[];
 
-    embedder?: EmbedderObject;
     ignoreGroups: boolean;
 
     constructor(private readonly config: EvaluateStepConfig<TSubunit, TUnit>) {
@@ -38,14 +38,9 @@ export class EvaluateStep<
     }
 
     async #execute() {
-        // Sanity check
-        if (!this.embedder) {
-            throw new EvaluateStep.ConfigError("Embedder not set");
-        }
-
         const datasets: Dataset<TUnit[]>[] = [],
             codebooks = new Map<string, Record<string, Codebook>>(),
-            groups = new Map<string, Record<string, Codebook>>(),
+            groups = new Map<string, Record<string, [Codebook, string[]]>>(),
             references = new Map<string, Codebook>();
         const consolidator = this.config.consolidator;
         consolidator.datasets.forEach((dataset) => {
@@ -56,14 +51,15 @@ export class EvaluateStep<
         });
 
         for (const dataset of datasets.values()) {
-            await StepContext.with(
+            await BaseStep.Context.with(
                 {
                     dataset,
-                    embedder: this.embedder,
                 },
                 async () => {
                     const evaluator = new NetworkEvaluator({
                         dataset: dataset as unknown as Dataset<TUnit>,
+                        parameters: this.config.parameters ?? {},
+                        anonymize: this.config.anonymize ?? true,
                     });
                     const codes = codebooks.get(dataset.name) ?? {};
                     const gs = this.ignoreGroups ? {} : (groups.get(dataset.name) ?? {});
@@ -73,16 +69,9 @@ export class EvaluateStep<
 
                     // Evaluate the codebooks
                     const results = await evaluator.evaluate(
-                        [
-                            references.get(dataset.name) ?? {},
-                            ...Object.values(codes),
-                            ...Object.values(gs),
-                        ],
-                        [
-                            join(dataset.path, "references"),
-                            ...Object.keys(codes),
-                            ...Object.keys(gs).map((n) => `group: ${n}`),
-                        ],
+                        references.get(dataset.name) ?? {},
+                        codes,
+                        gs,
                         exportPath,
                     );
 

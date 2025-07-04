@@ -6,9 +6,8 @@ import json
 import multiprocessing
 import os
 import sys
-from typing import List, Literal, TypedDict, cast, overload
-
 import numpy as np
+from typing import List, Literal, TypedDict, cast, overload
 
 cpus = multiprocessing.cpu_count()
 

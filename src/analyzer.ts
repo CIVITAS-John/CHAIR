@@ -1,4 +1,4 @@
-import { ContextVarNotFoundError, StepContext } from "./steps/base-step.js";
+import { BaseStep } from "./steps/base-step.js";
 import { logger } from "./utils/logger.js";
 
 abstract class AnalyzerError extends Error {
@@ -31,6 +31,19 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     baseTemperature = 0;
     /** The maximum number of iterations for the analyzer. */
     maxIterations = 1;
+    /** Custom requirement to be used in the LLM request. */
+    customPrompt: string;
+
+    constructor({
+        name,
+        prompt,
+    }: {
+        name?: string;
+        prompt?: string;
+    } = {}) {
+        this.name = name ?? this.name;
+        this.customPrompt = prompt ? `\n${prompt}` : "";
+    }
 
     /**
      * Get the chunk configuration for the LLM.
@@ -82,7 +95,7 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     }
     /**
      * Parse the responses from the LLM.
-     * The return value is only for item-based coding, where each item has its own response. Otherwise, return {}.
+     * The return value is only for item-based coding, where each item has its own response. Otherwise, return `{}`.
      * Alternatively, it can return a number to indicate the relative cursor movement. (Actual units - Expected units, often negative.)
      */
     async parseResponse(
@@ -113,9 +126,9 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
     retries = 5,
 ) =>
     logger.withDefaultSource("loopThroughChunk", async () => {
-        const { dataset, session } = StepContext.get();
+        const { dataset, session } = BaseStep.Context.get();
         if (!session) {
-            throw new ContextVarNotFoundError("session");
+            throw new BaseStep.ContextVarNotFoundError("session");
         }
 
         // Split units into smaller chunks based on the maximum items
@@ -128,7 +141,7 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
             logger.info(`[${dataset.name}] Iteration ${i + 1}/${analyzer.maxIterations}`);
             let cursor = 0;
             const filtered = sources.filter((subunit) => analyzer.subunitFilter(subunit, i));
-            logger.debug(`[${dataset.name}] ${filtered.length} subunits filtered`);
+            logger.info(`[${dataset.name}] ${filtered.length} subunits filtered`);
             // Loop through the subunits
             while (cursor < filtered.length) {
                 logger.debug(`[${dataset.name}] Cursor at ${cursor}/${filtered.length}`);

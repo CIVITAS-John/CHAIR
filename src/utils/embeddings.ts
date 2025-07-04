@@ -5,18 +5,20 @@ import { fileURLToPath } from "url";
 import { TaskType } from "@google/generative-ai";
 import type { Embeddings } from "@langchain/core/embeddings";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
+import { VertexAIEmbeddings } from "@langchain/google-vertexai";
 import { OllamaEmbeddings } from "@langchain/ollama";
 import { OpenAIEmbeddings } from "@langchain/openai";
+import AsyncLock from "async-lock";
 import * as dotenv from "dotenv";
 import md5 from "md5";
-import { PythonShell } from "python-shell";
 
+import { QAJob } from "../job.js";
 import type { Code } from "../schema.js";
-import { ContextVarNotFoundError, StepContext } from "../steps/base-step.js";
 
-import { ensureFolder, getPythonPath } from "./file.js";
+import { ensureFolder } from "./file.js";
 import { logger } from "./logger.js";
 import { sleep } from "./misc.js";
+import { runPythonScript } from "./python.js";
 
 const MODELS = {
     "openai-small-512": {
@@ -43,9 +45,16 @@ const MODELS = {
                 dimensions: 1024,
             }),
     },
-    "gemini-3072-similarity": {
+    "gemini-embedding-001": {
         dimensions: 3072,
-        batchSize: 10,
+        model: () =>
+            new VertexAIEmbeddings({
+                model: "gemini-embedding-001",
+            }),
+    },
+    "gemini-embedding-exp": {
+        dimensions: 3072,
+        batchSize: 100,
         model: () =>
             new GoogleGenerativeAIEmbeddings({
                 model: "gemini-embedding-exp-03-07",
@@ -60,9 +69,6 @@ const MODELS = {
                 taskType: TaskType.SEMANTIC_SIMILARITY,
             }),
     },
-    "mxbai-embed-large": {
-        dimensions: 1024,
-    },
 } satisfies Record<
     string,
     Omit<EmbedderObject, "name" | "model"> & {
@@ -76,6 +82,15 @@ export interface EmbedderObject {
     name: string;
     batchSize?: number;
     dimensions: number;
+    prompt?: string;
+}
+export interface OllamaEmbeddingsOptions {
+    name: string;
+    model?: string;
+    dimensions: number;
+    batchSize?: number;
+    baseUrl?: string;
+    prompt?: string;
 }
 export type EmbedderModel = EmbedderName | EmbedderObject;
 export class EmbedderNotSupportedError extends Error {
@@ -91,30 +106,25 @@ export class EmbedderNotSupportedError extends Error {
 
 dotenv.config();
 
+/** Initialize the Ollama embeddings with the given options. */
+export const initOllamaEmbedder = (options: OllamaEmbeddingsOptions): EmbedderObject => {
+    return {
+        name: options.name,
+        model: new OllamaEmbeddings({
+            model: options.model ?? options.name,
+            baseUrl: options.baseUrl ?? process.env.OLLAMA_URL ?? "https://127.0.0.1:11434",
+        }),
+        dimensions: options.dimensions,
+        batchSize: options.batchSize ?? 50, // Default batch size
+        prompt: options.prompt,
+    };
+};
+
 /** Initialize the embeddings with the given name. */
 export const initEmbedder = (embedder: string): EmbedderObject => {
-    // ollama Support
-    if (embedder.startsWith("o_")) {
-        embedder = embedder.substring(2);
-
-        if (!(embedder in MODELS)) {
-            throw new EmbedderNotSupportedError(embedder);
-        }
-
-        return {
-            ...MODELS[embedder as EmbedderName],
-            name: embedder,
-            model: new OllamaEmbeddings({
-                model: embedder,
-                baseUrl: process.env.OLLAMA_URL ?? "https://127.0.0.1:11434",
-            }),
-        };
-    }
-
     if (!(embedder in MODELS)) {
         throw new EmbedderNotSupportedError(embedder);
     }
-
     const config = MODELS[embedder as EmbedderName];
     if (!("model" in config)) {
         // No default online model
@@ -130,9 +140,10 @@ export const initEmbedder = (embedder: string): EmbedderObject => {
 /** Call the model to generate text embeddings with cache. */
 export const requestEmbeddings = (sources: string[], cache: string): Promise<Float32Array> =>
     logger.withDefaultSource("requestEmbeddings", async () => {
-        const { embedder } = StepContext.get();
+        const localsources: string[] = sources.map((source) => source.trim());
+        const { embedder } = QAJob.Context.get();
         if (!embedder) {
-            throw new ContextVarNotFoundError("embedder");
+            throw new QAJob.ContextVarNotFoundError("embedder");
         }
         // Create the cache folder
         const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
@@ -140,9 +151,10 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
         // Check if the cache exists
         const embeddings = new Float32Array(embedder.dimensions * sources.length);
         const requests: number[] = [];
-        for (let i = 0; i < sources.length; i++) {
-            const source = sources[i];
-            const cacheFile = `${cacheFolder}/${md5(source)}.bytes`;
+        for (let i = 0; i < localsources.length; i++) {
+            // Apply the prompt if provided
+            localsources[i] = (embedder.prompt ?? "{input}").replace("{input}", localsources[i]);
+            const cacheFile = `${cacheFolder}/${md5(localsources[i])}.bytes`;
             if (existsSync(cacheFile)) {
                 const buffer = readFileSync(cacheFile);
                 const cached = new Float32Array(
@@ -164,23 +176,29 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
                     // This line could debug some underlying issue behind 0 embeddings, particularly for stupid Gemini API
                     // var test = await (embedder.model as any).client.embedContent("test");
                     const res = await embedder.model.embedDocuments(
-                        requests.slice(i, i + batchSize).map((idx) => sources[idx]),
+                        requests.slice(i, i + batchSize).map((idx) => localsources[idx]),
                     );
                     for (let j = 0; j < res.length; j++) {
                         const idx = requests[i + j];
+                        // Cull embeddings to dimensions if necessary (need matryoshka support for the model)
+                        if (res[j].length !== embedder.dimensions) {
+                            res[j] = res[j].slice(0, embedder.dimensions);
+                        }
                         const embedding = new Float32Array(res[j]);
                         // Check if all elements are 0
                         if (embedding.every((v) => v === 0)) {
-                            throw new Error(`Invalid embedding for: ${sources[idx]}`);
+                            throw new Error(
+                                `Invalid embedding for: ${sources[idx]} (at index ${idx} / i ${i} j ${j} batchSize ${batchSize})`,
+                            );
                         }
                         embeddings.set(embedding, embedder.dimensions * idx);
-                        const cacheFile = `${cacheFolder}/${md5(sources[idx])}.bytes`;
+                        const cacheFile = `${cacheFolder}/${md5(localsources[idx])}.bytes`;
                         writeFileSync(cacheFile, embedding);
                     }
                     break;
                 } catch (e) {
-                    logger.error(e, ++retry >= 10);
-                    await sleep((retry + 1) * 6000);
+                    logger.error(e, ++retry <= 10);
+                    await sleep(6000 + retry * 2000);
                 }
             }
         }
@@ -190,12 +208,14 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
 /** Call the model to generate a text embedding with cache. */
 export const requestEmbedding = (source: string, cache: string) =>
     logger.withDefaultSource("requestEmbedding", async () => {
-        const { embedder } = StepContext.get();
+        const { embedder } = QAJob.Context.get();
         if (!embedder) {
-            throw new ContextVarNotFoundError("embedder");
+            throw new QAJob.ContextVarNotFoundError("embedder");
         }
         const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
         ensureFolder(cacheFolder);
+        // Apply the prompt if provided
+        source = (embedder.prompt ?? "{input}").replace("{input}", source);
         // Check if the cache exists
         const cacheFile = `${cacheFolder}/${md5(source)}.bytes`;
         if (existsSync(cacheFile)) {
@@ -209,9 +229,9 @@ export const requestEmbedding = (source: string, cache: string) =>
 
 /** Call the model to generate a text embedding. */
 export const requestEmbeddingWithoutCache = async (source: string) => {
-    const { embedder } = StepContext.get();
+    const { embedder } = QAJob.Context.get();
     if (!embedder) {
-        throw new ContextVarNotFoundError("embedder");
+        throw new QAJob.ContextVarNotFoundError("embedder");
     }
     return (await embedder.model.embedDocuments([source]))[0];
 };
@@ -275,13 +295,14 @@ export const clusterTexts = (
     logger.withDefaultSource("clusterTexts", async () => {
         logger.debug(`Requesting embeddings for ${sources.length} sources`);
         if (sources.length === 0) {
-            return {};
+            return { res: {}, param: [] };
         }
 
         const embeddings = await requestEmbeddings(sources, cache);
         return await clusterEmbeddings(embeddings, names, method, ...opts);
     });
 
+const embeddingLock = new AsyncLock();
 /**
  * Categorize the embeddings into clusters.
  * @returns \{ cluster: [id, probability][] \}
@@ -296,50 +317,53 @@ export const clusterEmbeddings = (
     ...opts: string[]
 ) =>
     logger.withDefaultSource("clusterEmbeddings", async () => {
-        const { embedder } = StepContext.get();
+        const { embedder } = QAJob.Context.get();
         if (!embedder) {
-            throw new ContextVarNotFoundError("embedder");
+            throw new QAJob.ContextVarNotFoundError("embedder");
         }
         const res: Record<number, ClusterItem[]> = {};
+        let param: number[] = [];
         ensureFolder("./known");
-        // Write it into ./known/temp.bytes
-        writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
-        // writeFileSync(`./known/temp.text`, Names.join("\n"));
-        writeFileSync("./known/clustering.temp.json", JSON.stringify(names));
-        // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
-        // Run the Python script
-        const __dirname = dirname(fileURLToPath(import.meta.url));
-        await PythonShell.run(resolve(__dirname, `embeddings/clustering_${method}.py`), {
-            pythonPath: getPythonPath(),
-            args: [embedder.dimensions.toString(), names.length.toString(), ...opts],
-            parser: (msg) => {
-                if (msg.startsWith("[")) {
-                    const data = JSON.parse(msg) as number[][];
-                    const clusters = data[0];
-                    const probs = data[1];
-                    // Get unique clusters
-                    const uniqueClusters = [...new Set(clusters)].sort();
-                    let noCluster = 0;
-                    for (const cluster of uniqueClusters) {
-                        res[cluster] = [];
-                        for (let j = 0; j < clusters.length; j++) {
-                            if (clusters[j] === cluster) {
-                                res[cluster].push({ id: j, probability: probs[j] });
-                                if (cluster === -1) {
-                                    noCluster++;
+        // Lock the file to prevent concurrent writes
+        await embeddingLock.acquire("temp", async () => {
+            writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
+            writeFileSync("./known/clustering.temp.json", JSON.stringify(names));
+            // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
+            // Run the Python script
+            const __dirname = dirname(fileURLToPath(import.meta.url));
+            await runPythonScript(resolve(__dirname, `embeddings/clustering_${method}.py`), {
+                args: [embedder.dimensions.toString(), names.length.toString(), ...opts],
+                parser: (msg) => {
+                    if (msg.startsWith("[")) {
+                        const data = JSON.parse(msg) as unknown[];
+                        const clusters = data[0] as number[];
+                        const probs = data[1] as number[];
+                        // More parameters from the algorithm if necessary
+                        param = data.slice(2) as number[];
+                        // Get unique clusters
+                        const uniqueClusters = [...new Set(clusters)].sort();
+                        let noCluster = 0;
+                        for (const cluster of uniqueClusters) {
+                            res[cluster] = [];
+                            for (let j = 0; j < clusters.length; j++) {
+                                if (clusters[j] === cluster) {
+                                    res[cluster].push({ id: j, probability: probs[j] });
+                                    if (cluster === -1) {
+                                        noCluster++;
+                                    }
                                 }
                             }
                         }
+                        logger.success(
+                            `Received ${clusters.length - (noCluster > 0 ? 1 : 0)} clusters from ${names.length} items (${noCluster} items unclustered)`,
+                        );
+                    } else {
+                        logger.debug(msg);
                     }
-                    logger.success(
-                        `Received ${clusters.length - (noCluster > 0 ? 1 : 0)} clusters from ${names.length} items (${noCluster} items unclustered)`,
-                    );
-                } else {
-                    logger.debug(msg);
-                }
-            },
+                },
+            });
         });
-        return res;
+        return { res, param };
     });
 
 /** Evaluate a number of texts. */
@@ -371,48 +395,49 @@ export const evaluateEmbeddings = <T>(
     ...opts: string[]
 ) =>
     logger.withDefaultSource("evaluateEmbeddings", async () => {
-        const { embedder } = StepContext.get();
+        const { embedder } = QAJob.Context.get();
         if (!embedder) {
-            throw new ContextVarNotFoundError("embedder");
+            throw new QAJob.ContextVarNotFoundError("embedder");
         }
         let res: T | undefined;
-        // Write it into ./known/temp.bytes
         ensureFolder("./known");
-        writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
-        // let TextData = Labels.map((Label, Index) => `${Owners[Index].join(",")}|${Label}`);
-        const textData = labels.map((label, index) => ({
-            label,
-            owners: owners[index],
-        }));
-        // File.writeFileSync(`./known/temp.text`, OwnerLabels.concat(TextData).join("\n"));
-        writeFileSync(
-            "./known/evaluation.temp.json",
-            JSON.stringify({
-                ownerLabels,
-                labels: textData,
-            }),
-        );
-        logger.debug(
-            `Embeddings sent: ${embeddings.buffer.byteLength} (${labels.length} embeddings)`,
-        );
-        // Run the Python script
-        const __dirname = dirname(fileURLToPath(import.meta.url));
-        await PythonShell.run(resolve(__dirname, `embeddings/evaluation_${method}.py`), {
-            pythonPath: getPythonPath(),
-            args: [
-                embedder.dimensions.toString(),
-                labels.length.toString(),
-                ownerLabels.length.toString(),
-                ...opts,
-            ],
-            parser: (msg) => {
-                if (msg.startsWith("{")) {
-                    res = JSON.parse(msg) as T;
-                } else {
-                    logger.debug(msg);
-                }
-            },
+        // Lock the file to prevent concurrent writes
+        await embeddingLock.acquire("temp", async () => {
+            // Write it into ./known/temp.bytes
+            writeFileSync("./known/temp.bytes", Buffer.from(embeddings.buffer));
+            const textData = labels.map((label, index) => ({
+                label,
+                owners: owners[index],
+            }));
+            writeFileSync(
+                "./known/evaluation.temp.json",
+                JSON.stringify({
+                    ownerLabels,
+                    labels: textData,
+                }),
+            );
+            logger.debug(
+                `Embeddings sent: ${embeddings.buffer.byteLength} (${labels.length} embeddings)`,
+            );
+            // Run the Python script
+            const __dirname = dirname(fileURLToPath(import.meta.url));
+            await runPythonScript(resolve(__dirname, `embeddings/evaluation_${method}.py`), {
+                args: [
+                    embedder.dimensions.toString(),
+                    labels.length.toString(),
+                    ownerLabels.length.toString(),
+                    ...opts,
+                ],
+                parser: (msg) => {
+                    if (msg.startsWith("{")) {
+                        res = JSON.parse(msg) as T;
+                    } else {
+                        logger.debug(msg);
+                    }
+                },
+            });
         });
+        // Check if the result is defined
         if (!res) {
             throw new Error("No results returned from evaluation Python script");
         }

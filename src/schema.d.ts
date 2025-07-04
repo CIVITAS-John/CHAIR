@@ -170,16 +170,20 @@ export interface CodebookComparison<T extends DataChunk<DataItem>> {
     codebooks: Codebook[];
     /** The names of the codebooks. */
     names: string[];
+    /** The groups of codebooks and their children. */
+    groups?: number[][];
+    /** The weights of codebooks to compare with. */
+    weights?: number[];
     /** The codes in the combined codebook. */
     codes: Code[];
-    /** The weights of the codes in the combined codebook. */
-    weights?: number[];
     /** The total weight of the codebooks. */
     totalWeight?: number;
     /** The mapping from user ID to nicknames. */
     uidToNicknames?: Map<string, string>;
     /** The distance matrix between codes in the first codebook. */
     distances: number[][];
+    /** Extra parameters for the comparison (to override defaults). */
+    parameters?: Record<string, unknown>;
 }
 
 /** CodebookEvaluation: Evaluation of a codebook. */

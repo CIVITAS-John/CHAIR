@@ -15,15 +15,16 @@ import type {
 import { withCache } from "../utils/cache.js";
 import { evaluateTexts } from "../utils/embeddings.js";
 import { logger } from "../utils/logger.js";
+import { getMedian } from "../utils/misc.js";
 import { createOfflineBundle, launchServer } from "../utils/server.js";
 
 import { CodebookEvaluator } from "./codebooks.js";
 
 /** Get the strings of the codes. */
 const getCodeString = (code: Code) => {
-    let text = `Label: ${code.label}`;
+    let text = code.label;
     if ((code.definitions?.length ?? 0) > 0) {
-        text += `\nDefinition: ${(code.definitions ?? [])[0]}`;
+        text += `Label: ${code.label}\nDefinition: ${(code.definitions ?? [])[0]}`;
     }
     return text;
 };
@@ -47,40 +48,66 @@ export class NetworkEvaluator<
     anonymize: boolean;
     /** The title of the evaluator. */
     title: string;
+    /** The extra parameters for the evaluation. */
+    parameters: Record<string, unknown> = {};
 
     /** Initialize the evaluator. */
     constructor({
         dataset,
         anonymize,
         title,
+        parameters,
     }: {
         dataset: Dataset<TUnit>;
         anonymize?: boolean;
         title?: string;
+        parameters?: Record<string, unknown>;
     }) {
         super();
         this.dataset = dataset;
         this.anonymize = anonymize ?? true;
         this.title = title ?? "Network Evaluator";
+        this.parameters = parameters ?? {};
     }
 
     /** Evaluate a number of codebooks. */
     override evaluate(
-        codebooks: Codebook[],
-        names: string[],
+        reference: Codebook,
+        codebooks: Record<string, Codebook>,
+        groups: Record<string, [Codebook, string[]]>,
         exportPath = "./known",
     ): Promise<Record<string, CodebookEvaluation>> {
         return logger.withSource(this._prefix, "evaluate", true, async () => {
             const hash = md5(JSON.stringify(codebooks));
-            // Weights
+            const allCodebooks = [reference];
+            const names: string[] = ["baseline"];
+            const groupIndexes: number[][] = [[]];
+            const sizes: number[] = [];
+            // Collect the names of the codebooks and groups
+            for (const [name, codebook] of Object.entries(codebooks)) {
+                names.push(name);
+                groupIndexes.push([]);
+                allCodebooks.push(codebook);
+                sizes.push(Object.keys(codebook).length);
+            }
+            for (const [name, group] of Object.entries(groups)) {
+                names.push(`group: ${name}`);
+                groupIndexes.push(group[1].map((c) => names.indexOf(c)));
+                allCodebooks.push(group[0]);
+            }
+            // Get the median codebook size
+            const medianSize = getMedian(sizes);
+            // Parse the codebooks and groups
             const weights = names.map((name, idx) => {
-                if (idx === 0 || name.startsWith("group:")) {
+                if (idx === 0 || name.startsWith("group: ")) {
                     return 0;
                 }
                 const fields = name.split("~");
                 const value = parseFloat(fields[fields.length - 1]);
                 if (isNaN(value)) {
-                    return 1;
+                    // By default, calculate weight as 1 / ln(max(median(# of everyones' codes), # of codes))
+                    var size = Object.keys(allCodebooks[idx]).length;
+                    return 1 / (size == 0 ? 1 : Math.log(Math.max(size, medianSize)));
                 }
                 names[idx] = fields.slice(0, fields.length - 1).join("~");
                 return value;
@@ -88,8 +115,7 @@ export class NetworkEvaluator<
             // Build the network information
             await withCache(join(exportPath, "network"), hash, async () => {
                 // We treat the first input as the reference codebook
-                names[0] = "baseline";
-                const merged = mergeCodebooks(codebooks, true);
+                const merged = mergeCodebooks(allCodebooks, true);
                 // Then, we convert each code into an embedding and send to Python
                 const codes = Object.values(merged);
                 const labels = codes.map((c) => c.label);
@@ -133,27 +159,30 @@ export class NetworkEvaluator<
                 }
                 // Return in the format
                 const pkg: CodebookComparison<DataChunk<DataItem>> = {
-                    codebooks,
+                    codebooks: allCodebooks,
                     names,
                     codes,
                     distances: res.distances,
                     source: this.dataset,
                     title: this.title,
                     weights,
+                    groups: groupIndexes,
+                    parameters: this.parameters,
                 };
                 return pkg;
             });
             // Run the HTTP server
             createOfflineBundle(
                 `${exportPath}/network`,
-                ["./src/evaluating/network", "./out/src/evaluating/network"],
+                ["./src/evaluating/network", "./dist/evaluating/network"],
                 `${exportPath}/network.json`,
             );
             // Return the results from the server
+            const port = 8000 + Math.floor(Math.random() * 1999);
             return (
                 (await launchServer(
-                    8080,
-                    ["./src/evaluating/network", "./out/src/evaluating/network"],
+                    port,
+                    ["./src/evaluating/network", "./dist/evaluating/network"],
                     `${exportPath}/network.json`,
                 )) ?? {}
             );

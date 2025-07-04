@@ -76,7 +76,7 @@ export class CodebookSection extends Panel {
         }
         // Render the codebooks and evaluation results
         this.buildTable(
-            Object.entries(results),
+            Object.entries(results).filter(([key]) => key !== "$$$ total"),
             (row, [key, value], idx) => {
                 const codebook = codebooks[idx + 1];
                 // Name of the codebook

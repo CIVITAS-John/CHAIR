@@ -7,6 +7,7 @@ import type {
 } from "@langchain/core/language_models/chat_models";
 import type { BaseMessage } from "@langchain/core/messages";
 import { HumanMessage } from "@langchain/core/messages";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatGroq } from "@langchain/groq";
 import { ChatMistralAI } from "@langchain/mistralai";
 import { ChatOllama } from "@langchain/ollama";
@@ -14,7 +15,7 @@ import { ChatOpenAI } from "@langchain/openai";
 import * as dotenv from "dotenv";
 import md5 from "md5";
 
-import { ContextVarNotFoundError, StepContext } from "../steps/base-step.js";
+import { BaseStep } from "../steps/base-step.js";
 
 import { ensureFolder } from "./file.js";
 import { logger } from "./logger.js";
@@ -30,25 +31,12 @@ const MODELS = {
         model: (temperature) =>
             new ChatOpenAI({
                 temperature,
-                model: "gpt-3.5-turbo-0125",
+                model: "gpt-3.5-turbo",
                 streaming: false,
                 maxTokens: 4096,
             }),
     },
-    "gpt-4.5-turbo": {
-        // 10$ / 30$
-        maxInput: 16385,
-        maxOutput: 4096,
-        maxItems: 64,
-        model: (temperature) =>
-            new ChatOpenAI({
-                temperature,
-                model: "gpt-4-turbo",
-                streaming: false,
-                maxTokens: 4096,
-            }),
-    },
-    "gpt-4.5-omni": {
+    "gpt-4o": {
         // 2.5$ / 10$
         maxInput: 16385,
         maxOutput: 4096,
@@ -61,7 +49,20 @@ const MODELS = {
                 maxTokens: 4096,
             }),
     },
-    "gpt-4.5-mini": {
+    "gpt-4.1": {
+        // 2$ / 8$
+        maxInput: 16385,
+        maxOutput: 4096,
+        maxItems: 64,
+        model: (temperature) =>
+            new ChatOpenAI({
+                temperature,
+                model: "gpt-4.1",
+                streaming: false,
+                maxTokens: 4096,
+            }),
+    },
+    "gpt-4o-mini": {
         // 0.15$ / 0.6$
         maxInput: 16385,
         maxOutput: 4096,
@@ -74,7 +75,7 @@ const MODELS = {
                 maxTokens: 4096,
             }),
     },
-    "gpt-4.5-audio": {
+    "gpt-4o-audio": {
         // 2.5$ / 10$
         // 100$ / 200$ audio
         maxInput: 16385,
@@ -86,21 +87,6 @@ const MODELS = {
                 model: "gpt-4o-audio-preview",
                 streaming: false,
                 maxTokens: 4096,
-            }),
-    },
-    "o3-mini": {
-        // 1.1$ / 4.4$
-        maxInput: 16385,
-        maxOutput: 4096,
-        maxItems: 64,
-        systemMessage: false,
-        model: () =>
-            new ChatOpenAI({
-                // Does not support temperature
-                model: "o3-mini",
-                streaming: false,
-                // maxCompletionTokens: MaxOutput,
-                // need to update the package, it seems
             }),
     },
     "o4-mini": {
@@ -118,21 +104,6 @@ const MODELS = {
                 // need to update the package, it seems
             }),
     },
-    o1: {
-        // 15$ / 60$
-        maxInput: 16385,
-        maxOutput: 4096,
-        maxItems: 64,
-        systemMessage: false,
-        model: () =>
-            new ChatOpenAI({
-                // Does not support temperature
-                model: "o1",
-                streaming: false,
-                // maxCompletionTokens: MaxOutput,
-                // need to update the package, it seems
-            }),
-    },
     "claude3-haiku": {
         // 0.25$ / 0.75$
         maxInput: 200000,
@@ -142,19 +113,6 @@ const MODELS = {
             new ChatAnthropic({
                 temperature,
                 model: "claude-3-haiku-20240307",
-                streaming: false,
-                maxTokens: 4096,
-            }),
-    },
-    "claude3-sonnet": {
-        // 3$ / 15$
-        maxInput: 200000,
-        maxOutput: 4096,
-        maxItems: 64,
-        model: (temperature) =>
-            new ChatAnthropic({
-                temperature,
-                model: "claude-3-sonnet-20240229",
                 streaming: false,
                 maxTokens: 4096,
             }),
@@ -211,23 +169,45 @@ const MODELS = {
                 maxTokens: 8192,
             }),
     },
-    gemma2: {
-        // Assuming 27b; models <= 10b generally don't really work
-        maxInput: 64000,
-        maxOutput: 64000,
+    "qwen-qwq-32b": {
+        maxInput: 8192,
+        maxOutput: 8192,
+        maxItems: 16,
+        model: (temperature) =>
+            new ChatGroq({
+                temperature,
+                model: "qwen-qwq-32b",
+                streaming: false,
+                maxTokens: 8192,
+            }),
+    },
+    "gemini-2.5-pro": {
+        maxInput: 32000,
+        maxOutput: 32000,
+        maxItems: 64,
+        model: (temperature) =>
+            new ChatGoogleGenerativeAI({
+                temperature,
+                model: "gemini-2.5-pro",
+                streaming: false,
+            }),
+    },
+    "gemma3-27b": {
+        maxInput: 32000,
+        maxOutput: 32000,
         maxItems: 32,
+        model: (temperature) =>
+            new ChatGoogleGenerativeAI({
+                temperature,
+                model: "gemma-3-27b-it",
+                streaming: false,
+            }),
     },
     "mistral-small": {
         // Assuming 22b
         maxInput: 64000,
         maxOutput: 64000,
         maxItems: 32,
-    },
-    "qwen2.5": {
-        // Assuming 14b (32b takes a bit too much vrams)
-        maxInput: 8192,
-        maxOutput: 8192,
-        maxItems: 16,
     },
     "mistral-nemo": {
         // It claims to support 128k, but I don't think it would work well with that large window.
@@ -244,6 +224,15 @@ export interface LLMObject {
     maxInput: number;
     maxOutput: number;
     maxItems: number;
+    systemMessage?: boolean;
+}
+export interface OllamaLLMOptions {
+    name: string;
+    model?: string;
+    maxInput?: number;
+    maxOutput?: number;
+    maxItems?: number;
+    baseUrl?: string;
     systemMessage?: boolean;
 }
 export type LLMModel = LLMName | LLMObject;
@@ -263,6 +252,24 @@ export interface LLMSession {
 }
 
 dotenv.config();
+
+/** Initialize the Ollama embeddings with the given options. */
+export const initOllamaLLM = (options: OllamaLLMOptions): LLMObject => {
+    return {
+        name: options.name,
+        model: (temperature) =>
+            new ChatOllama({
+                temperature,
+                model: options.model ?? options.name,
+                streaming: false,
+                baseUrl: options.baseUrl ?? process.env.OLLAMA_URL ?? "https://127.0.0.1:11434",
+            }),
+        maxInput: options.maxInput ?? 8192,
+        maxOutput: options.maxOutput ?? 8192,
+        maxItems: options.maxItems ?? 32,
+        systemMessage: options.systemMessage ?? true,
+    };
+};
 
 /** Initialize a LLM with the given name. */
 export const initLLM = (LLM: string): LLMObject => {
@@ -350,9 +357,9 @@ export const requestLLM = (
     fakeRequest = false,
 ) =>
     logger.withDefaultSource("requestLLM", async () => {
-        const { session } = StepContext.get();
+        const { session } = BaseStep.Context.get();
         if (!session) {
-            throw new ContextVarNotFoundError("session");
+            throw new BaseStep.ContextVarNotFoundError("session");
         }
 
         const input = messages
@@ -381,7 +388,12 @@ export const requestLLM = (
                         `[${session.llm.name}] Cache hit (input tokens: ${inputTokens}, output tokens: ${outputTokens})`,
                     );
                     logger.debug(`[${session.llm.name}] Cache content: ${content}`);
-                    return content;
+                    // Strip the <think> tags
+                    const stripped = stripThinkTags(content);
+                    if (stripped.includes("<think>")) {
+                        throw new Error("The return content has unclosed <think> tags!");
+                    }
+                    return stripped;
                 }
             }
         }
@@ -390,7 +402,12 @@ export const requestLLM = (
         const result = await requestLLMWithoutCache(messages, temperature, fakeRequest);
         logger.debug(`[${session.llm.name}] Writing to cache file`);
         writeFileSync(cacheFile, `${input}\n===\n${result}`);
-        return result;
+        // Strip the <think> tags
+        const stripped = stripThinkTags(result);
+        if (stripped.includes("<think>")) {
+            throw new Error("The return content has unclosed <think> tags!");
+        }
+        return stripped;
     });
 
 /** Call the model to generate text, explicitly bypassing cache. */
@@ -400,9 +417,9 @@ export const requestLLMWithoutCache = (
     fakeRequest = false,
 ) =>
     logger.withDefaultSource("requestLLMWithoutCache", async () => {
-        const { session } = StepContext.get();
+        const { session } = BaseStep.Context.get();
         if (!session) {
-            throw new ContextVarNotFoundError("session");
+            throw new BaseStep.ContextVarNotFoundError("session");
         }
 
         let text = "";
@@ -438,3 +455,9 @@ export const requestLLMWithoutCache = (
         logger.debug(`[${llm.name}] LLM response: ${text}`);
         return text;
     });
+
+/** Strip the <think> tags from the text. */
+const stripThinkTags = (text: string): string => {
+    // Remove everything between <think> and </think> tags
+    return text.replace(/<think>.*?<\/think>/gs, "").trim();
+};

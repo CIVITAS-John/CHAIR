@@ -1,17 +1,18 @@
-import type { CodedThread, Conversation, Message } from "../schema.js";
-import { BaseStep } from "../steps/base-step.js";
-
-import { buildMessagePrompt } from "./conversations.js";
-import { ItemLevelAnalyzerBase } from "./item-level.js";
+import type { CodedThread, Conversation, Message } from "../../schema.js";
+import { BaseStep } from "../../steps/base-step.js";
+import { buildMessagePrompt } from "../conversations.js";
+import { ItemLevelAnalyzerBase } from "../item-level.js";
 
 /**
  * Conduct the first-round item-level coding of the conversations.
  * Use anything as the code label.
+ * Edge adaptation: always generate more than 10 phrases for each message.
+ * DO NOT USE FOR PRODUCTION PURPOSE! THIS IS INTENDED AS A "BAD-ACTOR".
  * @author John Chen
  */
-export default class ItemLevelAnalyzerAny extends ItemLevelAnalyzerBase {
+export default class ItemLevelAnalyzerFlooding extends ItemLevelAnalyzerBase {
     /** The name of the analyzer. */
-    override name = "item-any";
+    override name = "item-flooding";
     /** The base temperature for the LLM. */
     override baseTemperature = 0.5;
 
@@ -19,7 +20,6 @@ export default class ItemLevelAnalyzerAny extends ItemLevelAnalyzerBase {
     protected override tagName = "phrase";
     /** How do we call tags in the prompt. */
     protected override tagsName = "phrases";
-
     /**
      * Get the chunk size and cursor movement for the LLM.
      * We will fetch at least 10 messages for each batch to keep the context.
@@ -56,7 +56,8 @@ You are an expert in thematic analysis with grounded theory, working on open cod
 Your goal is to identify multiple low-level tags for each message.
 When writing tags, balance between specifics and generalizability across messages. Do not repeat the input text.
 ${dataset.researchQuestion}
-${dataset.codingNotes}${this.customPrompt}
+${dataset.codingNotes}
+Special requirement: always generate more than 20 phrases for each message.
 
 Always follow the output format:
 ---

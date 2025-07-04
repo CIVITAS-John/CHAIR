@@ -5,6 +5,7 @@ import eslint from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
 import eslintPluginImportX from "eslint-plugin-import-x";
 import * as regexpPlugin from "eslint-plugin-regexp";
+import eslintTSDoc from "eslint-plugin-tsdoc";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
@@ -26,6 +27,9 @@ export default tseslint.config(
                 project: true,
                 tsconfigRootDir: import.meta.dirname,
             },
+        },
+        plugins: {
+            tsdoc: eslintTSDoc,
         },
         rules: {
             "@typescript-eslint/consistent-type-imports": "error",
@@ -96,11 +100,15 @@ export default tseslint.config(
                     ignoreDeclarationSort: true,
                 },
             ],
+            "tsdoc/syntax": "warn",
         },
     },
     {
         files: ["**/*.js"],
         extends: [tseslint.configs.disableTypeChecked],
+        rules: {
+            "tsdoc/syntax": "off",
+        },
     },
     includeIgnoreFile(`${import.meta.dirname}/.gitignore`),
     {

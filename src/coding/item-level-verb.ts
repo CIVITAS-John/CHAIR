@@ -1,5 +1,5 @@
 import type { CodedThread, Conversation, Message } from "../schema.js";
-import { ContextVarNotFoundError, StepContext } from "../steps/base-step.js";
+import { BaseStep } from "../steps/base-step.js";
 
 import { buildMessagePrompt } from "./conversations.js";
 import { ItemLevelAnalyzerBase } from "./item-level.js";
@@ -31,9 +31,9 @@ export default class ItemLevelAnalyzerVerb extends ItemLevelAnalyzerBase {
         _iteration: number,
         tries: number,
     ): [number, number, number] {
-        const { session } = StepContext.get();
+        const { session } = BaseStep.Context.get();
         if (!session) {
-            throw new ContextVarNotFoundError("session");
+            throw new BaseStep.ContextVarNotFoundError("session");
         }
         // For weaker models, we will reduce the chunk size (32 => 24 => 16 => 8)
         if (recommended === session.llm.maxItems) {
@@ -48,14 +48,14 @@ export default class ItemLevelAnalyzerVerb extends ItemLevelAnalyzerBase {
         _target: Conversation,
         messages: Message[],
     ): Promise<[string, string]> {
-        const { dataset } = StepContext.get();
+        const { dataset } = BaseStep.Context.get();
         return Promise.resolve([
             `
 You are an expert in thematic analysis with grounded theory, working on open coding.
 This is the first round of coding. Your goal is to describe each item with verb phrases.
-Try your best to interpret events, contexts, and intents. Always use ";" to separate verb phrases.
+Try your best to interpret events, contexts, and intents. Always use ";" to separate verb phrases. Do not repeat the input text.
 ${dataset.researchQuestion}
-${dataset.codingNotes}
+${dataset.codingNotes}${this.customPrompt}
 
 Always follow the output format:
 ---

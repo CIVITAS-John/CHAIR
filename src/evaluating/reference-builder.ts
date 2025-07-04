@@ -11,7 +11,7 @@ import { exportChunksForCoding } from "../utils/export.js";
 import { ensureFolder } from "../utils/file.js";
 import { logger } from "../utils/logger.js";
 
-interface ReferenceBuilderConfig {
+export interface ReferenceBuilderConfig {
     retries?: number;
     fakeRequest?: boolean;
 }

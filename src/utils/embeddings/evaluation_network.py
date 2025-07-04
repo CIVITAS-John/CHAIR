@@ -12,8 +12,8 @@ from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.preprocessing import MinMaxScaler, normalize
 from umap import UMAP
 
+# Calculate the L2 euclidean distance matrix using the original embeddings
 embeddings = normalize(embeddings, norm="l2")
-# Calculate the distance matrix
 distances = pairwise_distances(embeddings, embeddings, metric="euclidean", n_jobs=cpus)
 
 # Use UMap to reduce the dimensions

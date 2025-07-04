@@ -1,5 +1,5 @@
 import type { Code, Codebook } from "../schema.js";
-import { StepContext } from "../steps/base-step.js";
+import { BaseStep } from "../steps/base-step.js";
 import { clusterCodes } from "../utils/embeddings.js";
 import { logger } from "../utils/logger.js";
 
@@ -19,6 +19,8 @@ export class RefineMerger extends DefinitionParser {
     maximum = 0.6;
     /** The minimum threshold for merging codes. */
     minimum = 0.4;
+    /** Whether the merging process should be interactive. */
+    interactive = false;
     /** Whether we use definitions in merging (used to inform LLM). */
     useDefinition = true;
     /** Whether the merging process should force verb phrases. */
@@ -35,12 +37,14 @@ export class RefineMerger extends DefinitionParser {
         useDefinition,
         useVerbPhrases,
         looping,
+        interactive,
     }: {
         maximum?: number;
         minimum?: number;
         useDefinition?: boolean;
         useVerbPhrases?: boolean;
         looping?: boolean;
+        interactive?: boolean;
     } = {}) {
         super();
         this.maximum = maximum ?? this.maximum;
@@ -48,13 +52,16 @@ export class RefineMerger extends DefinitionParser {
         this.useDefinition = useDefinition ?? this.useDefinition;
         this.useVerbPhrases = useVerbPhrases ?? this.useVerbPhrases;
         this.looping = looping ?? this.looping;
+        this.interactive = interactive ?? this.interactive;
     }
 
     /** Preprocess the subunits before filtering and chunking. */
     override async preprocess(_codebook: Codebook, codes: Code[]) {
         return await logger.withPrefix(this._prefix, async () => {
             // Only when the code has at least one definition should we merge them
-            codes = codes.filter((Code) => (this.useDefinition ? Code.definitions?.length : true));
+            codes = codes.filter((Code) =>
+                this.useDefinition ? (Code.definitions?.length ?? 0) > 0 : true,
+            );
             if (codes.length === 0) {
                 return {};
             }
@@ -76,9 +83,19 @@ export class RefineMerger extends DefinitionParser {
                 "ward",
                 this.maximum.toString(),
                 this.minimum.toString(),
+                this.interactive ? "Setting Thresholds for Refined Merger (With LLM)" : "false",
             );
+            // If interactive, try to update the parameters
+            if (this.interactive && clusters.param.length > 0) {
+                this.maximum = clusters.param[0];
+                this.minimum = clusters.param[1];
+                this.interactive = false; // Stop the interactive mode after the first run
+                logger.info(
+                    `Updated parameters to maximum: ${this.maximum}, minimum: ${this.minimum}`,
+                );
+            }
             // Merge the codes
-            const res = mergeCodesByCluster(clusters, codes);
+            const res = mergeCodesByCluster(clusters.res, codes);
             // Check if we should stop - when nothing is merged
             this.stopping = Object.keys(res).length === len;
             return res;
@@ -96,13 +113,13 @@ export class RefineMerger extends DefinitionParser {
 
     /** Build the prompts for the code consolidator. */
     override buildPrompts(_codebook: Codebook, codes: Code[]): Promise<[string, string]> {
-        const { dataset } = StepContext.get();
+        const { dataset } = BaseStep.Context.get();
         return Promise.resolve([
             `
 You are an expert in thematic analysis. You are giving labels and definitions for qualitative codes.
 Each code includes one or more concepts and definitions. Each code is independent of another. Never attempt to merge them.
-For each code, reflect on the logical relationship between the concepts.
-Then, write a combined sentence of criteria covering all the concepts. Use clear and generalizable language and do not introduce unnecessary details. 
+For each code, reflect on the logical relationship between the input concepts.
+Then, write a combined sentence of criteria covering all the code's input concepts. Use clear and generalizable language and do not introduce unnecessary details. 
 Finally, write an accurate ${this.useVerbPhrases ? "verb phrase" : "label"} to best represent the code.
 ${dataset.researchQuestion}
 Always follow the output format:

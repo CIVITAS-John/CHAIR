@@ -1,5 +1,5 @@
 import type { CodedThread, Conversation, Message } from "../schema.js";
-import { StepContext } from "../steps/base-step.js";
+import { BaseStep } from "../steps/base-step.js";
 
 import { ChunkLevelAnalyzerBase } from "./chunk-level.js";
 import { buildMessagePrompt } from "./conversations.js";
@@ -15,7 +15,7 @@ import { buildMessagePrompt } from "./conversations.js";
  * However, the original prompt does not give examples as documented by the paper. We modified the prompt to make that happen. Note that the original paper's codebook only has around 8-11 codes. Therefore, we only ask ChatGPT to generate a single layer of codes.
  *
  * @author Barany et al.
- * @adapter John Chen
+ * Adapted by John Chen.
  */
 
 /** Conduct the first-round high-level coding of the conversations. */
@@ -32,13 +32,13 @@ export default class ChunkLevelAnalyzerBarany extends ChunkLevelAnalyzerBase {
         messages: Message[],
         _chunkStart: number,
     ): Promise<[string, string]> {
-        const { dataset } = StepContext.get();
+        const { dataset } = BaseStep.Context.get();
         return Promise.resolve([
             `
 Hi ChatGPT, I want to analyze the following interaction in one of Physics Lab's online message groups.
 Please give me a codebook to analyze factors within this interaction that could contribute to the research.
 ${dataset.researchQuestion}
-${dataset.codingNotes}
+${dataset.codingNotes}${this.customPrompt}
 For each code, try to find 3 quotes. Always follow the output format:
 ---
 ## Label: A label of code 1

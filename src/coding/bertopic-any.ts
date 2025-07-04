@@ -3,13 +3,13 @@ import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-import { PythonShell } from "python-shell";
 
 import type { BertopicTopics, CodedThread, Conversation, Message } from "../schema.js";
-import { StepContext } from "../steps/base-step.js";
-import { ensureFolder, getPythonPath } from "../utils/file.js";
+import { BaseStep } from "../steps/base-step.js";
+import { ensureFolder } from "../utils/file.js";
 import { requestLLM } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
+import { runPythonScript } from "../utils/python.js";
 
 import { buildMessagePrompt, ConversationAnalyzer } from "./conversations.js";
 
@@ -39,7 +39,7 @@ export default class BertopicAnalyzerAny extends ConversationAnalyzer {
         _analyzed: CodedThread[],
     ): Promise<void> {
         await logger.withSource(this._prefix, "batchPreprocess", true, async () => {
-            const { dataset } = StepContext.get();
+            const { dataset } = BaseStep.Context.get();
             // Write the messages into the file.
             const messages = conversations.flatMap((conversation) =>
                 conversation.items.filter(
@@ -64,8 +64,7 @@ export default class BertopicAnalyzerAny extends ConversationAnalyzer {
             // Run the Python script
             let topics: BertopicTopics = {};
             const __dirname = dirname(fileURLToPath(import.meta.url));
-            await PythonShell.run(resolve(__dirname, "bertopic_impl.py"), {
-                pythonPath: getPythonPath(),
+            await runPythonScript(resolve(__dirname, "bertopic_impl.py"), {
                 args: [messages.length.toString()],
                 parser: (message) => {
                     if (message.startsWith("{")) {
@@ -88,7 +87,7 @@ export default class BertopicAnalyzerAny extends ConversationAnalyzer {
 You are an expert in thematic analysis with grounded theory, working on open coding.
 You identified a topic from the input quotes. Each quote is independent from another.
 ${dataset.researchQuestion}
-${dataset.codingNotes}
+${dataset.codingNotes}${this.customPrompt}
 
 Always follow the output format:
 ===

@@ -5,7 +5,7 @@ import { select } from "@inquirer/prompts";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import open from "open";
 
-import { type Analyzer, loopThroughChunk } from "../analyzer.js";
+import { Analyzer, loopThroughChunk } from "../analyzer.js";
 import { mergeCodebook } from "../consolidating/codebooks.js";
 import type { CodedThread, CodedThreads, DataChunk, DataItem, Dataset } from "../schema.js";
 import { exportChunksForCoding, importCodes } from "../utils/export.js";
@@ -16,7 +16,7 @@ import { logger } from "../utils/logger.js";
 import { assembleExampleFrom } from "../utils/misc.js";
 
 import type { AIParameters } from "./base-step.js";
-import { BaseStep, StepContext } from "./base-step.js";
+import { BaseStep } from "./base-step.js";
 import type { LoadStep } from "./load-step.js";
 
 type AnalyzerConstructor<TUnit, TSubunit, TAnalysis> = new (
@@ -43,7 +43,11 @@ export type CodeStepConfig<
           // Renaming "Analyzer" to "Strategy" to avoid confusion with "the LLM that analyzes the data"
           strategy:
               | AnalyzerConstructor<TUnit, TSubunit, CodedThread>
-              | AnalyzerConstructor<TUnit, TSubunit, CodedThread>[];
+              | Analyzer<TUnit, TSubunit, CodedThread>
+              | (
+                    | Analyzer<TUnit, TSubunit, CodedThread>
+                    | AnalyzerConstructor<TUnit, TSubunit, CodedThread>
+                )[];
           model: LLMModel | LLMModel[];
           parameters?: AIParameters;
       }
@@ -59,7 +63,7 @@ const analyzeChunks = <T extends DataItem>(
     retries?: number,
 ) =>
     logger.withDefaultSource("analyzeChunks", async () => {
-        const { dataset } = StepContext.get();
+        const { dataset } = BaseStep.Context.get();
 
         const keys = Object.keys(chunks);
         logger.info(`[${dataset.name}] Analyzing ${keys.length} chunks`);
@@ -288,10 +292,10 @@ export class CodeStep<
 
             for (const dataset of this.#datasets) {
                 logger.info(`[${dataset.name}] Coding dataset`);
-                for (const AnalyzerClass of strategies) {
-                    logger.info(`[${dataset.name}] Using strategy ${AnalyzerClass.name}`);
+                for (const strategy of strategies) {
+                    logger.info(`[${dataset.name}] Using strategy ${strategy.name}`);
                     await useLLMs(async (session) => {
-                        await StepContext.with(
+                        await BaseStep.Context.with(
                             {
                                 dataset,
                                 session,
@@ -304,7 +308,14 @@ export class CodeStep<
                                     );
                                 }
 
-                                const analyzer = new AnalyzerClass();
+                                const analyzer =
+                                    strategy instanceof Analyzer ? strategy : new strategy();
+                                if (
+                                    !analyzer.customPrompt &&
+                                    this.config.parameters?.customPrompt
+                                ) {
+                                    analyzer.customPrompt = this.config.parameters.customPrompt;
+                                }
                                 logger.info(
                                     `[${dataset.name}/${analyzer.name}] Using model ${session.llm.name}`,
                                 );
