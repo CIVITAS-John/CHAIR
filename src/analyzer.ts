@@ -34,8 +34,15 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     /** Custom requirement to be used in the LLM request. */
     customPrompt: string;
 
-    constructor(customPrompt?: string) {
-        this.customPrompt = customPrompt ? `\n${customPrompt}` : "";
+    constructor({
+        name,
+        prompt,
+    }: {
+        name?: string;
+        prompt?: string;
+    } = {}) {
+        this.name = name ?? this.name;
+        this.customPrompt = prompt ? `\n${prompt}` : "";
     }
 
     /**

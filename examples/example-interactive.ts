@@ -19,9 +19,10 @@ const code = new CodeStep({
     strategy: [
         ItemLevelAnalyzerAny,
         ItemLevelAnalyzerVerb,
-        new ItemLevelAnalyzerAny(
-            "Special requirement: always generate more than 20 phrases for each message.",
-        ),
+        new ItemLevelAnalyzerAny({
+            name: "item-flooding",
+            prompt: "Special requirement: always generate more than 20 phrases for each message.",
+        }),
     ],
     model: ["gpt-4o"],
 });
@@ -35,9 +36,9 @@ const consolidate = new ConsolidateStep({
     model: ["gpt-4o"],
     builderConfig: {
         consolidators: [
-            new SimpleMerger({ 
+            new SimpleMerger({
                 looping: true,
-                interactive: true
+                interactive: true,
             }),
             new DefinitionGenerator(),
             new RefineMerger({

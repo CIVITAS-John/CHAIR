@@ -19,9 +19,10 @@ const code = new CodeStep({
     strategy: [
         ItemLevelAnalyzerAny,
         ItemLevelAnalyzerVerb,
-        new ItemLevelAnalyzerAny(
-            "Special requirement: always generate more than 20 phrases for each message.",
-        ),
+        new ItemLevelAnalyzerAny({
+            name: "item-flooding",
+            prompt: "Special requirement: always generate more than 20 phrases for each message.",
+        }),
     ],
     model: ["gpt-4o"],
 });
