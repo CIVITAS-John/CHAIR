@@ -117,8 +117,8 @@ export const buildSemanticGraph = (
             } else {
                 source.weights[owner] = Math.min(
                     // Math.max(source.weights[owner] / Math.max(source.neighbors, 1), 0),
-                    // changed 2025-6-19: use log2 function to reduce the impact of having many neighbors
-                    Math.log2(source.weights[owner] + 1) / Math.log2(source.neighbors.size + 1),
+                    // changed 2025-7-3: use log function to reduce the impact of having many neighbors
+                    Math.log(source.weights[owner] + 1) / Math.log(source.neighbors.size + 1),
                     1,
                 );
             }
