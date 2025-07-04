@@ -15,14 +15,14 @@ import type {
 import { withCache } from "../utils/cache.js";
 import { evaluateTexts } from "../utils/embeddings.js";
 import { logger } from "../utils/logger.js";
-import { createOfflineBundle, launchServer } from "../utils/server.js";
 import { getMedian } from "../utils/misc.js";
+import { createOfflineBundle, launchServer } from "../utils/server.js";
 
 import { CodebookEvaluator } from "./codebooks.js";
 
 /** Get the strings of the codes. */
 const getCodeString = (code: Code) => {
-    let text = `${code.label}`;
+    let text = code.label;
     if ((code.definitions?.length ?? 0) > 0) {
         text += `Label: ${code.label}\nDefinition: ${(code.definitions ?? [])[0]}`;
     }
@@ -49,7 +49,7 @@ export class NetworkEvaluator<
     /** The title of the evaluator. */
     title: string;
     /** The extra parameters for the evaluation. */
-    parameters: Record<string, any> = {};
+    parameters: Record<string, unknown> = {};
 
     /** Initialize the evaluator. */
     constructor({
@@ -61,7 +61,7 @@ export class NetworkEvaluator<
         dataset: Dataset<TUnit>;
         anonymize?: boolean;
         title?: string;
-        parameters?: Record<string, any>;
+        parameters?: Record<string, unknown>;
     }) {
         super();
         this.dataset = dataset;
@@ -106,8 +106,8 @@ export class NetworkEvaluator<
                 const value = parseFloat(fields[fields.length - 1]);
                 if (isNaN(value)) {
                     // By default, calculate weight as 1 / max(median(# of codes), sqrt(# of codes))
-                    var size = Object.keys(allCodebooks[idx]).length;
-                    return 1 / (size == 0 ? 1 : Math.sqrt(Math.max(size, medianSize)));
+                    const size = Object.keys(allCodebooks[idx]).length;
+                    return 1 / (size === 0 ? 1 : Math.sqrt(Math.max(size, medianSize)));
                 }
                 names[idx] = fields.slice(0, fields.length - 1).join("~");
                 return value;

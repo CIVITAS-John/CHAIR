@@ -7,6 +7,7 @@ import type {
 } from "@langchain/core/language_models/chat_models";
 import type { BaseMessage } from "@langchain/core/messages";
 import { HumanMessage } from "@langchain/core/messages";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatGroq } from "@langchain/groq";
 import { ChatMistralAI } from "@langchain/mistralai";
 import { ChatOllama } from "@langchain/ollama";
@@ -20,7 +21,6 @@ import { ensureFolder } from "./file.js";
 import { logger } from "./logger.js";
 import { promiseWithTimeout } from "./misc.js";
 import { tokenize } from "./tokenizer.js";
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 
 const MODELS = {
     "gpt-3.5-turbo": {
@@ -390,8 +390,9 @@ export const requestLLM = (
                     logger.debug(`[${session.llm.name}] Cache content: ${content}`);
                     // Strip the <think> tags
                     const stripped = stripThinkTags(content);
-                    if (stripped.includes("<think>"))
+                    if (stripped.includes("<think>")) {
                         throw new Error("The return content has unclosed <think> tags!");
+                    }
                     return stripped;
                 }
             }
@@ -403,8 +404,9 @@ export const requestLLM = (
         writeFileSync(cacheFile, `${input}\n===\n${result}`);
         // Strip the <think> tags
         const stripped = stripThinkTags(result);
-        if (stripped.includes("<think>"))
+        if (stripped.includes("<think>")) {
             throw new Error("The return content has unclosed <think> tags!");
+        }
         return stripped;
     });
 

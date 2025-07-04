@@ -10,7 +10,7 @@ import { getConsolidatedSize } from "./dataset.js";
 import { buildSemanticGraph } from "./graph.js";
 import type { Component, Graph } from "./schema.js";
 import type { Parameters } from "./utils.js";
-import { calculateJSD, calculateKL, calculateWSD } from "./utils.js";
+import { calculateJSD, calculateKL } from "./utils.js";
 
 /** Evaluate all codebooks based on the network structure. */
 export const evaluateCodebooks = (
@@ -67,16 +67,16 @@ export const evaluateCodebooks = (
             result.novelty += weighted * (node.novelty ?? 0);
             // For overlap, we reduce the code's own weight from the total weight, thus ignoring its own contribution
             // For grouped codebooks, we sum the weight of its component codebooks
-            var contribution = observed * cbWeights[i];
-            var potential = dataset.totalWeight!;
-            if ((dataset.groups?.[i]?.length ?? 0) > 0) {
+            let contribution = observed * cbWeights[i];
+            let potential = dataset.totalWeight ?? NaN;
+            if (dataset.groups && (dataset.groups[i]?.length ?? 0) > 0) {
                 contribution = 0;
-                for (const j of dataset.groups![i]) {
+                for (const j of dataset.groups[i]) {
                     contribution += node.weights[j] * cbWeights[j];
                     potential -= cbWeights[i];
                 }
             } else potential -= cbWeights[i];
-            var overlap = (nodeWeight - contribution) * observed;
+            const overlap = (nodeWeight - contribution) * observed;
             result.contributions += contribution;
             result.overlap += overlap;
             // for KL

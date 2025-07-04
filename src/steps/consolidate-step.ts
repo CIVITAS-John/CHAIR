@@ -119,7 +119,7 @@ export class ConsolidateStep<
                     ...Object.entries(results).reduce<Record<string, Codebook>>(
                         (acc, [analyzer, result]) => {
                             Object.entries(result).forEach(([ident, codedThreads]) => {
-                                var key = `${analyzer}-${ident}`;
+                                let key = `${analyzer}-${ident}`;
                                 if (this.config.namePattern) {
                                     key = this.config.namePattern
                                         .replace("{dataset}", dataset.name)
@@ -128,7 +128,7 @@ export class ConsolidateStep<
                                         .replace("{coder}", ident)
                                         .replace(
                                             "{coder-human}",
-                                            coder.group == "human" ? ident : "ai",
+                                            coder.group === "human" ? ident : "ai",
                                         );
                                 }
                                 if (!codedThreads.codebook) {

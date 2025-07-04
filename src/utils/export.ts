@@ -177,7 +177,7 @@ export const exportChunksForCoding = <T extends DataItem>(
                     typeof analysis === "undefined"
                         ? undefined
                         : (analysis.items[message.id] ?? analysis.items[message.id.substring(2)])
-                              ?.codes;
+                              ?.codes; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
                 message.chunk = message.chunk ?? chunk.id;
                 const columns = {
                     ID: message.id,
@@ -384,7 +384,7 @@ export const importCodes = (
         } catch (error) {
             // Build the codebook
             logger.warn(
-                `Failed to import codebook from ${path}, building one: ${error instanceof Error ? error.message + "\n" + error.stack : JSON.stringify(error)}`,
+                `Failed to import codebook from ${path}, building one: ${error instanceof Error ? `${error.message}\n${error.stack}` : JSON.stringify(error)}`,
             );
             mergeCodebook(analyses);
         }

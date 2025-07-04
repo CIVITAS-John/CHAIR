@@ -183,7 +183,7 @@ export interface CodebookComparison<T extends DataChunk<DataItem>> {
     /** The distance matrix between codes in the first codebook. */
     distances: number[][];
     /** Extra parameters for the comparison (to override defaults). */
-    parameters?: Record<string, any>;
+    parameters?: Record<string, unknown>;
 }
 
 /** CodebookEvaluation: Evaluation of a codebook. */

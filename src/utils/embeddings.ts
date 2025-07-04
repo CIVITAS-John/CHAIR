@@ -1,7 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
-import AsyncLock from "async-lock";
 
 import { TaskType } from "@google/generative-ai";
 import type { Embeddings } from "@langchain/core/embeddings";
@@ -9,6 +8,7 @@ import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { VertexAIEmbeddings } from "@langchain/google-vertexai";
 import { OllamaEmbeddings } from "@langchain/ollama";
 import { OpenAIEmbeddings } from "@langchain/openai";
+import AsyncLock from "async-lock";
 import * as dotenv from "dotenv";
 import md5 from "md5";
 
@@ -171,7 +171,7 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
         const batchSize = embedder.batchSize ?? 50;
         for (let i = 0; i < requests.length; i += batchSize) {
             let retry = 0;
-            while (true) {
+            while (retry <= 10) {
                 try {
                     // This line could debug some underlying issue behind 0 embeddings, particularly for stupid Gemini API
                     // var test = await (embedder.model as any).client.embedContent("test");
@@ -181,8 +181,9 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
                     for (let j = 0; j < res.length; j++) {
                         const idx = requests[i + j];
                         // Cull embeddings to dimensions if necessary (need matryoshka support for the model)
-                        if (res[j].length !== embedder.dimensions)
+                        if (res[j].length !== embedder.dimensions) {
                             res[j] = res[j].slice(0, embedder.dimensions);
+                        }
                         const embedding = new Float32Array(res[j]);
                         // Check if all elements are 0
                         if (embedding.every((v) => v === 0)) {
@@ -321,7 +322,7 @@ export const clusterEmbeddings = (
             throw new QAJob.ContextVarNotFoundError("embedder");
         }
         const res: Record<number, ClusterItem[]> = {};
-        var param: number[] = [];
+        let param: number[] = [];
         ensureFolder("./known");
         // Lock the file to prevent concurrent writes
         await embeddingLock.acquire("temp", async () => {
@@ -334,7 +335,7 @@ export const clusterEmbeddings = (
                 args: [embedder.dimensions.toString(), names.length.toString(), ...opts],
                 parser: (msg) => {
                     if (msg.startsWith("[")) {
-                        const data = JSON.parse(msg) as any[];
+                        const data = JSON.parse(msg) as unknown[];
                         const clusters = data[0] as number[];
                         const probs = data[1] as number[];
                         // More parameters from the algorithm if necessary

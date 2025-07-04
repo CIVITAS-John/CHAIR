@@ -722,7 +722,7 @@ const setClassForComponent = <T>(
     if (forNodes) {
         component.nodes.forEach((node) => {
             setClassForNode(node.id, className, status);
-            // SetClassForLinks(Node.ID, Class, Status, (Other) => Component.Nodes.findIndex(Node => Node.ID == Other) != -1);
+            // SetClassForLinks(Node.ID, Class, Status, (Other) => Component.Nodes.findIndex(Node => Node.ID === Other) !== -1);
         });
     }
 };

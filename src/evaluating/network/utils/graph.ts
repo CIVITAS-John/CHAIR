@@ -112,7 +112,7 @@ export const buildSemanticGraph = (
     // Calculate the weights
     for (const source of nodes) {
         for (let owner = 0; owner < allOwners; owner++) {
-            if (source.neighbors.size == 0) {
+            if (source.neighbors.size === 0) {
                 source.weights[owner] = 0;
             } else {
                 source.weights[owner] = Math.min(
@@ -145,7 +145,7 @@ export const buildSemanticGraph = (
     for (const source of nodes) {
         if ((source.soleOwner ?? -1) !== -1) {
             // Calculate novelty as 2^(-number of neighbors)
-            source.novelty = Math.pow(2, -source.neighbors.size);
+            source.novelty = 2 ** -source.neighbors.size;
         } else {
             source.novelty = 0;
         }

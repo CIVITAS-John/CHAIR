@@ -19,7 +19,7 @@ export interface EvaluateStepConfig<
     subdir?: string; // Defaults to "evaluation"
     ignoreGroups?: boolean; // Defaults to false
     anonymize?: boolean; // Defaults to true
-    parameters?: Record<string, any>; // Extra parameters for the evaluation
+    parameters?: Record<string, unknown>; // Extra parameters for the evaluation
 }
 
 export class EvaluateStep<

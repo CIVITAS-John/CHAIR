@@ -113,21 +113,23 @@ export class DefinitionGenerator extends DefinitionParser {
     /** Parse the response for the code consolidator. */
     override async parseResponse(codebook: Codebook, codes: Code[], lines: string[]) {
         // Filter has to happen here, otherwise some codes will get omitted
-        const oldcodes = codes.filter((Code) => (Code.definitions?.length ?? 0) == 0);
+        const oldcodes = codes.filter((Code) => (Code.definitions?.length ?? 0) === 0);
         const result = await super.parseResponse(codebook, oldcodes, lines);
         logger.debug(
             `Generated ${oldcodes.filter((Code) => (Code.definitions?.length ?? 0) > 0).length} definitions for ${oldcodes.length} codes (${codes.length} in total), cursor movement ${result}.`,
         );
-        if (result > 0) debugger;
         return result;
     }
 
     /** Postprocess the subunits after everything is done. */
     override postprocess(subunits: Code[]): Promise<Code[]> {
-        var mergedCodes = subunits.filter((Code) => (Code.oldLabels?.length ?? 0) > 0);
-        var mergedCount = mergedCodes.reduce((acc, Code) => acc + (Code.oldLabels?.length ?? 0), 0);
+        const mergedCodes = subunits.filter((Code) => (Code.oldLabels?.length ?? 0) > 0);
+        const mergedCount = mergedCodes.reduce(
+            (acc, Code) => acc + (Code.oldLabels?.length ?? 0),
+            0,
+        );
         logger.success(
-            `Generated ${subunits.filter((Code) => (Code.definitions?.length ?? 0) > 0).length} definitions for ${subunits.length} codes, with ${subunits.filter((Code) => Code.label == "[Merged]").length} implicitly merged. Sanity check: ${mergedCodes.length} codes merged ${mergedCount}.`,
+            `Generated ${subunits.filter((Code) => (Code.definitions?.length ?? 0) > 0).length} definitions for ${subunits.length} codes, with ${subunits.filter((Code) => Code.label === "[Merged]").length} implicitly merged. Sanity check: ${mergedCodes.length} codes merged ${mergedCount}.`,
         );
         return super.postprocess(subunits);
     }
@@ -135,7 +137,7 @@ export class DefinitionGenerator extends DefinitionParser {
     /** Build the prompts for the code consolidator. */
     override buildPrompts(_codebook: Codebook, codes: Code[]): Promise<[string, string]> {
         const { dataset } = BaseStep.Context.get();
-        codes = codes.filter((Code) => (Code.definitions?.length ?? 0) == 0);
+        codes = codes.filter((Code) => (Code.definitions?.length ?? 0) === 0);
         // Generate definitions for codes
         return Promise.resolve([
             `
