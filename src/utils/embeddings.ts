@@ -171,7 +171,7 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
         const batchSize = embedder.batchSize ?? 50;
         for (let i = 0; i < requests.length; i += batchSize) {
             let retry = 0;
-            while (retry <= 10) {
+            while (retry < 10) {
                 try {
                     // This line could debug some underlying issue behind 0 embeddings, particularly for stupid Gemini API
                     // var test = await (embedder.model as any).client.embedContent("test");
