@@ -5,8 +5,6 @@ A penalty is applied to the relative size (e.g. numbers of examples or codes) of
 
 import json
 import sys
-from PyQt6.QtWidgets import (QApplication, QDialog, QDoubleSpinBox, 
-                           QVBoxLayout, QLabel, QDialogButtonBox, QWidget)
 
 import matplotlib.pyplot as plt
 import numpy as np
