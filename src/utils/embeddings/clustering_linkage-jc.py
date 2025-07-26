@@ -65,51 +65,43 @@ if interactive != False:
 
     # Set the window title
     fig.canvas.manager.set_window_title(interactive)
-
+    
     # Left plot - histogram
     ax_hist = fig.add_subplot(gs[0])
-    instruction_text = fig.text(
-        0.1,
-        0.9,
-        "Click to set max distance (red line)\nPress Enter to confirm the choices",
-        fontsize=10,
-        va="top",
-    )
-
+    instruction_text = fig.text(0.1, 0.9, "Click to set max distance (red line)\nPress Enter to confirm the choices", 
+                              fontsize=10, va='top')
+    
     # Filter and plot histogram as before
     vis_distances = distances[distances < 1]
     vis_distances = vis_distances[vis_distances > 0]
     ax_hist.hist(vis_distances.flatten(), bins=70, log=True)
     ax_hist.set_xlabel("Distance")
     ax_hist.set_ylabel("Log Frequency")
-    ax_hist.set_title(
-        "Distribution of Code Distances\n0 = Identical, 2 = Vastly Different",
-        loc="right",
-        pad=10,
-    )
-
+    ax_hist.set_title("Distribution of Code Distances\n0 = Identical, 2 = Vastly Different",
+                     loc='right', pad=10)
+    
     # Initialize lines
-    max_line = ax_hist.axvline(max_dist, color="red", linestyle="--", label="Max")
-    min_line = ax_hist.axvline(min_dist, color="blue", linestyle="--", label="Min")
+    max_line = ax_hist.axvline(max_dist, color='red', linestyle='--', label='Max')
+    min_line = ax_hist.axvline(min_dist, color='blue', linestyle='--', label='Min')
     ax_hist.legend()
 
     # Right side - tables
     ax_tables = fig.add_subplot(gs[1])
-    ax_tables.axis("off")
+    ax_tables.axis('off')
 
     def update_tables():
         ax_tables.clear()
-        ax_tables.axis("off")
-
+        ax_tables.axis('off')
+        
         # Get pairs around thresholds
         pairs = []
         for i in range(items):
             for j in range(i + 1, items):
                 pairs.append((i, j, distances[i][j]))
-
+        
         # Sort by distance
         pairs.sort(key=lambda x: -x[2])
-
+        
         # Find pairs around max/min thresholds
         max_pairs = []
         min_pairs = []
@@ -126,62 +118,45 @@ if interactive != False:
         min_table_data = min_pairs[:10]
 
         # Handle case where there are no pairs
-        if len(max_table_data) == 0:
+        if (len(max_table_data) == 0):
             max_table_data = [("No pairs found", "", "")]
-        if len(min_table_data) == 0:
+        if (len(min_table_data) == 0):
             min_table_data = [("No pairs found", "", "")]
 
         # Add tables
-        ax_tables.text(
-            0.05,
-            1,
-            f"Pairs Near Max Threshold = {max_dist:.2f}",
-            fontsize=12,
-            fontweight="bold",
-        )
-        ax_tables.text(
-            0.05,
-            0.97,
-            "Codes under the threshold can be merged when examples are similar",
-            fontsize=10,
-        )
+        ax_tables.text(0.05, 1, f"Pairs Near Max Threshold = {max_dist:.2f}", fontsize=12, fontweight='bold')
+        ax_tables.text(0.05, 0.97, "Codes under the threshold can be merged when examples are similar", 
+                      fontsize=10)
         max_table = ax_tables.table(
             cellText=max_table_data,
-            colLabels=["Code 1", "Code 2", "Dist"],
-            loc="top",
-            cellLoc="left",
+            colLabels=['Code 1', 'Code 2', 'Dist'],
+            loc='top',
+            cellLoc='left',
             bbox=[0.05, 0.55, 0.9, 0.4],
-            colWidths=[0.45, 0.45, 0.1],
+            colWidths=[0.45, 0.45, 0.1]
         )
         max_table.auto_set_font_size(False)
         max_table.set_fontsize(9)
-
+        
         # Adjust cell padding for max_table
         for cell in max_table._cells.values():
             cell.PAD = 0.02
 
-        ax_tables.text(
-            0.05,
-            0.5,
-            f"Pairs Near Min Threshold = {min_dist:.2f}",
-            fontsize=12,
-            fontweight="bold",
-        )
-        ax_tables.text(
-            0.05, 0.47, "Codes under the threshold will always be merged", fontsize=10
-        )
+        ax_tables.text(0.05, 0.5, f"Pairs Near Min Threshold = {min_dist:.2f}", fontsize=12, fontweight='bold')
+        ax_tables.text(0.05, 0.47, "Codes under the threshold will always be merged", 
+                      fontsize=10)
 
         min_table = ax_tables.table(
             cellText=min_table_data,
-            colLabels=["Code 1", "Code 2", "Dist"],
-            loc="top",
-            cellLoc="left",
+            colLabels=['Code 1', 'Code 2', 'Dist'],
+            loc='top',
+            cellLoc='left',
             bbox=[0.05, 0.05, 0.9, 0.4],
-            colWidths=[0.45, 0.45, 0.1],
+            colWidths=[0.45, 0.45, 0.1]
         )
         min_table.auto_set_font_size(False)
         min_table.set_fontsize(9)
-
+        
         # Adjust cell padding for max_table
         for cell in min_table._cells.values():
             cell.PAD = 0.02
@@ -190,32 +165,27 @@ if interactive != False:
 
     # Key event handler to close the plot
     def onkey(event):
-        if event.key == "enter":
+        if event.key == 'enter':
             plt.close()
 
     # Update click handler to refresh tables
     update_max = True  # Start with max threshold
-
     def onclick(event):
         global max_dist, min_dist, update_max
         if event.inaxes != ax_hist:
             return
-
+        
         if update_max:
             max_dist = round(event.xdata, 2)
             max_dist = max(max_dist, min_dist)
             max_line.set_xdata([max_dist, max_dist])
-            instruction_text.set_text(
-                "Click to set min threshold (blue line)\nPress Enter to confirm the choices"
-            )
+            instruction_text.set_text("Click to set min threshold (blue line)\nPress Enter to confirm the choices")
         else:
             min_dist = round(event.xdata, 2)
             min_dist = min(min_dist, max_dist)
             min_line.set_xdata([min_dist, min_dist])
-            instruction_text.set_text(
-                "Click to set max threshold (red line)\nPress Enter to confirm the choices"
-            )
-
+            instruction_text.set_text("Click to set max threshold (red line)\nPress Enter to confirm the choices")
+        
         update_max = not update_max
         update_tables()
 
@@ -223,9 +193,9 @@ if interactive != False:
     update_tables()
 
     # Connect the event handlers
-    fig.canvas.mpl_connect("button_press_event", onclick)
-    fig.canvas.mpl_connect("key_press_event", onkey)
-
+    fig.canvas.mpl_connect('button_press_event', onclick)
+    fig.canvas.mpl_connect('key_press_event', onkey)
+    
     # Show the plot
     plt.tight_layout()
     plt.subplots_adjust(top=0.85)
@@ -234,7 +204,7 @@ if interactive != False:
 # Print the hyperparameters
 g_penalty = max_dist - min_dist
 print(
-    "Hyperparameters - Max Distance:",
+    'Hyperparameters - Max Distance:',
     max_dist,
     ", MinDistance:",
     min_dist,
@@ -249,13 +219,11 @@ max_size = avg_size * 3
 penalty_coff = max_size - avg_size
 print("Average size:", avg_size, ", Max penalty size:", max_size)
 
-
 def count_merged(code1, code2):
     """Calculate the unique differences of examples after merged."""
     return len(examples[code1] - examples[code2]) / len(
         examples[code1] | examples[code2]
     )
-
 
 # Calculate the penalty on the distance based on number of differences
 for i in range(items):
@@ -271,7 +239,6 @@ root = to_tree(linkages)
 
 tree_examples = {}
 
-
 # Pre-traverse the tree to get the sizes of the leaves and compile the examples
 def pre_traverse(node):
     """Pre-traverse the tree for bottom-up depth (leaf = size of the leaf, root = total_size)."""
@@ -282,7 +249,6 @@ def pre_traverse(node):
     )
     return tree_examples[node.id]
 
-
 total_size = len(pre_traverse(root))
 
 # Default cluster: -1, 100%
@@ -290,7 +256,6 @@ cluster_index = 0
 clusters = np.full(items, -1)
 probs = np.full(items, 1.0)
 colors = {}
-
 
 # Traverse the tree
 def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
@@ -318,7 +283,6 @@ def traverse(node, depth, cluster=-1, prob=1, color="#cccccc"):
     return traverse(node.get_left(), depth + 1, cluster, prob, color) + traverse(
         node.get_right(), depth + 1, cluster, prob, color
     )
-
 
 nodes = traverse(root, 0)
 
