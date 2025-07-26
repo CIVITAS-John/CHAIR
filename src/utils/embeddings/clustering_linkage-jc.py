@@ -22,8 +22,7 @@ metrics = sys.argv[3] if len(sys.argv) > 3 else "euclidean"
 linkage_mtd = sys.argv[4] if len(sys.argv) > 4 else "ward"
 max_dist = float(sys.argv[5]) if len(sys.argv) > 5 else 0.6
 min_dist = float(sys.argv[6]) if len(sys.argv) > 6 else 0.4
-interactive = sys.argv[7] if len(sys.argv) > 7 else False
-interactive = False if interactive == "false" else interactive
+interactive = sys.argv[7].lower() == "true" if len(sys.argv) > 7 else False
 tar_dims = int(sys.argv[8]) if len(sys.argv) > 8 else dims
 plotting = sys.argv[9] == "True" if len(sys.argv) > 9 else False
 
