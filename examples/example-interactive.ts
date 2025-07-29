@@ -11,7 +11,7 @@ import { LoadStep } from "../src/steps/load-step.js";
 import { logger } from "../src/utils/logger.js";
 
 const load = new LoadStep({
-    path: "./examples/data",
+    path: "./examples/docx-data",
 });
 
 const code = new CodeStep({
