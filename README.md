@@ -6,13 +6,13 @@ A comprehensive library for conducting inductive qualitative data analysis using
 
 This tool provides a complete pipeline for inductive qualitative data analysis, featuring:
 
-- **Multi-step Analysis Pipeline**: Load, code, consolidate, and evaluate qualitative data
+- **Flexible Data Input**: Support for text files, Word documents, and structured data formats
 - **AI-Powered Coding**: Support for multiple LLM providers (OpenAI, Google, Anthropic, Groq, Ollama, etc.)
-- **Human-AI Collaboration**: Interactive and automatic modes for coding and consolidation
 - **Multiple Coding Strategies**: Item-level, chunk-level, and specialized analysis approaches
+- **Human-AI Collaboration**: Interactive and automatic modes for coding and consolidation
 - **Advanced Consolidation**: Smart merging and refinement of coding results
 - **Evaluation Framework**: Network-based evaluation and visualization tools
-- **Flexible Data Input**: Support for text files, Word documents, and structured data formats
+- **Multi-step Analysis Pipeline**: Complete Load → Code → Consolidate → Evaluate workflow
 
 ## Analysis Pipeline
 
@@ -57,27 +57,20 @@ cd LLM-Qualitative-Analysis
 ./setup.sh  # or setup.bat on Windows
 ```
 
-## Project Structure
+### Running Example Analysis
 
+After installation, you can run the provided examples to see the framework in action:
+
+```bash
+# Build the project with examples
+pnpm run build:examples
+
+# Run automatic analysis (processes txt-data)
+node out/examples/example-automatic.js
+
+# Run interactive analysis (processes docx-data with user input)
+node out/examples/example-interactive.js
 ```
-src/
-├── coding/           # Analysis strategies and implementations
-├── consolidating/    # Code merging and consolidation logic
-├── evaluating/       # Evaluation metrics and visualization
-├── steps/           # Pipeline step definitions
-├── utils/           # Utilities for LLMs, embeddings, file 
-examples/            # Example configurations and data
-```
-
-## Configuration
-
-The framework supports extensive configuration options:
-
-- **LLM Models**: OpenAI GPT, Google Gemini, Anthropic Claude, Groq, Ollama, MistralAI
-- **Embedders**: OpenAI embeddings, local models, custom implementations
-- **Data Formats**: Plain text, Word documents, structured JSON/Excel
-- **Analysis Modes**: Automatic, interactive, hybrid approaches
-- **Parallel Processing**: Multi-threaded execution for large datasets
 
 ## Development
 
@@ -94,9 +87,16 @@ pnpm run lint         # Run ESLint and Prettier
 pnpm run format       # Auto-fix formatting issues
 ```
 
-### Documentation
-```bash
-pnpm run docs         # Generate TypeDoc documentation
+### Project Structure
+
+```
+src/
+├── coding/           # Analysis strategies and implementations
+├── consolidating/    # Code merging and consolidation logic
+├── evaluating/       # Evaluation metrics and visualization
+├── steps/           # Pipeline step definitions
+├── utils/           # Utilities for LLMs, embeddings, file 
+examples/            # Example configurations and data
 ```
 
 ## Contributing
@@ -114,6 +114,16 @@ This project is licensed under the Creative Commons Attribution-NonCommercial 4.
 
 If you use this software in your research, please cite:
 
+```bibtex
+@software{chen2024generating,
+  title={Generating and Evaluating Inductive Qualitative Coding Results through Human-AI Collaboration},
+  author={Chen, John and Zhang, Yanjia and Cheng, Sihan},
+  year={2024},
+  institution={Northwestern University},
+  url={https://github.com/CIVITAS-John/LLM-Qualitative-Analysis}
+}
+```
+
 ## Support
 
 - 📖 See [TUTORIAL.md](TUTORIAL.md) for detailed setup and usage instructions
@@ -122,6 +132,6 @@ If you use this software in your research, please cite:
 
 ## Contributors
 
-- **John Chen** - [civitas@u.northwestern.edu](mailto:civitas@u.northwestern.edu)
-- **Frank Zhang** - [fzhang@u.northwestern.edu](mailto:fzhang@u.northwestern.edu)
-- **Sihan Cheng** - [fzhang@u.northwestern.edu](mailto:fzhang@u.northwestern.edu)
+- **John Chen**, Northwestern University - [civitas@u.northwestern.edu](mailto:civitas@u.northwestern.edu)
+- **Yanjia Zhang**, Northwestern University - [fzhang@u.northwestern.edu](mailto:fzhang@u.northwestern.edu)
+- **Sihan Cheng**, Northwestern University - [sihancheng2026@u.northwestern.edu](mailto:sihancheng2026@u.northwestern.edu)

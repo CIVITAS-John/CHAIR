@@ -82,26 +82,6 @@ const job = new QAJob(config);
 await job.execute();
 ```
 
-## Development Commands
-
-### Building
-```bash
-pnpm run build        # Build main project
-pnpm run build:examples    # Build with examples
-pnpm run build:workspaces  # Build with workspaces
-```
-
-### Code Quality
-```bash
-pnpm run lint         # Run ESLint and Prettier
-pnpm run format       # Auto-fix formatting issues
-```
-
-### Documentation
-```bash
-pnpm run docs         # Generate TypeDoc documentation
-```
-
 ## Troubleshooting
 
 ### Common Issues
