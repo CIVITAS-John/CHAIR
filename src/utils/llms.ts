@@ -441,7 +441,7 @@ export const requestLLMWithoutCache = (
                     .then((res) => {
                         text = res.content as string;
                     }),
-                llm.name.startsWith("o_") ? 3600000 : 300000,
+                llm.local ? 3600000 : 300000,
             );
         }
         const input = messages

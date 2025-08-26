@@ -126,7 +126,7 @@ If you use this software in your research, please cite:
 
 ## Support
 
-- 📖 See [TUTORIAL.md](TUTORIAL.md) for detailed setup and usage instructions
+- 📖 See [TUTORIAL.md](docs/TUTORIAL.md) for detailed setup and usage instructions
 - 🐛 Report issues on [GitHub Issues](https://github.com/CIVITAS-John/LLM-Qualitative-Analysis/issues)
 - 💬 Join discussions in [GitHub Discussions](https://github.com/CIVITAS-John/LLM-Qualitative-Analysis/discussions)
 
