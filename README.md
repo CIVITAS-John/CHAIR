@@ -1,10 +1,10 @@
-# LLM Qualitative Analysis
+# CHAIR: A Library for **C**ollaborative **H**uman-**AI** **I**nductive **R**esearch
 
-A comprehensive library for conducting inductive qualitative data analysis using Large Language Models (LLMs) and human-AI collaboration.
+CHAIR is a comprehensive library for conducting inductive qualitative data analysis using Large Language Models (LLMs) and human-AI collaboration.
 
 ## Overview
 
-This tool provides a complete pipeline for inductive qualitative data analysis, featuring:
+CHAIR provides a complete pipeline for inductive qualitative data analysis, featuring:
 
 - **Flexible Data Input**: Support for text files, Word documents, and structured data formats
 - **AI-Powered Coding**: Support for multiple LLM providers (OpenAI, Google, Anthropic, Groq, Ollama, etc.)
@@ -108,17 +108,17 @@ examples/            # Example configurations and data
 
 ## License
 
-This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License. See [LICENSE.md](LICENSE.md) for details.
+CHAIR is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License. See [LICENSE.md](LICENSE.md) for details.
 
 ## Citation
 
 If you use this software in your research, please cite:
 
 ```bibtex
-@software{chen2024generating,
-  title={Generating and Evaluating Inductive Qualitative Coding Results through Human-AI Collaboration},
+@software{chen2025chair,
+  title={CHAIR: A Library for Collaborative Human-AI Inductive Qualitative Research},
   author={Chen, John and Zhang, Yanjia and Cheng, Sihan},
-  year={2024},
+  year={2025},
   institution={Northwestern University},
   url={https://github.com/CIVITAS-John/LLM-Qualitative-Analysis}
 }
