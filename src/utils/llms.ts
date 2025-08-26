@@ -224,6 +224,7 @@ export interface LLMObject {
     maxInput: number;
     maxOutput: number;
     maxItems: number;
+    local?: boolean;
     systemMessage?: boolean;
 }
 export interface OllamaLLMOptions {
@@ -268,6 +269,7 @@ export const initOllamaLLM = (options: OllamaLLMOptions): LLMObject => {
         maxOutput: options.maxOutput ?? 8192,
         maxItems: options.maxItems ?? 32,
         systemMessage: options.systemMessage ?? true,
+        local: true,
     };
 };
 

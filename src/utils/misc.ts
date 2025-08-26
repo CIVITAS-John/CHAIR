@@ -40,7 +40,7 @@ export const parseDateTime = (datetime: string) => {
     }
     const date = new Date(datetime);
     if (isNaN(date.getTime())) {
-        throw new Error(`Invalid datetime: ${datetime}`);
+        return new Date("1970-01-01T00:00:00Z");
     }
     return date;
 };

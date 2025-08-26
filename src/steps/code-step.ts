@@ -6,7 +6,7 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import open from "open";
 
 import { Analyzer, loopThroughChunk } from "../analyzer.js";
-import { mergeCodebook } from "../consolidating/codebooks.js";
+import { buildCodes, mergeCodebook } from "../consolidating/codebooks.js";
 import type { CodedThread, CodedThreads, DataChunk, DataItem, Dataset } from "../schema.js";
 import { exportChunksForCoding, importCodes } from "../utils/export.js";
 import { ensureFolder, readJSONFile } from "../utils/file.js";
@@ -416,6 +416,10 @@ export class CodeStep<
                     const analyses: CodedThreads = readJSONFile(path);
                     if (!("threads" in analyses)) {
                         throw new CodeStep.ConfigError(`Invalid JSON code file: ${path}`);
+                    }
+                    if (!analyses.codebook) {
+                        buildCodes(dataset, analyses);
+                        mergeCodebook(analyses);
                     }
                     logger.info(`[${dataset.name}] Loaded codes via JSON from ${path}`);
                     return analyses;

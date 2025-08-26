@@ -1,12 +1,41 @@
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 import { loopThroughChunk } from "../analyzer.js";
-import type { Code, Codebook, CodedThreads, CodedThreadsWithCodebook } from "../schema.js";
+import type { Code, Codebook, CodedThreads, CodedThreadsWithCodebook, DataChunk, DataItem, Dataset } from "../schema.js";
 import type { ClusterItem } from "../utils/embeddings.js";
 import { requestLLM } from "../utils/llms.js";
 import { logger } from "../utils/logger.js";
 
 import { CodebookConsolidator } from "./consolidator.js";
+import { assembleExampleFrom, getAllItems } from "../utils/misc.js";
+
+/** Build the list of codes from raw analyses. */
+export const buildCodes = <T>(dataset: Dataset<DataChunk<DataItem>>, analyses: CodedThreads): CodedThreads => {
+    const allItems = getAllItems(dataset);
+    for (const analysis of Object.values(analyses.threads)) {
+        if (analysis.codes) continue;
+        analysis.codes = {};
+        for (const item of Object.values(analysis.items)) {
+            if (!item.codes) continue;
+            for (const code of item.codes) {
+                const current: Code = analysis.codes[code] ?? { label: code, examples: [] };
+                analysis.codes[code] = current;
+                // find the message
+                const message = allItems.find((pending) => item.id === pending.id);
+                if (!message) {
+                    logger.warn(`Message ${item.id} not found in chunk ${analysis.id}`);
+                    continue;
+                }
+                // assemble the message
+                const contentWithID = assembleExampleFrom(dataset, message);
+                if (message.content !== "" && !current.examples?.includes(contentWithID)) {
+                    current.examples?.push(contentWithID);
+                }
+            }
+        }
+    }
+    return analyses;
+}
 
 /** Simply merge the codebooks without further consolidating. */
 export const mergeCodebook = (analyses: CodedThreads): CodedThreadsWithCodebook => {
