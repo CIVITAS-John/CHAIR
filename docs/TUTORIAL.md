@@ -11,8 +11,8 @@ Complete setup and usage guide for conducting inductive qualitative data analysi
 ### Quick Setup
 1. Clone the repository:
 ```bash
-git clone https://github.com/CIVITAS-John/LLM-Qualitative-Analysis.git
-cd LLM-Qualitative-Analysis
+git clone https://github.com/CIVITAS-John/CHAIR.git
+cd CHAIR
 ```
 
 2. Run the setup script:
@@ -91,5 +91,5 @@ await job.execute();
 - **Build Errors**: Run `pnpm run build` after making changes
 
 ### Getting Help
-- 🐛 Report issues on [GitHub Issues](https://github.com/CIVITAS-John/LLM-Qualitative-Analysis/issues)
-- 💬 Join discussions in [GitHub Discussions](https://github.com/CIVITAS-John/LLM-Qualitative-Analysis/discussions)
+- 🐛 Report issues on [GitHub Issues](https://github.com/CIVITAS-John/CHAIR/issues)
+- 💬 Join discussions in [GitHub Discussions](https://github.com/CIVITAS-John/CHAIR/discussions)

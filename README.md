@@ -52,8 +52,8 @@ Assess and visualize results:
 
 ### Installation
 ```bash
-git clone https://github.com/CIVITAS-John/LLM-Qualitative-Analysis.git
-cd LLM-Qualitative-Analysis
+git clone https://github.com/CIVITAS-John/CHAIR.git
+cd CHAIR
 ./setup.sh  # or setup.bat on Windows
 ```
 
@@ -120,15 +120,15 @@ If you use this software in your research, please cite:
   author={Chen, John and Zhang, Yanjia and Cheng, Sihan},
   year={2025},
   institution={Northwestern University},
-  url={https://github.com/CIVITAS-John/LLM-Qualitative-Analysis}
+  url={https://github.com/CIVITAS-John/CHAIR}
 }
 ```
 
 ## Support
 
 - 📖 See [TUTORIAL.md](docs/TUTORIAL.md) for detailed setup and usage instructions
-- 🐛 Report issues on [GitHub Issues](https://github.com/CIVITAS-John/LLM-Qualitative-Analysis/issues)
-- 💬 Join discussions in [GitHub Discussions](https://github.com/CIVITAS-John/LLM-Qualitative-Analysis/discussions)
+- 🐛 Report issues on [GitHub Issues](https://github.com/CIVITAS-John/CHAIR/issues)
+- 💬 Join discussions in [GitHub Discussions](https://github.com/CIVITAS-John/CHAIR/discussions)
 
 ## Contributors
 
