@@ -54,8 +54,21 @@ Assess and visualize results:
 ```bash
 git clone https://github.com/CIVITAS-John/CHAIR.git
 cd CHAIR
-./setup.sh  # or setup.bat on Windows
+
+# Windows
+scripts\setup.bat
+
+# Unix/Mac
+./scripts/setup.sh
 ```
+
+The setup script will:
+- Check Node.js installation (v20+)
+- Create .env file with API keys
+- Install Node.js dependencies
+- Build the project
+- Setup Python virtual environment
+- Install Python dependencies
 
 ### Running Example Analysis
 
@@ -63,7 +76,7 @@ After installation, you can run the provided examples to see the framework in ac
 
 ```bash
 # Build the project with examples
-pnpm run build:examples
+npm run build:examples
 
 # Run automatic analysis (processes txt-data)
 node out/examples/example-automatic.js
@@ -76,15 +89,15 @@ node out/examples/example-interactive.js
 
 ### Building
 ```bash
-pnpm run build        # Build main project
-pnpm run build:examples    # Build with examples
-pnpm run build:workspaces  # Build with workspaces
+npm run build             # Build main project
+npm run build:examples    # Build with examples
+npm run build:workspaces  # Build with workspaces
 ```
 
 ### Code Quality
 ```bash
-pnpm run lint         # Run ESLint and Prettier
-pnpm run format       # Auto-fix formatting issues
+npm run lint         # Run ESLint and Prettier
+npm run format       # Auto-fix formatting issues
 ```
 
 ### Project Structure

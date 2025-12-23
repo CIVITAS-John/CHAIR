@@ -12,9 +12,9 @@
         "build:main": "tsc -p tsconfig.json",
         "build:network": "tsc -p src/evaluating/network/tsconfig.json",
         "copy:python": "copyfiles -u 1 \"src/**/*.py\" dist/",
-        "build": "pnpm run clean && pnpm run build:main && pnpm run build:network && pnpm run copy:python",
-        "build:examples": "pnpm run clean && pnpm run build:network && pnpm run copy:python && tsc -p examples/tsconfig.json && copyfiles -u 1 \"src/**/*.py\" out/src/ && copyfiles -u 1 \"dist/evaluating/network/**/*.*\" out/src/evaluating/network/",
-        "build:workspaces": "pnpm run clean && pnpm run build:network && pnpm run copy:python && tsc -p workspaces/tsconfig.json && copyfiles -u 1 \"src/**/*.py\" out/src/ && copyfiles -u 1 \"dist/evaluating/network/**/*.*\" out/src/evaluating/network/",
+        "build": "npm run clean && npm run build:main && npm run build:network && npm run copy:python",
+        "build:examples": "npm run clean && npm run build:network && npm run copy:python && tsc -p examples/tsconfig.json && copyfiles -u 1 \"src/**/*.py\" out/src/ && copyfiles -u 1 \"dist/evaluating/network/**/*.*\" out/src/evaluating/network/",
+        "build:workspaces": "npm run clean && npm run build:network && npm run copy:python && tsc -p workspaces/tsconfig.json && copyfiles -u 1 \"src/**/*.py\" out/src/ && copyfiles -u 1 \"dist/evaluating/network/**/*.*\" out/src/evaluating/network/",
         "lint": "eslint --cache . && prettier --check --cache .",
         "format": "eslint --fix --cache . && prettier --write --cache .",
         "docs": "typedoc"
@@ -110,13 +110,5 @@
         "typedoc-plugin-missing-exports": "^4.0.0",
         "typescript": "^5.8.3",
         "typescript-eslint": "^8.35.1"
-    },
-    "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad",
-    "pnpm": {
-        "onlyBuiltDependencies": [
-            "esbuild",
-            "protobufjs",
-            "unrs-resolver"
-        ]
     }
 }
