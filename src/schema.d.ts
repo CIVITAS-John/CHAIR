@@ -1,39 +1,48 @@
-/** An item in a dataset (e.g. a message). */
+/**
+ * Represents a single data item in a dataset (e.g., a message, comment, or post).
+ * This is the atomic unit of analysis in the qualitative coding process.
+ */
 export interface DataItem {
-    /** The ID of the item. */
+    /** Unique identifier for this item */
     id: string;
-    /** The sender ID of the item. */
+    /** User ID of the item's sender/author */
     uid: string;
-    /** The nickname of the sender. */
+    /** Display name of the sender */
     nickname: string;
-    /** The time the item was sent. */
+    /** Timestamp when the item was created */
     time: Date;
-    /** The content of the item. */
+    /** The actual text/content of the item */
     content: string;
-    /** The chunk id of the item. */
+    /** Optional chunk ID for grouping related items */
     chunk?: string;
-    /** The participants that this item mentioned. */
+    /** User IDs mentioned in this item */
     mentions?: string[];
-    /** Extra qualitative tags on the item. */
+    /** Additional qualitative tags applied to this item */
     tags?: string[];
 }
 
-/** An unloaded JSON representation of a data item. */
+/**
+ * JSON-serializable version of DataItem with time as string instead of Date
+ */
 export interface RawDataItem extends DataItem {
     time: string;
 }
 
-/** A chunk of data items. */
+/**
+ * Groups related data items together for analysis.
+ * Chunks can contain items or nested chunks for hierarchical organization.
+ * @template T - Type of data items contained in the chunk
+ */
 export interface DataChunk<T extends DataItem> {
-    /** The ID of the chunk. */
+    /** Unique identifier for this chunk */
     id: string;
-    /** The beginning time of the chunk. */
+    /** Start timestamp of the chunk's time range */
     start: Date;
-    /** The ending time of the chunk. */
+    /** End timestamp of the chunk's time range */
     end: Date;
-    /** Data items in the chunk. */
+    /** Array of items or sub-chunks contained in this chunk */
     items: (T | DataChunk<T>)[];
-    /** The participants that this chunk mentioned. */
+    /** Aggregated list of all user IDs mentioned in this chunk */
     mentions?: string[];
 }
 
@@ -44,25 +53,29 @@ export interface RawDataChunk extends DataChunk<RawDataItem> {
     items: (RawDataItem | RawDataChunk)[];
 }
 
-/** A dataset for qualitative analysis. */
+/**
+ * Complete dataset structure for qualitative analysis.
+ * Contains metadata, research context, and the actual data chunks.
+ * @template T - Type of data chunks in the dataset
+ */
 export interface Dataset<T extends DataChunk> {
-    /** The path to the dataset. */
+    /** File system path to the dataset */
     path: string;
-    /** The name of the dataset (path-friendly). */
+    /** Filesystem-safe identifier for the dataset */
     name: string;
-    /** The title of the dataset. */
+    /** Human-readable title for the dataset */
     title: string;
-    /** The description of the dataset. */
+    /** Detailed description of what this dataset contains */
     description: string;
-    /** The research question of the dataset. */
+    /** The main research question being investigated */
     researchQuestion: string;
-    /** The coding notes of the dataset. */
+    /** Additional notes/guidelines for coding this dataset */
     codingNotes: string;
-    /** The data chunks in the dataset. */
+    /** Nested structure of data chunks organized by category and ID */
     data: Record<string, Record<string, T>>;
-    /** Get the speaker name from the user ID. */
+    /** Maps user ID to their display name */
     getSpeakerName: (uid: string) => string;
-    /** Get the speaker name (in example only) from the user ID. */
+    /** Maps user ID to anonymized name for examples */
     getSpeakerNameForExample: (uid: string) => string;
 }
 
@@ -73,120 +86,145 @@ export interface RawDataset extends Omit<Dataset<RawDataChunk>, "path"> {
     getSpeakerNameForExample?: (uid: string) => string;
 }
 
-/** A qualitative code. */
+/**
+ * Represents a qualitative code used for categorizing data.
+ * Codes are the fundamental units of meaning in qualitative analysis.
+ */
 export interface Code {
-    /** The label of the code. */
+    /** Primary label/name for this code */
     label: string;
-    /** Categories of the code. */
+    /** Higher-level categories this code belongs to */
     categories?: string[];
-    /** Definitions of the code. */
+    /** Clear definitions explaining what this code represents */
     definitions?: string[];
-    /** Examples of the code. */
+    /** Example text snippets that exemplify this code */
     examples?: string[];
-    /** Alternative labels of the code. */
+    /** Other names/labels that could refer to the same concept */
     alternatives?: string[];
-    /** Temporary, old labels of the code. Only used in consolidation. */
+    /** Previous labels used during consolidation (temporary) */
     oldLabels?: string[];
-    /** Owner codebooks of the code. Only used in evaluation. */
+    /** IDs of codebooks containing this code (evaluation only) */
     owners?: number[];
-    /** Visual position of the code. Only used in evaluation. */
+    /** X,Y coordinates for visualization (evaluation only) */
     position?: [number, number];
 }
 
-/** Codebook: A codebook for the qualitative codes. */
+/**
+ * Collection of codes forming a complete coding scheme.
+ * Maps code labels to their full definitions.
+ */
 export type Codebook = Record<string, Code>;
 
 /**
- * A qualitatively coded item (e.g. a comment, a message).
- * Depending on the context, each prompt/ways of coding may use some or all of the following fields.
+ * Represents a single coded data item with associated qualitative codes.
+ * This is the result of applying codes to individual data items.
  */
 export interface CodedItem {
-    /** The ID of the item. */
+    /** Unique identifier matching the original data item */
     id: string;
-    /** Qualitative codes on the item. */
+    /** Array of code labels applied to this item */
     codes?: string[];
 }
 
 /**
- * A qualitatively coded thread (e.g. a project, a conversation).
- * Depending on the context, each prompt/ways of coding may use some or all of the following fields.
+ * Represents a complete coded thread/conversation with metadata.
+ * Contains all coded items plus analysis context and summary information.
  */
 export interface CodedThread {
-    /** The ID of the item. */
+    /** Unique identifier for the thread */
     id: string;
-    /** Summary of the thread. */
+    /** High-level summary of the thread content */
     summary?: string;
-    /** Plans before the coding. */
+    /** Initial analysis plan before coding began */
     plan?: string;
-    /** Reflections after the coding. */
+    /** Post-coding reflections and insights */
     reflection?: string;
-    /** The codes used in the coding. */
+    /** Complete codebook used for this thread */
     codes: Codebook;
-    /** Coded items in the thread. */
+    /** Map of item IDs to their coded results */
     items: Record<string, CodedItem>;
-    /** The iteration of the coding. */
+    /** Which coding iteration this represents */
     iteration: number;
 }
 
-/** A collection of qualitatively coded threads. */
+/**
+ * Container for multiple coded threads/conversations.
+ * Optionally includes a unified codebook across all threads.
+ */
 export interface CodedThreads {
-    /** The qualitatively coded threads. */
+    /** Map of thread IDs to their coded analysis */
     threads: Record<string, CodedThread>;
-    /** The summarized codebook. */
+    /** Optional unified codebook derived from all threads */
     codebook?: Codebook;
 }
 
-/** A collection of qualitatively coded threads, with a codebook. */
+/**
+ * Coded threads that guarantee a unified codebook exists.
+ * Used after consolidation when a codebook is required.
+ */
 export interface CodedThreadsWithCodebook extends CodedThreads {
-    /** The summarized codebook. */
+    /** Required unified codebook for all threads */
     codebook: Codebook;
 }
 
-/** A message in a group chat. */
+/**
+ * Specialized data item for chat messages.
+ * Extends DataItem with chat-specific metadata.
+ */
 export interface Message extends DataItem {
-    /** firstSeen: Whether the sender is first seen in the group. */
+    /** True if this is the sender's first message in the group */
     firstSeen?: boolean;
 }
 
-/** A segment of the group chat. */
+/**
+ * Represents a conversation segment within a larger chat.
+ * Tracks participants and temporal boundaries.
+ */
 export interface Conversation extends DataChunk<Message> {
-    /** The time the conversation started. */
+    /** When this conversation segment began */
     start: Date;
-    /** The time the conversation ended. */
+    /** When this conversation segment ended */
     end: Date;
-    /** The participants in the conversation. */
+    /** Map of participant IDs to their message counts */
     participants: Map<string, number>;
-    /** The number of first-time participants. */
+    /** Count of new participants in this segment */
     firstSeen: number;
 }
 
-/** A package for comparing codebooks. */
+/**
+ * Structure for comparing multiple codebooks from different coders.
+ * Used to analyze inter-coder reliability and merge coding schemes.
+ * @template T - Type of data chunks being analyzed
+ */
 export interface CodebookComparison<T extends DataChunk<DataItem>> {
-    /** The title of the comparison. */
+    /** Display title for this comparison analysis */
     title: string;
-    /** The underlying dataset of the codebooks. */
+    /** Original dataset that was coded */
     source: Dataset<T>;
-    /** The codebooks to compare with. */
+    /** Array of codebooks from different coders to compare */
     codebooks: Codebook[];
-    /** The names of the codebooks. */
+    /** Human-readable names for each codebook */
     names: string[];
-    /** The groups of codebooks and their children. */
+    /** Hierarchical grouping of related codebooks */
     groups?: number[][];
-    /** The weights of codebooks to compare with. */
+    /** Relative importance weights for each codebook */
     weights?: number[];
-    /** The codes in the combined codebook. */
+    /** Merged/unified codes from all codebooks */
     codes: Code[];
-    /** The total weight of the codebooks. */
+    /** Sum of all codebook weights */
     totalWeight?: number;
-    /** The mapping from user ID to nicknames. */
+    /** Maps user IDs to display names for reports */
     uidToNicknames?: Map<string, string>;
-    /** The distance matrix between codes in the first codebook. */
+    /** Pairwise distance matrix between codes for similarity analysis */
     distances: number[][];
-    /** Extra parameters for the comparison (to override defaults). */
+    /** Additional configuration overrides */
     parameters?: Record<string, unknown>;
 }
 
-/** CodebookEvaluation: Evaluation of a codebook. */
+/**
+ * Numeric evaluation metrics for codebook quality.
+ * Maps metric names to their calculated values.
+ */
 export type CodebookEvaluation = Record<string, number>;
 
 // /** Participant: A participant in a group chat. */
@@ -257,11 +295,20 @@ export type CodebookEvaluation = Record<string, number>;
 //     Messages?: Comment[];
 // }
 
+/**
+ * Topic modeling results from BERTopic algorithm.
+ * Maps topic IDs (numbers) to their document assignments and representative keywords.
+ * Each topic contains the IDs of assigned documents, their probability scores, and
+ * the most relevant keywords that characterize the topic.
+ */
 export type BertopicTopics = Record<
     number,
     {
+        /** Document IDs assigned to this topic */
         ids: number[];
+        /** Probability scores for each document assignment (aligned with ids array) */
         probabilities: number[];
+        /** Top keywords representing this topic, ranked by relevance */
         keywords: string[];
     }
 >;

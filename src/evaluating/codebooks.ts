@@ -1,10 +1,40 @@
+/**
+ * Codebook Evaluation Base Classes
+ *
+ * This module provides the abstract base class for codebook evaluators.
+ * Evaluators assess the quality of qualitative codebooks by comparing them
+ * against a reference codebook and computing various quality metrics.
+ *
+ * Different evaluation strategies can be implemented by extending the
+ * CodebookEvaluator base class, such as:
+ * - Network-based evaluation (NetworkEvaluator)
+ * - Statistical comparison
+ * - Inter-rater reliability metrics
+ * - Coverage and overlap analysis
+ */
+
 import type { Codebook, CodebookEvaluation } from "../schema.js";
 
-/** An evaluator of codebook. */
+/**
+ * Abstract base class for codebook evaluators.
+ *
+ * Evaluators compare multiple codebooks against a reference and compute
+ * quality metrics such as coverage, overlap, novelty, and divergence.
+ * Concrete implementations define specific evaluation strategies.
+ */
 export abstract class CodebookEvaluator {
-    /** The name of the evaluator. */
+    /** The name identifying this evaluator. */
     name = "Unnamed";
-    /** Evaluate a number of codebooks. */
+
+    /**
+     * Evaluates multiple codebooks against a reference.
+     *
+     * @param reference - The baseline/reference codebook (usually merged from all codebooks)
+     * @param codebooks - Map of codebook names to codebooks to evaluate
+     * @param groups - Map of group names to [merged group codebook, member codebook names]
+     * @param exportPath - Directory path for exporting evaluation results
+     * @returns Promise resolving to evaluation metrics for each codebook
+     */
     abstract evaluate(
         reference: Codebook,
         codebooks: Record<string, Codebook>,

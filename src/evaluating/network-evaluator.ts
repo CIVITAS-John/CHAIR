@@ -1,3 +1,20 @@
+/**
+ * Network-based Codebook Evaluation
+ *
+ * This module provides network-based evaluation of qualitative codebooks by:
+ * - Building semantic graphs from code embeddings and distances
+ * - Calculating codebook quality metrics (coverage, overlap, novelty, divergence)
+ * - Generating interactive web-based visualizations
+ * - Supporting multi-codebook comparison and analysis
+ *
+ * The evaluation process:
+ * 1. Merges codes from multiple codebooks into a unified reference
+ * 2. Computes semantic embeddings and position calculations via Python
+ * 3. Builds a network graph with weighted edges based on code similarity
+ * 4. Calculates evaluation metrics for each codebook
+ * 5. Creates an interactive visualization bundle for exploration
+ */
+
 import { join } from "path";
 
 import md5 from "md5";
@@ -20,7 +37,13 @@ import { createOfflineBundle, launchServer } from "../utils/runtime/server.js";
 
 import { CodebookEvaluator } from "./codebooks.js";
 
-/** Get the strings of the codes. */
+/**
+ * Converts a code to a string representation for embedding calculation.
+ * Combines the code label with its first definition if available.
+ *
+ * @param code - The code to convert to a string
+ * @returns A string combining the code's label and definition
+ */
 const getCodeString = (code: Code) => {
     let text = code.label;
     if ((code.definitions?.length ?? 0) > 0) {
@@ -29,7 +52,24 @@ const getCodeString = (code: Code) => {
     return text;
 };
 
-/** NetworkEvaluator: A network evaluator of codebook against a reference codebook (#0) with potential human inputs. */
+/**
+ * Network-based evaluator for qualitative codebooks.
+ *
+ * This evaluator creates a semantic network of codes from multiple codebooks and uses
+ * graph-based metrics to evaluate codebook quality. It:
+ * - Merges codes from all codebooks into a unified reference
+ * - Calculates semantic embeddings and 2D positions for visualization
+ * - Builds weighted graphs based on code similarity
+ * - Computes quality metrics (coverage, overlap, novelty, divergence)
+ * - Generates interactive visualizations for exploration
+ * - Optionally anonymizes sensitive data in the dataset
+ *
+ * The evaluator supports both individual codebooks and grouped codebooks,
+ * with customizable weighting schemes for different analysis scenarios.
+ *
+ * @template TUnit - Type of data unit (e.g., DataChunk)
+ * @template TSubunit - Type of data subunit (defaults to DataItem)
+ */
 export class NetworkEvaluator<
     TUnit extends DataChunk<TSubunit>,
     TSubunit extends DataItem = DataItem,
@@ -40,18 +80,36 @@ export class NetworkEvaluator<
 
     /** The name of the evaluator. */
     override name = "network-evaluator";
-    /** Whether we visualize the evaluation. */
+
+    /** Whether to visualize the evaluation (used by Python embedding service). */
     visualize = false;
-    /** The dataset underlying the codebooks. */
+
+    /** The dataset underlying the codebooks being evaluated. */
     dataset: Dataset<TUnit>;
-    /** Whether the dataset should be anonymized. */
+
+    /**
+     * Whether the dataset should be anonymized in the visualization.
+     * When true, sensitive user information is replaced with nicknames.
+     */
     anonymize: boolean;
-    /** The title of the evaluator. */
+
+    /** The title displayed in the visualization. */
     title: string;
-    /** The extra parameters for the evaluation. */
+
+    /**
+     * Extra parameters passed to the visualization.
+     * These can control visualization behavior like useNearOwners, useExtendedChunk, etc.
+     */
     parameters: Record<string, unknown> = {};
 
-    /** Initialize the evaluator. */
+    /**
+     * Initializes the network evaluator with dataset and configuration.
+     *
+     * @param dataset - The dataset containing the qualitative data
+     * @param anonymize - Whether to anonymize user data (default: true)
+     * @param title - Title for the visualization (default: "Network Evaluator")
+     * @param parameters - Additional parameters for the visualization
+     */
     constructor({
         dataset,
         anonymize,
@@ -70,7 +128,26 @@ export class NetworkEvaluator<
         this.parameters = parameters ?? {};
     }
 
-    /** Evaluate a number of codebooks. */
+    /**
+     * Evaluates multiple codebooks against a reference codebook using network analysis.
+     *
+     * The evaluation process:
+     * 1. Collects and merges all codebooks into a unified reference
+     * 2. Calculates code weights based on codebook sizes (1/ln(max(median_size, code_count)))
+     * 3. Converts codes to embeddings and computes 2D positions via Python
+     * 4. Anonymizes dataset if configured
+     * 5. Creates an offline visualization bundle
+     * 6. Launches an HTTP server for interactive exploration
+     *
+     * Weight calculation: Smaller codebooks get higher weights to balance contribution.
+     * Uses logarithmic scaling to prevent very small codebooks from dominating.
+     *
+     * @param reference - The reference/baseline codebook (typically merged from all codebooks)
+     * @param codebooks - Map of codebook names to codebooks to evaluate
+     * @param groups - Map of group names to [merged codebook, member names]
+     * @param exportPath - Directory to export results and visualization (default: "./known")
+     * @returns Promise resolving to evaluation results for each codebook
+     */
     override evaluate(
         reference: Codebook,
         codebooks: Record<string, Codebook>,

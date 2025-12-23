@@ -1,3 +1,45 @@
+/**
+ * Structured chunk-level analyzer with hierarchical codebook generation.
+ *
+ * This analyzer is based on the methodology from Barany et al. (2024) "ChatGPT for
+ * Education Research: Exploring the Potential of Large Language Models for Qualitative
+ * Codebook Development," with significant enhancements.
+ *
+ * Key modifications from the original Barany approach:
+ * 1. Added explicit example formatting in prompts (original didn't specify)
+ * 2. Added planning stage ("Plan" section) for analytical transparency
+ * 3. Requested two-level hierarchy (categories + codes) instead of flat codes
+ * 4. Specified structured output format with Summary and Plan sections
+ * 5. Enhanced for general research contexts beyond education
+ *
+ * Codebook structure generated:
+ * ```
+ * * Summary: {conversation overview}
+ * * Plan: {analytical approach and guiding questions}
+ *
+ * # Category 1
+ * ## Code 1.1
+ * Definition: {what this code means}
+ * - "example quote 1"
+ * - "example quote 2"
+ * ```
+ *
+ * Differences from ChunkLevelAnalyzerBarany:
+ * - Barany: Single flat level of codes
+ * - Structured: Two-level hierarchy (categories -> codes)
+ * - Barany: Minimal metadata
+ * - Structured: Explicit Summary and Plan sections
+ *
+ * Use cases:
+ * - Exploratory research needing organized codebooks
+ * - Studies requiring hierarchical code organization
+ * - Team-based coding with clear code definitions
+ * - Mixed-methods research needing structured outputs
+ *
+ * @author Barany et al. (2024)
+ * @author John Chen (adaptations)
+ */
+
 import type { CodedThread, Conversation, Message } from "../schema.js";
 import { BaseStep } from "../steps/base-step.js";
 
@@ -5,28 +47,40 @@ import { ChunkLevelAnalyzerBase } from "./chunk-level.js";
 import { buildMessagePrompt } from "./conversations.js";
 
 /**
- * Original prompt format:
- * Hi ChatGPT, I want to analyze the following interaction between an instructor and some students:
- * [DATA]
- * Please give me a codebook to analyze the instructional methodologies and the sentiment within this interaction.
- * ---
- * Barany et al. (2024) ChatGPT for Education Research: Exploring the Potential of Large Language Models for Qualitative Codebook Development
- * ---
- * However, the original prompt does not give examples as documented by the paper. We modified the prompt to make that happen. Note that the original paper's codebook only has around 8-11 codes. Therefore, we only ask ChatGPT to generate a single layer of codes.
- * Changes from ChunkLevelAnalyzerBarany: We mentioned fields in the prompt and added a planning stage. We also ask LLMs to provide two levels of codes.
+ * Chunk-level analyzer generating hierarchical structured codebooks.
  *
- * @author Barany et al.
- * Adapted by John Chen.
+ * Creates two-level code hierarchies with categories, codes, definitions, and examples.
+ *
+ * @author Barany et al. (2024)
+ * @author John Chen (adaptations)
  */
-
-/** Conduct the first-round high-level coding of the conversations. */
 export default class ChunkLevelAnalyzerStructured extends ChunkLevelAnalyzerBase {
-    /** The name of the analyzer. */
+    /** Unique identifier for this analyzer */
     override name = "chunk-structured";
-    /** The base temperature for the LLM. */
+
+    /** LLM temperature (0.5 for balanced creativity) */
     override baseTemperature = 0.5;
 
-    /** Build the prompts for the LLM. */
+    /**
+     * Build prompts for structured hierarchical codebook generation.
+     *
+     * Creates prompts that request:
+     * - Summary of the conversation
+     * - Plan with analytical approach and guiding questions
+     * - Hierarchical categories and codes
+     * - Definitions for each code
+     * - Example quotes supporting each code
+     *
+     * The prompt is framed as a request to ChatGPT to generate a codebook,
+     * maintaining the conversational style of Barany et al. while adding
+     * explicit structure and metadata requirements.
+     *
+     * @param _analysis - CodedThread (unused)
+     * @param _target - Conversation (unused)
+     * @param messages - Messages to analyze
+     * @param _chunkStart - Chunk start index (unused)
+     * @returns [systemPrompt, userPrompt]
+     */
     override buildPrompts(
         _analysis: CodedThread,
         _target: Conversation,

@@ -22,6 +22,11 @@ import { logger } from "../core/logger.js";
 import { promiseWithTimeout } from "../core/misc.js";
 import { tokenize } from "./tokenizer.js";
 
+/**
+ * Configuration for available LLM models.
+ * Each model defines input/output limits and instantiation logic.
+ * Comments indicate approximate costs in $/1M tokens (input/output)
+ */
 const MODELS = {
     "gpt-3.5-turbo": {
         // 0.5$ / 1.5$
@@ -328,7 +333,13 @@ export const initLLM = (LLM: string): LLMObject => {
     };
 };
 
-/** Use specific LLMs one by one. Call it before start translating. */
+/**
+ * Execute a task with multiple LLMs sequentially.
+ * Each LLM gets its own session with token tracking.
+ *
+ * @param task - Async function to execute with each LLM session
+ * @param LLMs - Array of LLM models to use
+ */
 export const useLLMs = async (task: (session: LLMSession) => Promise<void>, LLMs: LLMModel[]) => {
     await logger.withDefaultSource("useLLMs", async () => {
         for (const llm of LLMs) {
@@ -351,7 +362,16 @@ export const useLLMs = async (task: (session: LLMSession) => Promise<void>, LLMs
     });
 };
 
-/** Call the model to generate text with cache. */
+/**
+ * Send a request to the LLM with caching support.
+ * Checks cache first, falls back to API call if not found.
+ *
+ * @param messages - Array of chat messages to send
+ * @param cache - Cache folder name for storing responses
+ * @param temperature - LLM temperature setting (0-2)
+ * @param fakeRequest - If true, simulate without calling LLM
+ * @returns The LLM's response text
+ */
 export const requestLLM = (
     messages: BaseMessage[],
     cache: string,

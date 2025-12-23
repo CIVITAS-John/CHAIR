@@ -1,3 +1,28 @@
+/**
+ * BERTopic-based conversation analysis with verb phrase labels.
+ *
+ * This analyzer is identical to BertopicAnalyzerAny except for one key difference:
+ * it instructs the LLM to generate verb phrases rather than general labels.
+ *
+ * Verb phrase coding is particularly useful for:
+ * - Action-oriented analysis (focusing on what people are doing)
+ * - Process-oriented research (examining activities and interactions)
+ * - Behavioral studies (describing observable actions)
+ * - Grounded theory where verbs capture processes and dynamics
+ *
+ * The only modification from BertopicAnalyzerAny is the LLM prompt format:
+ * - BertopicAnalyzerAny: "Label: {A single label...}"
+ * - BertopicAnalyzerVerb: "Phrase: {A single verb phrase...}"
+ *
+ * This demonstrates how minor prompt engineering changes can dramatically
+ * affect the nature of generated codes while keeping the technical pipeline
+ * identical.
+ *
+ * See bertopic-any.ts for detailed documentation of the BERTopic pipeline.
+ *
+ * @author John Chen
+ */
+
 import { writeFileSync } from "fs";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
@@ -14,8 +39,12 @@ import { runPythonScript } from "../utils/runtime/python.js";
 import { buildMessagePrompt, ConversationAnalyzer } from "./conversations.js";
 
 /**
- * Conduct the first-round bertopic coding of the conversations.
- * Differece from BertopicAnalyzerAny: The prompt specifically asks for a verb phrase.
+ * BERTopic-based analyzer with verb phrase label generation.
+ *
+ * Identical to BertopicAnalyzerAny except prompts specifically request verb phrases.
+ * This results in action-oriented codes like "Asking for clarification" rather than
+ * noun-based codes like "Clarification request".
+ *
  * @author John Chen
  */
 export default class BertopicAnalyzerVerb extends ConversationAnalyzer {
@@ -118,7 +147,8 @@ Keywords: ${keywords.join(", ")}`.trim(),
                     this.baseTemperature,
                     false,
                 );
-                // Parse the response
+                // Parse verb phrase from response
+                // NOTE: Only difference from BertopicAnalyzerAny - looks for "Phrase:" not "Label:"
                 let phrase = "";
                 const lines = response.split("\n");
                 for (const _line of lines) {

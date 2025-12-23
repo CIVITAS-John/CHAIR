@@ -1,3 +1,23 @@
+/**
+ * Reference Codebook Building
+ *
+ * This module provides tools for building reference codebooks from multiple
+ * individual codebooks. Reference codebooks serve as consolidated baselines
+ * for evaluation and comparison.
+ *
+ * The reference building process:
+ * 1. Merges codes from multiple codebooks by name
+ * 2. Consolidates similar codes using various strategies
+ * 3. Generates definitions for codes missing them
+ * 4. Refines the codebook through iterative merging
+ * 5. Validates that original codes are preserved
+ * 6. Exports the reference codebook to JSON and Excel formats
+ *
+ * Different building strategies:
+ * - ReferenceBuilder: Basic merging with simple consolidation
+ * - RefiningReferenceBuilder: Advanced merging with similarity-based refinement
+ */
+
 import { writeFileSync } from "fs";
 
 import { consolidateCodebook, mergeCodebooks } from "../consolidating/codebooks.js";
@@ -11,28 +31,58 @@ import { exportChunksForCoding } from "../utils/io/export.js";
 import { ensureFolder } from "../utils/io/file.js";
 import { logger } from "../utils/core/logger.js";
 
+/**
+ * Configuration for reference codebook builders.
+ */
 export interface ReferenceBuilderConfig {
+    /** Number of retries for failed consolidation steps. */
     retries?: number;
+    /** Whether to use fake/mock requests for testing. */
     fakeRequest?: boolean;
 }
 
-/** A reference codebook builder. */
+/**
+ * Abstract base class for reference codebook builders.
+ *
+ * Reference builders create a consolidated baseline codebook from multiple
+ * individual codebooks. This baseline is used for evaluation and comparison.
+ */
 export abstract class ReferenceBuilder {
-    /** The suffix of the reference codebook. */
+    /** Filename suffix for the reference codebook (e.g., "-refined"). */
     suffix = "";
-    /** The base temperature for the reference builder. */
+
+    /** Base temperature for AI-based consolidation operations (0-1). */
     baseTemperature = 0.5;
 
-    /** The original codes in the reference codebook. */
+    /**
+     * Tracks original codes to ensure they aren't lost during consolidation.
+     * Used by sanity check to validate consolidation integrity.
+     */
     private originalCodes = new Set<string>();
 
+    /** Logger prefix for this builder. */
     protected _prefix: string;
 
+    /**
+     * Creates a reference builder with optional configuration.
+     *
+     * @param config - Configuration for retries and testing
+     */
     constructor(public config?: ReferenceBuilderConfig) {
         this._prefix = logger.prefixed(logger.prefix, "ReferenceBuilder");
     }
 
-    /** Build a reference codebook from a list of codebooks. */
+    /**
+     * Builds a reference codebook from multiple codebooks.
+     *
+     * Process:
+     * 1. Merges codes by name across all codebooks
+     * 2. Refines the merged codebook using consolidation strategies
+     * 3. Returns the consolidated reference codebook
+     *
+     * @param codebooks - Array of codebooks to merge
+     * @returns Promise resolving to the merged and refined codebook
+     */
     buildReference(codebooks: Codebook[]): Promise<Codebook> {
         return logger.withSource(this._prefix, "buildReference", async () => {
             const lens = codebooks.map((c) => Object.keys(c).length);

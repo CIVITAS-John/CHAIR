@@ -1,3 +1,30 @@
+/**
+ * Item-level conversation analyzer with verb phrase coding.
+ *
+ * This analyzer is nearly identical to ItemLevelAnalyzerAny, with one critical difference:
+ * it explicitly instructs the LLM to use only verb phrases for coding.
+ *
+ * Verb phrase coding benefits:
+ * - Captures actions and processes rather than static states
+ * - Aligns with grounded theory's focus on social processes
+ * - Creates more dynamic, action-oriented codebooks
+ * - Facilitates analysis of interactions and behaviors
+ * - Enables process-oriented theorizing
+ *
+ * Example code differences:
+ * - ItemLevelAnalyzerAny: "Question", "Enthusiasm", "Technical issue"
+ * - ItemLevelAnalyzerVerb: "Asking question", "Expressing enthusiasm", "Reporting technical issue"
+ *
+ * The only implementation difference is in the prompt wording:
+ * - Any: "identify multiple low-level tags for each message"
+ * - Verb: "describe each item with verb phrases"
+ *
+ * This demonstrates how subtle prompt engineering can fundamentally shift the
+ * analytical lens while maintaining the same technical infrastructure.
+ *
+ * @author John Chen
+ */
+
 import type { CodedThread, Conversation, Message } from "../schema.js";
 import { BaseStep } from "../steps/base-step.js";
 
@@ -5,8 +32,11 @@ import { buildMessagePrompt } from "./conversations.js";
 import { ItemLevelAnalyzerBase } from "./item-level.js";
 
 /**
- * Conduct the first-round item-level coding of the conversations.
- * Only use verb phrases as the code labels.
+ * Concrete item-level analyzer using verb phrase coding.
+ *
+ * Implements buildPrompts() to explicitly request verb phrases, creating
+ * action-oriented codes for process-focused analysis.
+ *
  * @author John Chen
  */
 export default class ItemLevelAnalyzerVerb extends ItemLevelAnalyzerBase {
