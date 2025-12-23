@@ -1,3 +1,14 @@
+/**
+ * File System Utilities
+ *
+ * This module provides helpers for file operations including:
+ * - JSON file I/O
+ * - Dynamic ES module imports
+ * - Recursive directory traversal
+ * - Path manipulation (common prefix/suffix removal)
+ * - Directory creation with recursive support
+ */
+
 import { mkdirSync, readdirSync, readFileSync, statSync } from "fs";
 import { join, resolve } from "path";
 
@@ -5,9 +16,26 @@ import commonPathPrefix from "common-path-prefix";
 
 import { reverse } from "../core/misc.js";
 
+/**
+ * Read and parse a JSON file
+ *
+ * @template T - Expected type of the JSON data
+ * @param path - Path to the JSON file
+ * @returns Parsed JSON data typed as T
+ * @throws {SyntaxError} If file contains invalid JSON
+ */
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export const readJSONFile = <T>(path: string) => JSON.parse(readFileSync(path, "utf-8")) as T;
 
+/**
+ * Dynamically import an ES module and extract its default export
+ *
+ * Uses file:// protocol for proper ESM loading with absolute paths.
+ *
+ * @param path - Path to the module file (will be resolved to absolute)
+ * @returns The default export of the module
+ * @throws {TypeError} If module has no default export
+ */
 export const importDefault = async (path: string) => {
     const module = (await import(`file://${resolve(path)}`)) as unknown;
     if (typeof module !== "object" || module === null) {
@@ -19,13 +47,23 @@ export const importDefault = async (path: string) => {
     return module.default;
 };
 
-/** Ensure that a folder exists. */
+/**
+ * Ensure a directory exists, creating it and parents if necessary
+ *
+ * @param path - Directory path to create
+ * @returns The same path (for chaining)
+ */
 export const ensureFolder = (path: string) => {
     mkdirSync(path, { recursive: true });
     return path;
 };
 
-/** Get all files in a directory recursively. */
+/**
+ * Recursively get all files in a directory tree
+ *
+ * @param source - Directory path or file path
+ * @returns Array of absolute file paths
+ */
 export const getFilesRecursively = (source: string) => {
     // Check if the source is a file
     if (statSync(source).isFile()) {

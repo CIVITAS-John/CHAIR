@@ -1,3 +1,43 @@
+/**
+ * Excel Import/Export for Qualitative Coding
+ *
+ * This module handles bidirectional Excel transformation for qualitative data analysis:
+ * - Export chunks and codes to Excel for manual coding/review
+ * - Import coded results back from Excel into the analysis pipeline
+ *
+ * Key Features:
+ * - Exports data chunks as separate worksheets with frozen headers
+ * - Supports nested data structures (chunks containing subchunks)
+ * - Codebook export/import with categories, definitions, examples, alternatives
+ * - Special rows for thoughts, summary, and reflection per chunk
+ * - Automatic consolidation tracking (alternatives mapped to canonical codes)
+ *
+ * The "|||" Separator Convention:
+ * - Examples stored internally as: "ID|||Speaker: Content"
+ * - When exporting to Excel: "|||" replaced with ": " for readability
+ * - When importing from Excel: ": " converted back to "|||" (first occurrence only)
+ * - Why "|||"?
+ *   - Unlikely to appear in natural text
+ *   - Easy to split/join programmatically
+ *   - Preserves structure for ID extraction when needed
+ *   - Human-readable when converted to ": " in Excel
+ *
+ * Excel Format:
+ * - Data sheets: ID, CID, SID, Nickname, Time, In, Content, Codes, Memo, Consolidated
+ * - Codebook sheet: Label, Category, Definition, Examples, Alternatives
+ * - Multiple items separated by newlines with "* " bullet points
+ * - Row heights auto-calculated based on content length
+ *
+ * @example
+ * // Export for coding
+ * const workbook = exportChunksForCoding(chunks, existingAnalyses);
+ * await workbook.xlsx.writeFile("coding.xlsx");
+ *
+ * @example
+ * // Import coded results
+ * const codedData = await importCodes(dataset, "coding.xlsx");
+ */
+
 import Excel from "exceljs";
 
 import { mergeCodebook } from "../../consolidating/codebooks.js";
@@ -8,6 +48,14 @@ import { assembleExampleFrom, getAllItems } from "../core/misc.js";
 
 const { Workbook } = Excel;
 
+/**
+ * Extract cell value as string from Excel row
+ *
+ * @param row - Excel row object
+ * @param cell - Cell identifier (column letter or name)
+ * @returns Cell value as string, or empty string if null/undefined
+ * @internal
+ */
 const getCellValueString = (row: Excel.Row, cell: string) => {
     const cellValue = row.getCell(cell).value;
     return cellValue === null || cellValue === undefined
@@ -17,7 +65,16 @@ const getCellValueString = (row: Excel.Row, cell: string) => {
           : JSON.stringify(cellValue);
 };
 
-/** Get the row height for the given content. */
+/**
+ * Calculate appropriate Excel row height based on content
+ *
+ * Estimates row height needed to display multi-line content with text wrapping.
+ * Uses 15 pixels per line as base height.
+ *
+ * @param content - Text content that will be displayed
+ * @param width - Column width in characters
+ * @returns Suggested row height in pixels
+ */
 export const getRowHeight = (content: string, width: number) =>
     content
         .split("\n")
@@ -26,7 +83,15 @@ export const getRowHeight = (content: string, width: number) =>
         15 +
     3;
 
-/** Sort an array of codes. */
+/**
+ * Sort codes by category and label
+ *
+ * Primary sort: Categories (alphabetically joined)
+ * Secondary sort: Label (alphabetically)
+ *
+ * @param codes - Array of code objects to sort
+ * @returns New sorted array
+ */
 export const sortCodes = (codes: Code[]) =>
     [...codes].sort((A, B) => {
         const category = (A.categories?.sort().join("; ") ?? "").localeCompare(

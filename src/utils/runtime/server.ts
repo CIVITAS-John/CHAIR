@@ -1,3 +1,43 @@
+/**
+ * Local Development Server for Interactive Visualizations
+ *
+ * This module provides a simple HTTP server for serving interactive web-based visualizations
+ * and reports. It's designed for development/demo purposes where data needs to be visualized
+ * in a browser with user interaction.
+ *
+ * Key Features:
+ * - Static file serving from multiple base directories
+ * - Special handling for data files (JSON)
+ * - API endpoint for receiving user reports/interactions
+ * - Automatic browser launching
+ * - Import statement removal for ESM → browser compatibility
+ * - Graceful shutdown on browser close or Ctrl+C
+ *
+ * Server Workflow:
+ * 1. Start HTTP server on specified port
+ * 2. Serve static assets from baseDirs
+ * 3. Serve data files from specified paths
+ * 4. Open browser automatically (Chrome preferred)
+ * 5. Wait for:
+ *    - Browser tab to close (detected by open() promise)
+ *    - User to submit report via POST /api/report/
+ *    - Manual shutdown (Ctrl+C)
+ * 6. Return submitted data (if any) when shutting down
+ *
+ * Script Processing:
+ * - Removes ES module import statements (convert to browser-compatible bundles)
+ * - Strips source map comments
+ * - Allows inline scripts without build step
+ *
+ * @example
+ * const userReport = await launchServer<UserReport>(
+ *   3000,
+ *   ["public", "dist"],
+ *   "data/analysis.json",
+ *   "data/codebook.json"
+ * );
+ */
+
 import {
     copyFileSync,
     existsSync,
@@ -16,7 +56,17 @@ import { ensureFolder } from "../io/file.js";
 import { logger } from "../core/logger.js";
 import { sleep } from "../core/misc.js";
 
-/** Create a local server for interactivity. */
+/**
+ * Launch a local HTTP server for interactive visualizations
+ *
+ * Serves static files and data, opens browser, waits for interaction or shutdown.
+ *
+ * @template T - Type of data expected from user report submission
+ * @param port - Port number to listen on
+ * @param baseDirs - Directories to serve static files from (searched in order)
+ * @param dataFiles - Specific data files to serve by basename
+ * @returns Promise resolving to user-submitted data (if any) when server shuts down
+ */
 export const launchServer = <T>(
     port: number,
     baseDirs: string[],
@@ -143,7 +193,25 @@ export const launchServer = <T>(
     });
 };
 
-/** Create an offline bundle for the web application. */
+/**
+ * Create a standalone offline bundle of the web application
+ *
+ * Copies all necessary files (HTML, CSS, JS, data) into a single directory
+ * that can be opened directly in a browser without a server. Processes
+ * JavaScript files to remove import statements.
+ *
+ * @param targetDir - Destination directory for the bundle
+ * @param baseDirs - Source directories containing web assets
+ * @param dataFiles - Data files to include in the bundle
+ *
+ * @example
+ * createOfflineBundle(
+ *   "dist/offline",
+ *   ["public", "web"],
+ *   "output/analysis.json"
+ * );
+ * // Creates self-contained bundle in dist/offline/
+ */
 export const createOfflineBundle = (
     targetDir: string,
     baseDirs: string[],

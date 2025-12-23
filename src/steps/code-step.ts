@@ -1,3 +1,38 @@
+/**
+ * Code Step Module
+ *
+ * This module handles qualitative coding of data chunks using either AI or human coders.
+ * It's the core analysis step that applies codes (themes, categories) to data items.
+ *
+ * Dual-Mode Operation:
+ * 1. AI Mode: Uses LLMs with analysis strategies to automatically code data
+ * 2. Human Mode: Imports codes from Excel files filled out by human coders
+ *
+ * AI Coding Process:
+ * - Applies analyzer strategies to chunks using LLMs
+ * - Supports multiple models and strategies in parallel
+ * - Iterates through chunks with context windows
+ * - Builds codebooks with examples
+ * - Exports results to Excel and JSON
+ *
+ * Human Coding Process:
+ * - Exports empty Excel templates for coders
+ * - Imports completed codes from Excel/JSON
+ * - Supports multiple coders independently
+ * - Handles missing/incomplete files interactively
+ * - Builds codebooks from imported codes
+ *
+ * Data Flow:
+ * Input: Dataset from LoadStep
+ * Processing: Apply codes to each item in each chunk
+ * Output: CodedThreads with codes, examples, and codebook
+ *
+ * Pipeline Integration:
+ * - Depends on LoadStep for data
+ * - Provides coded results to ConsolidateStep
+ * - Supports multiple datasets in parallel
+ */
+
 import { existsSync, readdirSync, writeFileSync } from "fs";
 import { basename, extname, join } from "path";
 
@@ -19,28 +54,74 @@ import type { AIParameters } from "./base-step.js";
 import { BaseStep } from "./base-step.js";
 import type { LoadStep } from "./load-step.js";
 
+/**
+ * Type for analyzer constructor functions
+ *
+ * Allows passing either analyzer instances or constructor functions,
+ * enabling flexible configuration and lazy instantiation.
+ */
 type AnalyzerConstructor<TUnit, TSubunit, TAnalysis> = new (
     ...args: ConstructorParameters<typeof Analyzer<TUnit, TSubunit, TAnalysis>>
 ) => Analyzer<TUnit, TSubunit, TAnalysis>;
 
+/**
+ * Configuration for CodeStep with dual-mode support
+ *
+ * Common Properties:
+ * - dataset: Which LoadStep(s) to code (defaults to all loaded datasets)
+ * - group: Name for this coder group (for consolidation)
+ *
+ * Mode-Specific Properties:
+ *
+ * Human Mode (agent: "Human"):
+ * - subdir: Where to find/create Excel files (default: "human")
+ * - coders: List of coder names (files: <subdir>/<coder>.xlsx)
+ * - onMissing: Behavior when files are missing/empty
+ *   - "ask": Prompt user for action (default)
+ *   - "skip": Skip this coder
+ *   - "wait": Open file and wait for user to fill it
+ *   - "abort": Stop execution
+ * - codebookSheet: Excel sheet name for codebook (default: "Codebook")
+ *
+ * AI Mode (agent: "AI"):
+ * - strategy: Analysis strategy/strategies to apply
+ *   - Can be Analyzer instance or constructor
+ *   - Supports array for multiple strategies
+ * - model: LLM model(s) to use
+ *   - Can be single model or array
+ * - parameters: AI behavior settings
+ *   - retries: How many times to retry failed requests
+ *   - temperature: LLM creativity (0-2)
+ *   - customPrompt: Additional instructions
+ *   - fakeRequest: Testing mode (skip actual LLM calls)
+ */
 export type CodeStepConfig<
     TSubunit extends DataItem = DataItem,
     TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
 > = {
-    dataset?: LoadStep<TUnit> | LoadStep<TUnit>[]; // Defaults to all datasets loaded
+    /** Which LoadStep(s) provide the data to code (defaults to all loaded datasets) */
+    dataset?: LoadStep<TUnit> | LoadStep<TUnit>[];
 } & (
     | {
+          /** Use human coders via Excel files */
           agent: "Human";
-          group?: string; // The group name for human coders (defaults to "human")
-          subdir?: string; // A path to the Excel/JSON files containing the human-coded data, relative to the dataset path (defaults to "human")
-          coders?: string[]; // A list of coder names (the files are assumed to be found at <path>/<coder>.xlsx/json)
-          onMissing?: "ask" | "skip" | "wait" | "abort"; // What to do if the file does not exist or is empty (defaults to "ask")
-          codebookSheet?: string; // The name of the sheet to use for the codebook (defaults to "Codebook")
+          /** Group name for organizing results (defaults to "human") */
+          group?: string;
+          /** Path to Excel/JSON files relative to dataset (defaults to "human") */
+          subdir?: string;
+          /** Coder names - files at <subdir>/<coder>.xlsx/json */
+          coders?: string[];
+          /** What to do if file is missing/empty (defaults to "ask") */
+          onMissing?: "ask" | "skip" | "wait" | "abort";
+          /** Excel sheet name for codebook (defaults to "Codebook") */
+          codebookSheet?: string;
       }
     | {
+          /** Use AI to automatically code data */
           agent: "AI";
-          group?: string; // The group name for human coders (defaults to "ai")
-          // Renaming "Analyzer" to "Strategy" to avoid confusion with "the LLM that analyzes the data"
+          /** Group name for organizing results (defaults to "ai") */
+          group?: string;
+          /** Analysis strategy/strategies to apply to the data */
           strategy:
               | AnalyzerConstructor<TUnit, TSubunit, CodedThread>
               | Analyzer<TUnit, TSubunit, CodedThread>
@@ -48,12 +129,61 @@ export type CodeStepConfig<
                     | Analyzer<TUnit, TSubunit, CodedThread>
                     | AnalyzerConstructor<TUnit, TSubunit, CodedThread>
                 )[];
+          /** LLM model(s) to use for coding */
           model: LLMModel | LLMModel[];
+          /** AI behavior parameters (temperature, retries, etc.) */
           parameters?: AIParameters;
       }
 );
 
-/** Analyze a chunk of data items. */
+/**
+ * Analyze data chunks using an AI-powered analyzer
+ *
+ * This is the core function for AI-based qualitative coding. It orchestrates
+ * the complex process of applying codes to data items using LLMs.
+ *
+ * Process Overview:
+ * 1. Initialize analysis structures for each chunk
+ * 2. Batch preprocess all chunks (analyzer-specific preparation)
+ * 3. For each chunk:
+ *    a. Filter out empty items and subchunks (not yet supported)
+ *    b. Loop through items in windows (defined by analyzer)
+ *    c. Build prompts with context (previous summary, current items)
+ *    d. Send to LLM and parse response
+ *    e. Extract codes and examples from response
+ *    f. Store codes in analysis structure
+ * 4. Consolidate codebook from all codes
+ *
+ * Windowing Strategy:
+ * - Chunks may be too large for LLM context windows
+ * - Analyzer defines window size via chunkSize
+ * - Windows can overlap to maintain context
+ * - Previous window summary included in next window's prompt
+ *
+ * Code Extraction:
+ * - LLM responses parsed by analyzer's parseResponse()
+ * - Codes normalized (lowercase, trimmed, cleaned)
+ * - Examples collected for each code
+ * - Duplicate examples filtered out
+ *
+ * Error Handling:
+ * - Retries failed LLM requests with increasing temperature
+ * - Wraps errors in CodeStep.InternalError for tracking
+ * - Logs detailed progress at each step
+ *
+ * Caching:
+ * - Results stored in analyzed parameter (accumulator pattern)
+ * - Supports resuming/incremental analysis
+ * - Overlapping codes merged across windows
+ *
+ * @param analyzer - Analysis strategy defining prompts and parsing
+ * @param chunks - Data chunks to analyze
+ * @param analyzed - Accumulator for results (supports incremental analysis)
+ * @param temperature - LLM creativity (0-2), increases on retries
+ * @param fakeRequest - Skip LLM calls for testing
+ * @param retries - Max retry attempts for failed requests
+ * @returns CodedThreads with codes, examples, and codebook
+ */
 const analyzeChunks = <T extends DataItem>(
     analyzer: Analyzer<DataChunk<T>, T, CodedThread>,
     chunks: Record<string, DataChunk<T>>,
@@ -68,17 +198,22 @@ const analyzeChunks = <T extends DataItem>(
         const keys = Object.keys(chunks);
         logger.info(`[${dataset.name}] Analyzing ${keys.length} chunks`);
 
-        // Initialize the analysis
+        // Initialize the analysis structures for each chunk
+        // Creates a CodedThread for each chunk with empty code placeholders for each item
         for (const [key, chunk] of Object.entries(chunks)) {
-            // TODO: Support subchunks
+            // Filter items to only include simple data items (not subchunks)
+            // TODO: Support subchunks - currently nested chunks are skipped
             const messages = chunk.items.filter((m) => {
                 if (!("content" in m)) {
                     logger.warn("Subchunks are not yet supported, skipping");
                     return false;
                 }
+                // Skip empty items as they can't be meaningfully coded
                 return m.content !== "";
             }) as T[];
 
+            // Initialize or preserve existing analysis structure
+            // Supports resuming analysis or incremental updates
             analyzed.threads[key] = analyzed.threads[key] ?? {
                 id: key,
                 items: Object.fromEntries(messages.map((m) => [m.id, { id: m.id }])),
@@ -87,16 +222,17 @@ const analyzeChunks = <T extends DataItem>(
             };
         }
 
-        // Batch preprocess the chunks
+        // Batch preprocess all chunks before analysis
+        // Allows analyzers to perform bulk operations (e.g., loading embeddings, building indices)
         await analyzer.batchPreprocess(
             keys.map((k) => chunks[k]),
             keys.map((k) => analyzed.threads[k]),
         );
 
-        // Run the prompt over each chunk
+        // Process each chunk through the analyzer
         for (const [key, chunk] of Object.entries(chunks)) {
-            // Get the messages
-            // TODO: Support subchunks
+            // Filter items again (same as initialization, for consistency)
+            // TODO: Support subchunks - currently nested chunks are skipped
             const messages = chunk.items.filter((m) => {
                 if (!("content" in m)) {
                     logger.warn("Subchunks are not yet supported, skipping", "analyzeChunk");
@@ -106,26 +242,35 @@ const analyzeChunks = <T extends DataItem>(
             }) as T[];
             logger.info(`[${dataset.name}] Analyzing chunk ${key} with ${messages.length} items`);
 
-            // Initialize the analysis
+            // Get the analysis structure for this chunk
             const analysis = analyzed.threads[key];
-            // Run the messages through chunks (as defined by the analyzer)
+
+            // Track previous analysis for merging overlapping window codes
             let prevAnalysis: CodedThread | undefined;
+
             try {
+                // Loop through the chunk in windows defined by the analyzer
+                // Windows allow processing large chunks that exceed LLM context limits
                 await loopThroughChunk(
                     analyzer,
                     analysis,
                     chunk,
                     messages,
+                    // Callback invoked for each window of items
                     async (currents, chunkStart, isFirst, tries, iteration) => {
-                        // Sync from the previous analysis to keep the overlapping codes
+                        // Merge codes from overlapping windows
+                        // When windows overlap, preserve codes from previous window for shared items
                         if (prevAnalysis && prevAnalysis !== analysis) {
                             for (const [id, item] of Object.entries(prevAnalysis.items)) {
+                                // Check if this item exists in current chunk
                                 if (chunk.items.findIndex((m) => m.id === id) !== -1) {
                                     analysis.items[id] = { id, codes: item.codes };
                                 }
                             }
                         }
-                        // Build the prompts
+
+                        // Build prompts for this window
+                        // Returns [system_prompt, user_prompt] tailored to current items and context
                         const prompts = await analyzer.buildPrompts(
                             analysis,
                             chunk,
@@ -134,27 +279,38 @@ const analyzeChunks = <T extends DataItem>(
                             iteration,
                         );
                         let response = "";
-                        // Run the prompts
+
+                        // Send prompts to LLM if either prompt is non-empty
                         if (prompts[0] !== "" || prompts[1] !== "") {
+                            // Add summary from previous window to maintain context
                             if (!isFirst && analysis.summary) {
                                 prompts[1] = `Summary of previous conversation: ${analysis.summary}\n${prompts[1]}`;
                             }
+
                             logger.debug(
                                 `[${dataset.name}/${key}] Requesting LLM, iteration ${iteration}`,
                             );
+
+                            // Request with dynamic temperature: base + retry adjustment
+                            // Each retry increases temperature by 0.2 to encourage different responses
                             response = await requestLLM(
                                 [new SystemMessage(prompts[0]), new HumanMessage(prompts[1])],
                                 `${basename(dataset.path)}/${analyzer.name}`,
                                 tries * 0.2 + (temperature ?? analyzer.baseTemperature),
                                 fakeRequest,
                             );
+
                             logger.debug(
                                 `[${dataset.name}/${key}] Received response, iteration ${iteration}`,
                             );
+
+                            // Empty response indicates failure - return 0 to not advance cursor
                             if (response === "") {
                                 return 0;
                             }
                         }
+                        // Parse the LLM response to extract codes
+                        // Returns either a number (cursor movement) or object mapping indices to codes
                         const itemRes = await analyzer.parseResponse(
                             analysis,
                             response.split("\n").map((Line) => Line.trim()),
@@ -162,17 +318,24 @@ const analyzeChunks = <T extends DataItem>(
                             chunkStart,
                             iteration,
                         );
-                        // Process the results
+
+                        // Handle relative cursor movement (analyzer-specific navigation)
                         if (typeof itemRes === "number") {
                             logger.debug(
                                 `[${dataset.name}/${key}] Relative cursor movement: ${itemRes}`,
                             );
                             return itemRes;
                         }
-                        // Item-based coding
+
+                        // Process item-level codes
+                        // itemRes maps item indices (1-based) to code strings
                         for (const [idx, res] of Object.entries(itemRes)) {
                             const message = currents[parseInt(idx) - 1];
+
+                            // Detect delimiter: comma if no semicolons/pipes, otherwise semicolon/pipe
                             const isCommaDelim = !(res.includes(";") || res.includes("|"));
+
+                            // Parse and normalize codes from delimited string
                             const codes = res
                                 .toLowerCase()
                                 .split(isCommaDelim ? /,/g : /\||;/g)
@@ -180,22 +343,31 @@ const analyzeChunks = <T extends DataItem>(
                                 .filter(
                                     (c) =>
                                         c.length > 0 &&
-                                        c !== message.content.toLowerCase() &&
-                                        !c.endsWith("...") &&
+                                        // Filter out invalid codes:
+                                        c !== message.content.toLowerCase() && // Not just the message itself
+                                        !c.endsWith("...") && // Not incomplete
                                         !c.endsWith("!") &&
                                         !c.endsWith("?") &&
-                                        !c.endsWith(".") && // To avoid codes using the original content
-                                        !c.endsWith(`p${message.uid}`),
+                                        !c.endsWith(".") && // Not sentence fragments
+                                        !c.endsWith(`p${message.uid}`), // Not participant IDs
                                 );
+
                             logger.debug(
                                 `[${dataset.name}/${key}] Received ${codes.length} codes for message ${message.id}: ${codes.join(", ")}`,
                             );
-                            // Record the codes from line-level coding
+
+                            // Store codes for this item
                             analysis.items[message.id].codes = codes;
+
+                            // Build codebook entries with examples
                             codes.forEach((code) => {
                                 const cur = analysis.codes[code] ?? { label: code };
                                 cur.examples = cur.examples ?? [];
+
+                                // Format example with speaker and content
                                 const content = assembleExampleFrom(dataset, message);
+
+                                // Add example if non-empty and not already present
                                 if (message.content !== "" && !cur.examples.includes(content)) {
                                     cur.examples.push(content);
                                     logger.debug(
@@ -205,8 +377,13 @@ const analyzeChunks = <T extends DataItem>(
                                 analysis.codes[code] = cur;
                             });
                         }
+
+                        // Store analysis for next window's overlap processing
                         prevAnalysis = analysis;
-                        // Dial back the cursor if necessary
+
+                        // Calculate cursor movement based on items processed
+                        // Negative if fewer items coded than in window (dial back)
+                        // Positive if more items coded (skip ahead)
                         const movement = Object.keys(itemRes).length - currents.length;
                         logger.debug(`[${dataset.name}/${key}] Cursor movement: ${movement}`);
                         return movement;
@@ -215,44 +392,133 @@ const analyzeChunks = <T extends DataItem>(
                     retries,
                 );
             } catch (e) {
+                // Wrap errors for better tracking and debugging
                 const err = new CodeStep.InternalError("Failed to analyze chunk");
                 err.cause = e;
                 throw err;
             }
+
+            // Increment iteration counter for this chunk's analysis
             analysis.iteration++;
             logger.info(`[${dataset.name}] Analyzed chunk ${key}, iteration ${analysis.iteration}`);
         }
-        // Consolidate a codebook
+
+        // Consolidate all codes into a unified codebook
+        // Merges individual code entries, combines examples, builds hierarchies
         mergeCodebook(analyzed);
+
         return analyzed;
     });
 
+/**
+ * CodeStep - Applies qualitative codes to data items
+ *
+ * Responsibilities:
+ * - AI Mode: Use LLMs with analyzer strategies to automatically code data
+ * - Human Mode: Import codes from Excel files completed by human coders
+ * - Export results to Excel and JSON for review/editing
+ * - Build codebooks with codes, examples, and metadata
+ * - Support multiple datasets, strategies, models, and coders
+ *
+ * Type Parameters:
+ * - TSubunit: Type of data item (default: DataItem)
+ * - TUnit: Type of data chunk (default: DataChunk<DataItem>)
+ *
+ * Execution Modes:
+ *
+ * AI Mode (agent: "AI"):
+ * 1. For each dataset:
+ *    a. For each strategy:
+ *       - Initialize analyzer (or use provided instance)
+ *       - For each chunk group:
+ *         - Call analyzeChunks() to code all chunks
+ *         - Export results to JSON and Excel
+ *         - Store in results map
+ *
+ * Human Mode (agent: "Human"):
+ * 1. For each dataset:
+ *    a. Find coder files in configured directory
+ *    b. For each coder:
+ *       - Try loading from Excel (preferred)
+ *       - Fall back to JSON if Excel fails
+ *       - Handle missing/empty files per onMissing config
+ *       - Build codebook from imported codes
+ *       - Store in results map
+ *
+ * Results Structure:
+ * results[dataset_name][analyzer_name][identifier] = CodedThreads
+ * - dataset_name: Name of the dataset
+ * - analyzer_name: "human" for human mode, strategy name for AI mode
+ * - identifier: coder name (human) or "chunk_group-model" (AI)
+ *
+ * Pipeline Integration:
+ * - Depends on LoadStep(s) for data
+ * - Provides results to ConsolidateStep via getResult()
+ * - Group name used to organize coders in consolidation
+ */
 export class CodeStep<
     TSubunit extends DataItem = DataItem,
     TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
 > extends BaseStep {
+    /**
+     * Dependencies: LoadStep(s) providing the data to code
+     */
     override dependsOn: LoadStep<TUnit>[];
 
+    /**
+     * Datasets loaded from dependencies (private until execution)
+     */
     #datasets: Dataset<TUnit>[] = [];
+
+    /**
+     * Get the datasets being coded
+     *
+     * @throws UnexecutedError if step hasn't executed yet
+     * @returns Array of datasets from LoadStep dependencies
+     */
     get datasets() {
-        // Sanity check
+        // Sanity check - prevent access before execution
         if (!this.executed || !this.#datasets.length) {
             throw new CodeStep.UnexecutedError(logger.prefixed(this._prefix, "datasets"));
         }
         return this.#datasets;
     }
 
-    // the step's group name (for the consolidation step)
+    /**
+     * Group name for this coder (used in consolidation)
+     *
+     * Groups allow organizing multiple coding sources:
+     * - "human" for human coders
+     * - "ai" for AI coders
+     * - Custom names for specific coder groups
+     */
     group: string;
 
-    // results[dataset][analyzer][ident] = CodedThreads
+    /**
+     * Coding results organized by dataset, analyzer, and identifier
+     *
+     * Structure: results[dataset][analyzer][ident] = CodedThreads
+     * - dataset: Dataset name (e.g., "interview-study")
+     * - analyzer: Analyzer name (e.g., "human", "thematic-analysis")
+     * - ident: Specific identifier (coder name or "chunk-model")
+     */
     #results = new Map<string, Record<string, Record<string, CodedThreads>>>();
+
+    /**
+     * Get coding results for a specific dataset
+     *
+     * @param dataset - Name of the dataset
+     * @throws UnexecutedError if step hasn't executed yet
+     * @throws InternalError if dataset not found
+     * @returns Nested record of results by analyzer and identifier
+     */
     getResult(dataset: string) {
         logger.withSource(this._prefix, "getResult", () => {
-            // Sanity check
+            // Sanity check - ensure execution completed
             if (!this.executed || !this.#results.size) {
                 throw new CodeStep.UnexecutedError();
             }
+            // Verify dataset exists in results
             if (!this.#results.has(dataset)) {
                 throw new CodeStep.InternalError(`Dataset ${dataset} not found`);
             }
@@ -261,15 +527,23 @@ export class CodeStep<
         return this.#results.get(dataset) ?? {};
     }
 
+    /**
+     * Create a new CodeStep
+     *
+     * @param config - Configuration for AI or Human mode
+     */
     constructor(private readonly config: CodeStepConfig<TSubunit, TUnit>) {
         super();
-        // If config.dataset is not provided, we will code all datasets loaded
+
+        // Setup dependencies: normalize to array
+        // If no dataset specified, depends on all LoadSteps (configured elsewhere)
         this.dependsOn = config.dataset
             ? Array.isArray(config.dataset)
                 ? config.dataset
                 : [config.dataset]
             : [];
-        // Initialize the group name
+
+        // Initialize group name (defaults based on agent type)
         this.group = config.group ?? config.agent.toLowerCase();
     }
 

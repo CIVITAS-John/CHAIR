@@ -1,3 +1,35 @@
+/**
+ * LLM Request Management and Caching
+ *
+ * This module provides centralized LLM (Large Language Model) request handling with built-in caching,
+ * token tracking, and support for multiple model providers (OpenAI, Anthropic, Google, Groq, Mistral, Ollama).
+ *
+ * Key Features:
+ * - Automatic response caching based on MD5 hash of input messages and temperature
+ * - Token usage tracking per session for cost monitoring
+ * - Support for both cloud-based and local (Ollama) models
+ * - Configurable temperature and timeout settings per model
+ * - Automatic stripping of <think> tags for reasoning models
+ *
+ * Cache Strategy:
+ * - Cache files stored in: known/{cache_name}/{model_name}/{md5(input)}-{temperature}.txt
+ * - Format: "{input}\n===\n{output}" - allows cache validation by checking input matches
+ * - MD5 collision risk is acceptable for this use case (caching duplicate prompts as same response)
+ *
+ * Request Flow:
+ * 1. requestLLM() called with messages, cache name, and temperature
+ * 2. Generate MD5 hash of concatenated message contents
+ * 3. Check if cache file exists at known/{cache}/{model}/{hash}-{temp}.txt
+ * 4. If cache hit: read file, parse output, update token counts, return stripped response
+ * 5. If cache miss: call requestLLMWithoutCache() to invoke model API
+ * 6. Write response to cache file, update token counts, return stripped response
+ *
+ * Token Tracking:
+ * - All requests update session.inputTokens and session.outputTokens
+ * - Even cached responses are counted to track "virtual" costs
+ * - Token counts estimated using GPT-3.5-turbo tokenizer (good enough approximation)
+ */
+
 import { existsSync, readFileSync, writeFileSync } from "fs";
 
 import { ChatAnthropic } from "@langchain/anthropic";
@@ -222,7 +254,20 @@ const MODELS = {
     },
 } satisfies Record<string, Omit<LLMObject, "name" | "model"> & Partial<Pick<LLMObject, "model">>>;
 
+/** Type representing the names of all predefined LLM models */
 export type LLMName = keyof typeof MODELS;
+
+/**
+ * Configuration object for an LLM model instance
+ *
+ * @property model - Factory function that creates a configured LangChain chat model
+ * @property name - Human-readable name/identifier for the model
+ * @property maxInput - Maximum input tokens the model can accept
+ * @property maxOutput - Maximum output tokens the model can generate
+ * @property maxItems - Maximum number of items to process in a batch
+ * @property local - Whether this is a locally-hosted model (e.g., Ollama)
+ * @property systemMessage - Whether the model supports system messages (some reasoning models don't)
+ */
 export interface LLMObject {
     model: (temperature: number) => BaseChatModel;
     name: string;
@@ -232,6 +277,18 @@ export interface LLMObject {
     local?: boolean;
     systemMessage?: boolean;
 }
+
+/**
+ * Options for initializing a custom Ollama LLM
+ *
+ * @property name - Identifier for this model configuration
+ * @property model - Optional Ollama model name (defaults to name if not provided)
+ * @property maxInput - Maximum input tokens (defaults to 8192)
+ * @property maxOutput - Maximum output tokens (defaults to 8192)
+ * @property maxItems - Maximum batch size (defaults to 32)
+ * @property baseUrl - Ollama server URL (defaults to OLLAMA_URL env var or localhost:11434)
+ * @property systemMessage - Whether model supports system messages (defaults to true)
+ */
 export interface OllamaLLMOptions {
     name: string;
     model?: string;
@@ -241,7 +298,13 @@ export interface OllamaLLMOptions {
     baseUrl?: string;
     systemMessage?: boolean;
 }
+
+/** Type accepting either a predefined model name or a custom LLMObject */
 export type LLMModel = LLMName | LLMObject;
+
+/**
+ * Error thrown when attempting to use an unsupported or unavailable LLM model
+ */
 export class LLMNotSupportedError extends Error {
     override name = "LLMNotSupportedError";
     constructor(model: string, local = false) {
@@ -249,6 +312,15 @@ export class LLMNotSupportedError extends Error {
     }
 }
 
+/**
+ * Session object tracking LLM usage and progress for a single model across multiple requests
+ *
+ * @property llm - The LLM configuration being used
+ * @property inputTokens - Cumulative input tokens consumed across all requests
+ * @property outputTokens - Cumulative output tokens generated across all requests
+ * @property expectedItems - Total number of items expected to be processed
+ * @property finishedItems - Number of items successfully processed so far
+ */
 export interface LLMSession {
     llm: LLMObject;
     inputTokens: number;
@@ -259,7 +331,23 @@ export interface LLMSession {
 
 dotenv.config();
 
-/** Initialize the Ollama embeddings with the given options. */
+/**
+ * Initialize a custom Ollama LLM with the given configuration
+ *
+ * Ollama allows running open-source LLMs locally. This function creates an LLMObject
+ * configured to connect to a local Ollama server.
+ *
+ * @param options - Configuration for the Ollama model
+ * @returns Configured LLMObject ready for use in requests
+ *
+ * @example
+ * const customModel = initOllamaLLM({
+ *   name: "my-llama3",
+ *   model: "llama3:8b",
+ *   maxInput: 8192,
+ *   baseUrl: "http://localhost:11434"
+ * });
+ */
 export const initOllamaLLM = (options: OllamaLLMOptions): LLMObject => {
     return {
         name: options.name,
@@ -278,7 +366,30 @@ export const initOllamaLLM = (options: OllamaLLMOptions): LLMObject => {
     };
 };
 
-/** Initialize a LLM with the given name. */
+/**
+ * Initialize an LLM by name with support for experiment variants and Ollama models
+ *
+ * Naming Conventions:
+ * - "o_{model}" or "o_{model}_{tag}" - Routes to Ollama with specific tag (e.g., "o_llama3_70b" -> "llama3:70b")
+ * - "{model}_0" - Experiment variant (suffix stripped before lookup)
+ * - "{model}_{n}" - Multiple experiment variants supported
+ *
+ * @param LLM - Model name or experiment variant name
+ * @returns Configured LLMObject for the requested model
+ * @throws {LLMNotSupportedError} If model name not found in MODELS configuration
+ *
+ * @example
+ * // Standard model
+ * const gpt = initLLM("gpt-4o");
+ *
+ * @example
+ * // Ollama variant
+ * const localModel = initLLM("o_llama3_70b"); // Uses Ollama with model "llama3:70b"
+ *
+ * @example
+ * // Experiment variant
+ * const experiment = initLLM("claude3.5-sonnet_0"); // Uses claude3.5-sonnet configuration
+ */
 export const initLLM = (LLM: string): LLMObject => {
     // Handle the multiple experiments
     let realLLM = LLM;
@@ -432,7 +543,21 @@ export const requestLLM = (
         return stripped;
     });
 
-/** Call the model to generate text, explicitly bypassing cache. */
+/**
+ * Call the LLM API directly without using cache
+ *
+ * This function makes a direct API call to the configured LLM model, bypassing the caching layer.
+ * It tracks tokens, handles timeouts, and converts all messages to HumanMessage if the model
+ * doesn't support system messages.
+ *
+ * @param messages - Array of chat messages to send to the model
+ * @param temperature - Sampling temperature (0 = deterministic, higher = more random)
+ * @param fakeRequest - If true, skip API call and return empty string (for testing)
+ * @returns The raw model response text (before stripping <think> tags)
+ * @throws {BaseStep.ContextVarNotFoundError} If called outside an LLM session context
+ *
+ * @internal This function is called by requestLLM() when cache misses occur
+ */
 export const requestLLMWithoutCache = (
     messages: BaseMessage[],
     temperature?: number,
@@ -478,8 +603,20 @@ export const requestLLMWithoutCache = (
         return text;
     });
 
-/** Strip the <think> tags from the text. */
+/**
+ * Strip <think> reasoning tags from model output
+ *
+ * Some reasoning models (like o1) use <think></think> tags to show their internal reasoning process.
+ * This function removes those tags and their contents from the final output, keeping only the answer.
+ *
+ * @param text - Raw model output potentially containing <think> tags
+ * @returns Cleaned text with all <think>...</think> sections removed
+ *
+ * @example
+ * stripThinkTags("<think>Let me analyze...</think>The answer is 42")
+ * // Returns: "The answer is 42"
+ */
 const stripThinkTags = (text: string): string => {
-    // Remove everything between <think> and </think> tags
+    // Remove everything between <think> and </think> tags using regex with dotall flag
     return text.replace(/<think>.*?<\/think>/gs, "").trim();
 };

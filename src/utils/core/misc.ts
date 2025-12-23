@@ -1,9 +1,35 @@
+/**
+ * Core Utility Functions
+ *
+ * Collection of general-purpose utility functions used throughout the application.
+ * Includes async helpers, data manipulation, and dataset processing utilities.
+ */
+
 import type { DataChunk, DataItem, Dataset } from "../../schema.js";
 
-/** Reverse a string. */
+/**
+ * Reverse a string character by character
+ *
+ * @param s - String to reverse
+ * @returns Reversed string
+ *
+ * @example
+ * reverse("hello") // Returns "olleh"
+ */
 export const reverse = (s: string) => s.split("").reverse().join("");
 
-/** Wait for a number of milliseconds. */
+/**
+ * Sleep for a specified duration
+ *
+ * Returns a promise that resolves after the specified milliseconds.
+ * Useful for rate limiting, retry delays, or simulating async operations.
+ *
+ * @param ms - Duration to sleep in milliseconds
+ * @returns Promise that resolves to true after the delay
+ *
+ * @example
+ * await sleep(1000); // Wait for 1 second
+ */
 export const sleep = (ms: number) =>
     new Promise<true>((resolve) => {
         const timeout = setTimeout(() => {
@@ -12,7 +38,26 @@ export const sleep = (ms: number) =>
         }, ms);
     });
 
-/** Create a promise with timeout. */
+/**
+ * Race a promise against a timeout
+ *
+ * Wraps a promise with a timeout to prevent indefinite hangs. If the promise
+ * doesn't resolve/reject within the time limit, throws the timeout error.
+ *
+ * @template T - Type of the promise result
+ * @param promise - Promise to race against timeout
+ * @param time - Timeout duration in milliseconds
+ * @param timeoutError - Error to throw on timeout (default: "Sorry, the AI stopped responding.")
+ * @returns Promise result if it completes in time
+ * @throws {Error} timeoutError if timeout is exceeded
+ *
+ * @example
+ * const result = await promiseWithTimeout(
+ *   fetchData(),
+ *   5000,
+ *   new Error("Request timed out")
+ * );
+ */
 export const promiseWithTimeout = async <T>(
     promise: Promise<T>,
     time: number,
@@ -100,7 +145,25 @@ export const getMedian = (arr: number[]) => {
 //     return Categories;
 // }
 
-/** Assemble an example. */
+/**
+ * Assemble an example string with ID, speaker name, and content
+ *
+ * Uses the "|||" separator convention to separate ID from content.
+ * Format: "ID|||SpeakerName: Content"
+ *
+ * The "|||" separator is used because:
+ * - Unlikely to appear naturally in user content
+ * - Easy to split on for parsing
+ * - Converts to ": " for display (see export.ts)
+ *
+ * @param getSpeakerNameForExample - Function to get display name for a user ID
+ * @param id - Unique identifier for this example
+ * @param uid - User/speaker identifier
+ * @param content - The example text content
+ * @returns Formatted example string "ID|||Speaker: Content"
+ *
+ * @internal Used by assembleExampleFrom
+ */
 const assembleExample = (
     getSpeakerNameForExample: (uid: string) => string,
     id: string,
@@ -108,7 +171,20 @@ const assembleExample = (
     content: string,
 ) => `${id}|||${getSpeakerNameForExample(uid)}: ${content}`;
 
-/** Assemble an example from a data item. */
+/**
+ * Assemble an example string from a DataItem
+ *
+ * Convenience wrapper that extracts id, uid, and content from a DataItem
+ * and formats them using the "|||" separator convention.
+ *
+ * @param dataset - Dataset containing speaker name lookup logic
+ * @param item - Data item to format as an example
+ * @returns Formatted example string "ID|||Speaker: Content"
+ *
+ * @example
+ * const example = assembleExampleFrom(dataset, messageItem);
+ * // Returns: "msg123|||John Doe: Hello world"
+ */
 export const assembleExampleFrom = <T>(dataset: Dataset<T>, item: DataItem) =>
     assembleExample(dataset.getSpeakerNameForExample, item.id, item.uid, item.content);
 

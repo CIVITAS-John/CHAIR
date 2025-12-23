@@ -1,3 +1,42 @@
+/**
+ * Async Context-Aware Logging System
+ *
+ * This module provides a sophisticated logging system that uses AsyncLocalStorage (via @rakuzen25/async-store)
+ * to track execution context across async boundaries. This allows automatic source attribution without
+ * explicitly passing logger instances through the call stack.
+ *
+ * Key Features:
+ * - Automatic source tracking: Functions can declare their source name, visible to all nested calls
+ * - Prefix stacking: Support for hierarchical prefixes (e.g., "ClassName#methodName")
+ * - Dual output: Console (with colors) and file (with timestamps)
+ * - Log levels: ERROR, WARN, SUCCESS, INFO, DEBUG
+ * - Console locking: Temporarily disable console output while keeping file logging
+ *
+ * Async Context Pattern:
+ * - Uses AsyncVar<Stack<T>> to maintain a stack of sources/prefixes per async context
+ * - withSource() wraps a function to push/pop source onto the context stack
+ * - withPrefix() similar but for class/module prefixes
+ * - withDefaultSource() combines both: uses prefix + method name as source
+ * - All nested async operations inherit the context automatically
+ *
+ * Usage Pattern:
+ * ```typescript
+ * class MyClass {
+ *   async myMethod() {
+ *     return logger.withPrefix("MyClass", async () => {
+ *       logger.info("Starting"); // Logged as "[INFO] MyClass: Starting"
+ *       await logger.withDefaultSource("myMethod", async () => {
+ *         logger.debug("Working"); // Logged as "[DEBUG] MyClass#myMethod: Working"
+ *       });
+ *     });
+ *   }
+ * }
+ * ```
+ *
+ * The pattern ensures clean separation of concerns: business logic doesn't need to know
+ * about logging infrastructure, yet logs automatically include rich context information.
+ */
+
 import type { WriteStream } from "fs";
 import { createWriteStream } from "fs";
 import { dirname } from "path";
@@ -8,14 +47,18 @@ import chalk from "chalk";
 import { ensureFolder } from "../io/file.js";
 import { Stack } from "./stack.js";
 
+/**
+ * Log verbosity levels (lower number = higher priority)
+ */
 export enum LogLevel {
-    ERROR,
-    WARN,
-    SUCCESS,
-    INFO,
-    DEBUG,
+    ERROR,    // Critical errors that may terminate execution
+    WARN,     // Warnings about recoverable issues
+    SUCCESS,  // Success messages for major milestones
+    INFO,     // General information messages
+    DEBUG,    // Detailed debugging information
 }
 
+// Async context variables for tracking source and prefix stacks
 const LoggerSource = new AsyncVar<Stack<string>>("LoggerSource");
 const LoggerPrefix = new AsyncVar<Stack<string>>("LoggerPrefix");
 
