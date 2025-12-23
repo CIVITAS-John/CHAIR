@@ -5,7 +5,7 @@ import type { Code } from "../../../schema.js";
 import { Panel } from "../panels/panel.js";
 import { filterNodesByOwner } from "../utils/graph.js";
 import type { Component } from "../utils/schema.js";
-import { getCodebookColor } from "../utils/utils.js";
+import { downloadFile, exportCSV, getCodebookColor } from "../utils/utils.js";
 import type { Visualizer } from "../visualizer.js";
 
 /** The code side panel. */
@@ -34,16 +34,19 @@ export class CodeSection extends Panel {
         this.setRefresh(() => {
             this.container.empty();
             // Some notes
-            $('<p class="tips"></p>')
+            var Features = $('<p class="tips"></p>')
                 .appendTo(this.container)
                 .html(
                     `Clusters are not deterministic, only to help understand the data. Names are chosen by connectedness.
-                    <a href="javascript:void(0)">Click here</a> to visualize codebooks' coverage by clusters.`,
-                )
-                .find("a")
-                .on("click", () => {
-                    this.visualizer.dialog.compareCoverageByClusters();
-                });
+                    <a href="javascript:void(0)">Click here</a> to visualize codebooks' coverage by clusters.
+                    <a href="javascript:void(0)">Click here</a> to export all codes and clusters.`,
+                ).find("a");
+            Features.filter("a").eq(0).on("click", () => {
+                this.visualizer.dialog.compareCoverageByClusters();
+            });
+            Features.filter("a").eq(1).on("click", () => {
+                this.exportCodesAndClusters();
+            });
             // Show the components
             const components = this.getGraph<Code>().components ?? [];
             this.container.append(
@@ -226,5 +229,44 @@ export class CodeSection extends Panel {
                 ["Code", "Consensus", "Cases"],
             );
         });
+    }
+
+    /** Export all codes and clusters to CSV format. */
+    exportCodesAndClusters() {
+        const graph = this.getGraph<Code>();
+        const components = graph.components ?? [];
+        const allNodes = graph.nodes;
+        
+        // Helper function to add node data to CSV
+        const addNodeToCSV = (csvData: string[][], categoryName: string, node: typeof allNodes[0]) => {
+            const examples = (node.data.examples ?? [])
+                .map(example => example.replace("|||", ": "))
+                .join("\n");
+            csvData.push([categoryName, node.data.label, node.data.alternatives?.join("\n") ?? "", examples]);
+        };
+        
+        // Build CSV data
+        const csvData: string[][] = [["Category", "Code", "RawCodes", "Examples"]];
+        
+        // Add cluster data
+        components.forEach((component, clusterIndex) => {
+            const clusterName = `${component.representative?.data.label ?? `Cluster ${clusterIndex + 1}`}`;
+            // Only include filtered (non-hidden) nodes
+            component.nodes.filter((node) => !node.hidden).forEach((node) => {
+                addNodeToCSV(csvData, clusterName, node);
+            });
+        });
+        
+        // Add unclustered codes (if any) - also filter these
+        const clusteredNodeIds = new Set(components.flatMap(c => c.nodes.map(n => n.id)));
+        allNodes.filter(node => !clusteredNodeIds.has(node.id) && !node.hidden).forEach((node) => {
+            addNodeToCSV(csvData, "unclustered", node);
+        });
+        
+        // Convert to CSV format
+        const csvContent = exportCSV(csvData);
+
+        // Download the content
+        downloadFile(csvContent, "codes.csv", "text/csv;charset=utf-8");
     }
 }

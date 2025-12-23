@@ -126,3 +126,35 @@ export const postData = (url: string, data: unknown) =>
         },
         body: JSON.stringify(data),
     });
+
+
+/** Export data to CSV format. */
+export const exportCSV = (data: string[][]) => {
+    return data.map(row => 
+            row.map(cell => {
+                // Escape quotes and wrap in quotes if contains comma, newline, or quotes
+                const escaped = cell.replace(/"/g, '""');
+                if (cell.includes(',') || cell.includes('\n') || cell.includes('"')) {
+                    return `"${escaped}"`;
+                }
+                return escaped;
+            }).join(",")
+        ).join("\n");
+}
+
+/** Download a file in the browser context. */
+export const downloadFile = (content: string, filename: string, mime: string) => {
+    const blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), content], { type: mime });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute("href", url);
+    link.setAttribute("download", filename);
+    link.style.visibility = "hidden";
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    URL.revokeObjectURL(url);
+}
