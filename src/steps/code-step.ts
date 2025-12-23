@@ -8,12 +8,12 @@ import open from "open";
 import { Analyzer, loopThroughChunk } from "../analyzer.js";
 import { buildCodes, mergeCodebook } from "../consolidating/codebooks.js";
 import type { CodedThread, CodedThreads, DataChunk, DataItem, Dataset } from "../schema.js";
-import { exportChunksForCoding, importCodes } from "../utils/export.js";
-import { ensureFolder, readJSONFile } from "../utils/file.js";
-import type { LLMModel } from "../utils/llms.js";
-import { requestLLM, useLLMs } from "../utils/llms.js";
-import { logger } from "../utils/logger.js";
-import { assembleExampleFrom } from "../utils/misc.js";
+import { exportChunksForCoding, importCodes } from "../utils/io/export.js";
+import { ensureFolder, readJSONFile } from "../utils/io/file.js";
+import type { LLMModel } from "../utils/ai/llms.js";
+import { requestLLM, useLLMs } from "../utils/ai/llms.js";
+import { logger } from "../utils/core/logger.js";
+import { assembleExampleFrom } from "../utils/core/misc.js";
 
 import type { AIParameters } from "./base-step.js";
 import { BaseStep } from "./base-step.js";

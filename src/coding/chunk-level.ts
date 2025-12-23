@@ -1,8 +1,8 @@
 import { Analyzer } from "../analyzer.js";
 import type { Code, CodedThread, Message } from "../schema.js";
 import { BaseStep } from "../steps/base-step.js";
-import { logger } from "../utils/logger.js";
-import { assembleExampleFrom } from "../utils/misc.js";
+import { logger } from "../utils/core/logger.js";
+import { assembleExampleFrom } from "../utils/core/misc.js";
 
 import { ConversationAnalyzer, revertMessageFormat } from "./conversations.js";
 

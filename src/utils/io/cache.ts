@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
 
 import { readJSONFile } from "./file.js";
-import { logger } from "./logger.js";
+import { logger } from "../core/logger.js";
 
 /** Read or build a cache based on a hash. */
 export const withCache = <T>(cachePath: string, hash: string, task: () => Promise<T>) =>

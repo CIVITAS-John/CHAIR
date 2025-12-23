@@ -8,9 +8,9 @@ import type {
     RawDataItem,
     RawDataset,
 } from "../schema.js";
-import { importDefault, readJSONFile } from "../utils/file.js";
-import { logger } from "../utils/logger.js";
-import { parseDateTime } from "../utils/misc.js";
+import { importDefault, readJSONFile } from "../utils/io/file.js";
+import { logger } from "../utils/core/logger.js";
+import { parseDateTime } from "../utils/core/misc.js";
 
 import { BaseStep } from "./base-step.js";
 

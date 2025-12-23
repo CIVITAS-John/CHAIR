@@ -7,9 +7,9 @@ import { DefinitionGenerator } from "../consolidating/definition-generator.js";
 import { RefineMerger } from "../consolidating/refine-merger.js";
 import { SimpleMerger } from "../consolidating/simple-merger.js";
 import type { Codebook, CodedThreadsWithCodebook } from "../schema.js";
-import { exportChunksForCoding } from "../utils/export.js";
-import { ensureFolder } from "../utils/file.js";
-import { logger } from "../utils/logger.js";
+import { exportChunksForCoding } from "../utils/io/export.js";
+import { ensureFolder } from "../utils/io/file.js";
+import { logger } from "../utils/core/logger.js";
 
 export interface ReferenceBuilderConfig {
     retries?: number;

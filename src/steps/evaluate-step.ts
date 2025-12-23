@@ -4,8 +4,8 @@ import { join } from "path";
 // import type { CodebookEvaluator } from "../evaluating/codebooks";
 import { NetworkEvaluator } from "../evaluating/network-evaluator.js";
 import type { Codebook, DataChunk, DataItem, Dataset } from "../schema.js";
-import { ensureFolder } from "../utils/file.js";
-import { logger } from "../utils/logger.js";
+import { ensureFolder } from "../utils/io/file.js";
+import { logger } from "../utils/core/logger.js";
 
 import { BaseStep } from "./base-step.js";
 import type { ConsolidateStep } from "./consolidate-step.js";

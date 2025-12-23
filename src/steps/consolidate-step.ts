@@ -9,10 +9,10 @@ import {
     RefiningReferenceBuilder,
 } from "../evaluating/reference-builder.js";
 import type { Codebook, DataChunk, DataItem, Dataset } from "../schema.js";
-import { withCache } from "../utils/cache.js";
-import { ensureFolder } from "../utils/file.js";
-import { type LLMModel, useLLMs } from "../utils/llms.js";
-import { logger } from "../utils/logger.js";
+import { withCache } from "../utils/io/cache.js";
+import { ensureFolder } from "../utils/io/file.js";
+import { type LLMModel, useLLMs } from "../utils/ai/llms.js";
+import { logger } from "../utils/core/logger.js";
 
 import type { AIParameters } from "./base-step.js";
 import { BaseStep } from "./base-step.js";

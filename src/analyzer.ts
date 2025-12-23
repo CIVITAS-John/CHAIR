@@ -1,5 +1,5 @@
 import { BaseStep } from "./steps/base-step.js";
-import { logger } from "./utils/logger.js";
+import { logger } from "./utils/core/logger.js";
 
 abstract class AnalyzerError extends Error {
     override name = "Analyzer.Error";

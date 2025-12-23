@@ -12,9 +12,9 @@ import { basename, extname, join } from "path";
 
 import open, { apps } from "open";
 
-import { ensureFolder } from "./file.js";
-import { logger } from "./logger.js";
-import { sleep } from "./misc.js";
+import { ensureFolder } from "../io/file.js";
+import { logger } from "../core/logger.js";
+import { sleep } from "../core/misc.js";
 
 /** Create a local server for interactivity. */
 export const launchServer = <T>(

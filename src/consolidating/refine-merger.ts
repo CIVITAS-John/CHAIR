@@ -1,7 +1,7 @@
 import type { Code, Codebook } from "../schema.js";
 import { BaseStep } from "../steps/base-step.js";
-import { clusterCodes } from "../utils/embeddings.js";
-import { logger } from "../utils/logger.js";
+import { clusterCodes } from "../utils/ai/embeddings.js";
+import { logger } from "../utils/core/logger.js";
 
 import { mergeCodesByCluster } from "./codebooks.js";
 import { DefinitionParser } from "./definition-generator.js";

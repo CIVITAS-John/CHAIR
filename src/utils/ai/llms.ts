@@ -15,11 +15,11 @@ import { ChatOpenAI } from "@langchain/openai";
 import * as dotenv from "dotenv";
 import md5 from "md5";
 
-import { BaseStep } from "../steps/base-step.js";
+import { BaseStep } from "../../steps/base-step.js";
 
-import { ensureFolder } from "./file.js";
-import { logger } from "./logger.js";
-import { promiseWithTimeout } from "./misc.js";
+import { ensureFolder } from "../io/file.js";
+import { logger } from "../core/logger.js";
+import { promiseWithTimeout } from "../core/misc.js";
 import { tokenize } from "./tokenizer.js";
 
 const MODELS = {

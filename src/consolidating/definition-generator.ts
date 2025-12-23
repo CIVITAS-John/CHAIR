@@ -1,6 +1,6 @@
 import type { Code, Codebook } from "../schema.js";
 import { BaseStep } from "../steps/base-step.js";
-import { logger } from "../utils/logger.js";
+import { logger } from "../utils/core/logger.js";
 
 import { updateCodes } from "./codebooks.js";
 import { CodeConsolidator } from "./consolidator.js";

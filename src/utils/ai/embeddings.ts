@@ -12,13 +12,13 @@ import AsyncLock from "async-lock";
 import * as dotenv from "dotenv";
 import md5 from "md5";
 
-import { QAJob } from "../job.js";
-import type { Code } from "../schema.js";
+import { QAJob } from "../../job.js";
+import type { Code } from "../../schema.js";
 
-import { ensureFolder } from "./file.js";
-import { logger } from "./logger.js";
-import { sleep } from "./misc.js";
-import { runPythonScript } from "./python.js";
+import { ensureFolder } from "../io/file.js";
+import { logger } from "../core/logger.js";
+import { sleep } from "../core/misc.js";
+import { runPythonScript } from "../runtime/python.js";
 
 const MODELS = {
     "openai-small-512": {

@@ -1,4 +1,4 @@
-import type { DataChunk, DataItem, Dataset } from "../schema.js";
+import type { DataChunk, DataItem, Dataset } from "../../schema.js";
 
 /** Reverse a string. */
 export const reverse = (s: string) => s.split("").reverse().join("");

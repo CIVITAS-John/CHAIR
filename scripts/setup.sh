@@ -37,7 +37,7 @@ echo
 echo "[2/4] Setting up environment file..."
 env_file="./.env"
 if [[ -f "$env_file" ]]; then
-    echo -e "${GREEN}.env file already exists.${NC}"
+    echo -e "${GREEN}.env file already exists, skipping creation.${NC}"
 else
     echo "Creating .env file..."
     declare -a env_list

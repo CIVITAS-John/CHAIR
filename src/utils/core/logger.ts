@@ -5,7 +5,7 @@ import { dirname } from "path";
 import { AsyncScope, AsyncVar } from "@rakuzen25/async-store";
 import chalk from "chalk";
 
-import { ensureFolder } from "./file.js";
+import { ensureFolder } from "../io/file.js";
 import { Stack } from "./stack.js";
 
 export enum LogLevel {

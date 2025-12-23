@@ -3,7 +3,7 @@ import { join, resolve } from "path";
 
 import commonPathPrefix from "common-path-prefix";
 
-import { reverse } from "./misc.js";
+import { reverse } from "../core/misc.js";
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
 export const readJSONFile = <T>(path: string) => JSON.parse(readFileSync(path, "utf-8")) as T;

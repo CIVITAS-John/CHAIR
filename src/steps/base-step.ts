@@ -1,8 +1,8 @@
 import { AsyncVar } from "@rakuzen25/async-store";
 
 import type { Dataset } from "../schema.js";
-import type { LLMSession } from "../utils/llms.js";
-import { logger } from "../utils/logger.js";
+import type { LLMSession } from "../utils/ai/llms.js";
+import { logger } from "../utils/core/logger.js";
 
 export interface AIParameters extends Record<string, unknown> {
     retries?: number;

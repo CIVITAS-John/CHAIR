@@ -33,7 +33,7 @@ echo.
 :: Step 2: Setup environment file
 echo [2/4] Setting up environment file...
 if exist .env (
-    echo .env file already exists.
+    echo .env file already exists, skipping creation.
 ) else (
     echo Creating .env file...
     echo # API Keys for LLM providers > .env

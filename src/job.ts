@@ -9,9 +9,9 @@ import type { EvaluateStepConfig } from "./steps/evaluate-step.js";
 import { EvaluateStep } from "./steps/evaluate-step.js";
 import type { LoadStepConfig } from "./steps/load-step.js";
 import { LoadStep } from "./steps/load-step.js";
-import type { EmbedderModel, EmbedderObject } from "./utils/embeddings.js";
-import { initEmbedder } from "./utils/embeddings.js";
-import { logger } from "./utils/logger.js";
+import type { EmbedderModel, EmbedderObject } from "./utils/ai/embeddings.js";
+import { initEmbedder } from "./utils/ai/embeddings.js";
+import { logger } from "./utils/core/logger.js";
 
 export interface QAJobConfig {
     embedder?: EmbedderModel;

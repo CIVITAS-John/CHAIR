@@ -12,11 +12,11 @@ import type {
     DataItem,
     Dataset,
 } from "../schema.js";
-import { withCache } from "../utils/cache.js";
-import { evaluateTexts } from "../utils/embeddings.js";
-import { logger } from "../utils/logger.js";
-import { getMedian } from "../utils/misc.js";
-import { createOfflineBundle, launchServer } from "../utils/server.js";
+import { withCache } from "../utils/io/cache.js";
+import { evaluateTexts } from "../utils/ai/embeddings.js";
+import { logger } from "../utils/core/logger.js";
+import { getMedian } from "../utils/core/misc.js";
+import { createOfflineBundle, launchServer } from "../utils/runtime/server.js";
 
 import { CodebookEvaluator } from "./codebooks.js";
 

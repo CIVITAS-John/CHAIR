@@ -5,9 +5,9 @@ import { AsyncScope } from "@rakuzen25/async-store";
 import type { Options } from "python-shell";
 import { PythonShell } from "python-shell";
 
-import { QAJob } from "../job.js";
+import { QAJob } from "../../job.js";
 
-import { logger } from "./logger.js";
+import { logger } from "../core/logger.js";
 
 const getPythonPath = () => {
     // Determine from BaseStep.Context first

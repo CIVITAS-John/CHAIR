@@ -8,7 +8,7 @@ import { CodeStep } from "../src/steps/code-step.js";
 import { ConsolidateStep } from "../src/steps/consolidate-step.js";
 import { EvaluateStep } from "../src/steps/evaluate-step.js";
 import { LoadStep } from "../src/steps/load-step.js";
-import { logger } from "../src/utils/logger.js";
+import { logger } from "../src/utils/core/logger.js";
 
 const load = new LoadStep({
     path: "./examples/txt-data",

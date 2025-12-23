@@ -2,12 +2,12 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 import { loopThroughChunk } from "../analyzer.js";
 import type { Code, Codebook, CodedThreads, CodedThreadsWithCodebook, DataChunk, DataItem, Dataset } from "../schema.js";
-import type { ClusterItem } from "../utils/embeddings.js";
-import { requestLLM } from "../utils/llms.js";
-import { logger } from "../utils/logger.js";
+import type { ClusterItem } from "../utils/ai/embeddings.js";
+import { requestLLM } from "../utils/ai/llms.js";
+import { logger } from "../utils/core/logger.js";
 
 import { CodebookConsolidator } from "./consolidator.js";
-import { assembleExampleFrom, getAllItems } from "../utils/misc.js";
+import { assembleExampleFrom, getAllItems } from "../utils/core/misc.js";
 
 /** Build the list of codes from raw analyses. */
 export const buildCodes = <T>(dataset: Dataset<DataChunk<DataItem>>, analyses: CodedThreads): CodedThreads => {

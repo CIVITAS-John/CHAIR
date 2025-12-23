@@ -6,10 +6,10 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 
 import type { BertopicTopics, CodedThread, Conversation, Message } from "../schema.js";
 import { BaseStep } from "../steps/base-step.js";
-import { ensureFolder } from "../utils/file.js";
-import { requestLLM } from "../utils/llms.js";
-import { logger } from "../utils/logger.js";
-import { runPythonScript } from "../utils/python.js";
+import { ensureFolder } from "../utils/io/file.js";
+import { requestLLM } from "../utils/ai/llms.js";
+import { logger } from "../utils/core/logger.js";
+import { runPythonScript } from "../utils/runtime/python.js";
 
 import { buildMessagePrompt, ConversationAnalyzer } from "./conversations.js";
 

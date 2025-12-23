@@ -1,7 +1,7 @@
 import { Analyzer } from "../analyzer.js";
 import type { Code, Codebook, CodedThreads, CodedThreadsWithCodebook } from "../schema.js";
-import { logger } from "../utils/logger.js";
-import { seededShuffle } from "../utils/misc.js";
+import { logger } from "../utils/core/logger.js";
+import { seededShuffle } from "../utils/core/misc.js";
 
 abstract class ConsolidatorError extends Error {
     override name = "Consolidator.Error";

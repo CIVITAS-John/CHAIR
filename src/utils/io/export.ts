@@ -1,10 +1,10 @@
 import Excel from "exceljs";
 
-import { mergeCodebook } from "../consolidating/codebooks.js";
-import type { Code, CodedThread, CodedThreads, DataChunk, DataItem, Dataset } from "../schema.js";
+import { mergeCodebook } from "../../consolidating/codebooks.js";
+import type { Code, CodedThread, CodedThreads, DataChunk, DataItem, Dataset } from "../../schema.js";
 
-import { logger } from "./logger.js";
-import { assembleExampleFrom, getAllItems } from "./misc.js";
+import { logger } from "../core/logger.js";
+import { assembleExampleFrom, getAllItems } from "../core/misc.js";
 
 const { Workbook } = Excel;
 
