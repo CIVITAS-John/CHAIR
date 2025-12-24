@@ -16,13 +16,9 @@
 import { AsyncScope, AsyncVar } from "@rakuzen25/async-store";
 
 import { BaseStep } from "./steps/base-step.js";
-import type { CodeStepConfig } from "./steps/code-step.js";
 import { CodeStep } from "./steps/code-step.js";
-import type { ConsolidateStepConfig } from "./steps/consolidate-step.js";
 import { ConsolidateStep } from "./steps/consolidate-step.js";
-import type { EvaluateStepConfig } from "./steps/evaluate-step.js";
 import { EvaluateStep } from "./steps/evaluate-step.js";
-import type { LoadStepConfig } from "./steps/load-step.js";
 import { LoadStep } from "./steps/load-step.js";
 import type { EmbedderModel, EmbedderObject } from "./utils/ai/embeddings.js";
 import { initEmbedder } from "./utils/ai/embeddings.js";
@@ -331,48 +327,6 @@ export class QAJob {
             `Created job with ${this.steps.length} dependency groups (${this.steps.map((group) => group.length).join(", ")} steps)`,
             _id,
         );
-    }
-
-    /**
-     * Adds a step to the job dynamically.
-     *
-     * If no dependency groups exist, creates a new group.
-     * Otherwise, adds to the last dependency group.
-     * Reassigns all step IDs after adding.
-     *
-     * @param step - The step to add
-     * @returns The added step (for chaining)
-     */
-    addStep(step: BaseStep) {
-        logger.info(`Adding step of type ${step.constructor.name}`, "QAJob#addStep");
-        if (this.steps.length === 0) {
-            this.steps.push([step]);
-        } else {
-            this.steps[this.steps.length - 1].push(step);
-        }
-        step._id = `${this.steps.length}.${this.steps[this.steps.length - 1].length}`;
-        this.#assignID();
-        return step;
-    }
-
-    /** Creates and adds a LoadStep to the job */
-    addLoadStep(config: LoadStepConfig) {
-        return this.addStep(new LoadStep(config));
-    }
-
-    /** Creates and adds a CodeStep to the job */
-    addCodeStep(config: CodeStepConfig) {
-        return this.addStep(new CodeStep(config));
-    }
-
-    /** Creates and adds a ConsolidateStep to the job */
-    addConsolidateStep(config: ConsolidateStepConfig) {
-        return this.addStep(new ConsolidateStep(config));
-    }
-
-    /** Creates and adds an EvaluateStep to the job */
-    addEvaluateStep(config: EvaluateStepConfig) {
-        return this.addStep(new EvaluateStep(config));
     }
 
     /**

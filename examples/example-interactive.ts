@@ -4,13 +4,13 @@ import { DefinitionGenerator } from "../src/consolidating/definition-generator.j
 import { RefineMerger } from "../src/consolidating/refine-merger.js";
 import { SimpleMerger } from "../src/consolidating/simple-merger.js";
 import { QAJob, type QAJobConfig } from "../src/job.js";
+import { LoadJsonStep } from "../src/loading/load-json-step.js";
 import { CodeStep } from "../src/steps/code-step.js";
 import { ConsolidateStep } from "../src/steps/consolidate-step.js";
 import { EvaluateStep } from "../src/steps/evaluate-step.js";
-import { LoadStep } from "../src/steps/load-step.js";
 import { logger } from "../src/utils/core/logger.js";
 
-const load = new LoadStep({
+const load = new LoadJsonStep({
     path: "./examples/docx-data",
 });
 

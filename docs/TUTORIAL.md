@@ -58,7 +58,7 @@ To customize models or embedders, modify the `examples/example-automatic.ts` fil
 ### Configuration Example
 ```typescript
 import { QAJob } from "./src/job.js";
-import { LoadStep } from "./src/steps/load-step.js";
+import { LoadJsonStep } from "./src/loading/load-json-step.js";
 import { CodeStep } from "./src/steps/code-step.js";
 import { ConsolidateStep } from "./src/steps/consolidate-step.js";
 import { EvaluateStep } from "./src/steps/evaluate-step.js";
@@ -66,11 +66,11 @@ import { EvaluateStep } from "./src/steps/evaluate-step.js";
 const config = {
     embedder: "openai-small-512",
     steps: [
-        new LoadStep({ path: "./data" }),
-        new CodeStep({ 
-            agent: "AI", 
-            strategy: ["item-level-any"], 
-            model: ["gpt-4o"] 
+        new LoadJsonStep({ path: "./data" }),
+        new CodeStep({
+            agent: "AI",
+            strategy: ["item-level-any"],
+            model: ["gpt-4o"]
         }),
         new ConsolidateStep({ model: ["gpt-4o"] }),
         new EvaluateStep({ subdir: "evaluation" })

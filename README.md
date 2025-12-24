@@ -107,8 +107,9 @@ src/
 ├── coding/           # Analysis strategies and implementations
 ├── consolidating/    # Code merging and consolidation logic
 ├── evaluating/       # Evaluation metrics and visualization
+├── loading/         # Data loading implementations
 ├── steps/           # Pipeline step definitions
-├── utils/           # Utilities for LLMs, embeddings, file 
+├── utils/           # Utilities for LLMs, embeddings, file
 examples/            # Example configurations and data
 ```
 
