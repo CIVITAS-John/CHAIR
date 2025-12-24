@@ -1,21 +1,19 @@
 /**
- * Excel Import/Export for Qualitative Coding
+ * Excel Export for Qualitative Coding
  *
- * This module handles bidirectional Excel transformation for qualitative data analysis:
+ * This module handles exporting qualitative data analysis to Excel:
  * - Export chunks and codes to Excel for manual coding/review
- * - Import coded results back from Excel into the analysis pipeline
+ * - Export codebook with categories, definitions, examples, alternatives
  *
  * Key Features:
  * - Exports data chunks as separate worksheets with frozen headers
  * - Supports nested data structures (chunks containing subchunks)
- * - Codebook export/import with categories, definitions, examples, alternatives
  * - Special rows for thoughts, summary, and reflection per chunk
  * - Automatic consolidation tracking (alternatives mapped to canonical codes)
  *
  * The "|||" Separator Convention:
  * - Examples stored internally as: "ID|||Speaker: Content"
  * - When exporting to Excel: "|||" replaced with ": " for readability
- * - When importing from Excel: ": " converted back to "|||" (first occurrence only)
  * - Why "|||"?
  *   - Unlikely to appear in natural text
  *   - Easy to split/join programmatically
@@ -32,38 +30,15 @@
  * // Export for coding
  * const workbook = exportChunksForCoding(chunks, existingAnalyses);
  * await workbook.xlsx.writeFile("coding.xlsx");
- *
- * @example
- * // Import coded results
- * const codedData = await importCodes(dataset, "coding.xlsx");
  */
 
 import Excel from "exceljs";
 
-import { mergeCodebook } from "../../consolidating/codebooks.js";
-import type { Code, CodedThread, CodedThreads, DataChunk, DataItem, Dataset } from "../../schema.js";
+import type { Code, CodedThreads, DataChunk, DataItem } from "../../schema.js";
 
 import { logger } from "../core/logger.js";
-import { assembleExampleFrom, getAllItems } from "../core/misc.js";
 
 const { Workbook } = Excel;
-
-/**
- * Extract cell value as string from Excel row
- *
- * @param row - Excel row object
- * @param cell - Cell identifier (column letter or name)
- * @returns Cell value as string, or empty string if null/undefined
- * @internal
- */
-const getCellValueString = (row: Excel.Row, cell: string) => {
-    const cellValue = row.getCell(cell).value;
-    return cellValue === null || cellValue === undefined
-        ? ""
-        : typeof cellValue === "string"
-          ? cellValue
-          : JSON.stringify(cellValue);
-};
 
 /**
  * Calculate appropriate Excel row height based on content
@@ -99,85 +74,6 @@ export const sortCodes = (codes: Code[]) =>
         );
         return category !== 0 ? category : A.label.localeCompare(B.label);
     });
-
-// // Export: Export the JSON data into human-readable formats.
-// // ExportMessages: Export messages into markdown.
-// export function ExportMessages(Messages: Message[], Originals?: Message[]): string {
-//     let Result = "";
-//     let LastConversation = "-1";
-//     for (let I = 0; I < Messages.length; I++) {
-//         const Message = Messages[I];
-//         // Write a separator if the time gap is too long
-//         if (Message.chunk && LastConversation !== Message.chunk) {
-//             Result += `\n=== ${Message.chunk}\n\n`;
-//             LastConversation = Message.chunk;
-//         }
-//         // Export the message
-//         Result += `${Message.ID}. **P${Message.uid}, ${Message.nickname}**`;
-//         if (Originals !== undefined && Originals[I].nickname !== Message.nickname) {
-//             Result += ` (${Originals[I].nickname})`;
-//         }
-//         Result += `: ${Message.Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}\n`;
-//         Result += Message.Content;
-//         if (Originals !== undefined && Message.Content !== Originals[I].Content) {
-//             Result += `\n${Originals[I].Content}`;
-//         }
-//         Result += "\n";
-//     }
-//     return Result;
-// }
-
-// // ExportProjects: Export projects into markdown.
-// export function ExportProjects(Projects: Project[], Originals?: Project[]): string {
-//     let Result = "";
-//     for (let I = 0; I < Projects.length; I++) {
-//         const Project = Projects[I];
-//         const Original = Originals ? Originals[I] : undefined;
-//         // Title
-//         Result += `## ${Projects[I].Title} (${Projects[I].ID})`;
-//         if (Original && Original.Title !== Project.Title) {
-//             Result += `* Title: ${Original.Title}\n`;
-//         }
-//         // Author
-//         Result += `\n* Author: P${Projects[I].uid}, ${Projects[I].nickname}`;
-//         if (Original && Original.nickname !== Project.nickname) {
-//             Result += ` (${Original.nickname})`;
-//         }
-//         // Tags
-//         Result += `\n* Tags: ${Projects[I].Tags.join(", ")}`;
-//         // Time
-//         Result += `\n* Time: ${Projects[I].Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}`;
-//         // Visits
-//         Result += `\n* Popularity: Visits ${Projects[I].Visits}, Stars ${Projects[I].Stars}, Supports ${Projects[I].Supports}`;
-//         // Image
-//         Result += `\n![Cover](${Projects[I].Cover})`;
-//         // Content
-//         Result += `\n\n### Content\n${Projects[I].Content}`;
-//         if (Original && Original.Content !== Project.Content) {
-//             Result += `\n${Original.Content}`;
-//         }
-//         // Comments
-//         if (Project.items) {
-//             Result += "\n\n### Comments";
-//             Project.items.reverse(); // Here I had a little bug, the original exports have comments in reversed order.
-//             for (let N = 0; N < Project.items.length; N++) {
-//                 const Comment = Project.items[N];
-//                 const OriginalComment = Original ? Original.items[N] : undefined;
-//                 Result += `\n${N + 1}. **P${Comment.uid}, ${Comment.nickname}**`;
-//                 if (OriginalComment && Comment.nickname !== OriginalComment.nickname) {
-//                     Result += ` (${OriginalComment.nickname})`;
-//                 }
-//                 Result += `: ${Comment.Time.toLocaleString("en-US", { timeZone: "Asia/Shanghai" })}\n`;
-//                 Result += Comment.Content;
-//                 if (OriginalComment && Comment.Content !== OriginalComment.Content) {
-//                     Result += `\n${OriginalComment.Content}`;
-//                 }
-//             }
-//         }
-//         Result += "\n\n";
-//     }
-//     return Result;
-// }
 
 /** Export Chunks into an Excel workbook for coding. */
 export const exportChunksForCoding = <T extends DataItem>(
@@ -310,155 +206,6 @@ export const exportChunksForCoding = <T extends DataItem>(
         return book;
     });
 
-/** Import coded results from an Excel workbook. */
-export const importCodes = (
-    dataset: Dataset<DataChunk<DataItem>>,
-    path: string,
-    codebookSheet = "Codebook",
-): Promise<CodedThreads> =>
-    logger.withDefaultSource("importCodes", async () => {
-        logger.info(`Importing codes from ${path}`);
-
-        const workbook = new Workbook();
-        await workbook.xlsx.readFile(path);
-        const allItems = getAllItems(dataset);
-
-        // Initialize the analyses object
-        const analyses: CodedThreads = {
-            threads: {},
-        };
-
-        // Process each worksheet (tab) except the Codebook
-        workbook.eachSheet((worksheet) => {
-            if (worksheet.name === codebookSheet) return; // Skip codebook, will handle separately
-
-            const chunkId = worksheet.name;
-            logger.debug(`Importing chunk ${chunkId}`);
-
-            // Initialize the thread analysis
-            const analysis: CodedThread = {
-                id: chunkId,
-                codes: {},
-                items: {},
-                iteration: 0,
-            };
-
-            let msgs = 0;
-
-            // Find the column keys (not all worksheet will include all columns)
-            for (const column of worksheet.columns) {
-                if (!column.values?.[1]) continue; // Skip empty columns
-                const key = column.values[1];
-                column.key = typeof key === "string" ? key : JSON.stringify(key);
-            }
-
-            // Process each row in the worksheet
-            worksheet.eachRow((row, rowNumber) => {
-                if (rowNumber === 1) return; // Skip header row
-
-                // If the row has no ID cell, use (the row number - 1) as ID
-                const id = row.getCell("ID").value ?? rowNumber - 1;
-                const name = getCellValueString(row, "Nickname");
-                // const sid = getCellValueString(row, "SID");
-                const content = getCellValueString(row, "Content");
-
-                // Check if this is a special row (thoughts, summary, reflection)
-                if (typeof id === "number" && id < 0) {
-                    switch (id) {
-                        case -1:
-                            if (
-                                name === "Thoughts" &&
-                                content !== "(Optional) Your thoughts before coding the chunk."
-                            ) {
-                                analysis.plan = content;
-                            }
-                            break;
-                        case -2:
-                            if (name === "Summary" && content !== "The summary of the chunk.") {
-                                analysis.summary = content;
-                            }
-                            break;
-                        case -3:
-                            if (
-                                name === "Reflection" &&
-                                content !== "Your reflections after coding the chunk."
-                            ) {
-                                analysis.reflection = content;
-                            }
-                            break;
-                    }
-                    return;
-                }
-
-                // Skip empty rows
-                if (!content) return;
-
-                const codesValue = getCellValueString(row, "Codes");
-                const codes = codesValue
-                    ? codesValue
-                          .split(/[,;\n]+/)
-                          .filter(Boolean)
-                          .map((code) => code.trim())
-                    : undefined;
-
-                // Skip rows without codes
-                if (!codes) return;
-
-                // Add item to analysis
-                const messageId = typeof id === "string" ? id : JSON.stringify(id);
-                const item = {
-                    id: messageId,
-                    codes,
-                };
-                analysis.items[messageId] = item;
-
-                // Add item to the list of codes
-                for (const code of item.codes) {
-                    const current: Code = analysis.codes[code] ?? { label: code, examples: [] };
-                    analysis.codes[code] = current;
-                    // find the message
-                    const message = allItems.find((item) => item.id === messageId);
-                    if (!message) {
-                        logger.warn(`Message ${messageId} not found in chunk ${chunkId}`);
-                        continue;
-                    }
-                    // assemble the message
-                    const contentWithID = assembleExampleFrom(dataset, message);
-                    if (content !== "" && !current.examples?.includes(contentWithID)) {
-                        current.examples?.push(contentWithID);
-                    }
-                }
-
-                ++msgs;
-            });
-
-            if (msgs === 0) {
-                logger.warn(`No valid coded messages found in chunk ${chunkId}`);
-                return;
-            }
-
-            analyses.threads[chunkId] = analysis;
-
-            logger.debug(`Imported ${msgs} coded messages for chunk ${chunkId}`);
-        });
-
-        // Import the codebook
-        try {
-            analyses.codebook = await importCodebook(path, codebookSheet);
-            logger.info(`Successfully imported codebook from ${path}`);
-        } catch (error) {
-            // Build the codebook
-            logger.warn(
-                `Failed to import codebook from ${path}, building one: ${error instanceof Error ? `${error.message}\n${error.stack}` : JSON.stringify(error)}`,
-            );
-            mergeCodebook(analyses);
-        }
-
-        logger.info(
-            `Imported coded data from ${path}: ${Object.keys(analyses.threads).length} threads`,
-        );
-        return analyses;
-    });
 
 /** Export a codebook into an Excel workbook. */
 export const exportCodebook = (
@@ -549,92 +296,3 @@ export const exportCodebook = (
     });
 };
 
-/** Import a codebook from an Excel workbook. */
-export const importCodebook = (path: string, name = "Codebook"): Promise<Record<string, Code>> =>
-    logger.withDefaultSource("importCodebook", async () => {
-        logger.info(`Importing codebook from ${path}`);
-        const workbook = new Workbook();
-        await workbook.xlsx.readFile(path);
-
-        const sheet = workbook.getWorksheet(name);
-        if (!sheet) {
-            throw new Error(`Worksheet "${name}" not found in ${path}`);
-        }
-
-        const codebook: Record<string, Code> = {};
-
-        // Skip the header row (row 1)
-        sheet.eachRow((row, rowNumber) => {
-            if (rowNumber === 1) return;
-
-            const label = getCellValueString(row, "Label").trim();
-            if (!label) return; // Skip rows without a label
-
-            logger.debug(`Importing code ${label}`);
-
-            const categoryText = getCellValueString(row, "Category");
-            const definitionText = getCellValueString(row, "Definition");
-            const examplesText = getCellValueString(row, "Examples");
-            const alternativesText = getCellValueString(row, "Alternatives");
-
-            // Parse categories (handle bullet points)
-            const categories = categoryText
-                ? categoryText
-                      .split("\n")
-                      .map((c) => c.trim().replace(/^\* /, ""))
-                      .filter(Boolean)
-                : undefined;
-
-            // Parse definitions (handle bullet points)
-            const definitions = definitionText
-                ? definitionText
-                      .split("\n")
-                      .map((d) => d.trim().replace(/^\* /, ""))
-                      .filter(Boolean)
-                : undefined;
-
-            // Parse examples (handle bullet points and convert ": " back to "|||")
-            const examples = examplesText
-                ? examplesText
-                      .split("\n")
-                      .map((e) => {
-                          e = e.trim().replace(/^\* /, "");
-                          // Replace the first ": " with "|||"
-                          const colonIndex = e.indexOf(": ");
-                          if (colonIndex > 0) {
-                              e = `${e.substring(0, colonIndex)}|||${e.substring(colonIndex + 2)}`;
-                          }
-                          return e;
-                      })
-                      .filter(Boolean)
-                : undefined;
-
-            // Parse alternatives (handle bullet points)
-            const alternatives = alternativesText
-                ? alternativesText
-                      .split("\n")
-                      .map((a) => a.trim().replace(/^\* /, ""))
-                      .filter(Boolean)
-                : undefined;
-
-            // Create the code object
-            codebook[label] = {
-                label,
-                categories,
-                definitions,
-                examples,
-                alternatives,
-            };
-
-            logger.debug(`Imported code ${label}`);
-        });
-
-        const codeCount = Object.keys(codebook).length;
-        if (codeCount === 0) {
-            logger.warn("No codes found in the codebook");
-            return codebook;
-        }
-        logger.info(`Imported ${codeCount} codes from codebook`);
-
-        return codebook;
-    });
