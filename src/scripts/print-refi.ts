@@ -1,8 +1,8 @@
 /**
  * print-refi.ts - Test script for inspecting REFI-QDA file structure
  *
- * This script loads a REFI-QDA project file (.qdpx) and prints its internal
- * structure to the console for inspection and debugging purposes.
+ * This script loads a REFI-QDA project file (.qdpx) and writes its internal
+ * structure to JSON files in the input folder for inspection and debugging purposes.
  *
  * Usage:
  *   npm run print-refi -- <path-to-file.qdpx>
@@ -13,6 +13,11 @@
 
 // @ts-ignore - Package is missing TypeScript declarations
 import { importQDPX } from "@skyloom/refi-qda/dist/index.js";
+import { writeFile, mkdir } from "fs/promises";
+import { dirname, join, basename } from "path";
+import { createReadStream, createWriteStream } from "fs";
+// @ts-ignore - Package is missing TypeScript declarations
+import unzipper from "unzipper";
 
 /**
  * Main function to load and print REFI-QDA project structure
@@ -35,18 +40,19 @@ async function main() {
             resolveExternalSources: true,
         });
 
-        // Print the complete project structure
-        console.log("=== REFI-QDA Project Structure ===\n");
-        console.log(JSON.stringify(project, null, 2));
+        // Determine output directory (same as input file)
+        const outputDir = dirname(filePath);
+        const baseName = basename(filePath, ".qdpx");
 
-        // Print summary information
-        console.log("\n=== Project Summary ===");
-        console.log(`Project Name: ${project.name || "N/A"}`);
-        console.log(`Creation Date: ${project.creationDateTime || "N/A"}`);
+        // Create summary object
+        const summary: Record<string, unknown> = {
+            projectName: project.name || "N/A",
+            creationDate: project.creationDateTime || "N/A",
+        };
 
-        // Count and display key components
+        // Count and add key components to summary
         if (project.Users?.User) {
-            console.log(`Users: ${project.Users.User.length}`);
+            summary.usersCount = project.Users.User.length;
         }
 
         if (project.Sources) {
@@ -57,36 +63,106 @@ async function main() {
                 "AudioSource",
                 "VideoSource",
             ] as const;
-            console.log("\nSources:");
+            const sourceCounts: Record<string, number> = {};
             for (const sourceType of sourceTypes) {
                 const sources = project.Sources[sourceType];
                 if (sources && sources.length > 0) {
-                    console.log(`  ${sourceType}: ${sources.length}`);
+                    sourceCounts[sourceType] = sources.length;
                 }
+            }
+            if (Object.keys(sourceCounts).length > 0) {
+                summary.sources = sourceCounts;
             }
         }
 
         if (project.CodeBook?.Codes?.Code) {
-            console.log(`\nCodes: ${project.CodeBook.Codes.Code.length}`);
+            summary.codesCount = project.CodeBook.Codes.Code.length;
         }
 
         if (project.Cases?.Case) {
-            console.log(`Cases: ${project.Cases.Case.length}`);
+            summary.casesCount = project.Cases.Case.length;
         }
 
         if (project.Sets?.Set) {
-            console.log(`Sets: ${project.Sets.Set.length}`);
+            summary.setsCount = project.Sets.Set.length;
         }
 
         // Report missing external sources if any
         if (missingExternalSources && missingExternalSources.length > 0) {
-            console.log(`\nMissing External Sources: ${missingExternalSources.length}`);
-            missingExternalSources.forEach((path: string) => {
-                console.log(`  - ${path}`);
-            });
+            summary.missingExternalSources = missingExternalSources;
         }
 
-        console.log("\n=== End of Report ===");
+        // Write files
+        console.log(`Writing output files to: ${outputDir}\n`);
+
+        // Write full project structure
+        const projectFile = join(outputDir, `${baseName}-full-project.json`);
+        await writeFile(projectFile, JSON.stringify(project, null, 2));
+        console.log(`✓ Written full project structure: ${projectFile}`);
+
+        // Write summary
+        const summaryFile = join(outputDir, `${baseName}-summary.json`);
+        await writeFile(summaryFile, JSON.stringify(summary, null, 2));
+        console.log(`✓ Written project summary: ${summaryFile}`);
+
+        // Write individual sections if they exist
+        if (project.Sources) {
+            const sourcesFile = join(outputDir, `${baseName}-sources.json`);
+            await writeFile(sourcesFile, JSON.stringify(project.Sources, null, 2));
+            console.log(`✓ Written sources: ${sourcesFile}`);
+        }
+
+        if (project.CodeBook) {
+            const codeBookFile = join(outputDir, `${baseName}-codebook.json`);
+            await writeFile(codeBookFile, JSON.stringify(project.CodeBook, null, 2));
+            console.log(`✓ Written codebook: ${codeBookFile}`);
+        }
+
+        if (project.Cases) {
+            const casesFile = join(outputDir, `${baseName}-cases.json`);
+            await writeFile(casesFile, JSON.stringify(project.Cases, null, 2));
+            console.log(`✓ Written cases: ${casesFile}`);
+        }
+
+        if (project.Sets) {
+            const setsFile = join(outputDir, `${baseName}-sets.json`);
+            await writeFile(setsFile, JSON.stringify(project.Sets, null, 2));
+            console.log(`✓ Written sets: ${setsFile}`);
+        }
+
+        if (project.Users) {
+            const usersFile = join(outputDir, `${baseName}-users.json`);
+            await writeFile(usersFile, JSON.stringify(project.Users, null, 2));
+            console.log(`✓ Written users: ${usersFile}`);
+        }
+
+        // Extract sources folder from the QDPX file
+        console.log("\nExtracting sources folder...");
+        const sourcesOutputDir = join(outputDir, "sources");
+        await mkdir(sourcesOutputDir, { recursive: true });
+
+        await new Promise<void>((resolve, reject) => {
+            createReadStream(filePath)
+                .pipe(unzipper.Parse())
+                .on("entry", (entry: any) => {
+                    const fileName = entry.path;
+                    if (fileName.startsWith("sources/")) {
+                        const outputPath = join(outputDir, fileName);
+                        const entryDir = dirname(outputPath);
+                        mkdir(entryDir, { recursive: true }).then(() => {
+                            entry.pipe(createWriteStream(outputPath));
+                        });
+                    } else {
+                        entry.autodrain();
+                    }
+                })
+                .on("error", reject)
+                .on("finish", resolve);
+        });
+
+        console.log(`✓ Extracted sources to: ${sourcesOutputDir}`);
+
+        console.log("\n=== Export complete ===");
     } catch (error) {
         console.error("Error loading REFI-QDA file:", error);
         if (error instanceof Error) {
