@@ -17,7 +17,8 @@
         "build:workspaces": "npm run clean && npm run build:network && npm run copy:python && tsc -p workspaces/tsconfig.json && copyfiles -u 1 \"src/**/*.py\" out/src/ && copyfiles -u 1 \"dist/evaluating/network/**/*.*\" out/src/evaluating/network/",
         "lint": "eslint --cache . && prettier --check --cache .",
         "format": "eslint --fix --cache . && prettier --write --cache .",
-        "docs": "typedoc"
+        "docs": "typedoc",
+        "print-refi": "tsx src/scripts/print-refi.ts"
     },
     "exports": {
         ".": {
@@ -71,6 +72,7 @@
         "@langchain/ollama": "^0.2.3",
         "@langchain/openai": "^0.5.18",
         "@rakuzen25/async-store": "github:rakuzen25/async-store",
+        "@skyloom/refi-qda": "^1.0.0",
         "async-lock": "^1.4.1",
         "cash-dom": "^8.1.5",
         "chalk": "^5.4.1",
