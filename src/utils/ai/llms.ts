@@ -141,56 +141,30 @@ const MODELS = {
                 // need to update the package, it seems
             }),
     },
-    "claude3-haiku": {
-        // 0.25$ / 0.75$
+    "claude-4.5-haiku": {
+        // 1$ / 5$
         maxInput: 200000,
-        maxOutput: 4096,
-        maxItems: 32,
-        model: (temperature) =>
-            new ChatAnthropic({
-                temperature,
-                model: "claude-3-haiku-20240307",
-                streaming: false,
-                maxTokens: 4096,
-            }),
-    },
-    "claude3.5-sonnet": {
-        // 3$ / 15$
-        maxInput: 200000,
-        maxOutput: 4096,
+        maxOutput: 32000,
         maxItems: 64,
         model: (temperature) =>
             new ChatAnthropic({
                 temperature,
-                model: "claude-3-5-sonnet-20240620",
-                streaming: false,
-                maxTokens: 4096,
-            }),
-    },
-    "mixtral-8x22b": {
-        // 2$ / 6$
-        maxInput: 32000,
-        maxOutput: 32000,
-        maxItems: 32,
-        model: () =>
-            new ChatMistralAI({
-                temperature: 1,
-                model: "open-mixtral-8x22b",
+                model: "claude-4-5-haiku",
                 streaming: false,
                 maxTokens: 32000,
             }),
     },
-    "llama3-70b": {
-        // 0.59$ / 0.79$
-        maxInput: 8192,
-        maxOutput: 8192,
-        maxItems: 32,
+    "claude-4.5-sonnet": {
+        // 3$ / 15$
+        maxInput: 200000,
+        maxOutput: 32000,
+        maxItems: 64,
         model: (temperature) =>
-            new ChatGroq({
+            new ChatAnthropic({
                 temperature,
-                model: "llama3-70b-8192",
+                model: "claude-4-5-sonnet",
                 streaming: false,
-                maxTokens: 8192,
+                maxTokens: 32000,
             }),
     },
     "llama3.3-70b": {
@@ -206,26 +180,27 @@ const MODELS = {
                 maxTokens: 8192,
             }),
     },
-    "qwen-qwq-32b": {
-        maxInput: 8192,
-        maxOutput: 8192,
-        maxItems: 16,
-        model: (temperature) =>
-            new ChatGroq({
-                temperature,
-                model: "qwen-qwq-32b",
-                streaming: false,
-                maxTokens: 8192,
-            }),
-    },
-    "gemini-2.5-pro": {
-        maxInput: 32000,
+    "gemini-3-pro": {
+        // 0.5$ / 3$
+        maxInput: 200000,
         maxOutput: 32000,
         maxItems: 64,
         model: (temperature) =>
             new ChatGoogleGenerativeAI({
                 temperature,
-                model: "gemini-2.5-pro",
+                model: "gemini-3-pro",
+                streaming: false,
+            }),
+    },
+    "gemini-3-flash": {
+        // 0.5$ / 3$
+        maxInput: 200000,
+        maxOutput: 32000,
+        maxItems: 64,
+        model: (temperature) =>
+            new ChatGoogleGenerativeAI({
+                temperature,
+                model: "gemini-3-pro",
                 streaming: false,
             }),
     },
@@ -239,19 +214,7 @@ const MODELS = {
                 model: "gemma-3-27b-it",
                 streaming: false,
             }),
-    },
-    "mistral-small": {
-        // Assuming 22b
-        maxInput: 64000,
-        maxOutput: 64000,
-        maxItems: 32,
-    },
-    "mistral-nemo": {
-        // It claims to support 128k, but I don't think it would work well with that large window.
-        maxInput: 8192,
-        maxOutput: 8192,
-        maxItems: 16,
-    },
+    }
 } satisfies Record<string, Omit<LLMObject, "name" | "model"> & Partial<Pick<LLMObject, "model">>>;
 
 /** Type representing the names of all predefined LLM models */
