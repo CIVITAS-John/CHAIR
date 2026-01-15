@@ -19,6 +19,7 @@ import { parseStringPromise } from "xml2js";
 import AdmZip from "adm-zip";
 
 import type { Code, Codebook, RawDataChunk, RawDataItem } from "../../schema.js";
+import { exportChunksForCoding } from "./export.js";
 
 /**
  * REFI-QDA Code structure (supports nested hierarchy)
@@ -488,6 +489,7 @@ function findOverlappingItems(
 
 /**
  * Extract coded threads per coder
+ * Returns both the coder threads and a map from original GUID to renumbered thread ID
  */
 function extractCodedThreads(
     project: RefiProject,
@@ -495,8 +497,9 @@ function extractCodedThreads(
     codeGuidToName: Map<string, string>,
     users: Map<string, string>,
     codebook: Codebook,
-): Map<string, any> {
+): { coderThreads: Map<string, any>; guidToThreadId: Map<string, string> } {
     const coderThreads = new Map<string, any>();
+    const guidToThreadId = new Map<string, string>();
 
     const textSourceList = Array.isArray(project.Sources?.TextSource)
         ? project.Sources.TextSource
@@ -505,7 +508,7 @@ function extractCodedThreads(
         : [];
 
     if (textSourceList.length === 0) {
-        return coderThreads;
+        return { coderThreads, guidToThreadId };
     }
 
     // Process each source
@@ -604,8 +607,11 @@ function extractCodedThreads(
         const renumberedThreads: Record<string, any> = {};
         let threadNum = 1;
 
-        for (const [, thread] of threadsToUse as Array<[string, any]>) {
+        for (const [originalGuid, thread] of threadsToUse as Array<[string, any]>) {
             const newThreadId = `thread-${threadNum}`;
+
+            // Track the GUID -> thread ID mapping
+            guidToThreadId.set(originalGuid, newThreadId);
 
             // Renumber items within the thread
             const renumberedItems: Record<string, any> = {};
@@ -634,7 +640,7 @@ function extractCodedThreads(
         coderData.threads = renumberedThreads;
     }
 
-    return coderThreads;
+    return { coderThreads, guidToThreadId };
 }
 
 /**
@@ -707,7 +713,7 @@ export async function convertQdpxToJson(
     }
 
     // Extract coded threads per coder
-    const coderThreads = extractCodedThreads(
+    const { coderThreads, guidToThreadId } = extractCodedThreads(
         project,
         sourceChunks,
         codeGuidToName,
@@ -715,16 +721,48 @@ export async function convertQdpxToJson(
         codebook,
     );
 
+    // Create renumbered sources map
+    const renumberedSources: Record<string, RawDataChunk> = {};
+    const renumberedChunks: RawDataChunk[] = [];
+
+    for (const [originalGuid, newThreadId] of guidToThreadId) {
+        const originalChunk = sourceChunks.get(originalGuid);
+        if (!originalChunk) continue;
+
+        // Renumber items within the chunk
+        const renumberedItems: RawDataItem[] = [];
+        let itemNum = 1;
+
+        for (const item of originalChunk.items as RawDataItem[]) {
+            const newItemId = `${newThreadId}-${itemNum}`;
+            renumberedItems.push({
+                ...item,
+                id: newItemId,
+            });
+            itemNum++;
+        }
+
+        // Create renumbered chunk
+        const renumberedChunk: RawDataChunk = {
+            ...originalChunk,
+            id: newThreadId,
+            items: renumberedItems,
+        };
+
+        renumberedSources[newThreadId] = renumberedChunk;
+        renumberedChunks.push(renumberedChunk);
+    }
+
     // Write codebook.json
     await writeFile(
         join(outputDir, "codebook.json"),
         JSON.stringify(codebook, null, 4),
     );
 
-    // Write sources.json
+    // Write sources.json (use renumbered sources)
     await writeFile(
         join(outputDir, "sources.json"),
-        JSON.stringify(sources, null, 4),
+        JSON.stringify(renumberedSources, null, 4),
     );
 
     // Write configuration.js
@@ -744,15 +782,21 @@ export async function convertQdpxToJson(
 `;
     await writeFile(join(outputDir, "configuration.js"), configContent);
 
-    // Write human/*.json files
+    // Write human/*.json and *.xlsx files
     const humanDir = join(outputDir, "human");
     await mkdir(humanDir, { recursive: true });
 
     for (const [coderName, coderData] of coderThreads) {
-        const fileName = `${coderName.replace(/[^a-zA-Z0-9]/g, "_")}.json`;
+        const baseName = coderName.replace(/[^a-zA-Z0-9]/g, "_");
+
+        // Write JSON file
         await writeFile(
-            join(humanDir, fileName),
+            join(humanDir, `${baseName}.json`),
             JSON.stringify(coderData, null, 4),
         );
+
+        // Write Excel file (use renumbered chunks)
+        const workbook = exportChunksForCoding(renumberedChunks as any, coderData);
+        await workbook.xlsx.writeFile(join(humanDir, `${baseName}.xlsx`));
     }
 }
