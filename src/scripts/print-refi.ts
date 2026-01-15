@@ -15,9 +15,8 @@
 import { importQDPX } from "@skyloom/refi-qda/dist/index.js";
 import { writeFile, mkdir } from "fs/promises";
 import { dirname, join, basename } from "path";
-import { createReadStream, createWriteStream } from "fs";
-// @ts-ignore - Package is missing TypeScript declarations
-import unzipper from "unzipper";
+import { createWriteStream } from "fs";
+import yauzl from "yauzl";
 
 /**
  * Main function to load and print REFI-QDA project structure
@@ -139,25 +138,64 @@ async function main() {
         // Extract sources folder from the QDPX file
         console.log("\nExtracting sources folder...");
         const sourcesOutputDir = join(outputDir, "sources");
-        await mkdir(sourcesOutputDir, { recursive: true });
 
         await new Promise<void>((resolve, reject) => {
-            createReadStream(filePath)
-                .pipe(unzipper.Parse())
-                .on("entry", (entry: any) => {
-                    const fileName = entry.path;
-                    if (fileName.startsWith("sources/")) {
-                        const outputPath = join(outputDir, fileName);
-                        const entryDir = dirname(outputPath);
-                        mkdir(entryDir, { recursive: true }).then(() => {
-                            entry.pipe(createWriteStream(outputPath));
-                        });
-                    } else {
-                        entry.autodrain();
+            yauzl.open(filePath, { lazyEntries: true }, (err, zipfile) => {
+                if (err || !zipfile) {
+                    reject(err || new Error("Failed to open zip file"));
+                    return;
+                }
+
+                zipfile.readEntry();
+                zipfile.on("entry", (entry) => {
+                    const fileName = entry.fileName;
+
+                    // Only process files from sources/ or Sources/ directory (case-insensitive)
+                    if (!fileName.toLowerCase().startsWith("sources/")) {
+                        zipfile.readEntry();
+                        return;
                     }
-                })
-                .on("error", reject)
-                .on("finish", resolve);
+
+                    const outputPath = join(outputDir, fileName);
+
+                    // Handle directory entries
+                    if (fileName.endsWith("/")) {
+                        mkdir(outputPath, { recursive: true })
+                            .then(() => {
+                                zipfile.readEntry();
+                            })
+                            .catch(reject);
+                    } else {
+                        // Handle file entries
+                        const entryDir = dirname(outputPath);
+                        mkdir(entryDir, { recursive: true })
+                            .then(() => {
+                                zipfile.openReadStream(entry, (err, readStream) => {
+                                    if (err || !readStream) {
+                                        reject(err || new Error("Failed to open read stream"));
+                                        return;
+                                    }
+
+                                    const writeStream = createWriteStream(outputPath);
+                                    readStream
+                                        .pipe(writeStream)
+                                        .on("finish", () => {
+                                            // CRITICAL: only read next entry after write completes
+                                            zipfile.readEntry();
+                                        })
+                                        .on("error", reject);
+                                });
+                            })
+                            .catch(reject);
+                    }
+                });
+
+                zipfile.on("end", () => {
+                    resolve();
+                });
+
+                zipfile.on("error", reject);
+            });
         });
 
         console.log(`✓ Extracted sources to: ${sourcesOutputDir}`);

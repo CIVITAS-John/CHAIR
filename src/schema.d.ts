@@ -26,6 +26,10 @@ export interface DataItem {
  */
 export interface RawDataItem extends DataItem {
     time: string;
+    /** Optional start position in source text for coded segment matching */
+    startPosition?: number;
+    /** Optional end position in source text for coded segment matching */
+    endPosition?: number;
 }
 
 /**
