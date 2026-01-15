@@ -20,95 +20,15 @@ import AdmZip from "adm-zip";
 
 import type { Code, Codebook, RawDataChunk, RawDataItem } from "../../schema.js";
 import { exportChunksForCoding } from "./export.js";
-
-/**
- * REFI-QDA Code structure (supports nested hierarchy)
- */
-interface RefiCode {
-    guid: string;
-    name: string;
-    Description?: string;
-    isCodable?: boolean;
-    color?: string;
-    Code?: RefiCode[]; // Nested sub-codes
-}
-
-/**
- * REFI-QDA User structure
- */
-interface RefiUser {
-    guid: string;
-    name: string;
-}
-
-/**
- * REFI-QDA Coding (applied code reference)
- */
-interface RefiCoding {
-    guid: string;
-    creatingUser: string;
-    creationDateTime: string;
-    CodeRef: {
-        targetGUID: string;
-    };
-}
-
-/**
- * REFI-QDA PlainTextSelection (coded text segment)
- */
-interface RefiPlainTextSelection {
-    guid: string;
-    name?: string;
-    startPosition: number;
-    endPosition: number;
-    creatingUser: string;
-    creationDateTime: string;
-    Coding?: RefiCoding[];
-}
-
-/**
- * REFI-QDA TextSource structure
- */
-interface RefiTextSource {
-    guid: string;
-    name: string;
-    plainTextPath?: string;
-    plainTextContent?: string;
-    creatingUser: string;
-    creationDateTime: string;
-    modifyingUser?: string;
-    modifiedDateTime?: string;
-    PlainTextSelection?: RefiPlainTextSelection[];
-}
-
-/**
- * REFI-QDA Project structure
- */
-interface RefiProject {
-    name?: string;
-    creationDateTime?: string;
-    CodeBook?: {
-        Codes?: {
-            Code?: RefiCode[];
-        };
-    };
-    Sources?: {
-        TextSource?: RefiTextSource[];
-    };
-    Users?: {
-        User?: RefiUser[];
-    };
-}
-
-
-/**
- * Chunk content result with position tracking
- */
-export type ChunkContentResult = Partial<RawDataItem> & {
-    content: string;
-    startPosition: number;
-    endPosition: number;
-};
+import type {
+    ChunkContentResult,
+    RefiCode,
+    RefiCoding,
+    RefiPlainTextSelection,
+    RefiProject,
+    RefiTextSource,
+    RefiUser,
+} from "./qdpx.schema.js";
 
 /**
  * Default content chunking function with smart dialog detection
@@ -788,6 +708,9 @@ export async function convertQdpxToJson(
 
     for (const [coderName, coderData] of coderThreads) {
         const baseName = coderName.replace(/[^a-zA-Z0-9]/g, "_");
+
+        // Add unified codebook for Excel export
+        coderData.codebook = codebook;
 
         // Write JSON file
         await writeFile(
