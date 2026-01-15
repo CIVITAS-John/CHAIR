@@ -21,7 +21,7 @@ import AdmZip from "adm-zip";
 import type { Code, Codebook, RawDataChunk, RawDataItem } from "../../schema.js";
 
 /**
- * REFI-QDA Code structure
+ * REFI-QDA Code structure (supports nested hierarchy)
  */
 interface RefiCode {
     guid: string;
@@ -29,6 +29,7 @@ interface RefiCode {
     Description?: string;
     isCodable?: boolean;
     color?: string;
+    Code?: RefiCode[]; // Nested sub-codes
 }
 
 /**
@@ -294,6 +295,45 @@ function extractNickname(sourceName: string): string {
 }
 
 /**
+ * Flatten nested code structure into array with category ancestry
+ *
+ * @param codes - Array of potentially nested codes
+ * @param parentCategories - Accumulated parent category names
+ * @returns Flat array of codes with categories[] preserving hierarchy
+ */
+function flattenCodes(codes: RefiCode[], parentCategories: string[] = []): RefiCode[] {
+    const result: RefiCode[] = [];
+
+    for (const code of codes) {
+        // Create flattened version with current ancestry
+        const flatCode: RefiCode = {
+            guid: code.guid,
+            name: code.name,
+            Description: code.Description,
+            isCodable: code.isCodable,
+            color: code.color,
+        };
+
+        // Store parent categories for this code
+        if (parentCategories.length > 0) {
+            // We'll attach categories as a custom property for later use
+            (flatCode as any).__categories = [...parentCategories];
+        }
+
+        result.push(flatCode);
+
+        // Recursively flatten children
+        if (code.Code) {
+            const children = Array.isArray(code.Code) ? code.Code : [code.Code];
+            const childCategories = [...parentCategories, code.name];
+            result.push(...flattenCodes(children, childCategories));
+        }
+    }
+
+    return result;
+}
+
+/**
  * Filter codebook using bottom-up approach
  */
 function filterCodebook(codes: RefiCode[]): RefiCode[] {
@@ -301,13 +341,13 @@ function filterCodebook(codes: RefiCode[]): RefiCode[] {
     const codeMap = new Map<string, RefiCode>();
     codes.forEach((code) => codeMap.set(code.guid, code));
 
-    // Build children map by parsing :: notation
+    // Build children map using category relationships
     const childrenMap = new Map<string, Set<string>>();
     for (const code of codes) {
-        const parts = code.name.split("::");
-        if (parts.length > 1) {
-            // This is a child code
-            const parentName = parts.slice(0, -1).join("::");
+        const categories = (code as any).__categories as string[] | undefined;
+        if (categories && categories.length > 0) {
+            // This code has a parent - find the parent by name
+            const parentName = categories[categories.length - 1];
             const parentCode = codes.find((c) => c.name === parentName);
             if (parentCode) {
                 if (!childrenMap.has(parentCode.guid)) {
@@ -323,12 +363,13 @@ function filterCodebook(codes: RefiCode[]): RefiCode[] {
         const hasDescription = !!code.Description && code.Description.trim().length > 0;
         const hasChildren = childrenMap.has(code.guid);
 
-        if (hasDescription) {
-            return true;
+        if (!hasDescription && !hasChildren) {
+            return false;
         }
 
         if (!hasChildren) {
-            return false;
+            // Leaf node with description
+            return true;
         }
 
         // Has children - keep only if at least one child should be kept
@@ -350,15 +391,14 @@ function convertCodebook(codes: RefiCode[]): Codebook {
     const codebook: Codebook = {};
 
     for (const refiCode of filteredCodes) {
-        const parts = refiCode.name.split("::");
-        const label = parts[parts.length - 1]; // Leaf name
-        const categories = parts.length > 1 ? parts.slice(0, -1) : undefined;
+        const label = refiCode.name;
+        const categories = (refiCode as any).__categories as string[] | undefined;
 
         const code: Code = {
             label,
         };
 
-        if (categories) {
+        if (categories && categories.length > 0) {
             code.categories = categories;
         }
 
@@ -402,7 +442,7 @@ async function convertTextSource(
     // Create DataItems from chunks
     const items: RawDataItem[] = chunks.map((chunk) => ({
         id: `${source.guid}-${chunk.startPosition}-${chunk.endPosition}`,
-        uid: chunk.uid || defaultUid,
+        uid: chunk.uid || chunk.nickname || defaultUid,
         nickname: chunk.nickname || defaultNickname,
         time: chunk.time || source.creationDateTime,
         content: chunk.content,
@@ -508,7 +548,8 @@ function extractCodedThreads(
                 const coderName = users.get(coderGuid) || "Unknown";
                 const codeName = codeGuidToName.get(coding.CodeRef.targetGUID);
 
-                if (!codeName) continue;
+                // Skip if code doesn't exist or wasn't kept in the filtered codebook
+                if (!codeName || !codebook[codeName]) continue;
 
                 // Initialize coder data structure
                 if (!coderThreads.has(coderName)) {
@@ -544,6 +585,53 @@ function extractCodedThreads(
                 }
             }
         }
+    }
+
+    // Post-processing: filter and renumber threads
+    for (const [, coderData] of coderThreads) {
+        const threads = coderData.threads;
+        const threadEntries = Object.entries(threads);
+
+        // Filter out threads with no coded items
+        const threadsWithCodes = threadEntries.filter(([, thread]: [string, any]) => {
+            return Object.keys(thread.items).length > 0;
+        });
+
+        // Check if ALL threads are empty - if so, keep them all (fallback)
+        const threadsToUse = threadsWithCodes.length === 0 ? threadEntries : threadsWithCodes;
+
+        // Renumber threads sequentially
+        const renumberedThreads: Record<string, any> = {};
+        let threadNum = 1;
+
+        for (const [, thread] of threadsToUse as Array<[string, any]>) {
+            const newThreadId = `thread-${threadNum}`;
+
+            // Renumber items within the thread
+            const renumberedItems: Record<string, any> = {};
+            const itemEntries = Object.entries(thread.items);
+            let itemNum = 1;
+
+            for (const [, item] of itemEntries as Array<[string, any]>) {
+                const newItemId = `${newThreadId}-${itemNum}`;
+                renumberedItems[newItemId] = {
+                    id: newItemId,
+                    codes: item.codes,
+                };
+                itemNum++;
+            }
+
+            renumberedThreads[newThreadId] = {
+                id: newThreadId,
+                codes: thread.codes,
+                items: renumberedItems,
+                iteration: thread.iteration,
+            };
+
+            threadNum++;
+        }
+
+        coderData.threads = renumberedThreads;
     }
 
     return coderThreads;
@@ -590,14 +678,15 @@ export async function convertQdpxToJson(
         ? [project.CodeBook.Codes.Code]
         : [];
 
-    const codebook = convertCodebook(codeList);
+    // Flatten nested code structure
+    const flattenedCodes = flattenCodes(codeList);
 
-    // Build code GUID -> label map
+    const codebook = convertCodebook(flattenedCodes);
+
+    // Build code GUID -> label map (using flattened codes)
     const codeGuidToName = new Map<string, string>();
-    for (const code of codeList) {
-        const parts = code.name.split("::");
-        const label = parts[parts.length - 1];
-        codeGuidToName.set(code.guid, label);
+    for (const code of flattenedCodes) {
+        codeGuidToName.set(code.guid, code.name);
     }
 
     // Convert TextSources to RawDataChunks
@@ -624,6 +713,12 @@ export async function convertQdpxToJson(
         codeGuidToName,
         users,
         codebook,
+    );
+
+    // Write codebook.json
+    await writeFile(
+        join(outputDir, "codebook.json"),
+        JSON.stringify(codebook, null, 4),
     );
 
     // Write sources.json
