@@ -93,7 +93,7 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
      * - **Tuple return [size, prefetch, postfetch]**: Chunk size with surrounding context
      *
      * Examples:
-     * - `return recommended`: Use recommended size (typically session.llm.maxItems)
+     * - `return recommended`: Use recommended size (typically session.config.batchSize)
      * - `return 1`: Process one subunit at a time (no context, not recommended)
      * - `return [1, 1, 1]`: Process one subunit with previous and next as context
      * - `return remaining`: Process all remaining subunits in one chunk
@@ -330,7 +330,7 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
                 while (tries < retries) {
                     // Get chunk configuration from analyzer
                     const _chunkSize = analyzer.getChunkSize(
-                        Math.min(session.llm.maxItems, filtered.length - cursor),
+                        Math.min(session.config.batchSize ?? 32, filtered.length - cursor),
                         filtered.length - cursor,
                         i,
                         tries,

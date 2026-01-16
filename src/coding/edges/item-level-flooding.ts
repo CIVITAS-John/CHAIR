@@ -86,7 +86,7 @@ export default class ItemLevelAnalyzerFlooding extends ItemLevelAnalyzerBase {
         }
 
         // Weak model strategy
-        if (recommended === session.llm.maxItems) {
+        if (recommended === (session.config.batchSize ?? 32)) {
             return [recommended - tries * 8, 3, 0];
         }
 

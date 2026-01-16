@@ -66,7 +66,7 @@ export default class ItemLevelAnalyzerVerb extends ItemLevelAnalyzerBase {
             throw new BaseStep.ContextVarNotFoundError("session");
         }
         // For weaker models, we will reduce the chunk size (32 => 24 => 16 => 8)
-        if (recommended === session.llm.maxItems) {
+        if (recommended === (session.config.batchSize ?? 32)) {
             return [recommended - tries * 8, 3, 0];
         }
         return [recommended - tries * 2, Math.max(8 - recommended - tries, 3), 0];

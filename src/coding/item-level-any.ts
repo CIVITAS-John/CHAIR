@@ -86,7 +86,7 @@ export default class ItemLevelAnalyzerAny extends ItemLevelAnalyzerBase {
         }
 
         // Weak model: Aggressive reduction with fixed prefetch
-        if (recommended === session.llm.maxItems) {
+        if (recommended === (session.config.batchSize ?? 32)) {
             return [recommended - tries * 8, 3, 0];
         }
 

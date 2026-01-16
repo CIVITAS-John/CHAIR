@@ -5,11 +5,12 @@
  * and evaluation capabilities through Python integration (scikit-learn, HDBSCAN).
  *
  * Key Features:
- * - Multi-provider embedding support (OpenAI, Google, Ollama)
+ * - Multi-provider embedding support (OpenAI, Google, OpenAI-compatible)
  * - Automatic batching for efficient API usage
  * - Binary cache storage (Float32Array as .bytes files) for fast retrieval
  * - Python integration for clustering (HDBSCAN, linkage-based) and evaluation
  * - Retry logic with exponential backoff for API failures
+ * - Configuration-based model management (loaded from config.json)
  *
  * Embedding Cache Strategy:
  * - Cache path: known/embeddings/{cache_name}/{embedder_name}/{md5(text)}.bytes
@@ -39,12 +40,10 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
-import { TaskType } from "@google/generative-ai";
-import type { Embeddings } from "@langchain/core/embeddings";
-import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
-import { VertexAIEmbeddings } from "@langchain/google-vertexai";
-import { OllamaEmbeddings } from "@langchain/ollama";
-import { OpenAIEmbeddings } from "@langchain/openai";
+import { embed, embedMany, type EmbeddingModel } from "ai";
+import { google } from "@ai-sdk/google";
+import { openai } from "@ai-sdk/openai";
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import AsyncLock from "async-lock";
 import * as dotenv from "dotenv";
 import md5 from "md5";
@@ -56,161 +55,83 @@ import { ensureFolder } from "../io/file.js";
 import { logger } from "../core/logger.js";
 import { sleep } from "../core/misc.js";
 import { runPythonScript } from "../runtime/python.js";
+import { type EmbedderConfig, getEmbedderConfig } from "../core/config.js";
 
-const MODELS = {
-    "openai-small-512": {
-        dimensions: 512,
-        model: () =>
-            new OpenAIEmbeddings({
-                model: "text-embedding-3-small",
-                dimensions: 512,
-            }),
-    },
-    "openai-large-256": {
-        dimensions: 256,
-        model: () =>
-            new OpenAIEmbeddings({
-                model: "text-embedding-3-large",
-                dimensions: 256,
-            }),
-    },
-    "openai-large-1024": {
-        dimensions: 1024,
-        model: () =>
-            new OpenAIEmbeddings({
-                model: "text-embedding-3-large",
-                dimensions: 1024,
-            }),
-    },
-    "gemini-embedding-001": {
-        dimensions: 3072,
-        model: () =>
-            new VertexAIEmbeddings({
-                model: "gemini-embedding-001",
-            }),
-    },
-    "gemini-embedding-exp": {
-        dimensions: 3072,
-        batchSize: 100,
-        model: () =>
-            new GoogleGenerativeAIEmbeddings({
-                model: "gemini-embedding-exp-03-07",
-                taskType: TaskType.SEMANTIC_SIMILARITY,
-            }),
-    },
-    "gecko-768-similarity": {
-        dimensions: 768,
-        model: () =>
-            new GoogleGenerativeAIEmbeddings({
-                model: "text-embedding-004",
-                taskType: TaskType.SEMANTIC_SIMILARITY,
-            }),
-    },
-} satisfies Record<
-    string,
-    Omit<EmbedderObject, "name" | "model"> & {
-        model?: () => Embeddings;
-    }
->;
-
-/** Type representing the names of all predefined embedding models */
-export type EmbedderName = keyof typeof MODELS;
-
-/**
- * Configuration object for an embedding model instance
- *
- * @property model - LangChain embeddings instance for generating vectors
- * @property name - Human-readable identifier for this embedder
- * @property batchSize - Maximum number of texts to embed in a single API request
- * @property dimensions - Dimensionality of the embedding vectors
- * @property prompt - Optional prompt template to wrap input text (use {input} placeholder)
- */
-export interface EmbedderObject {
-    model: Embeddings;
-    name: string;
-    batchSize?: number;
-    dimensions: number;
-    prompt?: string;
-}
-
-/**
- * Options for initializing a custom Ollama embedding model
- *
- * @property name - Identifier for this embedder configuration
- * @property model - Optional Ollama model name (defaults to name)
- * @property dimensions - Dimensionality of the embedding vectors
- * @property batchSize - Maximum batch size (defaults to 50)
- * @property baseUrl - Ollama server URL (defaults to OLLAMA_URL env var or localhost:11434)
- * @property prompt - Optional prompt template with {input} placeholder
- */
-export interface OllamaEmbeddingsOptions {
-    name: string;
-    model?: string;
-    dimensions: number;
-    batchSize?: number;
-    baseUrl?: string;
-    prompt?: string;
-}
-
-/** Type accepting either a predefined embedder name or a custom EmbedderObject */
-export type EmbedderModel = EmbedderName | EmbedderObject;
-
-/**
- * Error thrown when attempting to use an unsupported or unavailable embedding model
- */
-export class EmbedderNotSupportedError extends Error {
-    override name = "EmbedderNotSupportedError";
-    constructor(model: string, local = false) {
-        super(
-            local
-                ? `Embedder ${model} is local only through ollama`
-                : `Embedder ${model} not supported`,
-        );
-    }
-}
+// Re-export for convenience
+export type { EmbedderConfig } from "../core/config.js";
 
 dotenv.config();
 
+/** Type accepting either an embedder name string or a direct EmbedderConfig object */
+export type EmbedderModel = string | EmbedderConfig;
+
 /**
- * Initialize a custom Ollama embedding model with the given configuration
- *
- * @param options - Configuration for the Ollama embedder
- * @returns Configured EmbedderObject ready for use
+ * Embedder session object
+ * Internal state for tracking embedder configuration
  */
-export const initOllamaEmbedder = (options: OllamaEmbeddingsOptions): EmbedderObject => {
-    return {
-        name: options.name,
-        model: new OllamaEmbeddings({
-            model: options.model ?? options.name,
-            baseUrl: options.baseUrl ?? process.env.OLLAMA_URL ?? "https://127.0.0.1:11434",
-        }),
-        dimensions: options.dimensions,
-        batchSize: options.batchSize ?? 50, // Default batch size
-        prompt: options.prompt,
-    };
+interface EmbedderSession {
+    config: EmbedderConfig;
+    name: string;
+}
+
+/**
+ * Create an embedding model instance from an EmbedderConfig
+ *
+ * @param config - Embedder configuration object
+ * @returns Configured embedding model function
+ * @throws {Error} If the provider is not supported
+ */
+const getEmbedder = (config: EmbedderConfig): EmbeddingModel<string> => {
+    switch (config.provider) {
+        case "openai":
+            return openai.embedding(config.name);
+
+        case "google":
+            return google.textEmbeddingModel(config.name);
+
+        case "openai-compatible":
+            if (!config.options?.baseURL) {
+                throw new Error(
+                    `openai-compatible provider requires baseURL in options for embedder: ${config.name}`,
+                );
+            }
+            return createOpenAICompatible({
+                baseURL: config.options.baseURL as string,
+                apiKey: (config.options.apiKey as string) ?? "dummy-key",
+                name: config.provider,
+            }).textEmbeddingModel(config.name);
+
+        default:
+            throw new Error(`Unsupported embedder provider: ${config.provider}`);
+    }
 };
 
 /**
- * Initialize an embedding model by name
+ * Initialize an embedder configuration by name
  *
- * @param embedder - Name of a predefined embedding model from MODELS
- * @returns Configured EmbedderObject
- * @throws {EmbedderNotSupportedError} If embedder name not found or has no online model
+ * Loads configuration from config.json.
+ * Supports embedder aliasing and configuration overrides.
+ *
+ * @param name - Embedder name or alias from config.json
+ * @param overrides - Optional configuration overrides for runtime customization
+ * @returns EmbedderConfig object
+ * @throws {Error} If embedder name not found in configuration
+ *
+ * @example
+ * // Standard embedder
+ * const config = initEmbedder("openai-small-512");
+ *
+ * @example
+ * // With overrides
+ * const config = initEmbedder("custom", {
+ *   custom: { provider: "openai", name: "text-embedding-3-small", dimensions: 512 }
+ * });
  */
-export const initEmbedder = (embedder: string): EmbedderObject => {
-    if (!(embedder in MODELS)) {
-        throw new EmbedderNotSupportedError(embedder);
-    }
-    const config = MODELS[embedder as EmbedderName];
-    if (!("model" in config)) {
-        // No default online model
-        throw new EmbedderNotSupportedError(embedder);
-    }
-    return {
-        ...config,
-        name: embedder,
-        model: config.model(),
-    };
+export const initEmbedder = (
+    name: string,
+    overrides?: Record<string, EmbedderConfig | string>,
+): EmbedderConfig => {
+    return getEmbedderConfig(name, overrides);
 };
 
 /**
@@ -239,15 +160,21 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
         if (!embedder) {
             throw new QAJob.ContextVarNotFoundError("embedder");
         }
+
+        const embedderSession = embedder as unknown as EmbedderSession;
+        const config = embedderSession.config;
+
         // Create the cache folder
-        const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
+        const cacheFolder = `known/embeddings/${cache}/${embedderSession.name}`;
         ensureFolder(cacheFolder);
+
         // Check if the cache exists
-        const embeddings = new Float32Array(embedder.dimensions * sources.length);
+        const embeddings = new Float32Array(config.dimensions * sources.length);
         const requests: number[] = [];
+        
         for (let i = 0; i < localsources.length; i++) {
             // Apply the prompt if provided
-            localsources[i] = (embedder.prompt ?? "{input}").replace("{input}", localsources[i]);
+            localsources[i] = (config.prompt ?? "{input}").replace("{input}", localsources[i]);
             const cacheFile = `${cacheFolder}/${md5(localsources[i])}.bytes`;
             if (existsSync(cacheFile)) {
                 const buffer = readFileSync(cacheFile);
@@ -256,36 +183,44 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
                     buffer.byteOffset,
                     buffer.byteLength / 4,
                 );
-                embeddings.set(cached, embedder.dimensions * i);
+                embeddings.set(cached, config.dimensions * i);
             } else {
                 requests.push(i);
             }
         }
+
         // Request the online embeddings
-        const batchSize = embedder.batchSize ?? 50;
+        const batchSize = config.batchSize ?? 50;
+        const model = getEmbedder(config);
+
         for (let i = 0; i < requests.length; i += batchSize) {
             let retry = 0;
             while (retry < 10) {
                 try {
-                    // This line could debug some underlying issue behind 0 embeddings, particularly for stupid Gemini API
-                    // var test = await (embedder.model as any).client.embedContent("test");
-                    const res = await embedder.model.embedDocuments(
-                        requests.slice(i, i + batchSize).map((idx) => localsources[idx]),
-                    );
-                    for (let j = 0; j < res.length; j++) {
+                    const batch = requests.slice(i, i + batchSize).map((idx) => localsources[idx]);
+                    const result = await embedMany({
+                        model: model as EmbeddingModel<string>,
+                        values: batch,
+                    });
+
+                    for (let j = 0; j < result.embeddings.length; j++) {
                         const idx = requests[i + j];
+                        let embeddingArray = result.embeddings[j];
+
                         // Cull embeddings to dimensions if necessary (need matryoshka support for the model)
-                        if (res[j].length !== embedder.dimensions) {
-                            res[j] = res[j].slice(0, embedder.dimensions);
+                        if (embeddingArray.length !== config.dimensions) {
+                            embeddingArray = embeddingArray.slice(0, config.dimensions);
                         }
-                        const embedding = new Float32Array(res[j]);
+                        const embedding = new Float32Array(embeddingArray);
+
                         // Check if all elements are 0
                         if (embedding.every((v) => v === 0)) {
                             throw new Error(
                                 `Invalid embedding for: ${sources[idx]} (at index ${idx} / i ${i} j ${j} batchSize ${batchSize})`,
                             );
                         }
-                        embeddings.set(embedding, embedder.dimensions * idx);
+
+                        embeddings.set(embedding, config.dimensions * idx);
                         const cacheFile = `${cacheFolder}/${md5(localsources[idx])}.bytes`;
                         writeFileSync(cacheFile, embedding);
                     }
@@ -299,35 +234,70 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
         return embeddings;
     });
 
-/** Call the model to generate a text embedding with cache. */
+/**
+ * Call the model to generate a text embedding with cache
+ *
+ * @param source - Text to embed
+ * @param cache - Cache folder name
+ * @returns Float32Array containing the embedding vector
+ */
 export const requestEmbedding = (source: string, cache: string) =>
     logger.withDefaultSource("requestEmbedding", async () => {
         const { embedder } = QAJob.Context.get();
         if (!embedder) {
             throw new QAJob.ContextVarNotFoundError("embedder");
         }
-        const cacheFolder = `known/embeddings/${cache}/${embedder.name}`;
+
+        const embedderSession = embedder as unknown as EmbedderSession;
+        const config = embedderSession.config;
+
+        const cacheFolder = `known/embeddings/${cache}/${embedderSession.name}`;
         ensureFolder(cacheFolder);
+
         // Apply the prompt if provided
-        source = (embedder.prompt ?? "{input}").replace("{input}", source);
+        const processedSource = (config.prompt ?? "{input}").replace("{input}", source);
+
         // Check if the cache exists
-        const cacheFile = `${cacheFolder}/${md5(source)}.bytes`;
+        const cacheFile = `${cacheFolder}/${md5(processedSource)}.bytes`;
         if (existsSync(cacheFile)) {
             const buffer = readFileSync(cacheFile);
             return new Float32Array(buffer.buffer, buffer.byteOffset, buffer.byteLength / 4);
         }
-        const res = Float32Array.from(await requestEmbeddingWithoutCache(source));
+
+        const res = Float32Array.from(await requestEmbeddingWithoutCache(processedSource));
         writeFileSync(cacheFile, res);
         return res;
     });
 
-/** Call the model to generate a text embedding. */
-export const requestEmbeddingWithoutCache = async (source: string) => {
+/**
+ * Call the model to generate a text embedding without cache
+ *
+ * @param source - Text to embed
+ * @returns Array containing the embedding vector
+ */
+export const requestEmbeddingWithoutCache = async (source: string): Promise<number[]> => {
     const { embedder } = QAJob.Context.get();
     if (!embedder) {
         throw new QAJob.ContextVarNotFoundError("embedder");
     }
-    return (await embedder.model.embedDocuments([source]))[0];
+
+    const embedderSession = embedder as unknown as EmbedderSession;
+    const config = embedderSession.config;
+    const model = getEmbedder(config);
+
+    const result = await embed({
+        model: model as EmbeddingModel<string>,
+        value: source,
+    });
+
+    let embedding = result.embedding;
+
+    // Cull embeddings to dimensions if necessary (need matryoshka support for the model)
+    if (embedding.length !== config.dimensions) {
+        embedding = embedding.slice(0, config.dimensions);
+    }
+
+    return embedding;
 };
 
 /**
@@ -429,6 +399,10 @@ export const clusterEmbeddings = (
         if (!embedder) {
             throw new QAJob.ContextVarNotFoundError("embedder");
         }
+
+        const embedderSession = embedder as unknown as EmbedderSession;
+        const config = embedderSession.config;
+
         const res: Record<number, ClusterItem[]> = {};
         let param: number[] = [];
         ensureFolder("./known");
@@ -440,7 +414,7 @@ export const clusterEmbeddings = (
             // Run the Python script
             const __dirname = dirname(fileURLToPath(import.meta.url));
             await runPythonScript(resolve(__dirname, `embeddings/clustering_${method}.py`), {
-                args: [embedder.dimensions.toString(), names.length.toString(), ...opts],
+                args: [config.dimensions.toString(), names.length.toString(), ...opts],
                 parser: (msg) => {
                     if (msg.startsWith("[")) {
                         const data = JSON.parse(msg) as unknown[];
@@ -507,6 +481,10 @@ export const evaluateEmbeddings = <T>(
         if (!embedder) {
             throw new QAJob.ContextVarNotFoundError("embedder");
         }
+
+        const embedderSession = embedder as unknown as EmbedderSession;
+        const config = embedderSession.config;
+
         let res: T | undefined;
         ensureFolder("./known");
         // Lock the file to prevent concurrent writes
@@ -531,7 +509,7 @@ export const evaluateEmbeddings = <T>(
             const __dirname = dirname(fileURLToPath(import.meta.url));
             await runPythonScript(resolve(__dirname, `embeddings/evaluation_${method}.py`), {
                 args: [
-                    embedder.dimensions.toString(),
+                    config.dimensions.toString(),
                     labels.length.toString(),
                     ownerLabels.length.toString(),
                     ...opts,

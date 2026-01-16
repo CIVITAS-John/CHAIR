@@ -431,7 +431,7 @@ export class ConsolidateStep<
                         // Determine output path for reference
                         const referencePath = join(
                             ensureFolder(join(dataset.path, "references")),
-                            `${this.config.prefix ?? session.llm.name}${builder.suffix}`,
+                            `${this.config.prefix ?? session.config.name}${builder.suffix}`,
                         );
 
                         // Compute cache key from input codebooks

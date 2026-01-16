@@ -20,8 +20,9 @@ import { CodeStep } from "./steps/code-step.js";
 import { ConsolidateStep } from "./steps/consolidate-step.js";
 import { EvaluateStep } from "./steps/evaluate-step.js";
 import { LoadStep } from "./steps/load-step.js";
-import type { EmbedderModel, EmbedderObject } from "./utils/ai/embeddings.js";
+import type { EmbedderModel } from "./utils/ai/embeddings.js";
 import { initEmbedder } from "./utils/ai/embeddings.js";
+import type { EmbedderConfig } from "./utils/core/config.js";
 import { logger } from "./utils/core/logger.js";
 
 /**
@@ -47,7 +48,10 @@ interface IJobContext {
     /** Path to Python executable for external analysis tools */
     pythonPath?: string;
     /** Embedding model instance for semantic operations */
-    embedder?: EmbedderObject;
+    embedder?: {
+        config: EmbedderConfig;
+        name: string;
+    };
 }
 
 /**
@@ -131,7 +135,10 @@ export class QAJob {
     steps: BaseStep[][];
 
     /** Embedding model instance for consolidation and evaluation steps */
-    embedder?: EmbedderObject;
+    embedder?: {
+        config: EmbedderConfig;
+        name: string;
+    };
 
     /** Error thrown when job configuration is invalid */
     static ConfigError = class extends QAJobError {
@@ -223,10 +230,20 @@ export class QAJob {
         }
 
         // Initialize embedder (either instance or model name)
-        this.embedder =
-            typeof this.config.embedder === "string"
-                ? initEmbedder(this.config.embedder)
-                : this.config.embedder;
+        if (this.config.embedder) {
+            const embedderName =
+                typeof this.config.embedder === "string"
+                    ? this.config.embedder
+                    : this.config.embedder.name;
+            const embedderConfig =
+                typeof this.config.embedder === "string"
+                    ? initEmbedder(this.config.embedder)
+                    : this.config.embedder;
+            this.embedder = {
+                config: embedderConfig,
+                name: embedderName,
+            };
+        }
 
         // Handle flat array configuration (auto-grouping mode)
         if (!Array.isArray(config.steps[0])) {

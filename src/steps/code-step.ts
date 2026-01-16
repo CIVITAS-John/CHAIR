@@ -592,7 +592,7 @@ export class CodeStep<
                                     analyzer.customPrompt = this.config.parameters.customPrompt;
                                 }
                                 logger.info(
-                                    `[${dataset.name}/${analyzer.name}] Using model ${session.llm.name}`,
+                                    `[${dataset.name}/${analyzer.name}] Using model ${session.config.name}`,
                                 );
                                 // Analyze the chunks
                                 const numChunks = Object.keys(dataset.data).length;
@@ -614,7 +614,7 @@ export class CodeStep<
                                         `[${dataset.name}/${analyzer.name}/${key}] Coded ${Object.keys(result.threads).length} threads (${idx + 1}/${numChunks})`,
                                     );
 
-                                    const filename = `${key.replace(".json", "")}-${session.llm.name}${analyzer.suffix}`;
+                                    const filename = `${key.replace(".json", "")}-${session.config.name}${analyzer.suffix}`;
                                     // Write the result into a JSON file
                                     const analyzerPath = ensureFolder(
                                         join(dataset.path, analyzer.name),

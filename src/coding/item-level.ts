@@ -91,7 +91,7 @@ export abstract class ItemLevelAnalyzerBase extends ConversationAnalyzer {
 
         // Weak model strategy: Aggressive size reduction on retries
         // Example: 32 => 24 => 16 => 8 messages per chunk
-        if (recommended === session.llm.maxItems) {
+        if (recommended === (session.config.batchSize ?? 32)) {
             return [recommended - tries * 8, 0, 0];
         }
 

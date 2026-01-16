@@ -1,0 +1,98 @@
+{
+  "llms": {
+    "default": "gpt-4o-mini",
+    "gpt-3.5-turbo": {
+      "provider": "openai",
+      "name": "gpt-3.5-turbo",
+      "contextWindow": 16385,
+      "batchSize": 32
+    },
+    "gpt-4o": {
+      "provider": "openai",
+      "name": "gpt-4o",
+      "contextWindow": 128000,
+      "batchSize": 64
+    },
+    "gpt-4.1": {
+      "provider": "openai",
+      "name": "gpt-4.1",
+      "contextWindow": 128000,
+      "batchSize": 64
+    },
+    "gpt-4o-mini": {
+      "provider": "openai",
+      "name": "gpt-4o-mini",
+      "contextWindow": 128000,
+      "batchSize": 64
+    },
+    "gpt-4o-audio": {
+      "provider": "openai",
+      "name": "gpt-4o-audio-preview",
+      "contextWindow": 128000,
+      "batchSize": 64
+    },
+    "claude-4.5-haiku": {
+      "provider": "anthropic",
+      "name": "claude-4-5-haiku",
+      "contextWindow": 200000,
+      "batchSize": 64
+    },
+    "claude-4.5-sonnet": {
+      "provider": "anthropic",
+      "name": "claude-4-5-sonnet",
+      "contextWindow": 200000,
+      "batchSize": 64
+    },
+    "llama3.3-70b": {
+      "provider": "openrouter",
+      "name": "meta-llama/llama-3.3-70b-instruct",
+      "contextWindow": 128000,
+      "batchSize": 32
+    },
+    "gemini-3-pro": {
+      "provider": "google",
+      "name": "gemini-3-pro",
+      "contextWindow": 2000000,
+      "batchSize": 64
+    },
+    "gemini-3-flash": {
+      "provider": "google",
+      "name": "gemini-3-flash",
+      "contextWindow": 1000000,
+      "batchSize": 64
+    },
+    "gemma3-27b": {
+      "provider": "google",
+      "name": "gemma-3-27b-it",
+      "contextWindow": 8192,
+      "batchSize": 32
+    }
+  },
+  "embedders": {
+    "default": "openai-small-512",
+    "openai-small-512": {
+      "provider": "openai",
+      "name": "text-embedding-3-small",
+      "dimensions": 512,
+      "batchSize": 50
+    },
+    "openai-large-256": {
+      "provider": "openai",
+      "name": "text-embedding-3-large",
+      "dimensions": 256,
+      "batchSize": 50
+    },
+    "openai-large-1024": {
+      "provider": "openai",
+      "name": "text-embedding-3-large",
+      "dimensions": 1024,
+      "batchSize": 50
+    },
+    "gecko-768-similarity": {
+      "provider": "google",
+      "name": "text-embedding-004",
+      "dimensions": 768,
+      "batchSize": 100
+    }
+  }
+}
