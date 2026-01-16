@@ -38,7 +38,6 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import type { BaseMessage } from "@langchain/core/messages";
 import * as dotenv from "dotenv";
 import md5 from "md5";
 
@@ -202,31 +201,19 @@ export const useLLMs = async (
     });
 };
 
-/**
- * Convert LangChain-style messages to Vercel AI SDK format
- */
-const convertMessages = (messages: BaseMessage[]): Message[] => {
-    return messages.map((msg) => {
-        const role =
-            msg.getType() === "system" ? "system" : msg.getType() === "ai" ? "assistant" : "user";
-        const content =
-            typeof msg.content === "string" ? msg.content : JSON.stringify(msg.content);
-        return { role, content } as Message;
-    });
-};
 
 /**
  * Send a request to the LLM with caching support.
  * Checks cache first, falls back to API call if not found.
  *
- * @param messages - Array of chat messages to send (LangChain format)
+ * @param messages - Array of chat messages to send (Vercel AI SDK format)
  * @param cache - Cache folder name for storing responses
  * @param temperature - LLM temperature setting (0-2)
  * @param fakeRequest - If true, simulate without calling LLM
  * @returns The LLM's response text
  */
 export const requestLLM = (
-    messages: BaseMessage[],
+    messages: Message[],
     cache: string,
     temperature?: number,
     fakeRequest = false,
@@ -237,12 +224,10 @@ export const requestLLM = (
             throw new BaseStep.ContextVarNotFoundError("session");
         }
 
-        const input = messages
-            .map((m) => (typeof m.content === "string" ? m.content : JSON.stringify(m.content)))
-            .join("\n~~~\n");
+        const input = messages.map((m) => m.content).join("\n~~~\n");
 
         logger.debug(
-            `[${session.config.name}] LLM request with temperature ${temperature ?? 0}: \n${messages.map((m) => `${m.getType()}: ${m.content as string}`).join("\n---\n")}`,
+            `[${session.config.name}] LLM request with temperature ${temperature ?? 0}: \n${messages.map((m) => `${m.role}: ${m.content}`).join("\n---\n")}`,
         );
         const cacheFolder = ensureFolder(`known/${cache}/${session.config.name}`);
         // Check if the cache exists
@@ -282,7 +267,7 @@ export const requestLLM = (
  * This function makes a direct API call to the configured LLM model, bypassing the caching layer.
  * It tracks tokens and handles timeouts.
  *
- * @param messages - Array of chat messages to send to the model (LangChain format)
+ * @param messages - Array of chat messages to send to the model (Vercel AI SDK format)
  * @param temperature - Sampling temperature (0 = deterministic, higher = more random)
  * @param fakeRequest - If true, skip API call and return empty string (for testing)
  * @returns The raw model response text
@@ -291,7 +276,7 @@ export const requestLLM = (
  * @internal This function is called by requestLLM() when cache misses occur
  */
 export const requestLLMWithoutCache = (
-    messages: BaseMessage[],
+    messages: Message[],
     temperature?: number,
     fakeRequest = false,
 ) =>
@@ -305,17 +290,15 @@ export const requestLLMWithoutCache = (
 
         const { config, model } = session;
         logger.debug(
-            `[${config.name}] LLM request with temperature ${temperature ?? 0}: \n${messages.map((m) => `${m.getType()}: ${m.content as string}`).join("\n---\n")}`,
+            `[${config.name}] LLM request with temperature ${temperature ?? 0}: \n${messages.map((m) => `${m.role}: ${m.content}`).join("\n---\n")}`,
         );
-
-        const convertedMessages = convertMessages(messages);
 
         if (!fakeRequest) {
             await promiseWithTimeout(
                 (async () => {
                     const result = await generateText({
                         model: model as LanguageModel,
-                        messages: convertedMessages,
+                        messages: messages,
                         temperature: temperature ?? 0,
                     });
                     text = result.text;

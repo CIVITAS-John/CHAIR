@@ -27,8 +27,6 @@ import { writeFileSync } from "fs";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
-import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-
 import type { BertopicTopics, CodedThread, Conversation, Message } from "../schema.js";
 import { BaseStep } from "../steps/base-step.js";
 import { ensureFolder } from "../utils/io/file.js";
@@ -129,9 +127,10 @@ Phrase: {A single verb phrase that faithfully describes the topic}
                 // Request the LLM
                 const response = await requestLLM(
                     [
-                        new SystemMessage(prompt),
-                        new HumanMessage(
-                            `Quotes:
+                        { role: "system", content: prompt },
+                        {
+                            role: "user",
+                            content: `Quotes:
 ${examples
     .map((message) =>
         // TODO: Support subchunks
@@ -141,7 +140,7 @@ ${examples
     )
     .join("\n")}
 Keywords: ${keywords.join(", ")}`.trim(),
-                        ),
+                        },
                     ],
                     `messaging-groups/${this.name}`,
                     this.baseTemperature,

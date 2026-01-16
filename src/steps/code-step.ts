@@ -37,12 +37,18 @@ import { existsSync, readdirSync, writeFileSync } from "fs";
 import { basename, extname, join } from "path";
 
 import { select } from "@inquirer/prompts";
-import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import open from "open";
 
 import { Analyzer, loopThroughChunk } from "../analyzer.js";
 import { buildCodes, mergeCodebook } from "../consolidating/codebooks.js";
-import type { CodedThread, CodedThreads, DataChunk, DataItem, Dataset } from "../schema.js";
+import type {
+    Codebook,
+    CodedThread,
+    CodedThreads,
+    DataChunk,
+    DataItem,
+    Dataset,
+} from "../schema.js";
 import { exportChunksForCoding } from "../utils/io/export.js";
 import { importCodes } from "../utils/io/import.js";
 import { ensureFolder, readJSONFile } from "../utils/io/file.js";
@@ -134,6 +140,8 @@ export type CodeStepConfig<
           model: LLMModel | LLMModel[];
           /** AI behavior parameters (temperature, retries, etc.) */
           parameters?: AIParameters;
+          /** Optional codebook for deductive coding (file path or Codebook object) */
+          codebook?: string | import("../schema.js").Codebook;
       }
 );
 
@@ -295,7 +303,10 @@ const analyzeChunks = <T extends DataItem>(
                             // Request with dynamic temperature: base + retry adjustment
                             // Each retry increases temperature by 0.2 to encourage different responses
                             response = await requestLLM(
-                                [new SystemMessage(prompts[0]), new HumanMessage(prompts[1])],
+                                [
+                                    { role: "system", content: prompts[0] },
+                                    { role: "user", content: prompts[1] },
+                                ],
                                 `${basename(dataset.path)}/${analyzer.name}`,
                                 tries * 0.2 + (temperature ?? analyzer.baseTemperature),
                                 fakeRequest,
@@ -561,6 +572,21 @@ export class CodeStep<
             const models = Array.isArray(this.config.model)
                 ? this.config.model
                 : [this.config.model];
+
+            // Load codebook if provided (for deductive coding)
+            let codebook: Codebook | undefined;
+            if (this.config.codebook) {
+                if (typeof this.config.codebook === "string") {
+                    logger.info(`Loading codebook from ${this.config.codebook}`);
+                    codebook = readJSONFile(this.config.codebook);
+                } else {
+                    codebook = this.config.codebook;
+                }
+                if (codebook) {
+                    logger.info(`Loaded codebook with ${Object.keys(codebook).length} codes`);
+                }
+            }
+
             logger.info(
                 `Coding ${this.#datasets.length} datasets with strategies ${strategies.map((s) => s.name).join(", ")} and models ${models.map((m) => (typeof m === "string" ? m : m.name)).join(", ")}`,
             );
@@ -583,8 +609,13 @@ export class CodeStep<
                                     );
                                 }
 
+                                // Instantiate analyzer with optional codebook for deductive coding
                                 const analyzer =
-                                    strategy instanceof Analyzer ? strategy : new strategy();
+                                    strategy instanceof Analyzer
+                                        ? strategy
+                                        : codebook
+                                          ? new strategy(codebook)
+                                          : new strategy();
                                 if (
                                     !analyzer.customPrompt &&
                                     this.config.parameters?.customPrompt

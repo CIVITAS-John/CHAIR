@@ -41,6 +41,10 @@
             "types": "./dist/steps/evaluate-step.d.ts",
             "default": "./dist/steps/evaluate-step.js"
         },
+        "./steps/reliability-step": {
+            "types": "./dist/steps/reliability-step.d.ts",
+            "default": "./dist/steps/reliability-step.js"
+        },
         "./coding/*": {
             "types": "./dist/coding/*.d.ts",
             "default": "./dist/coding/*.js"
@@ -68,7 +72,6 @@
         "@dqbd/tiktoken": "^1.0.21",
         "@google/generative-ai": "^0.24.1",
         "@inquirer/prompts": "^7.6.0",
-        "@langchain/core": "^0.3.62",
         "@openrouter/ai-sdk-provider": "^1.5.4",
         "@rakuzen25/async-store": "github:rakuzen25/async-store",
         "@skyloom/refi-qda": "^1.0.0",

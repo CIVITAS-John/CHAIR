@@ -26,8 +26,6 @@
  * @module consolidating/codebooks
  */
 
-import { HumanMessage, SystemMessage } from "@langchain/core/messages";
-
 import { loopThroughChunk } from "../analyzer.js";
 import type { Code, Codebook, CodedThreads, CodedThreadsWithCodebook, DataChunk, DataItem, Dataset } from "../schema.js";
 import type { ClusterItem } from "../utils/ai/embeddings.js";
@@ -351,7 +349,10 @@ export const consolidateCodebook = <TUnit>(
 
                 // Call LLM with temperature adjustment for retries
                 const response = await requestLLM(
-                    [new SystemMessage(prompts[0]), new HumanMessage(prompts[1])],
+                    [
+                        { role: "system", content: prompts[0] },
+                        { role: "user", content: prompts[1] },
+                    ],
                     `codebooks/${consolidator.name}`,
                     Math.min(tries, 3) * 0.2 + consolidator.baseTemperature,
                     fakeRequest,
