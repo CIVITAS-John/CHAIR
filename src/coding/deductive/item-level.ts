@@ -238,14 +238,14 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
                     // Validate and normalize codes to orthodox case from codebook
                     const codeList = codes
                         .toLowerCase()
-                        .split(/[;|]/)
+                        .split(/[;]/)
                         .map((c) => c.trim())
                         .filter((c) => c.length > 0 && c !== "n/a");
 
                     const normalizedCodes: string[] = [];
                     for (const code of codeList) {
                         // Try fuzzy-search to find best match
-                        const matches = search(code, codebookKeys, { threshold: 0.9, ignoreCase: true, ignoreSymbols: true });
+                        const matches = search(code.replaceAll("–", '-'), codebookKeys, { threshold: 0.9, ignoreCase: true, ignoreSymbols: true });
                         const orthodoxCase = matches.length > 0 ? matches[0] : undefined;
 
                         if (orthodoxCase) {

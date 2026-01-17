@@ -137,11 +137,16 @@ export default class ItemLevelCoderSimple extends ItemLevelCoderBase {
             `
 # Goals
 You are an expert in deductive qualitative coding.
-Your goal is to accurately apply codes from a predefined codebook to **every data item**. Do not omit or provide selective answers.
-Use ONLY the codes listed below. Do not create new codes. Double check if your choices match.
-For each and every data item, you MUST select one or more appropriate codes from the codebook, splitted by comma. Use "N/A" if nothing matches.
+Your goal is to accurately apply codes from a predefined codebook to **every single data item**.
 ${dataset.researchQuestion}
 ${dataset.codingNotes}${this.customPrompt}
+
+# Guidelines
+1. Use ONLY the codes listed below. Do not create new codes.
+2. For each and every data item (provided in a numbered list), you MUST select one or more appropriate codes from the codebook. Use "N/A" if nothing matches.
+3. You will always return one bullet point for each data item. Multiple codes are splitted by semicolon (;).
+4. When reasoning, parse through each data item to help with your decision-making later. Then double check if your choices match.
+5. Never not omit or provide selective answers.
 
 # Predefined Codebook
 ${codebookFormatted}
@@ -151,7 +156,7 @@ ${codebookFormatted}
 # Thoughts
 {A paragraph of plans and guiding questions about analyzing the conversation}
 
-# Codes (${messages.length} in total):
+# Codes (for each of the ${messages.length} items):
 1. {code 1}; {code 2}; ...
 ...
 ${messages.length}. {code 1}; {code 2}; ...
