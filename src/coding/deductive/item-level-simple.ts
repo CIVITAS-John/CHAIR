@@ -6,7 +6,7 @@
  * requirements (unlike verb-only or other constrained variants).
  *
  * Coding approach:
- * - Receives a predefined codebook with codes and definitions
+ * - Uses the codebook from incoming CodedThread (analysis.codes)
  * - LLM selects appropriate codes from the codebook for each message
  * - Multiple codes can be applied per message
  * - Codes are separated by semicolons
@@ -32,7 +32,7 @@
  * @author John Chen
  */
 
-import type { Codebook, CodedThread, Conversation, Message } from "../../schema.js";
+import type { CodedThread, Conversation, Message } from "../../schema.js";
 import { BaseStep } from "../../steps/base-step.js";
 import { buildMessagePrompt } from "../conversations.js";
 import { ItemLevelCoderBase } from "./item-level.js";
@@ -61,11 +61,10 @@ export default class ItemLevelCoderSimple extends ItemLevelCoderBase {
     /**
      * Create a new simple deductive coder.
      *
-     * @param codebook - The predefined codebook with codes and definitions
      * @param options - Optional configuration (name, prompt)
      */
-    constructor(codebook: Codebook, options?: { name?: string; prompt?: string }) {
-        super(codebook, options);
+    constructor(options?: { name?: string; prompt?: string }) {
+        super(options);
     }
 
     /**
@@ -112,17 +111,14 @@ export default class ItemLevelCoderSimple extends ItemLevelCoderBase {
      * 1. System message: Role, predefined codebook, instructions, and output format
      * 2. User message: Numbered messages with optional preliminary codes
      *
-     * Before building prompts:
-     * - Prefills analysis.codes with codebook structure (definitions but no examples)
-     *
      * The prompt:
-     * - Lists all predefined codes with their definitions
+     * - Lists all predefined codes from analysis.codes with their definitions
      * - Explicitly instructs LLM to use ONLY these codes
      * - Prohibits creating new codes
      * - Encourages selecting multiple appropriate codes per message
      * - Maintains output format consistency with inductive coders
      *
-     * @param analysis - Current analysis state (will be prefilled with codebook)
+     * @param analysis - Current analysis state containing the codebook in analysis.codes
      * @param _target - Conversation being analyzed (unused)
      * @param messages - Messages in current chunk
      * @returns [systemPrompt, userPrompt]
@@ -134,11 +130,8 @@ export default class ItemLevelCoderSimple extends ItemLevelCoderBase {
     ): Promise<[string, string]> {
         const { dataset } = BaseStep.Context.get();
 
-        // Prefill analysis.codes with codebook structure before coding begins
-        this.prefillCodesFromCodebook(analysis, this.codebook);
-
         // Format codebook for prompt inclusion
-        const codebookFormatted = this.formatCodebookForPrompt(this.codebook);
+        const codebookFormatted = this.formatCodebookForPrompt(analysis.codes);
 
         return Promise.resolve([
             `

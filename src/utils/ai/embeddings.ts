@@ -90,14 +90,9 @@ const getEmbedder = (config: EmbedderConfig): EmbeddingModel<string> => {
             return google.textEmbeddingModel(config.name);
 
         case "openai-compatible":
-            if (!config.options?.baseURL) {
-                throw new Error(
-                    `openai-compatible provider requires baseURL in options for embedder: ${config.name}`,
-                );
-            }
             return createOpenAICompatible({
-                baseURL: config.options.baseURL as string,
-                apiKey: (config.options.apiKey as string) ?? "dummy-key",
+                baseURL: config.options?.baseURL ?? process.env.OPENAI_COMPATIBLE_URL ?? "",
+                apiKey: config.options?.apiKey ?? process.env.OPENAI_COMPATIBLE_API_KEY ?? "",
                 name: config.provider,
             }).textEmbeddingModel(config.name);
 
@@ -171,7 +166,7 @@ export const requestEmbeddings = (sources: string[], cache: string): Promise<Flo
         // Check if the cache exists
         const embeddings = new Float32Array(config.dimensions * sources.length);
         const requests: number[] = [];
-        
+
         for (let i = 0; i < localsources.length; i++) {
             // Apply the prompt if provided
             localsources[i] = (config.prompt ?? "{input}").replace("{input}", localsources[i]);

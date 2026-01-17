@@ -58,6 +58,7 @@ export interface EmbedderConfig {
     options?: {
         concurrencyLimit?: number;
         baseURL?: string;
+        apiKey?: string;
         [key: string]: unknown;
     };
 }

@@ -66,6 +66,12 @@
       "name": "gemma-3-27b-it",
       "contextWindow": 8192,
       "batchSize": 32
+    },
+    "local-gpt-oss-120b": {
+      "provider": "openai-compatible",
+      "name": "gpt-oss-120b",
+      "contextWindow": 100000,
+      "batchSize": 32
     }
   },
   "embedders": {

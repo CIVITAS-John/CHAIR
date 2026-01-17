@@ -6,9 +6,9 @@
  * a fixed set of codes with known definitions.
  *
  * Key characteristics:
- * - Receives predefined codebook with codes and definitions
+ * - Uses codebook from incoming CodedThread (analysis.codes)
  * - LLM selects appropriate codes from the codebook for each message
- * - Codes are prefilled in analysis structure before coding begins
+ * - Codebook must be pre-populated in analysis.codes before analysis begins
  * - Examples are collected during coding but definitions come from codebook
  *
  * Deductive vs Inductive:
@@ -37,6 +37,10 @@ import { buildMessagePrompt } from "../conversations.js";
  * The main difference from inductive coding is in prompt construction: instead of asking
  * the LLM to generate codes, we provide a fixed list and ask it to select appropriate ones.
  *
+ * The codebook is expected to be pre-populated in the incoming CodedThread's analysis.codes
+ * property before the analyzer runs. This allows the analyzer to use the codebook from
+ * the coded threads rather than receiving it as a constructor parameter.
+ *
  * Subclasses must implement:
  * - buildPrompts(): Create prompts that include the codebook and instruct selection
  *
@@ -47,18 +51,14 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
     protected tagName = "code";
     /** Term used in prompts to refer to multiple codes */
     protected tagsName = "codes";
-    /** The predefined codebook for deductive coding */
-    protected codebook: Codebook;
 
     /**
-     * Create a new deductive coder with a predefined codebook.
+     * Create a new deductive coder.
      *
-     * @param codebook - The predefined codebook with codes and definitions
      * @param options - Optional configuration (name, prompt)
      */
-    constructor(codebook: Codebook, options?: { name?: string; prompt?: string }) {
+    constructor(options?: { name?: string; prompt?: string }) {
         super(options);
-        this.codebook = codebook;
     }
 
     /**
@@ -80,32 +80,6 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
         _tries: number,
     ): [number, number, number] {
         return [recommended, 0, 0];
-    }
-
-    /**
-     * Helper method to prefill analysis.codes with codebook structure.
-     *
-     * Copies codes from the input codebook to the analysis structure:
-     * - Preserves label and definitions
-     * - Initializes empty examples array (to be populated during coding)
-     * - Does NOT include examples from the codebook
-     *
-     * This ensures the analysis structure has all code definitions ready
-     * before the LLM begins selecting codes for messages.
-     *
-     * @param analysis - The CodedThread to prefill
-     * @param codebook - The source codebook
-     */
-    protected prefillCodesFromCodebook(analysis: CodedThread, codebook: Codebook): void {
-        for (const [label, code] of Object.entries(codebook)) {
-            analysis.codes[label] = {
-                label: code.label,
-                definitions: code.definitions,
-                categories: code.categories,
-                alternatives: code.alternatives,
-                examples: [], // Start with empty, will be filled during coding
-            };
-        }
     }
 
     /**
@@ -264,9 +238,9 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
                         .filter((c) => c.length > 0 && c !== "n/a");
 
                     for (const code of codeList) {
-                        if (!this.codebook[code]) {
+                        if (!analysis.codes[code]) {
                             logger.warn(
-                                `Code "${code}" not found in codebook for message ${match[1]}. Available codes: ${Object.keys(this.codebook).join(", ")}`,
+                                `Code "${code}" not found in codebook for message ${match[1]}. Available codes: ${Object.keys(analysis.codes).join(", ")}`,
                             );
                         }
                     }

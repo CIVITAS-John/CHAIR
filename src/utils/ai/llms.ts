@@ -119,14 +119,9 @@ export const getModel = (config: ModelConfig): LanguageModel => {
             })(config.name);
 
         case "openai-compatible":
-            if (!config.options?.baseURL) {
-                throw new Error(
-                    `openai-compatible provider requires baseURL in options for model: ${config.name}`,
-                );
-            }
             return createOpenAICompatible({
-                baseURL: config.options.baseURL ?? process.env.OPENAI_COMPATIBLE_URL,
-                apiKey: config.options.apiKey ?? process.env.OPENAI_COMPATIBLE_API_KEY ?? "",
+                baseURL: config.options?.baseURL ?? process.env.OPENAI_COMPATIBLE_URL ?? "",
+                apiKey: config.options?.apiKey ?? process.env.OPENAI_COMPATIBLE_API_KEY ?? "",
                 name: config.provider,
             }).chatModel(config.name);
 
