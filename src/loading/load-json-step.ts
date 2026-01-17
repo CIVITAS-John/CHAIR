@@ -66,21 +66,31 @@ const initializeItem = (item: RawDataItem): DataItem => ({
  * 1. Parses chunk start/end timestamps
  * 2. Recursively processes nested chunks
  * 3. Initializes simple items with parsed timestamps
+ * 4. Applies optional postprocess callback to items
  *
  * @param chunk - Raw data chunk with string timestamps
+ * @param postprocessItem - Optional callback to transform DataItems
  * @returns Initialized chunk with parsed Dates and processed items
  */
-const initializeChunk = (chunk: RawDataChunk): DataChunk<DataItem> => ({
+const initializeChunk = (
+    chunk: RawDataChunk,
+    postprocessItem?: (item: DataItem) => DataItem,
+): DataChunk<DataItem> => ({
     ...chunk,
     start: parseDateTime(chunk.start),
     end: parseDateTime(chunk.end),
     items: chunk.items.map((item) => {
         // Check if item is a nested chunk (has 'items' property)
         if ("items" in item) {
-            return initializeChunk(item);
+            return initializeChunk(item, postprocessItem);
         }
         // Otherwise it's a simple item
-        return initializeItem(item);
+        let initializedItem = initializeItem(item);
+        // Apply postprocess callback if provided
+        if (postprocessItem) {
+            initializedItem = postprocessItem(initializedItem);
+        }
+        return initializedItem;
     }),
 });
 
@@ -186,7 +196,7 @@ export class LoadJsonStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
             const parsedChunks: Record<string, TUnit> = {};
             for (const [ck, cv] of Object.entries(rawChunks)) {
                 logger.debug(`[${dataset.name}] Initializing chunk "${ck}" of chunk group "${gk}"`);
-                parsedChunks[ck] = initializeChunk(cv) as TUnit;
+                parsedChunks[ck] = initializeChunk(cv, this.config.postprocessItem) as TUnit;
             }
             parsedData[gk] = parsedChunks;
 

@@ -71,7 +71,10 @@
       "provider": "openai-compatible",
       "name": "gpt-oss-120b",
       "contextWindow": 100000,
-      "batchSize": 32
+      "batchSize": 32,
+      "options": {
+        "reasoningEffort": "high"
+      }
     }
   },
   "embedders": {

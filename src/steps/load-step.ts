@@ -64,6 +64,20 @@ export interface LoadStepConfig {
      * @returns Filtered chunk group (subset of input)
      */
     filter?: (data: Record<string, RawDataChunk>) => Record<string, RawDataChunk>;
+
+    /**
+     * Optional callback to postprocess each DataItem after it's fetched
+     *
+     * Applied after timestamp parsing but before the item is stored.
+     * Useful for:
+     * - Normalizing content formats
+     * - Adding computed fields
+     * - Filtering or transforming item properties
+     *
+     * @param item - The DataItem after initialization
+     * @returns Transformed DataItem
+     */
+    postprocessItem?: (item: DataItem) => DataItem;
 }
 
 /**

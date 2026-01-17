@@ -231,20 +231,24 @@ export const requestLLM = (
         if (existsSync(cacheFile)) {
             logger.debug(`[${session.config.name}] Cache file exists`);
             const cacheContent = readFileSync(cacheFile, "utf-8");
-            const split = cacheContent.split("\n===\n");
-            if (split.length === 2) {
-                const content = split[1].trim();
-                if (content.length > 0) {
-                    // Use tokenize for consistency with old behavior
-                    const inputTokens = tokenize(input).length;
-                    const outputTokens = tokenize(content).length;
-                    session.inputTokens += inputTokens;
-                    session.outputTokens += outputTokens;
-                    logger.info(
-                        `[${session.config.name}] Cache hit (input tokens: ${inputTokens}, output tokens: ${outputTokens})`,
-                    );
-                    logger.debug(`[${session.config.name}] Cache content: ${content}`);
-                    return content;
+            const parts = cacheContent.split("\n===REASONING===\n");
+            if (parts.length === 2) {
+                const [, rest] = parts;
+                const outputParts = rest.split("\n===OUTPUT===\n");
+                if (outputParts.length === 2) {
+                    const content = outputParts[1].trim();
+                    if (content.length > 0) {
+                        // Use tokenize for consistency with old behavior
+                        const inputTokens = tokenize(input).length;
+                        const outputTokens = tokenize(content).length;
+                        session.inputTokens += inputTokens;
+                        session.outputTokens += outputTokens;
+                        logger.info(
+                            `[${session.config.name}] Cache hit (input tokens: ${inputTokens}, output tokens: ${outputTokens})`,
+                        );
+                        logger.debug(`[${session.config.name}] Cache content: ${content}`);
+                        return content;
+                    }
                 }
             }
         }
@@ -252,8 +256,8 @@ export const requestLLM = (
         logger.info(`[${session.config.name}] Cache miss`);
         const result = await requestLLMWithoutCache(messages, temperature, fakeRequest);
         logger.debug(`[${session.config.name}] Writing to cache file`);
-        writeFileSync(cacheFile, `${input}\n===\n${result}`);
-        return result;
+        writeFileSync(cacheFile, `${input}\n===REASONING===\n${result.reasoning}\n===OUTPUT===\n${result.text}`);
+        return result.text;
     });
 
 /**
@@ -282,6 +286,7 @@ export const requestLLMWithoutCache = (
         }
 
         let text = "";
+        let reasoning = "";
 
         const { config, model } = session;
         logger.debug(
@@ -297,6 +302,8 @@ export const requestLLMWithoutCache = (
                         temperature: temperature ?? 0,
                     });
                     text = result.text;
+                    // Capture reasoning content if available
+                    reasoning = result.reasoningText ?? "";
                     // Update token counts from actual usage
                     session.inputTokens += result.usage.inputTokens ?? 0;
                     session.outputTokens += result.usage.outputTokens ?? 0;
@@ -309,5 +316,5 @@ export const requestLLMWithoutCache = (
             `[${config.name}] LLM request completed (input tokens: ${session.inputTokens}, output tokens: ${session.outputTokens})`,
         );
         logger.debug(`[${config.name}] LLM response: ${text}`);
-        return text;
+        return { text, reasoning };
     });

@@ -24,6 +24,7 @@
  * @author John Chen
  */
 
+import { search } from "fast-fuzzy";
 import type { Codebook, CodedThread, Conversation, Message } from "../../schema.js";
 import { BaseStep } from "../../steps/base-step.js";
 import { logger } from "../../utils/core/logger.js";
@@ -102,11 +103,12 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
      */
     protected formatCodebookForPrompt(codebook: Codebook): string {
         return Object.entries(codebook)
+            .filter(([label, code]) => (code.definitions?.length ?? 0) > 0)
             .map(([label, code]) => {
                 const definition = code.definitions?.[0] ?? "No definition provided";
-                return `- ${label}: ${definition}`;
+                return `## ${label}\nDefinition: ${definition}`;
             })
-            .join("\n");
+            .join("\n\n");
     }
 
     /**
@@ -149,6 +151,9 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
     ): Promise<Record<number, string>> {
         const { dataset } = BaseStep.Context.get();
         const results: Record<number, string> = {};
+
+        // Prepare codebook keys for fuzzy-search
+        const codebookKeys = Object.keys(analysis.codes);
 
         // State machine for section-based parsing
         type ParserState = "thoughts" | "codes" | "summary" | "notes" | null;
@@ -230,23 +235,31 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
                     codes = codes.replaceAll(/\(.*?\)/g, "").trim(); // (explanatory note)
                     codes = codes.replaceAll(/\*(.*?)\*/g, "$1").trim(); // *emphasis*
 
-                    // Validate codes are from the codebook
+                    // Validate and normalize codes to orthodox case from codebook
                     const codeList = codes
                         .toLowerCase()
                         .split(/[;|]/)
                         .map((c) => c.trim())
                         .filter((c) => c.length > 0 && c !== "n/a");
 
+                    const normalizedCodes: string[] = [];
                     for (const code of codeList) {
-                        if (!analysis.codes[code]) {
+                        // Try fuzzy-search to find best match
+                        const matches = search(code, codebookKeys, { threshold: 0.9, ignoreCase: true, ignoreSymbols: true });
+                        const orthodoxCase = matches.length > 0 ? matches[0] : undefined;
+
+                        if (orthodoxCase) {
+                            normalizedCodes.push(orthodoxCase);
+                        } else {
                             logger.warn(
-                                `Code "${code}" not found in codebook for message ${match[1]}. Available codes: ${Object.keys(analysis.codes).join(", ")}`,
+                                `Code "${code}" not found in codebook for message ${match[1]}.`,
                             );
+                            normalizedCodes.push(code); // Keep original if not found
                         }
                     }
 
-                    // Store the codes (1-based indexing)
-                    results[parseInt(match[1])] = codes;
+                    // Store the normalized codes (1-based indexing)
+                    results[parseInt(match[1])] = normalizedCodes.join("; ");
                 }
             }
         }

@@ -153,15 +153,16 @@ export type CodeStepConfig<
  *
  * Process Overview:
  * 1. Initialize analysis structures for each chunk
- * 2. Batch preprocess all chunks (analyzer-specific preparation)
- * 3. For each chunk:
+ * 2. Populate codebook if provided (for deductive coding)
+ * 3. Batch preprocess all chunks (analyzer-specific preparation)
+ * 4. For each chunk:
  *    a. Filter out empty items and subchunks (not yet supported)
  *    b. Loop through items in windows (defined by analyzer)
  *    c. Build prompts with context (previous summary, current items)
  *    d. Send to LLM and parse response
  *    e. Extract codes and examples from response
  *    f. Store codes in analysis structure
- * 4. Consolidate codebook from all codes
+ * 5. Consolidate codebook from all codes
  *
  * Windowing Strategy:
  * - Chunks may be too large for LLM context windows
@@ -188,6 +189,7 @@ export type CodeStepConfig<
  * @param analyzer - Analysis strategy defining prompts and parsing
  * @param chunks - Data chunks to analyze
  * @param analyzed - Accumulator for results (supports incremental analysis)
+ * @param codebook - Optional predefined codebook for deductive coding
  * @param temperature - LLM creativity (0-2), increases on retries
  * @param fakeRequest - Skip LLM calls for testing
  * @param retries - Max retry attempts for failed requests
@@ -197,6 +199,7 @@ const analyzeChunks = <T extends DataItem>(
     analyzer: Analyzer<DataChunk<T>, T, CodedThread>,
     chunks: Record<string, DataChunk<T>>,
     analyzed: CodedThreads = { threads: {} },
+    codebook?: Codebook,
     temperature?: number,
     fakeRequest = false,
     retries?: number,
@@ -229,6 +232,12 @@ const analyzeChunks = <T extends DataItem>(
                 iteration: 0,
                 codes: {},
             };
+
+            // Populate with predefined codebook for deductive coding
+            // Copies code definitions to analysis.codes by deep clone
+            if (codebook) {
+                analyzed.threads[key].codes = JSON.parse(JSON.stringify(codebook));
+            }
         }
 
         // Batch preprocess all chunks before analysis
@@ -609,13 +618,9 @@ export class CodeStep<
                                     );
                                 }
 
-                                // Instantiate analyzer with optional codebook for deductive coding
+                                // Instantiate analyzer (codebook handled separately in analyzeChunks)
                                 const analyzer =
-                                    strategy instanceof Analyzer
-                                        ? strategy
-                                        : codebook
-                                          ? new strategy(codebook)
-                                          : new strategy();
+                                    strategy instanceof Analyzer ? strategy : new strategy();
                                 if (
                                     !analyzer.customPrompt &&
                                     this.config.parameters?.customPrompt
@@ -637,6 +642,7 @@ export class CodeStep<
                                         analyzer,
                                         chunks,
                                         { threads: {} },
+                                        codebook,
                                         this.config.parameters?.temperature,
                                         this.config.parameters?.fakeRequest,
                                         this.config.parameters?.retries,

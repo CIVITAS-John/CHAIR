@@ -55,6 +55,20 @@ export interface LoadQdpxStepConfig {
      * Default: true
      */
     skipIfExists?: boolean;
+
+    /**
+     * Optional callback to postprocess each DataItem after it's fetched
+     *
+     * Applied after timestamp parsing but before the item is stored.
+     * Useful for:
+     * - Normalizing content formats
+     * - Adding computed fields
+     * - Filtering or transforming item properties
+     *
+     * @param item - The DataItem after initialization
+     * @returns Transformed DataItem
+     */
+    postprocessItem?: (item: DataItem) => DataItem;
 }
 
 /**
@@ -131,8 +145,11 @@ export class LoadQdpxStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
             config.outputDir ||
             join(dirname(config.path), basename(config.path, ".qdpx") + "-json");
 
-        // Pass output directory to parent LoadJsonStep
-        super({ path: outputDir });
+        // Pass output directory and postprocessItem callback to parent LoadJsonStep
+        super({
+            path: outputDir,
+            postprocessItem: config.postprocessItem,
+        });
 
         this.qdpxConfig = config;
     }
