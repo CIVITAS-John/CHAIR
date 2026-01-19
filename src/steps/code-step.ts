@@ -146,6 +146,35 @@ export type CodeStepConfig<
 );
 
 /**
+ * Filter codebook to codes matching category filter(s)
+ *
+ * Matches codes where any category path starts with the filter string.
+ * Example: filter="Social" matches code with categories=["Social Interaction"]
+ *
+ * @param codebook - Full codebook to filter
+ * @param filter - Category string or array (matches prefix)
+ * @returns Filtered codebook with matching codes
+ */
+const filterCodebookByCategory = (
+    codebook: Codebook | undefined,
+    filter: string | string[]
+): Codebook | undefined => {
+    if (!codebook) return undefined;
+
+    const filters = Array.isArray(filter) ? filter : [filter];
+    const result: Codebook = {};
+
+    for (const [label, code] of Object.entries(codebook)) {
+        if (code.categories?.some(cat => filters.some(f => cat.startsWith(f)))) {
+            result[label] = code;
+        }
+    }
+
+    logger.debug(`Filtered codebook: ${Object.keys(codebook).length} → ${Object.keys(result).length} codes`);
+    return result;
+};
+
+/**
  * Analyze data chunks using an AI-powered analyzer
  *
  * This is the core function for AI-based qualitative coding. It orchestrates
@@ -234,9 +263,12 @@ const analyzeChunks = <T extends DataItem>(
             };
 
             // Populate with predefined codebook for deductive coding
-            // Copies code definitions to analysis.codes by deep clone
+            // Merges code definitions to analysis.codes by deep clone (supports substeps)
             if (codebook) {
-                analyzed.threads[key].codes = JSON.parse(JSON.stringify(codebook));
+                analyzed.threads[key].codes = {
+                    ...analyzed.threads[key].codes,
+                    ...JSON.parse(JSON.stringify(codebook))
+                };
             }
         }
 
@@ -356,11 +388,19 @@ const analyzeChunks = <T extends DataItem>(
                             // Detect delimiter: comma if no semicolons/pipes, otherwise semicolon/pipe
                             const isCommaDelim = !(res.includes(";") || res.includes("|"));
 
+                            // Check if this is deductive coding (codebook has definitions)
+                            const isDeductive = Object.values(analysis.codes).some(
+                                (code) => (code.definitions?.length ?? 0) > 0,
+                            );
+
                             // Parse and normalize codes from delimited string
-                            const codes = res
-                                .toLowerCase()
+                            const codes = (isDeductive ? res : res.toLowerCase())
                                 .split(isCommaDelim ? /,/g : /\||;/g)
-                                .map((c) => c.trim().replace(/\.$/, "").toLowerCase())
+                                .map((c) =>
+                                    isDeductive
+                                        ? c.trim().replace(/\.$/, "")
+                                        : c.trim().replace(/\.$/, "").toLowerCase(),
+                                )
                                 .filter(
                                     (c) =>
                                         c.length > 0 &&
@@ -638,15 +678,57 @@ export class CodeStep<
                                     logger.info(
                                         `[${dataset.name}/${analyzer.name}] Analyzing chunk ${key} (${idx + 1}/${numChunks})`,
                                     );
-                                    const result = await analyzeChunks(
-                                        analyzer,
-                                        chunks,
-                                        { threads: {} },
-                                        codebook,
-                                        this.config.parameters?.temperature,
-                                        this.config.parameters?.fakeRequest,
-                                        this.config.parameters?.retries,
-                                    );
+
+                                    // Determine if using substeps or single-pass
+                                    const substeps = this.config.parameters?.substeps;
+                                    const passes = substeps?.length
+                                        ? substeps
+                                        : [{ name: "default", categoryFilter: undefined, customParameters: undefined }];
+
+                                    let result: CodedThreads = { threads: {} };
+
+                                    // Process each substep (or single default pass)
+                                    for (const substep of passes) {
+                                        if (substeps) {
+                                            logger.info(`[${dataset.name}/${analyzer.name}/${key}] Substep: ${substep.name}`);
+                                        }
+
+                                        // Filter codebook for this substep
+                                        const substepCodebook = substep.categoryFilter
+                                            ? filterCodebookByCategory(codebook, substep.categoryFilter)
+                                            : codebook;
+
+                                        // Get parameters (substep overrides base)
+                                        const params = substep.customParameters || {};
+                                        const temperature = params.temperature ?? this.config.parameters?.temperature;
+                                        const retries = params.retries ?? this.config.parameters?.retries;
+                                        const fakeRequest = params.fakeRequest ?? this.config.parameters?.fakeRequest;
+
+                                        // Merge prompts
+                                        const basePrompt = this.config.parameters?.customPrompt;
+                                        const customPrompt = params.customPrompt
+                                            ? (basePrompt ? `${basePrompt}\n\n${params.customPrompt}` : params.customPrompt)
+                                            : basePrompt;
+
+                                        const origPrompt = analyzer.customPrompt;
+                                        if (customPrompt !== undefined) {
+                                            analyzer.customPrompt = customPrompt;
+                                        }
+
+                                        // Accumulate results using analyzed parameter
+                                        result = await analyzeChunks(
+                                            analyzer,
+                                            chunks,
+                                            result,  // Pass previous result to accumulate
+                                            substepCodebook,
+                                            temperature,
+                                            fakeRequest,
+                                            retries,
+                                        );
+
+                                        analyzer.customPrompt = origPrompt;
+                                    }
+
                                     logger.success(
                                         `[${dataset.name}/${analyzer.name}/${key}] Coded ${Object.keys(result.threads).length} threads (${idx + 1}/${numChunks})`,
                                     );

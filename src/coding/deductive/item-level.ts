@@ -105,8 +105,18 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
         return Object.entries(codebook)
             .filter(([label, code]) => (code.definitions?.length ?? 0) > 0)
             .map(([label, code]) => {
-                const definition = code.definitions?.[0] ?? "No definition provided";
-                return `## ${label}\nDefinition: ${definition}`;
+                const parts = [`## ${label}`];
+
+                const definition = code.definitions?.[0];
+                if (definition) {
+                    parts.push(`- Definition: ${definition}`);
+                }
+
+                if (code.categories && code.categories.length > 0) {
+                    parts.push(`- Belongs to: ${code.categories.join(" => ")}`);
+                }
+
+                return parts.join("\n");
             })
             .join("\n\n");
     }
@@ -237,7 +247,6 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
 
                     // Validate and normalize codes to orthodox case from codebook
                     const codeList = codes
-                        .toLowerCase()
                         .split(/[;]/)
                         .map((c) => c.trim())
                         .filter((c) => c.length > 0 && c !== "n/a");

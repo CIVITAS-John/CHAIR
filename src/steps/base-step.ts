@@ -37,6 +37,15 @@ export interface AIParameters extends Record<string, unknown> {
     customPrompt?: string;
     /** Whether to simulate requests without calling LLM (for testing) */
     fakeRequest?: boolean;
+    /** Substeps for category-filtered multi-pass coding */
+    substeps?: Array<{
+        /** Name for logging (e.g., "Social Codes") */
+        name: string;
+        /** Filter codebook by category prefix (e.g., "Social" or ["Content", "Topic"]) */
+        categoryFilter?: string | string[];
+        /** AI parameters specific to this substep */
+        customParameters?: AIParameters;
+    }>;
 }
 
 /**

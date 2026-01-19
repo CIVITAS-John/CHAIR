@@ -138,14 +138,14 @@ export default class ItemLevelCoderSimple extends ItemLevelCoderBase {
 # Goals
 You are an expert in deductive qualitative coding.
 Your goal is to accurately apply codes from a predefined codebook to **every single data item**.
-${dataset.researchQuestion}
-${dataset.codingNotes}${this.customPrompt}
+${dataset.researchQuestion.trim()}
+${dataset.codingNotes.trim()}${this.customPrompt.trim()}
 
 # Guidelines
-1. Use ONLY the codes listed below. Do not create new codes.
-2. For each and every data item (provided in a numbered list), you MUST select one or more appropriate codes from the codebook. Use "N/A" if nothing matches.
+1. Use ONLY the codes listed below and strictly follow its DEFINITION. Do not create new codes.
+2. For each and every data item (provided in a numbered list), you MUST select appropriate codes from the codebook, as many as possible. Use "N/A" if nothing matches.
 3. You will always return one bullet point for each data item. Multiple codes are splitted by semicolon (;).
-4. When reasoning, parse through each data item to help with your decision-making later. Then double check if your choices match.
+4. When reasoning, interpret through each data item to help with your decision-making later. Then double check if your choices match.
 5. Never not omit or provide selective answers.
 
 # Predefined Codebook
@@ -170,7 +170,7 @@ ${messages.length}. {code 1}; {code 2}; ...
             messages
                 .map(
                     (message, idx) =>
-                        `${idx + 1}. ${buildMessagePrompt(dataset, message, analysis.items[message.id], this.tagsName)}`,
+                        `${idx + 1}. ${buildMessagePrompt(dataset, message, Object.keys(analysis.codes).length > 0 ? undefined : analysis.items[message.id], this.tagsName)}`,
                 )
                 .join("\n"),
         ]);
