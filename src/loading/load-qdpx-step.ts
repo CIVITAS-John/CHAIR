@@ -69,6 +69,13 @@ export interface LoadQdpxStepConfig {
      * @returns Transformed DataItem
      */
     postprocessItem?: (item: DataItem) => DataItem;
+
+    /**
+     * Only include threads with human codes in the output
+     * If true, excludes uncoded sources from sources.json and Excel exports
+     * Default: false (include all sources)
+     */
+    onlyCodedThreads?: boolean;
 }
 
 /**
@@ -247,7 +254,12 @@ export class LoadQdpxStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
             await mkdir(outputDir, { recursive: true });
 
             // Convert QDPX to JSON
-            await convertQdpxToJson(qdpxPath, outputDir);
+            await convertQdpxToJson(
+                qdpxPath,
+                outputDir,
+                undefined,
+                this.qdpxConfig.onlyCodedThreads,
+            );
 
             logger.success(`QDPX conversion complete`);
         } else {

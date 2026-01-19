@@ -35,16 +35,16 @@
 import { writeFileSync } from "fs";
 import { join } from "path";
 
-import type {
+import {
     calculateCodeLevelMetrics,
     calculatePairwiseReliability,
-    CodeLevelMetrics,
+    type CodeLevelMetrics,
     compareItems,
-    DifferenceCalculator,
+    type DifferenceCalculator,
     extractCodedItems,
-    PairwiseReliability,
+    type PairwiseReliability,
+    defaultCalculateDifference,
 } from "../evaluating/reliability-metrics.js";
-import { defaultCalculateDifference } from "../evaluating/reliability-metrics.js";
 import type { CodedItem, CodedThreads, DataChunk, DataItem, Dataset } from "../schema.js";
 import { ensureFolder } from "../utils/io/file.js";
 import { logger } from "../utils/core/logger.js";
@@ -226,14 +226,6 @@ export class ReliabilityStep<
      * 3. Filename: <dataset>/reliability/<subdir>/<subdir>-reliability.json
      */
     async #execute() {
-        // Import the utility functions (dynamic import to avoid circular dependencies)
-        const {
-            extractCodedItems,
-            compareItems,
-            calculatePairwiseReliability,
-            calculateCodeLevelMetrics,
-        } = await import("../evaluating/reliability-metrics.js");
-
         // Collect datasets from consolidator
         const datasets: Dataset<TUnit[]>[] = [];
         const codebooks = new Map<string, Record<string, unknown>>();

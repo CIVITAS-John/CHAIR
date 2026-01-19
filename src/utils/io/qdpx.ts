@@ -21,6 +21,7 @@ import AdmZip from "adm-zip";
 
 import type { Code, Codebook, RawDataChunk, RawDataItem } from "../../schema.js";
 import { exportChunksForCoding } from "./export.js";
+import { logger } from "../core/logger.js";
 import type {
     ChunkContentResult,
     RefiCode,
@@ -571,11 +572,13 @@ function extractCodedThreads(
  * @param qdpxPath - Path to .qdpx file
  * @param outputDir - Directory to write JSON files
  * @param chunkContent - Optional callback to split content into chunks (defaults to defaultChunkContent)
+ * @param onlyCodedThreads - If true, only include threads with human codes in output (default: false)
  */
 export async function convertQdpxToJson(
     qdpxPath: string,
     outputDir: string,
     chunkContent?: (content: string) => ChunkContentResult[],
+    onlyCodedThreads?: boolean,
 ): Promise<void> {
     // Create output directory
     await mkdir(outputDir, { recursive: true });
@@ -654,6 +657,28 @@ export async function convertQdpxToJson(
         codebook,
         sourceGuidToThreadId,
     );
+
+    // PHASE 4: Remove uncoded threads if option enabled
+    if (onlyCodedThreads) {
+        // Collect all thread IDs that have codes
+        const codedThreadIds = new Set<string>();
+        for (const coderData of coderThreads.values()) {
+            Object.keys(coderData.threads).forEach(id => codedThreadIds.add(id));
+        }
+
+        // Remove uncoded threads from sources
+        const originalCount = Object.keys(sources).length;
+        for (const threadId of Object.keys(sources)) {
+            if (!codedThreadIds.has(threadId)) {
+                delete sources[threadId];
+            }
+        }
+
+        logger.info(
+            `Filtered ${originalCount - Object.keys(sources).length} uncoded threads ` +
+            `(kept ${Object.keys(sources).length} coded threads)`
+        );
+    }
 
     // Write codebook.json
     await writeFile(

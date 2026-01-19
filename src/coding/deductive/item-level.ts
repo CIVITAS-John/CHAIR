@@ -254,7 +254,7 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
                     const normalizedCodes: string[] = [];
                     for (const code of codeList) {
                         // Try fuzzy-search to find best match
-                        const matches = search(code.replaceAll("–", '-'), codebookKeys, { threshold: 0.9, ignoreCase: true, ignoreSymbols: true });
+                        const matches = search(code.replaceAll("–", '-').replaceAll("‑", "-"), codebookKeys, { threshold: 0.9, ignoreCase: true, ignoreSymbols: true });
                         const orthodoxCase = matches.length > 0 ? matches[0] : undefined;
 
                         if (orthodoxCase) {
