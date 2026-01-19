@@ -249,7 +249,7 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
                     const codeList = codes
                         .split(/[;]/)
                         .map((c) => c.trim())
-                        .filter((c) => c.length > 0 && c !== "n/a");
+                        .filter((c) => c.length > 0 && c !== "N/A");
 
                     const normalizedCodes: string[] = [];
                     for (const code of codeList) {
@@ -274,9 +274,6 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
         }
 
         // === VALIDATION ===
-        if (Object.values(results).every((Value) => Value === "" || Value.toLowerCase() === "n/a")) {
-            throw new ItemLevelCoderBase.InvalidResponseError("All codes are empty or N/A");
-        }
         if (analysis.plan === undefined) {
             throw new ItemLevelCoderBase.InvalidResponseError("The response has no thoughts");
         }

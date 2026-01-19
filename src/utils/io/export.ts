@@ -137,8 +137,7 @@ export const exportChunksForCoding = <T extends DataItem>(
                 const codes =
                     typeof analysis === "undefined"
                         ? undefined
-                        : (analysis.items[message.id] ?? analysis.items[message.id.substring(2)])
-                              ?.codes; // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+                        : analysis.items[message.id]?.codes; // Direct ID lookup - no fallback needed
                 message.chunk = message.chunk ?? chunk.id;
                 const columns = {
                     ID: message.id,

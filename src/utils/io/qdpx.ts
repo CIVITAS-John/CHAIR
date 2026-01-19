@@ -14,6 +14,7 @@
  */
 
 import { writeFile, mkdir, readFile } from "fs/promises";
+import { existsSync } from "fs";
 import { join, basename } from "path";
 import { parseStringPromise } from "xml2js";
 import AdmZip from "adm-zip";
@@ -334,12 +335,20 @@ function convertCodebook(codes: RefiCode[]): Codebook {
 }
 
 /**
- * Convert TextSource to RawDataChunk
+ * Convert TextSource to RawDataChunk with final thread ID
+ *
+ * @param source - The REFI TextSource to convert
+ * @param sourcesDir - Directory containing source text files
+ * @param users - Map of user GUIDs to names
+ * @param threadId - Final thread ID to use (e.g., "thread-1")
+ * @param chunkContent - Optional content chunking function
+ * @returns RawDataChunk with items using final IDs
  */
 async function convertTextSource(
     source: RefiTextSource,
     sourcesDir: string,
     users: Map<string, string>,
+    threadId: string,
     chunkContent: (content: string) => ChunkContentResult[] = defaultChunkContent,
 ): Promise<RawDataChunk> {
     // Read plaintext content
@@ -360,9 +369,9 @@ async function convertTextSource(
     const defaultNickname = extractNickname(source.name);
     const defaultUid = users.get(source.creatingUser) || defaultNickname;
 
-    // Create DataItems from chunks
-    const items: RawDataItem[] = chunks.map((chunk) => ({
-        id: `${source.guid}-${chunk.startPosition}-${chunk.endPosition}`,
+    // Create DataItems from chunks with final thread-based IDs
+    const items: RawDataItem[] = chunks.map((chunk, index) => ({
+        id: `${threadId}-${index + 1}`,
         uid: chunk.uid || chunk.nickname || defaultUid,
         nickname: chunk.nickname || defaultNickname,
         time: chunk.time || source.creationDateTime,
@@ -371,9 +380,9 @@ async function convertTextSource(
         endPosition: chunk.endPosition,
     }));
 
-    // Create RawDataChunk
+    // Create RawDataChunk with final thread ID
     return {
-        id: source.guid,
+        id: threadId,
         start: source.creationDateTime,
         end: source.modifiedDateTime || source.creationDateTime,
         items,
@@ -382,6 +391,14 @@ async function convertTextSource(
 
 /**
  * Find paragraph items that overlap with a text selection
+ *
+ * Uses the startPosition and endPosition metadata fields to determine overlap.
+ * This is more reliable than parsing IDs since IDs may have various formats.
+ *
+ * @param items - Array of data items with position metadata
+ * @param startPos - Start position of the coded selection
+ * @param endPos - End position of the coded selection
+ * @returns Array of item IDs that overlap with the selection
  */
 function findOverlappingItems(
     items: RawDataItem[],
@@ -391,14 +408,16 @@ function findOverlappingItems(
     const overlapping: string[] = [];
 
     for (const item of items) {
-        // Parse position from item ID: sourceGuid-startPos-endPos
-        const parts = item.id.split("-");
-        if (parts.length < 3) continue;
+        // Use position metadata fields directly
+        const itemStart = item.startPosition;
+        const itemEnd = item.endPosition;
 
-        const itemStart = parseInt(parts[parts.length - 2], 10);
-        const itemEnd = parseInt(parts[parts.length - 1], 10);
+        // Skip items without position metadata
+        if (itemStart === undefined || itemEnd === undefined) {
+            continue;
+        }
 
-        // Check for overlap
+        // Check for overlap: items overlap if NOT (selection ends before item OR selection starts after item)
         if (!(endPos < itemStart || startPos > itemEnd)) {
             overlapping.push(item.id);
         }
@@ -409,7 +428,16 @@ function findOverlappingItems(
 
 /**
  * Extract coded threads per coder
- * Returns both the coder threads and a map from original GUID to renumbered thread ID
+ *
+ * Since items already have final thread-based IDs, this function simply
+ * maps codes to items without any renumbering.
+ *
+ * @param project - The REFI project structure
+ * @param sourceChunks - Map of thread ID to RawDataChunk (already using final IDs)
+ * @param codeGuidToName - Map of code GUIDs to code labels
+ * @param users - Map of user GUIDs to names
+ * @param codebook - The converted codebook
+ * @returns Map of coder names to their coded threads
  */
 function extractCodedThreads(
     project: RefiProject,
@@ -417,9 +445,9 @@ function extractCodedThreads(
     codeGuidToName: Map<string, string>,
     users: Map<string, string>,
     codebook: Codebook,
-): { coderThreads: Map<string, any>; guidToThreadId: Map<string, string> } {
+    sourceGuidToThreadId: Map<string, string>,
+): Map<string, any> {
     const coderThreads = new Map<string, any>();
-    const guidToThreadId = new Map<string, string>();
 
     const textSourceList = Array.isArray(project.Sources?.TextSource)
         ? project.Sources.TextSource
@@ -428,7 +456,7 @@ function extractCodedThreads(
         : [];
 
     if (textSourceList.length === 0) {
-        return { coderThreads, guidToThreadId };
+        return coderThreads;
     }
 
     // Process each source
@@ -437,7 +465,11 @@ function extractCodedThreads(
             continue;
         }
 
-        const chunk = sourceChunks.get(source.guid);
+        // Get the thread ID for this source
+        const threadId = sourceGuidToThreadId.get(source.guid);
+        if (!threadId) continue;
+
+        const chunk = sourceChunks.get(threadId);
         if (!chunk) continue;
 
         // Normalize PlainTextSelection to array
@@ -482,18 +514,18 @@ function extractCodedThreads(
                 }
 
                 const coderData = coderThreads.get(coderName);
-                if (!coderData.threads[source.guid]) {
-                    coderData.threads[source.guid] = {
-                        id: source.guid,
+                if (!coderData.threads[threadId]) {
+                    coderData.threads[threadId] = {
+                        id: threadId,
                         codes: codebook,
                         items: {},
                         iteration: 0,
                     };
                 }
 
-                const thread = coderData.threads[source.guid];
+                const thread = coderData.threads[threadId];
 
-                // Add code to overlapping items
+                // Add code to overlapping items (items already have final IDs)
                 for (const itemId of overlappingItems) {
                     if (!thread.items[itemId]) {
                         thread.items[itemId] = {
@@ -510,57 +542,27 @@ function extractCodedThreads(
         }
     }
 
-    // Post-processing: filter and renumber threads
-    for (const [, coderData] of coderThreads) {
+    // Filter out threads with no coded items
+    for (const [coderName, coderData] of coderThreads) {
         const threads = coderData.threads;
-        const threadEntries = Object.entries(threads);
+        const filteredThreads: Record<string, any> = {};
 
-        // Filter out threads with no coded items
-        const threadsWithCodes = threadEntries.filter(([, thread]: [string, any]) => {
-            return Object.keys(thread.items).length > 0;
-        });
-
-        // Check if ALL threads are empty - if so, keep them all (fallback)
-        const threadsToUse = threadsWithCodes.length === 0 ? threadEntries : threadsWithCodes;
-
-        // Renumber threads sequentially
-        const renumberedThreads: Record<string, any> = {};
-        let threadNum = 1;
-
-        for (const [originalGuid, thread] of threadsToUse as Array<[string, any]>) {
-            const newThreadId = `thread-${threadNum}`;
-
-            // Track the GUID -> thread ID mapping
-            guidToThreadId.set(originalGuid, newThreadId);
-
-            // Renumber items within the thread
-            const renumberedItems: Record<string, any> = {};
-            const itemEntries = Object.entries(thread.items);
-            let itemNum = 1;
-
-            for (const [, item] of itemEntries as Array<[string, any]>) {
-                const newItemId = `${newThreadId}-${itemNum}`;
-                renumberedItems[newItemId] = {
-                    id: newItemId,
-                    codes: item.codes,
-                };
-                itemNum++;
+        for (const [threadId, thread] of Object.entries(threads)) {
+            // Only keep threads that have at least one coded item
+            if (Object.keys((thread as any).items).length > 0) {
+                filteredThreads[threadId] = thread;
             }
-
-            renumberedThreads[newThreadId] = {
-                id: newThreadId,
-                codes: thread.codes,
-                items: renumberedItems,
-                iteration: thread.iteration,
-            };
-
-            threadNum++;
         }
 
-        coderData.threads = renumberedThreads;
+        // Update the coder's threads (or remove coder if no threads remain)
+        if (Object.keys(filteredThreads).length > 0) {
+            coderData.threads = filteredThreads;
+        } else {
+            coderThreads.delete(coderName);
+        }
     }
 
-    return { coderThreads, guidToThreadId };
+    return coderThreads;
 }
 
 /**
@@ -615,63 +617,43 @@ export async function convertQdpxToJson(
         codeGuidToName.set(code.guid, code.name);
     }
 
-    // Convert TextSources to RawDataChunks
-    const sourcesDir = join(extractDir, "Sources");
-    const sources: Record<string, RawDataChunk> = {};
-    const sourceChunks = new Map<string, RawDataChunk>();
-
+    // PHASE 1: Determine thread IDs upfront
     const textSourceList = Array.isArray(project.Sources?.TextSource)
         ? project.Sources.TextSource
         : project.Sources?.TextSource
         ? [project.Sources.TextSource]
         : [];
 
+    // Create source GUID -> thread ID mapping
+    const sourceGuidToThreadId = new Map<string, string>();
+    let threadNum = 1;
     for (const source of textSourceList) {
-        const chunk = await convertTextSource(source, sourcesDir, users, chunkContent);
-        sources[source.guid] = chunk;
-        sourceChunks.set(source.guid, chunk);
+        const threadId = `thread-${threadNum}`;
+        sourceGuidToThreadId.set(source.guid, threadId);
+        threadNum++;
     }
 
-    // Extract coded threads per coder
-    const { coderThreads, guidToThreadId } = extractCodedThreads(
+    // PHASE 2: Convert TextSources to RawDataChunks with final thread IDs
+    const sourcesDir = join(extractDir, "Sources");
+    const sources: Record<string, RawDataChunk> = {};
+    const sourceChunks = new Map<string, RawDataChunk>();
+
+    for (const source of textSourceList) {
+        const threadId = sourceGuidToThreadId.get(source.guid)!;
+        const chunk = await convertTextSource(source, sourcesDir, users, threadId, chunkContent);
+        sources[threadId] = chunk;
+        sourceChunks.set(threadId, chunk);
+    }
+
+    // PHASE 3: Extract coded threads per coder (no renumbering needed)
+    const coderThreads = extractCodedThreads(
         project,
         sourceChunks,
         codeGuidToName,
         users,
         codebook,
+        sourceGuidToThreadId,
     );
-
-    // Create renumbered sources map
-    const renumberedSources: Record<string, RawDataChunk> = {};
-    const renumberedChunks: RawDataChunk[] = [];
-
-    for (const [originalGuid, newThreadId] of guidToThreadId) {
-        const originalChunk = sourceChunks.get(originalGuid);
-        if (!originalChunk) continue;
-
-        // Renumber items within the chunk
-        const renumberedItems: RawDataItem[] = [];
-        let itemNum = 1;
-
-        for (const item of originalChunk.items as RawDataItem[]) {
-            const newItemId = `${newThreadId}-${itemNum}`;
-            renumberedItems.push({
-                ...item,
-                id: newItemId,
-            });
-            itemNum++;
-        }
-
-        // Create renumbered chunk
-        const renumberedChunk: RawDataChunk = {
-            ...originalChunk,
-            id: newThreadId,
-            items: renumberedItems,
-        };
-
-        renumberedSources[newThreadId] = renumberedChunk;
-        renumberedChunks.push(renumberedChunk);
-    }
 
     // Write codebook.json
     await writeFile(
@@ -679,32 +661,41 @@ export async function convertQdpxToJson(
         JSON.stringify(codebook, null, 4),
     );
 
-    // Write sources.json (use renumbered sources)
+    // Write sources.json (already using final thread IDs)
     await writeFile(
         join(outputDir, "sources.json"),
-        JSON.stringify(renumberedSources, null, 4),
+        JSON.stringify(sources, null, 4),
     );
 
-    // Write configuration.js
+    // Write configuration.js (preserve existing if it exists)
+    const configPath = join(outputDir, "configuration.js");
     const datasetName = basename(qdpxPath, ".qdpx");
-    const configContent = `export default ${JSON.stringify(
-        {
-            name: datasetName,
-            title: project.name || datasetName,
-            description: "",
-            researchQuestion: "",
-            codingNotes: "",
-            data: { sources: "sources.json" },
-        },
-        null,
-        4,
-    )};
+
+    if (!existsSync(configPath)) {
+        // Create new configuration.js
+        const configContent = `export default ${JSON.stringify(
+            {
+                name: datasetName,
+                title: project.name || datasetName,
+                description: "",
+                researchQuestion: "",
+                codingNotes: "",
+                data: { sources: "sources.json" },
+            },
+            null,
+            4,
+        )};
 `;
-    await writeFile(join(outputDir, "configuration.js"), configContent);
+        await writeFile(configPath, configContent);
+    }
+    // If configuration.js exists, leave it untouched to preserve user modifications
 
     // Write human/*.json and *.xlsx files
     const humanDir = join(outputDir, "human");
     await mkdir(humanDir, { recursive: true });
+
+    // Convert sources to array for Excel export
+    const chunksArray = Object.values(sources);
 
     for (const [coderName, coderData] of coderThreads) {
         const baseName = coderName.replace(/[^a-zA-Z0-9]/g, "_");
@@ -718,8 +709,8 @@ export async function convertQdpxToJson(
             JSON.stringify(coderData, null, 4),
         );
 
-        // Write Excel file (use renumbered chunks)
-        const workbook = exportChunksForCoding(renumberedChunks as any, coderData);
+        // Write Excel file (use chunks with final IDs)
+        const workbook = exportChunksForCoding(chunksArray as any, coderData);
         await workbook.xlsx.writeFile(join(humanDir, `${baseName}.xlsx`));
     }
 }
