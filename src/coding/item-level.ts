@@ -23,7 +23,7 @@
 import type { CodedThread, Message } from "../schema.js";
 import { BaseStep } from "../steps/base-step.js";
 
-import { ConversationAnalyzer } from "./conversations.js";
+import { buildMessagePrompt, ConversationAnalyzer } from "./conversations.js";
 
 /**
  * Abstract base class for item-level coding analyzers.
@@ -101,6 +101,38 @@ export abstract class ItemLevelAnalyzerBase extends ConversationAnalyzer {
     }
 
     /**
+     * Build context message block for prompt inclusion.
+     *
+     * Creates a formatted context section showing previous messages without numbering.
+     * These messages are for reference only and should not be coded by the LLM.
+     *
+     * @param messages - Full messages array including context and coding messages
+     * @param chunkStart - Index where actual coding begins
+     * @returns Formatted context string, or empty if no context
+     */
+    protected buildContextBlock(messages: Message[], chunkStart: number): string {
+        const { dataset } = BaseStep.Context.get();
+
+        // Determine context window range
+        const contextStart = this.contextWindow === -1
+            ? 0
+            : Math.max(0, chunkStart - this.contextWindow);
+        const contextEnd = chunkStart;
+
+        // No context if window is 0 or chunkStart is 0
+        if (this.contextWindow === 0 || chunkStart === 0 || contextStart >= contextEnd) {
+            return "";
+        }
+
+        const contextMessages = messages.slice(contextStart, contextEnd);
+        const contextLines = contextMessages.map(msg =>
+            buildMessagePrompt(dataset, msg, undefined, this.tagsName)
+        );
+
+        return `\n=== Previous Conversation (for context only) ===\n${contextLines.join('\n')}\n${'='.repeat(50)}\n`;
+    }
+
+    /**
      * Parse LLM response and extract codes for each message.
      *
      * This is one of the most complex methods in the system, handling numerous
@@ -143,6 +175,8 @@ export abstract class ItemLevelAnalyzerBase extends ConversationAnalyzer {
         analysis: CodedThread,
         lines: string[],
         messages: Message[],
+        chunkStart: number,
+        _iteration?: number,
     ): Promise<Record<number, string>> {
         const { dataset } = BaseStep.Context.get();
         const results: Record<number, string> = {};
@@ -306,9 +340,10 @@ export abstract class ItemLevelAnalyzerBase extends ConversationAnalyzer {
         if (analysis.summary === undefined) {
             throw new ItemLevelAnalyzerBase.InvalidResponseError("The response has no summary");
         }
-        if (Object.keys(results).length !== messages.length) {
+        const expectedCount = messages.length - chunkStart;
+        if (Object.keys(results).length !== expectedCount) {
             throw new ItemLevelAnalyzerBase.InvalidResponseError(
-                `${Object.keys(results).length} results for ${messages.length} messages`,
+                `${Object.keys(results).length} results for ${expectedCount} messages (${messages.length} total, ${chunkStart} context)`,
             );
         }
 

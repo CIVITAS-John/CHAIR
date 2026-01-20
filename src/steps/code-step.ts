@@ -667,6 +667,9 @@ export class CodeStep<
                                 ) {
                                     analyzer.customPrompt = this.config.parameters.customPrompt;
                                 }
+                                if (this.config.parameters?.contextWindow !== undefined) {
+                                    analyzer.contextWindow = this.config.parameters.contextWindow;
+                                }
                                 logger.info(
                                     `[${dataset.name}/${analyzer.name}] Using model ${session.config.name}`,
                                 );

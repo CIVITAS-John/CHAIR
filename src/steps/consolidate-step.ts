@@ -164,7 +164,7 @@ export class ConsolidateStep<
     /**
      * Datasets consolidated (private until execution)
      */
-    #datasets: Dataset<TUnit[]>[] = [];
+    #datasets: Dataset<TUnit>[] = [];
 
     /**
      * Get the datasets being consolidated
@@ -329,7 +329,7 @@ export class ConsolidateStep<
      */
     async #_execute() {
         // Collect unique datasets from all coders
-        const datasets = new Map<string, Dataset<TUnit[]>>();
+        const datasets = new Map<string, Dataset<TUnit>>();
 
         // Iterate through all CodeStep dependencies
         this.dependsOn.forEach((coder) => {
@@ -339,7 +339,7 @@ export class ConsolidateStep<
 
                 // Track dataset (only add once even if multiple coders)
                 if (!datasets.has(dataset.name)) {
-                    datasets.set(dataset.name, dataset as unknown as Dataset<TUnit[]>);
+                    datasets.set(dataset.name, dataset);
                 }
 
                 // Track codebooks for group merging

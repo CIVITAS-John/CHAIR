@@ -18,7 +18,9 @@
  * - Code-level Precision/Recall: Per-code accuracy metrics
  */
 
-import type { CodedItem, CodedThread } from "../schema.js";
+import { alpha } from "krippendorff";
+
+import type { CodedItem, CodedThread, DataItem } from "../schema.js";
 
 /**
  * Item-level difference calculation function type.
@@ -70,19 +72,22 @@ export interface PairwiseReliability {
 
 /**
  * Per-code precision and recall metrics.
+ *
+ * Note: These metrics use coder1 as the reference point (not necessarily "ground truth").
+ * Precision/recall are relative to coder1's coding decisions.
  */
 export interface CodeLevelMetrics {
     /** Code label */
     code: string;
-    /** True positives: both coders applied this code */
-    truePositives: number;
-    /** False positives: only coder2 applied this code */
-    falsePositives: number;
-    /** False negatives: only coder1 applied this code */
-    falseNegatives: number;
-    /** Precision: TP / (TP + FP) */
+    /** Agreement: both coders applied this code */
+    agreement: number;
+    /** Coder2 only: only coder2 applied this code */
+    coder2Only: number;
+    /** Coder1 only: only coder1 applied this code */
+    coder1Only: number;
+    /** Precision: agreement / (agreement + coder2Only) - how often coder2 was correct when they applied the code */
     precision: number;
-    /** Recall: TP / (TP + FN) */
+    /** Recall: agreement / (agreement + coder1Only) - what proportion of coder1's codes did coder2 find */
     recall: number;
     /** F1 score: 2 * (precision * recall) / (precision + recall) */
     f1Score: number;
@@ -128,17 +133,8 @@ export const defaultCalculateDifference: DifferenceCalculator = (
  * @param threads - Record of coded threads
  * @returns Array of all coded items across all threads
  */
-export const extractCodedItems = (threads: Record<string, CodedThread>): CodedItem[] => {
-    const items: CodedItem[] = [];
-
-    for (const thread of Object.values(threads)) {
-        for (const item of Object.values(thread.items)) {
-            items.push(item);
-        }
-    }
-
-    return items;
-};
+export const extractCodedItems = (threads: Record<string, CodedThread>): CodedItem[] =>
+    Object.values(threads).flatMap((thread) => Object.values(thread.items));
 
 /**
  * Compare two coders on a set of items using a difference calculator.
@@ -147,26 +143,28 @@ export const extractCodedItems = (threads: Record<string, CodedThread>): CodedIt
  * @param items2 - Coded items from second coder
  * @param calculateDifference - Function to calculate item-level difference
  * @param skipItem - Optional function to skip certain items
+ * @param dataItems - Map of item IDs to original data items for filtering
  * @returns Array of item comparisons
  */
 export const compareItems = (
     items1: CodedItem[],
     items2: CodedItem[],
     calculateDifference: DifferenceCalculator = defaultCalculateDifference,
-    skipItem?: (item: CodedItem) => boolean,
+    skipItem?: (item: DataItem) => boolean,
+    dataItems?: Map<string, DataItem>,
 ): ItemComparison[] => {
-    const comparisons: ItemComparison[] = [];
-
     // Create lookup map for second coder's items
-    const items2Map = new Map<string, CodedItem>();
-    for (const item of items2) {
-        items2Map.set(item.id, item);
-    }
+    const items2Map = new Map(items2.map((item) => [item.id, item]));
+
+    const comparisons: ItemComparison[] = [];
 
     // Compare each item from first coder
     for (const item1 of items1) {
         // Skip if filter function returns true
-        if (skipItem && skipItem(item1)) continue;
+        if (skipItem && dataItems) {
+            const dataItem = dataItems.get(item1.id);
+            if (dataItem && skipItem(dataItem)) continue;
+        }
 
         // Find corresponding item from second coder
         const item2 = items2Map.get(item1.id);
@@ -218,11 +216,8 @@ export const calculatePairwiseReliability = (
     }
 
     // Extract differences
+    const itemDifferences = Object.fromEntries(comparisons.map((c) => [c.itemId, c.difference]));
     const differences = comparisons.map((c) => c.difference);
-    const itemDifferences: Record<string, number> = {};
-    for (const comp of comparisons) {
-        itemDifferences[comp.itemId] = comp.difference;
-    }
 
     // Calculate mean
     const meanDifference = differences.reduce((a, b) => a + b, 0) / differences.length;
@@ -265,13 +260,14 @@ export const calculatePairwiseReliability = (
 /**
  * Calculate Krippendorff's Alpha for nominal data with set-based coding.
  *
- * This is a simplified implementation that treats each item as having a set of codes.
+ * Uses the standard krippendorff package implementation. For set-based coding
+ * (where items can have multiple codes), we convert code sets to a standardized
+ * format compatible with the library's nominal metric.
+ *
  * The metric ranges from -1 to 1, where:
  * - 1 = perfect agreement
  * - 0 = agreement by chance
  * - < 0 = systematic disagreement
- *
- * Formula: α = 1 - (observed disagreement / expected disagreement)
  *
  * @param comparisons - Array of item comparisons
  * @returns Krippendorff's Alpha coefficient
@@ -279,101 +275,105 @@ export const calculatePairwiseReliability = (
 export const calculateKrippendorffsAlpha = (comparisons: ItemComparison[]): number => {
     if (comparisons.length === 0) return 0;
 
-    // Calculate observed disagreement (mean of item differences)
-    const observedDisagreement =
-        comparisons.reduce((sum, c) => sum + c.difference, 0) / comparisons.length;
-
-    // Calculate expected disagreement by chance
-    // Collect all codes used by both coders
+    // Build a mapping from all unique codes to indices
     const allCodes = new Set<string>();
-    const codeFrequencies: Record<string, number> = {};
-
     for (const comp of comparisons) {
         for (const code of [...comp.codes1, ...comp.codes2]) {
             allCodes.add(code);
-            codeFrequencies[code] = (codeFrequencies[code] || 0) + 1;
         }
     }
 
-    // Calculate expected disagreement based on code distributions
-    // This is a simplified calculation assuming independence
-    const totalCodeApplications = Object.values(codeFrequencies).reduce((a, b) => a + b, 0);
+    if (allCodes.size === 0) return 1; // No codes applied = perfect agreement
 
-    if (totalCodeApplications === 0) return 1; // No codes applied = perfect agreement
+    const codeToIndex = new Map(Array.from(allCodes).map((code, idx) => [code, idx]));
 
-    // Expected Jaccard distance under random assignment
-    // For simplicity, we estimate this as the complement of the probability
-    // that two randomly selected code sets would overlap
-    let expectedOverlap = 0;
-    for (const freq of Object.values(codeFrequencies)) {
-        const prob = freq / totalCodeApplications;
-        expectedOverlap += prob * prob; // Probability of same code appearing in both sets
+    // Transform set-based codes into binary vectors for each item
+    // Each coder's rating becomes a binary vector indicating which codes are present
+    // We'll convert this to a string representation for the krippendorff package
+    const ratingMatrix: (string | undefined)[][] = [[], []]; // 2 coders (rows)
+
+    for (const comp of comparisons) {
+        // Convert code sets to binary vectors, then to string for nominal comparison
+        const vector1 = Array(allCodes.size).fill(0);
+        const vector2 = Array(allCodes.size).fill(0);
+
+        for (const code of comp.codes1) {
+            vector1[codeToIndex.get(code)!] = 1;
+        }
+        for (const code of comp.codes2) {
+            vector2[codeToIndex.get(code)!] = 1;
+        }
+
+        // Convert to string for nominal comparison
+        ratingMatrix[0].push(vector1.join(","));
+        ratingMatrix[1].push(vector2.join(","));
     }
 
-    const expectedDisagreement = 1 - expectedOverlap;
-
-    // Avoid division by zero
-    if (expectedDisagreement === 0) return 1;
-
-    // Calculate Krippendorff's Alpha
-    const alpha = 1 - observedDisagreement / expectedDisagreement;
-
-    return alpha;
+    // Calculate alpha using the krippendorff package
+    return alpha(ratingMatrix);
 };
 
 /**
  * Calculate precision, recall, and F1 score for each code.
  *
- * Treats coder1 as the "ground truth" and coder2 as the "prediction".
- * Useful for evaluating AI coders against human coders.
+ * Uses coder1 as the reference point for comparison (not necessarily "ground truth").
+ * Useful for comparing any two coders (human-human, AI-human, or AI-AI).
+ *
+ * Metrics interpretation:
+ * - agreement: How many items both coders applied this code to
+ * - coder2Only: How many items only coder2 applied this code to
+ * - coder1Only: How many items only coder1 applied this code to
+ * - precision: Of the times coder2 applied this code, how often did coder1 agree?
+ * - recall: Of the times coder1 applied this code, how often did coder2 find it?
  *
  * @param comparisons - Array of item comparisons
  * @returns Array of code-level metrics for each code
  */
 export const calculateCodeLevelMetrics = (comparisons: ItemComparison[]): CodeLevelMetrics[] => {
     // Collect all codes
-    const allCodes = new Set<string>();
-    for (const comp of comparisons) {
-        for (const code of [...comp.codes1, ...comp.codes2]) {
-            allCodes.add(code);
-        }
-    }
+    const allCodes = new Set(comparisons.flatMap((c) => [...c.codes1, ...c.codes2]));
+
+    // Pre-convert all code arrays to Sets once (outside the loops)
+    const codeSets = comparisons.map((c) => ({
+        set1: new Set(c.codes1),
+        set2: new Set(c.codes2),
+    }));
 
     const metrics: CodeLevelMetrics[] = [];
 
     // Calculate metrics for each code
     for (const code of allCodes) {
-        let truePositives = 0;
-        let falsePositives = 0;
-        let falseNegatives = 0;
+        let agreement = 0;
+        let coder2Only = 0;
+        let coder1Only = 0;
 
-        for (const comp of comparisons) {
-            const inCodes1 = comp.codes1.includes(code);
-            const inCodes2 = comp.codes2.includes(code);
+        for (const { set1, set2 } of codeSets) {
+            const inCodes1 = set1.has(code);
+            const inCodes2 = set2.has(code);
 
             if (inCodes1 && inCodes2) {
-                truePositives++;
+                agreement++;
             } else if (!inCodes1 && inCodes2) {
-                falsePositives++;
+                coder2Only++;
             } else if (inCodes1 && !inCodes2) {
-                falseNegatives++;
+                coder1Only++;
             }
-            // True negatives not tracked (neither coder applied the code)
+            // Neither coder applied the code - not tracked
         }
 
         // Calculate precision, recall, F1
         const precision =
-            truePositives + falsePositives > 0 ? truePositives / (truePositives + falsePositives) : 0;
+            agreement + coder2Only > 0 ? agreement / (agreement + coder2Only) : 0;
         const recall =
-            truePositives + falseNegatives > 0 ? truePositives / (truePositives + falseNegatives) : 0;
+            agreement + coder1Only > 0 ? agreement / (agreement + coder1Only) : 0;
         const f1Score =
             precision + recall > 0 ? (2 * precision * recall) / (precision + recall) : 0;
 
         metrics.push({
             code,
-            truePositives,
-            falsePositives,
-            falseNegatives,
+            agreement,
+            coder2Only,
+            coder1Only,
             precision,
             recall,
             f1Score,

@@ -73,6 +73,8 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
     maxIterations = 1;
     /** Additional instructions appended to LLM prompts */
     customPrompt: string;
+    /** Number of previous messages to show as context (0 = none, -1 = all previous, N = N messages) */
+    contextWindow = 0;
 
     constructor({
         name,

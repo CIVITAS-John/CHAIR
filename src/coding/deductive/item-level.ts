@@ -122,6 +122,39 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
     }
 
     /**
+     * Build context message block for prompt inclusion.
+     *
+     * Creates a formatted context section showing previous messages without numbering.
+     * These messages are for reference only and should not be coded by the LLM.
+     * Does NOT include codes to avoid biasing the deductive coding process.
+     *
+     * @param messages - Full messages array including context and coding messages
+     * @param chunkStart - Index where actual coding begins
+     * @returns Formatted context string, or empty if no context
+     */
+    protected buildContextBlock(messages: Message[], chunkStart: number): string {
+        const { dataset } = BaseStep.Context.get();
+
+        // Determine context window range
+        const contextStart = this.contextWindow === -1
+            ? 0
+            : Math.max(0, chunkStart - this.contextWindow);
+        const contextEnd = chunkStart;
+
+        // No context if window is 0 or chunkStart is 0
+        if (this.contextWindow === 0 || chunkStart === 0 || contextStart >= contextEnd) {
+            return "";
+        }
+
+        const contextMessages = messages.slice(contextStart, contextEnd);
+        const contextLines = contextMessages.map(msg =>
+            buildMessagePrompt(dataset, msg, undefined, this.tagsName)
+        );
+
+        return `\n# Previous Data for Your Context\n${contextLines.join('\n')}\n\n# Data for Coding\n`;
+    }
+
+    /**
      * Parse LLM response for deductive coding format.
      *
      * Overrides parent class to handle the markdown-based output format:
@@ -158,6 +191,8 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
         analysis: CodedThread,
         lines: string[],
         messages: Message[],
+        chunkStart: number,
+        _iteration?: number,
     ): Promise<Record<number, string>> {
         const { dataset } = BaseStep.Context.get();
         const results: Record<number, string> = {};
@@ -283,9 +318,10 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
         if (analysis.summary === undefined) {
             throw new ItemLevelCoderBase.InvalidResponseError("The response has no summary");
         }
-        if (Object.keys(results).length !== messages.length) {
+        const expectedCount = messages.length - chunkStart;
+        if (Object.keys(results).length !== expectedCount) {
             throw new ItemLevelCoderBase.InvalidResponseError(
-                `${Object.keys(results).length} results for ${messages.length} messages`,
+                `${Object.keys(results).length} results for ${expectedCount} messages (${messages.length} total, ${chunkStart} context)`,
             );
         }
 

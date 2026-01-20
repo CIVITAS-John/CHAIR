@@ -24,6 +24,7 @@ import type { EmbedderModel } from "./utils/ai/embeddings.js";
 import { initEmbedder } from "./utils/ai/embeddings.js";
 import type { EmbedderConfig } from "./utils/core/config.js";
 import { logger } from "./utils/core/logger.js";
+import { ReliabilityStep } from "./steps/reliability-step.js";
 
 /**
  * Configuration for a qualitative analysis job.
@@ -87,7 +88,7 @@ const validateStep = (step: BaseStep) => {
     if (step instanceof ConsolidateStep) {
         return 2;
     }
-    if (step instanceof EvaluateStep) {
+    if (step instanceof EvaluateStep || step instanceof ReliabilityStep) {
         return 3;
     }
     throw new QAJob.ConfigError(`Unknown step type: ${step.constructor.name}`);
@@ -179,13 +180,6 @@ export class QAJob {
         this.steps.forEach((steps, i) => {
             steps.forEach((step, j) => {
                 step._id = `${i + 1}.${j + 1}`;
-                if (step instanceof ConsolidateStep || step instanceof EvaluateStep) {
-                    if (!this.embedder) {
-                        throw new QAJob.ConfigError(
-                            "Embedder not provided for consolidation/evaluation",
-                        );
-                    }
-                }
             });
         });
     }

@@ -211,7 +211,7 @@ export class EvaluateStep<
      */
     async #execute() {
         // Collect all data from consolidator
-        const datasets: Dataset<TUnit[]>[] = [],
+        const datasets: Dataset<TUnit>[] = [],
             codebooks = new Map<string, Record<string, Codebook>>(),
             groups = new Map<string, Record<string, [Codebook, string[]]>>(),
             references = new Map<string, Codebook>();

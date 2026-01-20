@@ -37,6 +37,8 @@ export interface AIParameters extends Record<string, unknown> {
     customPrompt?: string;
     /** Whether to simulate requests without calling LLM (for testing) */
     fakeRequest?: boolean;
+    /** Number of previous messages to include as context (0 = none, -1 = all previous) */
+    contextWindow?: number;
     /** Substeps for category-filtered multi-pass coding */
     substeps?: Array<{
         /** Name for logging (e.g., "Social Codes") */

@@ -94,14 +94,7 @@ export default class ItemLevelCoderSimple extends ItemLevelCoderBase {
         if (!session) {
             throw new BaseStep.ContextVarNotFoundError("session");
         }
-
-        // Weak model: Aggressive reduction with fixed prefetch
-        if (recommended === (session.config.batchSize ?? 32)) {
-            return [recommended - tries * 8, 3, 0];
-        }
-
-        // Strong model: Gradual reduction with adaptive prefetch
-        return [recommended - tries * 2, Math.max(8 - recommended - tries, 3), 0];
+        return [recommended / 2 - tries, 0, 0];
     }
 
     /**
@@ -127,8 +120,15 @@ export default class ItemLevelCoderSimple extends ItemLevelCoderBase {
         analysis: CodedThread,
         _target: Conversation,
         messages: Message[],
+        chunkStart: number,
     ): Promise<[string, string]> {
         const { dataset } = BaseStep.Context.get();
+
+        // Extract messages to code (from chunkStart onwards)
+        const codingMessages = messages.slice(chunkStart);
+
+        // Build context block if contextWindow is set
+        const contextBlock = this.buildContextBlock(messages, chunkStart);
 
         // Format codebook for prompt inclusion
         const codebookFormatted = this.formatCodebookForPrompt(analysis.codes);
@@ -143,9 +143,9 @@ ${dataset.codingNotes.trim()}${this.customPrompt.trim()}
 
 # Guidelines
 1. Use ONLY the codes listed below and strictly follow its DEFINITION. Do not create new codes.
-2. For each and every data item (provided in a numbered list), you MUST select appropriate codes from the codebook, as many as possible. Use "N/A" if nothing matches.
+2. For each and every data item (provided in a numbered list), you MUST select appropriate codes from the codebook, as MANY as possible. Use "N/A" if nothing matches.
 3. You will always return one bullet point for each data item. Multiple codes are splitted by semicolon (;).
-4. When reasoning, interpret through each data item to help with your decision-making later. Then double check if your choices match.
+4. When reasoning, carefully interpret through each data item to help with your decision-making later. Then double check if your choices match.
 5. Never not omit or provide selective answers.
 
 # Predefined Codebook
@@ -156,23 +156,23 @@ ${codebookFormatted}
 # Thoughts
 {A paragraph of plans and guiding questions about analyzing the conversation}
 
-# Codes (for each of the ${messages.length} items):
+# Codes (for each of the ${codingMessages.length} items):
 1. {code 1}; {code 2}; ...
 ...
-${messages.length}. {code 1}; {code 2}; ...
+${codingMessages.length}. {code 1}; {code 2}; ...
 
 # Summary
-{A somewhat detailed summary of the data, including previous ones}
+{A somewhat detailed summary of the data, including previous ones, without item IDs to avoid confusion}
 
 # Notes
 {Notes and hypotheses about the data until now}
 \`\`\``.trim(),
-            messages
+            `${contextBlock}${codingMessages
                 .map(
                     (message, idx) =>
                         `${idx + 1}. ${buildMessagePrompt(dataset, message, Object.keys(analysis.codes).length > 0 ? undefined : analysis.items[message.id], this.tagsName)}`,
                 )
-                .join("\n"),
+                .join("\n")}`,
         ]);
     }
 }

@@ -117,9 +117,16 @@ export default class ItemLevelAnalyzerAny extends ItemLevelAnalyzerBase {
         analysis: CodedThread,
         _target: Conversation,
         messages: Message[],
-        _chunkStart: number,
+        chunkStart: number,
     ): Promise<[string, string]> {
         const { dataset } = BaseStep.Context.get();
+
+        // Extract messages to code (from chunkStart onwards)
+        const codingMessages = messages.slice(chunkStart);
+
+        // Build context block if contextWindow is set
+        const contextBlock = this.buildContextBlock(messages, chunkStart);
+
         return Promise.resolve([
             `
 You are an expert in thematic analysis with grounded theory, working on open coding.
@@ -131,18 +138,18 @@ ${dataset.codingNotes}${this.customPrompt}
 Always follow the output format:
 ---
 Thoughts: {A paragraph of plans and guiding questions about analyzing the conversation from multiple theoretical angles}
-Interpretations for each message (${messages.length} in total):
+Interpretations for each message (${codingMessages.length} in total):
 1. {phrase 1}; {phrase 2}; ...
 ...
-${messages.length}. {phrase 1}; {phrase 2}; ...
+${codingMessages.length}. {phrase 1}; {phrase 2}; ...
 Summary: {A somehow detailed summary of the conversation, including previous ones}
 Notes: {Notes and hypotheses about the conversation until now}`.trim(),
-            messages
+            `${contextBlock}${codingMessages
                 .map(
                     (message, idx) =>
                         `${idx + 1}. ${buildMessagePrompt(dataset, message, analysis.items[message.id], this.tagsName)}`,
                 )
-                .join("\n"),
+                .join("\n")}`,
         ]);
     }
 }

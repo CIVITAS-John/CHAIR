@@ -48,6 +48,7 @@ import {
 import type { CodedItem, CodedThreads, DataChunk, DataItem, Dataset } from "../schema.js";
 import { ensureFolder } from "../utils/io/file.js";
 import { logger } from "../utils/core/logger.js";
+import { getAllItems } from "../utils/core/misc.js";
 
 import { BaseStep } from "./base-step.js";
 import type { ConsolidateStep } from "./consolidate-step.js";
@@ -80,10 +81,10 @@ export interface ReliabilityStepConfig<
      * Useful for filtering out items that shouldn't be included in
      * reliability calculation (e.g., items with special flags, test items, etc.)
      *
-     * @param item - The coded item to evaluate
+     * @param item - The data item to evaluate
      * @returns true to skip this item, false to include it
      */
-    skipItem?: (item: CodedItem) => boolean;
+    skipItem?: (item: DataItem) => boolean;
 
     /**
      * Optional custom function to calculate item-level difference
@@ -227,7 +228,7 @@ export class ReliabilityStep<
      */
     async #execute() {
         // Collect datasets from consolidator
-        const datasets: Dataset<TUnit[]>[] = [];
+        const datasets: Dataset<TUnit>[] = [];
         const codebooks = new Map<string, Record<string, unknown>>();
 
         const consolidator = this.config.consolidator;
@@ -265,30 +266,29 @@ export class ReliabilityStep<
                     }
 
                     // Extract coded items from each coder
-                    const coderItems = new Map<string, CodedItem[]>();
-                    const coderNames: string[] = [];
-
-                    for (const [coderName, threads] of coderThreads.entries()) {
-                        const items = extractCodedItems(threads.threads);
-                        coderItems.set(coderName, items);
-                        coderNames.push(coderName);
-                    }
+                    const coderNames = Array.from(coderThreads.keys());
+                    const coderItems = new Map(
+                        Array.from(coderThreads.entries()).map(([name, threads]) => [
+                            name,
+                            extractCodedItems(threads.threads),
+                        ]),
+                    );
 
                     logger.info(`Found ${coderNames.length} coders: ${coderNames.join(", ")}`);
 
+                    // Extract all data items from dataset for filtering
+                    const allDataItems = getAllItems(dataset);
+                    const dataItemsMap = new Map(allDataItems.map((item) => [item.id, item]));
+                    logger.info(`Extracted ${dataItemsMap.size} data items from dataset`);
+
                     // Anonymize coder names if configured
                     const anonymize = this.config.anonymize ?? true;
-                    const coderNameMap = new Map<string, string>();
-
-                    if (anonymize) {
-                        coderNames.forEach((name, idx) => {
-                            coderNameMap.set(name, `Coder ${idx + 1}`);
-                        });
-                    } else {
-                        coderNames.forEach((name) => {
-                            coderNameMap.set(name, name);
-                        });
-                    }
+                    const coderNameMap = new Map(
+                        coderNames.map((name, idx) => [
+                            name,
+                            anonymize ? `Coder ${idx + 1}` : name,
+                        ]),
+                    );
 
                     // Compare all coder pairs
                     const pairwise: Record<string, PairwiseReliability> = {};
@@ -315,6 +315,7 @@ export class ReliabilityStep<
                                 items2,
                                 differenceCalculator,
                                 this.config.skipItem,
+                                dataItemsMap,
                             );
 
                             logger.info(`  Compared ${comparisons.length} items`);
