@@ -107,29 +107,18 @@ export abstract class ItemLevelAnalyzerBase extends ConversationAnalyzer {
      * Creates a formatted context section showing previous messages without numbering.
      * These messages are for reference only and should not be coded by the LLM.
      *
-     * @param messages - Full messages array including context and coding messages
-     * @param chunkStart - Index where actual coding begins
+     * @param contexts - Array of context messages from contextWindow
      * @returns Formatted context string, or empty if no context
      */
-    protected buildContextBlock(messages: Message[], chunkStart: number, aiParams?: AIParameters): string {
+    protected buildContextBlock(contexts: Message[]): string {
         const { dataset } = BaseStep.Context.get();
 
-        // Use contextWindow from aiParams if provided, otherwise use analyzer's setting
-        const contextWindow = aiParams?.contextWindow ?? this.contextWindow;
-
-        // Determine context window range
-        const contextStart = contextWindow === -1
-            ? 0
-            : Math.max(0, chunkStart - contextWindow);
-        const contextEnd = chunkStart;
-
-        // No context if window is 0 or chunkStart is 0
-        if (contextWindow === 0 || chunkStart === 0 || contextStart >= contextEnd) {
+        // No context if array is empty
+        if (contexts.length === 0) {
             return "";
         }
 
-        const contextMessages = messages.slice(contextStart, contextEnd);
-        const contextLines = contextMessages.map(msg =>
+        const contextLines = contexts.map(msg =>
             buildMessagePrompt(dataset, msg, undefined, this.tagsName)
         );
 

@@ -31,6 +31,7 @@
  */
 
 import type { CodedThread, Conversation, Message } from "../schema.js";
+import type { AIParameters } from "../steps/base-step.js";
 import { BaseStep } from "../steps/base-step.js";
 
 import { buildMessagePrompt } from "./conversations.js";
@@ -110,22 +111,32 @@ export default class ItemLevelAnalyzerAny extends ItemLevelAnalyzerBase {
      * @param analysis - Current analysis state with preliminary codes
      * @param _target - Conversation being analyzed (unused)
      * @param messages - Messages in current chunk
-     * @param _chunkStart - Starting index of chunk (unused)
+     * @param chunkStart - Starting index of chunk
+     * @param _iteration - Current iteration number (unused)
+     * @param aiParams - Optional AI parameters for runtime configuration
      * @returns [systemPrompt, userPrompt]
      */
     override buildPrompts(
         analysis: CodedThread,
         _target: Conversation,
         messages: Message[],
+        contexts: Message[],
         chunkStart: number,
+        _iteration: number,
+        aiParams?: AIParameters,
     ): Promise<[string, string]> {
         const { dataset } = BaseStep.Context.get();
 
         // Extract messages to code (from chunkStart onwards)
         const codingMessages = messages.slice(chunkStart);
 
-        // Build context block if contextWindow is set
-        const contextBlock = this.buildContextBlock(messages, chunkStart);
+        // Build context block from contexts array
+        const contextBlock = this.buildContextBlock(contexts);
+
+        // Combine base customPrompt with runtime aiParams customPrompt
+        const basePrompt = this.customPrompt || "";
+        const runtimePrompt = aiParams?.customPrompt ? `\n${aiParams.customPrompt}` : "";
+        const customPrompt = basePrompt + runtimePrompt;
 
         return Promise.resolve([
             `
@@ -133,7 +144,7 @@ You are an expert in thematic analysis with grounded theory, working on open cod
 Your goal is to identify multiple low-level tags for each message.
 When writing tags, balance between specifics and generalizability across messages. Do not repeat the input text.
 ${dataset.researchQuestion}
-${dataset.codingNotes}${this.customPrompt?.trim()}
+${dataset.codingNotes}${customPrompt?.trim()}
 
 Always follow the output format:
 ---

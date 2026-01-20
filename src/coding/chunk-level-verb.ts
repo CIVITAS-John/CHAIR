@@ -44,6 +44,7 @@
  */
 
 import type { CodedThread, Conversation, Message } from "../schema.js";
+import type { AIParameters } from "../steps/base-step.js";
 import { BaseStep } from "../steps/base-step.js";
 
 import { ChunkLevelAnalyzerBase } from "./chunk-level.js";
@@ -68,15 +69,24 @@ export default class ChunkLevelAnalyzerVerb extends ChunkLevelAnalyzerBase {
         _analysis: CodedThread,
         _target: Conversation,
         messages: Message[],
+        _contexts: Message[],
         _chunkStart: number,
+        _iteration: number,
+        aiParams?: AIParameters,
     ): Promise<[string, string]> {
         const { dataset } = BaseStep.Context.get();
+
+        // Combine base customPrompt with runtime aiParams customPrompt
+        const basePrompt = this.customPrompt || "";
+        const runtimePrompt = aiParams?.customPrompt ? `\n${aiParams.customPrompt}` : "";
+        const customPrompt = basePrompt + runtimePrompt;
+
         return Promise.resolve([
             `
 You are an expert in thematic analysis with grounded theory, working on open coding.
 Please give me a codebook to analyze factors within this interaction that could contribute to the research.
 ${dataset.researchQuestion}
-${dataset.codingNotes}${this.customPrompt?.trim()}
+${dataset.codingNotes}${customPrompt?.trim()}
 Always use verb phrases. For each phrase, try to find at least 3 quotes. Always follow the output format:
 ---
 * Summary

@@ -42,6 +42,7 @@
  */
 
 import type { CodedThread, Conversation, Message } from "../../schema.js";
+import type { AIParameters } from "../../steps/base-step.js";
 import { BaseStep } from "../../steps/base-step.js";
 import { buildMessagePrompt } from "../conversations.js";
 import { ItemLevelAnalyzerBase } from "../item-level.js";
@@ -112,15 +113,18 @@ export default class ItemLevelAnalyzerFlooding extends ItemLevelAnalyzerBase {
         analysis: CodedThread,
         _target: Conversation,
         messages: Message[],
+        contexts: Message[],
         chunkStart: number,
+        _iteration: number,
+        aiParams?: AIParameters,
     ): Promise<[string, string]> {
         const { dataset } = BaseStep.Context.get();
 
         // Extract messages to code (from chunkStart onwards)
         const codingMessages = messages.slice(chunkStart);
 
-        // Build context block if contextWindow is set
-        const contextBlock = this.buildContextBlock(messages, chunkStart);
+        // Build context block from contexts array
+        const contextBlock = this.buildContextBlock(contexts);
 
         return Promise.resolve([
             `

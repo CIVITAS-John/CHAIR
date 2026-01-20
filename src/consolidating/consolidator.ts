@@ -436,6 +436,7 @@ export class PipelineConsolidator<TUnit> extends Analyzer<TUnit[], Code, CodedTh
         analysis: CodedThreadsWithCodebook,
         _data: TUnit[],
         codes: Code[],
+        _contexts: Code[],
         _chunkStart: number,
         _iteration: number,
     ): Promise<[string, string]> {

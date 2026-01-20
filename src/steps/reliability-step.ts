@@ -70,8 +70,8 @@ export interface ReliabilityStepConfig<
     /**
      * Subdirectory for reliability outputs
      *
-     * Results saved to: <dataset>/reliability/<subdir>/
-     * Defaults to "reliability"
+     * Results saved to: <dataset>/reliability/<subdir>/<subdir>.json
+     * Defaults to "default"
      */
     subdir?: string;
 
@@ -224,7 +224,7 @@ export class ReliabilityStep<
      * Export Phase:
      * 1. Assemble results with metadata
      * 2. Write JSON to reliability directory
-     * 3. Filename: <dataset>/reliability/<subdir>/<subdir>-reliability.json
+     * 3. Filename: <dataset>/reliability/<subdir>/<subdir>.json
      */
     async #execute() {
         // Collect datasets from consolidator
@@ -362,12 +362,11 @@ export class ReliabilityStep<
                     };
 
                     // Ensure output directory exists
-                    const exportPath = ensureFolder(
-                        join(dataset.path, "reliability", this.config.subdir ?? "reliability"),
-                    );
+                    const subdir = this.config.subdir ?? "default";
+                    const exportPath = ensureFolder(join(dataset.path, "reliability", subdir));
 
                     // Export results to JSON
-                    const outputFile = `${exportPath}-reliability.json`;
+                    const outputFile = join(exportPath, `${subdir}.json`);
                     logger.info(`Writing reliability results to ${outputFile}`);
                     writeFileSync(outputFile, JSON.stringify(results, null, 4));
 

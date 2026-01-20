@@ -303,7 +303,7 @@ const analyzeChunks = <T extends DataItem>(
                     chunk,
                     messages,
                     // Callback invoked for each window of items
-                    async (currents, chunkStart, isFirst, tries, iteration, actionAiParams) => {
+                    async (currents, contexts, chunkStart, isFirst, tries, iteration, actionAiParams) => {
                         // Merge codes from overlapping windows
                         // When windows overlap, preserve codes from previous window for shared items
                         if (prevAnalysis && prevAnalysis !== analysis) {
@@ -321,6 +321,7 @@ const analyzeChunks = <T extends DataItem>(
                             analysis,
                             chunk,
                             currents,
+                            contexts,
                             chunkStart,
                             iteration,
                             actionAiParams,
@@ -658,15 +659,6 @@ export class CodeStep<
                                 // Instantiate analyzer (codebook handled separately in analyzeChunks)
                                 const analyzer =
                                     strategy instanceof Analyzer ? strategy : new strategy();
-                                if (
-                                    !analyzer.customPrompt &&
-                                    this.config.parameters?.customPrompt
-                                ) {
-                                    analyzer.customPrompt = this.config.parameters.customPrompt;
-                                }
-                                if (this.config.parameters?.contextWindow !== undefined) {
-                                    analyzer.contextWindow = this.config.parameters.contextWindow;
-                                }
                                 logger.info(
                                     `[${dataset.name}/${analyzer.name}] Using model ${session.config.name}`,
                                 );

@@ -183,24 +183,27 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
      * The subunits array includes prefetch/postfetch context, and chunkStart
      * indicates where the actual chunk begins.
      *
-     * Example with getChunkSize returning [2, 1, 1]:
-     * - subunits = [item0, item1, item2, item3, item4]
+     * Example with getChunkSize returning [2, 1, 1] and contextWindow = 2:
+     * - contexts = [contextItem0, contextItem1] (from contextWindow, before prefetch)
+     * - subunits = [prefetchItem, item1, item2, postfetchItem0, postfetchItem1]
      * - chunkStart = 1 (skip the prefetch item)
      * - Items to code: item1, item2 (2 items starting at index 1)
-     * - Context items: item0 (prefetch), item3, item4 (postfetch)
+     * - Context items: contexts (from contextWindow) + prefetchItem (at index 0) + postfetch items
      *
      * @param _analysis - The analysis container for this unit
      * @param _source - The original unit being analyzed
-     * @param _subunits - Array of subunits including context (prefetch + chunk + postfetch)
+     * @param _subunits - Array of subunits including prefetch + chunk + postfetch
+     * @param _contexts - Array of context subunits from contextWindow (before prefetch)
      * @param _chunkStart - Index where the actual chunk starts (skip prefetch items)
      * @param _iteration - Current iteration number (0-indexed)
-     * @param _aiParams - Optional AI parameters (temperature, customPrompt, contextWindow, etc.)
+     * @param _aiParams - Optional AI parameters (temperature, customPrompt, etc.)
      * @returns Tuple of [system prompt, user prompt]
      */
     async buildPrompts(
         _analysis: TAnalysis,
         _source: TUnit,
         _subunits: TSubunit[],
+        _contexts: TSubunit[],
         _chunkStart: number,
         _iteration: number,
         _aiParams?: AIParameters,
@@ -295,6 +298,7 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
     sources: TSubunit[],
     action: (
         currents: TSubunit[],
+        contexts: TSubunit[],
         chunkStart: number,
         isFirst: boolean,
         tries: number,
@@ -360,7 +364,15 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
                         chunkSize = _chunkSize;
                     }
 
-                    // Calculate slice boundaries including context window
+                    // Calculate context window separately (items before prefetch, for reference only)
+                    const contextWindow = aiParams?.contextWindow ?? 0;
+                    const contextStart = contextWindow === -1
+                        ? 0
+                        : Math.max(cursor - chunkSize[1] - contextWindow, 0);
+                    const contextEnd = Math.max(cursor - chunkSize[1], 0);
+                    const contexts = contextStart < contextEnd ? filtered.slice(contextStart, contextEnd) : [];
+
+                    // Calculate slice boundaries for items to process
                     // start: cursor - prefetch (but not before array start)
                     // end: cursor + chunk + postfetch (but not past array end)
                     const start = Math.max(cursor - chunkSize[1], 0);
@@ -368,13 +380,13 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
                     const currents = filtered.slice(start, end);
                     const isFirst = cursor === 0; // First chunk may need special handling
                     logger.debug(
-                        `[${dataset.name}] Processing block ${start}-${end} (${currents.length} subunits)`,
+                        `[${dataset.name}] Processing block ${start}-${end} (${currents.length} subunits, ${contexts.length} contexts)`,
                     );
 
                     // Attempt to process the chunk
                     try {
                         // action returns cursor adjustment (usually 0, negative if LLM skipped items)
-                        cursorRelative = await action(currents, cursor - start, isFirst, tries, i, aiParams);
+                        cursorRelative = await action(currents, contexts, cursor - start, isFirst, tries, i, aiParams);
                         logger.debug(
                             `[${dataset.name}] Cursor relative movement: ${cursorRelative}`,
                         );

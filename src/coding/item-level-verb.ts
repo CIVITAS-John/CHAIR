@@ -26,6 +26,7 @@
  */
 
 import type { CodedThread, Conversation, Message } from "../schema.js";
+import type { AIParameters } from "../steps/base-step.js";
 import { BaseStep } from "../steps/base-step.js";
 
 import { buildMessagePrompt } from "./conversations.js";
@@ -77,15 +78,23 @@ export default class ItemLevelAnalyzerVerb extends ItemLevelAnalyzerBase {
         analysis: CodedThread,
         _target: Conversation,
         messages: Message[],
+        contexts: Message[],
         chunkStart: number,
+        _iteration: number,
+        aiParams?: AIParameters,
     ): Promise<[string, string]> {
         const { dataset } = BaseStep.Context.get();
 
         // Extract messages to code (from chunkStart onwards)
         const codingMessages = messages.slice(chunkStart);
 
-        // Build context block if contextWindow is set
-        const contextBlock = this.buildContextBlock(messages, chunkStart);
+        // Build context block from contexts array
+        const contextBlock = this.buildContextBlock(contexts);
+
+        // Combine base customPrompt with runtime aiParams customPrompt
+        const basePrompt = this.customPrompt || "";
+        const runtimePrompt = aiParams?.customPrompt ? `\n${aiParams.customPrompt}` : "";
+        const customPrompt = basePrompt + runtimePrompt;
 
         return Promise.resolve([
             `
@@ -93,7 +102,7 @@ You are an expert in thematic analysis with grounded theory, working on open cod
 This is the first round of coding. Your goal is to describe each item with verb phrases.
 Try your best to interpret events, contexts, and intents. Always use ";" to separate verb phrases. Do not repeat the input text.
 ${dataset.researchQuestion}
-${dataset.codingNotes}${this.customPrompt?.trim()}
+${dataset.codingNotes}${customPrompt?.trim()}
 
 Always follow the output format:
 ---

@@ -333,12 +333,13 @@ export const consolidateCodebook = <TUnit>(
             analyses,
             sources,
             codes,
-            async (currents, chunkStart, _isFirst, tries, iteration, aiParams) => {
+            async (currents, contexts, chunkStart, _isFirst, tries, iteration, aiParams) => {
                 // Build prompts for current chunk
                 const prompts = await consolidator.buildPrompts(
                     analyses,
                     sources,
                     currents,
+                    contexts,
                     chunkStart,
                     iteration,
                 );
