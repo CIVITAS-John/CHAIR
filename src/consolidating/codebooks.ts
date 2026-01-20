@@ -333,7 +333,7 @@ export const consolidateCodebook = <TUnit>(
             analyses,
             sources,
             codes,
-            async (currents, chunkStart, _isFirst, tries, iteration) => {
+            async (currents, chunkStart, _isFirst, tries, iteration, aiParams) => {
                 // Build prompts for current chunk
                 const prompts = await consolidator.buildPrompts(
                     analyses,
@@ -355,7 +355,7 @@ export const consolidateCodebook = <TUnit>(
                     ],
                     `codebooks/${consolidator.name}`,
                     Math.min(tries, 3) * 0.2 + consolidator.baseTemperature,
-                    fakeRequest,
+                    aiParams?.fakeRequest ?? false,
                 );
                 if (response === "") {
                     return 0;
@@ -375,7 +375,7 @@ export const consolidateCodebook = <TUnit>(
                 return 0;
             },
             onIterate,
-            retries,
+            { retries, fakeRequest },
         );
     });
 

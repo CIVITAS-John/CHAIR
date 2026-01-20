@@ -12,6 +12,7 @@
  * like datasets and session information without explicit parameter passing.
  */
 
+import type { AIParameters } from "./steps/base-step.js";
 import { BaseStep } from "./steps/base-step.js";
 import { logger } from "./utils/core/logger.js";
 
@@ -193,6 +194,7 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
      * @param _subunits - Array of subunits including context (prefetch + chunk + postfetch)
      * @param _chunkStart - Index where the actual chunk starts (skip prefetch items)
      * @param _iteration - Current iteration number (0-indexed)
+     * @param _aiParams - Optional AI parameters (temperature, customPrompt, contextWindow, etc.)
      * @returns Tuple of [system prompt, user prompt]
      */
     async buildPrompts(
@@ -201,6 +203,7 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
         _subunits: TSubunit[],
         _chunkStart: number,
         _iteration: number,
+        _aiParams?: AIParameters,
     ): Promise<[string, string]> {
         return await Promise.resolve(["", ""]);
     }
@@ -280,7 +283,7 @@ export abstract class Analyzer<TUnit, TSubunit, TAnalysis> {
  * @param sources - Array of subunits to process (will be mutated by preprocessing)
  * @param action - Async function to process each chunk; returns cursor adjustment
  * @param onIterate - Optional callback invoked after each iteration completes
- * @param retries - Maximum retry attempts per chunk (default: 5)
+ * @param aiParams - Optional AI parameters (retries, temperature, etc.)
  * @returns Promise that resolves when all iterations and chunks are processed
  * @throws {BaseStep.ContextVarNotFoundError} If session not found in context
  * @throws {Analyzer.InternalError} If chunk processing fails after all retries
@@ -296,9 +299,10 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
         isFirst: boolean,
         tries: number,
         iteration: number,
+        aiParams?: AIParameters,
     ) => Promise<number>,
     onIterate?: (iteration: number) => Promise<void>,
-    retries = 5,
+    aiParams?: AIParameters,
 ) =>
     logger.withDefaultSource("loopThroughChunk", async () => {
         // Retrieve shared context using async-local storage pattern
@@ -306,6 +310,9 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
         if (!session) {
             throw new BaseStep.ContextVarNotFoundError("session");
         }
+
+        // Extract retries from aiParams with default
+        const retries = aiParams?.retries ?? 5;
 
         // Outer loop: Multiple iterations for refinement/multi-pass analysis
         for (let i = 0; i < analyzer.maxIterations; i++) {
@@ -367,7 +374,7 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
                     // Attempt to process the chunk
                     try {
                         // action returns cursor adjustment (usually 0, negative if LLM skipped items)
-                        cursorRelative = await action(currents, cursor - start, isFirst, tries, i);
+                        cursorRelative = await action(currents, cursor - start, isFirst, tries, i, aiParams);
                         logger.debug(
                             `[${dataset.name}] Cursor relative movement: ${cursorRelative}`,
                         );

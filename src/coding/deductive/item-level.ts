@@ -26,6 +26,7 @@
 
 import { search } from "fast-fuzzy";
 import type { Codebook, CodedThread, Conversation, Message } from "../../schema.js";
+import type { AIParameters } from "../../steps/base-step.js";
 import { BaseStep } from "../../steps/base-step.js";
 import { logger } from "../../utils/core/logger.js";
 import { ConversationAnalyzer } from "../conversations.js";
@@ -132,17 +133,20 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
      * @param chunkStart - Index where actual coding begins
      * @returns Formatted context string, or empty if no context
      */
-    protected buildContextBlock(messages: Message[], chunkStart: number): string {
+    protected buildContextBlock(messages: Message[], chunkStart: number, aiParams?: AIParameters): string {
         const { dataset } = BaseStep.Context.get();
 
+        // Use contextWindow from aiParams if provided, otherwise use analyzer's setting
+        const contextWindow = aiParams?.contextWindow ?? this.contextWindow;
+
         // Determine context window range
-        const contextStart = this.contextWindow === -1
+        const contextStart = contextWindow === -1
             ? 0
-            : Math.max(0, chunkStart - this.contextWindow);
+            : Math.max(0, chunkStart - contextWindow);
         const contextEnd = chunkStart;
 
         // No context if window is 0 or chunkStart is 0
-        if (this.contextWindow === 0 || chunkStart === 0 || contextStart >= contextEnd) {
+        if (contextWindow === 0 || chunkStart === 0 || contextStart >= contextEnd) {
             return "";
         }
 

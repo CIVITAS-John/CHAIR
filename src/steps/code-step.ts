@@ -219,9 +219,7 @@ const filterCodebookByCategory = (
  * @param chunks - Data chunks to analyze
  * @param analyzed - Accumulator for results (supports incremental analysis)
  * @param codebook - Optional predefined codebook for deductive coding
- * @param temperature - LLM creativity (0-2), increases on retries
- * @param fakeRequest - Skip LLM calls for testing
- * @param retries - Max retry attempts for failed requests
+ * @param aiParams - AI parameters (temperature, retries, customPrompt, etc.)
  * @returns CodedThreads with codes, examples, and codebook
  */
 const analyzeChunks = <T extends DataItem>(
@@ -229,9 +227,7 @@ const analyzeChunks = <T extends DataItem>(
     chunks: Record<string, DataChunk<T>>,
     analyzed: CodedThreads = { threads: {} },
     codebook?: Codebook,
-    temperature?: number,
-    fakeRequest = false,
-    retries?: number,
+    aiParams?: AIParameters,
 ) =>
     logger.withDefaultSource("analyzeChunks", async () => {
         const { dataset } = BaseStep.Context.get();
@@ -307,7 +303,7 @@ const analyzeChunks = <T extends DataItem>(
                     chunk,
                     messages,
                     // Callback invoked for each window of items
-                    async (currents, chunkStart, isFirst, tries, iteration) => {
+                    async (currents, chunkStart, isFirst, tries, iteration, actionAiParams) => {
                         // Merge codes from overlapping windows
                         // When windows overlap, preserve codes from previous window for shared items
                         if (prevAnalysis && prevAnalysis !== analysis) {
@@ -327,6 +323,7 @@ const analyzeChunks = <T extends DataItem>(
                             currents,
                             chunkStart,
                             iteration,
+                            actionAiParams,
                         );
                         let response = "";
 
@@ -349,8 +346,8 @@ const analyzeChunks = <T extends DataItem>(
                                     { role: "user", content: prompts[1] },
                                 ],
                                 `${basename(dataset.path)}/${analyzer.name}`,
-                                tries * 0.2 + (temperature ?? analyzer.baseTemperature),
-                                fakeRequest,
+                                tries * 0.2 + (actionAiParams?.temperature ?? analyzer.baseTemperature),
+                                actionAiParams?.fakeRequest ?? false,
                             );
 
                             logger.debug(
@@ -450,7 +447,7 @@ const analyzeChunks = <T extends DataItem>(
                         return movement;
                     },
                     undefined,
-                    retries,
+                    aiParams,
                 );
             } catch (e) {
                 // Wrap errors for better tracking and debugging
@@ -707,32 +704,14 @@ export class CodeStep<
                                             ...(substep.customParameters || {})
                                         };
 
-                                        // Extract individual values for analyzeChunks call
-                                        const { temperature, retries, fakeRequest, contextWindow, customPrompt: substepPrompt } = mergedParams;
-
-                                        // Handle customPrompt concatenation specially
-                                        const basePrompt = this.config.parameters?.customPrompt;
-                                        const customPrompt = substepPrompt && basePrompt !== substepPrompt
-                                            ? `${basePrompt}\n\n${substepPrompt}`
-                                            : (substepPrompt || basePrompt);
-
-                                        // Save and apply analyzer config
-                                        const original = { customPrompt: analyzer.customPrompt, contextWindow: analyzer.contextWindow };
-                                        Object.assign(analyzer, { customPrompt, contextWindow });
-
-                                        // Accumulate results using analyzed parameter
+                                        // Accumulate results using merged parameters
                                         result = await analyzeChunks(
                                             analyzer,
                                             chunks,
                                             result,  // Pass previous result to accumulate
                                             substepCodebook,
-                                            temperature,
-                                            fakeRequest,
-                                            retries,
+                                            mergedParams,
                                         );
-
-                                        // Restore original analyzer config
-                                        Object.assign(analyzer, original);
                                     }
 
                                     logger.success(
