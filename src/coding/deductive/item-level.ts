@@ -79,7 +79,7 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
         _remaining: number,
         _iteration: number,
         _tries: number,
-    ): [number, number, number] {
+    ): number | [number, number, number] {
         return [recommended, 0, 0];
     }
 

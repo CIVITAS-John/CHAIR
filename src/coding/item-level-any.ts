@@ -133,7 +133,7 @@ You are an expert in thematic analysis with grounded theory, working on open cod
 Your goal is to identify multiple low-level tags for each message.
 When writing tags, balance between specifics and generalizability across messages. Do not repeat the input text.
 ${dataset.researchQuestion}
-${dataset.codingNotes}${this.customPrompt}
+${dataset.codingNotes}${this.customPrompt?.trim()}
 
 Always follow the output format:
 ---

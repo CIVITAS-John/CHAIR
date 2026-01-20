@@ -89,12 +89,16 @@ export default class ItemLevelCoderSimple extends ItemLevelCoderBase {
         _remaining: number,
         _iteration: number,
         tries: number,
-    ): [number, number, number] {
+    ): number | [number, number, number] {
         const { session } = BaseStep.Context.get();
         if (!session) {
             throw new BaseStep.ContextVarNotFoundError("session");
         }
-        return [recommended / 2 - tries, 0, 0];
+        // Signal stop if no items remaining
+        if (recommended === 0) {
+            return -1;
+        }
+        return [Math.max(1, Math.floor(recommended / 2) - tries), 0, 0];
     }
 
     /**
@@ -139,7 +143,7 @@ export default class ItemLevelCoderSimple extends ItemLevelCoderBase {
 You are an expert in deductive qualitative coding.
 Your goal is to accurately apply codes from a predefined codebook to **every single data item**.
 ${dataset.researchQuestion.trim()}
-${dataset.codingNotes.trim()}${this.customPrompt.trim()}
+${dataset.codingNotes.trim()}${this.customPrompt?.trim()}
 
 # Guidelines
 1. Use ONLY the codes listed below and strictly follow its DEFINITION. Do not create new codes.

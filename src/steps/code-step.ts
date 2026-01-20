@@ -701,22 +701,24 @@ export class CodeStep<
                                             ? filterCodebookByCategory(codebook, substep.categoryFilter)
                                             : codebook;
 
-                                        // Get parameters (substep overrides base)
-                                        const params = substep.customParameters || {};
-                                        const temperature = params.temperature ?? this.config.parameters?.temperature;
-                                        const retries = params.retries ?? this.config.parameters?.retries;
-                                        const fakeRequest = params.fakeRequest ?? this.config.parameters?.fakeRequest;
+                                        // Merge parameters: substep overrides base
+                                        const mergedParams = {
+                                            ...this.config.parameters,
+                                            ...(substep.customParameters || {})
+                                        };
 
-                                        // Merge prompts
+                                        // Extract individual values for analyzeChunks call
+                                        const { temperature, retries, fakeRequest, contextWindow, customPrompt: substepPrompt } = mergedParams;
+
+                                        // Handle customPrompt concatenation specially
                                         const basePrompt = this.config.parameters?.customPrompt;
-                                        const customPrompt = params.customPrompt
-                                            ? (basePrompt ? `${basePrompt}\n\n${params.customPrompt}` : params.customPrompt)
-                                            : basePrompt;
+                                        const customPrompt = substepPrompt && basePrompt !== substepPrompt
+                                            ? `${basePrompt}\n\n${substepPrompt}`
+                                            : (substepPrompt || basePrompt);
 
-                                        const origPrompt = analyzer.customPrompt;
-                                        if (customPrompt !== undefined) {
-                                            analyzer.customPrompt = customPrompt;
-                                        }
+                                        // Save and apply analyzer config
+                                        const original = { customPrompt: analyzer.customPrompt, contextWindow: analyzer.contextWindow };
+                                        Object.assign(analyzer, { customPrompt, contextWindow });
 
                                         // Accumulate results using analyzed parameter
                                         result = await analyzeChunks(
@@ -729,7 +731,8 @@ export class CodeStep<
                                             retries,
                                         );
 
-                                        analyzer.customPrompt = origPrompt;
+                                        // Restore original analyzer config
+                                        Object.assign(analyzer, original);
                                     }
 
                                     logger.success(

@@ -186,7 +186,7 @@ export default class BertopicAnalyzerAny extends ConversationAnalyzer {
 You are an expert in thematic analysis with grounded theory, working on open coding.
 You identified a topic from the input quotes. Each quote is independent from another.
 ${dataset.researchQuestion}
-${dataset.codingNotes}${this.customPrompt}
+${dataset.codingNotes}${this.customPrompt?.trim()}
 
 Always follow the output format:
 ===
