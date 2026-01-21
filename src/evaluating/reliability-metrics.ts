@@ -20,7 +20,7 @@
 
 import { alpha } from "krippendorff";
 
-import type { CodedItem, CodedThread, DataItem } from "../schema.js";
+import type { Code, Codebook, CodedItem, CodedThread, DataItem } from "../schema.js";
 
 /**
  * Item-level difference calculation function type.
@@ -143,6 +143,8 @@ export const extractCodedItems = (threads: Record<string, CodedThread>): CodedIt
  * @param skipItem - Optional function to skip certain items
  * @param dataItems - Map of item IDs to original data items for filtering
  * @param rollingWindow - Optional window size for aggregate comparison (benefit-only)
+ * @param skipCodes - Optional function to skip certain codes during comparison
+ * @param codebook - Optional codebook to look up code definitions for filtering
  * @returns Array of item comparisons
  */
 export const compareItems = (
@@ -152,6 +154,8 @@ export const compareItems = (
     skipItem?: (item: DataItem) => boolean,
     dataItems?: Map<string, DataItem>,
     rollingWindow?: number,
+    skipCodes?: (label: string, code: Code | undefined) => boolean,
+    codebook?: Codebook,
 ): ItemComparison[] => {
     // Create lookup map for second coder's items
     const items2Map = new Map(items2.map((item) => [item.id, item]));
@@ -173,17 +177,31 @@ export const compareItems = (
         filteredPairs.push({ item1, item2 });
     }
 
+    // Helper function to filter codes if skipCodes is provided
+    const filterCodes = (codes: string[]): string[] => {
+        if (!skipCodes) return codes;
+        return codes.filter(label => {
+            const code = codebook?.[label];
+            return !skipCodes(label, code);
+        });
+    };
+
     // If no rolling window, use standard item-by-item comparison
     if (!rollingWindow || rollingWindow <= 0) {
         return filteredPairs.map(({ item1, item2 }) => {
             const codes1 = item1.codes ?? [];
             const codes2 = item2.codes ?? [];
-            const difference = calculateDifference(codes1, codes2);
+
+            // Filter codes if skipCodes function is provided
+            const filteredCodes1 = filterCodes(codes1);
+            const filteredCodes2 = filterCodes(codes2);
+
+            const difference = calculateDifference(filteredCodes1, filteredCodes2);
 
             return {
                 itemId: item1.id,
-                codes1,
-                codes2,
+                codes1: codes1, // Store original codes for transparency
+                codes2: codes2, // Store original codes for transparency
                 difference,
             };
         });
@@ -199,28 +217,32 @@ export const compareItems = (
         const baseCodes1 = item1.codes ?? [];
         const baseCodes2 = item2.codes ?? [];
 
+        // Filter base codes if skipCodes function is provided
+        const filteredBaseCodes1 = filterCodes(baseCodes1);
+        const filteredBaseCodes2 = filterCodes(baseCodes2);
+
         // Collect codes from rolling window for both coders
         const windowStart = Math.max(0, i - rollingWindow);
         const windowEnd = Math.min(filteredPairs.length - 1, i + rollingWindow);
 
-        // Aggregate codes within window
+        // Aggregate codes within window (with filtering)
         const windowCodes1Set = new Set<string>();
         const windowCodes2Set = new Set<string>();
 
         for (let j = windowStart; j <= windowEnd; j++) {
-            const codes1 = filteredPairs[j].item1.codes ?? [];
-            const codes2 = filteredPairs[j].item2.codes ?? [];
+            const codes1 = filterCodes(filteredPairs[j].item1.codes ?? []);
+            const codes2 = filterCodes(filteredPairs[j].item2.codes ?? []);
 
             codes1.forEach((code) => windowCodes1Set.add(code));
             codes2.forEach((code) => windowCodes2Set.add(code));
         }
 
         // Apply benefit-only logic:
-        // - Start with base codes at exact position
+        // - Start with filtered base codes at exact position
         // - For each code in union: if BOTH coders have it in their windows, add to intersection (benefit)
-        const allCodes = new Set([...baseCodes1, ...baseCodes2]);
-        const benefitCodes1 = new Set(baseCodes1);
-        const benefitCodes2 = new Set(baseCodes2);
+        const allCodes = new Set([...filteredBaseCodes1, ...filteredBaseCodes2]);
+        const benefitCodes1 = new Set(filteredBaseCodes1);
+        const benefitCodes2 = new Set(filteredBaseCodes2);
 
         // Add windowed matches (benefit-only)
         for (const code of allCodes) {

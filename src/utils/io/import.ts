@@ -50,7 +50,8 @@ const getCellValueString = (row: Excel.Row, cell: string) => {
                 ? cellValue
                 : JSON.stringify(cellValue);
     } catch {
-        throw new Error("Couldn't find the cell with the label: " + cell);
+        return "";
+        // throw new Error("Couldn't find the cell with the label: " + cell);
     }
 };
 
@@ -221,6 +222,7 @@ export const importCodebook = (path: string, name = "Codebook"): Promise<Record<
         // Skip the header row (row 1)
         sheet.eachRow((row, rowNumber) => {
             if (rowNumber === 1) return;
+            console.log(row.actualCellCount);
 
             const label = getCellValueString(row, "Label").trim();
             if (!label) return; // Skip rows without a label

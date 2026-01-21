@@ -45,7 +45,7 @@ import {
     type PairwiseReliability,
     defaultCalculateDifference,
 } from "../evaluating/reliability-metrics.js";
-import type { CodedItem, CodedThreads, DataChunk, DataItem, Dataset } from "../schema.js";
+import type { Code, CodedItem, CodedThreads, DataChunk, DataItem, Dataset } from "../schema.js";
 import { ensureFolder } from "../utils/io/file.js";
 import { logger } from "../utils/core/logger.js";
 import { getAllItems } from "../utils/core/misc.js";
@@ -97,6 +97,20 @@ export interface ReliabilityStepConfig<
      * @returns Difference score (0 = identical, higher = more different)
      */
     calculateDifference?: DifferenceCalculator;
+
+    /**
+     * Optional function to skip certain codes during comparison
+     *
+     * Allows filtering out codes that shouldn't be included in reliability
+     * calculation (e.g., codes without definitions, temporary codes, etc.)
+     *
+     * By default, skips codes without definitions.
+     *
+     * @param label - The code label
+     * @param code - The Code object if found in codebook, undefined otherwise
+     * @returns true to skip this code, false to include it
+     */
+    skipCodes?: (label: string, code: Code | undefined) => boolean;
 
     /**
      * Whether to anonymize coder identities in outputs
@@ -166,6 +180,14 @@ export interface ReliabilityResults {
         filterApplied: boolean;
         /** Size of rolling window if applied (benefit-only comparison) */
         rollingWindowSize?: number;
+        /** Whether code filtering was applied */
+        codeFilterApplied: boolean;
+        /** List of codes that were skipped during comparison */
+        skippedCodes?: string[];
+        /** Total number of unique codes in the dataset */
+        totalCodesCount?: number;
+        /** Number of codes actually compared */
+        comparedCodesCount?: number;
     };
 }
 
@@ -305,6 +327,17 @@ export class ReliabilityStep<
                     const dataItemsMap = new Map(allDataItems.map((item) => [item.id, item]));
                     logger.info(`Extracted ${dataItemsMap.size} data items from dataset`);
 
+                    // Get reference codebook for code filtering
+                    const referenceCodebook = consolidator.getReference(dataset.name);
+
+                    // Default skipCodes function: skip codes without definitions
+                    const skipCodesFunction = this.config.skipCodes ??
+                        ((label: string, code: Code | undefined) => !code || !code.definitions?.length);
+
+                    // Track skipped codes
+                    const skippedCodesSet = new Set<string>();
+                    const allCodesSet = new Set<string>();
+
                     // Anonymize coder names if configured
                     const anonymize = this.config.anonymize ?? true;
                     const coderNameMap = new Map(
@@ -333,7 +366,14 @@ export class ReliabilityStep<
                                 `Comparing ${coderNameMap.get(coder1Name)} vs ${coderNameMap.get(coder2Name)}`,
                             );
 
-                            // Compare items
+                            // Track codes from both coders before filtering
+                            for (const item of [...items1, ...items2]) {
+                                if (item.codes) {
+                                    item.codes.forEach(label => allCodesSet.add(label));
+                                }
+                            }
+
+                            // Compare items with code filtering
                             const comparisons = compareItems(
                                 items1,
                                 items2,
@@ -341,7 +381,17 @@ export class ReliabilityStep<
                                 this.config.skipItem,
                                 dataItemsMap,
                                 this.config.rollingWindow,
+                                skipCodesFunction,
+                                referenceCodebook,
                             );
+
+                            // Track which codes were skipped
+                            for (const label of allCodesSet) {
+                                const code = referenceCodebook[label];
+                                if (skipCodesFunction(label, code)) {
+                                    skippedCodesSet.add(label);
+                                }
+                            }
 
                             logger.info(`  Compared ${comparisons.length} items`);
 
@@ -360,12 +410,25 @@ export class ReliabilityStep<
                                     `Alpha: ${reliability.krippendorffsAlpha.toFixed(3)}`,
                             );
 
-                            // Calculate code-level metrics
-                            const codeMetrics = calculateCodeLevelMetrics(comparisons);
-                            codeLevelMetrics[pairKey] = codeMetrics;
+                            // Calculate code-level metrics (will only include compared codes)
+                            // Filter out skipped codes from the metrics
+                            const allCodeMetrics = calculateCodeLevelMetrics(comparisons);
+                            const filteredCodeMetrics = allCodeMetrics.filter(metric =>
+                                !skippedCodesSet.has(metric.code)
+                            );
+                            codeLevelMetrics[pairKey] = filteredCodeMetrics;
 
-                            logger.info(`  Calculated metrics for ${codeMetrics.length} codes`);
+                            logger.info(`  Calculated metrics for ${filteredCodeMetrics.length} codes`);
                         }
+                    }
+
+                    // Log skipped codes information
+                    const skippedCodesList = Array.from(skippedCodesSet).sort();
+                    const comparedCodesCount = allCodesSet.size - skippedCodesSet.size;
+
+                    if (skippedCodesList.length > 0) {
+                        logger.info(`Skipped ${skippedCodesList.length} codes without definitions: ${skippedCodesList.join(", ")}`);
+                        logger.info(`Compared ${comparedCodesCount} codes out of ${allCodesSet.size} total codes`);
                     }
 
                     // Assemble results
@@ -383,6 +446,10 @@ export class ReliabilityStep<
                             customDifferenceCalculator: !!this.config.calculateDifference,
                             filterApplied: !!this.config.skipItem,
                             rollingWindowSize: this.config.rollingWindow,
+                            codeFilterApplied: true, // Always true now since we have a default
+                            skippedCodes: skippedCodesList.length > 0 ? skippedCodesList : undefined,
+                            totalCodesCount: allCodesSet.size,
+                            comparedCodesCount: comparedCodesCount,
                         },
                     };
 

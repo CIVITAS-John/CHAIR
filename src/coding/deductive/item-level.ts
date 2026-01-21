@@ -144,7 +144,7 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
             buildMessagePrompt(dataset, msg, undefined, this.tagsName)
         );
 
-        return `# Previous Data for Your Context\n${contextLines.join('\n')}\n\n# Data for Coding\n`;
+        return `# Data for Context\n(...)\n${contextLines.join('\n')}\n\n# Data for Coding\n(Continuing from the previous section)\n`;
     }
 
     /**

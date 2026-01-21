@@ -175,6 +175,8 @@ const filterCodebookByCategories = (
     const result: Codebook = {};
 
     for (const [label, code] of Object.entries(codebook)) {
+        if (!code.categories) continue;
+
         // Check inclusion filter (if specified)
         if (includes && !code.categories?.some(cat => includes.some(f => cat.startsWith(f)))) {
             continue; // Skip if doesn't match any include filter
@@ -189,7 +191,7 @@ const filterCodebookByCategories = (
         result[label] = code;
     }
 
-    logger.debug(`Filtered codebook: ${Object.keys(codebook).length} → ${Object.keys(result).length} codes`);
+    logger.warn(`Filtered codebook: ${Object.keys(codebook).length} → ${Object.keys(result).length} codes`);
     return result;
 };
 
@@ -239,6 +241,7 @@ const filterCodebookByCategories = (
  * @param analyzed - Accumulator for results (supports incremental analysis)
  * @param codebook - Optional predefined codebook for deductive coding
  * @param aiParams - AI parameters (temperature, retries, customPrompt, etc.)
+ * @param promptCodebook - Optional codebook specifically for prompts (used in substeps to avoid accumulation)
  * @returns CodedThreads with codes, examples, and codebook
  */
 const analyzeChunks = <T extends DataItem>(
@@ -247,6 +250,7 @@ const analyzeChunks = <T extends DataItem>(
     analyzed: CodedThreads = { threads: {} },
     codebook?: Codebook,
     aiParams?: AIParameters,
+    promptCodebook?: Codebook,  // Optional codebook specifically for prompts (substeps)
 ) =>
     logger.withDefaultSource("analyzeChunks", async () => {
         const { dataset } = BaseStep.Context.get();
@@ -336,8 +340,14 @@ const analyzeChunks = <T extends DataItem>(
 
                         // Build prompts for this window
                         // Returns [system_prompt, user_prompt] tailored to current items and context
+                        // If promptCodebook is provided (for substeps), create temporary analysis with only those codes
+                        const promptAnalysis = promptCodebook ? {
+                            ...analysis,
+                            codes: promptCodebook
+                        } : analysis;
+
                         const prompts = await analyzer.buildPrompts(
-                            analysis,
+                            promptAnalysis,
                             chunk,
                             currents,
                             contexts,
@@ -434,8 +444,9 @@ const analyzeChunks = <T extends DataItem>(
                                 `[${dataset.name}/${key}] Received ${codes.length} codes for message ${message.id}: ${codes.join(", ")}`,
                             );
 
-                            // Store codes for this item
-                            analysis.items[message.id].codes = codes;
+                            // Accumulate codes for this item (merge with existing codes from previous substeps)
+                            const existingCodes = analysis.items[message.id].codes || [];
+                            analysis.items[message.id].codes = [...new Set([...existingCodes, ...codes])];
 
                             // Build codebook entries with examples
                             codes.forEach((code) => {
@@ -716,12 +727,14 @@ export class CodeStep<
                                         };
 
                                         // Accumulate results using merged parameters
+                                        // Pass substepCodebook as promptCodebook to ensure prompts only see current substep codes
                                         result = await analyzeChunks(
                                             analyzer,
                                             chunks,
                                             result,  // Pass previous result to accumulate
                                             substepCodebook,
                                             mergedParams,
+                                            substepCodebook,  // Use same filtered codebook for prompts
                                         );
                                     }
 
