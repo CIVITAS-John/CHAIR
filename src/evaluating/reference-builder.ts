@@ -191,9 +191,16 @@ export class RefiningReferenceBuilder extends ReferenceBuilder {
     /** Further merge the codebook.*/
     protected override refineCodebook(codebook: Codebook) {
         return logger.withSource(this._prefix, "refineCodebook", async () => {
+            // If consolidators is explicitly set to empty array, skip consolidation
+            if (this.consolidators && this.consolidators.length === 0) {
+                logger.info("No consolidators configured - returning merged codebook without further consolidation");
+                return codebook;
+            }
+
             const threads: CodedThreadsWithCodebook = { codebook, threads: {} };
             Object.values(codebook).forEach((Code) => (Code.alternatives = []));
 
+            // Use provided consolidators if available, otherwise use defaults
             const consolidator = new PipelineConsolidator(
                 this.consolidators ?? [
                     // Merge codes that have been merged

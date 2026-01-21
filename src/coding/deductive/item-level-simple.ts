@@ -165,7 +165,7 @@ ${customPrompt?.trim()}
 1. Use ONLY the codes listed below and strictly follow its DEFINITION. Do not create new codes.
 2. For each and every data item (provided in a numbered list), you MUST select appropriate codes from the codebook. Use "N/A" if nothing matches.
 3. You will always return one bullet point for each data item. Multiple codes are splitted by semicolon (;). Only send out the correct LABEL.
-4. When reasoning, carefully interpret through each data item to help with your decision-making later. Then double check if your choices match.
+4. When reasoning, carefully interpret through each data item to help with your decision-making. Then double check if your choices match and are accurate.
 5. Never not omit or provide selective answers.
 
 # Predefined Codebook
