@@ -108,6 +108,28 @@ export interface ReliabilityStepConfig<
     anonymize?: boolean;
 
     /**
+     * Size of rolling window for aggregate comparison
+     *
+     * If specified, compares aggregate codes across neighboring items
+     * instead of item-by-item. For each item at position i, codes are
+     * aggregated from items [i-rollingWindow, ..., i, ..., i+rollingWindow].
+     *
+     * Applied AFTER skipItem filtering, so the window operates on the
+     * filtered item list.
+     *
+     * Example:
+     * - rollingWindow = 1: compare codes from [i-1, i, i+1]
+     * - rollingWindow = 2: compare codes from [i-2, i-1, i, i+1, i+2]
+     *
+     * Edge cases:
+     * - Start/end of list: uses only available items
+     * - 0 or undefined: item-by-item comparison (default)
+     *
+     * Defaults to undefined (standard item-by-item comparison).
+     */
+    rollingWindow?: number;
+
+    /**
      * Extra parameters for future extensions
      *
      * Reserved for custom reliability metrics or configuration.
@@ -142,6 +164,8 @@ export interface ReliabilityResults {
         customDifferenceCalculator: boolean;
         /** Whether item filter was applied */
         filterApplied: boolean;
+        /** Size of rolling window if applied (benefit-only comparison) */
+        rollingWindowSize?: number;
     };
 }
 
@@ -316,6 +340,7 @@ export class ReliabilityStep<
                                 differenceCalculator,
                                 this.config.skipItem,
                                 dataItemsMap,
+                                this.config.rollingWindow,
                             );
 
                             logger.info(`  Compared ${comparisons.length} items`);
@@ -332,7 +357,6 @@ export class ReliabilityStep<
 
                             logger.info(
                                 `  Mean difference: ${reliability.meanDifference.toFixed(3)}, ` +
-                                    `Agreement: ${reliability.percentAgreement.toFixed(1)}%, ` +
                                     `Alpha: ${reliability.krippendorffsAlpha.toFixed(3)}`,
                             );
 
@@ -358,6 +382,7 @@ export class ReliabilityStep<
                             anonymized: anonymize,
                             customDifferenceCalculator: !!this.config.calculateDifference,
                             filterApplied: !!this.config.skipItem,
+                            rollingWindowSize: this.config.rollingWindow,
                         },
                     };
 

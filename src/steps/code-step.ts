@@ -146,28 +146,47 @@ export type CodeStepConfig<
 );
 
 /**
- * Filter codebook to codes matching category filter(s)
+ * Filter codebook with dual-direction category filtering
  *
- * Matches codes where any category path starts with the filter string.
- * Example: filter="Social" matches code with categories=["Social Interaction"]
+ * Supports both inclusion and exclusion filtering:
+ * - includeFilters: Only include codes where any category starts with these prefixes
+ * - excludeFilters: Exclude codes where any category starts with these prefixes
+ *
+ * When both filters are provided, inclusion is applied first, then exclusion.
+ * Example: include="Social", exclude="Social Conflict" keeps social codes except conflict ones
  *
  * @param codebook - Full codebook to filter
- * @param filter - Category string or array (matches prefix)
+ * @param includeFilters - Category prefixes to include (undefined = include all)
+ * @param excludeFilters - Category prefixes to exclude (undefined = exclude none)
  * @returns Filtered codebook with matching codes
  */
-const filterCodebookByCategory = (
+const filterCodebookByCategories = (
     codebook: Codebook | undefined,
-    filter: string | string[]
+    includeFilters?: string | string[],
+    excludeFilters?: string | string[]
 ): Codebook | undefined => {
     if (!codebook) return undefined;
 
-    const filters = Array.isArray(filter) ? filter : [filter];
+    // If no filters provided, return original codebook
+    if (!includeFilters && !excludeFilters) return codebook;
+
+    const includes = includeFilters ? (Array.isArray(includeFilters) ? includeFilters : [includeFilters]) : null;
+    const excludes = excludeFilters ? (Array.isArray(excludeFilters) ? excludeFilters : [excludeFilters]) : null;
     const result: Codebook = {};
 
     for (const [label, code] of Object.entries(codebook)) {
-        if (code.categories?.some(cat => filters.some(f => cat.startsWith(f)))) {
-            result[label] = code;
+        // Check inclusion filter (if specified)
+        if (includes && !code.categories?.some(cat => includes.some(f => cat.startsWith(f)))) {
+            continue; // Skip if doesn't match any include filter
         }
+
+        // Check exclusion filter (if specified)
+        if (excludes && code.categories?.some(cat => excludes.some(f => cat.startsWith(f)))) {
+            continue; // Skip if matches any exclude filter
+        }
+
+        // Code passed all filters
+        result[label] = code;
     }
 
     logger.debug(`Filtered codebook: ${Object.keys(codebook).length} → ${Object.keys(result).length} codes`);
@@ -675,7 +694,7 @@ export class CodeStep<
                                     const substeps = this.config.parameters?.substeps;
                                     const passes = substeps?.length
                                         ? substeps
-                                        : [{ name: "default", categoryFilter: undefined, customParameters: undefined }];
+                                        : [{ name: "default", includeCategories: undefined, excludeCategories: undefined, customParameters: undefined }];
 
                                     let result: CodedThreads = { threads: {} };
 
@@ -686,8 +705,8 @@ export class CodeStep<
                                         }
 
                                         // Filter codebook for this substep
-                                        const substepCodebook = substep.categoryFilter
-                                            ? filterCodebookByCategory(codebook, substep.categoryFilter)
+                                        const substepCodebook = (substep.includeCategories || substep.excludeCategories)
+                                            ? filterCodebookByCategories(codebook, substep.includeCategories, substep.excludeCategories)
                                             : codebook;
 
                                         // Merge parameters: substep overrides base

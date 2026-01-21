@@ -43,8 +43,10 @@ export interface AIParameters extends Record<string, unknown> {
     substeps?: Array<{
         /** Name for logging (e.g., "Social Codes") */
         name: string;
-        /** Filter codebook by category prefix (e.g., "Social" or ["Content", "Topic"]) */
-        categoryFilter?: string | string[];
+        /** Include only codes where any category starts with these prefixes (e.g., "Social" or ["Content", "Topic"]) */
+        includeCategories?: string | string[];
+        /** Exclude codes where any category starts with these prefixes (e.g., "Technical" or ["Debug", "Test"]) */
+        excludeCategories?: string | string[];
         /** AI parameters specific to this substep */
         customParameters?: AIParameters;
     }>;

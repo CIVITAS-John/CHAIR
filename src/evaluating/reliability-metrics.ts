@@ -62,8 +62,6 @@ export interface PairwiseReliability {
     medianDifference: number;
     /** Standard deviation of differences */
     stdDevDifference: number;
-    /** Percent of items with exact agreement */
-    percentAgreement: number;
     /** Krippendorff's Alpha coefficient */
     krippendorffsAlpha: number;
     /** Total number of items compared */
@@ -144,6 +142,7 @@ export const extractCodedItems = (threads: Record<string, CodedThread>): CodedIt
  * @param calculateDifference - Function to calculate item-level difference
  * @param skipItem - Optional function to skip certain items
  * @param dataItems - Map of item IDs to original data items for filtering
+ * @param rollingWindow - Optional window size for aggregate comparison (benefit-only)
  * @returns Array of item comparisons
  */
 export const compareItems = (
@@ -152,13 +151,14 @@ export const compareItems = (
     calculateDifference: DifferenceCalculator = defaultCalculateDifference,
     skipItem?: (item: DataItem) => boolean,
     dataItems?: Map<string, DataItem>,
+    rollingWindow?: number,
 ): ItemComparison[] => {
     // Create lookup map for second coder's items
     const items2Map = new Map(items2.map((item) => [item.id, item]));
 
-    const comparisons: ItemComparison[] = [];
+    // First pass: collect all items that pass the filter
+    const filteredPairs: Array<{ item1: CodedItem; item2: CodedItem }> = [];
 
-    // Compare each item from first coder
     for (const item1 of items1) {
         // Skip if filter function returns true
         if (skipItem && dataItems) {
@@ -170,17 +170,76 @@ export const compareItems = (
         const item2 = items2Map.get(item1.id);
         if (!item2) continue; // Skip if item not found in second coder
 
-        // Extract codes (default to empty array if undefined)
-        const codes1 = item1.codes ?? [];
-        const codes2 = item2.codes ?? [];
+        filteredPairs.push({ item1, item2 });
+    }
 
-        // Calculate difference
-        const difference = calculateDifference(codes1, codes2);
+    // If no rolling window, use standard item-by-item comparison
+    if (!rollingWindow || rollingWindow <= 0) {
+        return filteredPairs.map(({ item1, item2 }) => {
+            const codes1 = item1.codes ?? [];
+            const codes2 = item2.codes ?? [];
+            const difference = calculateDifference(codes1, codes2);
+
+            return {
+                itemId: item1.id,
+                codes1,
+                codes2,
+                difference,
+            };
+        });
+    }
+
+    // Rolling window comparison (benefit-only)
+    const comparisons: ItemComparison[] = [];
+
+    for (let i = 0; i < filteredPairs.length; i++) {
+        const { item1, item2 } = filteredPairs[i];
+
+        // Get base codes for this item
+        const baseCodes1 = item1.codes ?? [];
+        const baseCodes2 = item2.codes ?? [];
+
+        // Collect codes from rolling window for both coders
+        const windowStart = Math.max(0, i - rollingWindow);
+        const windowEnd = Math.min(filteredPairs.length - 1, i + rollingWindow);
+
+        // Aggregate codes within window
+        const windowCodes1Set = new Set<string>();
+        const windowCodes2Set = new Set<string>();
+
+        for (let j = windowStart; j <= windowEnd; j++) {
+            const codes1 = filteredPairs[j].item1.codes ?? [];
+            const codes2 = filteredPairs[j].item2.codes ?? [];
+
+            codes1.forEach((code) => windowCodes1Set.add(code));
+            codes2.forEach((code) => windowCodes2Set.add(code));
+        }
+
+        // Apply benefit-only logic:
+        // - Start with base codes at exact position
+        // - For each code in union: if BOTH coders have it in their windows, add to intersection (benefit)
+        const allCodes = new Set([...baseCodes1, ...baseCodes2]);
+        const benefitCodes1 = new Set(baseCodes1);
+        const benefitCodes2 = new Set(baseCodes2);
+
+        // Add windowed matches (benefit-only)
+        for (const code of allCodes) {
+            // If both coders have this code somewhere in their windows, give benefit
+            if (windowCodes1Set.has(code) && windowCodes2Set.has(code)) {
+                benefitCodes1.add(code);
+                benefitCodes2.add(code);
+            }
+        }
+
+        // Calculate difference with benefit-only rolling window
+        const codes1WithBenefit = Array.from(benefitCodes1);
+        const codes2WithBenefit = Array.from(benefitCodes2);
+        const difference = calculateDifference(codes1WithBenefit, codes2WithBenefit);
 
         comparisons.push({
             itemId: item1.id,
-            codes1,
-            codes2,
+            codes1: baseCodes1, // Store original codes for transparency
+            codes2: baseCodes2,
             difference,
         });
     }
@@ -209,7 +268,6 @@ export const calculatePairwiseReliability = (
             meanDifference: 0,
             medianDifference: 0,
             stdDevDifference: 0,
-            percentAgreement: 0,
             krippendorffsAlpha: 0,
             itemCount: 0,
         };
@@ -237,10 +295,6 @@ export const calculatePairwiseReliability = (
         differences.length;
     const stdDevDifference = Math.sqrt(variance);
 
-    // Calculate percent agreement (items with difference = 0)
-    const exactMatches = differences.filter((d) => d === 0).length;
-    const percentAgreement = (exactMatches / differences.length) * 100;
-
     // Calculate Krippendorff's Alpha
     const krippendorffsAlpha = calculateKrippendorffsAlpha(comparisons);
 
@@ -251,7 +305,6 @@ export const calculatePairwiseReliability = (
         meanDifference,
         medianDifference,
         stdDevDifference,
-        percentAgreement,
         krippendorffsAlpha,
         itemCount: comparisons.length,
     };
