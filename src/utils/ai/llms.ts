@@ -161,17 +161,20 @@ export const initLLM = (
 /**
  * Execute a task with multiple LLMs sequentially.
  * Each LLM gets its own session with token tracking.
+ * If no LLMs are provided, creates a dummy session for non-LLM processing.
  *
  * @param task - Async function to execute with each LLM session
- * @param LLMs - Array of LLM models to use (names or configs)
+ * @param LLMs - Array of LLM models to use (names or configs), or undefined for no LLM
  * @param overrides - Optional configuration overrides
  */
 export const useLLMs = async (
     task: (session: LLMSession) => Promise<void>,
-    LLMs: LLMModel[],
+    LLMs?: LLMModel[],
     overrides?: Record<string, ModelConfig | string>,
 ) => {
     await logger.withDefaultSource("useLLMs", async () => {
+        // If no LLMs provided, create a dummy session for non-LLM processing
+        LLMs = LLMs ?? ["default"];
         for (const llm of LLMs) {
             const config = typeof llm === "string" ? initLLM(llm, overrides) : llm;
             const modelName = typeof llm === "string" ? llm : llm.name;

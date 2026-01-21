@@ -71,8 +71,9 @@ export interface ConsolidateStepConfig<
      * LLM model(s) to use for reference building
      *
      * The model will refine and merge codes across codebooks.
+     * Optional when using empty consolidators (pure name-based merging).
      */
-    model: LLMModel | LLMModel[];
+    model?: LLMModel | LLMModel[];
 
     /**
      * AI behavior parameters (temperature, retries, etc.)
@@ -407,10 +408,12 @@ export class ConsolidateStep<
         // Store collected datasets
         this.#datasets = [...datasets.values()];
 
-        // Normalize model configuration to array
-        const models = Array.isArray(this.config.model) ? this.config.model : [this.config.model];
+        // Normalize model configuration to array or undefined
+        const models = this.config.model
+            ? Array.isArray(this.config.model) ? this.config.model : [this.config.model]
+            : undefined;
 
-        // Build references using LLM(s)
+        // Build references using LLM(s) or without LLM
         await useLLMs(async (session) => {
             for (const dataset of this.#datasets) {
                 // Set context for downstream utilities

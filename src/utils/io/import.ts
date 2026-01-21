@@ -37,13 +37,20 @@ const { Workbook } = Excel;
  * Extract cell value as string from Excel row
  *
  * @param row - Excel row object
- * @param cell - Cell identifier (column letter or name)
+ * @param cell - Cell identifier (column letter, number, or name via mapping)
+ * @param columnMapping - Optional mapping of column names to column numbers
  * @returns Cell value as string, or empty string if null/undefined
  * @internal
  */
-const getCellValueString = (row: Excel.Row, cell: string) => {
+const getCellValueString = (row: Excel.Row, cell: string | number, columnMapping?: Record<string, number>) => {
     try {
-        const cellValue = row.getCell(cell).value;
+        // If columnMapping is provided and cell is a string, try to resolve it
+        let cellRef: string | number = cell;
+        if (columnMapping && typeof cell === "string" && columnMapping[cell]) {
+            cellRef = columnMapping[cell];
+        }
+
+        const cellValue = row.getCell(cellRef).value;
         return cellValue === null || cellValue === undefined
             ? ""
             : typeof cellValue === "string"
@@ -90,22 +97,30 @@ export const importCodes = (
 
             let msgs = 0;
 
-            // Find the column keys (not all worksheet will include all columns)
-            for (const column of worksheet.columns) {
-                if (!column.values?.[1]) continue; // Skip empty columns
-                const key = column.values[1];
-                column.key = typeof key === "string" ? key : JSON.stringify(key);
-            }
+            // Extract column headers from the first row
+            const headerRow = worksheet.getRow(1);
+            const columnMapping: Record<string, number> = {};
+
+            headerRow.eachCell((cell, colNumber) => {
+                const headerValue = cell.value;
+                if (headerValue) {
+                    const headerName = typeof headerValue === "string"
+                        ? headerValue
+                        : JSON.stringify(headerValue);
+                    columnMapping[headerName] = colNumber;
+                }
+            });
 
             // Process each row in the worksheet
             worksheet.eachRow((row, rowNumber) => {
                 if (rowNumber === 1) return; // Skip header row
 
                 // If the row has no ID cell, use (the row number - 1) as ID
-                const id = row.getCell("ID").value ?? rowNumber - 1;
-                const name = getCellValueString(row, "Nickname");
-                // const sid = getCellValueString(row, "SID");
-                const content = getCellValueString(row, "Content");
+                const idCell = columnMapping["ID"] ? row.getCell(columnMapping["ID"]) : row.getCell("ID");
+                const id = idCell.value ?? rowNumber - 1;
+                const name = getCellValueString(row, "Nickname", columnMapping);
+                // const sid = getCellValueString(row, "SID", columnMapping);
+                const content = getCellValueString(row, "Content", columnMapping);
 
                 // Check if this is a special row (thoughts, summary, reflection)
                 if (typeof id === "number" && id < 0) {
@@ -138,7 +153,7 @@ export const importCodes = (
                 // Skip empty rows
                 if (!content) return;
 
-                const codesValue = getCellValueString(row, "Codes");
+                const codesValue = getCellValueString(row, "Codes", columnMapping);
                 const codes = codesValue
                     ? codesValue
                           .split(/[,;\n]+/)
@@ -219,20 +234,33 @@ export const importCodebook = (path: string, name = "Codebook"): Promise<Record<
 
         const codebook: Record<string, Code> = {};
 
-        // Skip the header row (row 1)
+        // Extract column headers from the first row
+        const headerRow = sheet.getRow(1);
+        const columnMapping: Record<string, number> = {};
+
+        headerRow.eachCell((cell, colNumber) => {
+            const headerValue = cell.value;
+            if (headerValue) {
+                const headerName = typeof headerValue === "string"
+                    ? headerValue
+                    : JSON.stringify(headerValue);
+                columnMapping[headerName] = colNumber;
+            }
+        });
+
+        // Process each row (skip the header row)
         sheet.eachRow((row, rowNumber) => {
             if (rowNumber === 1) return;
-            console.log(row.actualCellCount);
 
-            const label = getCellValueString(row, "Label").trim();
+            const label = getCellValueString(row, "Label", columnMapping).trim();
             if (!label) return; // Skip rows without a label
 
             logger.debug(`Importing code ${label}`);
 
-            const categoryText = getCellValueString(row, "Category");
-            const definitionText = getCellValueString(row, "Definition");
-            const examplesText = getCellValueString(row, "Examples");
-            const alternativesText = getCellValueString(row, "Alternatives");
+            const categoryText = getCellValueString(row, "Category", columnMapping);
+            const definitionText = getCellValueString(row, "Definition", columnMapping);
+            const examplesText = getCellValueString(row, "Examples", columnMapping);
+            const alternativesText = getCellValueString(row, "Alternatives", columnMapping);
 
             // Parse categories (handle bullet points)
             const categories = categoryText
