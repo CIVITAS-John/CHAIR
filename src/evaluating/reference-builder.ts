@@ -87,11 +87,10 @@ export abstract class ReferenceBuilder {
         return logger.withSource(this._prefix, "buildReference", async () => {
             const lens = codebooks.map((c) => Object.keys(c).length);
             logger.info(`Merging ${codebooks.length} codebooks`);
+            if (codebooks.length == 1) return codebooks[0];
             logger.info(
                 `${lens.reduce((Prev, Curr) => Curr + Prev)} codes found (${lens.join(", ")})`,
             );
-            // Remove alternatives from individual codebooks
-            // Codebooks.forEach(Codebook => Object.values(Codebook).forEach(Code => Code.Alternatives = []));
             // Merge into a single codebook
             const merged = mergeCodebooks(codebooks);
             logger.success(`Got ${Object.keys(merged).length} codes after merging by name`);
