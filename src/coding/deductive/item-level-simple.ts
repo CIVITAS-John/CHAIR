@@ -151,8 +151,15 @@ export default class ItemLevelCoderSimple extends ItemLevelCoderBase {
 # Goals
 You are an expert in deductive qualitative coding.
 Your goal is to accurately apply codes from a predefined codebook to **every single data item**.
+
+## Research Question
 ${dataset.researchQuestion.trim()}
-${dataset.codingNotes.trim()}${customPrompt?.trim()}
+
+## Coding Notes
+${dataset.codingNotes.trim()}
+
+## Special Instructions
+${customPrompt?.trim()}
 
 # Guidelines
 1. Use ONLY the codes listed below and strictly follow its DEFINITION. Do not create new codes.

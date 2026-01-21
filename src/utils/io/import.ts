@@ -42,12 +42,16 @@ const { Workbook } = Excel;
  * @internal
  */
 const getCellValueString = (row: Excel.Row, cell: string) => {
-    const cellValue = row.getCell(cell).value;
-    return cellValue === null || cellValue === undefined
-        ? ""
-        : typeof cellValue === "string"
-          ? cellValue
-          : JSON.stringify(cellValue);
+    try {
+        const cellValue = row.getCell(cell).value;
+        return cellValue === null || cellValue === undefined
+            ? ""
+            : typeof cellValue === "string"
+                ? cellValue
+                : JSON.stringify(cellValue);
+    } catch {
+        throw new Error("Couldn't find the cell with the label: " + cell);
+    }
 };
 
 /** Import coded results from an Excel workbook. */
