@@ -181,6 +181,11 @@ export const compareItems = (
         const item1 = items1Map.get(itemId) || { id: itemId, codes: [] };
         const item2 = items2Map.get(itemId) || { id: itemId, codes: [] };
 
+        // Only include items where at least one coder has applied codes
+        const codes1 = item1.codes || [];
+        const codes2 = item2.codes || [];
+        if (codes1.length === 0 && codes2.length === 0) continue;
+
         filteredPairs.push({ item1, item2 });
     }
 
