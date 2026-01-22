@@ -569,22 +569,39 @@ function extractCodedThreads(
 /**
  * Convert QDPX file to JSON dataset format
  *
- * @param qdpxPath - Path to .qdpx file
+ * @param qdpxPath - Path to .qdpx file or directory containing extracted QDPX content
  * @param outputDir - Directory to write JSON files
  * @param chunkContent - Optional callback to split content into chunks (defaults to defaultChunkContent)
  * @param onlyCodedThreads - If true, only include threads with human codes in output (default: false)
+ * @param onlyUsedCodes - If true, only keep codes that were actually used by human coders (default: false)
+ * @param threadFilter - Optional callback to filter which threads to include (applies to both sources and coded threads)
  */
 export async function convertQdpxToJson(
     qdpxPath: string,
     outputDir: string,
     chunkContent?: (content: string) => ChunkContentResult[],
     onlyCodedThreads?: boolean,
+    onlyUsedCodes?: boolean,
+    threadFilter?: (threadId: string) => boolean,
 ): Promise<void> {
     // Create output directory
     await mkdir(outputDir, { recursive: true });
 
-    // Extract QDPX directly to output directory
-    const extractDir = await unzipQdpx(qdpxPath, outputDir);
+    // Check if qdpxPath is a directory or a file
+    let extractDir: string;
+    if (existsSync(qdpxPath) && (await import("fs")).statSync(qdpxPath).isDirectory()) {
+        // It's already an extracted directory
+        const projectFile = join(qdpxPath, "project.qde");
+        if (!existsSync(projectFile)) {
+            throw new Error(`Invalid QDPX directory: project.qde not found in ${qdpxPath}`);
+        }
+        extractDir = qdpxPath;
+        logger.info(`Using pre-extracted QDPX directory: ${qdpxPath}`);
+    } else {
+        // It's a QDPX zip file, extract it to output directory
+        extractDir = await unzipQdpx(qdpxPath, outputDir);
+        logger.info(`Extracted QDPX file to: ${extractDir}`);
+    }
 
     // Parse project.qde XML file
     const projectFile = join(extractDir, "project.qde");
@@ -636,7 +653,7 @@ export async function convertQdpxToJson(
         threadNum++;
     }
 
-    // PHASE 2: Convert TextSources to RawDataChunks with final thread IDs
+    // PHASE 2: Convert ALL TextSources to RawDataChunks with final thread IDs (no filtering yet)
     const sourcesDir = join(extractDir, "Sources");
     const sources: Record<string, RawDataChunk> = {};
     const sourceChunks = new Map<string, RawDataChunk>();
@@ -680,16 +697,87 @@ export async function convertQdpxToJson(
         );
     }
 
-    // Write codebook.json
+    // PHASE 5: Filter codebook to only used codes if option enabled
+    let filteredCodebook = codebook;
+    if (onlyUsedCodes) {
+        // Collect all codes actually used across all coders
+        const usedCodes = new Set<string>();
+        for (const coderData of coderThreads.values()) {
+            for (const thread of Object.values(coderData.threads as Record<string, any>)) {
+                for (const item of Object.values(thread.items as Record<string, any>)) {
+                    if (item.codes && Array.isArray(item.codes)) {
+                        item.codes.forEach((code: string) => usedCodes.add(code));
+                    }
+                }
+            }
+        }
+
+        // Filter codebook to only include used codes
+        filteredCodebook = {};
+        for (const [label, code] of Object.entries(codebook)) {
+            if (usedCodes.has(label)) {
+                filteredCodebook[label] = code;
+            }
+        }
+
+        logger.info(
+            `Filtered codebook from ${Object.keys(codebook).length} codes to ` +
+            `${Object.keys(filteredCodebook).length} used codes`
+        );
+    }
+
+    // Write codebook.json (use filtered version if onlyUsedCodes is enabled)
     await writeFile(
         join(outputDir, "codebook.json"),
-        JSON.stringify(codebook, null, 4),
+        JSON.stringify(filteredCodebook, null, 4),
     );
 
-    // Write sources.json (already using final thread IDs)
+    // PHASE 6: Apply thread filtering if provided (after codebook is written)
+    let filteredSources = sources;
+    let filteredCoderThreads = coderThreads;
+
+    if (threadFilter) {
+        // Filter sources
+        filteredSources = {};
+        for (const [threadId, chunk] of Object.entries(sources)) {
+            if (threadFilter(threadId)) {
+                filteredSources[threadId] = chunk;
+            } else {
+                logger.debug(`Filtering out thread from sources: ${threadId}`);
+            }
+        }
+
+        // Filter coder threads
+        filteredCoderThreads = new Map<string, any>();
+        for (const [coderName, coderData] of coderThreads) {
+            const filteredThreads: Record<string, any> = {};
+            for (const [threadId, thread] of Object.entries(coderData.threads as Record<string, any>)) {
+                if (threadFilter(threadId)) {
+                    filteredThreads[threadId] = thread;
+                } else {
+                    logger.debug(`Filtering out thread ${threadId} for coder ${coderName}`);
+                }
+            }
+
+            // Only keep coder if they have threads remaining
+            if (Object.keys(filteredThreads).length > 0) {
+                filteredCoderThreads.set(coderName, {
+                    ...coderData,
+                    threads: filteredThreads,
+                });
+            }
+        }
+
+        logger.info(
+            `Thread filtering applied: ${Object.keys(filteredSources).length}/${Object.keys(sources).length} sources kept, ` +
+            `${filteredCoderThreads.size}/${coderThreads.size} coders with data remaining`
+        );
+    }
+
+    // Write sources.json (already using final thread IDs, possibly filtered)
     await writeFile(
         join(outputDir, "sources.json"),
-        JSON.stringify(sources, null, 4),
+        JSON.stringify(filteredSources, null, 4),
     );
 
     // Write configuration.js (preserve existing if it exists)
@@ -719,14 +807,14 @@ export async function convertQdpxToJson(
     const humanDir = join(outputDir, "human");
     await mkdir(humanDir, { recursive: true });
 
-    // Convert sources to array for Excel export
-    const chunksArray = Object.values(sources);
+    // Convert filtered sources to array for Excel export
+    const chunksArray = Object.values(filteredSources);
 
-    for (const [coderName, coderData] of coderThreads) {
+    for (const [coderName, coderData] of filteredCoderThreads) {
         const baseName = coderName.replace(/[^a-zA-Z0-9]/g, "_");
 
-        // Add unified codebook for Excel export
-        coderData.codebook = codebook;
+        // Add unified codebook for Excel export (use filtered version if onlyUsedCodes is enabled)
+        coderData.codebook = filteredCodebook;
 
         // Write JSON file
         await writeFile(

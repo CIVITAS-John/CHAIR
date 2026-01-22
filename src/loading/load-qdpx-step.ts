@@ -29,6 +29,8 @@ import type {
     DataItem,
     Dataset,
     CodedThread,
+    CodedItem,
+    Codebook,
 } from "../schema.js";
 import { LoadJsonStep } from "./load-json-step.js";
 import { convertQdpxToJson } from "../utils/io/qdpx.js";
@@ -40,7 +42,11 @@ import { logger } from "../utils/core/logger.js";
  */
 export interface LoadQdpxStepConfig {
     /**
-     * Path to the QDPX file
+     * Path to the QDPX file or directory containing extracted QDPX content
+     *
+     * Can be either:
+     * - A .qdpx file path (will be decompressed)
+     * - A directory path containing project.qde and Sources/ (will skip decompression)
      */
     path: string;
 
@@ -76,13 +82,53 @@ export interface LoadQdpxStepConfig {
      * Default: false (include all sources)
      */
     onlyCodedThreads?: boolean;
+
+    /**
+     * Optional callback to postprocess coded items imported from human coders
+     *
+     * Applied to each CodedItem after loading from human/*.json files.
+     * Useful for:
+     * - Normalizing code names or formats
+     * - Mapping codes to different labels
+     * - Adding metadata to coded items
+     * - Filtering or transforming coded items
+     *
+     * Note: This is applied BEFORE onlyUsedCodes filtering
+     *
+     * @param item - The CodedItem from human coders
+     * @returns Transformed CodedItem
+     */
+    postprocessCoded?: (item: CodedItem) => CodedItem;
+
+    /**
+     * Only keep codes in the codebook that were actually used by human coders
+     * If true, filters out unused codes from the codebook
+     * Applied after postprocessCoded transformation
+     * Default: false (keep all codes)
+     */
+    onlyUsedCodes?: boolean;
+
+    /**
+     * Optional callback to filter which threads to include
+     *
+     * Applied to BOTH sources and human coded threads.
+     * Only threads that return true from this function will be included.
+     * Useful for:
+     * - Loading only specific threads for focused analysis
+     * - Excluding threads based on naming patterns
+     * - Reducing memory usage when working with large datasets
+     *
+     * @param threadId - The thread ID (e.g., "thread-1", "thread-2")
+     * @returns true to include the thread, false to exclude it
+     */
+    threadFilter?: (threadId: string) => boolean;
 }
 
 /**
  * LoadQdpxStep - QDPX file implementation of LoadStep
  *
- * Loads datasets from REFI-QDA QDPX files by:
- * 1. Converting QDPX to JSON format (automatically unzips)
+ * Loads datasets from REFI-QDA QDPX files or pre-extracted QDPX directories by:
+ * 1. Converting QDPX to JSON format (automatically unzips if needed)
  * 2. Using LoadJsonStep to load the dataset
  * 3. Loading coded threads from human/*.json files
  *
@@ -92,21 +138,30 @@ export interface LoadQdpxStepConfig {
  * Execution Flow:
  * 1. Check if conversion needed (or skip if exists)
  * 2. Convert QDPX to JSON format:
- *    a. Unzip QDPX file
- *    b. Parse project.qde XML file
- *    c. Convert codebook with bottom-up filtering
- *    d. Convert TextSources to RawDataChunks (paragraphs as items)
- *    e. Extract coded segments per coder
- *    f. Write JSON files (sources.json, configuration.js, human/*.json)
+ *    a. If path is a file: Unzip QDPX file
+ *    b. If path is a directory: Use directly (skip unzipping)
+ *    c. Parse project.qde XML file
+ *    d. Convert codebook with bottom-up filtering
+ *    e. Convert TextSources to RawDataChunks (paragraphs as items)
+ *    f. Extract coded segments per coder
+ *    g. Write JSON files (sources.json, configuration.js, human/*.json)
  * 3. Load dataset using parent LoadJsonStep
  * 4. Load coded threads from human directory
  *
  * Example Usage:
  * ```typescript
+ * // From QDPX file
  * const loadStep = new LoadQdpxStep({
  *   path: "./data/my-project.qdpx",
  *   outputDir: "./data/my-project-json"
  * });
+ *
+ * // From pre-extracted directory
+ * const loadStep = new LoadQdpxStep({
+ *   path: "./data/extracted-qdpx",
+ *   outputDir: "./data/my-project-json"
+ * });
+ *
  * await loadStep.execute();
  * const dataset = loadStep.dataset;
  * const codedThreads = loadStep.codedThreads;
@@ -141,6 +196,7 @@ export class LoadQdpxStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
      */
     private readonly qdpxConfig: LoadQdpxStepConfig;
 
+
     /**
      * Create a new LoadQdpxStep
      *
@@ -150,7 +206,9 @@ export class LoadQdpxStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
         // Determine output directory
         const outputDir =
             config.outputDir ||
-            join(dirname(config.path), basename(config.path, ".qdpx") + "-json");
+            (config.path.endsWith(".qdpx")
+                ? join(dirname(config.path), basename(config.path, ".qdpx") + "-json")
+                : config.path);
 
         // Pass output directory and postprocessItem callback to parent LoadJsonStep
         super({
@@ -165,9 +223,13 @@ export class LoadQdpxStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
      * Load coded threads from human/*.json files
      *
      * @param humanDir - Path to human directory
+     * @param postprocessCoded - Optional callback to transform coded items
      * @returns Map of coder name to CodedThread
      */
-    private async loadCodedThreads(humanDir: string): Promise<Map<string, CodedThread>> {
+    private async loadCodedThreads(
+        humanDir: string,
+        postprocessCoded?: (item: CodedItem) => CodedItem
+    ): Promise<Map<string, CodedThread>> {
         const codedThreads = new Map<string, CodedThread>();
 
         if (!existsSync(humanDir)) {
@@ -198,16 +260,40 @@ export class LoadQdpxStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
                 };
 
                 for (const [threadId, thread] of Object.entries(data.threads)) {
-                    // Merge items
-                    Object.assign(mergedThread.items, thread.items);
+                    // Skip if thread is filtered out
+                    if (this.qdpxConfig.threadFilter && !this.qdpxConfig.threadFilter(threadId)) {
+                        logger.debug(`Filtering out thread ${threadId} for coder ${coderName}`);
+                        continue;
+                    }
+
+                    // Process and merge items
+                    for (const [itemId, item] of Object.entries(thread.items)) {
+                        let processedItem = item;
+
+                        // Apply postprocessing if provided
+                        if (postprocessCoded) {
+                            processedItem = postprocessCoded(item);
+                        }
+
+                        // Add to merged thread
+                        mergedThread.items[itemId] = processedItem;
+                    }
+
                     // Merge codes
                     Object.assign(mergedThread.codes, thread.codes || {});
                 }
 
-                codedThreads.set(coderName, mergedThread);
-                logger.debug(
-                    `Loaded coded thread for coder "${coderName}" with ${Object.keys(mergedThread.items).length} items`,
-                );
+                // Only add the thread if it has items
+                if (Object.keys(mergedThread.items).length > 0) {
+                    codedThreads.set(coderName, mergedThread);
+                    logger.debug(
+                        `Loaded coded thread for coder "${coderName}" with ${Object.keys(mergedThread.items).length} items`,
+                    );
+                } else {
+                    logger.debug(
+                        `Skipping empty coded thread for coder "${coderName}" after filtering`,
+                    );
+                }
             } catch (error) {
                 logger.error(`Failed to load coded thread from ${filePath}: ${error}`);
             }
@@ -241,13 +327,21 @@ export class LoadQdpxStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
         const qdpxPath = resolve(this.qdpxConfig.path);
         const outputDir = resolve(this.config.path);
 
+        // Check if input is a directory or a file
+        const { statSync } = await import("fs");
+        const isDirectory = existsSync(qdpxPath) && statSync(qdpxPath).isDirectory();
+
         // Check if conversion needed
         const skipIfExists = this.qdpxConfig.skipIfExists ?? true;
         const configPath = join(outputDir, "configuration.js");
         const needsConversion = !skipIfExists || !existsSync(configPath);
 
         if (needsConversion) {
-            logger.info(`Converting QDPX file: ${qdpxPath}`);
+            if (isDirectory) {
+                logger.info(`Converting QDPX from extracted directory: ${qdpxPath}`);
+            } else {
+                logger.info(`Converting QDPX file: ${qdpxPath}`);
+            }
             logger.info(`Output directory: ${outputDir}`);
 
             // Create output directory
@@ -259,6 +353,8 @@ export class LoadQdpxStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
                 outputDir,
                 undefined,
                 this.qdpxConfig.onlyCodedThreads,
+                this.qdpxConfig.onlyUsedCodes,
+                this.qdpxConfig.threadFilter,
             );
 
             logger.success(`QDPX conversion complete`);
@@ -269,9 +365,12 @@ export class LoadQdpxStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
         // Load dataset using parent LoadJsonStep
         const dataset = await super._load();
 
-        // Load coded threads
+        // Load coded threads with optional postprocessing
         const humanDir = join(outputDir, "human");
-        this.#codedThreads = await this.loadCodedThreads(humanDir);
+        this.#codedThreads = await this.loadCodedThreads(
+            humanDir,
+            this.qdpxConfig.postprocessCoded
+        );
 
         logger.info(
             `Loaded ${this.#codedThreads.size} coded thread(s) from ${this.#codedThreads.size} coder(s)`,

@@ -157,22 +157,29 @@ export const compareItems = (
     skipCodes?: (label: string, code: Code | undefined) => boolean,
     codebook?: Codebook,
 ): ItemComparison[] => {
-    // Create lookup map for second coder's items
+    // Create lookup maps for both coders' items
+    const items1Map = new Map(items1.map((item) => [item.id, item]));
     const items2Map = new Map(items2.map((item) => [item.id, item]));
+
+    // Collect all unique item IDs from both coders
+    const allItemIds = new Set([
+        ...items1.map(item => item.id),
+        ...items2.map(item => item.id)
+    ]);
 
     // First pass: collect all items that pass the filter
     const filteredPairs: Array<{ item1: CodedItem; item2: CodedItem }> = [];
 
-    for (const item1 of items1) {
+    for (const itemId of allItemIds) {
         // Skip if filter function returns true
         if (skipItem && dataItems) {
-            const dataItem = dataItems.get(item1.id);
+            const dataItem = dataItems.get(itemId);
             if (dataItem && skipItem(dataItem)) continue;
         }
 
-        // Find corresponding item from second coder
-        const item2 = items2Map.get(item1.id);
-        if (!item2) continue; // Skip if item not found in second coder
+        // Get items from both coders, creating empty coded items if missing
+        const item1 = items1Map.get(itemId) || { id: itemId, codes: [] };
+        const item2 = items2Map.get(itemId) || { id: itemId, codes: [] };
 
         filteredPairs.push({ item1, item2 });
     }
