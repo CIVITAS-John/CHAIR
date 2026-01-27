@@ -40,6 +40,7 @@ import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import * as dotenv from "dotenv";
 import md5 from "md5";
+import pLimit from "p-limit";
 
 import { BaseStep } from "../../steps/base-step.js";
 
@@ -53,6 +54,22 @@ import { tokenize } from "./tokenizer.js";
 export type { ModelConfig } from "../core/config.js";
 
 dotenv.config();
+
+// Store limit instances per model configuration
+const modelLimits = new Map<string, ReturnType<typeof pLimit>>();
+
+/**
+ * Get or create a concurrency limit for a specific model configuration.
+ * Each model gets its own limit instance to control concurrent requests independently.
+ */
+const getOrCreateLimit = (config: ModelConfig): ReturnType<typeof pLimit> => {
+    const key = `${config.provider}:${config.name}`;
+    if (!modelLimits.has(key)) {
+        const concurrencyLimit = config.options?.concurrencyLimit ?? 3;
+        modelLimits.set(key, pLimit(concurrencyLimit));
+    }
+    return modelLimits.get(key)!;
+};
 
 /** Type accepting either a model name string or a direct ModelConfig object */
 export type LLMModel = string | ModelConfig;
@@ -267,11 +284,14 @@ export const requestLLM = (
  * Call the LLM API directly without using cache
  *
  * This function makes a direct API call to the configured LLM model, bypassing the caching layer.
- * It tracks tokens and handles timeouts.
+ * It tracks tokens and handles timeouts. Implements per-model concurrency limiting
+ * to prevent overwhelming LLM providers.
  *
  * @param messages - Array of chat messages to send to the model (Vercel AI SDK format)
  * @param temperature - Sampling temperature (0 = deterministic, higher = more random)
  * @param fakeRequest - If true, skip API call and return empty string (for testing)
+ * @param options - Optional configuration overrides
+ * @param options.concurrencyLimit - Override the per-model concurrent request limit (default: 3 or model config)
  * @returns The raw model response text
  * @throws {BaseStep.ContextVarNotFoundError} If called outside an LLM session context
  *
@@ -281,6 +301,7 @@ export const requestLLMWithoutCache = (
     messages: Message[],
     temperature?: number,
     fakeRequest = false,
+    options?: { concurrencyLimit?: number },
 ) =>
     logger.withDefaultSource("requestLLMWithoutCache", async () => {
         const { session } = BaseStep.Context.get();
@@ -288,36 +309,50 @@ export const requestLLMWithoutCache = (
             throw new BaseStep.ContextVarNotFoundError("session");
         }
 
-        let text = "";
-        let reasoning = "";
-
         const { config, model } = session;
-        logger.debug(
-            `[${config.name}] LLM request with temperature ${temperature ?? 0}: \n${messages.map((m) => `${m.role}: ${m.content}`).join("\n---\n")}`,
-        );
 
-        if (!fakeRequest) {
-            await promiseWithTimeout(
-                (async () => {
-                    const result = await generateText({
-                        model: model as LanguageModel,
-                        messages: messages,
-                        temperature: temperature ?? 0,
-                    });
-                    text = result.text;
-                    // Capture reasoning content if available
-                    reasoning = result.reasoningText ?? "";
-                    // Update token counts from actual usage
-                    session.inputTokens += result.usage.inputTokens ?? 0;
-                    session.outputTokens += result.usage.outputTokens ?? 0;
-                })(),
-                300000, // 5 minute timeout for API models
+        // Get or create limit for this model with optional override
+        const limitConfig = {
+            ...config,
+            options: {
+                ...config.options,
+                concurrencyLimit: options?.concurrencyLimit ?? config.options?.concurrencyLimit,
+            },
+        };
+        const limit = getOrCreateLimit(limitConfig);
+
+        // Wrap the request in the limit
+        return limit(async () => {
+            let text = "";
+            let reasoning = "";
+
+            logger.debug(
+                `[${config.name}] LLM request with temperature ${temperature ?? 0}: \n${messages.map((m) => `${m.role}: ${m.content}`).join("\n---\n")}`,
             );
-        }
 
-        logger.info(
-            `[${config.name}] LLM request completed (input tokens: ${session.inputTokens}, output tokens: ${session.outputTokens})`,
-        );
-        logger.debug(`[${config.name}] LLM response: ${text}`);
-        return { text, reasoning };
+            if (!fakeRequest) {
+                await promiseWithTimeout(
+                    (async () => {
+                        const result = await generateText({
+                            model: model,
+                            messages: messages,
+                            temperature: temperature ?? 0,
+                        });
+                        text = result.text;
+                        // Capture reasoning content if available
+                        reasoning = result.reasoningText ?? "";
+                        // Update token counts from actual usage
+                        session.inputTokens += result.usage.inputTokens ?? 0;
+                        session.outputTokens += result.usage.outputTokens ?? 0;
+                    })(),
+                    300000, // 5 minute timeout for API models
+                );
+            }
+
+            logger.info(
+                `[${config.name}] LLM request completed (input tokens: ${session.inputTokens}, output tokens: ${session.outputTokens})`,
+            );
+            logger.debug(`[${config.name}] LLM response: ${text}`);
+            return { text, reasoning };
+        });
     });

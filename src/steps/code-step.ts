@@ -52,10 +52,11 @@ import type {
 import { exportChunksForCoding } from "../utils/io/export.js";
 import { importCodes } from "../utils/io/import.js";
 import { ensureFolder, readJSONFile } from "../utils/io/file.js";
-import type { LLMModel } from "../utils/ai/llms.js";
-import { requestLLM, useLLMs } from "../utils/ai/llms.js";
+import type { LLMModel, LLMSession } from "../utils/ai/llms.js";
+import { requestLLM, initLLM, getModel } from "../utils/ai/llms.js";
 import { logger } from "../utils/core/logger.js";
 import { assembleExampleFrom } from "../utils/core/misc.js";
+import { QAJob } from "../job.js";
 
 import type { AIParameters } from "./base-step.js";
 import { BaseStep } from "./base-step.js";
@@ -668,48 +669,57 @@ export class CodeStep<
                 `Coding ${this.#datasets.length} datasets with strategies ${strategies.map((s) => s.name).join(", ")} and models ${models.map((m) => (typeof m === "string" ? m : m.name)).join(", ")}`,
             );
 
+            // Check if parallel execution is enabled
+            const context = QAJob.Context.get();
+            const isParallel = context?.parallel ?? false;
+
             for (const dataset of this.#datasets) {
-                logger.info(`[${dataset.name}] Coding dataset`);
                 for (const strategy of strategies) {
-                    logger.info(`[${dataset.name}] Using strategy ${strategy.name}`);
-                    await useLLMs(async (session) => {
+                    // Create analyzer instance once
+                    const analyzer = strategy instanceof Analyzer ? strategy : new strategy();
+
+                    // Create a task for each model
+                    const modelTasks = models.map((model) => async () => {
+                        const config = typeof model === "string" ? initLLM(model) : model;
+                        const modelName = typeof model === "string" ? model : model.name;
+
+                        logger.debug(`[${dataset.name}/${analyzer.name}] Initializing model ${modelName}`);
+                        const session: LLMSession = {
+                            config,
+                            model: getModel(config),
+                            inputTokens: 0,
+                            outputTokens: 0,
+                            expectedItems: 0,
+                            finishedItems: 0,
+                        };
+
+                        // Set context for this model's execution
                         await BaseStep.Context.with(
                             {
                                 dataset,
                                 session,
                             },
                             async () => {
-                                // Sanity check
-                                if (this.config.agent !== "AI") {
-                                    throw new CodeStep.InternalError(
-                                        `Invalid agent ${this.config.agent}`,
-                                    );
-                                }
-
-                                // Instantiate analyzer (codebook handled separately in analyzeChunks)
-                                const analyzer =
-                                    strategy instanceof Analyzer ? strategy : new strategy();
                                 logger.info(
                                     `[${dataset.name}/${analyzer.name}] Using model ${session.config.name}`,
                                 );
-                                // Analyze the chunks
+
+                                // Process all chunks for this model
                                 const numChunks = Object.keys(dataset.data).length;
-                                for (const [idx, [key, chunks]] of Object.entries(
-                                    dataset.data,
-                                ).entries()) {
+                                for (const [idx, [key, chunks]] of Object.entries(dataset.data).entries()) {
                                     logger.info(
                                         `[${dataset.name}/${analyzer.name}] Analyzing chunk ${key} (${idx + 1}/${numChunks})`,
                                     );
 
                                     // Determine if using substeps or single-pass
-                                    const substeps = this.config.parameters?.substeps;
+                                    const substeps = this.config.agent === "AI" ? this.config.parameters?.substeps : undefined;
                                     const passes = substeps?.length
                                         ? substeps
                                         : [{ name: "default", includeCategories: undefined, excludeCategories: undefined, customParameters: undefined }];
 
                                     let result: CodedThreads = { threads: {} };
 
-                                    // Process each substep (or single default pass)
+                                    // Process each substep sequentially (they accumulate)
                                     for (const substep of passes) {
                                         if (substeps) {
                                             logger.info(`[${dataset.name}/${analyzer.name}/${key}] Substep: ${substep.name}`);
@@ -722,19 +732,18 @@ export class CodeStep<
 
                                         // Merge parameters: substep overrides base
                                         const mergedParams = {
-                                            ...this.config.parameters,
+                                            ...(this.config.agent === "AI" ? this.config.parameters : {}),
                                             ...(substep.customParameters || {})
                                         };
 
                                         // Accumulate results using merged parameters
-                                        // Pass substepCodebook as promptCodebook to ensure prompts only see current substep codes
                                         result = await analyzeChunks(
                                             analyzer,
                                             chunks,
-                                            result,  // Pass previous result to accumulate
+                                            result,
                                             substepCodebook,
                                             mergedParams,
-                                            substepCodebook,  // Use same filtered codebook for prompts
+                                            substepCodebook,
                                         );
                                     }
 
@@ -742,22 +751,17 @@ export class CodeStep<
                                         `[${dataset.name}/${analyzer.name}/${key}] Coded ${Object.keys(result.threads).length} threads (${idx + 1}/${numChunks})`,
                                     );
 
+                                    // Write results with model-specific filename
                                     const filename = `${key.replace(".json", "")}-${session.config.name}${analyzer.suffix}`;
-                                    // Write the result into a JSON file
-                                    const analyzerPath = ensureFolder(
-                                        join(dataset.path, analyzer.name),
-                                    );
+                                    const analyzerPath = ensureFolder(join(dataset.path, analyzer.name));
+
                                     const jsonPath = join(analyzerPath, `${filename}.json`);
                                     logger.info(
                                         `[${dataset.name}/${analyzer.name}/${key}] Writing JSON result to ${jsonPath}`,
                                     );
                                     writeFileSync(jsonPath, JSON.stringify(result, null, 4));
 
-                                    // Write the result into an Excel file
-                                    const book = exportChunksForCoding(
-                                        Object.values(chunks),
-                                        result,
-                                    );
+                                    const book = exportChunksForCoding(Object.values(chunks), result);
                                     const excelPath = join(analyzerPath, `${filename}.xlsx`);
                                     logger.info(
                                         `[${dataset.name}/${analyzer.name}/${key}] Writing Excel result to ${excelPath}`,
@@ -774,13 +778,31 @@ export class CodeStep<
                                         },
                                     });
                                 }
-                            },
+                            }
                         );
-                    }, models);
+
+                        logger.info(
+                            `[${dataset.name}/${analyzer.name}] Model ${modelName} completed ` +
+                            `(input tokens: ${session.inputTokens}, output tokens: ${session.outputTokens}, ` +
+                            `finish rate: ${Math.round((session.finishedItems / Math.max(1, session.expectedItems)) * 100)}%)`
+                        );
+                    });
+
+                    // Execute tasks based on parallel flag
+                    if (isParallel && models.length > 1) {
+                        logger.info(`[${dataset.name}/${analyzer.name}] Running ${models.length} models in parallel`);
+                        await Promise.all(modelTasks.map(task => task()));
+                    } else {
+                        logger.info(`[${dataset.name}/${analyzer.name}] Running ${models.length} models sequentially`);
+                        for (const task of modelTasks) {
+                            await task();
+                        }
+                    }
                 }
             }
         });
     }
+
 
     async #codeHuman() {
         await logger.withSource(this._prefix, "codeHuman", async () => {

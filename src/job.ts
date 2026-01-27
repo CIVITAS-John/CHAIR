@@ -53,6 +53,8 @@ interface IJobContext {
         config: EmbedderConfig;
         name: string;
     };
+    /** Whether to execute operations in parallel when possible */
+    parallel?: boolean;
 }
 
 /**
@@ -359,6 +361,7 @@ export class QAJob {
             QAJob.Context.set({
                 pythonPath: this.config.pythonPath,
                 embedder: this.embedder,
+                parallel: this.config.parallel,
             });
             await logger.withSource("QAJob#executeStep", async () => {
                 logger.info(`Executing step ${step._id}`);
