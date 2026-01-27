@@ -355,6 +355,7 @@ export class LoadQdpxStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
                 this.qdpxConfig.onlyCodedThreads,
                 this.qdpxConfig.onlyUsedCodes,
                 this.qdpxConfig.threadFilter,
+                this.qdpxConfig.postprocessCoded,
             );
 
             logger.success(`QDPX conversion complete`);
@@ -365,11 +366,13 @@ export class LoadQdpxStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
         // Load dataset using parent LoadJsonStep
         const dataset = await super._load();
 
-        // Load coded threads with optional postprocessing
+        // Load coded threads
+        // Note: postprocessCoded is applied during conversion if needsConversion=true,
+        // but we still need to apply it here if conversion was skipped
         const humanDir = join(outputDir, "human");
         this.#codedThreads = await this.loadCodedThreads(
             humanDir,
-            this.qdpxConfig.postprocessCoded
+            needsConversion ? undefined : this.qdpxConfig.postprocessCoded
         );
 
         logger.info(

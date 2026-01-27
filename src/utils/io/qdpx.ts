@@ -438,6 +438,8 @@ function findOverlappingItems(
  * @param codeGuidToName - Map of code GUIDs to code labels
  * @param users - Map of user GUIDs to names
  * @param codebook - The converted codebook
+ * @param sourceGuidToThreadId - Map of source GUIDs to thread IDs
+ * @param postprocessCoded - Optional callback to transform coded items
  * @returns Map of coder names to their coded threads
  */
 function extractCodedThreads(
@@ -447,6 +449,7 @@ function extractCodedThreads(
     users: Map<string, string>,
     codebook: Codebook,
     sourceGuidToThreadId: Map<string, string>,
+    postprocessCoded?: (item: any) => any,
 ): Map<string, any> {
     const coderThreads = new Map<string, any>();
 
@@ -543,6 +546,19 @@ function extractCodedThreads(
         }
     }
 
+    // Apply postprocessing to all coded items if provided
+    if (postprocessCoded) {
+        for (const [coderName, coderData] of coderThreads) {
+            for (const thread of Object.values(coderData.threads)) {
+                const processedItems: Record<string, any> = {};
+                for (const [itemId, item] of Object.entries((thread as any).items)) {
+                    processedItems[itemId] = postprocessCoded(item);
+                }
+                (thread as any).items = processedItems;
+            }
+        }
+    }
+
     // Filter out threads with no coded items
     for (const [coderName, coderData] of coderThreads) {
         const threads = coderData.threads;
@@ -583,6 +599,7 @@ export async function convertQdpxToJson(
     onlyCodedThreads?: boolean,
     onlyUsedCodes?: boolean,
     threadFilter?: (threadId: string) => boolean,
+    postprocessCoded?: (item: any) => any,
 ): Promise<void> {
     // Create output directory
     await mkdir(outputDir, { recursive: true });
@@ -666,6 +683,7 @@ export async function convertQdpxToJson(
     }
 
     // PHASE 3: Extract coded threads per coder (no renumbering needed)
+    // Apply postprocessCoded transformation before onlyUsedCodes filtering
     const coderThreads = extractCodedThreads(
         project,
         sourceChunks,
@@ -673,6 +691,7 @@ export async function convertQdpxToJson(
         users,
         codebook,
         sourceGuidToThreadId,
+        postprocessCoded,
     );
 
     // PHASE 4: Remove uncoded threads if option enabled
