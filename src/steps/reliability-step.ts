@@ -373,16 +373,16 @@ export class ReliabilityStep<
                                 }
                             }
 
-                            // Compare items with code filtering
+                            // Compare items with code filtering using the full codebook
                             const comparisons = compareItems(
                                 items1,
                                 items2,
+                                referenceCodebook,
                                 differenceCalculator,
                                 this.config.skipItem,
                                 dataItemsMap,
                                 this.config.rollingWindow,
                                 skipCodesFunction,
-                                referenceCodebook,
                             );
 
                             // Track which codes were skipped
@@ -395,11 +395,12 @@ export class ReliabilityStep<
 
                             logger.info(`  Compared ${comparisons.length} items`);
 
-                            // Calculate pairwise reliability
+                            // Calculate pairwise reliability with full codebook
                             const reliability = calculatePairwiseReliability(
                                 comparisons,
                                 coderNameMap.get(coder1Name) ?? coder1Name,
                                 coderNameMap.get(coder2Name) ?? coder2Name,
+                                referenceCodebook,
                             );
 
                             const pairKey = `${coderNameMap.get(coder1Name)}_vs_${coderNameMap.get(coder2Name)}`;
@@ -410,9 +411,9 @@ export class ReliabilityStep<
                                     `Alpha: ${reliability.krippendorffsAlpha.toFixed(3)}`,
                             );
 
-                            // Calculate code-level metrics (will only include compared codes)
+                            // Calculate code-level metrics using adjusted codes (will only include compared codes)
                             // Filter out skipped codes from the metrics
-                            const allCodeMetrics = calculateCodeLevelMetrics(comparisons);
+                            const allCodeMetrics = calculateCodeLevelMetrics(comparisons, true);
                             const filteredCodeMetrics = allCodeMetrics.filter(metric =>
                                 !skippedCodesSet.has(metric.code)
                             );

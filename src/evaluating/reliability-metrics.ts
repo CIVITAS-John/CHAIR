@@ -24,13 +24,15 @@ import type { Code, Codebook, CodedItem, CodedThread, DataItem } from "../schema
 
 /**
  * Item-level difference calculation function type.
- * Takes two arrays of code labels and returns a difference score.
+ * Takes two arrays of code labels and the codebook, returns a difference score.
+ * Uses binary matrix representation where each code in the codebook is a dimension.
  *
  * @param codes1 - First coder's codes for the item
  * @param codes2 - Second coder's codes for the item
- * @returns Difference score (0 = identical, higher = more different)
+ * @param codebook - The full codebook defining all possible codes
+ * @returns Difference score (0 = identical, 1 = completely different)
  */
-export type DifferenceCalculator = (codes1: string[], codes2: string[]) => number;
+export type DifferenceCalculator = (codes1: string[], codes2: string[], codebook: Codebook) => number;
 
 /**
  * Results from comparing two coders on a single item.
@@ -38,11 +40,15 @@ export type DifferenceCalculator = (codes1: string[], codes2: string[]) => numbe
 export interface ItemComparison {
     /** The item ID being compared */
     itemId: string;
-    /** Codes applied by first coder */
+    /** Original codes applied by first coder */
     codes1: string[];
-    /** Codes applied by second coder */
+    /** Original codes applied by second coder */
     codes2: string[];
-    /** Calculated difference score */
+    /** Adjusted codes for first coder (after applying rolling window or filtering) */
+    adjustedCodes1: string[];
+    /** Adjusted codes for second coder (after applying rolling window or filtering) */
+    adjustedCodes2: string[];
+    /** Calculated difference score (using adjusted codes) */
     difference: number;
 }
 
@@ -92,37 +98,48 @@ export interface CodeLevelMetrics {
 }
 
 /**
- * Default Jaccard distance calculator for code sets.
+ * Binary matrix distance calculator for code sets.
  *
- * Jaccard distance = 1 - Jaccard similarity
- * Jaccard similarity = |intersection| / |union|
+ * Treats all codes in the codebook as a fixed-dimension binary matrix where:
+ * - Each code is a dimension (column)
+ * - 1 = code present, 0 = code absent
+ * - Distance = Hamming distance / number of codes (normalized to 0-1)
  *
- * Handles the case where both coders applied no codes (returns 0).
- * Well-suited for multiple codes per item.
+ * This approach considers both presence and absence of codes as meaningful,
+ * making it ideal for deductive coding with fixed codebooks.
  *
  * @param codes1 - First coder's codes
  * @param codes2 - Second coder's codes
- * @returns Jaccard distance (0 = identical, 1 = completely different)
+ * @param codebook - The full codebook defining all possible codes
+ * @returns Normalized Hamming distance (0 = identical, 1 = completely different)
  */
 export const defaultCalculateDifference: DifferenceCalculator = (
     codes1: string[],
     codes2: string[],
+    codebook: Codebook,
 ): number => {
-    // Handle edge case: both coders applied no codes (perfect agreement)
-    if (codes1.length === 0 && codes2.length === 0) return 0;
+    // Get all codes from the codebook
+    const allCodes = Object.keys(codebook);
 
-    // Convert to sets for intersection/union calculation
+    // Handle edge case: empty codebook
+    if (allCodes.length === 0) return 0;
+
+    // Create sets for efficient lookup
     const set1 = new Set(codes1);
     const set2 = new Set(codes2);
 
-    // Calculate intersection size
-    const intersection = new Set([...set1].filter((x) => set2.has(x)));
+    // Calculate Hamming distance (count of different bits)
+    let hammingDistance = 0;
+    for (const code of allCodes) {
+        const in1 = set1.has(code);
+        const in2 = set2.has(code);
+        if (in1 !== in2) {
+            hammingDistance++;
+        }
+    }
 
-    // Calculate union size
-    const union = new Set([...set1, ...set2]);
-
-    // Jaccard distance = 1 - Jaccard similarity
-    return 1 - intersection.size / union.size;
+    // Normalize by total number of codes to get 0-1 range
+    return hammingDistance / allCodes.length;
 };
 
 /**
@@ -139,23 +156,23 @@ export const extractCodedItems = (threads: Record<string, CodedThread>): CodedIt
  *
  * @param items1 - Coded items from first coder
  * @param items2 - Coded items from second coder
+ * @param codebook - The full codebook defining all possible codes
  * @param calculateDifference - Function to calculate item-level difference
  * @param skipItem - Optional function to skip certain items
  * @param dataItems - Map of item IDs to original data items for filtering
  * @param rollingWindow - Optional window size for aggregate comparison (benefit-only)
  * @param skipCodes - Optional function to skip certain codes during comparison
- * @param codebook - Optional codebook to look up code definitions for filtering
  * @returns Array of item comparisons
  */
 export const compareItems = (
     items1: CodedItem[],
     items2: CodedItem[],
+    codebook: Codebook,
     calculateDifference: DifferenceCalculator = defaultCalculateDifference,
     skipItem?: (item: DataItem) => boolean,
     dataItems?: Map<string, DataItem>,
     rollingWindow?: number,
     skipCodes?: (label: string, code: Code | undefined) => boolean,
-    codebook?: Codebook,
 ): ItemComparison[] => {
     // Create lookup maps for both coders' items
     const items1Map = new Map(items1.map((item) => [item.id, item]));
@@ -208,12 +225,14 @@ export const compareItems = (
             const filteredCodes1 = filterCodes(codes1);
             const filteredCodes2 = filterCodes(codes2);
 
-            const difference = calculateDifference(filteredCodes1, filteredCodes2);
+            const difference = calculateDifference(filteredCodes1, filteredCodes2, codebook);
 
             return {
                 itemId: item1.id,
-                codes1: codes1, // Store original codes for transparency
-                codes2: codes2, // Store original codes for transparency
+                codes1: codes1, // Original codes
+                codes2: codes2, // Original codes
+                adjustedCodes1: filteredCodes1, // Adjusted codes (filtered, no window)
+                adjustedCodes2: filteredCodes2, // Adjusted codes (filtered, no window)
                 difference,
             };
         });
@@ -268,12 +287,14 @@ export const compareItems = (
         // Calculate difference with benefit-only rolling window
         const codes1WithBenefit = Array.from(benefitCodes1);
         const codes2WithBenefit = Array.from(benefitCodes2);
-        const difference = calculateDifference(codes1WithBenefit, codes2WithBenefit);
+        const difference = calculateDifference(codes1WithBenefit, codes2WithBenefit, codebook);
 
         comparisons.push({
             itemId: item1.id,
-            codes1: baseCodes1, // Store original codes for transparency
-            codes2: baseCodes2,
+            codes1: baseCodes1, // Original codes
+            codes2: baseCodes2, // Original codes
+            adjustedCodes1: codes1WithBenefit, // Adjusted codes (with rolling window benefit)
+            adjustedCodes2: codes2WithBenefit, // Adjusted codes (with rolling window benefit)
             difference,
         });
     }
@@ -287,12 +308,14 @@ export const compareItems = (
  * @param comparisons - Array of item comparisons
  * @param coder1 - Name of first coder
  * @param coder2 - Name of second coder
+ * @param codebook - The full codebook defining all possible codes
  * @returns Pairwise reliability metrics
  */
 export const calculatePairwiseReliability = (
     comparisons: ItemComparison[],
     coder1: string,
     coder2: string,
+    codebook: Codebook,
 ): PairwiseReliability => {
     if (comparisons.length === 0) {
         return {
@@ -329,8 +352,8 @@ export const calculatePairwiseReliability = (
         differences.length;
     const stdDevDifference = Math.sqrt(variance);
 
-    // Calculate Krippendorff's Alpha
-    const krippendorffsAlpha = calculateKrippendorffsAlpha(comparisons);
+    // Calculate Krippendorff's Alpha with full codebook using adjusted codes
+    const krippendorffsAlpha = calculateKrippendorffsAlpha(comparisons, codebook, true);
 
     return {
         coder1,
@@ -347,9 +370,9 @@ export const calculatePairwiseReliability = (
 /**
  * Calculate Krippendorff's Alpha for nominal data with set-based coding.
  *
- * Uses the standard krippendorff package implementation. For set-based coding
- * (where items can have multiple codes), we convert code sets to a standardized
- * format compatible with the library's nominal metric.
+ * Uses the standard krippendorff package implementation with fixed-dimension
+ * binary vectors based on the full codebook. This ensures consistent comparison
+ * across all items and datasets.
  *
  * The metric ranges from -1 to 1, where:
  * - 1 = perfect agreement
@@ -357,22 +380,23 @@ export const calculatePairwiseReliability = (
  * - < 0 = systematic disagreement
  *
  * @param comparisons - Array of item comparisons
+ * @param codebook - The full codebook defining all possible codes
+ * @param useAdjustedCodes - Whether to use adjusted codes (true) or original codes (false)
  * @returns Krippendorff's Alpha coefficient
  */
-export const calculateKrippendorffsAlpha = (comparisons: ItemComparison[]): number => {
+export const calculateKrippendorffsAlpha = (
+    comparisons: ItemComparison[],
+    codebook: Codebook,
+    useAdjustedCodes: boolean = true
+): number => {
     if (comparisons.length === 0) return 0;
 
-    // Build a mapping from all unique codes to indices
-    const allCodes = new Set<string>();
-    for (const comp of comparisons) {
-        for (const code of [...comp.codes1, ...comp.codes2]) {
-            allCodes.add(code);
-        }
-    }
+    // Use ALL codes from the codebook as the fixed dimensions
+    const allCodes = Object.keys(codebook);
 
-    if (allCodes.size === 0) return 1; // No codes applied = perfect agreement
+    if (allCodes.length === 0) return 1; // No codes in codebook = perfect agreement
 
-    const codeToIndex = new Map(Array.from(allCodes).map((code, idx) => [code, idx]));
+    const codeToIndex = new Map(allCodes.map((code, idx) => [code, idx]));
 
     // Transform set-based codes into binary vectors for each item
     // Each coder's rating becomes a binary vector indicating which codes are present
@@ -380,15 +404,25 @@ export const calculateKrippendorffsAlpha = (comparisons: ItemComparison[]): numb
     const ratingMatrix: (string | undefined)[][] = [[], []]; // 2 coders (rows)
 
     for (const comp of comparisons) {
-        // Convert code sets to binary vectors, then to string for nominal comparison
-        const vector1 = Array(allCodes.size).fill(0);
-        const vector2 = Array(allCodes.size).fill(0);
+        // Use adjusted codes if available and requested, otherwise use original codes
+        const codes1 = useAdjustedCodes ? comp.adjustedCodes1 : comp.codes1;
+        const codes2 = useAdjustedCodes ? comp.adjustedCodes2 : comp.codes2;
 
-        for (const code of comp.codes1) {
-            vector1[codeToIndex.get(code)!] = 1;
+        // Convert code sets to fixed-size binary vectors based on full codebook
+        const vector1 = Array(allCodes.length).fill(0);
+        const vector2 = Array(allCodes.length).fill(0);
+
+        for (const code of codes1) {
+            const index = codeToIndex.get(code);
+            if (index !== undefined) {
+                vector1[index] = 1;
+            }
         }
-        for (const code of comp.codes2) {
-            vector2[codeToIndex.get(code)!] = 1;
+        for (const code of codes2) {
+            const index = codeToIndex.get(code);
+            if (index !== undefined) {
+                vector2[index] = 1;
+            }
         }
 
         // Convert to string for nominal comparison
@@ -414,16 +448,24 @@ export const calculateKrippendorffsAlpha = (comparisons: ItemComparison[]): numb
  * - recall: Of the times coder1 applied this code, how often did coder2 find it?
  *
  * @param comparisons - Array of item comparisons
+ * @param useAdjustedCodes - Whether to use adjusted codes (true) or original codes (false)
  * @returns Array of code-level metrics for each code
  */
-export const calculateCodeLevelMetrics = (comparisons: ItemComparison[]): CodeLevelMetrics[] => {
-    // Collect all codes
-    const allCodes = new Set(comparisons.flatMap((c) => [...c.codes1, ...c.codes2]));
+export const calculateCodeLevelMetrics = (
+    comparisons: ItemComparison[],
+    useAdjustedCodes: boolean = true
+): CodeLevelMetrics[] => {
+    // Collect all codes (using adjusted codes if requested)
+    const allCodes = new Set(comparisons.flatMap((c) =>
+        useAdjustedCodes
+            ? [...c.adjustedCodes1, ...c.adjustedCodes2]
+            : [...c.codes1, ...c.codes2]
+    ));
 
     // Pre-convert all code arrays to Sets once (outside the loops)
     const codeSets = comparisons.map((c) => ({
-        set1: new Set(c.codes1),
-        set2: new Set(c.codes2),
+        set1: new Set(useAdjustedCodes ? c.adjustedCodes1 : c.codes1),
+        set2: new Set(useAdjustedCodes ? c.adjustedCodes2 : c.codes2),
     }));
 
     const metrics: CodeLevelMetrics[] = [];

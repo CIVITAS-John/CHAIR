@@ -150,7 +150,7 @@ export default class ItemLevelCoderSimple extends ItemLevelCoderBase {
             `
 # Goals
 You are an expert in deductive qualitative coding.
-Your goal is to accurately apply codes from a predefined codebook to **every single data item**.
+Your goal is to accurately apply codes based on its definition from a predefined codebook to **every single data item**.
 
 ## Research Question
 ${dataset.researchQuestion.trim()}
@@ -163,9 +163,9 @@ ${customPrompt?.trim()}
 
 # Guidelines
 1. Use ONLY the codes listed below and strictly follow its DEFINITION. Do not create new codes.
-2. For each and every data item (provided in a numbered list), you MUST select one or more appropriate codes from the codebook. Use "N/A" if nothing matches.
+2. For each and every data item (provided in a numbered list), you MUST select zero (N/A), one or more appropriate codes from the codebook. Use "N/A" if nothing matches.
 3. You will always return one bullet point for each data item. Multiple codes are splitted by semicolon (;). Only send out the correct LABEL.
-4. When reasoning, carefully interpret through each data item to help with your decision-making. Then double check if your choices match and are accurate.
+4. When reasoning, carefully interpret through each data item to help with your decision-making. Then double check if your choices exactly follow the code's DEFINITIONS.
 5. Never not omit or provide selective answers.
 
 # Predefined Codebook

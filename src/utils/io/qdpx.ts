@@ -711,6 +711,7 @@ export async function convertQdpxToJson(
                 }
             }
         }
+        console.log([...usedCodes].join(", "));
 
         // Filter codebook to only include used codes
         filteredCodebook = {};
