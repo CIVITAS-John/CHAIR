@@ -182,18 +182,7 @@ class Logger {
         } catch (_) {}
     }
     get source() {
-        try {
-            return LoggerSource.get().peek();
-        } catch (e) {
-            const err =
-                e instanceof AsyncScope.NotFoundError
-                    ? new Logger.ScopeError(
-                          "Tried getting source without a scope, am I wrapped in AsyncScope.run()?",
-                      )
-                    : new Logger.InternalError("An error occurred", "Logger#source");
-            err.cause = e;
-            throw err;
-        }
+        return LoggerSource.get().peek();
     }
 
     withPrefix<T>(prefix: string, func: () => T): T {

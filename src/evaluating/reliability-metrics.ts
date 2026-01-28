@@ -198,11 +198,8 @@ export const compareItems = (
         const item1 = items1Map.get(itemId) || { id: itemId, codes: [] };
         const item2 = items2Map.get(itemId) || { id: itemId, codes: [] };
 
-        // Only include items where at least one coder has applied codes
-        const codes1 = item1.codes || [];
-        const codes2 = item2.codes || [];
-        if (codes1.length === 0 && codes2.length === 0) continue;
-
+        // Include all items that pass the filter (including those where both coders applied no codes)
+        // Agreement on "no codes" is still a valid form of agreement
         filteredPairs.push({ item1, item2 });
     }
 

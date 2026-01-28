@@ -142,7 +142,7 @@ export type CodeStepConfig<
           /** AI behavior parameters (temperature, retries, etc.) */
           parameters?: AIParameters;
           /** Optional codebook for deductive coding (file path or Codebook object) */
-          codebook?: string | import("../schema.js").Codebook;
+          codebook?: string | Codebook;
       }
 );
 
@@ -717,10 +717,8 @@ export class CodeStep<
                                         ? substeps
                                         : [{ name: "default", includeCategories: undefined, excludeCategories: undefined, customParameters: undefined }];
 
-                                    let result: CodedThreads = { threads: {} };
-
-                                    // Process each substep sequentially (they accumulate)
-                                    for (const substep of passes) {
+                                    // Create task functions for each substep
+                                    const substepTasks = passes.map((substep) => async () => {
                                         if (substeps) {
                                             logger.info(`[${dataset.name}/${analyzer.name}/${key}] Substep: ${substep.name}`);
                                         }
@@ -736,15 +734,78 @@ export class CodeStep<
                                             ...(substep.customParameters || {})
                                         };
 
-                                        // Accumulate results using merged parameters
-                                        result = await analyzeChunks(
+                                        // Process this substep independently
+                                        const substepResult = await analyzeChunks(
                                             analyzer,
                                             chunks,
-                                            result,
+                                            { threads: {} },  // Start with empty result for each substep
                                             substepCodebook,
                                             mergedParams,
                                             substepCodebook,
                                         );
+
+                                        return substepResult;
+                                    });
+
+                                    // Execute substeps based on parallel flag
+                                    let results: CodedThreads[];
+                                    if (isParallel && passes.length > 1) {
+                                        logger.info(`[${dataset.name}/${analyzer.name}/${key}] Running ${passes.length} substeps in parallel`);
+                                        results = await Promise.all(substepTasks.map(task => task()));
+                                    } else {
+                                        logger.info(`[${dataset.name}/${analyzer.name}/${key}] Running ${passes.length} substeps sequentially`);
+                                        results = [];
+                                        for (const task of substepTasks) {
+                                            results.push(await task());
+                                        }
+                                    }
+
+                                    // Merge results from all substeps
+                                    const result: CodedThreads = { threads: {} };
+
+                                    // Merge thread data from all substeps
+                                    for (const substepResult of results) {
+                                        for (const [threadId, thread] of Object.entries(substepResult.threads)) {
+                                            if (!result.threads[threadId]) {
+                                                result.threads[threadId] = {
+                                                    id: thread.id,
+                                                    items: {},
+                                                    iteration: thread.iteration,
+                                                    codes: {},
+                                                    summary: thread.summary
+                                                };
+                                            }
+
+                                            // Merge items and their codes
+                                            for (const [itemId, item] of Object.entries(thread.items)) {
+                                                if (!result.threads[threadId].items[itemId]) {
+                                                    result.threads[threadId].items[itemId] = { id: itemId, codes: [] };
+                                                }
+                                                // Combine codes from different substeps
+                                                if (item.codes) {
+                                                    result.threads[threadId].items[itemId].codes = [
+                                                        ...(result.threads[threadId].items[itemId].codes || []),
+                                                        ...item.codes
+                                                    ];
+                                                    // Remove duplicates
+                                                    result.threads[threadId].items[itemId].codes =
+                                                        [...new Set(result.threads[threadId].items[itemId].codes)];
+                                                }
+                                            }
+
+                                            // Merge codes dictionary
+                                            Object.assign(result.threads[threadId].codes, thread.codes);
+                                        }
+                                    }
+
+                                    // Merge codebooks if they exist
+                                    if (results.some(r => r.codebook)) {
+                                        result.codebook = {};
+                                        for (const substepResult of results) {
+                                            if (substepResult.codebook) {
+                                                Object.assign(result.codebook, substepResult.codebook);
+                                            }
+                                        }
                                     }
 
                                     logger.success(

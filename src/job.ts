@@ -18,6 +18,7 @@ import { AsyncScope, AsyncVar } from "@rakuzen25/async-store";
 import { BaseStep } from "./steps/base-step.js";
 import { CodeStep } from "./steps/code-step.js";
 import { ConsolidateStep } from "./steps/consolidate-step.js";
+import { EnsembleCodeStep } from "./steps/ensemble-code-step.js";
 import { EvaluateStep } from "./steps/evaluate-step.js";
 import { LoadStep } from "./steps/load-step.js";
 import type { EmbedderModel } from "./utils/ai/embeddings.js";
@@ -63,7 +64,11 @@ interface IJobContext {
 abstract class QAJobError extends Error {
     override name = "QAJob.Error";
     constructor(message: string, source?: string) {
-        super(`${source ?? logger.source}: ${message}`);
+        try {
+            super(`${source ?? logger.source}: ${message}`);
+        } catch {
+            super(`${source ?? "unknown"}: ${message}`);
+        }
     }
 }
 
@@ -73,25 +78,30 @@ abstract class QAJobError extends Error {
  * Steps are organized into dependency tiers based on their type:
  * - Tier 0: LoadStep (loads datasets)
  * - Tier 1: CodeStep (codes datasets, depends on LoadStep)
- * - Tier 2: ConsolidateStep (consolidates codes, depends on CodeStep)
- * - Tier 3: EvaluateStep (evaluates codebooks, depends on ConsolidateStep)
+ * - Tier 2: EnsembleCodeStep (ensembles multiple CodeSteps, depends on CodeStep)
+ * - Tier 3: ConsolidateStep (consolidates codes, depends on CodeStep/EnsembleCodeStep)
+ * - Tier 4: EvaluateStep, ReliabilityStep (evaluates codebooks, depends on ConsolidateStep)
  *
  * @param step - The step to validate and classify
- * @returns The dependency tier (0-3)
+ * @returns The dependency tier (0-4)
  * @throws {QAJob.ConfigError} If step type is unknown
  */
 const validateStep = (step: BaseStep) => {
     if (step instanceof LoadStep) {
         return 0;
     }
+    // EnsembleCodeStep must be checked before CodeStep since it extends CodeStep
+    if (step instanceof EnsembleCodeStep) {
+        return 2;
+    }
     if (step instanceof CodeStep) {
         return 1;
     }
     if (step instanceof ConsolidateStep) {
-        return 2;
+        return 3;
     }
     if (step instanceof EvaluateStep || step instanceof ReliabilityStep) {
-        return 3;
+        return 4;
     }
     throw new QAJob.ConfigError(`Unknown step type: ${step.constructor.name}`);
 };
@@ -208,8 +218,9 @@ export class QAJob {
      * - If step.dependsOn is empty, it inherits from all steps in previous groups
      * - If step.dependsOn is specified, it must reference steps in earlier groups
      * - CodeStep can only depend on LoadStep
-     * - ConsolidateStep can only depend on CodeStep
-     * - EvaluateStep can only depend on ConsolidateStep
+     * - EnsembleCodeStep can only depend on CodeStep
+     * - ConsolidateStep can only depend on CodeStep or EnsembleCodeStep
+     * - EvaluateStep/ReliabilityStep can only depend on ConsolidateStep
      *
      * @param config - Job configuration with steps, embedder, and execution mode
      * @throws {QAJob.ConfigError} If configuration is invalid (duplicates, bad dependencies, etc.)
@@ -256,12 +267,12 @@ export class QAJob {
             });
 
             // Auto-group steps by type into dependency tiers
-            // Tier 0: LoadStep, Tier 1: CodeStep, Tier 2: ConsolidateStep, Tier 3: EvaluateStep
-            this.steps = [[], [], [], []];
+            // Tier 0: LoadStep, Tier 1: CodeStep, Tier 2: EnsembleCodeStep, Tier 3: ConsolidateStep, Tier 4: EvaluateStep
+            this.steps = [[], [], [], [], []];
             stepsFlat.forEach((step) => this.steps[validateStep(step)].push(step));
 
             // Auto-infer dependencies: each tier depends on all steps in previous tier
-            for (let i = 1; i < 4; i++) {
+            for (let i = 1; i < 5; i++) {
                 this.steps[i].forEach((step) => {
                     if (!step.dependsOn?.length) {
                         step.dependsOn = this.steps[i - 1];
