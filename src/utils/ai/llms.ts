@@ -273,7 +273,7 @@ export const requestLLM = (
             }
         }
         // If not, call the model
-        logger.info(`[${session.config.name}] Cache miss`);
+        logger.info(`[${session.config.name}] Cache miss, sending the request`);
         const result = await requestLLMWithoutCache(messages, temperature, fakeRequest);
         logger.debug(`[${session.config.name}] Writing to cache file`);
         writeFileSync(cacheFile, `${input}\n===REASONING===\n${result.reasoning}\n===OUTPUT===\n${result.text}`);
