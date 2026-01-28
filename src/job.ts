@@ -275,7 +275,16 @@ export class QAJob {
             for (let i = 1; i < 5; i++) {
                 this.steps[i].forEach((step) => {
                     if (!step.dependsOn?.length) {
-                        step.dependsOn = this.steps[i - 1];
+                        if (i === 3 && step instanceof ConsolidateStep) {
+                            // ConsolidateStep depends on BOTH tier 1 (CodeSteps) AND tier 2 (EnsembleCodeSteps)
+                            // Cast to appropriate types since we know tier 1 is CodeSteps and tier 2 is EnsembleCodeSteps
+                            step.dependsOn = [
+                                ...(this.steps[1] || []) as CodeStep[],
+                                ...(this.steps[2] || []) as CodeStep[]  // EnsembleCodeStep extends CodeStep
+                            ];
+                        } else {
+                            step.dependsOn = this.steps[i - 1];
+                        }
                     }
                 });
             }

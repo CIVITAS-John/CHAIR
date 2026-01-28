@@ -27,8 +27,6 @@
  * - Provides ensemble results to downstream steps
  */
 
-import { join } from "path";
-import { writeFileSync } from "fs";
 
 import type {
     CodedItem,
@@ -38,11 +36,8 @@ import type {
     DataItem,
 } from "../schema.js";
 import { mergeCodebook } from "../consolidating/codebooks.js";
-import { exportChunksForCoding } from "../utils/io/export.js";
-import { ensureFolder } from "../utils/io/file.js";
 import { logger } from "../utils/core/logger.js";
 
-import { BaseStep } from "./base-step.js";
 import { CodeStep } from "./code-step.js";
 
 /**
@@ -124,8 +119,8 @@ interface EnsembleMetadata {
     threshold?: number;
     /** Rolling window size if used */
     rollingWindow?: number;
-    /** Map of codes to their source coders for analysis */
-    codeProvenance: Record<string, Record<string, string[]>>;
+    /** Map of thread -> item -> code -> source coders for analysis */
+    codeProvenance: Record<string, Record<string, Record<string, string[]>>>;
 }
 
 /**
@@ -252,11 +247,11 @@ const applyVoteThreshold = (
 export class EnsembleCodeStep<
     TSubunit extends DataItem = DataItem,
     TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
-> extends BaseStep {
+> extends CodeStep<TSubunit, TUnit> {
     /**
-     * Dependencies: CodeSteps providing coded data
+     * Dependencies: CodeSteps providing coded data (cast as any to override parent type)
      */
-    override dependsOn: CodeStep<TSubunit, TUnit>[];
+    override dependsOn: any;
 
     /**
      * Ensemble-specific configuration
@@ -269,28 +264,25 @@ export class EnsembleCodeStep<
     private metadata: Map<string, EnsembleMetadata> = new Map();
 
     /**
-     * Results storage for ensemble outputs
-     */
-    private ensembleResults = new Map<string, Record<string, Record<string, CodedThreads>>>();
-
-    /**
-     * Group name for organizing results
-     */
-    group: string;
-
-    /**
      * Create a new EnsembleCodeStep
      *
      * @param config - Configuration for ensemble behavior
      */
     constructor(config: EnsembleCodeStepConfig<TSubunit, TUnit>) {
-        super();
+        // Create a minimal CodeStep config - these are dummy values since we override execute()
+        super({
+            agent: "AI" as const,
+            dataset: [], // Will be set from our coders
+            group: config.group ?? "ensemble",
+            // Provide dummy values for required AI fields
+            strategy: [] as any, // Not used - we override execute
+            model: "" as any, // Not used - we override execute
+        } as any);
 
         // Store ensemble-specific config
         this.ensembleConfig = config;
-        this.group = config.group ?? "ensemble";
 
-        // Set dependencies from coders
+        // Override dependencies with our CodeStep dependencies
         this.dependsOn = Array.isArray(config.coders) ? config.coders : [config.coders];
 
         // Validate configuration
@@ -299,23 +291,6 @@ export class EnsembleCodeStep<
         }
     }
 
-    /**
-     * Get ensemble results for a dataset
-     *
-     * @param dataset - Name of the dataset
-     * @returns Ensemble results for the dataset
-     */
-    getResult(dataset: string) {
-        if (!this.executed || !this.ensembleResults.size) {
-            throw new EnsembleCodeStep.UnexecutedError();
-        }
-        if (!this.ensembleResults.has(dataset)) {
-            throw new EnsembleCodeStep.InternalError(
-                `Dataset ${dataset} not found`
-            );
-        }
-        return this.ensembleResults.get(dataset) ?? {};
-    }
 
     /**
      * Execute ensemble code selection
@@ -337,12 +312,12 @@ export class EnsembleCodeStep<
             }
 
             // Get datasets from dependencies (should all have the same datasets)
-            const datasets = this.dependsOn[0].datasets;
+            this._datasets = this.dependsOn[0].datasets;
 
-            logger.info(`Ensemble coding ${datasets.length} datasets from ${this.dependsOn.length} coders`);
+            logger.info(`Ensemble coding ${this._datasets.length} datasets from ${this.dependsOn.length} coders`);
 
             // Process each dataset
-            for (const dataset of datasets) {
+            for (const dataset of this._datasets) {
                 logger.info(`[${dataset.name}] Starting ensemble coding`);
 
                 // Collect all coder identifiers
@@ -355,7 +330,7 @@ export class EnsembleCodeStep<
 
                     // Store results indexed by coder
                     for (const [analyzerName, analyzerResults] of Object.entries(results)) {
-                        for (const [identifier, codedThreads] of Object.entries(analyzerResults)) {
+                        for (const [identifier, codedThreads] of Object.entries(analyzerResults as Record<string, CodedThreads>)) {
                             const coderId = buildCoderIdentifier(
                                 coder.group || analyzerName,
                                 identifier
@@ -493,13 +468,16 @@ export class EnsembleCodeStep<
                                 codes: selectedCodes,
                             };
 
-                            // Track provenance for metadata
+                            // Track provenance for metadata at item level
                             if (!datasetMetadata.codeProvenance[threadId]) {
                                 datasetMetadata.codeProvenance[threadId] = {};
                             }
+                            if (!datasetMetadata.codeProvenance[threadId][itemId]) {
+                                datasetMetadata.codeProvenance[threadId][itemId] = {};
+                            }
                             for (const [code, coders] of codeToCoders.entries()) {
                                 if (selectedCodes.includes(code)) {
-                                    datasetMetadata.codeProvenance[threadId][code] = coders;
+                                    datasetMetadata.codeProvenance[threadId][itemId][code] = coders;
                                 }
                             }
 
@@ -507,21 +485,6 @@ export class EnsembleCodeStep<
                             for (const code of selectedCodes) {
                                 if (!ensembleThread.codes[code]) {
                                     ensembleThread.codes[code] = { label: code };
-                                }
-                                // Collect examples from source coders
-                                for (const [coderId, coderAnalyzers] of coderResults.entries()) {
-                                    for (const codedThreads of coderAnalyzers.values()) {
-                                        const sourceThread = codedThreads.threads[threadId];
-                                        if (sourceThread?.codes[code]?.examples) {
-                                            ensembleThread.codes[code].examples =
-                                                ensembleThread.codes[code].examples || [];
-                                            for (const example of sourceThread.codes[code].examples) {
-                                                if (!ensembleThread.codes[code].examples!.includes(example)) {
-                                                    ensembleThread.codes[code].examples!.push(example);
-                                                }
-                                            }
-                                        }
-                                    }
                                 }
                             }
                         }
@@ -532,34 +495,19 @@ export class EnsembleCodeStep<
                     // Consolidate codebook
                     mergeCodebook(ensembleResult);
 
-                    // Export results
-                    const filename = `${chunkKey.replace(".json", "")}-ensemble`;
-                    const ensemblePath = ensureFolder(join(dataset.path, "ensemble"));
+                    // Export results using inherited helper method
+                    const filename = `${chunkKey.replace(".json", "")}-${this.group}`;
+                    await this.exportResults(
+                        dataset,
+                        this.group,
+                        filename,
+                        ensembleResult,
+                        Object.values(chunks) as TUnit[],
+                        datasetMetadata
+                    );
 
-                    // Write JSON with metadata
-                    const jsonPath = join(ensemblePath, `${filename}.json`);
-                    const jsonOutput = {
-                        ...ensembleResult,
-                        metadata: datasetMetadata,
-                    };
-                    logger.info(`[${dataset.name}/ensemble] Writing JSON to ${jsonPath}`);
-                    writeFileSync(jsonPath, JSON.stringify(jsonOutput, null, 4));
-
-                    // Write Excel
-                    const book = exportChunksForCoding(Object.values(chunks), ensembleResult);
-                    const excelPath = join(ensemblePath, `${filename}.xlsx`);
-                    logger.info(`[${dataset.name}/ensemble] Writing Excel to ${excelPath}`);
-                    await book.xlsx.writeFile(excelPath);
-
-                    // Store in results
-                    const currentResults = this.ensembleResults.get(dataset.name) || {};
-                    this.ensembleResults.set(dataset.name, {
-                        ...currentResults,
-                        ["ensemble"]: {
-                            ...(currentResults["ensemble"] || {}),
-                            [filename]: ensembleResult,
-                        },
-                    });
+                    // Store ensemble result as additional analyzer using group name
+                    this.storeResult(dataset.name, this.group, filename, ensembleResult);
                 }
 
                 logger.success(`[${dataset.name}] Ensemble coding complete`);

@@ -456,7 +456,7 @@ export class ConsolidateStep<
                 );
             }
         }, models);
-
+        
         this.executed = true;
     }
 

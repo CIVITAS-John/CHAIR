@@ -165,10 +165,12 @@ ${customPrompt?.trim()}
 1. Use ONLY the codes listed below and strictly follow its DEFINITION. Do not create new codes.
 2. For each and every data item (provided in a numbered list), you MUST select zero (N/A), one or more appropriate codes from the codebook. Use "N/A" if nothing matches.
 3. You will always return one bullet point for each data item. Multiple codes are splitted by semicolon (;). Only send out the correct LABEL.
-4. When reasoning, carefully interpret through each data item to help with your decision-making following the coding instructions.
-5. You can infer contexts from data before or after, but only apply codes for the item at hand. 
-6. After you first-pass reasoning, justify why your choices follow the instruction and the code's DEFINITIONS. If mismatch, eliminate it.
-7. Never not omit or provide selective answers.
+4. You can infer contexts from data before or after, but only apply codes for the item at hand. 
+5. Carefully reason through each data item in three passes.
+- The first pass should focus on interpreting the data following the coding instructions.
+- The second pass should focus on identifying applicable codes following the code's definitions.
+- The third pass should verify whether your codes follow the task-specific instruction and the code's DEFINITIONS. If mismatch, eliminate it.
+6. Never not omit or provide selective answers.
 
 # Predefined Codebook
 ${codebookFormatted}

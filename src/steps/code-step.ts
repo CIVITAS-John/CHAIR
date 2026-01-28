@@ -556,9 +556,9 @@ export class CodeStep<
     override dependsOn: LoadStep<TUnit>[];
 
     /**
-     * Datasets loaded from dependencies (private until execution)
+     * Datasets loaded from dependencies (protected for subclasses)
      */
-    #datasets: Dataset<TUnit>[] = [];
+    protected _datasets: Dataset<TUnit>[] = [];
 
     /**
      * Get the datasets being coded
@@ -568,10 +568,10 @@ export class CodeStep<
      */
     get datasets() {
         // Sanity check - prevent access before execution
-        if (!this.executed || !this.#datasets.length) {
+        if (!this.executed || !this._datasets.length) {
             throw new CodeStep.UnexecutedError(logger.prefixed(this._prefix, "datasets"));
         }
-        return this.#datasets;
+        return this._datasets;
     }
 
     /**
@@ -592,7 +592,7 @@ export class CodeStep<
      * - analyzer: Analyzer name (e.g., "human", "thematic-analysis")
      * - ident: Specific identifier (coder name or "chunk-model")
      */
-    #results = new Map<string, Record<string, Record<string, CodedThreads>>>();
+    protected _results = new Map<string, Record<string, Record<string, CodedThreads>>>();
 
     /**
      * Get coding results for a specific dataset
@@ -605,16 +605,77 @@ export class CodeStep<
     getResult(dataset: string) {
         logger.withSource(this._prefix, "getResult", () => {
             // Sanity check - ensure execution completed
-            if (!this.executed || !this.#results.size) {
+            if (!this.executed || !this._results.size) {
                 throw new CodeStep.UnexecutedError();
             }
             // Verify dataset exists in results
-            if (!this.#results.has(dataset)) {
+            if (!this._results.has(dataset)) {
                 throw new CodeStep.InternalError(`Dataset ${dataset} not found`);
             }
         });
 
-        return this.#results.get(dataset) ?? {};
+        return this._results.get(dataset) ?? {};
+    }
+
+    /**
+     * Export coding results to JSON and Excel files
+     *
+     * Protected method for use by subclasses
+     *
+     * @param dataset - The dataset being processed
+     * @param analyzerName - Name of the analyzer/folder
+     * @param filename - Base filename (without extension)
+     * @param codedThreads - The coded threads to export
+     * @param chunks - The data chunks
+     * @param metadata - Optional metadata to include in JSON
+     */
+    protected async exportResults(
+        dataset: Dataset<TUnit>,
+        analyzerName: string,
+        filename: string,
+        codedThreads: CodedThreads,
+        chunks: TUnit[],
+        metadata?: any
+    ): Promise<void> {
+        const analyzerPath = ensureFolder(join(dataset.path, analyzerName));
+
+        // Write JSON
+        const jsonPath = join(analyzerPath, `${filename}.json`);
+        const jsonOutput = metadata ? { ...codedThreads, metadata } : codedThreads;
+        logger.info(`[${dataset.name}/${analyzerName}] Writing JSON to ${jsonPath}`);
+        writeFileSync(jsonPath, JSON.stringify(jsonOutput, null, 4));
+
+        // Write Excel
+        const book = exportChunksForCoding(chunks, codedThreads);
+        const excelPath = join(analyzerPath, `${filename}.xlsx`);
+        logger.info(`[${dataset.name}/${analyzerName}] Writing Excel to ${excelPath}`);
+        await book.xlsx.writeFile(excelPath);
+    }
+
+    /**
+     * Store coding results in the results map
+     *
+     * Protected method for use by subclasses
+     *
+     * @param datasetName - Name of the dataset
+     * @param analyzerName - Name of the analyzer
+     * @param identifier - Specific identifier
+     * @param codedThreads - The coded threads to store
+     */
+    protected storeResult(
+        datasetName: string,
+        analyzerName: string,
+        identifier: string,
+        codedThreads: CodedThreads
+    ): void {
+        const current = this._results.get(datasetName) ?? {};
+        this._results.set(datasetName, {
+            ...current,
+            [analyzerName]: {
+                ...(current[analyzerName] || {}),
+                [identifier]: codedThreads,
+            },
+        });
     }
 
     /**
@@ -622,7 +683,7 @@ export class CodeStep<
      *
      * @param config - Configuration for AI or Human mode
      */
-    constructor(private readonly config: CodeStepConfig<TSubunit, TUnit>) {
+    constructor(protected readonly config: CodeStepConfig<TSubunit, TUnit>) {
         super();
 
         // Setup dependencies: normalize to array
@@ -666,14 +727,14 @@ export class CodeStep<
             }
 
             logger.info(
-                `Coding ${this.#datasets.length} datasets with strategies ${strategies.map((s) => s.name).join(", ")} and models ${models.map((m) => (typeof m === "string" ? m : m.name)).join(", ")}`,
+                `Coding ${this._datasets.length} datasets with strategies ${strategies.map((s) => s.name).join(", ")} and models ${models.map((m) => (typeof m === "string" ? m : m.name)).join(", ")}`,
             );
 
             // Check if parallel execution is enabled
             const context = QAJob.Context.get();
             const isParallel = context?.parallel ?? false;
 
-            for (const dataset of this.#datasets) {
+            for (const dataset of this._datasets) {
                 for (const strategy of strategies) {
                     // Create analyzer instance once
                     const analyzer = strategy instanceof Analyzer ? strategy : new strategy();
@@ -830,8 +891,8 @@ export class CodeStep<
                                     await book.xlsx.writeFile(excelPath);
 
                                     // Store the result
-                                    const cur = this.#results.get(dataset.name) ?? {};
-                                    this.#results.set(dataset.name, {
+                                    const cur = this._results.get(dataset.name) ?? {};
+                                    this._results.set(dataset.name, {
                                         ...cur,
                                         [analyzer.name]: {
                                             ...(cur[analyzer.name] ?? {}),
@@ -872,9 +933,9 @@ export class CodeStep<
                 throw new CodeStep.InternalError(`Invalid agent ${this.config.agent}`);
             }
 
-            logger.info(`Coding ${this.#datasets.length} datasets with human`);
+            logger.info(`Coding ${this._datasets.length} datasets with human`);
 
-            for (const dataset of this.#datasets) {
+            for (const dataset of this._datasets) {
                 logger.info(`[${dataset.name}] Loading human codes`);
 
                 const loadExcel = async (path: string, sheet?: string) => {
@@ -1003,7 +1064,7 @@ export class CodeStep<
                 }
 
                 // Store the result
-                this.#results.set(dataset.name, {
+                this._results.set(dataset.name, {
                     human: codes,
                 });
             }
@@ -1011,8 +1072,8 @@ export class CodeStep<
     }
 
     async #_execute() {
-        this.#datasets = this.dependsOn.map((step) => step.dataset);
-        logger.info(`Coding ${this.#datasets.length} datasets`);
+        this._datasets = this.dependsOn.map((step) => step.dataset);
+        logger.info(`Coding ${this._datasets.length} datasets`);
 
         // Cast the agent to a generic string to perform runtime checks
         const agent = this.config.agent as string;
