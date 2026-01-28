@@ -206,7 +206,7 @@ const applyVoteThreshold = (
 
     for (const [code, coders] of codeToCoders.entries()) {
         const agreement = coders.length / totalCoders;
-        if (agreement >= threshold) {
+        if (agreement > threshold) {
             selected.push(code);
         }
     }

@@ -150,14 +150,17 @@ export type CodeStepConfig<
  * Filter codebook with dual-direction category filtering
  *
  * Supports both inclusion and exclusion filtering:
- * - includeFilters: Only include codes where any category starts with these prefixes
+ * - includeFilters: Include codes where:
+ *   1. The code label exactly matches any filter, OR
+ *   2. Any category starts with any filter prefix
  * - excludeFilters: Exclude codes where any category starts with these prefixes
  *
  * When both filters are provided, inclusion is applied first, then exclusion.
  * Example: include="Social", exclude="Social Conflict" keeps social codes except conflict ones
+ * Example: include="trust" includes a code named "trust" even if it has no categories
  *
  * @param codebook - Full codebook to filter
- * @param includeFilters - Category prefixes to include (undefined = include all)
+ * @param includeFilters - Code names (exact match) or category prefixes to include (undefined = include all)
  * @param excludeFilters - Category prefixes to exclude (undefined = exclude none)
  * @returns Filtered codebook with matching codes
  */
@@ -176,14 +179,21 @@ const filterCodebookByCategories = (
     const result: Codebook = {};
 
     for (const [label, code] of Object.entries(codebook)) {
-        if (!code.categories) continue;
-
         // Check inclusion filter (if specified)
-        if (includes && !code.categories?.some(cat => includes.some(f => cat.startsWith(f)))) {
-            continue; // Skip if doesn't match any include filter
+        if (includes) {
+            // Include if:
+            // 1. The code label exactly matches any include filter, OR
+            // 2. Any category starts with any include filter
+            const labelMatches = includes.some(f => label === f);
+            const categoryMatches = code.categories?.some(cat => includes.some(f => cat.startsWith(f))) ?? false;
+
+            if (!labelMatches && !categoryMatches) {
+                continue; // Skip if doesn't match any include filter
+            }
         }
 
         // Check exclusion filter (if specified)
+        // Note: Exclusion only checks categories, not the label itself
         if (excludes && code.categories?.some(cat => excludes.some(f => cat.startsWith(f)))) {
             continue; // Skip if matches any exclude filter
         }
