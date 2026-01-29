@@ -511,11 +511,8 @@ function extractCodedThreads(
                 if (!codeName || !codebook[codeName]) continue;
 
                 // Initialize coder data structure
-                if (!coderThreads.has(coderName)) {
-                    coderThreads.set(coderName, {
-                        threads: {},
-                    });
-                }
+                if (!coderThreads.has(coderName))
+                    coderThreads.set(coderName, { threads: {} });
 
                 const coderData = coderThreads.get(coderName);
                 if (!coderData.threads[threadId]) {
@@ -538,9 +535,8 @@ function extractCodedThreads(
                         };
                     }
                     // Add code if not already present
-                    if (!thread.items[itemId].codes.includes(codeName)) {
+                    if (!thread.items[itemId].codes.includes(codeName))
                         thread.items[itemId].codes.push(codeName);
-                    }
                 }
             }
         }
@@ -635,6 +631,7 @@ export async function convertQdpxToJson(
     for (const user of userList) {
         users.set(user.guid, user.name);
     }
+    logger.info(`Found ${users.size} users`);
 
     // Convert codebook
     const codeList = Array.isArray(project.CodeBook?.Codes?.Code)

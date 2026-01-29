@@ -281,6 +281,31 @@ export const requestLLM = (
     });
 
 /**
+ * Extract reasoning content from <think></think> tags and remove them from the text
+ *
+ * @param text - The response text to extract reasoning from
+ * @returns Object containing extracted reasoning and cleaned text
+ */
+function extractAndRemoveThinkTags(text: string): { reasoning: string; cleanedText: string } {
+    const thinkRegex = /<think>([\s\S]*?)<\/think>/g;
+    const matches = [];
+    let match;
+
+    // Extract all think tag contents
+    while ((match = thinkRegex.exec(text)) !== null) {
+        matches.push(match[1].trim());
+    }
+
+    // Remove think tags from text
+    const cleanedText = text.replace(thinkRegex, '').trim();
+
+    return {
+        reasoning: matches.join('\n\n'),
+        cleanedText: cleanedText
+    };
+}
+
+/**
  * Call the LLM API directly without using cache
  *
  * This function makes a direct API call to the configured LLM model, bypassing the caching layer.
@@ -341,6 +366,12 @@ export const requestLLMWithoutCache = (
                         text = result.text;
                         // Capture reasoning content if available
                         reasoning = result.reasoningText ?? "";
+                        // Also check for <think> tags in the response if no reasoningText
+                        if (!reasoning && text) {
+                            const extracted = extractAndRemoveThinkTags(text);
+                            reasoning = extracted.reasoning;
+                            text = extracted.cleanedText; // Update text to remove think tags
+                        }
                         // Update token counts from actual usage
                         session.inputTokens += result.usage.inputTokens ?? 0;
                         session.outputTokens += result.usage.outputTokens ?? 0;
