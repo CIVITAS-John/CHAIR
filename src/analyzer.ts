@@ -408,7 +408,7 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
                     } catch (e) {
                         ++tries;
                         const error = new Analyzer.InternalError(
-                            `Analysis error, try ${tries}/${retries}`,
+                            `[${session.config.name}] Analysis error, try ${tries}/${retries}`,
                         );
                         error.cause = e;
                         if (tries >= retries) {

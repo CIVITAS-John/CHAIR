@@ -32,7 +32,7 @@
 
 import { existsSync, readFileSync, writeFileSync } from "fs";
 
-import { generateText, type LanguageModel } from "ai";
+import { generateText, ProviderMetadata, type LanguageModel } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
@@ -87,6 +87,7 @@ export type LLMModel = string | ModelConfig;
 export interface LLMSession {
     config: ModelConfig;
     model: LanguageModel;
+    providerOptions: ProviderMetadata;
     inputTokens: number;
     outputTokens: number;
     expectedItems: number;
@@ -147,6 +148,81 @@ export const getModel = (config: ModelConfig): LanguageModel => {
     }
 };
 
+
+/**
+ * Build provider options from model configuration
+ *
+ * Converts OpenAI-style reasoningEffort to OpenRouter's reasoning.effort format
+ * when using the openrouter provider.
+ *
+ * @param model - The model configuration
+ * @returns Provider options object keyed by provider name
+ *
+ * @example
+ * // OpenAI format
+ * buildProviderOptions({
+ *   provider: 'openai',
+ *   name: 'gpt-5',
+ *   options: { reasoningEffort: 'high' }
+ * })
+ * // Returns: { openai: { reasoningEffort: 'high' } }
+ *
+ * @example
+ * // OpenRouter conversion
+ * buildProviderOptions({
+ *   provider: 'openrouter',
+ *   name: 'deepseek/deepseek-r1',
+ *   options: { reasoningEffort: 'medium' }
+ * })
+ * // Returns: { openrouter: { reasoning: { effort: 'medium' } } }
+ */
+export function buildProviderOptions(model: ModelConfig): ProviderMetadata {
+  if (!model.options) {
+    return { [model.provider]: {} };
+  }
+
+  // Handle OpenRouter's reasoning format
+  if (model.provider === 'openrouter' && model.options.reasoningEffort) {
+    const { reasoningEffort, ...otherOptions } = model.options;
+    return {
+      openrouter: {
+        ...otherOptions,
+        reasoning: {
+          effort: reasoningEffort
+        }
+      }
+    };
+  }
+
+  // Handle Anthropic's reasoning format
+  if (model.provider === 'anthropic' && model.options.reasoningEffort && model.options.reasoningEffort !== "minimal") {
+    const { reasoningEffort, ...otherOptions } = model.options;
+    let budget = 1024;
+    switch (model.options.reasoningEffort) {
+      case 'low':
+        budget = 1024;
+        break;
+      case 'medium':
+        budget = 4096;
+        break;
+      case 'high':
+        budget = 8192;
+        break;
+    }
+    return {
+      anthropic: {
+        ...otherOptions,
+        thinking: { type: 'enabled', budgetTokens: budget }
+      }
+    };
+  }
+
+  // Default: pass options through as-is
+  return {
+    [model.provider]: model.options
+  };
+}
+
 /**
  * Initialize an LLM configuration by name
  *
@@ -200,6 +276,7 @@ export const useLLMs = async (
             const session: LLMSession = {
                 config,
                 model: getModel(config),
+                providerOptions: buildProviderOptions(config),
                 inputTokens: 0,
                 outputTokens: 0,
                 expectedItems: 0,
@@ -334,7 +411,7 @@ export const requestLLMWithoutCache = (
             throw new BaseStep.ContextVarNotFoundError("session");
         }
 
-        const { config, model } = session;
+        const { config, model, providerOptions } = session;
 
         // Get or create limit for this model with optional override
         const limitConfig = {
@@ -360,6 +437,7 @@ export const requestLLMWithoutCache = (
                     (async () => {
                         const result = await generateText({
                             model: model,
+                            providerOptions: providerOptions,
                             messages: messages,
                             temperature: temperature ?? 0,
                         });

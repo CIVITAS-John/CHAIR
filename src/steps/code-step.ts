@@ -53,7 +53,7 @@ import { exportChunksForCoding } from "../utils/io/export.js";
 import { importCodes } from "../utils/io/import.js";
 import { ensureFolder, readJSONFile } from "../utils/io/file.js";
 import type { LLMModel, LLMSession } from "../utils/ai/llms.js";
-import { requestLLM, initLLM, getModel } from "../utils/ai/llms.js";
+import { requestLLM, initLLM, getModel, buildProviderOptions } from "../utils/ai/llms.js";
 import { logger } from "../utils/core/logger.js";
 import { assembleExampleFrom } from "../utils/core/misc.js";
 import { QAJob } from "../job.js";
@@ -758,6 +758,7 @@ export class CodeStep<
                         const session: LLMSession = {
                             config,
                             model: getModel(config),
+                            providerOptions: buildProviderOptions(config),
                             inputTokens: 0,
                             outputTokens: 0,
                             expectedItems: 0,

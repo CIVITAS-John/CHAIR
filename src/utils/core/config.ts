@@ -31,11 +31,11 @@ export interface ModelConfig {
     batchSize?: number;
     options?: {
         temperature?: number;
-        reasoningEffort?: "low" | "medium" | "high";
+        reasoningEffort?: "minimal" | "low" | "medium" | "high";
         concurrencyLimit?: number;
         baseURL?: string;
         apiKey?: string;
-        [key: string]: unknown;
+        [key: string]: any;
     };
 }
 
