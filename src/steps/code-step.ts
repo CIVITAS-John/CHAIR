@@ -561,6 +561,35 @@ export class CodeStep<
     TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
 > extends BaseStep {
     /**
+     * Get the coder identifier for this instance
+     *
+     * Returns the formatted identifier used in filenames based on the instance's configuration:
+     * - Human mode: "human-{coderName}"
+     * - AI mode: "{group}-{model}" or "{group}-{model}-{alias}" if alias is configured
+     *
+     * @param identifier - Specific identifier (e.g., coder name for human mode, model for AI mode)
+     * @returns Formatted coder identifier for use in filenames
+     */
+    public getCoderIdentifier(identifier: string): string {
+        // For human mode, use the group (defaults to "human")
+        if (this.config.agent === "Human") {
+            // Extract first part as coder name
+            return `${this.group}-${identifier.split("-")[0]}`;
+        }
+
+        // For AI mode, include model and optional alias
+        const modelMatch = identifier.match(/(?:^|-)([a-z]+(?:-[a-z]+)*)/i);
+        const model = modelMatch?.[1] || identifier;
+
+        // Get alias from AI parameters if available
+        const alias = this.config.agent === "AI" && this.config.parameters?.alias
+            ? this.config.parameters.alias
+            : undefined;
+
+        return `${this.group}-${model}${alias ? `-${alias}` : ""}`;
+    }
+
+    /**
      * Dependencies: LoadStep(s) providing the data to code
      */
     override dependsOn: LoadStep<TUnit>[];
@@ -884,8 +913,11 @@ export class CodeStep<
                                         `[${dataset.name}/${analyzer.name}/${key}] Coded ${Object.keys(result.threads).length} threads (${idx + 1}/${numChunks})`,
                                     );
 
-                                    // Write results with model-specific filename
-                                    const filename = `${key.replace(".json", "")}-${session.config.name}${analyzer.suffix}`;
+                                    // Write results with model-specific filename, including alias if provided
+                                    const modelAlias = this.config.agent === "AI" && this.config.parameters?.alias
+                                        ? `-${this.config.parameters.alias}`
+                                        : "";
+                                    const filename = `${key.replace(".json", "")}-${session.config.name}${modelAlias}${analyzer.suffix}`;
                                     const analyzerPath = ensureFolder(join(dataset.path, analyzer.name));
 
                                     const jsonPath = join(analyzerPath, `${filename}.json`);
@@ -901,7 +933,7 @@ export class CodeStep<
                                     );
                                     await book.xlsx.writeFile(excelPath);
 
-                                    // Store the result
+                                    // Store the result using the same identifier as the filename
                                     const cur = this._results.get(dataset.name) ?? {};
                                     this._results.set(dataset.name, {
                                         ...cur,

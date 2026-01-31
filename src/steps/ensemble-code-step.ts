@@ -14,7 +14,7 @@
  *
  * Decision Strategies:
  * 1. Custom Function: User provides function receiving Map<code, coders[]>
- * 2. Vote Threshold: Keep codes where agreement >= threshold (default 0.5)
+ * 2. Vote Threshold: Keep codes where agreement > threshold (default 0.5)
  * 3. Rolling Window: Optional aggregation across neighboring items
  *
  * Coder Identification:
@@ -34,9 +34,11 @@ import type {
     CodedThreads,
     DataChunk,
     DataItem,
+    Dataset,
 } from "../schema.js";
 import { mergeCodebook } from "../consolidating/codebooks.js";
 import { logger } from "../utils/core/logger.js";
+import { createRollingWindow } from "../utils/rolling-window.js";
 
 import { CodeStep } from "./code-step.js";
 
@@ -44,15 +46,18 @@ import { CodeStep } from "./code-step.js";
  * Decision function for ensemble code selection
  *
  * Receives a map of codes to the list of coders who assigned them,
- * along with the total number of coders, and returns the codes to keep.
+ * along with the total number of coders and optional coder weights,
+ * and returns the codes to keep.
  *
  * @param codeToCoders - Map of code label to array of coder identifiers
  * @param totalCoders - Total number of coders in the ensemble
+ * @param coderWeights - Optional map of coder identifier to normalized weight (sums to 1.0)
  * @returns Array of code labels to include in the ensemble result
  */
 export type EnsembleDecisionFunction = (
     codeToCoders: Map<string, string[]>,
-    totalCoders: number
+    totalCoders: number,
+    coderWeights?: Map<string, number>
 ) => string[];
 
 /**
@@ -63,12 +68,20 @@ export interface EnsembleCodeStepConfig<
     TUnit extends DataChunk<TSubunit> = DataChunk<TSubunit>,
 > {
     /**
-     * Prior CodeSteps to ensemble
+     * Prior CodeSteps to ensemble with optional custom weighting
      *
-     * Can be a single CodeStep or array of multiple coding sources.
+     * Can be:
+     * - A single CodeStep (weight = 1)
+     * - An array of CodeSteps (equal weights = 1/n)
+     * - A Map<CodeStep, number> mapping CodeSteps to their weights
+     *
+     * When using custom weights, they will be normalized to sum to 1.0
      * These steps must have completed execution before ensemble.
      */
-    coders: CodeStep<TSubunit, TUnit> | CodeStep<TSubunit, TUnit>[];
+    coders:
+        | CodeStep<TSubunit, TUnit>
+        | CodeStep<TSubunit, TUnit>[]
+        | Map<CodeStep<TSubunit, TUnit>, number>;
 
     /**
      * Custom decision function for code selection
@@ -108,104 +121,56 @@ export interface EnsembleCodeStepConfig<
 }
 
 /**
+ * Compound key for provenance tracking
+ */
+type ProvenanceKey = `${string}:${string}:${string}`; // threadId:itemId:code
+
+/**
  * Metadata tracked for ensemble results
  */
 interface EnsembleMetadata {
     /** List of all input coder identifiers */
     coderSources: string[];
+    /** Map of coder identifier to normalized weight (if custom weights used) */
+    coderWeights?: Record<string, number>;
     /** Method used for ensemble decision */
     ensembleMethod: "function" | "threshold";
     /** Vote threshold if used */
     threshold?: number;
     /** Rolling window size if used */
     rollingWindow?: number;
-    /** Map of thread -> item -> code -> source coders for analysis */
-    codeProvenance: Record<string, Record<string, Record<string, string[]>>>;
+    /** Map of compound key to source coders for analysis */
+    codeProvenance: Map<ProvenanceKey, string[]>;
 }
 
-/**
- * Apply rolling window aggregation to coded items
- *
- * Aggregates codes within a window around each item position.
- * Edge cases (start/end of list) use only available items.
- *
- * @param items - Ordered list of coded items
- * @param windowSize - Number of items to include on each side
- * @returns Map of item ID to aggregated codes for that window
- */
-const applyRollingWindow = (
-    items: CodedItem[],
-    windowSize: number
-): Map<string, Set<string>> => {
-    const windowCodes = new Map<string, Set<string>>();
 
-    for (let i = 0; i < items.length; i++) {
-        const windowStart = Math.max(0, i - windowSize);
-        const windowEnd = Math.min(items.length - 1, i + windowSize);
-
-        const aggregatedCodes = new Set<string>();
-        for (let j = windowStart; j <= windowEnd; j++) {
-            const codes = items[j].codes || [];
-            codes.forEach(code => aggregatedCodes.add(code));
-        }
-
-        windowCodes.set(items[i].id, aggregatedCodes);
-    }
-
-    return windowCodes;
-};
-
-/**
- * Build coder identifier including model information
- *
- * Creates consistent identifiers for tracking code sources:
- * - AI coders: "{analyzer}-{model}"
- * - Human coders: "human-{coderName}"
- *
- * @param group - Coder group (e.g., "human", "ai", or analyzer name)
- * @param identifier - Specific identifier within the group
- * @returns Formatted coder identifier
- */
-const buildCoderIdentifier = (group: string, identifier: string): string => {
-    if (group === "human") {
-        // Extract coder name from identifier (might be just the name or include other info)
-        const coderName = identifier.split("-")[0] || identifier;
-        return `human-${coderName}`;
-    } else {
-        // For AI, identifier typically includes chunk and model info
-        // Extract model name from patterns like "chunk-gpt-4-suffix"
-        const parts = identifier.split("-");
-        const modelParts = [];
-        for (let i = 1; i < parts.length; i++) {
-            // Skip the first part (usually "chunk" or similar)
-            if (parts[i] && !parts[i].match(/^\d+$/)) {
-                modelParts.push(parts[i]);
-            }
-        }
-        const model = modelParts.join("-") || identifier;
-        return `${group}-${model}`;
-    }
-};
 
 /**
  * Default vote threshold decision function
  *
- * Keeps codes where the proportion of agreeing coders meets the threshold.
+ * Keeps codes where the weighted proportion of agreeing coders meets the threshold.
+ * Since weights are always normalized to sum to 1.0, the agreement is already a proportion.
  *
  * @param codeToCoders - Map of codes to coders who assigned them
- * @param totalCoders - Total number of coders
  * @param threshold - Minimum proportion of agreement required (0-1)
+ * @param coderWeights - Map of coder identifier to normalized weight (always present)
  * @returns Codes that meet the threshold
  */
 const applyVoteThreshold = (
     codeToCoders: Map<string, string[]>,
-    totalCoders: number,
-    threshold: number
+    threshold: number,
+    coderWeights: Map<string, number>
 ): string[] => {
     const selected: string[] = [];
 
     for (const [code, coders] of codeToCoders.entries()) {
-        const agreement = coders.length / totalCoders;
+        // Calculate weighted agreement: sum of weights for coders who assigned this code
+        // Weights are normalized to sum to 1.0, so this gives us a proportion
+        const agreement = coders.reduce((sum, coderId) => {
+            return sum + (coderWeights.get(coderId) ?? 0);
+        }, 0);
+
+
         if (agreement > threshold) {
             selected.push(code);
         }
@@ -264,6 +229,12 @@ export class EnsembleCodeStep<
     private metadata: Map<string, EnsembleMetadata> = new Map();
 
     /**
+     * Normalized weights for each coder (maps coder identifier to weight)
+     * Weights sum to 1.0 for proper weighted voting
+     */
+    private coderWeights: Map<string, number> = new Map();
+
+    /**
      * Create a new EnsembleCodeStep
      *
      * @param config - Configuration for ensemble behavior
@@ -279,18 +250,291 @@ export class EnsembleCodeStep<
             model: "" as any, // Not used - we override execute
         } as any);
 
-        // Store ensemble-specific config
+        // Validate and store configuration
+        this.validateConfig(config);
         this.ensembleConfig = config;
 
-        // Override dependencies with our CodeStep dependencies
-        this.dependsOn = Array.isArray(config.coders) ? config.coders : [config.coders];
+        // Parse and normalize weights
+        const { coders, weights } = this.parseCodersAndWeights(config);
+        this.coderWeights = weights;
+        this.dependsOn = coders;
+    }
 
-        // Validate configuration
+    /**
+     * Validate configuration parameters
+     */
+    private validateConfig(config: EnsembleCodeStepConfig<TSubunit, TUnit>): void {
         if (config.decisionFunction && config.voteThreshold !== undefined) {
             throw new Error("Cannot specify both decisionFunction and voteThreshold");
         }
+
+        if (config.voteThreshold !== undefined && (config.voteThreshold < 0 || config.voteThreshold > 1)) {
+            throw new Error("Vote threshold must be between 0 and 1");
+        }
+
+        if (config.rollingWindow !== undefined && config.rollingWindow < 0) {
+            throw new Error("Rolling window must be non-negative");
+        }
     }
 
+    /**
+     * Parse coders configuration and normalize weights
+     */
+    private parseCodersAndWeights(config: EnsembleCodeStepConfig<TSubunit, TUnit>): {
+        coders: CodeStep<TSubunit, TUnit>[];
+        weights: Map<string, number>;
+    } {
+        let codersList: CodeStep<TSubunit, TUnit>[] = [];
+        let rawWeights: number[] = [];
+
+        if (Array.isArray(config.coders)) {
+            // Array of coders - equal weights
+            codersList = config.coders;
+            rawWeights = new Array(codersList.length).fill(1);
+        } else if (config.coders instanceof CodeStep) {
+            // Single coder
+            codersList = [config.coders];
+            rawWeights = [1];
+        } else if (config.coders instanceof Map) {
+            // Map with custom weights
+            for (const [coder, weight] of config.coders.entries()) {
+                codersList.push(coder);
+                rawWeights.push(weight);
+            }
+        } else {
+            throw new Error("Invalid coders configuration");
+        }
+
+        // Normalize weights to sum to 1.0
+        const totalWeight = rawWeights.reduce((sum, w) => sum + w, 0);
+        if (totalWeight <= 0) {
+            throw new Error("Total weight must be positive");
+        }
+
+        const normalizedWeights = rawWeights.map(w => w / totalWeight);
+
+        // Store normalized weights indexed by position (will map to coder IDs during execution)
+        const weights = new Map<string, number>();
+        normalizedWeights.forEach((weight, index) => {
+            weights.set(`coder_${index}`, weight);
+        });
+
+        return { coders: codersList, weights };
+    }
+
+    /**
+     * Collect results from a single coder for a dataset
+     */
+    private collectCoderResults(
+        coder: CodeStep<TSubunit, TUnit>,
+        dataset: Dataset<TUnit>,
+        coderWeight: number
+    ): {
+        coderIds: string[];
+        weights: Map<string, number>;
+        results: Map<string, Map<string, CodedThreads>>;
+    } {
+        const coderIds: string[] = [];
+        const weights = new Map<string, number>();
+        const results = new Map<string, Map<string, CodedThreads>>();
+
+        const coderResults = coder.getResult(dataset.name);
+
+        for (const [analyzerName, analyzerResults] of Object.entries(coderResults)) {
+            for (const [identifier, codedThreads] of Object.entries(analyzerResults as Record<string, CodedThreads>)) {
+                const coderId = coder.getCoderIdentifier(identifier);
+                coderIds.push(coderId);
+                weights.set(coderId, coderWeight);
+
+                if (!results.has(coderId)) {
+                    results.set(coderId, new Map());
+                }
+                results.get(coderId)!.set(
+                    `${analyzerName}-${identifier}`,
+                    codedThreads
+                );
+            }
+        }
+
+        return { coderIds, weights, results };
+    }
+
+    /**
+     * Build metadata for the ensemble results
+     */
+    private buildMetadata(
+        coderSources: string[],
+        finalCoderWeights: Map<string, number>
+    ): EnsembleMetadata {
+        const weightsRecord: Record<string, number> = {};
+        for (const [coderId, weight] of finalCoderWeights.entries()) {
+            weightsRecord[coderId] = weight;
+        }
+
+        return {
+            coderSources,
+            coderWeights: weightsRecord, // Always present since weights are always normalized
+            ensembleMethod: this.ensembleConfig.decisionFunction ? "function" : "threshold",
+            threshold: this.ensembleConfig.voteThreshold,
+            rollingWindow: this.ensembleConfig.rollingWindow,
+            codeProvenance: new Map(),
+        };
+    }
+
+    /**
+     * Process a single item to determine its ensemble codes
+     */
+    private processItem(
+        itemId: string,
+        coderItems: Map<string, CodedItem[]>,
+        windowMaps: Map<string, Map<string, Set<string>>>,
+        finalCoderWeights: Map<string, number>,
+        coderSources: string[]
+    ): { codes: string[]; codeToCoders: Map<string, string[]> } {
+        const codeToCoders = new Map<string, string[]>();
+
+        // If using rolling window, collect codes directly applied to this item by ANY coder
+        let directCodes: Set<string> | null = null;
+        if (this.ensembleConfig.rollingWindow) {
+            directCodes = new Set<string>();
+            for (const items of coderItems.values()) {
+                const item = items.find(i => i.id === itemId);
+                item?.codes?.forEach(code => directCodes!.add(code));
+            }
+        }
+
+        // Build code-to-coders map
+        for (const [coderId, items] of coderItems.entries()) {
+            let coderCodes: Set<string>;
+
+            if (this.ensembleConfig.rollingWindow && directCodes !== null) {
+                // Get all codes from window for this coder
+                const windowCodes = windowMaps.get(coderId)?.get(itemId) || new Set<string>();
+
+                // Only consider codes that appear directly on this item (by ANY coder)
+                coderCodes = new Set([...windowCodes].filter(c => directCodes.has(c)));
+            } else {
+                // Standard item-by-item: use codes directly from this item
+                const item = items.find(i => i.id === itemId);
+                coderCodes = new Set(item?.codes || []);
+            }
+
+            // Add coder to each code's list
+            for (const code of coderCodes) {
+                if (!codeToCoders.has(code)) {
+                    codeToCoders.set(code, []);
+                }
+                codeToCoders.get(code)!.push(coderId);
+            }
+        }
+
+        // Apply decision logic
+        let selectedCodes: string[];
+        if (this.ensembleConfig.decisionFunction) {
+            selectedCodes = this.ensembleConfig.decisionFunction(
+                codeToCoders,
+                coderSources.length,
+                finalCoderWeights
+            );
+        } else {
+            const threshold = this.ensembleConfig.voteThreshold ?? 0.5;
+            selectedCodes = applyVoteThreshold(
+                codeToCoders,
+                threshold,
+                finalCoderWeights
+            );
+        }
+
+        return { codes: selectedCodes, codeToCoders };
+    }
+
+    /**
+     * Process a single thread to build ensemble results
+     */
+    private processThread(
+        threadId: string,
+        coderResults: Map<string, Map<string, CodedThreads>>,
+        finalCoderWeights: Map<string, number>,
+        datasetMetadata: EnsembleMetadata,
+        coderSources: string[]
+    ): CodedThread {
+        // Collect items from all coders for this thread
+        const coderItems = new Map<string, CodedItem[]>();
+        const itemIds: string[] = [];
+
+        for (const [coderId, coderAnalyzers] of coderResults.entries()) {
+            for (const codedThreads of coderAnalyzers.values()) {
+                const thread = codedThreads.threads[threadId];
+                if (thread) {
+                    const items = Object.values(thread.items);
+                    coderItems.set(coderId, items);
+                    // Collect item IDs from first coder
+                    if (itemIds.length === 0) {
+                        itemIds.push(...items.map(item => item.id));
+                    }
+                }
+            }
+        }
+
+        // Initialize ensemble thread
+        const ensembleThread: CodedThread = {
+            id: threadId,
+            items: {},
+            iteration: 0,
+            codes: {},
+        };
+
+        // Apply rolling window if configured
+        const windowMaps = new Map<string, Map<string, Set<string>>>();
+        if (this.ensembleConfig.rollingWindow) {
+            const windowAggregator = createRollingWindow<CodedItem>(this.ensembleConfig.rollingWindow);
+            for (const [coderId, items] of coderItems.entries()) {
+                // Use simple aggregate - filtering happens in processItem
+                windowMaps.set(
+                    coderId,
+                    windowAggregator.aggregate(
+                        items,
+                        item => item.id,
+                        item => item.codes || []
+                    )
+                );
+            }
+        }
+
+        // Process each item
+        for (const itemId of itemIds) {
+            const { codes, codeToCoders } = this.processItem(
+                itemId,
+                coderItems,
+                windowMaps,
+                finalCoderWeights,
+                coderSources
+            );
+
+            // Store ensemble codes for this item
+            ensembleThread.items[itemId] = {
+                id: itemId,
+                codes,
+            };
+
+            // Track provenance for metadata using compound key
+            for (const [code, coders] of codeToCoders.entries()) {
+                if (codes.includes(code)) {
+                    const key: ProvenanceKey = `${threadId}:${itemId}:${code}`;
+                    datasetMetadata.codeProvenance.set(key, coders);
+                }
+            }
+
+            // Build codes in ensemble thread
+            for (const code of codes) {
+                if (!ensembleThread.codes[code]) {
+                    ensembleThread.codes[code] = { label: code };
+                }
+            }
+        }
+
+        return ensembleThread;
+    }
 
     /**
      * Execute ensemble code selection
@@ -320,44 +564,35 @@ export class EnsembleCodeStep<
             for (const dataset of this._datasets) {
                 logger.info(`[${dataset.name}] Starting ensemble coding`);
 
-                // Collect all coder identifiers
+                // Collect all coder identifiers and map weights
                 const coderSources: string[] = [];
                 const coderResults: Map<string, Map<string, CodedThreads>> = new Map();
+                const finalCoderWeights: Map<string, number> = new Map();
+
+                // Calculate weights for each coder in the dependency list
+                const tempWeights = Array.from(this.coderWeights.values());
 
                 // Gather results from all coders
+                let coderIndex = 0;
                 for (const coder of this.dependsOn) {
-                    const results = coder.getResult(dataset.name);
+                    const coderWeight = tempWeights[coderIndex]; // Weights are always present and normalized
+                    const { coderIds, weights, results } = this.collectCoderResults(coder, dataset, coderWeight);
 
-                    // Store results indexed by coder
-                    for (const [analyzerName, analyzerResults] of Object.entries(results)) {
-                        for (const [identifier, codedThreads] of Object.entries(analyzerResults as Record<string, CodedThreads>)) {
-                            const coderId = buildCoderIdentifier(
-                                coder.group || analyzerName,
-                                identifier
-                            );
-                            coderSources.push(coderId);
-
-                            if (!coderResults.has(coderId)) {
-                                coderResults.set(coderId, new Map());
-                            }
-                            coderResults.get(coderId)!.set(
-                                `${analyzerName}-${identifier}`,
-                                codedThreads
-                            );
-                        }
+                    coderSources.push(...coderIds);
+                    for (const [id, weight] of weights) {
+                        finalCoderWeights.set(id, weight);
                     }
+                    for (const [id, data] of results) {
+                        coderResults.set(id, data);
+                    }
+
+                    coderIndex++;
                 }
 
                 logger.info(`[${dataset.name}] Found ${coderSources.length} coders: ${coderSources.join(", ")}`);
 
                 // Initialize metadata for this dataset
-                const datasetMetadata: EnsembleMetadata = {
-                    coderSources,
-                    ensembleMethod: this.ensembleConfig.decisionFunction ? "function" : "threshold",
-                    threshold: this.ensembleConfig.voteThreshold,
-                    rollingWindow: this.ensembleConfig.rollingWindow,
-                    codeProvenance: {},
-                };
+                const datasetMetadata = this.buildMetadata(coderSources, finalCoderWeights);
                 this.metadata.set(dataset.name, datasetMetadata);
 
                 // Process each chunk group
@@ -378,116 +613,13 @@ export class EnsembleCodeStep<
                     for (const threadId of threadIds) {
                         logger.debug(`[${dataset.name}/${chunkKey}] Processing thread ${threadId}`);
 
-                        // Collect items from all coders for this thread
-                        const coderItems = new Map<string, CodedItem[]>();
-                        const itemIds: string[] = [];
-
-                        for (const [coderId, coderAnalyzers] of coderResults.entries()) {
-                            for (const codedThreads of coderAnalyzers.values()) {
-                                const thread = codedThreads.threads[threadId];
-                                if (thread) {
-                                    const items = Object.values(thread.items);
-                                    coderItems.set(coderId, items);
-                                    // Collect item IDs from first coder
-                                    if (itemIds.length === 0) {
-                                        itemIds.push(...items.map(item => item.id));
-                                    }
-                                }
-                            }
-                        }
-
-                        // Initialize ensemble thread
-                        const ensembleThread: CodedThread = {
-                            id: threadId,
-                            items: {},
-                            iteration: 0,
-                            codes: {},
-                        };
-
-                        // Apply rolling window if configured
-                        const windowMaps = new Map<string, Map<string, Set<string>>>();
-                        if (this.ensembleConfig.rollingWindow) {
-                            for (const [coderId, items] of coderItems.entries()) {
-                                windowMaps.set(coderId, applyRollingWindow(
-                                    items,
-                                    this.ensembleConfig.rollingWindow
-                                ));
-                            }
-                        }
-
-                        // Process each item
-                        for (const itemId of itemIds) {
-                            const codeToCoders = new Map<string, string[]>();
-
-                            // If using rolling window, collect codes directly applied to this item (for filtering)
-                            const directCodes = new Set<string>();
-                            if (this.ensembleConfig.rollingWindow) {
-                                for (const items of coderItems.values()) {
-                                    const item = items.find(i => i.id === itemId);
-                                    item?.codes?.forEach(code => directCodes.add(code));
-                                }
-                            }
-
-                            // Build code-to-coders map
-                            for (const [coderId, items] of coderItems.entries()) {
-                                const item = items.find(i => i.id === itemId);
-
-                                // Determine which codes this coder contributes
-                                const coderCodes = this.ensembleConfig.rollingWindow
-                                    ? new Set([...windowMaps.get(coderId)?.get(itemId) || []].filter(c => directCodes.has(c)))
-                                    : new Set(item?.codes || []);
-
-                                // Add coder to each code's list
-                                for (const code of coderCodes) {
-                                    if (!codeToCoders.has(code)) {
-                                        codeToCoders.set(code, []);
-                                    }
-                                    codeToCoders.get(code)!.push(coderId);
-                                }
-                            }
-
-                            // Apply decision logic
-                            let selectedCodes: string[];
-                            if (this.ensembleConfig.decisionFunction) {
-                                selectedCodes = this.ensembleConfig.decisionFunction(
-                                    codeToCoders,
-                                    coderSources.length
-                                );
-                            } else {
-                                const threshold = this.ensembleConfig.voteThreshold ?? 0.5;
-                                selectedCodes = applyVoteThreshold(
-                                    codeToCoders,
-                                    coderSources.length,
-                                    threshold
-                                );
-                            }
-
-                            // Store ensemble codes for this item
-                            ensembleThread.items[itemId] = {
-                                id: itemId,
-                                codes: selectedCodes,
-                            };
-
-                            // Track provenance for metadata at item level
-                            if (!datasetMetadata.codeProvenance[threadId]) {
-                                datasetMetadata.codeProvenance[threadId] = {};
-                            }
-                            if (!datasetMetadata.codeProvenance[threadId][itemId]) {
-                                datasetMetadata.codeProvenance[threadId][itemId] = {};
-                            }
-                            for (const [code, coders] of codeToCoders.entries()) {
-                                if (selectedCodes.includes(code)) {
-                                    datasetMetadata.codeProvenance[threadId][itemId][code] = coders;
-                                }
-                            }
-
-                            // Build codes in ensemble thread
-                            for (const code of selectedCodes) {
-                                if (!ensembleThread.codes[code]) {
-                                    ensembleThread.codes[code] = { label: code };
-                                }
-                            }
-                        }
+                        const ensembleThread = this.processThread(
+                            threadId,
+                            coderResults,
+                            finalCoderWeights,
+                            datasetMetadata,
+                            coderSources
+                        );
 
                         ensembleResult.threads[threadId] = ensembleThread;
                     }
@@ -497,13 +629,20 @@ export class EnsembleCodeStep<
 
                     // Export results using inherited helper method
                     const filename = `${chunkKey.replace(".json", "")}-${this.group}`;
+
+                    // Convert Map to object for JSON serialization
+                    const metadataForExport = {
+                        ...datasetMetadata,
+                        codeProvenance: Object.fromEntries(datasetMetadata.codeProvenance)
+                    };
+
                     await this.exportResults(
                         dataset,
                         this.group,
                         filename,
                         ensembleResult,
                         Object.values(chunks) as TUnit[],
-                        datasetMetadata
+                        metadataForExport
                     );
 
                     // Store ensemble result as additional analyzer using group name

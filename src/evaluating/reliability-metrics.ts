@@ -21,6 +21,7 @@
 import { alpha } from "krippendorff";
 
 import type { Code, Codebook, CodedItem, CodedThread, DataItem } from "../schema.js";
+import { createRollingWindow } from "../utils/rolling-window.js";
 
 /**
  * Item-level difference calculation function type.
@@ -235,8 +236,27 @@ export const compareItems = (
         });
     }
 
-    // Rolling window comparison (benefit-only)
+    // Rolling window comparison (benefit-only) using RollingWindowAggregator
     const comparisons: ItemComparison[] = [];
+
+    // Use the rolling window aggregator to collect codes in windows
+    const windowAggregator = createRollingWindow<CodedItem>(rollingWindow);
+
+    // Extract items for each coder from filtered pairs
+    const filteredItems1 = filteredPairs.map(p => p.item1);
+    const filteredItems2 = filteredPairs.map(p => p.item2);
+
+    // Aggregate codes within windows for each coder (with filtering applied)
+    const windowMap1 = windowAggregator.aggregate(
+        filteredItems1,
+        item => item.id,
+        item => filterCodes(item.codes ?? [])
+    );
+    const windowMap2 = windowAggregator.aggregate(
+        filteredItems2,
+        item => item.id,
+        item => filterCodes(item.codes ?? [])
+    );
 
     for (let i = 0; i < filteredPairs.length; i++) {
         const { item1, item2 } = filteredPairs[i];
@@ -249,21 +269,9 @@ export const compareItems = (
         const filteredBaseCodes1 = filterCodes(baseCodes1);
         const filteredBaseCodes2 = filterCodes(baseCodes2);
 
-        // Collect codes from rolling window for both coders
-        const windowStart = Math.max(0, i - rollingWindow);
-        const windowEnd = Math.min(filteredPairs.length - 1, i + rollingWindow);
-
-        // Aggregate codes within window (with filtering)
-        const windowCodes1Set = new Set<string>();
-        const windowCodes2Set = new Set<string>();
-
-        for (let j = windowStart; j <= windowEnd; j++) {
-            const codes1 = filterCodes(filteredPairs[j].item1.codes ?? []);
-            const codes2 = filterCodes(filteredPairs[j].item2.codes ?? []);
-
-            codes1.forEach((code) => windowCodes1Set.add(code));
-            codes2.forEach((code) => windowCodes2Set.add(code));
-        }
+        // Get aggregated codes from windows
+        const windowCodes1Set = windowMap1.get(item1.id)!;
+        const windowCodes2Set = windowMap2.get(item2.id)!;
 
         // Apply benefit-only logic:
         // - Start with filtered base codes at exact position

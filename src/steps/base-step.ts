@@ -39,6 +39,8 @@ export interface AIParameters extends Record<string, unknown> {
     fakeRequest?: boolean;
     /** Number of previous messages to include as context (0 = none, -1 = all previous) */
     contextWindow?: number;
+    /** Optional alias to append to model name for identification (e.g., "temp05" results in "gpt-4-temp05") */
+    alias?: string;
     /** Substeps for category-filtered multi-pass coding */
     substeps?: Array<{
         /** Name for logging (e.g., "Social Codes") */

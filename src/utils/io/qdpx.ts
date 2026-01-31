@@ -511,8 +511,9 @@ function extractCodedThreads(
                 if (!codeName || !codebook[codeName]) continue;
 
                 // Initialize coder data structure
-                if (!coderThreads.has(coderName))
+                if (!coderThreads.has(coderName)) {
                     coderThreads.set(coderName, { threads: {} });
+                }
 
                 const coderData = coderThreads.get(coderName);
                 if (!coderData.threads[threadId]) {
@@ -550,7 +551,6 @@ function extractCodedThreads(
                 for (const [itemId, item] of Object.entries((thread as any).items)) {
                     processedItems[itemId] = postprocessCoded(item);
                 }
-                (thread as any).items = processedItems;
             }
         }
     }
