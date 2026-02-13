@@ -153,6 +153,50 @@ export const extractCodedItems = (threads: Record<string, CodedThread>): CodedIt
     Object.values(threads).flatMap((thread) => Object.values(thread.items));
 
 /**
+ * Extract thread-level coded items by aggregating all codes within each thread.
+ *
+ * For each thread, applies skipItem filtering, then creates a single CodedItem with:
+ * - id = thread ID
+ * - codes = deduplicated union of all codes from non-skipped items in the thread
+ *
+ * Threads where all items are filtered out are omitted entirely.
+ *
+ * Used when rollingWindow === -1 for thread-level reliability calculation.
+ *
+ * @param threads - Record of coded threads
+ * @param skipItem - Optional function to skip certain items during aggregation
+ * @param dataItems - Map of item IDs to original data items for filtering
+ * @returns Array of thread-level coded items (one per thread)
+ */
+export const extractCodedItemsByThread = (
+    threads: Record<string, CodedThread>,
+    skipItem?: (item: DataItem) => boolean,
+    dataItems?: Map<string, DataItem>,
+): CodedItem[] => {
+    const result: CodedItem[] = [];
+    for (const thread of Object.values(threads)) {
+        const allCodes = new Set<string>();
+        for (const item of Object.values(thread.items)) {
+            // Apply skipItem filter before aggregation
+            if (skipItem && dataItems) {
+                const dataItem = dataItems.get(item.id);
+                if (dataItem && skipItem(dataItem)) continue;
+            }
+            if (item.codes) {
+                for (const code of item.codes) {
+                    allCodes.add(code);
+                }
+            }
+        }
+        // Skip entire thread if all items were filtered out
+        if (allCodes.size > 0) {
+            result.push({ id: thread.id, codes: [...allCodes] });
+        }
+    }
+    return result;
+};
+
+/**
  * Compare two coders on a set of items using a difference calculator.
  *
  * @param items1 - Coded items from first coder

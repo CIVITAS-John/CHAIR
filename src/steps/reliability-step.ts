@@ -42,6 +42,7 @@ import {
     compareItems,
     type DifferenceCalculator,
     extractCodedItems,
+    extractCodedItemsByThread,
     type PairwiseReliability,
     defaultCalculateDifference,
 } from "../evaluating/reliability-metrics.js";
@@ -124,20 +125,24 @@ export interface ReliabilityStepConfig<
     /**
      * Size of rolling window for aggregate comparison
      *
-     * If specified, compares aggregate codes across neighboring items
-     * instead of item-by-item. For each item at position i, codes are
-     * aggregated from items [i-rollingWindow, ..., i, ..., i+rollingWindow].
+     * Controls how codes are aggregated for reliability comparison:
      *
-     * Applied AFTER skipItem filtering, so the window operates on the
-     * filtered item list.
+     * - undefined or 0: Standard item-by-item comparison (default)
+     * - Positive integer: Rolling window comparison. For each item at position i,
+     *   codes are aggregated from items [i-rollingWindow, ..., i, ..., i+rollingWindow].
+     *   Applied AFTER skipItem filtering, so the window operates on the filtered item list.
+     * - -1: Thread-level comparison. All codes within each thread are aggregated
+     *   into a single representative item per thread. skipItem is applied before
+     *   aggregation to exclude items from code collection. Threads where all items
+     *   are skipped are omitted entirely.
      *
      * Example:
      * - rollingWindow = 1: compare codes from [i-1, i, i+1]
      * - rollingWindow = 2: compare codes from [i-2, i-1, i, i+1, i+2]
+     * - rollingWindow = -1: compare deduplicated codes per thread
      *
      * Edge cases:
-     * - Start/end of list: uses only available items
-     * - 0 or undefined: item-by-item comparison (default)
+     * - Start/end of list: uses only available items (positive values)
      *
      * Defaults to undefined (standard item-by-item comparison).
      */
@@ -311,21 +316,27 @@ export class ReliabilityStep<
                         }
                     }
 
-                    // Extract coded items from each coder
-                    const coderNames = Array.from(coderThreads.keys());
-                    const coderItems = new Map(
-                        Array.from(coderThreads.entries()).map(([name, threads]) => [
-                            name,
-                            extractCodedItems(threads.threads),
-                        ]),
-                    );
-
-                    logger.info(`Found ${coderNames.length} coders: ${coderNames.join(", ")}`);
-
                     // Extract all data items from dataset for filtering
                     const allDataItems = getAllItems(dataset);
                     const dataItemsMap = new Map(allDataItems.map((item) => [item.id, item]));
                     logger.info(`Extracted ${dataItemsMap.size} data items from dataset`);
+
+                    // Extract coded items from each coder
+                    const coderNames = Array.from(coderThreads.keys());
+                    const isThreadLevel = this.config.rollingWindow === -1;
+                    const coderItems = new Map(
+                        Array.from(coderThreads.entries()).map(([name, threads]) => [
+                            name,
+                            isThreadLevel
+                                ? extractCodedItemsByThread(threads.threads, this.config.skipItem, dataItemsMap)
+                                : extractCodedItems(threads.threads),
+                        ]),
+                    );
+
+                    logger.info(`Found ${coderNames.length} coders: ${coderNames.join(", ")}`);
+                    if (isThreadLevel) {
+                        logger.info(`Thread-level mode: aggregated items into ${coderItems.get(coderNames[0])?.length ?? 0} threads`);
+                    }
 
                     // Get reference codebook for code filtering
                     const referenceCodebook = consolidator.getReference(dataset.name);
@@ -374,14 +385,15 @@ export class ReliabilityStep<
                             }
 
                             // Compare items with code filtering using the full codebook
+                            // In thread-level mode, skipItem was already applied during extraction
                             const comparisons = compareItems(
                                 items1,
                                 items2,
                                 referenceCodebook,
                                 differenceCalculator,
-                                this.config.skipItem,
+                                isThreadLevel ? undefined : this.config.skipItem,
                                 dataItemsMap,
-                                this.config.rollingWindow,
+                                isThreadLevel ? undefined : this.config.rollingWindow,
                                 skipCodesFunction,
                             );
 
