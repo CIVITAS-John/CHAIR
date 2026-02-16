@@ -47,6 +47,7 @@ import {
     defaultCalculateDifference,
 } from "../evaluating/reliability-metrics.js";
 import type { Code, CodedItem, CodedThreads, DataChunk, DataItem, Dataset } from "../schema.js";
+import { exportComparisonXlsx } from "../utils/io/export.js";
 import { ensureFolder } from "../utils/io/file.js";
 import { logger } from "../utils/core/logger.js";
 import { getAllItems } from "../utils/core/misc.js";
@@ -358,6 +359,13 @@ export class ReliabilityStep<
                         ]),
                     );
 
+                    // Ensure output directory exists
+                    const subdir = this.config.subdir ?? "default";
+                    const exportPath = ensureFolder(join(dataset.path, "reliability", subdir));
+
+                    // Get chunks for comparison XLSX export
+                    const chunks = Object.values(dataset.data).flatMap((cg) => Object.values(cg));
+
                     // Compare all coder pairs
                     const pairwise: Record<string, PairwiseReliability> = {};
                     const codeLevelMetrics: Record<string, CodeLevelMetrics[]> = {};
@@ -432,6 +440,17 @@ export class ReliabilityStep<
                             codeLevelMetrics[pairKey] = filteredCodeMetrics;
 
                             logger.info(`  Calculated metrics for ${filteredCodeMetrics.length} codes`);
+
+                            // Export comparison XLSX
+                            const compBook = exportComparisonXlsx(
+                                chunks,
+                                comparisons,
+                                coderNameMap.get(coder1Name) ?? coder1Name,
+                                coderNameMap.get(coder2Name) ?? coder2Name,
+                            );
+                            const compPath = join(exportPath, `${pairKey}.xlsx`);
+                            await compBook.xlsx.writeFile(compPath);
+                            logger.info(`  Wrote comparison XLSX to ${compPath}`);
                         }
                     }
 
@@ -465,10 +484,6 @@ export class ReliabilityStep<
                             comparedCodesCount: comparedCodesCount,
                         },
                     };
-
-                    // Ensure output directory exists
-                    const subdir = this.config.subdir ?? "default";
-                    const exportPath = ensureFolder(join(dataset.path, "reliability", subdir));
 
                     // Export results to JSON
                     const outputFile = join(exportPath, `${subdir}.json`);
