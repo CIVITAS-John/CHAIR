@@ -111,7 +111,7 @@ export interface Message {
  * @throws {Error} If the provider is not supported
  *
  * @example
- * const config = getModelConfig("gpt-4o");
+ * const config = getModelConfig("gpt-5.4-mini");
  * const model = getModel(config);
  */
 export const getModel = (config: ModelConfig): LanguageModel => {
@@ -236,12 +236,12 @@ export function buildProviderOptions(model: ModelConfig): ProviderMetadata {
  *
  * @example
  * // Standard model
- * const config = initLLM("gpt-4o");
+ * const config = initLLM("gpt-5.4-mini");
  *
  * @example
  * // With overrides
  * const config = initLLM("custom", {
- *   custom: { provider: "openai", name: "gpt-4o", batchSize: 16 }
+ *   custom: { provider: "openai", name: "gpt-5.4-mini", batchSize: 16 }
  * });
  */
 export const initLLM = (

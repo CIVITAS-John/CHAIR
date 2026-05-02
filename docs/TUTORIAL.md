@@ -36,16 +36,27 @@ The setup script will:
 
 ## Running Examples
 
-After setup, build and run the included examples:
+After setup, run the included examples directly:
 ```bash
-# Build the project with examples
-pnpm run build:examples
+# Windows
+scripts\run.bat examples\example-automatic.ts
 
-# Run automatic analysis (processes txt-data, fully automated)
-node out/examples/example-automatic.js
+# Unix/macOS
+./scripts/run.sh examples/example-automatic.ts
+```
 
-# Run interactive analysis (processes docx-data, with user input during consolidation)
-node out/examples/example-interactive.js
+Available examples:
+- `examples/example-automatic.ts` — Automatic inductive analysis (processes txt-data)
+- `examples/example-interactive.ts` — Interactive inductive analysis (processes docx-data, with user input)
+- `examples/example-deductive.ts` — Deductive analysis with predefined codebook
+
+For development (rebuilds the project before running):
+```bash
+# Windows
+scripts\run.bat --dev examples\example-automatic.ts
+
+# Unix/macOS
+./scripts/run.sh --dev examples/example-automatic.ts
 ```
 
 ## Configuration
@@ -71,9 +82,9 @@ const load = new LoadJsonStep({ path: "./data" });
 const code = new CodeStep({
     agent: "AI",
     strategy: [ItemLevelAnalyzerAny],
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
 });
-const consolidate = new ConsolidateStep({ model: ["gpt-4o"] });
+const consolidate = new ConsolidateStep({ model: ["gpt-5.4-mini"] });
 const evaluate = new EvaluateStep({ consolidator: consolidate, subdir: "evaluation" });
 
 const job = new QAJob({
@@ -84,7 +95,7 @@ const job = new QAJob({
 await job.execute();
 ```
 
-To customize, modify `examples/example-automatic.ts` and rebuild with `pnpm run build:examples`.
+To customize, modify `examples/example-automatic.ts` and re-run with the run script.
 
 ## Tutorials
 
@@ -101,7 +112,7 @@ Detailed guides for each workflow:
 - **API Key Configuration**: Ensure your LLM provider API keys are set in `.env`
 - **Node.js Version**: Verify you're using Node.js v20 or later (`node --version`)
 - **Python Dependencies**: Check that all Python packages are installed correctly
-- **Build Errors**: Run `pnpm run build` after making changes to TypeScript files
+- **Build Errors**: Use `--dev` flag when running experiments to rebuild after source changes
 
 ### Getting Help
 - Report issues on [GitHub Issues](https://github.com/CIVITAS-John/CHAIR/issues)

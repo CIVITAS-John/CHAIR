@@ -15,7 +15,7 @@ const load = new LoadJsonStep({
 const codeDeductive1 = new CodeStep({
     agent: "AI",
     strategy: ItemLevelCoderSimple,
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
     codebook: "./examples/txt-data/codebook.xlsx",
     parameters: {
         temperature: 0.3,
@@ -26,7 +26,7 @@ const codeDeductive1 = new CodeStep({
 const codeDeductive2 = new CodeStep({
     agent: "AI",
     strategy: ItemLevelCoderSimple,
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
     codebook: "./examples/txt-data/codebook.xlsx",
     parameters: {
         temperature: 0.5,

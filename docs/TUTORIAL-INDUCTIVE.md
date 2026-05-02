@@ -56,10 +56,10 @@ Multiple strategies run independently and produce separate codebooks, which are 
 
 ```typescript
 // Single model
-model: ["gpt-4o"]
+model: ["gpt-5.4-mini"]
 
 // Multiple models — each produces separate results
-model: ["gpt-4o", "gemini-2.0-flash"]
+model: ["gpt-5.4-mini", "gemini-3.1-flash-lite"]
 ```
 
 Supported providers: OpenAI GPT, Google Gemini, Anthropic Claude, Groq, Ollama, MistralAI.
@@ -70,7 +70,7 @@ Supported providers: OpenAI GPT, Google Gemini, Anthropic Claude, Groq, Ollama, 
 const code = new CodeStep({
     agent: "AI",
     strategy: [ItemLevelAnalyzerAny],
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
     parameters: {
         temperature: 0.5,       // LLM creativity (0-2)
         retries: 3,             // Retry failed requests
@@ -99,7 +99,7 @@ const code = new CodeStep({
             prompt: "Special requirement: always generate more than 20 phrases for each message.",
         }),
     ],
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
 });
 ```
 
@@ -124,7 +124,7 @@ import { RefineMerger } from "../src/consolidating/refine-merger.js";
 import { ConsolidateStep } from "../src/steps/consolidate-step.js";
 
 const consolidate = new ConsolidateStep({
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
     builderConfig: {
         consolidators: [
             // Pass 1: Deduplicate similar labels (no LLM cost)
@@ -194,11 +194,11 @@ const code = new CodeStep({
             prompt: "Special requirement: always generate more than 20 phrases for each message.",
         }),
     ],
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
 });
 
 const consolidate = new ConsolidateStep({
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
     builderConfig: {
         consolidators: [
             new SimpleMerger({ looping: true }),

@@ -71,29 +71,26 @@ The setup script will:
 
 ### Running Example Analysis
 
-After installation, you can run the provided examples to see the framework in action:
+After installation, run the provided examples to see the framework in action:
 
 ```bash
-# Build the project with examples
-npm run build:examples
+# Windows
+scripts\run.bat examples\example-automatic.ts
+scripts\run.bat examples\example-interactive.ts
+scripts\run.bat examples\example-deductive.ts
 
-# Run automatic inductive analysis (processes txt-data)
-node out/examples/example-automatic.js
-
-# Run interactive inductive analysis (processes docx-data with user input)
-node out/examples/example-interactive.js
-
-# Run deductive analysis with predefined codebook (processes txt-data)
-node out/examples/example-deductive.js
+# Unix/macOS
+./scripts/run.sh examples/example-automatic.ts
+./scripts/run.sh examples/example-interactive.ts
+./scripts/run.sh examples/example-deductive.ts
 ```
 
 ## Development
 
-### Building
+### Building & Running
 ```bash
-npm run build             # Build main project
-npm run build:examples    # Build with examples
-npm run build:workspaces  # Build with workspaces
+npm run build                                          # Build main library
+./scripts/run.sh --dev examples/example-automatic.ts   # Rebuild + run experiment
 ```
 
 ### Code Quality

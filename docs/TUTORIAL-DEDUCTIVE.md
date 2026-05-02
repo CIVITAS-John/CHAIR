@@ -63,7 +63,7 @@ A codebook maps code labels to their definitions:
 const code = new CodeStep({
     agent: "AI",
     strategy: [ItemLevelCoderSimple],
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
     codebook: "./path/to/codebook.json",
 });
 ```
@@ -80,7 +80,7 @@ You can load a codebook directly from an Excel file that follows CHAIR's codeboo
 const code = new CodeStep({
     agent: "AI",
     strategy: [ItemLevelCoderSimple],
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
     codebook: "./my-dataset/item-any/results.xlsx",
 });
 ```
@@ -105,7 +105,7 @@ const myCodebook: Codebook = {
 const code = new CodeStep({
     agent: "AI",
     strategy: [ItemLevelCoderSimple],
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
     codebook: myCodebook,
 });
 ```
@@ -141,7 +141,7 @@ For large codebooks, you can split the analysis into category-filtered passes us
 const code = new CodeStep({
     agent: "AI",
     strategy: [ItemLevelCoderSimple],
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
     codebook: "./codebook.json",
     parameters: {
         substeps: [
@@ -183,7 +183,7 @@ const load = new LoadJsonStep({ path: "./my-dataset" });
 const codeDeductive1 = new CodeStep({
     agent: "AI",
     strategy: ItemLevelCoderSimple,
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
     codebook: "./codebook.xlsx",
     parameters: { temperature: 0.3, alias: "0" },
 });
@@ -191,7 +191,7 @@ const codeDeductive1 = new CodeStep({
 const codeDeductive2 = new CodeStep({
     agent: "AI",
     strategy: ItemLevelCoderSimple,
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
     codebook: "./codebook.xlsx",
     parameters: { temperature: 0.5, alias: "1" },
 });
@@ -267,9 +267,11 @@ Metrics computed: Jaccard Distance, Percent Agreement, Krippendorff's Alpha, and
 CHAIR includes a complete deductive coding example using the `txt-data` dataset:
 
 ```bash
-# Build and run
-pnpm run build:examples
-node out/examples/example-deductive.js
+# Windows
+scripts\run.bat examples\example-deductive.ts
+
+# Unix/macOS
+./scripts/run.sh examples/example-deductive.ts
 ```
 
 This example (`examples/example-deductive.ts`):
@@ -290,13 +292,13 @@ import ItemLevelCoderSimple from "../src/coding/deductive/item-level-simple.js";
 const inductiveCode = new CodeStep({
     agent: "AI",
     strategy: [ItemLevelAnalyzerAny],
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
 });
 
 const deductiveCode = new CodeStep({
     agent: "AI",
     strategy: [ItemLevelCoderSimple],
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
     codebook: "./codebook.json",
 });
 

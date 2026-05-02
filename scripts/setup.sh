@@ -203,9 +203,9 @@ if [[ -d $venv_path ]]; then
     echo "  source .venv/bin/activate"
     echo
 fi
-echo "To build the project, run:"
-echo "  npm run build"
+echo "To run an experiment:"
+echo "  ./scripts/run.sh examples/example-automatic.ts"
 echo
-echo "To run tests, use:"
-echo "  npm test"
+echo "To rebuild and run (for development):"
+echo "  ./scripts/run.sh --dev examples/example-automatic.ts"
 echo

@@ -198,11 +198,11 @@ echo.
 echo To activate the Python virtual environment later, run:
 echo   .venv\Scripts\activate.bat
 echo.
-echo To build the project, run:
-echo   npm run build
+echo To run an experiment:
+echo   scripts\run.bat examples\example-automatic.ts
 echo.
-echo To run tests, use:
-echo   npm test
+echo To rebuild and run (for development):
+echo   scripts\run.bat --dev examples\example-automatic.ts
 echo.
 
 endlocal

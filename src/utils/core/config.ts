@@ -122,7 +122,7 @@ export const loadConfig = (configPath?: string): Config => {
  *
  * @example
  * // Get model by name
- * const config = getModelConfig("gpt-4o");
+ * const config = getModelConfig("gpt-5.4-mini");
  *
  * @example
  * // Use alias
@@ -131,7 +131,7 @@ export const loadConfig = (configPath?: string): Config => {
  * @example
  * // With overrides
  * const config = getModelConfig("custom", {
- *   custom: { provider: "openai", name: "gpt-4o", batchSize: 16 }
+ *   custom: { provider: "openai", name: "gpt-5.4-mini", batchSize: 16 }
  * });
  */
 export const getModelConfig = (

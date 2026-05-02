@@ -24,7 +24,7 @@ const code = new CodeStep({
             prompt: "Special requirement: always generate more than 20 phrases for each message.",
         }),
     ],
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
 });
 
 // const code2 = new CodeStep({
@@ -33,7 +33,7 @@ const code = new CodeStep({
 // });
 
 const consolidate = new ConsolidateStep({
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
     builderConfig: {
         consolidators: [
             new SimpleMerger({

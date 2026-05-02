@@ -143,10 +143,10 @@ const humanCode = new CodeStep({
 const aiCode = new CodeStep({
     agent: "AI",
     strategy: [ItemLevelAnalyzerAny],
-    model: ["gpt-4o"],
+    model: ["gpt-5.4-mini"],
 });
 
-const consolidate = new ConsolidateStep({ model: ["gpt-4o"] });
+const consolidate = new ConsolidateStep({ model: ["gpt-5.4-mini"] });
 
 const job = new QAJob({
     embedder: "openai-small-512",
