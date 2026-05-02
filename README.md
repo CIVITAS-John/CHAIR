@@ -138,9 +138,16 @@ If you use this software in your research, please cite:
 }
 ```
 
+## Documentation
+
+- 📖 [Getting Started](docs/TUTORIAL.md) — Installation, setup, and quick start
+- 📂 [Data Preparation](docs/TUTORIAL-DATA.md) — Convert TXT, DOCX, QDPX, or other formats
+- 📊 [Human Coding with Spreadsheets](docs/TUTORIAL-SPREADSHEET.md) — Generate Excel templates for human coders
+- 🤖 [Inductive Coding](docs/TUTORIAL-INDUCTIVE.md) — AI-powered code generation from data
+- 📋 [Deductive Coding](docs/TUTORIAL-DEDUCTIVE.md) — Apply predefined codebooks using LLMs
+
 ## Support
 
-- 📖 See [TUTORIAL.md](docs/TUTORIAL.md) for detailed setup and usage instructions
 - 🐛 Report issues on [GitHub Issues](https://github.com/CIVITAS-John/CHAIR/issues)
 - 💬 Join discussions in [GitHub Discussions](https://github.com/CIVITAS-John/CHAIR/discussions)
 

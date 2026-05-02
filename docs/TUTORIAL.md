@@ -1,6 +1,6 @@
-# LLM Qualitative Analysis Tutorial
+# Getting Started with CHAIR
 
-Complete setup and usage guide for conducting inductive qualitative data analysis using Large Language Models and human-AI collaboration.
+Complete setup and usage guide for CHAIR — a library for qualitative data analysis using LLMs and human-AI collaboration.
 
 ## Installation
 
@@ -18,78 +18,91 @@ cd CHAIR
 2. Run the setup script:
 ```bash
 # Windows
-setup.bat
+scripts\setup.bat
 
 # Linux/macOS
-./setup.sh
+./scripts/setup.sh
 ```
 
 3. Configure API keys when prompted for your preferred LLM providers. For Google AI, get your API key at [Google AI Studio](https://aistudio.google.com/app/apikey).
 
-## Usage
-### Running Examples
-After setup, run the included examples:
+The setup script will:
+- Check Node.js installation (v20+)
+- Create `.env` file with API keys
+- Install Node.js dependencies
+- Build the project
+- Setup Python virtual environment
+- Install Python dependencies
+
+## Running Examples
+
+After setup, build and run the included examples:
 ```bash
-# Build the project
-pnpm run build
+# Build the project with examples
+pnpm run build:examples
 
-# Run example analysis
-node out/examples/job-config.js
-
-# Run automatic analysis example
+# Run automatic analysis (processes txt-data, fully automated)
 node out/examples/example-automatic.js
 
-# Run interactive analysis example  
+# Run interactive analysis (processes docx-data, with user input during consolidation)
 node out/examples/example-interactive.js
 ```
 
-## Configuration Options
+## Configuration
 
-The framework supports extensive configuration:
+### Supported LLM Providers
+OpenAI GPT, Google Gemini, Anthropic Claude, Groq, Ollama, MistralAI
 
-- **LLM Models**: OpenAI GPT, Google Gemini, Anthropic Claude, Groq, Ollama, MistralAI
-- **Embedders**: OpenAI embeddings, local models, custom implementations
-- **Data Formats**: Plain text, Word documents, structured JSON/Excel
-- **Analysis Modes**: Automatic, interactive, hybrid approaches
-- **Parallel Processing**: Multi-threaded execution for large datasets
+Configure API keys in the `.env` file. See `.env.example` for the required variables.
 
-To customize models or embedders, modify the `examples/example-automatic.ts` file and rebuild.
+### Supported Embedders
+OpenAI embeddings, local models, custom implementations. An embedder is required for the consolidation and evaluation steps.
 
-### Configuration Example
+### Quick Configuration Example
 ```typescript
-import { QAJob } from "./src/job.js";
-import { LoadJsonStep } from "./src/loading/load-json-step.js";
-import { CodeStep } from "./src/steps/code-step.js";
-import { ConsolidateStep } from "./src/steps/consolidate-step.js";
-import { EvaluateStep } from "./src/steps/evaluate-step.js";
+import ItemLevelAnalyzerAny from "../src/coding/item-level-any.js";
+import { QAJob } from "../src/job.js";
+import { LoadJsonStep } from "../src/loading/load-json-step.js";
+import { CodeStep } from "../src/steps/code-step.js";
+import { ConsolidateStep } from "../src/steps/consolidate-step.js";
+import { EvaluateStep } from "../src/steps/evaluate-step.js";
 
-const config = {
+const load = new LoadJsonStep({ path: "./data" });
+const code = new CodeStep({
+    agent: "AI",
+    strategy: [ItemLevelAnalyzerAny],
+    model: ["gpt-4o"],
+});
+const consolidate = new ConsolidateStep({ model: ["gpt-4o"] });
+const evaluate = new EvaluateStep({ consolidator: consolidate, subdir: "evaluation" });
+
+const job = new QAJob({
     embedder: "openai-small-512",
-    steps: [
-        new LoadJsonStep({ path: "./data" }),
-        new CodeStep({
-            agent: "AI",
-            strategy: ["item-level-any"],
-            model: ["gpt-4o"]
-        }),
-        new ConsolidateStep({ model: ["gpt-4o"] }),
-        new EvaluateStep({ subdir: "evaluation" })
-    ],
-    parallel: true
-};
-
-const job = new QAJob(config);
+    steps: [load, code, consolidate, evaluate],
+    parallel: true,
+});
 await job.execute();
 ```
+
+To customize, modify `examples/example-automatic.ts` and rebuild with `pnpm run build:examples`.
+
+## Tutorials
+
+Detailed guides for each workflow:
+
+- **[Data Preparation](./TUTORIAL-DATA.md)** — Convert TXT, DOCX, QDPX, or other formats into CHAIR's data format
+- **[Human Coding with Spreadsheets](./TUTORIAL-SPREADSHEET.md)** — Generate Excel templates for human coders and import results
+- **[Inductive Coding](./TUTORIAL-INDUCTIVE.md)** — AI-powered code generation from data (no predefined codebook)
+- **[Deductive Coding](./TUTORIAL-DEDUCTIVE.md)** — Apply predefined codebooks to data using LLMs
 
 ## Troubleshooting
 
 ### Common Issues
-- **API Key Configuration**: Ensure your LLM provider API keys are properly set
-- **Node.js Version**: Verify you're using Node.js v20 or later
+- **API Key Configuration**: Ensure your LLM provider API keys are set in `.env`
+- **Node.js Version**: Verify you're using Node.js v20 or later (`node --version`)
 - **Python Dependencies**: Check that all Python packages are installed correctly
-- **Build Errors**: Run `pnpm run build` after making changes
+- **Build Errors**: Run `pnpm run build` after making changes to TypeScript files
 
 ### Getting Help
-- 🐛 Report issues on [GitHub Issues](https://github.com/CIVITAS-John/CHAIR/issues)
-- 💬 Join discussions in [GitHub Discussions](https://github.com/CIVITAS-John/CHAIR/discussions)
+- Report issues on [GitHub Issues](https://github.com/CIVITAS-John/CHAIR/issues)
+- Join discussions in [GitHub Discussions](https://github.com/CIVITAS-John/CHAIR/discussions)
