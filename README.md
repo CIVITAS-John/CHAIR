@@ -18,29 +18,28 @@ CHAIR provides a complete pipeline for inductive qualitative data analysis, feat
 
 ### 1. Load Step
 Load your qualitative data from various sources:
-- Text files
-- Word documents (with qualitative codes as comments)
-- Excel Spreadsheets (with qualitative codes)
+- Text files, Word documents, Excel spreadsheets
+- REFI-QDA QDPX files (ATLAS.ti, NVivo, MAXQDA)
+- Structured JSON with `configuration.js`
 
 ### 2. Code Step
-Apply Generative AI coding strategies:
-- **Item-Level Analysis**: Individual data item analysis
-- **Chunk-Level Analysis**: Process larger text segments
-- **BERTopic Integration**: Automatic topic modeling
-
-In parallel or alternatively, load human coding results.
+Apply coding strategies — inductive, deductive, or both:
+- **Inductive (AI)**: Item-level, chunk-level, and verb-based analysis strategies
+- **Deductive (AI)**: Apply predefined codebooks with three-pass verification
+- **Human**: Import codes from Excel spreadsheets or DOCX comments
+- **Ensemble**: Combine multiple coders via weighted voting for robustness
 
 ### 3. Consolidate Step
 Merge and refine coding results:
-- **Simple Merger**: Basic consolidation
-- **Refine Merger**: Similarity-based merging
+- **Simple Merger**: Embedding-based label deduplication
+- **Refine Merger**: LLM-powered semantic merging with definitions
 - **Definition Generator**: Auto-generate code descriptions
+- For deductive coding: collect codebooks for comparison without merging
 
-### 4. Evaluate Step
+### 4. Evaluate / Reliability Step
 Assess and visualize results:
-- **Network Analysis**: Graph-based coding relationships
-- **Coverage Analysis**: Completeness assessment
-- **Interactive Visualization**: Web-based exploration
+- **Evaluate**: Network analysis, coverage assessment, interactive visualization
+- **Reliability**: Krippendorff's Alpha, percent agreement, per-code precision/recall
 
 ## Quick Start
 
@@ -78,11 +77,14 @@ After installation, you can run the provided examples to see the framework in ac
 # Build the project with examples
 npm run build:examples
 
-# Run automatic analysis (processes txt-data)
+# Run automatic inductive analysis (processes txt-data)
 node out/examples/example-automatic.js
 
-# Run interactive analysis (processes docx-data with user input)
+# Run interactive inductive analysis (processes docx-data with user input)
 node out/examples/example-interactive.js
+
+# Run deductive analysis with predefined codebook (processes txt-data)
+node out/examples/example-deductive.js
 ```
 
 ## Development

@@ -68,6 +68,25 @@ const code = new CodeStep({
 });
 ```
 
+### From an Excel file (.xlsx)
+
+You can load a codebook directly from an Excel file that follows CHAIR's codebook sheet format (columns: **Label**, **Category**, **Definition**, **Examples**, **Alternatives**). This is the same format that CHAIR exports during inductive coding, so you can:
+
+1. Run inductive coding to generate an initial codebook
+2. Open the output `.xlsx` file and refine the Codebook sheet
+3. Load the refined codebook for deductive coding
+
+```typescript
+const code = new CodeStep({
+    agent: "AI",
+    strategy: [ItemLevelCoderSimple],
+    model: ["gpt-4o"],
+    codebook: "./my-dataset/item-any/results.xlsx",
+});
+```
+
+The codebook is read from the "Codebook" sheet of the Excel file using the same import logic as human coding (see [TUTORIAL-SPREADSHEET.md](./TUTORIAL-SPREADSHEET.md)).
+
 ### From a Codebook object
 ```typescript
 import type { Codebook } from "../src/schema.js";
@@ -147,39 +166,118 @@ const code = new CodeStep({
 
 ## Complete Pipeline Example
 
+A typical deductive pipeline runs multiple coders at different temperatures, ensembles them for robustness, and measures inter-coder reliability:
+
 ```typescript
 import ItemLevelCoderSimple from "../src/coding/deductive/item-level-simple.js";
 import { QAJob, type QAJobConfig } from "../src/job.js";
 import { LoadJsonStep } from "../src/loading/load-json-step.js";
 import { CodeStep } from "../src/steps/code-step.js";
+import { EnsembleCodeStep } from "../src/steps/ensemble-code-step.js";
 import { ConsolidateStep } from "../src/steps/consolidate-step.js";
-import { EvaluateStep } from "../src/steps/evaluate-step.js";
+import { ReliabilityStep } from "../src/steps/reliability-step.js";
 
 const load = new LoadJsonStep({ path: "./my-dataset" });
 
-const code = new CodeStep({
+// Run the same strategy at different temperatures for ensemble voting
+const codeDeductive1 = new CodeStep({
     agent: "AI",
-    strategy: [ItemLevelCoderSimple],
+    strategy: ItemLevelCoderSimple,
     model: ["gpt-4o"],
-    codebook: "./codebook.json",
+    codebook: "./codebook.xlsx",
+    parameters: { temperature: 0.3, alias: "0" },
 });
 
-const consolidate = new ConsolidateStep({ model: ["gpt-4o"] });
+const codeDeductive2 = new CodeStep({
+    agent: "AI",
+    strategy: ItemLevelCoderSimple,
+    model: ["gpt-4o"],
+    codebook: "./codebook.xlsx",
+    parameters: { temperature: 0.5, alias: "1" },
+});
 
-const evaluate = new EvaluateStep({
+// Ensemble: keep codes where both coders agree
+const ensemble = new EnsembleCodeStep({
+    coders: [codeDeductive1, codeDeductive2],
+    voteThreshold: 0.5,
+});
+
+// Consolidate: collect codebooks for comparison (no merging in deductive mode)
+const consolidate = new ConsolidateStep({
+    namePattern: "codebook",
+    coder: [codeDeductive1, codeDeductive2, ensemble],
+    builderConfig: { consolidators: [] },
+});
+
+// Reliability: compute inter-coder agreement
+const reliability = new ReliabilityStep({
     consolidator: consolidate,
-    subdir: "evaluation",
+    skipItem: (item) => item.uid === "Interviewer",
 });
 
 const config: QAJobConfig = {
-    embedder: "openai-small-512",
-    steps: [load, code, consolidate, evaluate],
+    steps: [load, codeDeductive1, codeDeductive2, ensemble, consolidate, reliability],
     parallel: true,
 };
 
 const job = new QAJob(config);
 await job.execute();
 ```
+
+**Key differences from inductive coding:**
+- **No embedder needed** — deductive coding doesn't require embedding-based consolidation
+- **Empty consolidators** — `ConsolidateStep` only collects codebooks, it doesn't merge codes
+- **`ReliabilityStep`** replaces `EvaluateStep` — computes Krippendorff's Alpha, percent agreement, and per-code precision/recall
+- **Multiple temperatures** + `EnsembleCodeStep` — improves robustness by ensembling runs with different LLM temperatures
+- **`skipItem`** — exclude items from reliability calculation (e.g., interviewer questions)
+
+### EnsembleCodeStep
+
+Combines codes from multiple coders using configurable voting:
+
+```typescript
+const ensemble = new EnsembleCodeStep({
+    coders: [coder1, coder2, coder3],  // CodeStep instances to ensemble
+    voteThreshold: 0.5,                // Keep codes with >50% agreement
+    rollingWindow: 3,                  // Optional: aggregate across neighboring items
+});
+```
+
+- `voteThreshold`: Proportion of coders that must agree (0-1). Default: 0.5 (majority)
+- `rollingWindow`: Optional window size for aggregating codes across neighboring items
+- Custom weights: Pass a `Map<CodeStep, number>` to `coders` for weighted voting
+
+### ReliabilityStep
+
+Computes inter-coder reliability metrics:
+
+```typescript
+const reliability = new ReliabilityStep({
+    consolidator: consolidate,
+    skipItem: (item) => item.uid === "Interviewer",  // Exclude from metrics
+    rollingWindow: 6,                                 // Optional: window for comparison
+    anonymize: false,                                 // Show coder names in output
+});
+```
+
+Metrics computed: Jaccard Distance, Percent Agreement, Krippendorff's Alpha, and per-code Precision/Recall.
+
+## Running the Example
+
+CHAIR includes a complete deductive coding example using the `txt-data` dataset:
+
+```bash
+# Build and run
+pnpm run build:examples
+node out/examples/example-deductive.js
+```
+
+This example (`examples/example-deductive.ts`):
+1. Loads the mock interview data from `examples/txt-data/`
+2. Loads a predefined codebook from `examples/txt-data/codebook.xlsx` (10 codes covering Interview Process, Career Development, and Professional Skills)
+3. Runs two deductive coders at temperatures 0.3 and 0.5
+4. Ensembles them with majority voting
+5. Computes inter-coder reliability
 
 ## Combining Deductive and Inductive
 

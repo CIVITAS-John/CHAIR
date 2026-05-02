@@ -50,7 +50,7 @@ import type {
     Dataset,
 } from "../schema.js";
 import { exportChunksForCoding } from "../utils/io/export.js";
-import { importCodes } from "../utils/io/import.js";
+import { importCodes, importCodebook } from "../utils/io/import.js";
 import { ensureFolder, readJSONFile } from "../utils/io/file.js";
 import type { LLMModel, LLMSession } from "../utils/ai/llms.js";
 import { requestLLM, initLLM, getModel, buildProviderOptions } from "../utils/ai/llms.js";
@@ -756,7 +756,11 @@ export class CodeStep<
             if (this.config.codebook) {
                 if (typeof this.config.codebook === "string") {
                     logger.info(`Loading codebook from ${this.config.codebook}`);
-                    codebook = readJSONFile(this.config.codebook);
+                    if (this.config.codebook.endsWith(".xlsx")) {
+                        codebook = await importCodebook(this.config.codebook);
+                    } else {
+                        codebook = readJSONFile(this.config.codebook);
+                    }
                 } else {
                     codebook = this.config.codebook;
                 }
