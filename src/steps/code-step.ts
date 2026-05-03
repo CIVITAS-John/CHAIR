@@ -492,6 +492,11 @@ const analyzeChunks = <T extends DataItem>(
                     aiParams,
                 );
             } catch (e) {
+                // Log cache file path for human inspection of the LLM response
+                const { session } = BaseStep.Context.get();
+                if (session?.lastCacheFile) {
+                    logger.error(`Cache file for inspection: ${session.lastCacheFile}`);
+                }
                 // Wrap errors for better tracking and debugging
                 const err = new CodeStep.InternalError("Failed to analyze chunk");
                 err.cause = e;

@@ -92,6 +92,7 @@ export interface LLMSession {
     outputTokens: number;
     expectedItems: number;
     finishedItems: number;
+    lastCacheFile?: string;
 }
 
 /**
@@ -369,6 +370,7 @@ export const requestLLM = (
         // Check if the cache exists
         const cacheFile = `${cacheFolder}/${md5(input)}-${temperature}.txt`;
         logger.debug(`[${session.config.name}] Cache file path: ${cacheFile}`);
+        session.lastCacheFile = cacheFile;
         if (existsSync(cacheFile)) {
             logger.debug(`[${session.config.name}] Cache file exists`);
             const cacheContent = readFileSync(cacheFile, "utf-8");

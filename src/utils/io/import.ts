@@ -86,8 +86,8 @@ export const importCodes = (
         if (indexSheet) {
             indexSheet.eachRow((row, rowNum) => {
                 if (rowNum === 1) return;
-                const sheetName = getCellValue(row, 1);
-                const chunkId = getCellValue(row, 2);
+                const sheetName = getCellValueString(row, 1);
+                const chunkId = getCellValueString(row, 2);
                 if (sheetName && chunkId) indexMap.set(sheetName, chunkId);
             });
         }

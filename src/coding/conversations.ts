@@ -76,8 +76,13 @@ export const buildMessagePrompt = (
         (_Match, Type) => `[${Type} ${message.id}]`,
     );
 
-    // Compose the final result with speaker prefix
-    let result = `${shortenName ? dataset.getSpeakerNameForExample(message.uid) : dataset.getSpeakerName(message.uid)}: ${content}`;
+    // If content contains numbered lists, blockquote the entire content
+    // to prevent parser confusion (e.g., "1. **Military Situation**:" mistaken for coded results)
+    const speakerName = shortenName ? dataset.getSpeakerNameForExample(message.uid) : dataset.getSpeakerName(message.uid);
+    const hasNumberedList = /^\d+\.\s/m.test(content);
+    let result = hasNumberedList
+        ? `${speakerName}:\n${content.split("\n").map((line) => `> ${line}`).join("\n")}`
+        : `${speakerName}: ${content}`;
 
     // Append preliminary codes if available from previous coding rounds
     if (coded?.codes?.length) {
