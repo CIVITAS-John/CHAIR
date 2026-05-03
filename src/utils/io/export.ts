@@ -134,13 +134,18 @@ export const exportChunks = <T extends DataItem>(
 ) => {
     const { chunks, extraColumns, getExtraData, getRowFill, postProcessRow, analyses, wrapColumns } = options;
     const addExtraRows = options.extraRows ?? true;
+    const useNumbered = chunks.some((c) => c.id.length > 31);
+    const sheetNameMap = new Map<string, string>();
 
-    for (const chunk of chunks) {
-        logger.debug(`Exporting chunk ${chunk.id}`);
+    for (let i = 0; i < chunks.length; i++) {
+        const chunk = chunks[i];
+        const sheetName = useNumbered ? `Chunk ${i + 1}` : chunk.id;
+        sheetNameMap.set(sheetName, chunk.id);
+        logger.debug(`Exporting chunk ${chunk.id} as ${sheetName}`);
         const messages = chunk.items;
         const analysis = analyses?.threads[chunk.id] ?? analyses?.threads[chunk.id.substring(2)];
 
-        const sheet = book.addWorksheet(chunk.id, {
+        const sheet = book.addWorksheet(sheetName, {
             views: [{ state: "frozen", xSplit: 1, ySplit: 1 }],
         });
         sheet.columns = [
@@ -207,6 +212,17 @@ export const exportChunks = <T extends DataItem>(
             );
         }
         logger.debug("Finished exporting chunk");
+    }
+
+    if (useNumbered) {
+        const indexSheet = book.addWorksheet("Index");
+        indexSheet.columns = [
+            { header: "Sheet", key: "Sheet", width: 15 },
+            { header: "ChunkID", key: "ChunkID", width: 80 },
+        ];
+        for (const [sheet, id] of sheetNameMap) {
+            indexSheet.addRow({ Sheet: sheet, ChunkID: id });
+        }
     }
 };
 

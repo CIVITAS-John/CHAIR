@@ -80,11 +80,23 @@ export const importCodes = (
             threads: {},
         };
 
-        // Process each worksheet (tab) except the Codebook
-        workbook.eachSheet((worksheet) => {
-            if (worksheet.name === codebookSheet) return; // Skip codebook, will handle separately
+        // Build index lookup if Index sheet exists (for numbered worksheet names)
+        const indexSheet = workbook.getWorksheet("Index");
+        const indexMap = new Map<string, string>();
+        if (indexSheet) {
+            indexSheet.eachRow((row, rowNum) => {
+                if (rowNum === 1) return;
+                const sheetName = getCellValue(row, 1);
+                const chunkId = getCellValue(row, 2);
+                if (sheetName && chunkId) indexMap.set(sheetName, chunkId);
+            });
+        }
 
-            const chunkId = worksheet.name;
+        // Process each worksheet (tab) except the Codebook and Index
+        workbook.eachSheet((worksheet) => {
+            if (worksheet.name === codebookSheet || worksheet.name === "Index") return;
+
+            const chunkId = indexMap.get(worksheet.name) || worksheet.name;
             logger.debug(`Importing chunk ${chunkId}`);
 
             // Initialize the thread analysis

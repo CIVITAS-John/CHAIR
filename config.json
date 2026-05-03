@@ -57,6 +57,33 @@
       "name": "DeepSeek-R1",
       "contextWindow": 100000,
       "batchSize": 32
+    },
+    "local-gemma-4": {
+      "provider": "openai-compatible",
+      "name": "Gemma-4",
+      "contextWindow": 100000,
+      "batchSize": 32,
+      "options": {
+        "reasoningEffort": "high"
+      }
+    },
+    "local-minimax-m2.7": {
+      "provider": "openai-compatible",
+      "name": "Minimax-M2.7",
+      "contextWindow": 200000,
+      "batchSize": 32,
+      "options": {
+        "reasoningEffort": "high"
+      }
+    },
+    "local-Qwen-3.5": {
+      "provider": "openai-compatible",
+      "name": "Qwen-3.5",
+      "contextWindow": 200000,
+      "batchSize": 32,
+      "options": {
+        "reasoningEffort": "high"
+      }
     }
   },
   "embedders": {
