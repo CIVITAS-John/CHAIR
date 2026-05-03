@@ -177,14 +177,19 @@ export const getModel = (config: ModelConfig): LanguageModel => {
  * // Returns: { openrouter: { reasoning: { effort: 'medium' } } }
  */
 export function buildProviderOptions(model: ModelConfig): ProviderMetadata {
+  let result: ProviderMetadata;
+
+  const isVertexAnthropic = model.provider === 'google' && model.name.startsWith('claude-');
+  const providerOptionsKey = isVertexAnthropic ? 'anthropic' : model.provider;
+
   if (!model.options) {
-    return { [model.provider]: {} };
+    result = { [providerOptionsKey]: {} };
   }
 
   // Handle OpenRouter's reasoning format
-  if (model.provider === 'openrouter' && model.options.reasoningEffort) {
+  else if (model.provider === 'openrouter' && model.options.reasoningEffort) {
     const { reasoningEffort, ...otherOptions } = model.options;
-    return {
+    result = {
       openrouter: {
         ...otherOptions,
         reasoning: {
@@ -194,33 +199,72 @@ export function buildProviderOptions(model: ModelConfig): ProviderMetadata {
     };
   }
 
-  // Handle Anthropic's reasoning format
-  if (model.provider === 'anthropic' && model.options.reasoningEffort && model.options.reasoningEffort !== "minimal") {
+  // Handle Gemma's thinking format
+  else if (model.provider === 'openai-compatible' && model.options.reasoningEffort && model.options.reasoningEffort !== "minimal" && model.name.toLowerCase().includes('gemma-4')) {
+    result = {
+      openaiCompatible: {
+        ...model.options,
+        extra_body: { chat_template_kwargs: { enable_thinking: true } },
+        allowed_openai_params: ['reasoning_effort']
+      }
+    };
+  }
+
+  // Handle LiteLLM's reasoning format
+  else if (model.provider === 'openai-compatible' && model.options.reasoningEffort) {
+    result = {
+      openaiCompatible: {
+        ...model.options,
+        allowed_openai_params: ['reasoning_effort']
+      }
+    };
+  }
+
+  // Handle Anthropic's reasoning format (direct Anthropic or Claude on Vertex)
+  else if ((model.provider === 'anthropic' || (model.provider === 'google' && model.name.startsWith('claude-'))) && model.options.reasoningEffort) {
     const { reasoningEffort, ...otherOptions } = model.options;
-    let budget = 1024;
-    switch (model.options.reasoningEffort) {
-      case 'low':
-        budget = 1024;
-        break;
-      case 'medium':
-        budget = 4096;
-        break;
-      case 'high':
-        budget = 8192;
-        break;
+    if (reasoningEffort === 'minimal') {
+      // minimal maps to no thinking — pass through without effort
+      result = {
+        anthropic: {
+          ...otherOptions,
+          thinking: { type: 'disabled' },
+        }
+      };
+    } else {
+      result = {
+        anthropic: {
+          ...otherOptions,
+          thinking: { type: 'adaptive', display: 'summarized' },
+          effort: reasoningEffort
+        }
+      };
     }
-    return {
-      anthropic: {
+  }
+
+  // Handle Google/Vertex's thinking format
+  else if (model.provider === 'google' && model.options.reasoningEffort) {
+    const { reasoningEffort, ...otherOptions } = model.options;
+    const providerKey = process.env.GOOGLE_GENAI_USE_VERTEXAI === 'true' ? 'vertex' : 'google';
+    result = {
+      [providerKey]: {
         ...otherOptions,
-        thinking: { type: 'enabled', budgetTokens: budget }
+        thinkingConfig: {
+          thinkingLevel: reasoningEffort === 'minimal' ? 'low' : reasoningEffort,
+          includeThoughts: true,
+        },
       }
     };
   }
 
   // Default: pass options through as-is
-  return {
-    [model.provider]: model.options
-  };
+  else {
+    result = {
+      [providerOptionsKey]: model.options
+    };
+  }
+
+  return result;
 }
 
 /**
