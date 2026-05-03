@@ -387,7 +387,7 @@ const analyzeChunks = <T extends DataItem>(
                                     { role: "user", content: prompts[1] },
                                 ],
                                 `${basename(dataset.path)}/${analyzer.name}`,
-                                tries * 0.2 + (actionAiParams?.temperature ?? analyzer.baseTemperature),
+                                tries * 0.1 + (actionAiParams?.temperature ?? analyzer.baseTemperature),
                                 actionAiParams?.fakeRequest ?? false,
                             );
 

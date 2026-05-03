@@ -76,10 +76,10 @@ export const buildMessagePrompt = (
         (_Match, Type) => `[${Type} ${message.id}]`,
     );
 
-    // If content contains numbered lists, blockquote the entire content
+    // If content contains numbered lists, markdown headers, or line-breaks
     // to prevent parser confusion (e.g., "1. **Military Situation**:" mistaken for coded results)
     const speakerName = shortenName ? dataset.getSpeakerNameForExample(message.uid) : dataset.getSpeakerName(message.uid);
-    const hasMarkdown = /^\d+\.\s/m.test(content) || /^#{1,6}\s/m.test(content);
+    const hasMarkdown = /^\d+\.\s/m.test(content) || /^#{1,6}\s/m.test(content) || /\n/m.test(content);
     let result = hasMarkdown
         ? `${speakerName}:\n${content.split("\n").map((line) => `> ${line}`).join("\n")}\n===`
         : `${speakerName}: ${content}`;

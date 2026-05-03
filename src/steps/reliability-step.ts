@@ -301,20 +301,36 @@ export class ReliabilityStep<
                 async () => {
                     logger.info(`Calculating reliability for dataset: ${dataset.name}`);
 
-                    // Get all coded threads from each coder
+                    // Get all coded threads from each coder, merging chunks from the same CodeStep
                     const coderThreads = new Map<string, CodedThreads>();
+                    let coderIndex = 0;
 
-                    // Iterate through CodeStep dependencies to get coded threads
                     for (const codeStep of consolidator.dependsOn) {
                         const results = codeStep.getResult(dataset.name);
 
-                        // Extract coded threads from each analyzer/coder
-                        for (const [analyzer, analyzerResults] of Object.entries(results)) {
-                            for (const [ident, codedThreads] of Object.entries(analyzerResults)) {
-                                const coderName = `${analyzer}-${ident}`;
-                                coderThreads.set(coderName, codedThreads);
+                        // Merge all chunk results per analyzer into a single coder entry
+                        for (const [_analyzer, analyzerResults] of Object.entries(results)) {
+                            const mergedThreads: CodedThreads = { threads: {} };
+
+                            for (const [_ident, codedThreads] of Object.entries(analyzerResults)) {
+                                const ct = codedThreads as CodedThreads;
+                                // Merge threads from all chunks (disjoint thread IDs)
+                                for (const [threadId, thread] of Object.entries(ct.threads)) {
+                                    mergedThreads.threads[threadId] = thread;
+                                }
+                                // Merge codebook if present
+                                if (ct.codebook) {
+                                    mergedThreads.codebook = {
+                                        ...(mergedThreads.codebook ?? {}),
+                                        ...ct.codebook,
+                                    };
+                                }
                             }
+
+                            const coderName = `${codeStep.group}-${coderIndex}`;
+                            coderThreads.set(coderName, mergedThreads);
                         }
+                        coderIndex++;
                     }
 
                     // Extract all data items from dataset for filtering
