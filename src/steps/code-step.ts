@@ -40,7 +40,7 @@ import { select } from "@inquirer/prompts";
 import open from "open";
 
 import { Analyzer, loopThroughChunk } from "../analyzer.js";
-import { buildCodes, mergeCodebook } from "../consolidating/codebooks.js";
+import { buildCodes, codebooksStructureEqual, mergeCodebook } from "../consolidating/codebooks.js";
 import type {
     Codebook,
     CodedThread,
@@ -145,6 +145,29 @@ export type CodeStepConfig<
           codebook?: string | Codebook;
       }
 );
+
+/**
+ * Create a JSON-serializable copy of CodedThreads that omits per-thread `codes`
+ * when all threads share the same codebook structure (keys, definitions, categories).
+ * The top-level `codebook` (from mergeCodebook) serves as the single source of truth.
+ * Returns the original object unchanged when codebooks differ across threads.
+ */
+const slimForJson = (codedThreads: CodedThreads): CodedThreads => {
+    if (!codedThreads.codebook || !codebooksStructureEqual(codedThreads.threads)) {
+        return codedThreads;
+    }
+    logger.info(`All ${Object.keys(codedThreads.threads).length} threads share the same codebook, deduplicating for JSON`);
+    // Cast needed: the slim representation intentionally omits `codes` for serialization only
+    return {
+        ...codedThreads,
+        threads: Object.fromEntries(
+            Object.entries(codedThreads.threads).map(([id, thread]) => {
+                const { codes, ...rest } = thread;
+                return [id, rest];
+            })
+        ),
+    } as CodedThreads;
+};
 
 /**
  * Filter codebook with dual-direction category filtering
@@ -683,9 +706,10 @@ export class CodeStep<
     ): Promise<void> {
         const analyzerPath = ensureFolder(join(dataset.path, analyzerName));
 
-        // Write JSON
+        // Write JSON (deduplicate per-thread codebooks if they share the same structure)
         const jsonPath = join(analyzerPath, `${filename}.json`);
-        const jsonOutput = metadata ? { ...codedThreads, metadata } : codedThreads;
+        const slim = slimForJson(codedThreads);
+        const jsonOutput = metadata ? { ...slim, metadata } : slim;
         logger.info(`[${dataset.name}/${analyzerName}] Writing JSON to ${jsonPath}`);
         writeFileSync(jsonPath, JSON.stringify(jsonOutput, null, 4));
 
@@ -933,7 +957,7 @@ export class CodeStep<
                                     logger.info(
                                         `[${dataset.name}/${analyzer.name}/${key}] Writing JSON result to ${jsonPath}`,
                                     );
-                                    writeFileSync(jsonPath, JSON.stringify(result, null, 4));
+                                    writeFileSync(jsonPath, JSON.stringify(slimForJson(result), null, 4));
 
                                     const book = exportChunksForCoding(Object.values(chunks), result);
                                     const excelPath = join(analyzerPath, `${filename}.xlsx`);
@@ -1015,6 +1039,12 @@ export class CodeStep<
                     const analyses: CodedThreads = readJSONFile(path);
                     if (!("threads" in analyses)) {
                         throw new CodeStep.ConfigError(`Invalid JSON code file: ${path}`);
+                    }
+                    // Restore per-thread codebooks if they were deduplicated during export
+                    if (analyses.codebook && Object.values(analyses.threads).some(t => !t.codes)) {
+                        for (const thread of Object.values(analyses.threads)) {
+                            if (!thread.codes) thread.codes = JSON.parse(JSON.stringify(analyses.codebook));
+                        }
                     }
                     if (!analyses.codebook) {
                         buildCodes(dataset, analyses);
