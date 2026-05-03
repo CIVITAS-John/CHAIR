@@ -148,7 +148,7 @@ interface EnsembleMetadata {
 /**
  * Default vote threshold decision function
  *
- * Keeps codes where the weighted proportion of agreeing coders meets the threshold.
+ * Keeps codes where the weighted proportion of agreeing coders meets or exceeds the threshold.
  * Since weights are always normalized to sum to 1.0, the agreement is already a proportion.
  *
  * @param codeToCoders - Map of codes to coders who assigned them
@@ -171,7 +171,7 @@ const applyVoteThreshold = (
         }, 0);
 
 
-        if (agreement > threshold) {
+        if (agreement >= threshold) {
             selected.push(code);
         }
     }
@@ -604,10 +604,8 @@ export class EnsembleCodeStep<
                         threads: {},
                     };
 
-                    // Get thread IDs from first coder (all should have same structure)
-                    const firstCoderResults = Array.from(coderResults.values())[0];
-                    const firstAnalyzerResults = Array.from(firstCoderResults.values())[0];
-                    const threadIds = Object.keys(firstAnalyzerResults.threads);
+                    // Get thread IDs from the chunk data (keys are thread IDs)
+                    const threadIds = Object.keys(chunks);
 
                     // Process each thread
                     for (const threadId of threadIds) {

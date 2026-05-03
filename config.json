@@ -84,6 +84,15 @@
       "options": {
         "reasoningEffort": "high"
       }
+    },
+    "local-mistral-small-4": {
+      "provider": "openai-compatible",
+      "name": "mistral-small-4",
+      "contextWindow": 200000,
+      "batchSize": 32,
+      "options": {
+        "reasoningEffort": "high"
+      }
     }
   },
   "embedders": {

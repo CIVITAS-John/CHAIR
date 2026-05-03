@@ -203,7 +203,7 @@ export function buildProviderOptions(model: ModelConfig): ProviderMetadata {
   // Handle Gemma's thinking format
   else if (model.provider === 'openai-compatible' && model.options.reasoningEffort && model.options.reasoningEffort !== "minimal" && model.name.toLowerCase().includes('gemma-4')) {
     result = {
-      openaiCompatible: {
+      'openai-compatible': {
         ...model.options,
         extra_body: { chat_template_kwargs: { enable_thinking: true } },
         allowed_openai_params: ['reasoning_effort']
@@ -214,7 +214,7 @@ export function buildProviderOptions(model: ModelConfig): ProviderMetadata {
   // Handle LiteLLM's reasoning format
   else if (model.provider === 'openai-compatible' && model.options.reasoningEffort) {
     result = {
-      openaiCompatible: {
+      'openai-compatible': {
         ...model.options,
         allowed_openai_params: ['reasoning_effort']
       }
@@ -489,7 +489,7 @@ export const requestLLMWithoutCache = (
                         });
                         text = result.text;
                         // Capture reasoning content if available
-                        reasoning = result.reasoningText ?? "";
+                        reasoning = result.reasoningText ?? result.reasoning?.join("\n");
                         // Also check for <think> tags in the response if no reasoningText
                         if (!reasoning && text) {
                             const extracted = extractAndRemoveThinkTags(text);
