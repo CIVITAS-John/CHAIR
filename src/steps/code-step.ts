@@ -36,6 +36,7 @@
 import { existsSync, readdirSync, writeFileSync } from "fs";
 import { basename, extname, join } from "path";
 
+import { AsyncScope } from "@rakuzen25/async-store";
 import { select } from "@inquirer/prompts";
 import open from "open";
 
@@ -814,6 +815,7 @@ export class CodeStep<
 
                     // Create a task for each model
                     const modelTasks = models.map((model) => async () => {
+                        await new AsyncScope().run(async () => {
                         const config = typeof model === "string" ? initLLM(model) : model;
                         const modelName = typeof model === "string" ? model : model.name;
 
@@ -985,6 +987,7 @@ export class CodeStep<
                             `(input tokens: ${session.inputTokens}, output tokens: ${session.outputTokens}, ` +
                             `finish rate: ${Math.round((session.finishedItems / Math.max(1, session.expectedItems)) * 100)}%)`
                         );
+                        });
                     });
 
                     // Execute tasks based on parallel flag

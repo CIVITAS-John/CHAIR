@@ -383,6 +383,14 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
                         `[${dataset.name}] Processing block ${start}-${end} (${currents.length} subunits, ${contexts.length} contexts)`,
                     );
 
+                    // Guard: skip if no items to code after chunkStart
+                    if (end - cursor <= 0) {
+                        logger.warn(
+                            `[${dataset.name}] No items to code (chunkStart=${cursor - start}, subunits=${currents.length}), skipping chunk`,
+                        );
+                        break;
+                    }
+
                     // Attempt to process the chunk
                     try {
                         // action returns cursor adjustment (usually 0, negative if LLM skipped items)
