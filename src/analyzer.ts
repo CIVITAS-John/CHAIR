@@ -386,7 +386,7 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
                     // Guard: skip if no items to code after chunkStart
                     if (end - cursor <= 0) {
                         logger.warn(
-                            `[${dataset.name}] No items to code (chunkStart=${cursor - start}, subunits=${currents.length}), skipping chunk`,
+                            `[${dataset.name}-${(source as any).id}] No items to code (chunkStart=${cursor - start}, subunits=${currents.length}), skipping chunk`,
                         );
                         break;
                     }
@@ -429,7 +429,7 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
                     }
                 }
                 // Advance cursor: move by chunk size + any adjustment from parseResponse
-                cursor += chunkSize[0] + cursorRelative;
+                cursor += Math.max(chunkSize[0] + cursorRelative, 1);
             }
 
             // Execute optional post-iteration callback (e.g., save intermediate results)

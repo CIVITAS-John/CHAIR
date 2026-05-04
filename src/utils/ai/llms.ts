@@ -402,8 +402,6 @@ export const requestLLM = (
                 const cachedInput = cacheContent.substring(0, Math.min(200, cacheContent.length));
                 logger.warn(`[${session.config.name}] Cache INVALID: ===REASONING=== delimiter not found (file: ${cacheFile}, fileSize: ${cacheContent.length}, starts with: ${JSON.stringify(cachedInput)})`);
             }
-        } else {
-            logger.info(`[${session.config.name}] Cache miss: file does not exist (${cacheFile})`);
         }
         // Cache miss - call the model
         logger.warn(`[${session.config.name}] Cache miss for ${cacheFile}, input hash: ${md5(input)}, temperature: ${temperature}`);
