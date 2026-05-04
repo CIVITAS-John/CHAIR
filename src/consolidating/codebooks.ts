@@ -122,29 +122,6 @@ export const mergeCodebook = (analyses: CodedThreads): CodedThreadsWithCodebook 
 };
 
 /**
- * Check if all threads share the same codebook structure (keys, definitions, categories).
- * Examples are ignored since they naturally differ per thread.
- *
- * When true, the per-thread `codes` can be omitted from JSON in favor of the
- * top-level `codebook`, significantly reducing file size.
- */
-export const codebooksStructureEqual = (threads: Record<string, CodedThread>): boolean => {
-    const values = Object.values(threads);
-    if (values.length <= 1) return true;
-    const normalize = (codes: Codebook) =>
-        JSON.stringify(
-            Object.fromEntries(
-                Object.keys(codes).sort().map(key => {
-                    const { examples, ...rest } = codes[key];
-                    return [key, rest];
-                })
-            )
-        );
-    const reference = normalize(values[0].codes);
-    return values.every(t => normalize(t.codes) === reference);
-};
-
-/**
  * Merge multiple codebooks using label-based or reference-based strategy
  *
  * This function handles two distinct merging strategies:

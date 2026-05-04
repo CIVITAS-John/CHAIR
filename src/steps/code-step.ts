@@ -40,7 +40,7 @@ import { select } from "@inquirer/prompts";
 import open from "open";
 
 import { Analyzer, loopThroughChunk } from "../analyzer.js";
-import { buildCodes, codebooksStructureEqual, mergeCodebook } from "../consolidating/codebooks.js";
+import { buildCodes, mergeCodebook } from "../consolidating/codebooks.js";
 import type {
     Codebook,
     CodedThread,
@@ -143,21 +143,21 @@ export type CodeStepConfig<
           parameters?: AIParameters;
           /** Optional codebook for deductive coding (file path or Codebook object) */
           codebook?: string | Codebook;
+          /** Strip per-thread codebooks from JSON export (default: true) */
+          stripThreadCodebook?: boolean;
       }
 );
 
 /**
- * Create a JSON-serializable copy of CodedThreads that omits per-thread `codes`
- * when all threads share the same codebook structure (keys, definitions, categories).
- * The top-level `codebook` (from mergeCodebook) serves as the single source of truth.
- * Returns the original object unchanged when codebooks differ across threads.
+ * Create a JSON-serializable copy of CodedThreads that omits per-thread `codes`.
+ * The top-level `codebook` serves as the single source of truth.
+ * When strip is false or no top-level codebook exists, returns the original object unchanged.
  */
-const slimForJson = (codedThreads: CodedThreads): CodedThreads => {
-    if (!codedThreads.codebook || !codebooksStructureEqual(codedThreads.threads)) {
+const slimForJson = (codedThreads: CodedThreads, strip = true): CodedThreads => {
+    if (!strip || !codedThreads.codebook) {
         return codedThreads;
     }
-    logger.info(`All ${Object.keys(codedThreads.threads).length} threads share the same codebook, deduplicating for JSON`);
-    // Cast needed: the slim representation intentionally omits `codes` for serialization only
+    logger.info(`Stripping per-thread codebooks from ${Object.keys(codedThreads.threads).length} threads for JSON export`);
     return {
         ...codedThreads,
         threads: Object.fromEntries(
@@ -706,9 +706,10 @@ export class CodeStep<
     ): Promise<void> {
         const analyzerPath = ensureFolder(join(dataset.path, analyzerName));
 
-        // Write JSON (deduplicate per-thread codebooks if they share the same structure)
+        // Write JSON (strip per-thread codebooks unless disabled)
         const jsonPath = join(analyzerPath, `${filename}.json`);
-        const slim = slimForJson(codedThreads);
+        const strip = this.config.agent === "AI" ? (this.config.stripThreadCodebook ?? true) : true;
+        const slim = slimForJson(codedThreads, strip);
         const jsonOutput = metadata ? { ...slim, metadata } : slim;
         logger.info(`[${dataset.name}/${analyzerName}] Writing JSON to ${jsonPath}`);
         writeFileSync(jsonPath, JSON.stringify(jsonOutput, null, 4));

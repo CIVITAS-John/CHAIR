@@ -374,12 +374,13 @@ export const requestLLM = (
         if (existsSync(cacheFile)) {
             logger.debug(`[${session.config.name}] Cache file exists`);
             const cacheContent = readFileSync(cacheFile, "utf-8");
-            const parts = cacheContent.split("\n===REASONING===\n");
-            if (parts.length === 2) {
-                const [, rest] = parts;
-                const outputParts = rest.split("\n===OUTPUT===\n");
-                if (outputParts.length === 2) {
-                    const content = outputParts[1].trim();
+            // Split on FIRST ===REASONING=== and LAST ===OUTPUT=== to avoid
+            // collisions with separator strings in reasoning/output content
+            const reasoningIdx = cacheContent.indexOf("\n===REASONING===\n");
+            if (reasoningIdx !== -1) {
+                const outputIdx = cacheContent.lastIndexOf("\n===OUTPUT===\n");
+                if (outputIdx > reasoningIdx) {
+                    const content = cacheContent.substring(outputIdx + "\n===OUTPUT===\n".length).trim();
                     if (content.length > 0) {
                         // Use tokenize for consistency with old behavior
                         const inputTokens = tokenize(input).length;
@@ -392,11 +393,20 @@ export const requestLLM = (
                         logger.debug(`[${session.config.name}] Cache content: ${content}`);
                         return content;
                     }
+                    logger.warn(`[${session.config.name}] Cache INVALID: output section is empty after trim (file: ${cacheFile})`);
+                } else {
+                    logger.warn(`[${session.config.name}] Cache INVALID: ===OUTPUT=== not found after ===REASONING=== (file: ${cacheFile}, reasoningIdx: ${reasoningIdx}, outputIdx: ${outputIdx})`);
                 }
+            } else {
+                // Check if file has content but wrong format
+                const cachedInput = cacheContent.substring(0, Math.min(200, cacheContent.length));
+                logger.warn(`[${session.config.name}] Cache INVALID: ===REASONING=== delimiter not found (file: ${cacheFile}, fileSize: ${cacheContent.length}, starts with: ${JSON.stringify(cachedInput)})`);
             }
+        } else {
+            logger.info(`[${session.config.name}] Cache miss: file does not exist (${cacheFile})`);
         }
-        // If not, call the model
-        logger.info(`[${session.config.name}] Cache miss, sending the request`);
+        // Cache miss - call the model
+        logger.warn(`[${session.config.name}] Cache miss for ${cacheFile}, input hash: ${md5(input)}, temperature: ${temperature}`);
         const result = await requestLLMWithoutCache(messages, temperature, fakeRequest);
         logger.debug(`[${session.config.name}] Writing to cache file`);
         writeFileSync(cacheFile, `${input}\n===REASONING===\n${result.reasoning}\n===OUTPUT===\n${result.text}`);
