@@ -154,13 +154,9 @@ export const getModelConfig = (
     const modelConfig = config.llms[name];
 
     if (!modelConfig) {
-        // Try falling back to default
-        if (name === "default") {
-            throw new Error(
-                'The assignment for "default" is not found in config.json. Please check your configuration!',
-            );
-        }
-        return getModelConfig("default", overrides);
+        throw new Error(
+            `LLM "${name}" is not found in config.json. Available: ${Object.keys(config.llms).join(", ")}`,
+        );
     }
 
     if (typeof modelConfig === "string") {
@@ -214,13 +210,9 @@ export const getEmbedderConfig = (
     const embedderConfig = config.embedders[name];
 
     if (!embedderConfig) {
-        // Try falling back to default
-        if (name === "default") {
-            throw new Error(
-                'The assignment for "default" is not found in config.json. Please check your configuration!',
-            );
-        }
-        return getEmbedderConfig("default", overrides);
+        throw new Error(
+            `Embedder "${name}" is not found in config.json. Available: ${Object.keys(config.embedders).join(", ")}`,
+        );
     }
 
     if (typeof embedderConfig === "string") {

@@ -115,11 +115,17 @@
       "dimensions": 1024,
       "batchSize": 50
     },
-    "gecko-768-similarity": {
+    "gemini-embedding-001": {
       "provider": "google",
-      "name": "text-embedding-004",
-      "dimensions": 768,
-      "batchSize": 100
+      "name": "gemini-embedding-001",
+      "dimensions": 3072,
+      "batchSize": 50
+    },
+    "qwen3-embedding": {
+      "provider": "openai-compatible",
+      "name": "embedder",
+      "dimensions": 4096,
+      "batchSize": 50
     }
   }
 }
