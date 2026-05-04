@@ -408,7 +408,7 @@ export const clusterEmbeddings = (
             // console.log("Embeddings sent: " + Embeddings.buffer.byteLength + " (" + Names.length + " embeddings)");
             // Run the Python script
             const __dirname = dirname(fileURLToPath(import.meta.url));
-            await runPythonScript(resolve(__dirname, `embeddings/clustering_${method}.py`), {
+            await runPythonScript(resolve(__dirname, `../embeddings/clustering_${method}.py`), {
                 args: [config.dimensions.toString(), names.length.toString(), ...opts],
                 parser: (msg) => {
                     if (msg.startsWith("[")) {
@@ -502,7 +502,7 @@ export const evaluateEmbeddings = <T>(
             );
             // Run the Python script
             const __dirname = dirname(fileURLToPath(import.meta.url));
-            await runPythonScript(resolve(__dirname, `embeddings/evaluation_${method}.py`), {
+            await runPythonScript(resolve(__dirname, `../embeddings/evaluation_${method}.py`), {
                 args: [
                     config.dimensions.toString(),
                     labels.length.toString(),
