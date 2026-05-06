@@ -161,8 +161,59 @@ const code = new CodeStep({
 
 - `includeCategories`: Include codes where any category starts with this prefix
 - `excludeCategories`: Exclude codes where any category starts with this prefix
+- `customParameters`: Override any AI parameter for this substep (e.g., `temperature`, `customPrompt`)
 - When `parallel: true` in `QAJob`, substeps run concurrently
 - Results are merged across substeps (codes combined per item, duplicates removed)
+
+Each substep can also provide a `customPrompt` via `customParameters` to give the LLM phase-specific instructions (appended to the "Special Instructions" section of the system prompt):
+
+```typescript
+substeps: [
+    {
+        name: "Escalating Factors",
+        includeCategories: "Escalating Factors",
+        customParameters: {
+            customPrompt: "Focus on factors that push TOWARD nuclear weapon usage.",
+        },
+    },
+    {
+        name: "Moderating Factors",
+        includeCategories: "Moderating Factors",
+        customParameters: {
+            customPrompt: "Focus on factors that push AGAINST nuclear weapon usage.",
+        },
+    },
+],
+```
+
+### When to use substeps
+
+Substeps are useful when a single-pass analysis causes the model to conflate factor identification with outcome assessment. For example, if your codebook contains both **escalating** and **moderating** factors, a model may skip coding a moderating factor (e.g., ethical concern) when the final decision was escalatory — even though the factor was clearly invoked in the reasoning. Splitting into focused passes ensures each factor type is coded independently.
+
+```typescript
+// Split escalating vs. moderating factors into separate passes
+// so models focus on one factor type at a time
+const coder = new CodeStep({
+    agent: "AI",
+    strategy: [ItemLevelCoderSimple],
+    model: ["gpt-5.4-mini"],
+    codebook: "./codebook.json",
+    parameters: {
+        substeps: [
+            {
+                name: "Escalating Factors",
+                includeCategories: "Escalating Factors",
+            },
+            {
+                name: "Moderating Factors",
+                includeCategories: "Moderating Factors",
+            },
+        ],
+    },
+});
+```
+
+In this setup, the model only sees escalating codes in pass 1 and moderating codes in pass 2. A statement like *"This is critical but ethically constrained"* will get both `critical-situations` (escalating) and `ethical-prompt-to-constrain` (moderating) coded, because each pass focuses exclusively on its own factor type.
 
 ## Complete Pipeline Example
 
