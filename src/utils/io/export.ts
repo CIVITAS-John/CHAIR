@@ -34,7 +34,7 @@
 
 import Excel from "exceljs";
 
-import type { ItemComparison } from "../../evaluating/reliability-metrics.js";
+import type { ItemComparison } from "../../evaluating/reliability-interfaces.js";
 import type { Code, CodedThreads, DataChunk, DataItem } from "../../schema.js";
 
 import { logger } from "../core/logger.js";
@@ -444,4 +444,3 @@ export const exportComparisonXlsx = <T extends DataItem>(
         logger.info(`Exported comparison for ${coder1Name} vs ${coder2Name}`);
         return book;
     });
-

@@ -340,13 +340,64 @@ export const useLLMs = async (
 
 
 /**
+ * Read a cached LLM response from disk.
+ *
+ * @param cacheFile - Path to the cache file
+ * @param input - The original input text (for token counting)
+ * @param session - The LLM session (for token tracking)
+ * @returns The cached response text, or undefined on miss/invalid
+ */
+export const readCachedLLMResponse = (
+    cacheFile: string,
+    input: string,
+    session: LLMSession,
+): string | undefined => {
+    if (!existsSync(cacheFile)) {
+        return undefined;
+    }
+    logger.debug(`[${session.config.name}] Cache file exists`);
+    const cacheContent = readFileSync(cacheFile, "utf-8");
+    // Split on FIRST ===REASONING=== and LAST ===OUTPUT=== to avoid
+    // collisions with separator strings in reasoning/output content
+    const reasoningIdx = cacheContent.indexOf("\n===REASONING===\n");
+    if (reasoningIdx !== -1) {
+        const outputIdx = cacheContent.lastIndexOf("\n===OUTPUT===\n");
+        if (outputIdx > reasoningIdx) {
+            const content = cacheContent.substring(outputIdx + "\n===OUTPUT===\n".length).trim();
+            if (content.length > 0) {
+                // Use tokenize for consistency with old behavior
+                const inputTokens = tokenize(input).length;
+                const outputTokens = tokenize(content).length;
+                session.inputTokens += inputTokens;
+                session.outputTokens += outputTokens;
+                logger.info(
+                    `[${session.config.name}] Cache hit (input tokens: ${inputTokens}, output tokens: ${outputTokens})`,
+                );
+                logger.debug(`[${session.config.name}] Cache content: ${content}`);
+                return content;
+            }
+            logger.warn(`[${session.config.name}] Cache INVALID: output section is empty after trim (file: ${cacheFile})`);
+        } else {
+            logger.warn(`[${session.config.name}] Cache INVALID: ===OUTPUT=== not found after ===REASONING=== (file: ${cacheFile}, reasoningIdx: ${reasoningIdx}, outputIdx: ${outputIdx})`);
+        }
+    } else {
+        // Check if file has content but wrong format
+        const cachedInput = cacheContent.substring(0, Math.min(200, cacheContent.length));
+        logger.warn(`[${session.config.name}] Cache INVALID: ===REASONING=== delimiter not found (file: ${cacheFile}, fileSize: ${cacheContent.length}, starts with: ${JSON.stringify(cachedInput)})`);
+    }
+    return undefined;
+};
+
+/**
  * Send a request to the LLM with caching support.
  * Checks cache first, falls back to API call if not found.
+ * Retries network/API errors internally at the same temperature.
  *
  * @param messages - Array of chat messages to send (Vercel AI SDK format)
  * @param cache - Cache folder name for storing responses
  * @param temperature - LLM temperature setting (0-2)
  * @param fakeRequest - If true, simulate without calling LLM
+ * @param retries - Number of internal retry attempts for network/API errors
  * @returns The LLM's response text
  */
 export const requestLLM = (
@@ -354,6 +405,7 @@ export const requestLLM = (
     cache: string,
     temperature?: number,
     fakeRequest = false,
+    retries = 5,
 ) =>
     logger.withDefaultSource("requestLLM", async () => {
         const { session } = BaseStep.Context.get();
@@ -367,48 +419,35 @@ export const requestLLM = (
             `[${session.config.name}] LLM request with temperature ${temperature ?? 0}: \n${messages.map((m) => `${m.role}: ${m.content}`).join("\n---\n")}`,
         );
         const cacheFolder = ensureFolder(`known/${cache}/${session.config.name}`);
-        // Check if the cache exists
         const cacheFile = `${cacheFolder}/${md5(input)}-${temperature}.txt`;
         logger.debug(`[${session.config.name}] Cache file path: ${cacheFile}`);
         session.lastCacheFile = cacheFile;
-        if (existsSync(cacheFile)) {
-            logger.debug(`[${session.config.name}] Cache file exists`);
-            const cacheContent = readFileSync(cacheFile, "utf-8");
-            // Split on FIRST ===REASONING=== and LAST ===OUTPUT=== to avoid
-            // collisions with separator strings in reasoning/output content
-            const reasoningIdx = cacheContent.indexOf("\n===REASONING===\n");
-            if (reasoningIdx !== -1) {
-                const outputIdx = cacheContent.lastIndexOf("\n===OUTPUT===\n");
-                if (outputIdx > reasoningIdx) {
-                    const content = cacheContent.substring(outputIdx + "\n===OUTPUT===\n".length).trim();
-                    if (content.length > 0) {
-                        // Use tokenize for consistency with old behavior
-                        const inputTokens = tokenize(input).length;
-                        const outputTokens = tokenize(content).length;
-                        session.inputTokens += inputTokens;
-                        session.outputTokens += outputTokens;
-                        logger.info(
-                            `[${session.config.name}] Cache hit (input tokens: ${inputTokens}, output tokens: ${outputTokens})`,
-                        );
-                        logger.debug(`[${session.config.name}] Cache content: ${content}`);
-                        return content;
-                    }
-                    logger.warn(`[${session.config.name}] Cache INVALID: output section is empty after trim (file: ${cacheFile})`);
-                } else {
-                    logger.warn(`[${session.config.name}] Cache INVALID: ===OUTPUT=== not found after ===REASONING=== (file: ${cacheFile}, reasoningIdx: ${reasoningIdx}, outputIdx: ${outputIdx})`);
+
+        // Check cache first
+        const cached = readCachedLLMResponse(cacheFile, input, session);
+        if (cached !== undefined) {
+            return cached;
+        }
+
+        // Cache miss - call the model with internal retries for network/API errors
+        logger.warn(`[${session.config.name}] Cache miss for ${cacheFile}, input hash: ${md5(input)}, temperature: ${temperature}`);
+        let lastError: unknown;
+        for (let attempt = 0; attempt < retries; attempt++) {
+            try {
+                const result = await requestLLMWithoutCache(messages, temperature, fakeRequest);
+                logger.debug(`[${session.config.name}] Writing to cache file`);
+                writeFileSync(cacheFile, `${input}\n===REASONING===\n${result.reasoning}\n===OUTPUT===\n${result.text}`);
+                return result.text;
+            } catch (e) {
+                lastError = e;
+                const delay = Math.min(2000 * 2 ** attempt, 60000);
+                logger.warn(`[${session.config.name}] Network/API error (attempt ${attempt + 1}/${retries}), retrying in ${delay}ms: ${e instanceof Error ? e.message : String(e)}`);
+                if (attempt + 1 < retries) {
+                    await new Promise((resolve) => setTimeout(resolve, delay));
                 }
-            } else {
-                // Check if file has content but wrong format
-                const cachedInput = cacheContent.substring(0, Math.min(200, cacheContent.length));
-                logger.warn(`[${session.config.name}] Cache INVALID: ===REASONING=== delimiter not found (file: ${cacheFile}, fileSize: ${cacheContent.length}, starts with: ${JSON.stringify(cachedInput)})`);
             }
         }
-        // Cache miss - call the model
-        logger.warn(`[${session.config.name}] Cache miss for ${cacheFile}, input hash: ${md5(input)}, temperature: ${temperature}`);
-        const result = await requestLLMWithoutCache(messages, temperature, fakeRequest);
-        logger.debug(`[${session.config.name}] Writing to cache file`);
-        writeFileSync(cacheFile, `${input}\n===REASONING===\n${result.reasoning}\n===OUTPUT===\n${result.text}`);
-        return result.text;
+        throw lastError;
     });
 
 /**
