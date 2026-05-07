@@ -395,7 +395,7 @@ export const exportComparisonXlsx = <T extends DataItem>(
     coder2Name: string,
 ) =>
     logger.withDefaultSource("exportComparisonXlsx", () => {
-        logger.info(`Exporting comparison for ${coder1Name} vs ${coder2Name}`);
+        // logger.info(`Exporting comparison for ${coder1Name} vs ${coder2Name}`);
         const book = new Workbook();
 
         // Build lookup from itemId → comparison
@@ -441,6 +441,6 @@ export const exportComparisonXlsx = <T extends DataItem>(
             extraRows: false,
         });
 
-        logger.info(`Exported comparison for ${coder1Name} vs ${coder2Name}`);
+        // logger.info(`Exported comparison for ${coder1Name} vs ${coder2Name}`);
         return book;
     });

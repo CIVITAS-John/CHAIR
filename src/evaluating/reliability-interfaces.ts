@@ -134,6 +134,12 @@ export interface ReliabilityStepConfig<
      * Size of rolling window for item-level aggregate comparison.
      */
     rollingWindow?: number;
+
+    /**
+     * Maximum number of chunks to compare.
+     * Omit or set to 0 for no limit.
+     */
+    limit?: number;
 }
 
 /**

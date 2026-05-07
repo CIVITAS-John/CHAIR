@@ -335,8 +335,10 @@ const analyzeChunks = <T extends DataItem>(
             keys.map((k) => analyzed.threads[k]),
         );
 
-        // Process each chunk through the analyzer
-        for (const [key, chunk] of Object.entries(chunks)) {
+        // Process all chunks concurrently through the analyzer
+        // Chunks are independent (no cross-chunk data dependencies)
+        // LLM concurrency is controlled at the request level via per-model p-limit
+        await Promise.all(Object.entries(chunks).map(async ([key, chunk]) => {
             // Filter items again (same as initialization, for consistency)
             // TODO: Support subchunks - currently nested chunks are skipped
             const messages = chunk.items.filter((m) => {
@@ -532,7 +534,7 @@ const analyzeChunks = <T extends DataItem>(
             // Increment iteration counter for this chunk's analysis
             analysis.iteration++;
             logger.info(`[${dataset.name}] Analyzed chunk ${key}, iteration ${analysis.iteration}`);
-        }
+        }));
 
         // Consolidate all codes into a unified codebook
         // Merges individual code entries, combines examples, builds hierarchies

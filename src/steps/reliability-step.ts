@@ -321,6 +321,38 @@ export class ReliabilityStep<
                     const compPath = join(exportPath, `${pairKey}.xlsx`);
                     await compBook.xlsx.writeFile(compPath);
                     logger.info(`  Wrote comparison XLSX to ${compPath}`);
+
+                    // Export comparison Markdown with original data
+                    const compMdPath = join(exportPath, `${pairKey}.md`);
+                    const compMap = new Map(comparisons.map((c) => [c.itemId, c]));
+                    const allItems = chunks.flatMap((chunk) => chunk.items.filter((item) => !("items" in item))) as DataItem[];
+                    const mdLines: string[] = [
+                        `# Comparison: ${display1} vs ${display2}`,
+                        "",
+                        `Total items compared: ${comparisons.length}`,
+                        "",
+                    ];
+                    for (const item of allItems) {
+                        const comp = compMap.get(item.id);
+                        if (!comp) continue;
+                        const disagreement = comp.difference > 0 ? " ⚠️" : "";
+                        mdLines.push(`## ${item.id}${disagreement}`);
+                        mdLines.push("");
+                        mdLines.push(`**${item.nickname}** (${item.time instanceof Date ? item.time.toISOString() : item.time})`);
+                        mdLines.push("");
+                        mdLines.push(`> ${item.content.replace(/\n/g, "\n> ")}`);
+                        mdLines.push("");
+                        mdLines.push(`| | ${display1} | ${display2} |`);
+                        mdLines.push(`|---|---|---|`);
+                        mdLines.push(`| Codes | ${comp.codes1.join(", ")} | ${comp.codes2.join(", ")} |`);
+                        mdLines.push(`| Adjusted | ${comp.adjustedCodes1.join(", ")} | ${comp.adjustedCodes2.join(", ")} |`);
+                        mdLines.push(`| Difference | ${comp.difference.toFixed(3)} | |`);
+                        mdLines.push("");
+                        mdLines.push("---");
+                        mdLines.push("");
+                    }
+                    writeFileSync(compMdPath, mdLines.join("\n"));
+                    logger.info(`  Wrote comparison MD to ${compMdPath}`);
                 }
             }
         }
@@ -343,7 +375,24 @@ export class ReliabilityStep<
                     coderNames.map((name, idx) => [name, anonymize ? `Coder ${idx + 1}` : name]),
                 );
 
-                const chunks = Object.values(dataset.data).flatMap((cg) => Object.values(cg));
+                const limit = this.config.limit && this.config.limit > 0 ? this.config.limit : 0;
+                const allChunks = Object.values(dataset.data).flatMap((cg) => Object.values(cg));
+                const chunks = limit ? allChunks.slice(0, limit) : allChunks;
+                if (limit) {
+                    logger.info(`Limiting to ${chunks.length}/${allChunks.length} chunks`);
+
+                    // Filter coder threads to only include threads present in the limited chunks
+                    const allowedThreadIds = new Set(chunks.map((c) => c.id));
+                    for (const [name, codedThreads] of coderThreads.entries()) {
+                        const filtered: typeof codedThreads.threads = {};
+                        for (const [threadId, thread] of Object.entries(codedThreads.threads)) {
+                            if (allowedThreadIds.has(threadId)) {
+                                filtered[threadId] = thread;
+                            }
+                        }
+                        coderThreads.set(name, { ...codedThreads, threads: filtered });
+                    }
+                }
                 const dataItemsMap = new Map(getAllItems(dataset).map((item) => [item.id, item]));
                 const observedCodes = this.#collectObservedCodes(coderThreads);
                 const { comparedCodebook, skippedCodesList } = this.#filterCodebook(
