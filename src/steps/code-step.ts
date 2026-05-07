@@ -148,6 +148,8 @@ export type CodeStepConfig<
           stripThreadCodebook?: boolean;
           /** Maximum number of chunk groups to code (useful for testing/debugging). Omit or set to 0 for no limit. */
           limit?: number;
+          /** Post-process each item's codes after substep merging (e.g., enforce mutual exclusivity) */
+          postProcess?: (codes: string[], codebook: Codebook | undefined) => string[];
       }
 );
 
@@ -966,6 +968,18 @@ export class CodeStep<
                                         for (const substepResult of results) {
                                             if (substepResult.codebook) {
                                                 Object.assign(result.codebook, substepResult.codebook);
+                                            }
+                                        }
+                                    }
+
+                                    // Apply post-processing to each item's code set
+                                    if (this.config.agent === "AI" && this.config.postProcess) {
+                                        const resolvedCodebook = result.codebook ?? codebook;
+                                        for (const thread of Object.values(result.threads)) {
+                                            for (const item of Object.values(thread.items)) {
+                                                if (item.codes) {
+                                                    item.codes = this.config.postProcess(item.codes, resolvedCodebook);
+                                                }
                                             }
                                         }
                                     }

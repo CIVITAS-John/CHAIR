@@ -316,6 +316,15 @@ export class ReliabilityStep<
                         `Alpha: ${reliability.krippendorffsAlpha.toFixed(3)}`,
                 );
 
+                // Format codes for markdown: sorted alphabetically, differing codes bolded.
+                const formatCodesMd = (codes: string[], otherCodes: string[]) => {
+                    const otherSet = new Set(otherCodes);
+                    return [...codes]
+                        .sort((a, b) => a.localeCompare(b))
+                        .map((c) => (otherSet.has(c) ? c : `**${c}**`))
+                        .join(", ");
+                };
+
                 if (level === "item") {
                     const compBook = exportComparisonXlsx(chunks, comparisons, display1, display2);
                     const compPath = join(exportPath, `${pairKey}.xlsx`);
@@ -346,7 +355,7 @@ export class ReliabilityStep<
                         mdLines.push("");
                         mdLines.push(`| ${display1} | ${display2} |`);
                         mdLines.push(`|---|---|`);
-                        mdLines.push(`| ${comp.adjustedCodes1.join(", ")} | ${comp.adjustedCodes2.join(", ")} |`);
+                        mdLines.push(`| ${formatCodesMd(comp.adjustedCodes1, comp.adjustedCodes2)} | ${formatCodesMd(comp.adjustedCodes2, comp.adjustedCodes1)} |`);
                         mdLines.push("");
                         mdLines.push("---");
                         mdLines.push("");
@@ -376,7 +385,7 @@ export class ReliabilityStep<
                         }
                         mdLines.push(`| ${display1} | ${display2} |`);
                         mdLines.push(`|---|---|`);
-                        mdLines.push(`| ${comp.adjustedCodes1.join(", ")} | ${comp.adjustedCodes2.join(", ")} |`);
+                        mdLines.push(`| ${formatCodesMd(comp.adjustedCodes1, comp.adjustedCodes2)} | ${formatCodesMd(comp.adjustedCodes2, comp.adjustedCodes1)} |`);
                         mdLines.push("");
                         mdLines.push("---");
                         mdLines.push("");
