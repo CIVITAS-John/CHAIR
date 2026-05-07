@@ -577,9 +577,9 @@ export const requestLLMWithoutCache = (
                     text = extracted.cleanedText; // Update text to remove think tags
                 }
                 // Update token counts from actual usage
-                const usage = await result.usage;
+                const usage = await result.totalUsage;
                 session.inputTokens += usage.inputTokens ?? 0;
-                session.outputTokens += usage.outputTokens ?? 0;
+                session.outputTokens += usage.outputTokens ?? 0 + (usage.reasoningTokens ?? 0);
             }
 
             logger.info(
