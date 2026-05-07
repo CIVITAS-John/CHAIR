@@ -122,6 +122,23 @@ export interface LoadQdpxStepConfig {
      * @returns true to include the thread, false to exclude it
      */
     threadFilter?: (threadId: string) => boolean;
+
+    /**
+     * Load existing codebook.json as the authoritative codebook source.
+     *
+     * Enables a two-pass workflow:
+     * 1. First run: converts QDPX and generates codebook.json (keys == labels)
+     * 2. User edits codebook.json (rename labels, remove codes; keys stay stable)
+     * 3. Re-run with useExistingCodebook: true to apply edits to human codes
+     *
+     * When enabled and codebook.json exists in the output directory:
+     * - Codes not in the codebook are removed from all human CodedItem.codes
+     * - Renamed labels (key unchanged, label changed) are propagated to human codes
+     * - Per-thread codebooks are replaced with the reconciled codebook
+     *
+     * Default: false
+     */
+    useExistingCodebook?: boolean;
 }
 
 /**
@@ -356,6 +373,7 @@ export class LoadQdpxStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
                 this.qdpxConfig.onlyUsedCodes,
                 this.qdpxConfig.threadFilter,
                 this.qdpxConfig.postprocessCoded,
+                this.qdpxConfig.useExistingCodebook,
             );
 
             logger.success(`QDPX conversion complete`);

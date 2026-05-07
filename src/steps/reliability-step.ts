@@ -338,15 +338,15 @@ export class ReliabilityStep<
                         const disagreement = comp.difference > 0 ? " ⚠️" : "";
                         mdLines.push(`## ${item.id}${disagreement}`);
                         mdLines.push("");
-                        mdLines.push(`**${item.nickname}** (${item.time instanceof Date ? item.time.toISOString() : item.time})`);
-                        mdLines.push("");
+                        if (item.nickname) {
+                            mdLines.push(`**${item.nickname}** (${item.time instanceof Date ? item.time.toISOString() : item.time})`);
+                            mdLines.push("");
+                        }
                         mdLines.push(`> ${item.content.replace(/\n/g, "\n> ")}`);
                         mdLines.push("");
-                        mdLines.push(`| | ${display1} | ${display2} |`);
-                        mdLines.push(`|---|---|---|`);
-                        mdLines.push(`| Codes | ${comp.codes1.join(", ")} | ${comp.codes2.join(", ")} |`);
-                        mdLines.push(`| Adjusted | ${comp.adjustedCodes1.join(", ")} | ${comp.adjustedCodes2.join(", ")} |`);
-                        mdLines.push(`| Difference | ${comp.difference.toFixed(3)} | |`);
+                        mdLines.push(`| ${display1} | ${display2} |`);
+                        mdLines.push(`|---|---|`);
+                        mdLines.push(`| ${comp.adjustedCodes1.join(", ")} | ${comp.adjustedCodes2.join(", ")} |`);
                         mdLines.push("");
                         mdLines.push("---");
                         mdLines.push("");

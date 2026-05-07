@@ -307,6 +307,72 @@ function filterCodebook(codes: RefiCode[]): RefiCode[] {
 }
 
 /**
+ * Reconcile converted QDPX data with an existing authoritative codebook.
+ *
+ * When codebook.json already exists in the output directory, the user may have:
+ * - Renamed codes (changed the `label` field but kept the key stable)
+ * - Removed codes (deleted entries from the codebook)
+ *
+ * Matching is done by key (which equals the original label from the first export).
+ * For each key in the authoritative codebook whose label differs from the key,
+ * all references to that key in human CodedItem.codes are renamed to the new label.
+ * Codes not present in the authoritative codebook are removed entirely.
+ *
+ * @param authoritativeCodebook - The user-edited codebook loaded from disk
+ * @param coderThreads - Mutable map of coder data; items are updated in-place
+ * @returns A new codebook re-keyed by the (possibly renamed) labels
+ */
+function reconcileWithCodebook(
+    authoritativeCodebook: Codebook,
+    coderThreads: Map<string, any>,
+): Codebook {
+    const renameMap = new Map<string, string>();
+    const validKeys = new Set<string>();
+
+    for (const [key, code] of Object.entries(authoritativeCodebook)) {
+        validKeys.add(key);
+        if (code.label !== key) {
+            renameMap.set(key, code.label);
+        }
+    }
+
+    // Build output codebook re-keyed by new labels
+    const reconciled: Codebook = {};
+    for (const [, code] of Object.entries(authoritativeCodebook)) {
+        reconciled[code.label] = { ...code };
+    }
+
+    let removedCount = 0;
+    let renamedCount = 0;
+
+    for (const [, coderData] of coderThreads) {
+        for (const thread of Object.values(coderData.threads as Record<string, any>)) {
+            thread.codes = reconciled;
+
+            for (const item of Object.values(thread.items as Record<string, any>)) {
+                if (!item.codes) continue;
+                item.codes = item.codes
+                    .filter((code: string) => {
+                        if (!validKeys.has(code)) { removedCount++; return false; }
+                        return true;
+                    })
+                    .map((code: string) => {
+                        const newLabel = renameMap.get(code);
+                        if (newLabel) { renamedCount++; return newLabel; }
+                        return code;
+                    });
+            }
+        }
+    }
+
+    logger.info(
+        `Codebook reconciliation: ${renamedCount} code references renamed, ${removedCount} removed`
+    );
+
+    return reconciled;
+}
+
+/**
  * Convert REFI codebook to our Codebook format
  */
 function convertCodebook(codes: RefiCode[]): Codebook {
@@ -581,12 +647,22 @@ function extractCodedThreads(
 /**
  * Convert QDPX file to JSON dataset format
  *
+ * Supports a two-pass workflow with `useExistingCodebook`:
+ * 1. First run: converts QDPX and generates codebook.json (keys == labels)
+ * 2. User edits codebook.json (rename labels, remove codes; keys stay stable)
+ * 3. Re-run with `useExistingCodebook: true`: loads the edited codebook,
+ *    renames human codes where labels changed, removes codes no longer present
+ *
  * @param qdpxPath - Path to .qdpx file or directory containing extracted QDPX content
  * @param outputDir - Directory to write JSON files
  * @param chunkContent - Optional callback to split content into chunks (defaults to defaultChunkContent)
  * @param onlyCodedThreads - If true, only include threads with human codes in output (default: false)
  * @param onlyUsedCodes - If true, only keep codes that were actually used by human coders (default: false)
  * @param threadFilter - Optional callback to filter which threads to include (applies to both sources and coded threads)
+ * @param postprocessCoded - Optional callback to transform coded items after extraction
+ * @param useExistingCodebook - If true and codebook.json exists in outputDir, load it as the
+ *   authoritative codebook. Codes not in the file are removed from human items; renamed labels
+ *   (key unchanged, label changed) are propagated to all human code references. (default: false)
  */
 export async function convertQdpxToJson(
     qdpxPath: string,
@@ -596,6 +672,7 @@ export async function convertQdpxToJson(
     onlyUsedCodes?: boolean,
     threadFilter?: (threadId: string) => boolean,
     postprocessCoded?: (item: any) => any,
+    useExistingCodebook?: boolean,
 ): Promise<void> {
     // Create output directory
     await mkdir(outputDir, { recursive: true });
@@ -643,7 +720,7 @@ export async function convertQdpxToJson(
     // Flatten nested code structure
     const flattenedCodes = flattenCodes(codeList);
 
-    const codebook = convertCodebook(flattenedCodes);
+    let codebook = convertCodebook(flattenedCodes);
 
     // Build code GUID -> label map (using flattened codes)
     const codeGuidToName = new Map<string, string>();
@@ -690,6 +767,20 @@ export async function convertQdpxToJson(
         sourceGuidToThreadId,
         postprocessCoded,
     );
+
+    // PHASE 3.5: Reconcile with existing codebook if requested
+    if (useExistingCodebook) {
+        const existingCodebookPath = join(outputDir, "codebook.json");
+        if (existsSync(existingCodebookPath)) {
+            logger.info(`Loading existing codebook from ${existingCodebookPath}`);
+            const authoritative = JSON.parse(
+                await readFile(existingCodebookPath, "utf-8"),
+            ) as Codebook;
+            codebook = reconcileWithCodebook(authoritative, coderThreads);
+        } else {
+            logger.warn(`useExistingCodebook enabled but codebook.json not found at ${existingCodebookPath}`);
+        }
+    }
 
     // PHASE 4: Remove uncoded threads if option enabled
     if (onlyCodedThreads) {

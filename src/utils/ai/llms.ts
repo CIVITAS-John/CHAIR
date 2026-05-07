@@ -547,7 +547,7 @@ export const requestLLMWithoutCache = (
                         session.inputTokens += result.usage.inputTokens ?? 0;
                         session.outputTokens += result.usage.outputTokens ?? 0;
                     })(),
-                    300000, // 5 minute timeout for API models
+                    600000, // 10 minute timeout for API models
                 );
             }
 
