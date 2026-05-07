@@ -140,6 +140,12 @@ export interface ReliabilityStepConfig<
      * Omit or set to 0 for no limit.
      */
     limit?: number;
+
+    /**
+     * Post-process each item's codes before comparison (e.g., enforce mutual exclusivity).
+     * Applied to every coder's items after extraction but before any comparison logic.
+     */
+    postProcess?: (codes: string[], codebook: Codebook | undefined) => string[];
 }
 
 /**

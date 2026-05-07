@@ -458,6 +458,18 @@ export class ReliabilityStep<
 
                 for (const level of comparisonLevels) {
                     const coderItems = this.#extractItemsForLevel(level, coderThreads, chunks);
+
+                    // Apply post-processing to each coder's item codes before comparison
+                    if (this.config.postProcess) {
+                        for (const items of coderItems.values()) {
+                            for (const item of items) {
+                                if (item.codes) {
+                                    item.codes = this.config.postProcess(item.codes, comparedCodebook);
+                                }
+                            }
+                        }
+                    }
+
                     const firstCoderItemCount = coderItems.get(coderNames[0])?.length ?? 0;
                     logger.info(`Prepared ${firstCoderItemCount} ${level}-level comparison units`);
 
