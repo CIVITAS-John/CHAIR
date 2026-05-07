@@ -329,16 +329,20 @@ export const compareItems = (
 
         // Apply benefit-only logic:
         // - Start with filtered base codes at exact position
-        // - For each code in union: if BOTH coders have it in their windows, add to intersection (benefit)
-        const allCodes = new Set([...filteredBaseCodes1, ...filteredBaseCodes2]);
+        // - Give each coder benefit for window codes that the OTHER coder explicitly has at this item
         const benefitCodes1 = new Set(filteredBaseCodes1);
         const benefitCodes2 = new Set(filteredBaseCodes2);
 
-        // Add windowed matches (benefit-only)
-        for (const code of allCodes) {
-            // If both coders have this code somewhere in their windows, give benefit
-            if (windowCodes1Set.has(code) && windowCodes2Set.has(code)) {
+        // Give coder 1 benefit for codes in their window that coder 2 explicitly has at this item
+        for (const code of filteredBaseCodes2) {
+            if (windowCodes1Set.has(code)) {
                 benefitCodes1.add(code);
+            }
+        }
+
+        // Give coder 2 benefit for codes in their window that coder 1 explicitly has at this item
+        for (const code of filteredBaseCodes1) {
+            if (windowCodes2Set.has(code)) {
                 benefitCodes2.add(code);
             }
         }

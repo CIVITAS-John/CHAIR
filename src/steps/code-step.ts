@@ -146,6 +146,8 @@ export type CodeStepConfig<
           codebook?: string | Codebook;
           /** Strip per-thread codebooks from JSON export (default: true) */
           stripThreadCodebook?: boolean;
+          /** Maximum number of chunk groups to code (useful for testing/debugging). Omit or set to 0 for no limit. */
+          limit?: number;
       }
 );
 
@@ -842,8 +844,19 @@ export class CodeStep<
                                 );
 
                                 // Process all chunks for this model
+                                const limit = this.config.agent === "AI" && this.config.limit && this.config.limit > 0
+                                    ? this.config.limit
+                                    : 0;
                                 const numChunks = Object.keys(dataset.data).length;
-                                for (const [idx, [key, chunks]] of Object.entries(dataset.data).entries()) {
+                                for (const [idx, [key, allChunks]] of Object.entries(dataset.data).entries()) {
+                                    // Apply chunk limit if configured
+                                    let chunks = allChunks;
+                                    if (limit) {
+                                        const entries = Object.entries(allChunks).slice(0, limit);
+                                        chunks = Object.fromEntries(entries) as typeof allChunks;
+                                        logger.info(`[${dataset.name}/${analyzer.name}/${key}] Limiting to ${entries.length}/${Object.keys(allChunks).length} chunks`);
+                                    }
+
                                     logger.info(
                                         `[${dataset.name}/${analyzer.name}] Analyzing chunk ${key} (${idx + 1}/${numChunks})`,
                                     );
