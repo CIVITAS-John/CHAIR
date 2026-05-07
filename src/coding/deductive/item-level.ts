@@ -277,7 +277,7 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
                     const codeList = codes
                         .split(/[;]/)
                         .map((c) => c.trim())
-                        .filter((c) => c.length > 0 && c !== "N/A");
+                        .filter((c) => c.length > 0 && c !== "NA");
 
                     const normalizedCodes: string[] = [];
                     for (const code of codeList) {

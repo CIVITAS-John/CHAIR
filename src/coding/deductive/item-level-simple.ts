@@ -163,7 +163,7 @@ ${customPrompt?.trim()}
 
 # Guidelines
 1. Use ONLY the codes listed below and strictly follow its DEFINITION. Do not create new codes.
-2. For each and every data item (provided in a numbered list), you MUST select zero (N/A), one or more appropriate codes from the codebook. Use "N/A" if nothing matches.
+2. For each and every data item (provided in a numbered list), you MUST select zero (NA), one or more appropriate codes from the codebook. Use "NA" if nothing matches.
 3. You will always return one bullet point for each data item. Multiple codes are splitted by semicolon (;). Only send out the correct LABEL.
 4. You will infer contexts from data before or after the item at hand, but only apply codes on the item itself.
 5. Carefully reason through each data item in three passes.
