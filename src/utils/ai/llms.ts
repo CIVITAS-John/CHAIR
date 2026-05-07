@@ -32,7 +32,7 @@
 
 import { existsSync, readFileSync, writeFileSync } from "fs";
 
-import { generateText, ProviderMetadata, type LanguageModel } from "ai";
+import { streamText, ProviderMetadata, type LanguageModel } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
@@ -46,7 +46,7 @@ import { BaseStep } from "../../steps/base-step.js";
 
 import { ensureFolder } from "../io/file.js";
 import { logger } from "../core/logger.js";
-import { promiseWithTimeout } from "../core/misc.js";
+
 import { type ModelConfig, getModelConfig } from "../core/config.js";
 import { tokenize } from "./tokenizer.js";
 
@@ -526,29 +526,60 @@ export const requestLLMWithoutCache = (
             );
 
             if (!fakeRequest) {
-                await promiseWithTimeout(
-                    (async () => {
-                        const result = await generateText({
-                            model: model,
-                            providerOptions: providerOptions,
-                            messages: messages,
-                            temperature: temperature ?? 0,
-                        });
-                        text = result.text;
-                        // Capture reasoning content if available
-                        reasoning = result.reasoningText ?? result.reasoning?.join("\n");
-                        // Also check for <think> tags in the response if no reasoningText
-                        if (!reasoning && text) {
-                            const extracted = extractAndRemoveThinkTags(text);
-                            reasoning = extracted.reasoning;
-                            text = extracted.cleanedText; // Update text to remove think tags
-                        }
-                        // Update token counts from actual usage
-                        session.inputTokens += result.usage.inputTokens ?? 0;
-                        session.outputTokens += result.usage.outputTokens ?? 0;
-                    })(),
-                    600000, // 10 minute timeout for API models
-                );
+                const INITIAL_TIMEOUT_MS = 120_000; // 2 min for first chunk (covers prefill, queueing)
+                const CHUNK_TIMEOUT_MS = 60_000; // 60s silence between chunks = dead connection
+
+                const result = streamText({
+                    model: model,
+                    providerOptions: providerOptions,
+                    messages: messages,
+                    temperature: temperature ?? 0,
+                });
+
+                // Consume stream with resettable timeout
+                let timeoutId: NodeJS.Timeout | undefined;
+                try {
+                    await new Promise<void>((resolve, reject) => {
+                        const resetTimeout = (ms: number) => {
+                            if (timeoutId) clearTimeout(timeoutId);
+                            timeoutId = setTimeout(() => {
+                                reject(new Error("Sorry, the AI stopped responding."));
+                            }, ms);
+                        };
+                        resetTimeout(INITIAL_TIMEOUT_MS);
+
+                        (async () => {
+                            try {
+                                // Use fullStream (not textStream) so reasoning-phase
+                                // tokens also reset the timer
+                                for await (const _part of result.fullStream) {
+                                    resetTimeout(CHUNK_TIMEOUT_MS);
+                                }
+                                resolve();
+                            } catch (err) {
+                                reject(err);
+                            }
+                        })();
+                    });
+                } finally {
+                    if (timeoutId) clearTimeout(timeoutId);
+                }
+
+                // Read final values after stream completes
+                text = await result.text;
+                // Capture reasoning content if available
+                reasoning =
+                    (await result.reasoningText) ?? (await result.reasoning)?.join("\n");
+                // Also check for <think> tags in the response if no reasoningText
+                if (!reasoning && text) {
+                    const extracted = extractAndRemoveThinkTags(text);
+                    reasoning = extracted.reasoning;
+                    text = extracted.cleanedText; // Update text to remove think tags
+                }
+                // Update token counts from actual usage
+                const usage = await result.usage;
+                session.inputTokens += usage.inputTokens ?? 0;
+                session.outputTokens += usage.outputTokens ?? 0;
             }
 
             logger.info(

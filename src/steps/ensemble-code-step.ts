@@ -643,8 +643,8 @@ export class EnsembleCodeStep<
                         metadataForExport
                     );
 
-                    // Store ensemble result as additional analyzer using group name
-                    this.storeResult(dataset.name, this.group, filename, ensembleResult);
+                    // Store result keyed by group name (without piece key)
+                    this.storeResult(dataset.name, this.group, this.group, ensembleResult);
                 }
 
                 logger.success(`[${dataset.name}] Ensemble coding complete`);

@@ -743,12 +743,22 @@ export class CodeStep<
         codedThreads: CodedThreads
     ): void {
         const current = this._results.get(datasetName) ?? {};
+        const existingAnalyzer = current[analyzerName] ?? {};
+        const existing = existingAnalyzer[identifier] as CodedThreads | undefined;
+
+        // Merge threads when the same identifier already exists (e.g., from different pieces)
+        const merged: CodedThreads = existing
+            ? {
+                threads: { ...existing.threads, ...codedThreads.threads },
+                codebook: existing.codebook || codedThreads.codebook
+                    ? { ...(existing.codebook ?? {}), ...(codedThreads.codebook ?? {}) }
+                    : undefined,
+              }
+            : codedThreads;
+
         this._results.set(datasetName, {
             ...current,
-            [analyzerName]: {
-                ...(current[analyzerName] || {}),
-                [identifier]: codedThreads,
-            },
+            [analyzerName]: { ...existingAnalyzer, [identifier]: merged },
         });
     }
 
@@ -984,15 +994,9 @@ export class CodeStep<
                                     );
                                     await book.xlsx.writeFile(excelPath);
 
-                                    // Store the result using the same identifier as the filename
-                                    const cur = this._results.get(dataset.name) ?? {};
-                                    this._results.set(dataset.name, {
-                                        ...cur,
-                                        [analyzer.name]: {
-                                            ...(cur[analyzer.name] ?? {}),
-                                            [filename]: result,
-                                        },
-                                    });
+                                    // Store result keyed by model identifier (without piece key)
+                                    const modelIdent = `${session.config.name}${modelAlias}${analyzer.suffix}`;
+                                    this.storeResult(dataset.name, analyzer.name, modelIdent, result);
                                 }
                             }
                         );

@@ -55,7 +55,7 @@ import type { Code, Codebook, CodedItem, CodedThreads, DataChunk, DataItem } fro
 import { exportComparisonXlsx } from "../utils/io/export.js";
 import { ensureFolder } from "../utils/io/file.js";
 import { logger } from "../utils/core/logger.js";
-import { getAllItems } from "../utils/core/misc.js";
+import { getAllItems, getAllItemsFromChunk } from "../utils/core/misc.js";
 
 import { BaseStep } from "./base-step.js";
 import type { ConsolidateStep } from "./consolidate-step.js";
@@ -353,6 +353,36 @@ export class ReliabilityStep<
                     }
                     writeFileSync(compMdPath, mdLines.join("\n"));
                     logger.info(`  Wrote comparison MD to ${compMdPath}`);
+                } else if (level === "chunk") {
+                    const compMdPath = join(exportPath, `${pairKey}-chunk.md`);
+                    const chunksById = new Map(chunks.map((c) => [c.id, c]));
+                    const mdLines: string[] = [
+                        `# Chunk Comparison: ${display1} vs ${display2}`,
+                        "",
+                        `Total chunks compared: ${comparisons.length}`,
+                        "",
+                    ];
+                    for (const comp of comparisons) {
+                        const chunk = chunksById.get(comp.itemId);
+                        const disagreement = comp.difference > 0 ? " ⚠️" : "";
+                        mdLines.push(`## ${comp.itemId}${disagreement}`);
+                        mdLines.push("");
+                        if (chunk) {
+                            const startStr = chunk.start instanceof Date ? chunk.start.toISOString() : String(chunk.start);
+                            const endStr = chunk.end instanceof Date ? chunk.end.toISOString() : String(chunk.end);
+                            const itemCount = getAllItemsFromChunk(chunk).length;
+                            mdLines.push(`**${startStr}** to **${endStr}** (${itemCount} items)`);
+                            mdLines.push("");
+                        }
+                        mdLines.push(`| ${display1} | ${display2} |`);
+                        mdLines.push(`|---|---|`);
+                        mdLines.push(`| ${comp.adjustedCodes1.join(", ")} | ${comp.adjustedCodes2.join(", ")} |`);
+                        mdLines.push("");
+                        mdLines.push("---");
+                        mdLines.push("");
+                    }
+                    writeFileSync(compMdPath, mdLines.join("\n"));
+                    logger.info(`  Wrote chunk comparison MD to ${compMdPath}`);
                 }
             }
         }
@@ -376,10 +406,13 @@ export class ReliabilityStep<
                 );
 
                 const limit = this.config.limit && this.config.limit > 0 ? this.config.limit : 0;
-                const allChunks = Object.values(dataset.data).flatMap((cg) => Object.values(cg));
-                const chunks = limit ? allChunks.slice(0, limit) : allChunks;
+                const pieces = Object.values(dataset.data);
+                const allChunks = pieces.flatMap((cg) => Object.values(cg));
+                const chunks = limit
+                    ? pieces.flatMap((cg) => Object.values(cg).slice(0, limit))
+                    : allChunks;
                 if (limit) {
-                    logger.info(`Limiting to ${chunks.length}/${allChunks.length} chunks`);
+                    logger.info(`Limiting to ${chunks.length}/${allChunks.length} chunks (${limit} per piece)`);
 
                     // Filter coder threads to only include threads present in the limited chunks
                     const allowedThreadIds = new Set(chunks.map((c) => c.id));
@@ -393,7 +426,9 @@ export class ReliabilityStep<
                         coderThreads.set(name, { ...codedThreads, threads: filtered });
                     }
                 }
-                const dataItemsMap = new Map(getAllItems(dataset).map((item) => [item.id, item]));
+                const dataItemsMap = limit
+                    ? new Map(chunks.flatMap(getAllItemsFromChunk).map((item) => [item.id, item]))
+                    : new Map(getAllItems(dataset).map((item) => [item.id, item]));
                 const observedCodes = this.#collectObservedCodes(coderThreads);
                 const { comparedCodebook, skippedCodesList } = this.#filterCodebook(
                     consolidator.getReference(dataset.name),
