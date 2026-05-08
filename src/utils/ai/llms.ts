@@ -373,10 +373,8 @@ export const readCachedLLMResponse = (
                 logger.info(
                     `[${session.config.name}] Cache hit (input tokens: ${inputTokens}, output tokens: ${outputTokens})`,
                 );
-                logger.debug(`[${session.config.name}] Cache content: ${content}`);
-                return content;
             }
-            logger.warn(`[${session.config.name}] Cache INVALID: output section is empty after trim (file: ${cacheFile})`);
+            return content;
         } else {
             logger.warn(`[${session.config.name}] Cache INVALID: ===OUTPUT=== not found after ===REASONING=== (file: ${cacheFile}, reasoningIdx: ${reasoningIdx}, outputIdx: ${outputIdx})`);
         }
