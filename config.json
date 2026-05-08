@@ -102,6 +102,15 @@
       "options": {
         "reasoningEffort": "high"
       }
+    },
+    "local-glm-4.7": {
+      "provider": "openai-compatible",
+      "name": "GLM-4.7",
+      "contextWindow": 200000,
+      "batchSize": 32,
+      "options": {
+        "reasoningEffort": "high"
+      }
     }
   },
   "embedders": {

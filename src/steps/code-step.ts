@@ -1078,88 +1078,126 @@ export class CodeStep<
                 };
 
                 const basePath = ensureFolder(join(dataset.path, this.config.subdir ?? "human"));
-                const coders = new Set(
-                    this.config.coders ??
-                        readdirSync(basePath)
-                            .filter((file) => {
-                                const ext = extname(file).toLowerCase();
-                                return ext === ".xlsx" || ext === ".json";
-                            })
-                            .map((file) => basename(file, extname(file))),
+
+                // Discover all file stems in the human folder
+                const allStems = readdirSync(basePath)
+                    .filter((file) => {
+                        const ext = extname(file).toLowerCase();
+                        return ext === ".xlsx" || ext === ".json";
+                    })
+                    .map((file) => basename(file, extname(file)));
+
+                // Group file stems by base coder name.
+                // Rule: if stem X exists and stem X-suffix also exists, X-suffix is a variant of X.
+                const coderFiles = new Map<string, string[]>();
+                const baseCoders = this.config.coders ?? allStems.filter(
+                    (stem) => !allStems.some((other) => other !== stem && stem.startsWith(other + "-")),
                 );
 
-                if (!coders.size) {
+                for (const base of baseCoders) {
+                    const variants = allStems.filter(
+                        (stem) => stem === base || stem.startsWith(base + "-"),
+                    );
+                    coderFiles.set(base, variants.length ? variants : [base]);
+                }
+
+                if (!coderFiles.size) {
                     throw new CodeStep.ConfigError(
                         `No coders found in ${basePath}; please provide a valid path or a list of coders`,
                     );
                 }
 
                 const codes: Record<string, CodedThreads> = {};
-                for (const coder of coders) {
-                    logger.info(`[${dataset.name}] Loading codes for coder "${coder}"`);
-                    const excelPath = join(basePath, `${coder}.xlsx`);
-                    let analyses =
-                        (await loadExcel(excelPath, this.config.codebookSheet)) ??
-                        loadJSON(join(basePath, `${coder}.json`));
+                for (const [coder, fileStems] of coderFiles) {
+                    logger.info(`[${dataset.name}] Loading codes for coder "${coder}" (${fileStems.length} file(s))`);
 
-                    // Check if analyses is empty
-                    if (!analyses || !Object.keys(analyses.threads).length) {
-                        if (!existsSync(excelPath)) {
-                            logger.warn(
-                                `[${dataset.name}] Exporting empty Excel workbook for coder "${coder}"`,
-                            );
-                            // Export empty Excel file
-                            const book = exportChunksForCoding(
-                                Object.values(dataset.data).flatMap((cg) => Object.values(cg)),
-                            );
-                            await book.xlsx.writeFile(excelPath);
-                        }
+                    let mergedAnalyses: CodedThreads | undefined;
 
-                        let action = this.config.onMissing ?? "ask";
-                        if (action === "ask") {
-                            logger.lock();
-                            action = await select({
-                                message: `No analyses found for human coder "${coder}". What do you want to do?`,
-                                choices: [
-                                    { name: "Skip this coder", value: "skip" },
-                                    {
-                                        name: `Wait for coder to fill in ${excelPath}`,
-                                        value: "wait",
-                                    },
-                                    { name: "Abort and exit", value: "abort" },
-                                ],
-                            });
-                            logger.unlock();
-                        }
+                    for (const stem of fileStems) {
+                        const excelPath = join(basePath, `${stem}.xlsx`);
+                        let analyses =
+                            (await loadExcel(excelPath, this.config.codebookSheet)) ??
+                            loadJSON(join(basePath, `${stem}.json`));
 
-                        logger.debug(`[${dataset.name}] Action for coder "${coder}": ${action}`);
+                        // Only run the interactive missing-file flow for the primary file
+                        if (stem === coder) {
+                            if (!analyses || !Object.keys(analyses.threads).length) {
+                                if (!existsSync(excelPath)) {
+                                    logger.warn(
+                                        `[${dataset.name}] Exporting empty Excel workbook for coder "${coder}"`,
+                                    );
+                                    const book = exportChunksForCoding(
+                                        Object.values(dataset.data).flatMap((cg) => Object.values(cg)),
+                                    );
+                                    await book.xlsx.writeFile(excelPath);
+                                }
 
-                        if (action === "skip") {
-                            logger.warn(`[${dataset.name}] Skipping coder "${coder}"`);
+                                let action = this.config.onMissing ?? "ask";
+                                if (action === "ask") {
+                                    logger.lock();
+                                    action = await select({
+                                        message: `No analyses found for human coder "${coder}". What do you want to do?`,
+                                        choices: [
+                                            { name: "Skip this coder", value: "skip" },
+                                            {
+                                                name: `Wait for coder to fill in ${excelPath}`,
+                                                value: "wait",
+                                            },
+                                            { name: "Abort and exit", value: "abort" },
+                                        ],
+                                    });
+                                    logger.unlock();
+                                }
+
+                                logger.debug(`[${dataset.name}] Action for coder "${coder}": ${action}`);
+
+                                if (action === "skip") {
+                                    logger.warn(`[${dataset.name}] Skipping coder "${coder}"`);
+                                    mergedAnalyses = undefined;
+                                    break;
+                                }
+
+                                if (action === "abort") {
+                                    logger.warn(`[${dataset.name}] User requested to abort`);
+                                    this.abort();
+                                    return;
+                                }
+
+                                while (!analyses || !Object.keys(analyses.threads).length) {
+                                    logger.lock();
+                                    console.log(
+                                        `Waiting for coder "${coder}" to close the file at ${excelPath}...\n`,
+                                    );
+                                    await open(excelPath, { wait: true });
+                                    logger.unlock();
+                                    analyses = await loadExcel(excelPath, this.config.codebookSheet);
+                                }
+                            }
+                        } else if (!analyses || !Object.keys(analyses.threads).length) {
+                            // Variant file: skip silently if missing or empty
+                            logger.warn(`[${dataset.name}] Variant file "${stem}" is empty or missing, skipping`);
                             continue;
                         }
 
-                        if (action === "abort") {
-                            logger.warn(`[${dataset.name}] User requested to abort`);
-                            this.abort();
-                            return;
-                        }
-
-                        while (!analyses || !Object.keys(analyses.threads).length) {
-                            logger.lock();
-                            console.log(
-                                `Waiting for coder "${coder}" to close the file at ${excelPath}...\n`,
-                            );
-                            await open(excelPath, { wait: true });
-                            logger.unlock();
-                            analyses = await loadExcel(excelPath, this.config.codebookSheet);
+                        // Merge into accumulated result
+                        if (!mergedAnalyses) {
+                            mergedAnalyses = analyses!;
+                        } else {
+                            mergedAnalyses = {
+                                threads: { ...mergedAnalyses.threads, ...analyses!.threads },
+                                codebook: mergedAnalyses.codebook || analyses!.codebook
+                                    ? { ...(mergedAnalyses.codebook ?? {}), ...(analyses!.codebook ?? {}) }
+                                    : undefined,
+                            };
                         }
                     }
 
-                    codes[coder] = analyses;
-                    logger.success(
-                        `[${dataset.name}] Loaded ${Object.keys(analyses.threads).length} threads from "${coder}"`,
-                    );
+                    if (mergedAnalyses) {
+                        codes[coder] = mergedAnalyses;
+                        logger.success(
+                            `[${dataset.name}] Loaded ${Object.keys(mergedAnalyses.threads).length} threads from "${coder}"`,
+                        );
+                    }
                 }
 
                 if (!Object.keys(codes).length) {
