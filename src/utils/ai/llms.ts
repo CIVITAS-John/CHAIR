@@ -574,6 +574,7 @@ export const requestLLMWithoutCache = (
                     reasoning = extracted.reasoning;
                     text = extracted.cleanedText; // Update text to remove think tags
                 }
+                if (!text || text === "") throw new Error("The generated content is empty.")
                 // Update token counts from actual usage
                 const usage = await result.totalUsage;
                 session.inputTokens += usage.inputTokens ?? 0;
