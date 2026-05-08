@@ -403,7 +403,7 @@ export const requestLLM = (
     cache: string,
     temperature?: number,
     fakeRequest = false,
-    retries = 5,
+    retries = 30,
 ) =>
     logger.withDefaultSource("requestLLM", async () => {
         const { session } = BaseStep.Context.get();
@@ -438,7 +438,7 @@ export const requestLLM = (
                 return result.text;
             } catch (e) {
                 lastError = e;
-                const delay = Math.min(2000 * 2 ** attempt, 60000);
+                const delay = Math.min(2000 * 2 ** attempt, 300000);
                 logger.warn(`[${session.config.name}] Network/API error (attempt ${attempt + 1}/${retries}), retrying in ${delay}ms: ${e instanceof Error ? e.message : String(e)}`);
                 if (attempt + 1 < retries) {
                     await new Promise((resolve) => setTimeout(resolve, delay));
