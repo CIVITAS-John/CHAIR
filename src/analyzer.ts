@@ -419,9 +419,7 @@ export const loopThroughChunk = <TUnit, TSubunit, TAnalysis>(
                             `[${session.config.name}] Analysis error, try ${tries}/${retries}`,
                         );
                         error.cause = e;
-                        if (tries >= retries) {
-                            throw error; // All retries exhausted
-                        }
+                        if (tries >= retries) break;
                         // Mark chunk as processed (even though it failed) to avoid infinite loop
                         session.expectedItems += chunkSize[0];
                         session.finishedItems += chunkSize[0];
