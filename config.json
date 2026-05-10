@@ -111,6 +111,15 @@
       "options": {
         "reasoningEffort": "high"
       }
+    },
+    "local-glm-5.1": {
+      "provider": "openai-compatible",
+      "name": "GLM-5.1",
+      "contextWindow": 200000,
+      "batchSize": 32,
+      "options": {
+        "reasoningEffort": "high"
+      }
     }
   },
   "embedders": {
