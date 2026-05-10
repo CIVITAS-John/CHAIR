@@ -523,7 +523,7 @@ export const requestLLMWithoutCache = (
             );
 
             if (!fakeRequest) {
-                const INITIAL_TIMEOUT_MS = 120_000; // 2 min for first chunk (covers prefill, queueing)
+                const INITIAL_TIMEOUT_MS = 300_000; // 5 min for first chunk (covers prefill, queueing)
                 const CHUNK_TIMEOUT_MS = 60_000; // 60s silence between chunks = dead connection
 
                 const result = streamText({
