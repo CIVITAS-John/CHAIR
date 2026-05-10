@@ -429,7 +429,6 @@ export const requestLLM = (
 
         // Cache miss - call the model with internal retries for network/API errors
         logger.warn(`[${session.config.name}] Cache miss for ${cacheFile}, input hash: ${md5(input)}, temperature: ${temperature}`);
-        let lastError: unknown;
         for (let attempt = 0; attempt < retries; attempt++) {
             try {
                 const result = await requestLLMWithoutCache(messages, temperature, fakeRequest);
@@ -437,15 +436,15 @@ export const requestLLM = (
                 writeFileSync(cacheFile, `${input}\n===REASONING===\n${result.reasoning}\n===OUTPUT===\n${result.text}`);
                 return result.text;
             } catch (e) {
-                lastError = e;
                 const delay = Math.min(2000 * 2 ** attempt, 300000);
                 logger.warn(`[${session.config.name}] Network/API error (attempt ${attempt + 1}/${retries}), retrying in ${delay}ms: ${e instanceof Error ? e.message : String(e)}`);
                 if (attempt + 1 < retries) {
                     await new Promise((resolve) => setTimeout(resolve, delay));
+                } else {
+                    throw e;
                 }
             }
         }
-        throw lastError;
     });
 
 /**
