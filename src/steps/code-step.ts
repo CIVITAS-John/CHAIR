@@ -103,6 +103,7 @@ type AnalyzerConstructor<TUnit, TSubunit, TAnalysis> = new (
  *   - temperature: LLM creativity (0-2)
  *   - customPrompt: Additional instructions
  *   - fakeRequest: Testing mode (skip actual LLM calls)
+ * - reuseExisting: Load existing JSON outputs when present before running LLM coding
  */
 export type CodeStepConfig<
     TSubunit extends DataItem = DataItem,
@@ -146,6 +147,8 @@ export type CodeStepConfig<
           codebook?: string | Codebook;
           /** Strip per-thread codebooks from JSON export (default: true) */
           stripThreadCodebook?: boolean;
+          /** Reuse existing JSON exports when present instead of re-running AI coding for those outputs */
+          reuseExisting?: boolean;
           /** Maximum number of chunk groups to code (useful for testing/debugging). Omit or set to 0 for no limit. */
           limit?: number;
       }
@@ -170,6 +173,57 @@ const slimForJson = (codedThreads: CodedThreads, strip = true): CodedThreads => 
             })
         ),
     } as CodedThreads;
+};
+
+/**
+ * Load a coded-threads JSON export and normalize it for downstream steps.
+ *
+ * JSON exports may omit per-thread codebooks when a top-level codebook exists.
+ * This restores those thread-level codebooks for consumers that expect them,
+ * and rebuilds a top-level codebook when older exports do not include one.
+ */
+const loadCodedThreadsJson = <TUnit extends DataChunk<DataItem>>(
+    dataset: Dataset<TUnit>,
+    path: string,
+): CodedThreads => {
+    let parsed: unknown;
+    try {
+        parsed = readJSONFile(path);
+    } catch (error) {
+        throw new CodeStep.ConfigError(
+            `Invalid JSON code file: ${path}: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+        );
+    }
+
+    if (
+        typeof parsed !== "object" ||
+        parsed === null ||
+        !("threads" in parsed) ||
+        typeof (parsed as { threads: unknown }).threads !== "object" ||
+        (parsed as { threads: unknown }).threads === null
+    ) {
+        throw new CodeStep.ConfigError(`Invalid JSON code file: ${path}`);
+    }
+
+    const source = parsed as CodedThreads;
+    const analyses: CodedThreads = {
+        threads: source.threads,
+        codebook: source.codebook,
+    };
+
+    // Restore per-thread codebooks if they were deduplicated during export.
+    if (analyses.codebook && Object.values(analyses.threads).some(t => !t.codes)) {
+        for (const thread of Object.values(analyses.threads)) {
+            if (!thread.codes) thread.codes = analyses.codebook;
+        }
+    }
+
+    if (!analyses.codebook) {
+        buildCodes(dataset, analyses);
+        mergeCodebook(analyses);
+    }
+
+    return analyses;
 };
 
 /**
@@ -788,26 +842,27 @@ export class CodeStep<
             if (this.config.agent !== "AI") {
                 throw new CodeStep.InternalError(`Invalid agent ${this.config.agent}`);
             }
+            const aiConfig = this.config;
 
-            const strategies = Array.isArray(this.config.strategy)
-                ? this.config.strategy
-                : [this.config.strategy];
-            const models = Array.isArray(this.config.model)
-                ? this.config.model
-                : [this.config.model];
+            const strategies = Array.isArray(aiConfig.strategy)
+                ? aiConfig.strategy
+                : [aiConfig.strategy];
+            const models = Array.isArray(aiConfig.model)
+                ? aiConfig.model
+                : [aiConfig.model];
 
             // Load codebook if provided (for deductive coding)
             let codebook: Codebook | undefined;
-            if (this.config.codebook) {
-                if (typeof this.config.codebook === "string") {
-                    logger.info(`Loading codebook from ${this.config.codebook}`);
-                    if (this.config.codebook.endsWith(".xlsx")) {
-                        codebook = await importCodebook(this.config.codebook);
+            if (aiConfig.codebook) {
+                if (typeof aiConfig.codebook === "string") {
+                    logger.info(`Loading codebook from ${aiConfig.codebook}`);
+                    if (aiConfig.codebook.endsWith(".xlsx")) {
+                        codebook = await importCodebook(aiConfig.codebook);
                     } else {
-                        codebook = readJSONFile(this.config.codebook);
+                        codebook = readJSONFile(aiConfig.codebook);
                     }
                 } else {
-                    codebook = this.config.codebook;
+                    codebook = aiConfig.codebook;
                 }
                 if (codebook) {
                     logger.info(`Loaded codebook with ${Object.keys(codebook).length} codes`);
@@ -856,8 +911,8 @@ export class CodeStep<
                                 );
 
                                 // Process all chunks for this model
-                                const limit = this.config.agent === "AI" && this.config.limit && this.config.limit > 0
-                                    ? this.config.limit
+                                const limit = aiConfig.limit && aiConfig.limit > 0
+                                    ? aiConfig.limit
                                     : 0;
                                 const numChunks = Object.keys(dataset.data).length;
                                 for (const [idx, [key, allChunks]] of Object.entries(dataset.data).entries()) {
@@ -869,12 +924,33 @@ export class CodeStep<
                                         logger.info(`[${dataset.name}/${analyzer.name}/${key}] Limiting to ${entries.length}/${Object.keys(allChunks).length} chunks`);
                                     }
 
+                                    // Compute the output identifiers up front so existing files can be reused.
+                                    const modelAlias = aiConfig.parameters?.alias
+                                        ? `-${aiConfig.parameters.alias}`
+                                        : "";
+                                    const filename = `${key.replace(".json", "")}-${session.config.name}${modelAlias}${analyzer.suffix}`;
+                                    const analyzerPath = join(dataset.path, analyzer.name);
+                                    const jsonPath = join(analyzerPath, `${filename}.json`);
+                                    const modelIdent = `${session.config.name}${modelAlias}${analyzer.suffix}`;
+
+                                    if (aiConfig.reuseExisting && existsSync(jsonPath)) {
+                                        logger.info(
+                                            `[${dataset.name}/${analyzer.name}/${key}] Reusing existing JSON result from ${jsonPath}`,
+                                        );
+                                        const result = loadCodedThreadsJson(dataset, jsonPath);
+                                        this.storeResult(dataset.name, analyzer.name, modelIdent, result);
+                                        logger.success(
+                                            `[${dataset.name}/${analyzer.name}/${key}] Loaded ${Object.keys(result.threads).length} threads from existing JSON (${idx + 1}/${numChunks})`,
+                                        );
+                                        continue;
+                                    }
+
                                     logger.info(
                                         `[${dataset.name}/${analyzer.name}] Analyzing chunk ${key} (${idx + 1}/${numChunks})`,
                                     );
 
                                     // Determine if using substeps or single-pass
-                                    const substeps = this.config.agent === "AI" ? this.config.parameters?.substeps : undefined;
+                                    const substeps = aiConfig.parameters?.substeps;
                                     const passes = substeps?.length
                                         ? substeps
                                         : [{ name: "default", includeCategories: undefined, excludeCategories: undefined, customParameters: undefined }];
@@ -892,7 +968,7 @@ export class CodeStep<
 
                                         // Merge parameters: substep overrides base
                                         const mergedParams = {
-                                            ...(this.config.agent === "AI" ? this.config.parameters : {}),
+                                            ...(aiConfig.parameters ?? {}),
                                             ...(substep.customParameters || {})
                                         };
 
@@ -975,13 +1051,8 @@ export class CodeStep<
                                     );
 
                                     // Write results with model-specific filename, including alias if provided
-                                    const modelAlias = this.config.agent === "AI" && this.config.parameters?.alias
-                                        ? `-${this.config.parameters.alias}`
-                                        : "";
-                                    const filename = `${key.replace(".json", "")}-${session.config.name}${modelAlias}${analyzer.suffix}`;
-                                    const analyzerPath = ensureFolder(join(dataset.path, analyzer.name));
+                                    ensureFolder(analyzerPath);
 
-                                    const jsonPath = join(analyzerPath, `${filename}.json`);
                                     logger.info(
                                         `[${dataset.name}/${analyzer.name}/${key}] Writing JSON result to ${jsonPath}`,
                                     );
@@ -995,7 +1066,6 @@ export class CodeStep<
                                     await book.xlsx.writeFile(excelPath);
 
                                     // Store result keyed by model identifier (without piece key)
-                                    const modelIdent = `${session.config.name}${modelAlias}${analyzer.suffix}`;
                                     this.storeResult(dataset.name, analyzer.name, modelIdent, result);
                                 }
                             }
@@ -1059,20 +1129,7 @@ export class CodeStep<
                         return;
                     }
 
-                    const analyses: CodedThreads = readJSONFile(path);
-                    if (!("threads" in analyses)) {
-                        throw new CodeStep.ConfigError(`Invalid JSON code file: ${path}`);
-                    }
-                    // Restore per-thread codebooks if they were deduplicated during export
-                    if (analyses.codebook && Object.values(analyses.threads).some(t => !t.codes)) {
-                        for (const thread of Object.values(analyses.threads)) {
-                            if (!thread.codes) thread.codes = JSON.parse(JSON.stringify(analyses.codebook));
-                        }
-                    }
-                    if (!analyses.codebook) {
-                        buildCodes(dataset, analyses);
-                        mergeCodebook(analyses);
-                    }
+                    const analyses = loadCodedThreadsJson(dataset, path);
                     logger.info(`[${dataset.name}] Loaded codes via JSON from ${path}`);
                     return analyses;
                 };

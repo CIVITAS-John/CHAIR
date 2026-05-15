@@ -445,6 +445,8 @@ export const requestLLM = (
                 }
             }
         }
+
+        throw new Error(`[${session.config.name}] LLM request failed after ${retries} retries`);
     });
 
 /**

@@ -79,6 +79,7 @@ const code = new CodeStep({
         fakeRequest: false,     // Skip LLM calls for testing
         alias: "emotional",     // Appended to filename for identification
     },
+    reuseExisting: true,        // Load existing JSON outputs when present
 });
 ```
 
