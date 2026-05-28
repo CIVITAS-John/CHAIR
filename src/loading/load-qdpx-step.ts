@@ -109,6 +109,16 @@ export interface LoadQdpxStepConfig {
     onlyUsedCodes?: boolean;
 
     /**
+     * Only keep QDPX codes that have a non-empty definition/description.
+     *
+     * If true, codes without definitions are excluded from codebook.json and
+     * any matching human-coded references are ignored during import.
+     *
+     * Default: true
+     */
+    requireCodeDefinitions?: boolean;
+
+    /**
      * Optional callback to filter which threads to include
      *
      * Applied to BOTH sources and human coded threads.
@@ -374,6 +384,7 @@ export class LoadQdpxStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
                 this.qdpxConfig.threadFilter,
                 this.qdpxConfig.postprocessCoded,
                 this.qdpxConfig.useExistingCodebook,
+                this.qdpxConfig.requireCodeDefinitions,
             );
 
             logger.success(`QDPX conversion complete`);

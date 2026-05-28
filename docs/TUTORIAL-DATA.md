@@ -252,6 +252,9 @@ const load = new LoadQdpxStep({
     // Filter the codebook to only codes actually used in coded segments
     onlyUsedCodes: true,
 
+    // Only export/import QDPX codes with definitions (default: true)
+    requireCodeDefinitions: true,
+
     // Custom filter to include/exclude specific threads by ID
     threadFilter: (threadId) => !threadId.startsWith("excluded-"),
 

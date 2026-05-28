@@ -372,14 +372,32 @@ function reconcileWithCodebook(
     return reconciled;
 }
 
+function hasDefinition(code: Code): boolean {
+    return (code.definitions ?? []).some((definition) => definition.trim().length > 0);
+}
+
+function filterCodebookByDefinitions(codebook: Codebook): Codebook {
+    return Object.fromEntries(
+        Object.entries(codebook).filter(([, code]) => hasDefinition(code)),
+    );
+}
+
 /**
- * Convert REFI codebook to our Codebook format
+ * Convert REFI codebook to our Codebook format.
  */
-function convertCodebook(codes: RefiCode[]): Codebook {
+function convertCodebook(
+    codes: RefiCode[],
+    requireCodeDefinitions = true,
+): Codebook {
     const filteredCodes = filterCodebook(codes);
     const codebook: Codebook = {};
 
     for (const refiCode of filteredCodes) {
+        const definition = refiCode.Description?.trim();
+        if (requireCodeDefinitions && !definition) {
+            continue;
+        }
+
         const label = refiCode.name;
         const categories = (refiCode as any).__categories as string[] | undefined;
 
@@ -391,8 +409,8 @@ function convertCodebook(codes: RefiCode[]): Codebook {
             code.categories = categories;
         }
 
-        if (refiCode.Description && refiCode.Description.trim().length > 0) {
-            code.definitions = [refiCode.Description];
+        if (definition) {
+            code.definitions = [definition];
         }
 
         codebook[label] = code;
@@ -663,6 +681,8 @@ function extractCodedThreads(
  * @param useExistingCodebook - If true and codebook.json exists in outputDir, load it as the
  *   authoritative codebook. Codes not in the file are removed from human items; renamed labels
  *   (key unchanged, label changed) are propagated to all human code references. (default: false)
+ * @param requireCodeDefinitions - If true, only export and import QDPX codes with non-empty
+ *   definitions/descriptions. (default: true)
  */
 export async function convertQdpxToJson(
     qdpxPath: string,
@@ -673,6 +693,7 @@ export async function convertQdpxToJson(
     threadFilter?: (threadId: string) => boolean,
     postprocessCoded?: (item: any) => any,
     useExistingCodebook?: boolean,
+    requireCodeDefinitions = true,
 ): Promise<void> {
     // Create output directory
     await mkdir(outputDir, { recursive: true });
@@ -720,7 +741,7 @@ export async function convertQdpxToJson(
     // Flatten nested code structure
     const flattenedCodes = flattenCodes(codeList);
 
-    let codebook = convertCodebook(flattenedCodes);
+    let codebook = convertCodebook(flattenedCodes, requireCodeDefinitions);
 
     // Build code GUID -> label map (using flattened codes)
     const codeGuidToName = new Map<string, string>();
@@ -773,9 +794,12 @@ export async function convertQdpxToJson(
         const existingCodebookPath = join(outputDir, "codebook.json");
         if (existsSync(existingCodebookPath)) {
             logger.info(`Loading existing codebook from ${existingCodebookPath}`);
-            const authoritative = JSON.parse(
+            let authoritative = JSON.parse(
                 await readFile(existingCodebookPath, "utf-8"),
             ) as Codebook;
+            if (requireCodeDefinitions) {
+                authoritative = filterCodebookByDefinitions(authoritative);
+            }
             codebook = reconcileWithCodebook(authoritative, coderThreads);
         } else {
             logger.warn(`useExistingCodebook enabled but codebook.json not found at ${existingCodebookPath}`);
