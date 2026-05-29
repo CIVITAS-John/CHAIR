@@ -255,6 +255,10 @@ const load = new LoadQdpxStep({
     // Only export/import QDPX codes with definitions (default: true)
     requireCodeDefinitions: true,
 
+    // Reconcile human codes with edits made to codebook.json
+    useExistingCodebook: true,
+    skipIfExists: false,
+
     // Custom filter to include/exclude specific threads by ID
     threadFilter: (threadId) => !threadId.startsWith("excluded-"),
 
@@ -268,6 +272,10 @@ const load = new LoadQdpxStep({
     postprocessCoded: (item) => item,
 });
 ```
+
+When you edit labels in a generated QDPX `codebook.json`, keep the original key and change the
+code's `label` field. Re-run `LoadQdpxStep` with `useExistingCodebook: true` and
+`skipIfExists: false` so regenerated human coding files use the new label.
 
 See `examples/qdpx-data/` for sample QDPX project structures.
 
@@ -301,6 +309,41 @@ const load = new LoadJsonStep({
         ...item,
         content: item.content.replace(/\[inaudible\]/g, ""),
     }),
+});
+```
+
+### Speaker Normalization
+
+Use `normalizeSpeakers` to normalize speaker labels per top-level chunk/interview. The callback
+receives the unique speaker names in that chunk and returns a map from original names to normalized
+names. The loader applies the map to `uid`, `nickname`, and matching speaker names in item content.
+
+```typescript
+const normalizeInterviewSpeakers = (speakers: string[]) => {
+    const mapping = new Map<string, string>();
+    let intervieweeCount = 0;
+
+    for (const speaker of speakers) {
+        if (["interviewer", "speaker 1"].includes(speaker.trim().toLowerCase())) {
+            mapping.set(speaker, "Interviewer");
+        } else {
+            intervieweeCount += 1;
+            mapping.set(speaker, `Interviewee ${intervieweeCount}`);
+        }
+    }
+
+    return mapping;
+};
+
+const jsonLoad = new LoadJsonStep({
+    path: "./my-study",
+    normalizeSpeakers: normalizeInterviewSpeakers,
+});
+
+const qdpxLoad = new LoadQdpxStep({
+    path: "./my-study-qdpx",
+    outputDir: "./my-study-json",
+    normalizeSpeakers: normalizeInterviewSpeakers,
 });
 ```
 

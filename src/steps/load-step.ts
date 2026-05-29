@@ -66,6 +66,18 @@ export interface LoadStepConfig {
     filter?: (data: Record<string, RawDataChunk>) => Record<string, RawDataChunk>;
 
     /**
+     * Optional callback to normalize speaker names within each top-level chunk.
+     *
+     * Receives the unique speaker names found in a chunk and returns a mapping
+     * from original speaker names to normalized names. The mapping is applied to
+     * item `uid`, item `nickname`, and matching speaker-name text in item content.
+     *
+     * @param speakers - Unique speaker names found in one top-level chunk
+     * @returns Map from original speaker names to normalized speaker names
+     */
+    normalizeSpeakers?: (speakers: string[]) => Map<string, string>;
+
+    /**
      * Optional callback to postprocess each DataItem after it's fetched
      *
      * Applied after timestamp parsing but before the item is stored.

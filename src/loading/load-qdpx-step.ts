@@ -77,6 +77,18 @@ export interface LoadQdpxStepConfig {
     postprocessItem?: (item: DataItem) => DataItem;
 
     /**
+     * Optional callback to normalize speaker names within each top-level chunk.
+     *
+     * Receives the unique speaker names found in a chunk and returns a mapping
+     * from original speaker names to normalized names. The mapping is applied to
+     * item `uid`, item `nickname`, and matching speaker-name text in item content.
+     *
+     * @param speakers - Unique speaker names found in one top-level chunk
+     * @returns Map from original speaker names to normalized speaker names
+     */
+    normalizeSpeakers?: (speakers: string[]) => Map<string, string>;
+
+    /**
      * Only include threads with human codes in the output
      * If true, excludes uncoded sources from sources.json and Excel exports
      * Default: false (include all sources)
@@ -241,6 +253,7 @@ export class LoadQdpxStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
         super({
             path: outputDir,
             postprocessItem: config.postprocessItem,
+            normalizeSpeakers: config.normalizeSpeakers,
         });
 
         this.qdpxConfig = config;

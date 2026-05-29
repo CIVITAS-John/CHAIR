@@ -42,6 +42,93 @@ import { parseDateTime } from "../utils/core/misc.js";
 const loadChunkGroup = (datasetPath: string, name: string) =>
     readJSONFile<Record<string, RawDataChunk>>(join(datasetPath, name));
 
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const normalizeSpeakerKey = (speaker: string) => speaker.trim().toLowerCase();
+
+/**
+ * Collect speaker names from a top-level chunk before initialization.
+ *
+ * Speaker normalization is scoped to one chunk/interview at a time so generic
+ * labels like "Speaker 2" can map differently in different interviews.
+ */
+const collectSpeakers = (chunk: RawDataChunk, speakers: Set<string>) => {
+    for (const item of chunk.items) {
+        if ("items" in item) {
+            collectSpeakers(item, speakers);
+        } else if (item.nickname.trim()) {
+            speakers.add(item.nickname);
+        }
+    }
+};
+
+/**
+ * Resolve a raw speaker value through the caller-provided mapping.
+ *
+ * The direct lookup is the expected path. Trimmed and case-normalized fallbacks
+ * make the loader tolerant of small differences between uid/nickname/content
+ * spelling without forcing every callback to duplicate that bookkeeping.
+ */
+const resolveSpeakerName = (speaker: string, speakerMap: Map<string, string>) =>
+    speakerMap.get(speaker) ??
+    speakerMap.get(speaker.trim()) ??
+    new Map([...speakerMap].map(([key, value]) => [normalizeSpeakerKey(key), value])).get(
+        normalizeSpeakerKey(speaker),
+    ) ??
+    speaker;
+
+/**
+ * Replace speaker names in transcript text after uid/nickname normalization.
+ *
+ * Longer originals are replaced first so a short name cannot partially rewrite
+ * a longer one before its own replacement runs.
+ */
+const replaceSpeakerNames = (content: string, speakerMap: Map<string, string>) => {
+    let normalizedContent = content;
+    const replacements = [...speakerMap.entries()]
+        .filter(([original, normalized]) => original && original !== normalized)
+        .sort(([a], [b]) => b.length - a.length);
+
+    for (const [original, normalized] of replacements) {
+        normalizedContent = normalizedContent.replace(
+            new RegExp(`\\b${escapeRegExp(original)}\\b`, "gi"),
+            normalized,
+        );
+    }
+
+    return normalizedContent;
+};
+
+/**
+ * Apply the caller's per-chunk speaker mapping to every item in the chunk tree.
+ */
+const normalizeChunkSpeakers = (
+    chunk: RawDataChunk,
+    normalizeSpeakers: (speakers: string[]) => Map<string, string>,
+): RawDataChunk => {
+    const speakers = new Set<string>();
+    collectSpeakers(chunk, speakers);
+    const speakerMap = normalizeSpeakers([...speakers]);
+
+    const normalizeChunk = (current: RawDataChunk): RawDataChunk => ({
+        ...current,
+        items: current.items.map((item) => {
+            if ("items" in item) {
+                return normalizeChunk(item);
+            }
+
+            return {
+                ...item,
+                uid: resolveSpeakerName(item.uid, speakerMap),
+                nickname: resolveSpeakerName(item.nickname, speakerMap),
+                content: replaceSpeakerNames(item.content, speakerMap),
+            };
+        }),
+    });
+
+    return normalizeChunk(chunk);
+};
+
 /**
  * Initialize a data item by parsing its timestamp
  *
@@ -196,7 +283,10 @@ export class LoadJsonStep<TUnit extends DataChunk<DataItem> = DataChunk<DataItem
             const parsedChunks: Record<string, TUnit> = {};
             for (const [ck, cv] of Object.entries(rawChunks)) {
                 logger.debug(`[${dataset.name}] Initializing chunk "${ck}" of chunk group "${gk}"`);
-                parsedChunks[ck] = initializeChunk(cv, this.config.postprocessItem) as TUnit;
+                const normalizedChunk = this.config.normalizeSpeakers
+                    ? normalizeChunkSpeakers(cv, this.config.normalizeSpeakers)
+                    : cv;
+                parsedChunks[ck] = initializeChunk(normalizedChunk, this.config.postprocessItem) as TUnit;
             }
             parsedData[gk] = parsedChunks;
 

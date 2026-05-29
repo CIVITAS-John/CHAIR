@@ -635,6 +635,7 @@ function extractCodedThreads(
                 for (const [itemId, item] of Object.entries((thread as any).items)) {
                     processedItems[itemId] = postprocessCoded(item);
                 }
+                (thread as any).items = processedItems;
             }
         }
     }
