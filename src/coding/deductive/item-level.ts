@@ -100,9 +100,15 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
      * ```
      *
      * @param codebook - The codebook to format
+     * @param options - Optional formatting behavior
      * @returns Formatted string for prompt inclusion
      */
-    protected formatCodebookForPrompt(codebook: Codebook): string {
+    protected formatCodebookForPrompt(
+        codebook: Codebook,
+        options: { includeCategories?: boolean } = {},
+    ): string {
+        const { includeCategories = false } = options;
+
         return Object.entries(codebook)
             .filter(([label, code]) => (code.definitions?.length ?? 0) > 0)
             .map(([label, code]) => {
@@ -113,7 +119,7 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
                     parts.push(`- Definition: ${definition}`);
                 }
 
-                if (code.categories && code.categories.length > 0) {
+                if (includeCategories && code.categories && code.categories.length > 0) {
                     parts.push(`- Belongs to: ${code.categories.join(" => ")}`);
                 }
 

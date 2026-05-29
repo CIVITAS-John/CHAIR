@@ -83,6 +83,8 @@ export type LLMModel = string | ModelConfig;
  * @property outputTokens - Cumulative output tokens generated across all requests
  * @property expectedItems - Total number of items expected to be processed
  * @property finishedItems - Number of items successfully processed so far
+ * @property expectedRequests - Planned LLM requests for this session
+ * @property completedRequests - LLM requests completed for this session
  */
 export interface LLMSession {
     config: ModelConfig;
@@ -92,8 +94,22 @@ export interface LLMSession {
     outputTokens: number;
     expectedItems: number;
     finishedItems: number;
+    expectedRequests: number;
+    completedRequests: number;
     lastCacheFile?: string;
 }
+
+const usageOrEstimate = (actual: number | undefined, estimate: number): number =>
+    actual && actual > 0 ? actual : estimate;
+
+const logRequestProgress = (session: LLMSession) => {
+    session.completedRequests += 1;
+    const total = Math.max(session.expectedRequests, session.completedRequests);
+    logger.info(
+        `[${session.config.name}] Request progress ${session.completedRequests}/${total} ` +
+        `(input tokens: ${session.inputTokens}, output tokens: ${session.outputTokens})`,
+    );
+};
 
 /**
  * Message type for LLM requests
@@ -326,6 +342,8 @@ export const useLLMs = async (
                 outputTokens: 0,
                 expectedItems: 0,
                 finishedItems: 0,
+                expectedRequests: 0,
+                completedRequests: 0,
             };
             logger.debug("Executing task");
             await task(session);
@@ -373,6 +391,7 @@ export const readCachedLLMResponse = (
                 logger.info(
                     `[${session.config.name}] Cache hit (input tokens: ${inputTokens}, output tokens: ${outputTokens})`,
                 );
+                logRequestProgress(session);
             }
             return content;
         } else {
@@ -576,15 +595,20 @@ export const requestLLMWithoutCache = (
                     text = extracted.cleanedText; // Update text to remove think tags
                 }
                 if (!text || text === "") throw new Error("The generated content is empty.")
-                // Update token counts from actual usage
+                // Update token counts from actual usage, falling back when providers omit/zero usage.
                 const usage = await result.totalUsage;
-                session.inputTokens += usage.inputTokens ?? 0;
-                session.outputTokens += usage.outputTokens ?? 0 + (usage.reasoningTokens ?? 0);
+                const input = messages.map((m) => m.content).join("\n~~~\n");
+                const inputTokens = usageOrEstimate(usage.inputTokens, tokenize(input).length);
+                const outputTokens = usageOrEstimate(usage.outputTokens, tokenize(text).length);
+                const reasoningTokens = usageOrEstimate(
+                    usage.reasoningTokens,
+                    reasoning ? tokenize(reasoning).length : 0,
+                );
+                session.inputTokens += inputTokens;
+                session.outputTokens += outputTokens + reasoningTokens;
             }
 
-            logger.info(
-                `[${config.name}] LLM request completed (input tokens: ${session.inputTokens}, output tokens: ${session.outputTokens})`,
-            );
+            logRequestProgress(session);
             logger.debug(`[${config.name}] LLM response: ${text}`);
             return { text, reasoning };
         });

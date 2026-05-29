@@ -139,7 +139,9 @@ export default class ItemLevelCoderSimple extends ItemLevelCoderBase {
         const contextBlock = this.buildContextBlock(contexts);
 
         // Format codebook for prompt inclusion
-        const codebookFormatted = this.formatCodebookForPrompt(analysis.codes);
+        const codebookFormatted = this.formatCodebookForPrompt(analysis.codes, {
+            includeCategories: aiParams?.includeCodebookCategories === true,
+        });
 
         // Combine base customPrompt with runtime aiParams customPrompt
         const basePrompt = this.customPrompt || "";

@@ -50,7 +50,7 @@ A codebook maps code labels to their definitions:
 |-------|----------|-------------|
 | `label` | Yes | Primary code name (used for matching) |
 | `definitions` | **Critical** | Clear explanations — codes without definitions are excluded from prompts |
-| `categories` | No | Higher-level groupings (enables substep filtering) |
+| `categories` | No | Higher-level groupings (enables substep filtering; omitted from deductive prompts by default) |
 | `examples` | No | Example text snippets |
 | `alternatives` | No | Synonym labels for the same concept |
 
@@ -128,6 +128,14 @@ This strategy is designed specifically for deductive coding. It instructs the LL
 3. **Verify**: Check whether selected codes match both instructions and definitions; eliminate mismatches
 
 The LLM can only select codes from the predefined codebook — it cannot create new codes.
+
+By default, deductive prompts include code labels and definitions, but omit category paths. Set `parameters.includeCodebookCategories` to `true` if you want category paths included in the prompt:
+
+```typescript
+parameters: {
+    includeCodebookCategories: true,
+}
+```
 
 ### Code Validation
 

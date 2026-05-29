@@ -597,6 +597,60 @@ const analyzeChunks = <T extends DataItem>(
         return analyzed;
     });
 
+const normalizeChunkSize = (
+    chunkSize: number | [number, number, number],
+): [number, number, number] | undefined => {
+    if (typeof chunkSize === "number") {
+        return chunkSize < 0 ? undefined : [chunkSize, 0, 0];
+    }
+
+    return chunkSize;
+};
+
+const countAnalyzerRequestWindows = <T extends DataItem>(
+    analyzer: Analyzer<DataChunk<T>, T, CodedThread>,
+    chunks: Record<string, DataChunk<T>>,
+): number => {
+    const { session } = BaseStep.Context.get();
+    if (!session) {
+        throw new BaseStep.ContextVarNotFoundError("session");
+    }
+
+    let requests = 0;
+    for (const chunk of Object.values(chunks)) {
+        const messages = chunk.items.filter((m) => "content" in m && m.content !== "") as T[];
+
+        for (let iteration = 0; iteration < analyzer.maxIterations; iteration++) {
+            const filtered = messages.filter((subunit) => analyzer.subunitFilter(subunit, iteration));
+            let cursor = 0;
+
+            while (cursor < filtered.length) {
+                const chunkSize = normalizeChunkSize(
+                    analyzer.getChunkSize(
+                        Math.min(session.config.batchSize ?? 32, filtered.length - cursor),
+                        filtered.length - cursor,
+                        iteration,
+                        0,
+                    ),
+                );
+
+                if (!chunkSize) {
+                    break;
+                }
+
+                const end = Math.min(cursor + chunkSize[0] + chunkSize[2], filtered.length);
+                if (end - cursor > 0) {
+                    requests += 1;
+                }
+
+                cursor += Math.max(chunkSize[0], 1);
+            }
+        }
+    }
+
+    return requests;
+};
+
 /**
  * CodeStep - Applies qualitative codes to data items
  *
@@ -897,6 +951,8 @@ export class CodeStep<
                             outputTokens: 0,
                             expectedItems: 0,
                             finishedItems: 0,
+                            expectedRequests: 0,
+                            completedRequests: 0,
                         };
 
                         // Set context for this model's execution
@@ -915,6 +971,43 @@ export class CodeStep<
                                     ? aiConfig.limit
                                     : 0;
                                 const numChunks = Object.keys(dataset.data).length;
+                                const modelAlias = aiConfig.parameters?.alias
+                                    ? `-${aiConfig.parameters.alias}`
+                                    : "";
+                                const substeps = aiConfig.parameters?.substeps;
+                                const passes = substeps?.length
+                                    ? substeps
+                                    : [{ name: "default", includeCategories: undefined, excludeCategories: undefined, customParameters: undefined }];
+
+                                session.expectedRequests = Object.entries(dataset.data).reduce(
+                                    (total, [key, allChunks]) => {
+                                        let chunks = allChunks;
+                                        if (limit) {
+                                            chunks = Object.fromEntries(
+                                                Object.entries(allChunks).slice(0, limit),
+                                            ) as typeof allChunks;
+                                        }
+
+                                        const filename = `${key.replace(".json", "")}-${session.config.name}${modelAlias}${analyzer.suffix}`;
+                                        const analyzerPath = join(dataset.path, analyzer.name);
+                                        const jsonPath = join(analyzerPath, `${filename}.json`);
+                                        if (aiConfig.reuseExisting && existsSync(jsonPath)) {
+                                            return total;
+                                        }
+
+                                        return total + passes.reduce((passTotal) => {
+                                            return passTotal + countAnalyzerRequestWindows(
+                                                analyzer,
+                                                chunks,
+                                            );
+                                        }, 0);
+                                    },
+                                    0,
+                                );
+                                logger.info(
+                                    `[${dataset.name}/${analyzer.name}] Planned ${session.expectedRequests} LLM requests for model ${session.config.name}`,
+                                );
+
                                 for (const [idx, [key, allChunks]] of Object.entries(dataset.data).entries()) {
                                     // Apply chunk limit if configured
                                     let chunks = allChunks;
@@ -925,9 +1018,6 @@ export class CodeStep<
                                     }
 
                                     // Compute the output identifiers up front so existing files can be reused.
-                                    const modelAlias = aiConfig.parameters?.alias
-                                        ? `-${aiConfig.parameters.alias}`
-                                        : "";
                                     const filename = `${key.replace(".json", "")}-${session.config.name}${modelAlias}${analyzer.suffix}`;
                                     const analyzerPath = join(dataset.path, analyzer.name);
                                     const jsonPath = join(analyzerPath, `${filename}.json`);
@@ -948,12 +1038,6 @@ export class CodeStep<
                                     logger.info(
                                         `[${dataset.name}/${analyzer.name}] Analyzing chunk ${key} (${idx + 1}/${numChunks})`,
                                     );
-
-                                    // Determine if using substeps or single-pass
-                                    const substeps = aiConfig.parameters?.substeps;
-                                    const passes = substeps?.length
-                                        ? substeps
-                                        : [{ name: "default", includeCategories: undefined, excludeCategories: undefined, customParameters: undefined }];
 
                                     // Create task functions for each substep
                                     const substepTasks = passes.map((substep) => async () => {

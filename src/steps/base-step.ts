@@ -41,6 +41,8 @@ export interface AIParameters extends Record<string, unknown> {
     contextWindow?: number;
     /** Optional alias to append to model name for identification (e.g., "temp05" results in "gpt-4-temp05") */
     alias?: string;
+    /** Include code categories in deductive codebook prompts (default: false) */
+    includeCodebookCategories?: boolean;
     /** Substeps for category-filtered multi-pass coding */
     substeps?: Array<{
         /** Name for logging (e.g., "Social Codes") */
