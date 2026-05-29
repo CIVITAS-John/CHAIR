@@ -11,13 +11,13 @@
       "provider": "openai",
       "name": "gpt-5.4-mini",
       "contextWindow": 256000,
-      "batchSize": 64
+      "batchSize": 32
     },
     "claude-4.5-haiku": {
       "provider": "anthropic",
       "name": "claude-4-5-haiku",
       "contextWindow": 256000,
-      "batchSize": 64
+      "batchSize": 32
     },
     "claude-4.6-sonnet": {
       "provider": "anthropic",
@@ -31,9 +31,9 @@
       "contextWindow": 256000,
       "batchSize": 64
     },
-    "gemini-3.1-flash-lite": {
+    "gemini-3.5-flash": {
       "provider": "google",
-      "name": "gemini-3.1-flash-lite-preview",
+      "name": "gemini-3.5-flash",
       "contextWindow": 256000,
       "batchSize": 64
     },
@@ -71,7 +71,7 @@
       "provider": "openai-compatible",
       "name": "Minimax-M2.7",
       "contextWindow": 200000,
-      "batchSize": 32,
+      "batchSize": 64,
       "options": {
         "reasoningEffort": "high"
       }
@@ -80,7 +80,7 @@
       "provider": "openai-compatible",
       "name": "Qwen-3.5",
       "contextWindow": 200000,
-      "batchSize": 32,
+      "batchSize": 64,
       "options": {
         "reasoningEffort": "high"
       }
@@ -89,7 +89,7 @@
       "provider": "openai-compatible",
       "name": "Kimi-K2.6",
       "contextWindow": 200000,
-      "batchSize": 32,
+      "batchSize": 64,
       "options": {
         "reasoningEffort": "high"
       }
@@ -116,7 +116,7 @@
       "provider": "openai-compatible",
       "name": "GLM-5.1",
       "contextWindow": 200000,
-      "batchSize": 32,
+      "batchSize": 64,
       "options": {
         "reasoningEffort": "high"
       }
