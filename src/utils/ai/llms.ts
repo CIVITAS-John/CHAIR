@@ -65,7 +65,7 @@ const modelLimits = new Map<string, ReturnType<typeof pLimit>>();
 const getOrCreateLimit = (config: ModelConfig): ReturnType<typeof pLimit> => {
     const key = `${config.provider}:${config.name}`;
     if (!modelLimits.has(key)) {
-        const concurrencyLimit = config.options?.concurrencyLimit ?? 4;
+        const concurrencyLimit = config.options?.concurrencyLimit ?? 5;
         modelLimits.set(key, pLimit(concurrencyLimit));
     }
     return modelLimits.get(key)!;

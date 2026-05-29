@@ -99,7 +99,7 @@ export default class ItemLevelCoderSimple extends ItemLevelCoderBase {
         if (recommended === 0) {
             return -1;
         }
-        return [Math.max(1, Math.floor(recommended / 2) - tries), 0, 0];
+        return [Math.max(1, recommended - tries), 0, 0];
     }
 
     /**
