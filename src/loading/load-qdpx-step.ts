@@ -151,12 +151,11 @@ export interface LoadQdpxStepConfig {
      * Enables a two-pass workflow:
      * 1. First run: converts QDPX and generates codebook.json (keys == labels)
      * 2. User edits codebook.json (rename labels, remove codes; keys stay stable)
-     * 3. Re-run with useExistingCodebook: true to apply edits to human codes
+     * 3. Re-run with useExistingCodebook: true to keep the edited codebook
      *
      * When enabled and codebook.json exists in the output directory:
-     * - Codes not in the codebook are removed from all human CodedItem.codes
-     * - Renamed labels (key unchanged, label changed) are propagated to human codes
-     * - Per-thread codebooks are replaced with the reconciled codebook
+     * - The edited codebook is used as the exported codebook source
+     * - Human code references are left as exported; CodeStep harmonizes them on import
      *
      * Default: false
      */

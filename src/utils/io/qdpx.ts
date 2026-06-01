@@ -306,72 +306,6 @@ function filterCodebook(codes: RefiCode[]): RefiCode[] {
     return codes.filter(shouldKeep);
 }
 
-/**
- * Reconcile converted QDPX data with an existing authoritative codebook.
- *
- * When codebook.json already exists in the output directory, the user may have:
- * - Renamed codes (changed the `label` field but kept the key stable)
- * - Removed codes (deleted entries from the codebook)
- *
- * Matching is done by key (which equals the original label from the first export).
- * For each key in the authoritative codebook whose label differs from the key,
- * all references to that key in human CodedItem.codes are renamed to the new label.
- * Codes not present in the authoritative codebook are removed entirely.
- *
- * @param authoritativeCodebook - The user-edited codebook loaded from disk
- * @param coderThreads - Mutable map of coder data; items are updated in-place
- * @returns A new codebook re-keyed by the (possibly renamed) labels
- */
-function reconcileWithCodebook(
-    authoritativeCodebook: Codebook,
-    coderThreads: Map<string, any>,
-): Codebook {
-    const renameMap = new Map<string, string>();
-    const validKeys = new Set<string>();
-
-    for (const [key, code] of Object.entries(authoritativeCodebook)) {
-        validKeys.add(key);
-        if (code.label !== key) {
-            renameMap.set(key, code.label);
-        }
-    }
-
-    // Build output codebook re-keyed by new labels
-    const reconciled: Codebook = {};
-    for (const [, code] of Object.entries(authoritativeCodebook)) {
-        reconciled[code.label] = { ...code };
-    }
-
-    let removedCount = 0;
-    let renamedCount = 0;
-
-    for (const [, coderData] of coderThreads) {
-        for (const thread of Object.values(coderData.threads as Record<string, any>)) {
-            thread.codes = reconciled;
-
-            for (const item of Object.values(thread.items as Record<string, any>)) {
-                if (!item.codes) continue;
-                item.codes = item.codes
-                    .filter((code: string) => {
-                        if (!validKeys.has(code)) { removedCount++; return false; }
-                        return true;
-                    })
-                    .map((code: string) => {
-                        const newLabel = renameMap.get(code);
-                        if (newLabel) { renamedCount++; return newLabel; }
-                        return code;
-                    });
-            }
-        }
-    }
-
-    logger.info(
-        `Codebook reconciliation: ${renamedCount} code references renamed, ${removedCount} removed`
-    );
-
-    return reconciled;
-}
-
 function hasDefinition(code: Code): boolean {
     return (code.definitions ?? []).some((definition) => definition.trim().length > 0);
 }
@@ -669,8 +603,8 @@ function extractCodedThreads(
  * Supports a two-pass workflow with `useExistingCodebook`:
  * 1. First run: converts QDPX and generates codebook.json (keys == labels)
  * 2. User edits codebook.json (rename labels, remove codes; keys stay stable)
- * 3. Re-run with `useExistingCodebook: true`: loads the edited codebook,
- *    renames human codes where labels changed, removes codes no longer present
+ * 3. Re-run with `useExistingCodebook: true`: loads the edited codebook as the
+ *    exported codebook source. Human code harmonization happens in CodeStep.
  *
  * @param qdpxPath - Path to .qdpx file or directory containing extracted QDPX content
  * @param outputDir - Directory to write JSON files
@@ -680,8 +614,7 @@ function extractCodedThreads(
  * @param threadFilter - Optional callback to filter which threads to include (applies to both sources and coded threads)
  * @param postprocessCoded - Optional callback to transform coded items after extraction
  * @param useExistingCodebook - If true and codebook.json exists in outputDir, load it as the
- *   authoritative codebook. Codes not in the file are removed from human items; renamed labels
- *   (key unchanged, label changed) are propagated to all human code references. (default: false)
+ *   authoritative exported codebook source. Human code references are not rewritten here. (default: false)
  * @param requireCodeDefinitions - If true, only export and import QDPX codes with non-empty
  *   definitions/descriptions. (default: true)
  */
@@ -790,7 +723,7 @@ export async function convertQdpxToJson(
         postprocessCoded,
     );
 
-    // PHASE 3.5: Reconcile with existing codebook if requested
+    // PHASE 3.5: Use existing codebook as the exported codebook source if requested.
     if (useExistingCodebook) {
         const existingCodebookPath = join(outputDir, "codebook.json");
         if (existsSync(existingCodebookPath)) {
@@ -801,7 +734,7 @@ export async function convertQdpxToJson(
             if (requireCodeDefinitions) {
                 authoritative = filterCodebookByDefinitions(authoritative);
             }
-            codebook = reconcileWithCodebook(authoritative, coderThreads);
+            codebook = authoritative;
         } else {
             logger.warn(`useExistingCodebook enabled but codebook.json not found at ${existingCodebookPath}`);
         }

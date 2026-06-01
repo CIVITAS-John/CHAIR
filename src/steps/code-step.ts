@@ -53,6 +53,7 @@ import type {
 import { exportChunksForCoding } from "../utils/io/export.js";
 import { importCodes, importCodebook } from "../utils/io/import.js";
 import { ensureFolder, readJSONFile } from "../utils/io/file.js";
+import { createCodebookHarmonizer } from "../utils/io/codebook-harmonizer.js";
 import type { LLMModel, LLMSession } from "../utils/ai/llms.js";
 import { requestLLM, initLLM, getModel, buildProviderOptions } from "../utils/ai/llms.js";
 import { logger } from "../utils/core/logger.js";
@@ -1190,6 +1191,7 @@ export class CodeStep<
 
             for (const dataset of this._datasets) {
                 logger.info(`[${dataset.name}] Loading human codes`);
+                const harmonizeWithCodebook = createCodebookHarmonizer(dataset);
 
                 const loadExcel = async (path: string, sheet?: string) => {
                     if (!existsSync(path)) {
@@ -1334,6 +1336,10 @@ export class CodeStep<
                     }
 
                     if (mergedAnalyses) {
+                        if (harmonizeWithCodebook) {
+                            mergedAnalyses = harmonizeWithCodebook(mergedAnalyses, coder);
+                        }
+
                         codes[coder] = mergedAnalyses;
                         logger.success(
                             `[${dataset.name}] Loaded ${Object.keys(mergedAnalyses.threads).length} threads from "${coder}"`,
