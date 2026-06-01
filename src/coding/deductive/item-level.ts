@@ -112,7 +112,7 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
         return Object.entries(codebook)
             .filter(([label, code]) => (code.definitions?.length ?? 0) > 0)
             .map(([label, code]) => {
-                const parts = [`## ${label}`];
+                const parts = [`## ${code.label}`];
 
                 const definition = code.definitions?.[0];
                 if (definition) {
@@ -196,8 +196,8 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
         const { dataset } = BaseStep.Context.get();
         const results: Record<number, string> = {};
 
-        // Prepare codebook keys for fuzzy-search
-        const codebookKeys = Object.keys(analysis.codes);
+        // Prepare codebook labels for fuzzy-search
+        const codebookLabels = Object.values(analysis.codes).map(code => code.label);
 
         // State machine for section-based parsing
         type ParserState = "thoughts" | "codes" | "summary" | "notes" | null;
@@ -288,7 +288,7 @@ export abstract class ItemLevelCoderBase extends ConversationAnalyzer {
                     const normalizedCodes: string[] = [];
                     for (const code of codeList) {
                         // Try fuzzy-search to find best match
-                        const matches = search(code.replaceAll("–", '-').replaceAll("‑", "-"), codebookKeys, { threshold: 0.9, ignoreCase: true, ignoreSymbols: true });
+                        const matches = search(code.replaceAll("–", '-').replaceAll("‑", "-"), codebookLabels, { threshold: 0.9, ignoreCase: true, ignoreSymbols: true });
                         const orthodoxCase = matches.length > 0 ? matches[0] : undefined;
 
                         if (orthodoxCase) {
