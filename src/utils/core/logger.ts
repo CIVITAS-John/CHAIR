@@ -61,6 +61,7 @@ export enum LogLevel {
 // Async context variables for tracking source and prefix stacks
 const LoggerSource = new AsyncVar<Stack<string>>("LoggerSource");
 const LoggerPrefix = new AsyncVar<Stack<string>>("LoggerPrefix");
+const LoggerErrorSource = new WeakMap<Error, string>();
 
 abstract class LoggerError extends Error {
     override name = "Logger.Error";
@@ -114,6 +115,12 @@ class Logger {
         this.#consoleLock = false;
     }
 
+    #annotateError(error: unknown, source: string) {
+        if (error instanceof Error && !LoggerErrorSource.has(error)) {
+            LoggerErrorSource.set(error, source);
+        }
+    }
+
     withSource<T>(source: string, func: () => T): T;
     withSource<T>(prefix: string, method: string, func: () => T): T;
     withSource<T>(prefix: string, method: string, withPrefix: true, func: () => T): T;
@@ -155,22 +162,33 @@ class Logger {
                 LoggerSource.set(new Stack<string>());
             }
             LoggerSource.get().push(source);
-
-            const result = withPrefix && prefix ? this.withPrefix(prefix, func) : func();
-            if (result instanceof Promise) {
-                return result.finally(() => {
-                    LoggerSource.get().pop();
-                }) as T;
-            }
-
-            LoggerSource.get().pop();
-            return result;
         } catch (e) {
             const err = new Logger.ScopeError(
                 `Tried setting source to ${source} without a scope, am I wrapped in AsyncScope.run()?`,
             );
             err.cause = e;
             throw err;
+        }
+
+        try {
+            const result = withPrefix && prefix ? this.withPrefix(prefix, func) : func();
+            if (result instanceof Promise) {
+                return result
+                    .catch((e) => {
+                        this.#annotateError(e, source);
+                        throw e;
+                    })
+                    .finally(() => {
+                        LoggerSource.get().pop();
+                    }) as T;
+            }
+
+            LoggerSource.get().pop();
+            return result;
+        } catch (e) {
+            this.#annotateError(e, source);
+            LoggerSource.get().pop();
+            throw e;
         }
     }
     withDefaultSource<T>(method: string, func: () => T): T {
@@ -191,7 +209,18 @@ class Logger {
                 LoggerPrefix.set(new Stack<string>());
             }
             LoggerPrefix.get().push(prefix);
+        } catch (e) {
+            const err =
+                e instanceof AsyncScope.NotFoundError
+                    ? new Logger.ScopeError(
+                          `Tried setting prefix to ${prefix} without a scope, am I wrapped in AsyncScope.run()?`,
+                      )
+                    : new Logger.InternalError("An error occurred", "Logger#withPrefix");
+            err.cause = e;
+            throw err;
+        }
 
+        try {
             const result = func();
             if (result instanceof Promise) {
                 return result.finally(() => {
@@ -202,14 +231,8 @@ class Logger {
             LoggerPrefix.get().pop();
             return result;
         } catch (e) {
-            const err =
-                e instanceof AsyncScope.NotFoundError
-                    ? new Logger.ScopeError(
-                          `Tried setting prefix to ${prefix} without a scope, am I wrapped in AsyncScope.run()?`,
-                      )
-                    : new Logger.InternalError("An error occurred", "Logger#withPrefix");
-            err.cause = e;
-            throw err;
+            LoggerPrefix.get().pop();
+            throw e;
         }
     }
     get prefix() {
@@ -233,14 +256,26 @@ class Logger {
         return prefix;
     }
 
+    #errorMessage(error: unknown): string {
+        if (error instanceof Error) {
+            return error.name && error.name !== "Error"
+                ? `${error.name}: ${error.message}`
+                : error.message;
+        }
+        if (typeof error === "string") {
+            return error;
+        }
+        try {
+            return JSON.stringify(error);
+        } catch {
+            return String(error);
+        }
+    }
+
     error(error?: unknown, recoverable = false, source?: string) {
-        const message =
-            error instanceof Error
-                ? error.message
-                : typeof error === "string"
-                  ? error
-                  : JSON.stringify(error);
-        const formatted = this.format(message, "ERROR", source);
+        const message = this.#errorMessage(error);
+        const errorSource = error instanceof Error ? LoggerErrorSource.get(error) : undefined;
+        const formatted = this.format(message, "ERROR", source ?? errorSource);
         const tb = error instanceof Error ? error.stack : undefined;
         const cause = error instanceof Error ? error.cause : undefined;
 
@@ -251,7 +286,7 @@ class Logger {
             this.#logFile(tb);
         }
         if (cause) {
-            if (!this.#consoleLock) console.error(chalk.red("Cause by:"));
+            if (!this.#consoleLock) console.error(chalk.red("Caused by:"));
             this.#logFile("Caused by:");
             this.error(cause, recoverable, source);
         }
