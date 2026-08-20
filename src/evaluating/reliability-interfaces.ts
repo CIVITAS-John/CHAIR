@@ -57,10 +57,7 @@ export interface PairwiseReliability {
 }
 
 /**
- * Per-code precision and recall metrics.
- *
- * Note: These metrics use coder1 as the reference point (not necessarily "ground truth").
- * Precision/recall are relative to coder1's coding decisions.
+ * Per-code (per-label) agreement counts and Krippendorff's Alpha.
  */
 export interface CodeLevelMetrics {
     /** Code label */
@@ -71,12 +68,8 @@ export interface CodeLevelMetrics {
     coder2Only: number;
     /** Coder1 only: only coder1 applied this code */
     coder1Only: number;
-    /** Precision: agreement / (agreement + coder2Only) */
-    precision: number;
-    /** Recall: agreement / (agreement + coder1Only) */
-    recall: number;
-    /** F1 score: 2 * (precision * recall) / (precision + recall) */
-    f1Score: number;
+    /** Krippendorff's Alpha for this code's presence/absence judgment across all items */
+    krippendorffsAlpha: number;
 }
 
 export type ReliabilityComparisonLevel = "item" | "chunk";
@@ -155,7 +148,7 @@ export interface ReliabilityLevelResults {
     /** Pairwise reliability metrics for all coder pairs */
     pairwise: Record<string, PairwiseReliability>;
 
-    /** Code-level precision/recall metrics for all coder pairs */
+    /** Code-level agreement counts and Krippendorff's Alpha for all coder pairs */
     codeLevelMetrics: Record<string, CodeLevelMetrics[]>;
 }
 

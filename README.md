@@ -39,7 +39,7 @@ Merge and refine coding results:
 ### 4. Evaluate / Reliability Step
 Assess and visualize results:
 - **Evaluate**: Network analysis, coverage assessment, interactive visualization
-- **Reliability**: Krippendorff's Alpha, percent agreement, per-code precision/recall
+- **Reliability**: Krippendorff's Alpha, percent agreement, per-code Krippendorff's Alpha
 
 ## Quick Start
 

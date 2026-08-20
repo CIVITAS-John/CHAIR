@@ -7,18 +7,20 @@
  * Key Features:
  * - Handles multiple codes per item (set-based comparison)
  * - Jaccard distance for item-level differences
- * - Krippendorff's Alpha for overall reliability
+ * - Krippendorff's Alpha for overall reliability, using a normalized Hamming
+ *   distance metric so partial label overlap earns partial credit
  * - Pairwise coder comparisons
- * - Per-code precision/recall metrics
+ * - Per-code Krippendorff's Alpha (individual label reliability)
  *
  * Metrics Supported:
  * - Jaccard Distance: 1 - (intersection / union) for code sets
  * - Percent Agreement: Simple agreement percentage
  * - Krippendorff's Alpha: Robust reliability metric for multiple coders
- * - Code-level Precision/Recall: Per-code accuracy metrics
+ * - Code-level Krippendorff's Alpha: Per-code reliability metric
  */
 
 import { alpha } from "krippendorff";
+import type { MetricFunction } from "krippendorff";
 
 import type {
     CodeLevelMetrics,
@@ -431,11 +433,36 @@ export const calculatePairwiseReliability = (
 };
 
 /**
- * Calculate Krippendorff's Alpha for nominal data with set-based coding.
+ * Compute Krippendorff's Alpha via the krippendorff package, treating a NaN
+ * result (zero expected disagreement, i.e. no variance in the ratings) as
+ * perfect agreement rather than propagating NaN into the output.
  *
- * Uses the standard krippendorff package implementation with fixed-dimension
- * binary vectors based on the full codebook. This ensures consistent comparison
- * across all items and datasets.
+ * @param ratingMatrix - Two coders' ratings, one column per compared unit
+ * @param metric - Optional distance metric between two ratings
+ * @returns Krippendorff's Alpha coefficient, never NaN
+ */
+const safeAlpha = <R extends string | number>(
+    ratingMatrix: (R | undefined)[][],
+    metric?: MetricFunction<R>,
+): number => {
+    const result = alpha(ratingMatrix, metric);
+    return Number.isNaN(result) ? 1 : result;
+};
+
+/**
+ * Calculate Krippendorff's Alpha for set-based coding using fixed-dimension
+ * binary vectors based on the full codebook.
+ *
+ * Each item's code set is one-hot encoded into a binary vector (one dimension
+ * per codebook code), then joined into a string so it can serve as a hashable
+ * "rating" for the krippendorff package. Crucially, the package is given a
+ * custom distance metric that decodes two such ratings back into their binary
+ * vectors and computes the normalized Hamming distance between them, instead
+ * of relying on the package's default identity metric (exact string match).
+ * This gives proportional credit for partial label overlap — a vector that
+ * differs in 1 of 21 dimensions is scored as far more similar than a vector
+ * that shares nothing, whereas the identity metric would have scored both as
+ * maximally different.
  *
  * The metric ranges from -1 to 1, where:
  * - 1 = perfect agreement
@@ -462,8 +489,8 @@ export const calculateKrippendorffsAlpha = (
     const codeToIndex = new Map(allCodes.map((code, idx) => [code, idx]));
 
     // Transform set-based codes into binary vectors for each item
-    // Each coder's rating becomes a binary vector indicating which codes are present
-    // We'll convert this to a string representation for the krippendorff package
+    // Each coder's rating becomes a binary vector indicating which codes are present,
+    // encoded as a comma-joined string so it can serve as a hashable rating key.
     const ratingMatrix: (string | undefined)[][] = [[], []]; // 2 coders (rows)
 
     for (const comp of comparisons) {
@@ -488,27 +515,52 @@ export const calculateKrippendorffsAlpha = (
             }
         }
 
-        // Convert to string for nominal comparison
         ratingMatrix[0].push(vector1.join(","));
         ratingMatrix[1].push(vector2.join(","));
     }
 
-    // Calculate alpha using the krippendorff package
-    return alpha(ratingMatrix);
+    // Decode a rating key back into its binary vector, memoized since the
+    // package's alpha() calls the metric for every pair of distinct ratings.
+    const decodeCache = new Map<string, number[]>();
+    const decodeVector = (key: string): number[] => {
+        let vector = decodeCache.get(key);
+        if (!vector) {
+            vector = key.split(",").map(Number);
+            decodeCache.set(key, vector);
+        }
+        return vector;
+    };
+
+    // Normalized Hamming distance between two decoded binary vectors (0-1),
+    // giving partial credit proportional to the fraction of matching codes.
+    const binaryDistance: MetricFunction<string> = (a, b) => {
+        const va = decodeVector(a);
+        const vb = decodeVector(b);
+        let mismatches = 0;
+        for (let i = 0; i < va.length; i++) {
+            if (va[i] !== vb[i]) mismatches++;
+        }
+        return mismatches / va.length;
+    };
+
+    return safeAlpha(ratingMatrix, binaryDistance);
 };
 
 /**
- * Calculate precision, recall, and F1 score for each code.
+ * Calculate per-code (per-label) Krippendorff's Alpha and raw agreement counts.
  *
- * Uses coder1 as the reference point for comparison (not necessarily "ground truth").
- * Useful for comparing any two coders (human-human, AI-human, or AI-AI).
+ * Useful for comparing any two coders (human-human, AI-human, or AI-AI) and for
+ * identifying which specific codes drive disagreement in the overall alpha.
  *
  * Metrics interpretation:
  * - agreement: How many items both coders applied this code to
  * - coder2Only: How many items only coder2 applied this code to
  * - coder1Only: How many items only coder1 applied this code to
- * - precision: Of the times coder2 applied this code, how often did coder1 agree?
- * - recall: Of the times coder1 applied this code, how often did coder2 find it?
+ * - krippendorffsAlpha: Reliability of this single code's presence/absence
+ *   judgment across all items. Since each code's rating is already a scalar
+ *   (1 = applied, 0 = not applied), the package's default identity metric is
+ *   the mathematically correct distance here — there is no partial credit to
+ *   give within a single binary dimension.
  *
  * @param comparisons - Array of item comparisons
  * @param useAdjustedCodes - Whether to use adjusted codes (true) or original codes (false)
@@ -540,6 +592,7 @@ export const calculateCodeLevelMetrics = (
         let agreement = 0;
         let coder2Only = 0;
         let coder1Only = 0;
+        const ratingMatrix: (number | undefined)[][] = [[], []]; // 2 coders (rows)
 
         for (const { set1, set2 } of codeSets) {
             const inCodes1 = set1.has(code);
@@ -553,22 +606,19 @@ export const calculateCodeLevelMetrics = (
                 coder1Only++;
             }
             // Neither coder applied the code - not tracked
+
+            ratingMatrix[0].push(inCodes1 ? 1 : 0);
+            ratingMatrix[1].push(inCodes2 ? 1 : 0);
         }
 
-        // Calculate precision, recall, F1
-        const precision = agreement + coder2Only > 0 ? agreement / (agreement + coder2Only) : 0;
-        const recall = agreement + coder1Only > 0 ? agreement / (agreement + coder1Only) : 0;
-        const f1Score =
-            precision + recall > 0 ? (2 * precision * recall) / (precision + recall) : 0;
+        const krippendorffsAlpha = safeAlpha(ratingMatrix);
 
         metrics.push({
             code,
             agreement,
             coder2Only,
             coder1Only,
-            precision,
-            recall,
-            f1Score,
+            krippendorffsAlpha,
         });
     }
 

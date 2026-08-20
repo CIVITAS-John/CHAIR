@@ -286,7 +286,7 @@ await job.execute();
 **Key differences from inductive coding:**
 - **No embedder needed** — deductive coding doesn't require embedding-based consolidation
 - **Empty consolidators** — `ConsolidateStep` only collects codebooks, it doesn't merge codes
-- **`ReliabilityStep`** replaces `EvaluateStep` — computes Krippendorff's Alpha, percent agreement, and per-code precision/recall
+- **`ReliabilityStep`** replaces `EvaluateStep` — computes Krippendorff's Alpha, percent agreement, and per-code Krippendorff's Alpha
 - **Multiple temperatures** + `EnsembleCodeStep` — improves robustness by ensembling runs with different LLM temperatures
 - **`skipItem`** — exclude items from reliability calculation (e.g., interviewer questions)
 
@@ -319,7 +319,7 @@ const reliability = new ReliabilityStep({
 });
 ```
 
-Metrics computed: Jaccard Distance, Percent Agreement, Krippendorff's Alpha, and per-code Precision/Recall.
+Metrics computed: Jaccard Distance, Percent Agreement, Krippendorff's Alpha, and per-code Krippendorff's Alpha.
 
 ## Running the Example
 

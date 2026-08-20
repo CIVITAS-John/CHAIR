@@ -11,14 +11,14 @@
  * 3. Filter items using optional skipItem function
  * 4. Compare all coder pairs using item-level difference metrics
  * 5. Calculate aggregate reliability metrics (Alpha, agreement, etc.)
- * 6. Compute per-code precision/recall metrics
+ * 6. Compute per-code Krippendorff's Alpha
  * 7. Export results to JSON
  *
  * Metrics Computed:
  * - Jaccard Distance: Set-based difference for multiple codes per item
  * - Percent Agreement: Simple agreement percentage
  * - Krippendorff's Alpha: Robust reliability metric for multiple coders
- * - Code-level Precision/Recall: Per-code accuracy metrics
+ * - Code-level Krippendorff's Alpha: Per-code reliability metric
  *
  * Use Cases:
  * - Comparing human coders for quality control
@@ -75,7 +75,7 @@ export type {
  * - Extract coded items from all coders
  * - Compare all coder pairs using difference metrics
  * - Calculate aggregate reliability statistics
- * - Compute code-level precision/recall
+ * - Compute code-level Krippendorff's Alpha
  * - Export comprehensive reliability reports
  *
  * Type Parameters:
@@ -95,7 +95,7 @@ export type {
  *    c. Compare all coder pairs:
  *       - Calculate item-level differences
  *       - Compute pairwise reliability metrics
- *       - Generate code-level precision/recall
+ *       - Generate code-level Krippendorff's Alpha
  *
  * 3. Export Phase:
  *    - Write JSON results to reliability directory
@@ -141,7 +141,7 @@ export class ReliabilityStep<
      *    c. Compare all coder pairs:
      *       - Use custom or default difference calculator
      *       - Calculate pairwise reliability metrics
-     *       - Compute code-level precision/recall
+     *       - Compute code-level Krippendorff's Alpha
      *
      * Export Phase:
      * 1. Assemble results with metadata
