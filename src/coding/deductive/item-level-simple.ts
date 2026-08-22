@@ -148,6 +148,27 @@ export default class ItemLevelCoderSimple extends ItemLevelCoderBase {
         const runtimePrompt = aiParams?.customPrompt ? `\n${aiParams.customPrompt}` : "";
         const customPrompt = basePrompt + runtimePrompt;
 
+        // Build guidelines. When items are independent, omit the context-inference
+        // instruction and renumber so numbering stays sequential.
+        const guidelines: string[] = [
+            "1. Use ONLY the codes listed below and strictly follow its DEFINITION. Do not create new codes.",
+            '2. For each and every data item (provided in a numbered list), you MUST select zero (NA), one or more appropriate codes from the codebook. Use "NA" if nothing matches.',
+            "3. You will always return one bullet point for each data item. Multiple codes are splitted by semicolon (;). Only send out the correct LABEL.",
+        ];
+        if (aiParams?.independentItems !== true) {
+            guidelines.push(
+                "4. You will infer contexts from data before or after the item at hand, but only apply codes on the item itself.",
+            );
+        } else {
+            guidelines.push(
+                "4. Each data item is independent to one another. DO NOT infer between data items and ONLY apply codes on the item itself.",
+            );
+        }
+        guidelines.push(
+            `5. Carefully reason through each data item in three passes.\n- The first pass should focus on interpreting the data following the coding instructions.\n- The second pass should focus on identifying applicable codes following the code's definitions.\n- The third pass should verify whether your codes follow the task-specific instruction and the code's DEFINITIONS. If mismatch, eliminate it.`,
+        );
+        guidelines.push(`${guidelines.length + 1}. Never not omit or provide selective answers.`);
+
         return Promise.resolve([
             `
 # Goals
@@ -164,15 +185,7 @@ ${dataset.codingNotes.trim()}
 ${customPrompt?.trim()}
 
 # Guidelines
-1. Use ONLY the codes listed below and strictly follow its DEFINITION. Do not create new codes.
-2. For each and every data item (provided in a numbered list), you MUST select zero (NA), one or more appropriate codes from the codebook. Use "NA" if nothing matches.
-3. You will always return one bullet point for each data item. Multiple codes are splitted by semicolon (;). Only send out the correct LABEL.
-4. You will infer contexts from data before or after the item at hand, but only apply codes on the item itself.
-5. Carefully reason through each data item in three passes.
-- The first pass should focus on interpreting the data following the coding instructions.
-- The second pass should focus on identifying applicable codes following the code's definitions.
-- The third pass should verify whether your codes follow the task-specific instruction and the code's DEFINITIONS. If mismatch, eliminate it.
-6. Never not omit or provide selective answers.
+${guidelines.join("\n")}
 
 # Predefined Codebook
 ${codebookFormatted}

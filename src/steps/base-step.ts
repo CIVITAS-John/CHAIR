@@ -43,6 +43,8 @@ export interface AIParameters extends Record<string, unknown> {
     alias?: string;
     /** Include code categories in deductive codebook prompts (default: false) */
     includeCodebookCategories?: boolean;
+    /** Treat data items as independent — omit the context-inference instruction in deductive prompts (default: false) */
+    independentItems?: boolean;
     /** Substeps for category-filtered multi-pass coding */
     substeps?: Array<{
         /** Name for logging (e.g., "Social Codes") */

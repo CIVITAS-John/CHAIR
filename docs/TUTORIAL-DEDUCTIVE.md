@@ -137,6 +137,14 @@ parameters: {
 }
 ```
 
+By default, deductive prompts also instruct the LLM: "You will infer contexts from data before or after the item at hand, but only apply codes on the item itself." If your data items are independent of each other (e.g., survey responses), this context inference may be inappropriate. Set `parameters.independentItems` to `true` to omit that instruction:
+
+```typescript
+parameters: {
+    independentItems: true,
+}
+```
+
 ### Code Validation
 
 After the LLM responds, selected codes are validated against the codebook using fuzzy matching (0.9 threshold). If a close match is found, the canonical label from the codebook is used. This handles minor LLM variations like capitalization or punctuation differences.
