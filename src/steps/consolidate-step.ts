@@ -9,7 +9,8 @@
  * 2. Organize codebooks by dataset and group
  * 3. Merge codebooks within groups (if multiple coders)
  * 4. Build reference codebook using AI (RefiningReferenceBuilder)
- * 5. Cache results to avoid recomputation
+ * 5. Apply optional postProcess hook to input codebooks before reference building
+ * 6. Cache results to avoid recomputation
  *
  * Reference Building:
  * - Uses LLM to refine and merge codes across codebooks
@@ -108,6 +109,24 @@ export interface ConsolidateStepConfig<
      * Defaults to model name if not specified.
      */
     prefix?: string;
+
+    /**
+     * Post-process the collected input codebooks before reference building.
+     *
+     * Applied per dataset to a deep copy of the individual codebooks, right
+     * before the merged cache key is computed and the reference is built.
+     * Edits are transient (memory only): `#codebooks`, `getCodebooks()`, and
+     * `getGroups()` are left unchanged, but the returned codebooks feed into
+     * the reference builder and therefore shape the exported reference.
+     *
+     * @param codebooks - The individual codebooks collected for this dataset
+     * @param dataset - The dataset being consolidated
+     * @returns The (possibly edited) codebooks to merge into the reference
+     */
+    postProcess?: (
+        codebooks: Codebook[],
+        dataset: Dataset<TUnit>,
+    ) => Codebook[] | Promise<Codebook[]>;
 }
 
 /**
@@ -136,9 +155,10 @@ export interface ConsolidateStepConfig<
  *    - Track which codebooks contributed to each group
  *
  * 3. Build References:
+ *    - Apply optional postProcess hook to a deep copy of the input codebooks
  *    - Use LLM with RefiningReferenceBuilder
  *    - Process all codebooks to create unified reference
- *    - Cache based on MD5 hash of input codebooks
+ *    - Cache based on MD5 hash of the (post-processed) input codebooks
  *    - Export reference with examples and metadata
  *
  * Data Structures:
@@ -312,14 +332,16 @@ export class ConsolidateStep<
      *
      * Reference Building Phase:
      * 1. For each dataset:
-     *    a. Serialize all codebooks to JSON
-     *    b. Compute MD5 hash for caching
-     *    c. Check cache for existing reference
-     *    d. If cache miss:
+     *    a. Deep copy all codebooks
+     *    b. Apply optional postProcess hook to the copied codebooks (transient)
+     *    c. Serialize the codebooks to JSON
+     *    d. Compute MD5 hash for caching
+     *    e. Check cache for existing reference
+     *    f. If cache miss:
      *       - Build reference using LLM
      *       - Export to files
      *       - Cache result
-     *    e. Store reference in map
+     *    g. Store reference in map
      *
      * Name Pattern Replacement:
      * - {dataset}: Dataset name
@@ -424,9 +446,14 @@ export class ConsolidateStep<
                     },
                     async () => {
                         // Deep copy codebooks - reference builder may modify them
-                        const codes = JSON.stringify(
-                            Object.values(this.#codebooks.get(dataset.name) ?? {}),
-                        );
+                        const rawCodebooks = (
+                            Object.values(this.#codebooks.get(dataset.name) ?? {}) as Codebook[]
+                        ).map((book) => JSON.parse(JSON.stringify(book)) as Codebook);
+
+                        // Post-process input codebooks (transient, memory only) if configured
+                        const codebooks = this.config.postProcess
+                            ? await this.config.postProcess(rawCodebooks, dataset)
+                            : rawCodebooks;
 
                         // Initialize reference builder with configuration
                         const builder = new RefiningReferenceBuilder(this.config.builderConfig);
@@ -438,16 +465,12 @@ export class ConsolidateStep<
                         );
 
                         // Compute cache key from input codebooks
-                        const hash = md5(codes);
+                        const hash = md5(JSON.stringify(codebooks));
 
                         // Build reference with caching
                         // If cache hit, skip expensive LLM calls
                         const reference = await withCache(referencePath, hash, () =>
-                            buildReferenceAndExport(
-                                builder,
-                                JSON.parse(codes) as Codebook[],
-                                referencePath,
-                            ),
+                            buildReferenceAndExport(builder, codebooks, referencePath),
                         );
 
                         // Store reference for this dataset

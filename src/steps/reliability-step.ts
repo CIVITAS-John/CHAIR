@@ -9,10 +9,11 @@
  * 1. Collect codebooks and coded threads from ConsolidateStep
  * 2. Extract coded items from each coder's threads
  * 3. Filter items using optional skipItem function
- * 4. Compare all coder pairs using item-level difference metrics
- * 5. Calculate aggregate reliability metrics (Alpha, agreement, etc.)
- * 6. Compute per-code Krippendorff's Alpha
- * 7. Export results to JSON
+ * 4. Post-process codes using optional postProcess and pairPostProcess hooks
+ * 5. Compare all coder pairs using item-level difference metrics
+ * 6. Calculate aggregate reliability metrics (Alpha, agreement, etc.)
+ * 7. Compute per-code Krippendorff's Alpha
+ * 8. Export results to JSON
  *
  * Metrics Computed:
  * - Jaccard Distance: Set-based difference for multiple codes per item
@@ -61,6 +62,7 @@ import { BaseStep } from "./base-step.js";
 import type { ConsolidateStep } from "./consolidate-step.js";
 
 export type {
+    PairPostProcessor,
     ReliabilityComparisonLevel,
     ReliabilityLevelResults,
     ReliabilityResults,
@@ -92,7 +94,9 @@ export type {
  *    For each dataset:
  *    a. Extract coded items from each coder's threads
  *    b. Apply optional filter function
- *    c. Compare all coder pairs:
+ *    c. Post-process codes with optional postProcess hook
+ *    d. Compare all coder pairs:
+ *       - Apply optional pairPostProcess hook to each pair's de facto codes
  *       - Calculate item-level differences
  *       - Compute pairwise reliability metrics
  *       - Generate code-level Krippendorff's Alpha
@@ -138,7 +142,9 @@ export class ReliabilityStep<
      * 1. For each dataset:
      *    a. Extract coded items from each coder's threads
      *    b. Filter items using optional skipItem function
-     *    c. Compare all coder pairs:
+     *    c. Post-process codes using optional postProcess hook
+     *    d. Compare all coder pairs:
+     *       - Apply optional pairPostProcess hook to the pair's de facto codes
      *       - Use custom or default difference calculator
      *       - Calculate pairwise reliability metrics
      *       - Compute code-level Krippendorff's Alpha
@@ -288,9 +294,29 @@ export class ReliabilityStep<
 
                 logger.info(`Comparing ${display1} vs ${display2} (${level})`);
 
+                // Transient: fresh copies so pair-specific edits never leak
+                // into other pairs or into the shared coderItems map.
+                const copyItems = (items: CodedItem[]): CodedItem[] =>
+                    items.map((item) => ({
+                        ...item,
+                        codes: item.codes ? [...item.codes] : item.codes,
+                    }));
+                let items1 = copyItems(coderItems.get(coder1Name) ?? []);
+                let items2 = copyItems(coderItems.get(coder2Name) ?? []);
+
+                // Post-process each pair's de facto codes before comparison
+                if (this.config.pairPostProcess) {
+                    [items1, items2] = await this.config.pairPostProcess(items1, items2, {
+                        coder1: display1,
+                        coder2: display2,
+                        level,
+                        codebook,
+                    });
+                }
+
                 const comparisons = compareItems(
-                    coderItems.get(coder1Name) ?? [],
-                    coderItems.get(coder2Name) ?? [],
+                    items1,
+                    items2,
                     codebook,
                     differenceCalculator,
                     level === "item" ? this.config.skipItem : undefined,

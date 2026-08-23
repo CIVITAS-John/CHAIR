@@ -1,4 +1,4 @@
-import type { Code, Codebook, DataChunk, DataItem } from "../schema.js";
+import type { Code, Codebook, CodedItem, DataChunk, DataItem } from "../schema.js";
 import type { ConsolidateStep } from "../steps/consolidate-step.js";
 
 /**
@@ -75,6 +75,36 @@ export interface CodeLevelMetrics {
 export type ReliabilityComparisonLevel = "item" | "chunk";
 
 /**
+ * Post-process the de facto codes of a specific coder pair before comparison.
+ *
+ * Runs inside the pairwise loop after the global `postProcess` hook and
+ * before `compareItems` on fresh copies of each coder's items, so edits are
+ * transient (they never affect other pairs or any stored results).
+ *
+ * Useful for pair-specific harmonization, e.g. mapping one coder's synonyms
+ * onto the other coder's canonical labels for this pair only.
+ *
+ * @param items1 - First coder's coded items (fresh copies; safe to mutate)
+ * @param items2 - Second coder's coded items (fresh copies; safe to mutate)
+ * @param context - Pair context (display names, comparison level, de facto codebook)
+ * @returns The edited code arrays for both coders
+ */
+export type PairPostProcessor = (
+    items1: CodedItem[],
+    items2: CodedItem[],
+    context: {
+        /** Display name of the first coder (anonymized if anonymize is enabled) */
+        coder1: string;
+        /** Display name of the second coder (anonymized if anonymize is enabled) */
+        coder2: string;
+        /** Comparison level being calculated */
+        level: ReliabilityComparisonLevel;
+        /** De facto codebook of codes actually compared */
+        codebook: Codebook;
+    },
+) => [CodedItem[], CodedItem[]] | Promise<[CodedItem[], CodedItem[]]>;
+
+/**
  * Configuration for ReliabilityStep.
  */
 export interface ReliabilityStepConfig<
@@ -139,6 +169,16 @@ export interface ReliabilityStepConfig<
      * Applied to every coder's items after extraction but before any comparison logic.
      */
     postProcess?: (codes: string[], codebook: Codebook | undefined) => string[];
+
+    /**
+     * Post-process the de facto codes of a specific coder pair before comparison.
+     *
+     * Runs inside the pairwise loop after the global `postProcess` hook and
+     * before `compareItems`, on fresh copies of each coder's items for that
+     * pair only. Edits are transient: they affect the metrics of this single
+     * pair and never propagate to other pairs or stored results.
+     */
+    pairPostProcess?: PairPostProcessor;
 }
 
 /**
