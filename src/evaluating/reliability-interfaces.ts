@@ -75,11 +75,14 @@ export interface CodeLevelMetrics {
 export type ReliabilityComparisonLevel = "item" | "chunk";
 
 /**
- * Post-process the de facto codes of a specific coder pair before comparison.
+ * Post-process the de facto codes of a specific coder pair before calculating
+ * this pair's metrics.
  *
- * Runs inside the pairwise loop after the global `postProcess` hook and
- * before `compareItems` on fresh copies of each coder's items, so edits are
- * transient (they never affect other pairs or any stored results).
+ * Runs inside the pairwise loop after the global `postProcess` hook, on
+ * transient copies of each coder's items. The edits only affect the computed
+ * metrics for this pair (pairwise reliability and code-level metrics); they
+ * are never reflected in the exported xlsx/md comparison files, other pairs,
+ * or any stored results.
  *
  * Useful for pair-specific harmonization, e.g. mapping one coder's synonyms
  * onto the other coder's canonical labels for this pair only.
@@ -171,12 +174,14 @@ export interface ReliabilityStepConfig<
     postProcess?: (codes: string[], codebook: Codebook | undefined) => string[];
 
     /**
-     * Post-process the de facto codes of a specific coder pair before comparison.
+     * Post-process the de facto codes of a specific coder pair before
+     * calculating this pair's metrics.
      *
-     * Runs inside the pairwise loop after the global `postProcess` hook and
-     * before `compareItems`, on fresh copies of each coder's items for that
-     * pair only. Edits are transient: they affect the metrics of this single
-     * pair and never propagate to other pairs or stored results.
+     * Runs inside the pairwise loop after the global `postProcess` hook, on
+     * transient copies of each coder's items for that pair only. The edits
+     * affect only the computed metrics (pairwise reliability and code-level
+     * metrics); they never propagate to the exported xlsx/md comparison files,
+     * to other pairs, or to any stored results.
      */
     pairPostProcess?: PairPostProcessor;
 }

@@ -97,6 +97,7 @@ export type {
  *    c. Post-process codes with optional postProcess hook
  *    d. Compare all coder pairs:
  *       - Apply optional pairPostProcess hook to each pair's de facto codes
+ *         (affects only the computed metrics, never the exported comparisons)
  *       - Calculate item-level differences
  *       - Compute pairwise reliability metrics
  *       - Generate code-level Krippendorff's Alpha
@@ -145,6 +146,7 @@ export class ReliabilityStep<
      *    c. Post-process codes using optional postProcess hook
      *    d. Compare all coder pairs:
      *       - Apply optional pairPostProcess hook to the pair's de facto codes
+     *         (metrics only; exported xlsx/md comparisons stay unmodified)
      *       - Use custom or default difference calculator
      *       - Calculate pairwise reliability metrics
      *       - Compute code-level Krippendorff's Alpha
@@ -294,47 +296,60 @@ export class ReliabilityStep<
 
                 logger.info(`Comparing ${display1} vs ${display2} (${level})`);
 
-                // Transient: fresh copies so pair-specific edits never leak
-                // into other pairs or into the shared coderItems map.
-                const copyItems = (items: CodedItem[]): CodedItem[] =>
-                    items.map((item) => ({
-                        ...item,
-                        codes: item.codes ? [...item.codes] : item.codes,
-                    }));
-                let items1 = copyItems(coderItems.get(coder1Name) ?? []);
-                let items2 = copyItems(coderItems.get(coder2Name) ?? []);
+                // Base items (already post-processed by the global postProcess hook,
+                // but not pair-specific). These drive the exported comparisons.
+                const baseItems1 = coderItems.get(coder1Name) ?? [];
+                const baseItems2 = coderItems.get(coder2Name) ?? [];
 
-                // Post-process each pair's de facto codes before comparison
-                if (this.config.pairPostProcess) {
-                    [items1, items2] = await this.config.pairPostProcess(items1, items2, {
-                        coder1: display1,
-                        coder2: display2,
-                        level,
+                const calculateComparisons = (items1: CodedItem[], items2: CodedItem[]) =>
+                    compareItems(
+                        items1,
+                        items2,
                         codebook,
-                    });
+                        differenceCalculator,
+                        level === "item" ? this.config.skipItem : undefined,
+                        level === "item" ? dataItemsMap : undefined,
+                        level === "item" ? this.config.rollingWindow : undefined,
+                        shouldSkipMissingCode,
+                        level === "item" ? chunks : undefined,
+                    );
+
+                // Comparisons that flow into the exported xlsx/md output. These are
+                // never altered by pairPostProcess, which only affects metrics.
+                const comparisons = calculateComparisons(baseItems1, baseItems2);
+
+                // Calculation-only comparisons: pairPostProcess edits the pair's
+                // de facto codes on transient copies so only the computed metrics
+                // change, never the exported comparisons or any stored results.
+                let calcComparisons = comparisons;
+                if (this.config.pairPostProcess) {
+                    const copyItems = (items: CodedItem[]): CodedItem[] =>
+                        items.map((item) => ({
+                            ...item,
+                            codes: item.codes ? [...item.codes] : item.codes,
+                        }));
+                    const [items1, items2] = await this.config.pairPostProcess(
+                        copyItems(baseItems1),
+                        copyItems(baseItems2),
+                        {
+                            coder1: display1,
+                            coder2: display2,
+                            level,
+                            codebook,
+                        },
+                    );
+                    calcComparisons = calculateComparisons(items1, items2);
                 }
 
-                const comparisons = compareItems(
-                    items1,
-                    items2,
-                    codebook,
-                    differenceCalculator,
-                    level === "item" ? this.config.skipItem : undefined,
-                    level === "item" ? dataItemsMap : undefined,
-                    level === "item" ? this.config.rollingWindow : undefined,
-                    shouldSkipMissingCode,
-                    level === "item" ? chunks : undefined,
-                );
-
                 const reliability = calculatePairwiseReliability(
-                    comparisons,
+                    calcComparisons,
                     display1,
                     display2,
                     codebook,
                 );
 
                 pairwise[pairKey] = reliability;
-                codeLevelMetrics[pairKey] = calculateCodeLevelMetrics(comparisons, true);
+                codeLevelMetrics[pairKey] = calculateCodeLevelMetrics(calcComparisons, true);
 
                 logger.info(
                     `  Compared ${comparisons.length} ${level}s; ` +
