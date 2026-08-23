@@ -7,6 +7,7 @@
  *
  * Key Features:
  * - Depends on multiple prior CodeSteps (AI or human)
+ * - Optional preprocess hook to rewrite each item's codes before ensembling
  * - User-defined decision functions or simple vote threshold
  * - Rolling window support for aggregate comparison
  * - Full provenance tracking of code sources
@@ -29,6 +30,7 @@
 
 
 import type {
+    Codebook,
     CodedItem,
     CodedThread,
     CodedThreads,
@@ -110,6 +112,21 @@ export interface EnsembleCodeStepConfig<
      * Similar to ReliabilityStep's rolling window feature.
      */
     rollingWindow?: number;
+
+    /**
+     * Pre-process each item's codes before ensembling.
+     *
+     * Mirrors ReliabilityStep's postProcess hook. Applied per input codebook
+     * to the codes of every item, it allows rewriting the de facto codes
+     * (e.g., enforcing mutual exclusivity, harmonizing labels) before the
+     * ensemble vote. The underlying coded threads are never mutated — each
+     * item is transformed on a copy so other steps see the original codes.
+     *
+     * @param codes - The codes applied to an individual item
+     * @param codebook - The codebook of the input codebook being processed
+     * @returns The rewritten codes for this item
+     */
+    preprocess?: (codes: string[], codebook: Codebook | undefined) => string[];
 
     /**
      * Group name for organizing results
@@ -197,10 +214,11 @@ const applyVoteThreshold = (
  * 1. Collect results from all dependent CodeSteps
  * 2. For each dataset and thread:
  *    a. Extract coded items from all coders
- *    b. Apply rolling window if configured
- *    c. Build code-to-coders mapping
- *    d. Apply decision function or threshold
- *    e. Store ensemble results with provenance
+ *    b. Pre-process each item's codes with optional preprocess hook
+ *    c. Apply rolling window if configured
+ *    d. Build code-to-coders mapping
+ *    e. Apply decision function or threshold
+ *    f. Store ensemble results with provenance
  * 3. Export results to JSON and Excel
  * 4. Build consolidated codebook
  *
@@ -466,7 +484,17 @@ export class EnsembleCodeStep<
             for (const codedThreads of coderAnalyzers.values()) {
                 const thread = codedThreads.threads[threadId];
                 if (thread) {
-                    const items = Object.values(thread.items);
+                    // Pre-process each item's codes on a copy before ensembling
+                    const items: CodedItem[] = Object.values(thread.items).map((item) => {
+                        if (!this.ensembleConfig.preprocess || !item.codes) return item;
+                        return {
+                            ...item,
+                            codes: this.ensembleConfig.preprocess(
+                                item.codes,
+                                codedThreads.codebook,
+                            ),
+                        };
+                    });
                     coderItems.set(coderId, items);
                     // Collect item IDs from first coder
                     if (itemIds.length === 0) {

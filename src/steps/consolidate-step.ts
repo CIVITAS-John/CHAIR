@@ -7,11 +7,9 @@
  * Consolidation Process:
  * 1. Collect codebooks from all CodeSteps
  * 2. Organize codebooks by dataset and group
- * 3. Apply optional postProcess hook: rewrite each item's codes, filter each
- *    input codebook to surviving labels (never adding new codes)
- * 4. Merge codebooks within groups (if multiple coders)
- * 5. Build reference codebook using AI (RefiningReferenceBuilder)
- * 6. Cache results to avoid recomputation
+ * 3. Merge codebooks within groups (if multiple coders)
+ * 4. Build reference codebook using AI (RefiningReferenceBuilder)
+ * 5. Cache results to avoid recomputation
  *
  * Reference Building:
  * - Uses LLM to refine and merge codes across codebooks
@@ -45,7 +43,7 @@ import {
     buildReferenceAndExport,
     RefiningReferenceBuilder,
 } from "../evaluating/reference-builder.js";
-import type { Codebook, CodedThreads, DataChunk, DataItem, Dataset } from "../schema.js";
+import type { Codebook, DataChunk, DataItem, Dataset } from "../schema.js";
 import { withCache } from "../utils/io/cache.js";
 import { ensureFolder } from "../utils/io/file.js";
 import { type LLMModel, useLLMs } from "../utils/ai/llms.js";
@@ -110,27 +108,6 @@ export interface ConsolidateStepConfig<
      * Defaults to model name if not specified.
      */
     prefix?: string;
-
-    /**
-     * Post-process an item's codes within each input codebook before
-     * consolidation.
-     *
-     * Mirrors ReliabilityStep's postProcess hook. Applied to the codes of
-     * every item of every input codebook, it allows rewriting the de facto
-     * codes (e.g., renaming, enforcing mutual exclusivity). The codebook, not
-     * the hook, is never edited directly: after rewriting, each input codebook
-     * used for group merging and reference building is filtered to the labels
-     * that survive rewriting.
-     *
-     * This step must not invent new codes: a rewritten label that is not
-     * present in the input codebook is dropped with a warning instead of being
-     * added.
-     *
-     * @param codes - The codes applied to an individual item
-     * @param codebook - The codebook of the input being processed
-     * @returns The rewritten codes for this item
-     */
-    postProcess?: (codes: string[], codebook: Codebook | undefined) => string[];
 }
 
 /**
@@ -151,8 +128,6 @@ export interface ConsolidateStepConfig<
  * 1. Collect Results:
  *    - Iterate through all CodeStep dependencies
  *    - Extract codebooks from each coder/analyzer
- *    - Apply optional postProcess hook: rewrite each item's de facto codes,
- *      then filter each input codebook to the labels that survive rewriting
  *    - Apply namePattern to generate codebook identifiers
  *
  * 2. Organize by Groups:
@@ -163,7 +138,7 @@ export interface ConsolidateStepConfig<
  * 3. Build References:
  *    - Use LLM with RefiningReferenceBuilder
  *    - Process all codebooks to create unified reference
- *    - Cache based on MD5 hash of the collected (post-processed) codebooks
+ *    - Cache based on MD5 hash of input codebooks
  *    - Export reference with examples and metadata
  *
  * Data Structures:
@@ -317,48 +292,6 @@ export class ConsolidateStep<
     }
 
     /**
-     * Rewrite every item's de facto codes and derive a codebook filtered to
-     * the labels that survive rewriting.
-     *
-     * Applies the configured postProcess hook to the codes of every item in
-     * every thread. The items are only read to collect the surviving labels —
-     * the underlying coded threads shared with other steps are never mutated.
-     * The returned codebook keeps every original entry whose label still
-     * appears after rewriting (definitions, examples, categories preserved).
-     *
-     * This step never invents codes: a rewritten label absent from the input
-     * codebook is dropped with a warning instead of being added.
-     *
-     * @param codedThreads - The input codebook with its coded threads
-     * @param key - Identifier of the input (for logging)
-     * @returns The codebook filtered to labels surviving rewriting
-     */
-    #rewriteItemCodes(codedThreads: CodedThreads, key: string): Codebook {
-        const codebook = codedThreads.codebook ?? {};
-        const postProcess = this.config.postProcess!;
-        const survived = new Set<string>();
-
-        for (const thread of Object.values(codedThreads.threads)) {
-            for (const item of Object.values(thread.items)) {
-                if (!item.codes) continue;
-                for (const code of postProcess(item.codes, codebook)) {
-                    if (codebook[code]) {
-                        survived.add(code);
-                    } else {
-                        logger.warn(
-                            `postProcess introduced code "${code}" not in codebook (${key}); dropped`,
-                        );
-                    }
-                }
-            }
-        }
-
-        return Object.fromEntries(
-            Object.entries(codebook).filter(([label]) => survived.has(label)),
-        ) as Codebook;
-    }
-
-    /**
      * Internal execution logic for consolidation
      *
      * This method orchestrates the consolidation process:
@@ -368,10 +301,8 @@ export class ConsolidateStep<
      * 2. For each dataset in each coder:
      *    a. Get coding results from the coder
      *    b. Extract codebooks from results
-     *    c. Apply optional postProcess hook: rewrite each item's codes and
-     *       filter the codebook to the surviving labels (no new codes added)
-     *    d. Apply namePattern to generate identifiers
-     *    e. Store codebook in codebooks map
+     *    c. Apply namePattern to generate identifiers
+     *    d. Store in codebooks map
      *
      * Grouping Phase:
      * 1. Track codebooks by coder group
@@ -381,15 +312,14 @@ export class ConsolidateStep<
      *
      * Reference Building Phase:
      * 1. For each dataset:
-     *    a. Deep copy all codebooks
-     *    b. Serialize the codebooks to JSON
-     *    c. Compute MD5 hash for caching
-     *    d. Check cache for existing reference
-     *    e. If cache miss:
+     *    a. Serialize all codebooks to JSON
+     *    b. Compute MD5 hash for caching
+     *    c. Check cache for existing reference
+     *    d. If cache miss:
      *       - Build reference using LLM
      *       - Export to files
      *       - Cache result
-     *    f. Store reference in map
+     *    e. Store reference in map
      *
      * Name Pattern Replacement:
      * - {dataset}: Dataset name
@@ -448,15 +378,9 @@ export class ConsolidateStep<
                                     );
                                 }
 
-                                // Rewrite each item's de facto codes and derive
-                                // the codebook filtered to surviving labels
-                                const codebook = this.config.postProcess
-                                    ? this.#rewriteItemCodes(codedThreads, key)
-                                    : codedThreads.codebook;
-
                                 // Store codebook
-                                acc[key] = codebook;
-                                codebooks.push(codebook);
+                                acc[key] = codedThreads.codebook;
+                                codebooks.push(codedThreads.codebook);
                                 names.push(key);
                             });
                             return acc;
@@ -500,9 +424,9 @@ export class ConsolidateStep<
                     },
                     async () => {
                         // Deep copy codebooks - reference builder may modify them
-                        const codebooks = (
-                            Object.values(this.#codebooks.get(dataset.name) ?? {}) as Codebook[]
-                        ).map((book) => JSON.parse(JSON.stringify(book)) as Codebook);
+                        const codes = JSON.stringify(
+                            Object.values(this.#codebooks.get(dataset.name) ?? {}),
+                        );
 
                         // Initialize reference builder with configuration
                         const builder = new RefiningReferenceBuilder(this.config.builderConfig);
@@ -514,12 +438,16 @@ export class ConsolidateStep<
                         );
 
                         // Compute cache key from input codebooks
-                        const hash = md5(JSON.stringify(codebooks));
+                        const hash = md5(codes);
 
                         // Build reference with caching
                         // If cache hit, skip expensive LLM calls
                         const reference = await withCache(referencePath, hash, () =>
-                            buildReferenceAndExport(builder, codebooks, referencePath),
+                            buildReferenceAndExport(
+                                builder,
+                                JSON.parse(codes) as Codebook[],
+                                referencePath,
+                            ),
                         );
 
                         // Store reference for this dataset
