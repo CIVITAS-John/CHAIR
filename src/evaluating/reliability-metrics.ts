@@ -19,7 +19,6 @@
  * - Code-level Krippendorff's Alpha: Per-code reliability metric
  */
 
-import { alpha } from "krippendorff";
 import type { MetricFunction } from "krippendorff";
 
 import type {
@@ -433,9 +432,23 @@ export const calculatePairwiseReliability = (
 };
 
 /**
- * Compute Krippendorff's Alpha via the krippendorff package, treating a NaN
- * result (zero expected disagreement, i.e. no variance in the ratings) as
- * perfect agreement rather than propagating NaN into the output.
+ * Compute Krippendorff's Alpha for two coders directly from a rating matrix.
+ *
+ * The krippendorff package's alpha() builds a full V x V coincidence matrix
+ * and re-scans every unit for each distinct rating pair, so its cost scales
+ * as O(V^2 * S) with a large constant (V distinct ratings, S units). With
+ * thousands of distinct ratings and ~10k units that is hundreds of billions
+ * of inner iterations, which looks like a hang on larger datasets. This
+ * implementation computes the exact same quantity in O(S + V^2 * metricCost):
+ *
+ * - coincidence(a, b) accumulates ordered rater pairs per unit (2 when both
+ *   raters agree on the same value, 1 in each direction otherwise)
+ * - observedDisagreement = half of the coincidence-weighted metric sum
+ * - expectedDisagreement = sum over unordered distinct-value pairs of
+ *   n_a * n_b * metric(a, b), divided by (totalRatings - 1)
+ *
+ * A NaN result (zero expected disagreement, i.e. no variance in the ratings)
+ * is treated as perfect agreement rather than propagated into the output.
  *
  * @param ratingMatrix - Two coders' ratings, one column per compared unit
  * @param metric - Optional distance metric between two ratings
@@ -443,9 +456,58 @@ export const calculatePairwiseReliability = (
  */
 const safeAlpha = <R extends string | number>(
     ratingMatrix: (R | undefined)[][],
-    metric?: MetricFunction<R>,
+    metric: MetricFunction<R> = (a, b) => (a === b ? 0 : 1),
 ): number => {
-    const result = alpha(ratingMatrix, metric);
+    const columnCount = ratingMatrix[0]?.length ?? 0;
+    if (columnCount === 0) return 1;
+
+    const valueCounts = new Map<R, number>();
+    const coincidence = new Map<string, number>();
+
+    for (let column = 0; column < columnCount; column++) {
+        const a = ratingMatrix[0]?.[column];
+        const b = ratingMatrix[1]?.[column];
+        if (a === undefined || b === undefined) continue;
+
+        valueCounts.set(a, (valueCounts.get(a) ?? 0) + 1);
+        valueCounts.set(b, (valueCounts.get(b) ?? 0) + 1);
+
+        const key = `${String(a)}\u0000${String(b)}`;
+        if (a === b) {
+            coincidence.set(key, (coincidence.get(key) ?? 0) + 2);
+        } else {
+            coincidence.set(key, (coincidence.get(key) ?? 0) + 1);
+            const reverseKey = `${String(b)}\u0000${String(a)}`;
+            coincidence.set(reverseKey, (coincidence.get(reverseKey) ?? 0) + 1);
+        }
+    }
+
+    let observedDisagreement = 0;
+    for (const [key, frequency] of coincidence) {
+        const separator = key.indexOf("\u0000");
+        const a = key.slice(0, separator) as unknown as R;
+        const b = key.slice(separator + 1) as unknown as R;
+        observedDisagreement += frequency * metric(a, b);
+    }
+    observedDisagreement /= 2;
+
+    const values = Array.from(valueCounts.keys());
+    const totalRatings = Array.from(valueCounts.values()).reduce(
+        (sum, count) => sum + count,
+        0,
+    );
+
+    let expectedDisagreement = 0;
+    for (let i = 0; i < values.length; i++) {
+        const countI = valueCounts.get(values[i]) ?? 0;
+        for (let j = i; j < values.length; j++) {
+            expectedDisagreement +=
+                countI * (valueCounts.get(values[j]) ?? 0) * metric(values[i], values[j]);
+        }
+    }
+    expectedDisagreement /= totalRatings - 1;
+
+    const result = 1 - observedDisagreement / expectedDisagreement;
     return Number.isNaN(result) ? 1 : result;
 };
 
@@ -455,10 +517,10 @@ const safeAlpha = <R extends string | number>(
  *
  * Each item's code set is one-hot encoded into a binary vector (one dimension
  * per codebook code), then joined into a string so it can serve as a hashable
- * "rating" for the krippendorff package. Crucially, the package is given a
- * custom distance metric that decodes two such ratings back into their binary
- * vectors and computes the normalized Hamming distance between them, instead
- * of relying on the package's default identity metric (exact string match).
+ * rating. Crucially, a custom distance metric decodes two such ratings back
+ * into their binary vectors and computes the normalized Hamming distance
+ * between them, instead of relying on the default identity metric (exact
+ * string match).
  * This gives proportional credit for partial label overlap — a vector that
  * differs in 1 of 21 dimensions is scored as far more similar than a vector
  * that shares nothing, whereas the identity metric would have scored both as
@@ -520,7 +582,7 @@ export const calculateKrippendorffsAlpha = (
     }
 
     // Decode a rating key back into its binary vector, memoized since the
-    // package's alpha() calls the metric for every pair of distinct ratings.
+    // metric is evaluated for every pair of distinct ratings.
     const decodeCache = new Map<string, number[]>();
     const decodeVector = (key: string): number[] => {
         let vector = decodeCache.get(key);
