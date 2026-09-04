@@ -35,7 +35,7 @@
 
 import { join } from "path";
 
-import md5 from "md5";
+import { createHash } from "node:crypto";
 
 import { mergeCodebooks } from "../consolidating/codebooks.js";
 import type { RefiningReferenceBuilderConfig } from "../evaluating/reference-builder.js";
@@ -438,7 +438,7 @@ export class ConsolidateStep<
                         );
 
                         // Compute cache key from input codebooks
-                        const hash = md5(codes);
+                        const hash = createHash("md5").update(codes, "utf8").digest("hex");
 
                         // Build reference with caching
                         // If cache hit, skip expensive LLM calls
